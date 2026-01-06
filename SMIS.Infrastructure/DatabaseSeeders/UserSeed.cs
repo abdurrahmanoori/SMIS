@@ -8,7 +8,6 @@ namespace SMIS.Infrastructure.DatabaseSeeders
     {
         public static void DataSeed(ModelBuilder modelBuilder)
         {
-            // Seed users with valid HospitalId (1)
             var hasher = new PasswordHasher<ApplicationUser>();
             var admin = new ApplicationUser
             {
@@ -20,7 +19,6 @@ namespace SMIS.Infrastructure.DatabaseSeeders
                 EmailConfirmed = true,
                 FirstName = "System",
                 LastName = "Admin",
-                HospitalId = 1,
                 SecurityStamp = "admin-seed"
             };
             admin.PasswordHash = hasher.HashPassword(admin, "Pass@123");
@@ -35,7 +33,6 @@ namespace SMIS.Infrastructure.DatabaseSeeders
                 EmailConfirmed = true,
                 FirstName = "Default",
                 LastName = "User",
-                HospitalId = 1,
                 SecurityStamp = "user-seed"
             };
             user.PasswordHash = hasher.HashPassword(user, "Pass@123");

@@ -29,7 +29,6 @@ namespace SMIS.Infrastructure.Interceptors
                 {
                     entry.Entity.CreatedDate = DateTime.UtcNow;
                     entry.Entity.CreatedBy = _currentUser.GetUserId();
-                    entry.Entity.HospitalId = _currentUser.GetHospitalId();
                 }
 
                 if (entry.State == EntityState.Modified)
@@ -37,7 +36,6 @@ namespace SMIS.Infrastructure.Interceptors
                     entry.Entity.UpdatedDate = DateTime.UtcNow;
                     entry.Entity.UpdatedBy = _currentUser.GetUserId();
                     entry.Property(e => e.CreatedDate).IsModified = false; // Ensure CreatedDate is not updated
-                    entry.Entity.HospitalId = _currentUser.GetHospitalId();
                 }
                 if (entry.State == EntityState.Deleted)
                 {

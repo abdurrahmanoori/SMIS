@@ -12,6 +12,5 @@ namespace SMIS.Domain.Common.BaseAbstract
         [Required]
         public string PublicId { get; set; } = Guid.NewGuid().ToString();
         public bool IsPublic { get ; set ; } = false;
-        public int HospitalId { get ; set ; }
     }
 }

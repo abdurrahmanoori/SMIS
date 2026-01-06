@@ -44,7 +44,6 @@ namespace SMIS.Test.Controllers
                 FirstName = "Test",
                 LastName = "User",
                 Roles = new[] { "User" },
-                HospitalId = 1
             };
 
             var response = await _client.PostAsJsonAsync("/api/users", dto);

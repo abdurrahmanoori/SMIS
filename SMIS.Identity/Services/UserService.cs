@@ -28,7 +28,6 @@ namespace SMIS.Identity.Services
                 PhoneNumber = input.PhoneNumber,
                 FirstName = input.FirstName,
                 LastName = input.LastName,
-                HospitalId = input.HospitalId,
                 EmailConfirmed = false
             };
 
@@ -87,7 +86,6 @@ namespace SMIS.Identity.Services
             if (!string.IsNullOrWhiteSpace(input.LastName)) user.LastName = input.LastName;
             if (input.EmailConfirmed.HasValue) user.EmailConfirmed = input.EmailConfirmed.Value;
             if (input.PhoneNumberConfirmed.HasValue) user.PhoneNumberConfirmed = input.PhoneNumberConfirmed.Value;
-            if (input.HospitalId.HasValue) user.HospitalId = input.HospitalId.Value;
 
             var updateResult = await _userManager.UpdateAsync(user);
             if (!updateResult.Succeeded)
@@ -212,7 +210,6 @@ namespace SMIS.Identity.Services
                 LastName = user.LastName,
                 EmailConfirmed = user.EmailConfirmed,
                 PhoneNumberConfirmed = user.PhoneNumberConfirmed,
-                HospitalId = user.HospitalId
             };
         }
     }

@@ -1,13 +1,8 @@
 ﻿using AutoMapper;
 using SMIS.Application.DTO.Localization;
-using SMIS.Application.DTO.Patients;
 using SMIS.Application.DTO.Provinces;
-using SMIS.Application.DTO.Laboratory;
-using SMIS.Application.DTO.Hospitals;
 using SMIS.Domain.Entities;
 using SMIS.Domain.Entities.Localization;
-using SMIS.Domain.Entities.Laboratory;
-using SMIS.Domain.Entities.Patients;
 using System.Globalization;
 
 namespace SMIS.Application.Mappings;
@@ -16,13 +11,7 @@ public class MappingProfile : Profile
 {
     public MappingProfile()
     {
-        CreateMap<Patient, PatientDto>()
-            .ForMember(dest => dest.HospitalId, opt => opt.MapFrom(src => src.HospitalId))
-            .ReverseMap();
-        CreateMap<Patient, PatientCreateDto>()
-            .ForMember(dest => dest.HospitalId, opt => opt.MapFrom(src => src.HospitalId))
-            .ReverseMap();
-
+      
         // Language mappings
         CreateMap<Language, LanguageDto>().ReverseMap();
         CreateMap<Language, LanguageCreateDto>().ReverseMap();
@@ -65,17 +54,11 @@ public class MappingProfile : Profile
                 }
             });
 
-        CreateMap<LabTestGroup, LabTestGroupDto>().ReverseMap();
-        CreateMap<LabTestGroup, LabTestGroupCreateDto>().ReverseMap();
 
-        CreateMap<LabTest, LabTestDto>().ReverseMap();
-        CreateMap<LabTest, LabTestCreateDto>().ReverseMap();
-
-        CreateMap<Hospital, HospitalDto>().ReverseMap();
-        CreateMap<Hospital, HospitalCreateDto>()
-            .ReverseMap()
-            .ForMember(dest => dest.Name,
-                opt => opt.MapFrom(src => string.IsNullOrWhiteSpace(src.Code) ? (src.Email ?? "Hospital") : src.Code));
+        //CreateMap<Hospital, HospitalCreateDto>()
+        //    .ReverseMap()
+        //    .ForMember(dest => dest.Name,
+        //        opt => opt.MapFrom(src => string.IsNullOrWhiteSpace(src.Code) ? (src.Email ?? "Hospital") : src.Code));
 
         CreateMap<ProvinceTranslation, ProvinceTranslationDto>()
             .ForMember(dest => dest.LanguageCode, opt => opt.MapFrom(src => src.LanguageCode))

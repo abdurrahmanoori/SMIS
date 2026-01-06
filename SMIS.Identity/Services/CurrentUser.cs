@@ -13,11 +13,6 @@ namespace SMIS.Identity.Services
         }
 
         
-        public int GetHospitalId()
-        {
-            return 1;
-        }
-
         public int GetUserId()
         {
             //var user = _httpContextAccessor.HttpContext?.User;

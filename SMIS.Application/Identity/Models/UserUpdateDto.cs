@@ -8,7 +8,6 @@ namespace SMIS.Application.Identity.Models
         public string? LastName { get; set; }
         public bool? EmailConfirmed { get; set; }
         public bool? PhoneNumberConfirmed { get; set; }
-        public int? HospitalId { get; set; }
         public IEnumerable<string>? Roles { get; set; }
     }
 }

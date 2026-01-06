@@ -2,9 +2,7 @@
 using MediatR;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using SMIS.Application.DTO.Common.Behaviors;
-using SMIS.Application.Features.Patients.Commands;
-using Sigtas.Application.Features.TaxRole.MaintainEnterprise.CommandValidators;
+using SMIS.Application.Common.Behaviors;
 using System.Reflection;
 
 namespace SMIS.Application.Extensions;
@@ -17,8 +15,8 @@ public static class ApplicationServiceRegistration
     {
         services.AddMediatR(Assembly.GetExecutingAssembly());
 
-        services.AddValidatorsFromAssemblyContaining(typeof(CreatePatientCommandValidator),
-            includeInternalTypes: true);
+        // Register validators from the current assembly
+        services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly(), includeInternalTypes: true);
         services.AddScoped(typeof(IPipelineBehavior<,>), typeof(ValidationPipelineBehavior<,>));
 
         return services;

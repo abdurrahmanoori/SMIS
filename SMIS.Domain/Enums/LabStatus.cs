@@ -4,7 +4,7 @@
     public enum LabStatus
     {
         Ordered,          // Test has been requested
-        SampleCollected,  // Sample has been taken from the patient
+        SampleCollected,  // Sample has been collected
         InTransit,        // Sample is being transported to the lab
         ReceivedByLab,    // Lab has received and logged the sample
         InAnalysis,       // Test is being processed/analyzed

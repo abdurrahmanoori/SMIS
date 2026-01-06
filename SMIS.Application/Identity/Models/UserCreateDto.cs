@@ -8,7 +8,6 @@ namespace SMIS.Application.Identity.Models
         public string Password { get; set; } = default!;
         public string? FirstName { get; set; }
         public string? LastName { get; set; }
-        public int HospitalId { get; set; }
         public IEnumerable<string>? Roles { get; set; }
     }
 }

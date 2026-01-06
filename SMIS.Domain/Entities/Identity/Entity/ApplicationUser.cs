@@ -8,9 +8,7 @@ namespace SMIS.Domain.Entities.Identity.Entity
         public string? FirstName { get; set; }
         public string? LastName { get; set; }
 
-        public int HospitalId { get; set; }
-
-        public virtual Hospital? Hospital { get; set; } 
+ 
         //public List<ApplicationRole>? ApplicationRoles { get; set; }
     }
 }

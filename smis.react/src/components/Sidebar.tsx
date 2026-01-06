@@ -9,29 +9,25 @@ export default function Sidebar({ collapsed, onNavigate }: SidebarProps) {
   return (
     <aside className={`sidebar ${collapsed ? 'collapsed' : ''}`}>
       <div className="sidebar-header">
-        <div className="logo-circle">H</div>
-        {!collapsed && <div className="sidebar-title">Hospital Admin</div>}
+        <div className="logo-circle">S</div>
+        {!collapsed && <div className="sidebar-title">SMIS Admin</div>}
       </div>
       <nav className="nav">
         <NavLink to="/" end onClick={onNavigate} className={({ isActive }: { isActive: boolean }) => `nav-item ${isActive ? 'active' : ''}`}>
           <span className="nav-icon">🏠</span>
           <span className="nav-label">Dashboard</span>
         </NavLink>
-  <NavLink to="/hospitals" onClick={onNavigate} className={({ isActive }: { isActive: boolean }) => `nav-item ${isActive ? 'active' : ''}`}>
-          <span className="nav-icon">🏥</span>
-          <span className="nav-label">Hospitals</span>
+  <NavLink to="/items" onClick={onNavigate} className={({ isActive }: { isActive: boolean }) => `nav-item ${isActive ? 'active' : ''}`}>
+          <span className="nav-icon">📦</span>
+          <span className="nav-label">Items</span>
         </NavLink>
-  <NavLink to="/patients" onClick={onNavigate} className={({ isActive }: { isActive: boolean }) => `nav-item ${isActive ? 'active' : ''}`}>
-          <span className="nav-icon">👤</span>
-          <span className="nav-label">Patients</span>
+  <NavLink to="/inventory-items" onClick={onNavigate} className={({ isActive }: { isActive: boolean }) => `nav-item ${isActive ? 'active' : ''}`}>
+          <span className="nav-icon">📋</span>
+          <span className="nav-label">Inventory Items</span>
         </NavLink>
-  <NavLink to="/lab-tests" onClick={onNavigate} className={({ isActive }: { isActive: boolean }) => `nav-item ${isActive ? 'active' : ''}`}>
-          <span className="nav-icon">🧪</span>
-          <span className="nav-label">Lab Tests</span>
-        </NavLink>
-  <NavLink to="/lab-test-groups" onClick={onNavigate} className={({ isActive }: { isActive: boolean }) => `nav-item ${isActive ? 'active' : ''}`}>
-          <span className="nav-icon">🧬</span>
-          <span className="nav-label">Lab Test Groups</span>
+  <NavLink to="/categories" onClick={onNavigate} className={({ isActive }: { isActive: boolean }) => `nav-item ${isActive ? 'active' : ''}`}>
+          <span className="nav-icon">🏷️</span>
+          <span className="nav-label">Categories</span>
         </NavLink>
   <NavLink to="/provinces" onClick={onNavigate} className={({ isActive }: { isActive: boolean }) => `nav-item ${isActive ? 'active' : ''}`}>
           <span className="nav-icon">🗺️</span>

@@ -2,8 +2,6 @@
 using Microsoft.EntityFrameworkCore;
 using SMIS.Domain.Entities;
 using SMIS.Domain.Entities.Identity.Entity;
-using SMIS.Domain.Entities.Laboratory;
-using SMIS.Domain.Entities.Patients;
 using SMIS.Domain.Entities.Localization;
 using SMIS.Infrastructure.DatabaseSeeders;
 using System.Reflection;
@@ -24,10 +22,6 @@ namespace SMIS.Infrastructure.Context
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
 
             #region Seed Database
-            PatientSeed.DataSeed(modelBuilder);
-            LabTestGroupSeed.DataSeed(modelBuilder);
-            LabTestSeed.DataSeed(modelBuilder);
-            HospitalSeed.DataSeed(modelBuilder);
             UserSeed.DataSeed(modelBuilder);
             LanguageSeed.DataSeed(modelBuilder);
             #endregion
@@ -38,13 +32,8 @@ namespace SMIS.Infrastructure.Context
 
         partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
 
-        public DbSet<Patient> Patients { get; set; }
         public DbSet<Province> Provinces { get; set; }
         public DbSet<ProvinceTranslation> ProvinceTranslations { get; set; }
-        public DbSet<LabTestGroup> LabTestGroups { get; set; }
-        public DbSet<LabTest> LabTests { get; set; }
-        public DbSet<PatientLabTest> PatientLabTests { get; set; }
-        public DbSet<Hospital> Hospitals { get; set; }
         public DbSet<Language> Languages { get; set; }
     }
 }
