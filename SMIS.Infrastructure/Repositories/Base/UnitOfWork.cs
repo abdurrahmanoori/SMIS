@@ -213,27 +213,36 @@ namespace SMIS.Infrastructure.Repositories.Base
                 return true;
             }
 
+            if (primaryKeyValue is Guid guidValue && guidValue == Guid.Empty)
+            {
+                return true;
+            }
+
             return false;
         }
 
 
         // Set the primary key value dynamically based on its type
-        private void SetPrimaryKeyValue(PropertyInfo primaryKeyProperty, object entity, long sequenceValue)
+        private void SetPrimaryKeyValue(PropertyInfo primaryKeyProperty, object entity, object sequenceValue)
         {
             var propertyType = primaryKeyProperty.PropertyType;
 
-            // Handle numeric types (int, long, byte)
+            // Handle numeric types (int, long, byte) and Guid
             if (propertyType == typeof(int))
             {
                 primaryKeyProperty.SetValue(entity, Convert.ToInt32(sequenceValue));
             }
             else if (propertyType == typeof(long))
             {
-                primaryKeyProperty.SetValue(entity, sequenceValue);
+                primaryKeyProperty.SetValue(entity, Convert.ToInt64(sequenceValue));
             }
             else if (propertyType == typeof(byte))
             {
                 primaryKeyProperty.SetValue(entity, Convert.ToByte(sequenceValue));
+            }
+            else if (propertyType == typeof(Guid))
+            {
+                primaryKeyProperty.SetValue(entity, Guid.NewGuid());
             }
             else
             {

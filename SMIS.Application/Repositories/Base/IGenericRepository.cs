@@ -13,7 +13,7 @@ namespace SMIS.Application.Repositories.Base
         Task<T> AddAsync(T entity);
 
         Task<T> UpdateAsync(T entity);
-        Task<bool> ExistsAsync(int id);
+        Task<bool> ExistsAsync(Guid id);
         Task<bool> AnyAsync(Expression<Func<T, bool>> filter, CancellationToken cancellationToken = default);
 
         Task<IReadOnlyList<T>> ExecuteRawQueryAsync(string sqlQuery);
@@ -35,7 +35,7 @@ namespace SMIS.Application.Repositories.Base
             Expression<Func<T, object>>[]? includeProperties = null,
             params Expression<Func<T, object>>[] orderByProperties);
 
-        Task<T?> GetByIdAsync(int Id);
+        Task<T?> GetByIdAsync(Guid Id);
 
         public Task<List<T>> GetWhenAsync(Expression<Func<T, bool>> condition);
         public Task<List<T>> GetWhenContainsAsync<TProperty>(Expression<Func<T, TProperty>> property, List<TProperty> ids);

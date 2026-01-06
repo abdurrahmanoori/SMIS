@@ -1,0 +1,6 @@
+Convert all Id properties from int to Guid
+
+Change all entity Id properties from int to Guid across the entire codebase.
+Update all related methods, interfaces, and implementations to use Guid instead of int.
+Update database models and migrations to reflect the Guid changes.
+Fix syntax errors and type mismatches caused by the conversion.

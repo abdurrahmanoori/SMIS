@@ -35,7 +35,7 @@ namespace SMIS.Infrastructure.Repositories.Base
         }
 
         /// <inheritdoc/>
-        public async Task<bool> ExistsAsync(int id)
+        public async Task<bool> ExistsAsync(Guid id)
         {
             var entity = await this.dbSet.FindAsync(id);
             return entity != null;
@@ -208,7 +208,7 @@ namespace SMIS.Infrastructure.Repositories.Base
         }
 
         /// <inheritdoc/>
-        public async Task<T?> GetByIdAsync(int Id)
+        public async Task<T?> GetByIdAsync(Guid Id)
         {
             return await this.dbSet.FindAsync(Id);
         }

@@ -7,7 +7,7 @@ using SMIS.Application.Repositories.Localization;
 
 namespace SMIS.Application.Features.Localization.Commands
 {
-    public record UpdateLanguageCommand(int Id, LanguageCreateDto LanguageCreateDto) : IRequest<Result<LanguageDto>> { }
+    public record UpdateLanguageCommand(Guid Id, LanguageCreateDto LanguageCreateDto) : IRequest<Result<LanguageDto>> { }
 
     internal sealed class UpdateLanguageCommandHandler : IRequestHandler<UpdateLanguageCommand, Result<LanguageDto>>
     {

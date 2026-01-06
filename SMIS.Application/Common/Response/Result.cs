@@ -41,6 +41,15 @@ public class Result<T>
             Message = $"Entity with the {id} not found",
         };
     }
+
+    public static Result<T> NotFoundResult(Guid? id = null)
+    {
+        return new Result<T>
+        {
+            Success = false,
+            Message = $"Entity with the {id} not found",
+        };
+    }
     public static Result<T> EmptyResult(string? entity = null)
     {
         return new Result<T>

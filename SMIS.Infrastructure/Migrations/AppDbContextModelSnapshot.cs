@@ -19,7 +19,7 @@ namespace SMIS.Infrastructure.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
@@ -29,7 +29,7 @@ namespace SMIS.Infrastructure.Migrations
                     b.Property<string>("ClaimValue")
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("RoleId")
+                    b.Property<Guid>("RoleId")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
@@ -41,7 +41,7 @@ namespace SMIS.Infrastructure.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<int>", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
@@ -51,7 +51,7 @@ namespace SMIS.Infrastructure.Migrations
                     b.Property<string>("ClaimValue")
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("UserId")
+                    b.Property<Guid>("UserId")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
@@ -72,7 +72,7 @@ namespace SMIS.Infrastructure.Migrations
                     b.Property<string>("ProviderDisplayName")
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("UserId")
+                    b.Property<Guid>("UserId")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("LoginProvider", "ProviderKey");
@@ -84,10 +84,10 @@ namespace SMIS.Infrastructure.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<int>", b =>
                 {
-                    b.Property<int>("UserId")
+                    b.Property<Guid>("UserId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("RoleId")
+                    b.Property<Guid>("RoleId")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("UserId", "RoleId");
@@ -99,7 +99,7 @@ namespace SMIS.Infrastructure.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<int>", b =>
                 {
-                    b.Property<int>("UserId")
+                    b.Property<Guid>("UserId")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("LoginProvider")
@@ -118,7 +118,7 @@ namespace SMIS.Infrastructure.Migrations
 
             modelBuilder.Entity("SMIS.Domain.Entities.Identity.Entity.ApplicationRole", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
@@ -145,7 +145,7 @@ namespace SMIS.Infrastructure.Migrations
 
             modelBuilder.Entity("SMIS.Domain.Entities.Identity.Entity.ApplicationUser", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
@@ -216,7 +216,7 @@ namespace SMIS.Infrastructure.Migrations
                     b.HasData(
                         new
                         {
-                            Id = 1,
+                            Id = new Guid("00000000-0000-0000-0000-000000000001"),
                             AccessFailedCount = 0,
                             ConcurrencyStamp = "67494a80-0206-4523-9fbc-d03c3ea08e82",
                             Email = "admin@local",
@@ -234,7 +234,7 @@ namespace SMIS.Infrastructure.Migrations
                         },
                         new
                         {
-                            Id = 2,
+                            Id = new Guid("00000000-0000-0000-0000-000000000002"),
                             AccessFailedCount = 0,
                             ConcurrencyStamp = "dd1699ad-c1e9-404e-92f3-1e58ed632afd",
                             Email = "user@local",
@@ -254,7 +254,7 @@ namespace SMIS.Infrastructure.Migrations
 
             modelBuilder.Entity("SMIS.Domain.Entities.Localization.Language", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
@@ -275,21 +275,21 @@ namespace SMIS.Infrastructure.Migrations
                     b.HasData(
                         new
                         {
-                            Id = 1,
+                            Id = new Guid("00000000-0000-0000-0000-000000000001"),
                             Code = "en",
                             IsActive = true,
                             Name = "English"
                         },
                         new
                         {
-                            Id = 2,
+                            Id = new Guid("00000000-0000-0000-0000-000000000002"),
                             Code = "ps",
                             IsActive = true,
                             Name = "Pashto"
                         },
                         new
                         {
-                            Id = 3,
+                            Id = new Guid("00000000-0000-0000-0000-000000000003"),
                             Code = "fa",
                             IsActive = true,
                             Name = "Farsi"
@@ -298,7 +298,7 @@ namespace SMIS.Infrastructure.Migrations
 
             modelBuilder.Entity("SMIS.Domain.Entities.Province", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
@@ -321,28 +321,28 @@ namespace SMIS.Infrastructure.Migrations
                     b.HasData(
                         new
                         {
-                            Id = 1,
+                            Id = new Guid("00000000-0000-0000-0000-000000000001"),
                             IsPublic = false,
                             Name = "Kabul",
                             PublicId = "232bc308-2924-4925-bce2-6deaf45d920e"
                         },
                         new
                         {
-                            Id = 2,
+                            Id = new Guid("00000000-0000-0000-0000-000000000002"),
                             IsPublic = false,
                             Name = "Herat",
                             PublicId = "9fea4102-8aab-4b4f-9e2a-9d61c38409a1"
                         },
                         new
                         {
-                            Id = 3,
+                            Id = new Guid("00000000-0000-0000-0000-000000000003"),
                             IsPublic = false,
                             Name = "Kandahar",
                             PublicId = "d7d9b518-1541-45e7-b8e4-e4ff89b8459d"
                         },
                         new
                         {
-                            Id = 4,
+                            Id = new Guid("00000000-0000-0000-0000-000000000004"),
                             IsPublic = false,
                             Name = "Balkh",
                             PublicId = "7fac881e-0e66-4f14-a050-95ef24a04c36"
@@ -351,7 +351,7 @@ namespace SMIS.Infrastructure.Migrations
 
             modelBuilder.Entity("SMIS.Domain.Entities.ProvinceTranslation", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 

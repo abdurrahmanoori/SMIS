@@ -9,7 +9,7 @@ using SMIS.Application.DTO.Common.Response;
 
 namespace SMIS.Application.Features.Provinces.Commands
 {
-    public record UpdateProvinceTranslationCommand(int Id, ProvinceTranslationDto Dto) : IRequest<Result<ProvinceTranslationDto>>;
+    public record UpdateProvinceTranslationCommand(Guid Id, ProvinceTranslationDto Dto) : IRequest<Result<ProvinceTranslationDto>>;
 
     internal sealed class UpdateProvinceTranslationCommandHandler : IRequestHandler<UpdateProvinceTranslationCommand, Result<ProvinceTranslationDto>>
     {
@@ -35,7 +35,7 @@ namespace SMIS.Application.Features.Provinces.Commands
             _mapper.Map(request.Dto, trans);
 
             // Resolve language id if provided or by code
-            if (request.Dto.LanguageId > 0)
+            if (request.Dto.LanguageId != Guid.Empty)
             {
                 trans.LanguageId = request.Dto.LanguageId;
             }

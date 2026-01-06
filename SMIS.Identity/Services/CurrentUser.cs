@@ -13,7 +13,7 @@ namespace SMIS.Identity.Services
         }
 
         
-        public int GetUserId()
+        public Guid GetUserId()
         {
             //var user = _httpContextAccessor.HttpContext?.User;
             //if (user?.Identity?.IsAuthenticated ?? false)
@@ -24,7 +24,7 @@ namespace SMIS.Identity.Services
             //}
 
             //return Task.FromResult("NRZ01015");
-            return 1;
+            return Guid.NewGuid();
 
 
             //int? currentUserId = Convert.ToInt32(user?.FindFirst(ClaimTypes.NameIdentifier)?.Value);

@@ -17,7 +17,7 @@ namespace SMIS.Infrastructure.Migrations
                 name: "AspNetRoles",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                    Id = table.Column<Guid>(type: "uuid", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     Name = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
                     NormalizedName = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
@@ -32,7 +32,7 @@ namespace SMIS.Infrastructure.Migrations
                 name: "AspNetUsers",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                    Id = table.Column<Guid>(type: "uuid", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     FirstName = table.Column<string>(type: "TEXT", nullable: true),
                     LastName = table.Column<string>(type: "TEXT", nullable: true),
@@ -60,7 +60,7 @@ namespace SMIS.Infrastructure.Migrations
                 name: "Languages",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                    Id = table.Column<Guid>(type: "uuid", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     Name = table.Column<string>(type: "TEXT", nullable: false),
                     Code = table.Column<string>(type: "TEXT", nullable: true),
@@ -75,7 +75,7 @@ namespace SMIS.Infrastructure.Migrations
                 name: "Provinces",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                    Id = table.Column<Guid>(type: "uuid", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     Name = table.Column<string>(type: "TEXT", maxLength: 200, nullable: false),
                     PublicId = table.Column<string>(type: "TEXT", nullable: false),
@@ -90,9 +90,9 @@ namespace SMIS.Infrastructure.Migrations
                 name: "AspNetRoleClaims",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                    Id = table.Column<Guid>(type: "uuid", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    RoleId = table.Column<int>(type: "INTEGER", nullable: false),
+                    RoleId = table.Column<Guid>(type: "uuid", nullable: false),
                     ClaimType = table.Column<string>(type: "TEXT", nullable: true),
                     ClaimValue = table.Column<string>(type: "TEXT", nullable: true)
                 },
@@ -111,9 +111,9 @@ namespace SMIS.Infrastructure.Migrations
                 name: "AspNetUserClaims",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                    Id = table.Column<Guid>(type: "uuid", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    UserId = table.Column<int>(type: "INTEGER", nullable: false),
+                    UserId = table.Column<Guid>(type: "uuid", nullable: false),
                     ClaimType = table.Column<string>(type: "TEXT", nullable: true),
                     ClaimValue = table.Column<string>(type: "TEXT", nullable: true)
                 },
@@ -135,7 +135,7 @@ namespace SMIS.Infrastructure.Migrations
                     LoginProvider = table.Column<string>(type: "TEXT", nullable: false),
                     ProviderKey = table.Column<string>(type: "TEXT", nullable: false),
                     ProviderDisplayName = table.Column<string>(type: "TEXT", nullable: true),
-                    UserId = table.Column<int>(type: "INTEGER", nullable: false)
+                    UserId = table.Column<Guid>(type: "uuid", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -152,8 +152,8 @@ namespace SMIS.Infrastructure.Migrations
                 name: "AspNetUserRoles",
                 columns: table => new
                 {
-                    UserId = table.Column<int>(type: "INTEGER", nullable: false),
-                    RoleId = table.Column<int>(type: "INTEGER", nullable: false)
+                    UserId = table.Column<Guid>(type: "uuid", nullable: false),
+                    RoleId = table.Column<Guid>(type: "uuid", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -176,7 +176,7 @@ namespace SMIS.Infrastructure.Migrations
                 name: "AspNetUserTokens",
                 columns: table => new
                 {
-                    UserId = table.Column<int>(type: "INTEGER", nullable: false),
+                    UserId = table.Column<Guid>(type: "uuid", nullable: false),
                     LoginProvider = table.Column<string>(type: "TEXT", nullable: false),
                     Name = table.Column<string>(type: "TEXT", nullable: false),
                     Value = table.Column<string>(type: "TEXT", nullable: true)
@@ -196,12 +196,12 @@ namespace SMIS.Infrastructure.Migrations
                 name: "ProvinceTranslations",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                    Id = table.Column<Guid>(type: "uuid", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    ProvinceId = table.Column<int>(type: "INTEGER", nullable: false),
+                    ProvinceId = table.Column<Guid>(type: "uuid", nullable: false),
                     Name = table.Column<string>(type: "TEXT", maxLength: 200, nullable: false),
                     LanguageCode = table.Column<string>(type: "TEXT", maxLength: 10, nullable: false),
-                    LanguageId = table.Column<int>(type: "INTEGER", nullable: false),
+                    LanguageId = table.Column<Guid>(type: "uuid", nullable: false),
                     IsDefault = table.Column<bool>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
@@ -226,8 +226,8 @@ namespace SMIS.Infrastructure.Migrations
                 columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "FirstName", "LastName", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
                 values: new object[,]
                 {
-                    { 1, 0, "67494a80-0206-4523-9fbc-d03c3ea08e82", "admin@local", true, "System", "Admin", false, null, "ADMIN@LOCAL", "ADMIN", "AQAAAAIAAYagAAAAECBj8vyClTvhVD1Ti9oV+NyjSKnSF/jyPUSr4Qob4BPDtMt3xUaq/m+QAZieP/Ravw==", null, false, "admin-seed", false, "admin" },
-                    { 2, 0, "dd1699ad-c1e9-404e-92f3-1e58ed632afd", "user@local", true, "Default", "User", false, null, "USER@LOCAL", "USER", "AQAAAAIAAYagAAAAENv2srSdsVSmV7PeDPtlGuRKClRTGc6+qH+OWPE2u/OjZH/FEMXloIe/hIB/Iy+bUQ==", null, false, "user-seed", false, "user" }
+                    { new Guid("00000000-0000-0000-0000-000000000001"), 0, "67494a80-0206-4523-9fbc-d03c3ea08e82", "admin@local", true, "System", "Admin", false, null, "ADMIN@LOCAL", "ADMIN", "AQAAAAIAAYagAAAAECBj8vyClTvhVD1Ti9oV+NyjSKnSF/jyPUSr4Qob4BPDtMt3xUaq/m+QAZieP/Ravw==", null, false, "admin-seed", false, "admin" },
+                    { new Guid("00000000-0000-0000-0000-000000000002"), 0, "dd1699ad-c1e9-404e-92f3-1e58ed632afd", "user@local", true, "Default", "User", false, null, "USER@LOCAL", "USER", "AQAAAAIAAYagAAAAENv2srSdsVSmV7PeDPtlGuRKClRTGc6+qH+OWPE2u/OjZH/FEMXloIe/hIB/Iy+bUQ==", null, false, "user-seed", false, "user" }
                 });
 
             migrationBuilder.InsertData(
@@ -235,9 +235,9 @@ namespace SMIS.Infrastructure.Migrations
                 columns: new[] { "Id", "Code", "IsActive", "Name" },
                 values: new object[,]
                 {
-                    { 1, "en", true, "English" },
-                    { 2, "ps", true, "Pashto" },
-                    { 3, "fa", true, "Farsi" }
+                    { new Guid("00000000-0000-0000-0000-000000000001"), "en", true, "English" },
+                    { new Guid("00000000-0000-0000-0000-000000000002"), "ps", true, "Pashto" },
+                    { new Guid("00000000-0000-0000-0000-000000000003"), "fa", true, "Farsi" }
                 });
 
             migrationBuilder.InsertData(
@@ -245,10 +245,10 @@ namespace SMIS.Infrastructure.Migrations
                 columns: new[] { "Id", "IsPublic", "Name", "PublicId" },
                 values: new object[,]
                 {
-                    { 1, false, "Kabul", "232bc308-2924-4925-bce2-6deaf45d920e" },
-                    { 2, false, "Herat", "9fea4102-8aab-4b4f-9e2a-9d61c38409a1" },
-                    { 3, false, "Kandahar", "d7d9b518-1541-45e7-b8e4-e4ff89b8459d" },
-                    { 4, false, "Balkh", "7fac881e-0e66-4f14-a050-95ef24a04c36" }
+                    { new Guid("00000000-0000-0000-0000-000000000001"), false, "Kabul", "232bc308-2924-4925-bce2-6deaf45d920e" },
+                    { new Guid("00000000-0000-0000-0000-000000000002"), false, "Herat", "9fea4102-8aab-4b4f-9e2a-9d61c38409a1" },
+                    { new Guid("00000000-0000-0000-0000-000000000003"), false, "Kandahar", "d7d9b518-1541-45e7-b8e4-e4ff89b8459d" },
+                    { new Guid("00000000-0000-0000-0000-000000000004"), false, "Balkh", "7fac881e-0e66-4f14-a050-95ef24a04c36" }
                 });
 
             migrationBuilder.InsertData(
@@ -256,18 +256,18 @@ namespace SMIS.Infrastructure.Migrations
                 columns: new[] { "Id", "IsDefault", "LanguageCode", "LanguageId", "Name", "ProvinceId" },
                 values: new object[,]
                 {
-                    { 1, true, "en", 1, "Kabul", 1 },
-                    { 2, false, "ps", 2, "کابل", 1 },
-                    { 3, false, "fa", 3, "کابل", 1 },
-                    { 4, true, "en", 1, "Herat", 2 },
-                    { 5, false, "ps", 2, "هرات", 2 },
-                    { 6, false, "fa", 3, "هرات", 2 },
-                    { 7, true, "en", 1, "Kandahar", 3 },
-                    { 8, false, "ps", 2, "کندهار", 3 },
-                    { 9, false, "fa", 3, "قندهار", 3 },
-                    { 10, true, "en", 1, "Balkh", 4 },
-                    { 11, false, "ps", 2, "بلخ", 4 },
-                    { 12, false, "fa", 3, "بلخ", 4 }
+                    { new Guid("00000000-0000-0000-0000-000000000001"), true, "en", new Guid("00000000-0000-0000-0000-000000000001"), "Kabul", new Guid("00000000-0000-0000-0000-000000000001") },
+                    { new Guid("00000000-0000-0000-0000-000000000002"), false, "ps", new Guid("00000000-0000-0000-0000-000000000002"), "کابل", new Guid("00000000-0000-0000-0000-000000000001") },
+                    { new Guid("00000000-0000-0000-0000-000000000003"), false, "fa", new Guid("00000000-0000-0000-0000-000000000003"), "کابل", new Guid("00000000-0000-0000-0000-000000000001") },
+                    { new Guid("00000000-0000-0000-0000-000000000004"), true, "en", new Guid("00000000-0000-0000-0000-000000000001"), "Herat", new Guid("00000000-0000-0000-0000-000000000002") },
+                    { new Guid("00000000-0000-0000-0000-000000000005"), false, "ps", new Guid("00000000-0000-0000-0000-000000000002"), "هرات", new Guid("00000000-0000-0000-0000-000000000002") },
+                    { new Guid("00000000-0000-0000-0000-000000000006"), false, "fa", new Guid("00000000-0000-0000-0000-000000000003"), "هرات", new Guid("00000000-0000-0000-0000-000000000002") },
+                    { new Guid("00000000-0000-0000-0000-000000000007"), true, "en", new Guid("00000000-0000-0000-0000-000000000001"), "Kandahar", new Guid("00000000-0000-0000-0000-000000000003") },
+                    { new Guid("00000000-0000-0000-0000-000000000008"), false, "ps", new Guid("00000000-0000-0000-0000-000000000002"), "کندهار", new Guid("00000000-0000-0000-0000-000000000003") },
+                    { new Guid("00000000-0000-0000-0000-000000000009"), false, "fa", new Guid("00000000-0000-0000-0000-000000000003"), "قندهار", new Guid("00000000-0000-0000-0000-000000000003") },
+                    { new Guid("00000000-0000-0000-0000-00000000000A"), true, "en", new Guid("00000000-0000-0000-0000-000000000001"), "Balkh", new Guid("00000000-0000-0000-0000-000000000004") },
+                    { new Guid("00000000-0000-0000-0000-00000000000B"), false, "ps", new Guid("00000000-0000-0000-0000-000000000002"), "بلخ", new Guid("00000000-0000-0000-0000-000000000004") },
+                    { new Guid("00000000-0000-0000-0000-00000000000C"), false, "fa", new Guid("00000000-0000-0000-0000-000000000003"), "بلخ", new Guid("00000000-0000-0000-0000-000000000004") }
                 });
 
             migrationBuilder.CreateIndex(

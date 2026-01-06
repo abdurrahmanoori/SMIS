@@ -5,7 +5,7 @@ using SMIS.Application.Identity.Models;
 
 namespace SMIS.Application.Features.Identity.Users.Commands
 {
-    public record ChangePasswordCommand(int UserId, ChangePasswordDto Dto) : IRequest<Result<Unit>>;
+    public record ChangePasswordCommand(Guid UserId, ChangePasswordDto Dto) : IRequest<Result<Unit>>;
 
     public class ChangePasswordCommandHandler : IRequestHandler<ChangePasswordCommand, Result<Unit>>
     {

@@ -5,7 +5,7 @@ using SMIS.Application.Repositories.Provinces;
 
 namespace SMIS.Application.Features.Provinces.Commands
 {
-    public record DeleteProvinceCommand(int Id) : IRequest<Result<Unit>>;
+    public record DeleteProvinceCommand(Guid Id) : IRequest<Result<Unit>>;
 
     internal sealed class DeleteProvinceCommandHandler : IRequestHandler<DeleteProvinceCommand, Result<Unit>>
     {

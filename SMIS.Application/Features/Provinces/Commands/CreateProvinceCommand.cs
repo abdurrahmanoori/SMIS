@@ -33,7 +33,7 @@ namespace SMIS.Application.Features.Provinces.Commands
             {
                 entity.Translations = new List<ProvinceTranslation>
                 {
-                    new ProvinceTranslation { LanguageCode = "en", LanguageId = 1, IsDefault = true, Name = request.ProvinceCreateDto.Name }
+                    new ProvinceTranslation { LanguageCode = "en", LanguageId = Guid.NewGuid(), IsDefault = true, Name = request.ProvinceCreateDto.Name }
                 };
             }
 

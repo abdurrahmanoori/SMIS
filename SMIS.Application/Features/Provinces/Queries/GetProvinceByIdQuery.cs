@@ -6,7 +6,7 @@ using SMIS.Application.Repositories.Provinces;
 
 namespace SMIS.Application.Features.Provinces.Queries
 {
-    public record GetProvinceByIdQuery(int Id) : IRequest<Result<ProvinceDto>>;
+    public record GetProvinceByIdQuery(Guid Id) : IRequest<Result<ProvinceDto>>;
 
     internal sealed class GetProvinceByIdQueryHandler : IRequestHandler<GetProvinceByIdQuery, Result<ProvinceDto>>
     {
