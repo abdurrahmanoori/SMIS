@@ -1,0 +1,34 @@
+using AutoMapper;
+using MediatR;
+using SMIS.Application.DTO.Common.Response;
+using SMIS.Application.DTO.Provinces;
+using SMIS.Application.Repositories.Provinces;
+
+namespace SMIS.Application.Features.Provinces.Queries
+{
+    public record GetProvinceByIdQuery(int Id) : IRequest<Result<ProvinceDto>>;
+
+    internal sealed class GetProvinceByIdQueryHandler : IRequestHandler<GetProvinceByIdQuery, Result<ProvinceDto>>
+    {
+        private readonly IProvinceRepository _provinceRepository;
+        private readonly IMapper _mapper;
+
+        public GetProvinceByIdQueryHandler(IProvinceRepository provinceRepository, IMapper mapper)
+        {
+            _provinceRepository = provinceRepository;
+            _mapper = mapper;
+        }
+
+        public async Task<Result<ProvinceDto>> Handle(GetProvinceByIdQuery request, CancellationToken cancellationToken)
+        {
+            var entity = await _provinceRepository.GetFirstOrDefaultAsync(x => x.Id == request.Id, includeProperties: nameof(Domain.Entities.Province.Translations));
+            if (entity is null)
+            {
+                return Result<ProvinceDto>.NotFoundResult(request.Id);
+            }
+
+            var dto = _mapper.Map<ProvinceDto>(entity);
+            return Result<ProvinceDto>.SuccessResult(dto);
+        }
+    }
+}
