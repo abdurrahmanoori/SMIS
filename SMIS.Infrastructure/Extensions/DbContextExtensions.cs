@@ -19,7 +19,7 @@ namespace SMIS.Infrastructure.Extensions
                 string parentDirectory = Path.GetDirectoryName(current)!;
 
                 // Path to database inside Infrastructure/Databases
-                var dbPath = Path.Combine(parentDirectory, "SMIS.Infrastructure", "Databases", "rhmisDb.db");
+                var dbPath = Path.Combine(parentDirectory, "SMIS.Infrastructure", "Databases", "smis.db");
 
                 // Ensure directory exists
                 var dbDirectory = Path.GetDirectoryName(dbPath)!;
