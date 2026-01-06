@@ -24,7 +24,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\RHMIS\SMIS.csproj" />
+    <ProjectReference Include="..\SMIS\SMIS.csproj" />
     <ProjectReference Include="..\SMIS.Infrastructure\SMIS.Infrastructure.csproj" />
     <ProjectReference Include="..\SMIS.Application\SMIS.Application.csproj" />
   </ItemGroup>
