@@ -17,9 +17,9 @@ namespace SMIS.Infrastructure.Migrations
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.10");
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
@@ -30,7 +30,7 @@ namespace SMIS.Infrastructure.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<Guid>("RoleId")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
@@ -39,9 +39,9 @@ namespace SMIS.Infrastructure.Migrations
                     b.ToTable("AspNetRoleClaims", (string)null);
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<int>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<System.Guid>", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
@@ -52,7 +52,7 @@ namespace SMIS.Infrastructure.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<Guid>("UserId")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
@@ -61,7 +61,7 @@ namespace SMIS.Infrastructure.Migrations
                     b.ToTable("AspNetUserClaims", (string)null);
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<int>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<System.Guid>", b =>
                 {
                     b.Property<string>("LoginProvider")
                         .HasColumnType("TEXT");
@@ -73,7 +73,7 @@ namespace SMIS.Infrastructure.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<Guid>("UserId")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("TEXT");
 
                     b.HasKey("LoginProvider", "ProviderKey");
 
@@ -82,13 +82,13 @@ namespace SMIS.Infrastructure.Migrations
                     b.ToTable("AspNetUserLogins", (string)null);
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<int>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<System.Guid>", b =>
                 {
                     b.Property<Guid>("UserId")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("TEXT");
 
                     b.Property<Guid>("RoleId")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("TEXT");
 
                     b.HasKey("UserId", "RoleId");
 
@@ -97,10 +97,10 @@ namespace SMIS.Infrastructure.Migrations
                     b.ToTable("AspNetUserRoles", (string)null);
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<int>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<System.Guid>", b =>
                 {
                     b.Property<Guid>("UserId")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("LoginProvider")
                         .HasColumnType("TEXT");
@@ -120,7 +120,7 @@ namespace SMIS.Infrastructure.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
@@ -147,7 +147,7 @@ namespace SMIS.Infrastructure.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("TEXT");
 
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("INTEGER");
@@ -218,7 +218,7 @@ namespace SMIS.Infrastructure.Migrations
                         {
                             Id = new Guid("00000000-0000-0000-0000-000000000001"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "67494a80-0206-4523-9fbc-d03c3ea08e82",
+                            ConcurrencyStamp = "8d7f3e85-a8b2-4e39-ac92-ee5d48bfcdc1",
                             Email = "admin@local",
                             EmailConfirmed = true,
                             FirstName = "System",
@@ -226,7 +226,7 @@ namespace SMIS.Infrastructure.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@LOCAL",
                             NormalizedUserName = "ADMIN",
-                            PasswordHash = "AQAAAAIAAYagAAAAECBj8vyClTvhVD1Ti9oV+NyjSKnSF/jyPUSr4Qob4BPDtMt3xUaq/m+QAZieP/Ravw==",
+                            PasswordHash = "AQAAAAIAAYagAAAAECnqZQtOYWeqUPuISPwIxRGoMEUpxBTU1gucltMCAnlmkEYshiWNhdBF7PSrNxGfTw==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "admin-seed",
                             TwoFactorEnabled = false,
@@ -236,7 +236,7 @@ namespace SMIS.Infrastructure.Migrations
                         {
                             Id = new Guid("00000000-0000-0000-0000-000000000002"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "dd1699ad-c1e9-404e-92f3-1e58ed632afd",
+                            ConcurrencyStamp = "c90775e9-9b50-4ae6-ae0b-be920287927b",
                             Email = "user@local",
                             EmailConfirmed = true,
                             FirstName = "Default",
@@ -244,7 +244,7 @@ namespace SMIS.Infrastructure.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "USER@LOCAL",
                             NormalizedUserName = "USER",
-                            PasswordHash = "AQAAAAIAAYagAAAAENv2srSdsVSmV7PeDPtlGuRKClRTGc6+qH+OWPE2u/OjZH/FEMXloIe/hIB/Iy+bUQ==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEK5qb0fzi5OFFW6ptJ/v3gxiVkPgXxddG4jDLGGP27SyQRHxmVAKTwt+ihA+8SOuLA==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "user-seed",
                             TwoFactorEnabled = false,
@@ -256,7 +256,7 @@ namespace SMIS.Infrastructure.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Code")
                         .HasColumnType("TEXT");
@@ -300,7 +300,7 @@ namespace SMIS.Infrastructure.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("TEXT");
 
                     b.Property<bool>("IsPublic")
                         .HasColumnType("INTEGER");
@@ -324,28 +324,28 @@ namespace SMIS.Infrastructure.Migrations
                             Id = new Guid("00000000-0000-0000-0000-000000000001"),
                             IsPublic = false,
                             Name = "Kabul",
-                            PublicId = "232bc308-2924-4925-bce2-6deaf45d920e"
+                            PublicId = "22a2df77-9d8b-4a88-894f-40b7c59e175d"
                         },
                         new
                         {
                             Id = new Guid("00000000-0000-0000-0000-000000000002"),
                             IsPublic = false,
                             Name = "Herat",
-                            PublicId = "9fea4102-8aab-4b4f-9e2a-9d61c38409a1"
+                            PublicId = "384fc19a-3ff2-402e-b03a-cf6c2b9d06e9"
                         },
                         new
                         {
                             Id = new Guid("00000000-0000-0000-0000-000000000003"),
                             IsPublic = false,
                             Name = "Kandahar",
-                            PublicId = "d7d9b518-1541-45e7-b8e4-e4ff89b8459d"
+                            PublicId = "3bdb3156-b0fd-4473-b280-f66ce5b0f739"
                         },
                         new
                         {
                             Id = new Guid("00000000-0000-0000-0000-000000000004"),
                             IsPublic = false,
                             Name = "Balkh",
-                            PublicId = "7fac881e-0e66-4f14-a050-95ef24a04c36"
+                            PublicId = "71e76d8a-c335-4cea-aac8-3258d498f7cc"
                         });
                 });
 
@@ -353,7 +353,7 @@ namespace SMIS.Infrastructure.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("TEXT");
 
                     b.Property<bool>("IsDefault")
                         .HasColumnType("INTEGER");
@@ -363,16 +363,16 @@ namespace SMIS.Infrastructure.Migrations
                         .HasMaxLength(10)
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("LanguageId")
-                        .HasColumnType("INTEGER");
+                    b.Property<Guid>("LanguageId")
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("ProvinceId")
-                        .HasColumnType("INTEGER");
+                    b.Property<Guid>("ProvinceId")
+                        .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
@@ -386,115 +386,115 @@ namespace SMIS.Infrastructure.Migrations
                     b.HasData(
                         new
                         {
-                            Id = 1,
+                            Id = new Guid("00000000-0000-0000-0000-000000000001"),
                             IsDefault = true,
                             LanguageCode = "en",
-                            LanguageId = 1,
+                            LanguageId = new Guid("00000000-0000-0000-0000-000000000001"),
                             Name = "Kabul",
-                            ProvinceId = 1
+                            ProvinceId = new Guid("00000000-0000-0000-0000-000000000001")
                         },
                         new
                         {
-                            Id = 2,
+                            Id = new Guid("00000000-0000-0000-0000-000000000002"),
                             IsDefault = false,
                             LanguageCode = "ps",
-                            LanguageId = 2,
+                            LanguageId = new Guid("00000000-0000-0000-0000-000000000002"),
                             Name = "کابل",
-                            ProvinceId = 1
+                            ProvinceId = new Guid("00000000-0000-0000-0000-000000000001")
                         },
                         new
                         {
-                            Id = 3,
+                            Id = new Guid("00000000-0000-0000-0000-000000000003"),
                             IsDefault = false,
                             LanguageCode = "fa",
-                            LanguageId = 3,
+                            LanguageId = new Guid("00000000-0000-0000-0000-000000000003"),
                             Name = "کابل",
-                            ProvinceId = 1
+                            ProvinceId = new Guid("00000000-0000-0000-0000-000000000001")
                         },
                         new
                         {
-                            Id = 4,
+                            Id = new Guid("00000000-0000-0000-0000-000000000004"),
                             IsDefault = true,
                             LanguageCode = "en",
-                            LanguageId = 1,
+                            LanguageId = new Guid("00000000-0000-0000-0000-000000000001"),
                             Name = "Herat",
-                            ProvinceId = 2
+                            ProvinceId = new Guid("00000000-0000-0000-0000-000000000002")
                         },
                         new
                         {
-                            Id = 5,
+                            Id = new Guid("00000000-0000-0000-0000-000000000005"),
                             IsDefault = false,
                             LanguageCode = "ps",
-                            LanguageId = 2,
+                            LanguageId = new Guid("00000000-0000-0000-0000-000000000002"),
                             Name = "هرات",
-                            ProvinceId = 2
+                            ProvinceId = new Guid("00000000-0000-0000-0000-000000000002")
                         },
                         new
                         {
-                            Id = 6,
+                            Id = new Guid("00000000-0000-0000-0000-000000000006"),
                             IsDefault = false,
                             LanguageCode = "fa",
-                            LanguageId = 3,
+                            LanguageId = new Guid("00000000-0000-0000-0000-000000000003"),
                             Name = "هرات",
-                            ProvinceId = 2
+                            ProvinceId = new Guid("00000000-0000-0000-0000-000000000002")
                         },
                         new
                         {
-                            Id = 7,
+                            Id = new Guid("00000000-0000-0000-0000-000000000007"),
                             IsDefault = true,
                             LanguageCode = "en",
-                            LanguageId = 1,
+                            LanguageId = new Guid("00000000-0000-0000-0000-000000000001"),
                             Name = "Kandahar",
-                            ProvinceId = 3
+                            ProvinceId = new Guid("00000000-0000-0000-0000-000000000003")
                         },
                         new
                         {
-                            Id = 8,
+                            Id = new Guid("00000000-0000-0000-0000-000000000008"),
                             IsDefault = false,
                             LanguageCode = "ps",
-                            LanguageId = 2,
+                            LanguageId = new Guid("00000000-0000-0000-0000-000000000002"),
                             Name = "کندهار",
-                            ProvinceId = 3
+                            ProvinceId = new Guid("00000000-0000-0000-0000-000000000003")
                         },
                         new
                         {
-                            Id = 9,
+                            Id = new Guid("00000000-0000-0000-0000-000000000009"),
                             IsDefault = false,
                             LanguageCode = "fa",
-                            LanguageId = 3,
+                            LanguageId = new Guid("00000000-0000-0000-0000-000000000003"),
                             Name = "قندهار",
-                            ProvinceId = 3
+                            ProvinceId = new Guid("00000000-0000-0000-0000-000000000003")
                         },
                         new
                         {
-                            Id = 10,
+                            Id = new Guid("00000000-0000-0000-0000-00000000000a"),
                             IsDefault = true,
                             LanguageCode = "en",
-                            LanguageId = 1,
+                            LanguageId = new Guid("00000000-0000-0000-0000-000000000001"),
                             Name = "Balkh",
-                            ProvinceId = 4
+                            ProvinceId = new Guid("00000000-0000-0000-0000-000000000004")
                         },
                         new
                         {
-                            Id = 11,
+                            Id = new Guid("00000000-0000-0000-0000-00000000000b"),
                             IsDefault = false,
                             LanguageCode = "ps",
-                            LanguageId = 2,
+                            LanguageId = new Guid("00000000-0000-0000-0000-000000000002"),
                             Name = "بلخ",
-                            ProvinceId = 4
+                            ProvinceId = new Guid("00000000-0000-0000-0000-000000000004")
                         },
                         new
                         {
-                            Id = 12,
+                            Id = new Guid("00000000-0000-0000-0000-00000000000c"),
                             IsDefault = false,
                             LanguageCode = "fa",
-                            LanguageId = 3,
+                            LanguageId = new Guid("00000000-0000-0000-0000-000000000003"),
                             Name = "بلخ",
-                            ProvinceId = 4
+                            ProvinceId = new Guid("00000000-0000-0000-0000-000000000004")
                         });
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
                 {
                     b.HasOne("SMIS.Domain.Entities.Identity.Entity.ApplicationRole", null)
                         .WithMany()
@@ -503,7 +503,7 @@ namespace SMIS.Infrastructure.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<int>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<System.Guid>", b =>
                 {
                     b.HasOne("SMIS.Domain.Entities.Identity.Entity.ApplicationUser", null)
                         .WithMany()
@@ -512,7 +512,7 @@ namespace SMIS.Infrastructure.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<int>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<System.Guid>", b =>
                 {
                     b.HasOne("SMIS.Domain.Entities.Identity.Entity.ApplicationUser", null)
                         .WithMany()
@@ -521,7 +521,7 @@ namespace SMIS.Infrastructure.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<int>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<System.Guid>", b =>
                 {
                     b.HasOne("SMIS.Domain.Entities.Identity.Entity.ApplicationRole", null)
                         .WithMany()
@@ -536,7 +536,7 @@ namespace SMIS.Infrastructure.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<int>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<System.Guid>", b =>
                 {
                     b.HasOne("SMIS.Domain.Entities.Identity.Entity.ApplicationUser", null)
                         .WithMany()

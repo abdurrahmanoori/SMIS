@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace SMIS.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class InitilaMig : Migration
+    public partial class InitlaMig : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -17,8 +17,7 @@ namespace SMIS.Infrastructure.Migrations
                 name: "AspNetRoles",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
+                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
                     Name = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
                     NormalizedName = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
                     ConcurrencyStamp = table.Column<string>(type: "TEXT", nullable: true)
@@ -32,8 +31,7 @@ namespace SMIS.Infrastructure.Migrations
                 name: "AspNetUsers",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
+                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
                     FirstName = table.Column<string>(type: "TEXT", nullable: true),
                     LastName = table.Column<string>(type: "TEXT", nullable: true),
                     UserName = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
@@ -60,8 +58,7 @@ namespace SMIS.Infrastructure.Migrations
                 name: "Languages",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
+                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
                     Name = table.Column<string>(type: "TEXT", nullable: false),
                     Code = table.Column<string>(type: "TEXT", nullable: true),
                     IsActive = table.Column<bool>(type: "INTEGER", nullable: false)
@@ -75,8 +72,7 @@ namespace SMIS.Infrastructure.Migrations
                 name: "Provinces",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
+                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
                     Name = table.Column<string>(type: "TEXT", maxLength: 200, nullable: false),
                     PublicId = table.Column<string>(type: "TEXT", nullable: false),
                     IsPublic = table.Column<bool>(type: "INTEGER", nullable: false)
@@ -90,9 +86,9 @@ namespace SMIS.Infrastructure.Migrations
                 name: "AspNetRoleClaims",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false)
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    RoleId = table.Column<Guid>(type: "uuid", nullable: false),
+                    RoleId = table.Column<Guid>(type: "TEXT", nullable: false),
                     ClaimType = table.Column<string>(type: "TEXT", nullable: true),
                     ClaimValue = table.Column<string>(type: "TEXT", nullable: true)
                 },
@@ -111,9 +107,9 @@ namespace SMIS.Infrastructure.Migrations
                 name: "AspNetUserClaims",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false)
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    UserId = table.Column<Guid>(type: "uuid", nullable: false),
+                    UserId = table.Column<Guid>(type: "TEXT", nullable: false),
                     ClaimType = table.Column<string>(type: "TEXT", nullable: true),
                     ClaimValue = table.Column<string>(type: "TEXT", nullable: true)
                 },
@@ -135,7 +131,7 @@ namespace SMIS.Infrastructure.Migrations
                     LoginProvider = table.Column<string>(type: "TEXT", nullable: false),
                     ProviderKey = table.Column<string>(type: "TEXT", nullable: false),
                     ProviderDisplayName = table.Column<string>(type: "TEXT", nullable: true),
-                    UserId = table.Column<Guid>(type: "uuid", nullable: false)
+                    UserId = table.Column<Guid>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -152,8 +148,8 @@ namespace SMIS.Infrastructure.Migrations
                 name: "AspNetUserRoles",
                 columns: table => new
                 {
-                    UserId = table.Column<Guid>(type: "uuid", nullable: false),
-                    RoleId = table.Column<Guid>(type: "uuid", nullable: false)
+                    UserId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    RoleId = table.Column<Guid>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -176,7 +172,7 @@ namespace SMIS.Infrastructure.Migrations
                 name: "AspNetUserTokens",
                 columns: table => new
                 {
-                    UserId = table.Column<Guid>(type: "uuid", nullable: false),
+                    UserId = table.Column<Guid>(type: "TEXT", nullable: false),
                     LoginProvider = table.Column<string>(type: "TEXT", nullable: false),
                     Name = table.Column<string>(type: "TEXT", nullable: false),
                     Value = table.Column<string>(type: "TEXT", nullable: true)
@@ -196,12 +192,11 @@ namespace SMIS.Infrastructure.Migrations
                 name: "ProvinceTranslations",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    ProvinceId = table.Column<Guid>(type: "uuid", nullable: false),
+                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
+                    ProvinceId = table.Column<Guid>(type: "TEXT", nullable: false),
                     Name = table.Column<string>(type: "TEXT", maxLength: 200, nullable: false),
                     LanguageCode = table.Column<string>(type: "TEXT", maxLength: 10, nullable: false),
-                    LanguageId = table.Column<Guid>(type: "uuid", nullable: false),
+                    LanguageId = table.Column<Guid>(type: "TEXT", nullable: false),
                     IsDefault = table.Column<bool>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
@@ -226,8 +221,8 @@ namespace SMIS.Infrastructure.Migrations
                 columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "FirstName", "LastName", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
                 values: new object[,]
                 {
-                    { new Guid("00000000-0000-0000-0000-000000000001"), 0, "67494a80-0206-4523-9fbc-d03c3ea08e82", "admin@local", true, "System", "Admin", false, null, "ADMIN@LOCAL", "ADMIN", "AQAAAAIAAYagAAAAECBj8vyClTvhVD1Ti9oV+NyjSKnSF/jyPUSr4Qob4BPDtMt3xUaq/m+QAZieP/Ravw==", null, false, "admin-seed", false, "admin" },
-                    { new Guid("00000000-0000-0000-0000-000000000002"), 0, "dd1699ad-c1e9-404e-92f3-1e58ed632afd", "user@local", true, "Default", "User", false, null, "USER@LOCAL", "USER", "AQAAAAIAAYagAAAAENv2srSdsVSmV7PeDPtlGuRKClRTGc6+qH+OWPE2u/OjZH/FEMXloIe/hIB/Iy+bUQ==", null, false, "user-seed", false, "user" }
+                    { new Guid("00000000-0000-0000-0000-000000000001"), 0, "8d7f3e85-a8b2-4e39-ac92-ee5d48bfcdc1", "admin@local", true, "System", "Admin", false, null, "ADMIN@LOCAL", "ADMIN", "AQAAAAIAAYagAAAAECnqZQtOYWeqUPuISPwIxRGoMEUpxBTU1gucltMCAnlmkEYshiWNhdBF7PSrNxGfTw==", null, false, "admin-seed", false, "admin" },
+                    { new Guid("00000000-0000-0000-0000-000000000002"), 0, "c90775e9-9b50-4ae6-ae0b-be920287927b", "user@local", true, "Default", "User", false, null, "USER@LOCAL", "USER", "AQAAAAIAAYagAAAAEK5qb0fzi5OFFW6ptJ/v3gxiVkPgXxddG4jDLGGP27SyQRHxmVAKTwt+ihA+8SOuLA==", null, false, "user-seed", false, "user" }
                 });
 
             migrationBuilder.InsertData(
@@ -245,10 +240,10 @@ namespace SMIS.Infrastructure.Migrations
                 columns: new[] { "Id", "IsPublic", "Name", "PublicId" },
                 values: new object[,]
                 {
-                    { new Guid("00000000-0000-0000-0000-000000000001"), false, "Kabul", "232bc308-2924-4925-bce2-6deaf45d920e" },
-                    { new Guid("00000000-0000-0000-0000-000000000002"), false, "Herat", "9fea4102-8aab-4b4f-9e2a-9d61c38409a1" },
-                    { new Guid("00000000-0000-0000-0000-000000000003"), false, "Kandahar", "d7d9b518-1541-45e7-b8e4-e4ff89b8459d" },
-                    { new Guid("00000000-0000-0000-0000-000000000004"), false, "Balkh", "7fac881e-0e66-4f14-a050-95ef24a04c36" }
+                    { new Guid("00000000-0000-0000-0000-000000000001"), false, "Kabul", "22a2df77-9d8b-4a88-894f-40b7c59e175d" },
+                    { new Guid("00000000-0000-0000-0000-000000000002"), false, "Herat", "384fc19a-3ff2-402e-b03a-cf6c2b9d06e9" },
+                    { new Guid("00000000-0000-0000-0000-000000000003"), false, "Kandahar", "3bdb3156-b0fd-4473-b280-f66ce5b0f739" },
+                    { new Guid("00000000-0000-0000-0000-000000000004"), false, "Balkh", "71e76d8a-c335-4cea-aac8-3258d498f7cc" }
                 });
 
             migrationBuilder.InsertData(
@@ -265,9 +260,9 @@ namespace SMIS.Infrastructure.Migrations
                     { new Guid("00000000-0000-0000-0000-000000000007"), true, "en", new Guid("00000000-0000-0000-0000-000000000001"), "Kandahar", new Guid("00000000-0000-0000-0000-000000000003") },
                     { new Guid("00000000-0000-0000-0000-000000000008"), false, "ps", new Guid("00000000-0000-0000-0000-000000000002"), "کندهار", new Guid("00000000-0000-0000-0000-000000000003") },
                     { new Guid("00000000-0000-0000-0000-000000000009"), false, "fa", new Guid("00000000-0000-0000-0000-000000000003"), "قندهار", new Guid("00000000-0000-0000-0000-000000000003") },
-                    { new Guid("00000000-0000-0000-0000-00000000000A"), true, "en", new Guid("00000000-0000-0000-0000-000000000001"), "Balkh", new Guid("00000000-0000-0000-0000-000000000004") },
-                    { new Guid("00000000-0000-0000-0000-00000000000B"), false, "ps", new Guid("00000000-0000-0000-0000-000000000002"), "بلخ", new Guid("00000000-0000-0000-0000-000000000004") },
-                    { new Guid("00000000-0000-0000-0000-00000000000C"), false, "fa", new Guid("00000000-0000-0000-0000-000000000003"), "بلخ", new Guid("00000000-0000-0000-0000-000000000004") }
+                    { new Guid("00000000-0000-0000-0000-00000000000a"), true, "en", new Guid("00000000-0000-0000-0000-000000000001"), "Balkh", new Guid("00000000-0000-0000-0000-000000000004") },
+                    { new Guid("00000000-0000-0000-0000-00000000000b"), false, "ps", new Guid("00000000-0000-0000-0000-000000000002"), "بلخ", new Guid("00000000-0000-0000-0000-000000000004") },
+                    { new Guid("00000000-0000-0000-0000-00000000000c"), false, "fa", new Guid("00000000-0000-0000-0000-000000000003"), "بلخ", new Guid("00000000-0000-0000-0000-000000000004") }
                 });
 
             migrationBuilder.CreateIndex(
