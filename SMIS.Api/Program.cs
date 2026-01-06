@@ -1,5 +1,5 @@
 using FluentValidation.AspNetCore;
-using SMIS.Extensions;
+using SMIS.Api.Extensions;
 using SMIS.Infrastructure.Extensions;
 using SMIS.Application.Extensions;
 using SMIS.Infrastructure.Context;
@@ -59,4 +59,7 @@ app.MapControllers();
 
 app.Run();
 
-public partial class Program { }
+namespace SMIS.Api
+{
+    public partial class Program { }
+}

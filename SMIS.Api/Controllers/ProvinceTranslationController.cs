@@ -4,9 +4,9 @@ using SMIS.Application.Common;
 using SMIS.Application.DTO.Provinces;
 using SMIS.Application.Features.Provinces.Commands;
 using SMIS.Application.Features.Provinces.Queries;
-using SMIS.Controllers.Base;
+using SMIS.Api.Controllers.Base;
 
-namespace SMIS.Controllers
+namespace SMIS.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]

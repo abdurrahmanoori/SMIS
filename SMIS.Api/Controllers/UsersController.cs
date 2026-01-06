@@ -5,9 +5,9 @@ using SMIS.Application.Common.Response;
 using SMIS.Application.Features.Identity.Users.Commands;
 using SMIS.Application.Features.Identity.Users.Queries;
 using SMIS.Application.Identity.Models;
-using SMIS.Controllers.Base;
+using SMIS.Api.Controllers.Base;
 
-namespace SMIS.Controllers
+namespace SMIS.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]

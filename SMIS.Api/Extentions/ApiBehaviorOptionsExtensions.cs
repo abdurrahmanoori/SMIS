@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace SMIS.Extensions
+namespace SMIS.Api.Extensions
 {
 
     public static class ApiBehaviorOptionsExtensions

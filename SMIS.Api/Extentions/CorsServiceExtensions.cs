@@ -1,4 +1,4 @@
-﻿namespace SMIS.Extensions
+﻿namespace SMIS.Api.Extensions
 {
     public static class CorsServiceExtensions
     {

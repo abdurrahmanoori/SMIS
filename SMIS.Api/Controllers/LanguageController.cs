@@ -4,9 +4,9 @@ using SMIS.Application.DTO.Common;
 using SMIS.Application.DTO.Localization;
 using SMIS.Application.Features.Localization.Commands;
 using SMIS.Application.Features.Localization.Queries;
-using SMIS.Controllers.Base;
+using SMIS.Api.Controllers.Base;
 
-namespace SMIS.Controllers
+namespace SMIS.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]

@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using SMIS.Application.DTO.Common.Response;
 
-namespace SMIS.Controllers.Base
+namespace SMIS.Api.Controllers.Base
 {
     //[Route("api/[controller]")]
     [ApiController]
