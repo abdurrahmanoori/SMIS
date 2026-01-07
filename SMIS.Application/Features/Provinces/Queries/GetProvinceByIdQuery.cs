@@ -1,7 +1,7 @@
-using AutoMapper;
 using MediatR;
 using SMIS.Application.DTO.Common.Response;
 using SMIS.Application.DTO.Provinces;
+using SMIS.Application.Identity.IServices;
 using SMIS.Application.Repositories.Provinces;
 
 namespace SMIS.Application.Features.Provinces.Queries
@@ -11,12 +11,12 @@ namespace SMIS.Application.Features.Provinces.Queries
     internal sealed class GetProvinceByIdQueryHandler : IRequestHandler<GetProvinceByIdQuery, Result<ProvinceDto>>
     {
         private readonly IProvinceRepository _provinceRepository;
-        private readonly IMapper _mapper;
+        private readonly ICurrentUser _currentUser;
 
-        public GetProvinceByIdQueryHandler(IProvinceRepository provinceRepository, IMapper mapper)
+        public GetProvinceByIdQueryHandler(IProvinceRepository provinceRepository, ICurrentUser currentUser)
         {
             _provinceRepository = provinceRepository;
-            _mapper = mapper;
+            _currentUser = currentUser;
         }
 
         public async Task<Result<ProvinceDto>> Handle(GetProvinceByIdQuery request, CancellationToken cancellationToken)
@@ -27,7 +27,16 @@ namespace SMIS.Application.Features.Provinces.Queries
                 return Result<ProvinceDto>.NotFoundResult(request.Id);
             }
 
-            var dto = _mapper.Map<ProvinceDto>(entity);
+            var userLangId = _currentUser.GetLangId();
+            var translation = entity.Translations.FirstOrDefault(t => t.LanguageId == userLangId) ??
+                             entity.Translations.FirstOrDefault(t => t.IsDefault);
+
+            var dto = new ProvinceDto
+            {
+                Id = entity.Id,
+                Name = translation?.Name ?? string.Empty
+            };
+
             return Result<ProvinceDto>.SuccessResult(dto);
         }
     }
