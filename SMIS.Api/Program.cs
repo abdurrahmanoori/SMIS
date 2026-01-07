@@ -48,6 +48,7 @@ app.UseSwaggerWithUI(app.Environment);
 
 // MiniProfiler middleware
 app.UseMiniProfiler();
+
 app.UseCors("AllowReactApp");
 
 app.UseHttpsRedirection();

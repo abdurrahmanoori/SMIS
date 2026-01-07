@@ -8,7 +8,7 @@
             {
                 options.AddPolicy("AllowReactApp", policy =>
                 {
-                    policy.WithOrigins("http://localhost:3011")
+                    policy.SetIsOriginAllowed(origin => new Uri(origin).Host == "localhost")
                           .AllowAnyMethod()
                           .AllowAnyHeader()
                           .AllowCredentials();

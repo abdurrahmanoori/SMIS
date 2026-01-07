@@ -23,8 +23,10 @@ namespace SMIS.Api.Controllers
             HandleResultResponse(await _mediator.Send(new CreateProvinceCommand(dto)));
 
         [HttpGet]
-        public async Task<ActionResult<PagedList<ProvinceDto>>> GetAll([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 25) =>
-            HandleResultResponse(await _mediator.Send(new GetProvinceListQuery(pageNumber, pageSize)));
+        public async Task<ActionResult<PagedList<ProvinceDto>>> GetAll([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 25)
+        {
+            return HandleResultResponse(await _mediator.Send(new GetProvinceListQuery(pageNumber, pageSize)));
+        }
 
         [HttpGet("{id}")]
         public async Task<ActionResult<ProvinceDto>> GetById(int id) =>
