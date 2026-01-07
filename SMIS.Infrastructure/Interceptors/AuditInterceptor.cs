@@ -28,13 +28,13 @@ namespace SMIS.Infrastructure.Interceptors
                 if (entry.State == EntityState.Added)
                 {
                     entry.Entity.CreatedDate = DateTime.UtcNow;
-                    entry.Entity.CreatedBy = _currentUser.GetUserId();
+                    entry.Entity.CreatedBy = _currentUser.GetId();
                 }
 
                 if (entry.State == EntityState.Modified)
                 {
                     entry.Entity.UpdatedDate = DateTime.UtcNow;
-                    entry.Entity.UpdatedBy = _currentUser.GetUserId();
+                    entry.Entity.UpdatedBy = _currentUser.GetId();
                     entry.Property(e => e.CreatedDate).IsModified = false; // Ensure CreatedDate is not updated
                 }
                 if (entry.State == EntityState.Deleted)
@@ -42,7 +42,7 @@ namespace SMIS.Infrastructure.Interceptors
                     //entry.State = EntityState.Modified; // Soft-delete the entity
                     //entry.Entity.IsDeleted = true;
                     //entry.Entity.DeletedAt = DateTime.UtcNow;
-                    //entry.Entity.DeletedBy = _currentUser.GetUserId();
+                    //entry.Entity.DeletedBy = _currentUser.GetId();
                 }
             }
             //foreach (var entry in context.ChangeTracker.Entries<AuditableEntity>())
@@ -50,13 +50,13 @@ namespace SMIS.Infrastructure.Interceptors
             //    if (entry.State == EntityState.Added)
             //    {
             //        entry.Entity.CreatedAt = DateTime.UtcNow;
-            //        entry.Entity.CreatedBy = _currentUser.GetUserId();
+            //        entry.Entity.CreatedBy = _currentUser.GetId();
             //    }
 
             //    if (entry.State == EntityState.Modified)
             //    {
             //        entry.Entity.UpdatedAt = DateTime.UtcNow;
-            //        entry.Entity.UpdatedBy = _currentUser.GetUserId();
+            //        entry.Entity.UpdatedBy = _currentUser.GetId();
             //        entry.Property(e => e.CreatedAt).IsModified = false; // Ensure CreatedDate is not updated
             //    }
             //    if (entry.State == EntityState.Deleted)
@@ -64,7 +64,7 @@ namespace SMIS.Infrastructure.Interceptors
             //        entry.State = EntityState.Modified; // Soft-delete the entity
             //        entry.Entity.IsDeleted = true;
             //        entry.Entity.DeletedAt = DateTime.UtcNow;
-            //        entry.Entity.DeletedBy = _currentUser.GetUserId();
+            //        entry.Entity.DeletedBy = _currentUser.GetId();
             //    }
             //}
 

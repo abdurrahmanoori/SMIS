@@ -3,6 +3,8 @@ namespace SMIS.Application.Identity.IServices
 {
     public interface ICurrentUser
     {
-        int GetUserId();
+        int GetId();
+        Guid GetGuid();
+        int GetLangId( );
     }
 }

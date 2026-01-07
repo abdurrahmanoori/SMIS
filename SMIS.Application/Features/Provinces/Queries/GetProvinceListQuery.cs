@@ -3,6 +3,7 @@ using MediatR;
 using SMIS.Application.DTO.Common;
 using SMIS.Application.DTO.Common.Response;
 using SMIS.Application.DTO.Provinces;
+using SMIS.Application.Identity.IServices;
 using SMIS.Application.Repositories.Provinces;
 
 namespace SMIS.Application.Features.Provinces.Queries
@@ -13,17 +14,18 @@ namespace SMIS.Application.Features.Provinces.Queries
     {
         private readonly IProvinceRepository _provinceRepository;
         private readonly IMapper _mapper;
+        private readonly ICurrentUser _currentUser;
 
-        public GetProvinceListQueryHandler(IProvinceRepository provinceRepository, IMapper mapper)
+        public GetProvinceListQueryHandler(IProvinceRepository provinceRepository, IMapper mapper, ICurrentUser currentUser)
         {
             _provinceRepository = provinceRepository;
             _mapper = mapper;
+            _currentUser = currentUser;
         }
 
         public async Task<Result<PagedList<ProvinceDto>>> Handle(GetProvinceListQuery request, CancellationToken cancellationToken)
         {
             var query = _provinceRepository.GetAllQueryable(includeProperties: nameof(Domain.Entities.Province.Translations));
-
             // Page domain entities first
             var pagedEntities = await query.ToPagedList(request.PageNumber, request.PageSize);
             if (pagedEntities.Items.Count == 0)

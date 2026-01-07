@@ -1,9 +1,8 @@
 ﻿using SMIS.Application.Identity.IServices;
 
-
 namespace SMIS.Identity.Services
 {
-    public  class CurrentUser: ICurrentUser
+    public class CurrentUser : ICurrentUser
     {
         //private readonly IHttpContextAccessor _httpContextAccessor;
 
@@ -12,8 +11,12 @@ namespace SMIS.Identity.Services
             //_httpContextAccessor = httpContextAccessor;
         }
 
-        
-        public int GetUserId()
+        public Guid GetGuid( )
+        {
+            return Guid.Empty;
+        }
+
+        public int GetId( )
         {
             //var user = _httpContextAccessor.HttpContext?.User;
             //if (user?.Identity?.IsAuthenticated ?? false)
@@ -34,6 +37,11 @@ namespace SMIS.Identity.Services
             //    return Task.FromResult(currentUserId);
             //}
             //return null!; // Or handle appropriately when user ID is missing
+        }
+
+        public int GetLangId( )
+        {
+            return (1);
         }
     }
 }
