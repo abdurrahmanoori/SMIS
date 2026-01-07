@@ -1,4 +1,3 @@
-using AutoMapper;
 using MediatR;
 using SMIS.Application.DTO.Common;
 using SMIS.Application.DTO.Common.Response;
@@ -13,28 +12,36 @@ namespace SMIS.Application.Features.Provinces.Queries
     internal sealed class GetProvinceListQueryHandler : IRequestHandler<GetProvinceListQuery, Result<PagedList<ProvinceDto>>>
     {
         private readonly IProvinceRepository _provinceRepository;
-        private readonly IMapper _mapper;
         private readonly ICurrentUser _currentUser;
 
-        public GetProvinceListQueryHandler(IProvinceRepository provinceRepository, IMapper mapper, ICurrentUser currentUser)
+        public GetProvinceListQueryHandler(IProvinceRepository provinceRepository, ICurrentUser currentUser)
         {
             _provinceRepository = provinceRepository;
-            _mapper = mapper;
             _currentUser = currentUser;
         }
 
         public async Task<Result<PagedList<ProvinceDto>>> Handle(GetProvinceListQuery request, CancellationToken cancellationToken)
         {
-            var query = _provinceRepository.GetAllQueryable(includeProperties: nameof(Domain.Entities.Province.Translations));
-            // Page domain entities first
+            var userLangId = _currentUser.GetLangId();
+            var query = _provinceRepository.GetAllQueryable(includeProperties: nameof(Domain.Entities.Province.Translations))
+                .Select(p => new
+                {
+                    Province = p,
+                    Translation = p.Translations.FirstOrDefault(t => t.LanguageId == userLangId) ??
+                                 p.Translations.FirstOrDefault(t => t.IsDefault)
+                });
+
             var pagedEntities = await query.ToPagedList(request.PageNumber, request.PageSize);
             if (pagedEntities.Items.Count == 0)
             {
                 return Result<PagedList<ProvinceDto>>.EmptyResult(nameof(ProvinceDto));
             }
 
-            // Map paged items to DTOs with culture-aware name resolution
-            var dtoItems = _mapper.Map<List<ProvinceDto>>(pagedEntities.Items);
+            var dtoItems = pagedEntities.Items.Select(item => new ProvinceDto
+            {
+                Id = item.Province.Id,
+                Name = item.Translation?.Name ?? string.Empty
+            }).ToList();
 
             var pagedDto = new PagedList<ProvinceDto>
             {
