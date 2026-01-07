@@ -9,7 +9,7 @@ using SMIS.Domain.Entities;
 
 namespace SMIS.Application.Features.Provinces.Commands
 {
-    public record UpdateProvinceCommand(Guid Id, ProvinceCreateDto ProvinceDto) : IRequest<Result<ProvinceDto>>;
+    public record UpdateProvinceCommand(int Id, ProvinceCreateDto ProvinceDto) : IRequest<Result<ProvinceDto>>;
 
     internal sealed class UpdateProvinceCommandHandler : IRequestHandler<UpdateProvinceCommand, Result<ProvinceDto>>
     {
@@ -69,7 +69,7 @@ namespace SMIS.Application.Features.Provinces.Commands
                 {
                     existing.Translations = new List<ProvinceTranslation>
                     {
-                        new ProvinceTranslation { LanguageCode = "en", LanguageId = Guid.NewGuid(), IsDefault = true, Name = request.ProvinceDto.Name }
+                        new ProvinceTranslation { LanguageCode = "en", LanguageId = 1, IsDefault = true, Name = request.ProvinceDto.Name }
                     };
                 }
                 else

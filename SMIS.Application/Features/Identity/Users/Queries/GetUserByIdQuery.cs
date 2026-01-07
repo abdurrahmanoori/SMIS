@@ -5,7 +5,7 @@ using SMIS.Application.Identity.Models;
 
 namespace SMIS.Application.Features.Identity.Users.Queries
 {
-    public record GetUserByIdQuery(Guid UserId) : IRequest<Result<UserDto>>;
+    public record GetUserByIdQuery(int UserId) : IRequest<Result<UserDto>>;
 
     public class GetUserByIdQueryHandler : IRequestHandler<GetUserByIdQuery, Result<UserDto>>
     {

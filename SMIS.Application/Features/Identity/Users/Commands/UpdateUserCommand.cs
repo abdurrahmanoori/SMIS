@@ -5,7 +5,7 @@ using SMIS.Application.Identity.Models;
 
 namespace SMIS.Application.Features.Identity.Users.Commands
 {
-    public record UpdateUserCommand(Guid UserId, UserUpdateDto Dto) : IRequest<Result<UserDto>>;
+    public record UpdateUserCommand(int UserId, UserUpdateDto Dto) : IRequest<Result<UserDto>>;
 
     public class UpdateUserCommandHandler : IRequestHandler<UpdateUserCommand, Result<UserDto>>
     {

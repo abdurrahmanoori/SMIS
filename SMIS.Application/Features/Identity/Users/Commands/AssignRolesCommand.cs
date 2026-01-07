@@ -4,7 +4,7 @@ using SMIS.Application.Identity.IServices;
 
 namespace SMIS.Application.Features.Identity.Users.Commands
 {
-    public record AssignRolesCommand(Guid UserId, IEnumerable<string> Roles) : IRequest<Result<Unit>>;
+    public record AssignRolesCommand(int UserId, IEnumerable<string> Roles) : IRequest<Result<Unit>>;
 
     public class AssignRolesCommandHandler : IRequestHandler<AssignRolesCommand, Result<Unit>>
     {

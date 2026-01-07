@@ -4,7 +4,7 @@ using SMIS.Application.Identity.IServices;
 
 namespace SMIS.Application.Features.Identity.Users.Commands
 {
-    public record DeleteUserCommand(Guid UserId) : IRequest<Result<Unit>>;
+    public record DeleteUserCommand(int UserId) : IRequest<Result<Unit>>;
 
     public class DeleteUserCommandHandler : IRequestHandler<DeleteUserCommand, Result<Unit>>
     {

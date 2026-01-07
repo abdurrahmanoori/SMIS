@@ -5,7 +5,7 @@ using SMIS.Application.Repositories.Localization;
 
 namespace SMIS.Application.Features.Localization.Commands
 {
-    public record DeleteLanguageCommand(Guid Id) : IRequest<Result<Unit>> { }
+    public record DeleteLanguageCommand(int Id) : IRequest<Result<Unit>> { }
 
     internal sealed class DeleteLanguageCommandHandler : IRequestHandler<DeleteLanguageCommand, Result<Unit>>
     {

@@ -8,7 +8,7 @@ using System.Linq;
 
 namespace SMIS.Application.Features.Provinces.Queries
 {
-    public record GetProvinceTranslationListQuery(Guid ProvinceId) : IRequest<Result<List<ProvinceTranslationDto>>>;
+    public record GetProvinceTranslationListQuery(int ProvinceId) : IRequest<Result<List<ProvinceTranslationDto>>>;
 
     internal sealed class GetProvinceTranslationListQueryHandler : IRequestHandler<GetProvinceTranslationListQuery, Result<List<ProvinceTranslationDto>>>
     {

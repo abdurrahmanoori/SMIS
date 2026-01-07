@@ -6,7 +6,7 @@ using SMIS.Application.DTO.Common.Response;
 
 namespace SMIS.Application.Features.Provinces.Commands
 {
-    public record DeleteProvinceTranslationCommand(Guid Id) : IRequest<Result<Unit>>;
+    public record DeleteProvinceTranslationCommand(int Id) : IRequest<Result<Unit>>;
 
     internal sealed class DeleteProvinceTranslationCommandHandler : IRequestHandler<DeleteProvinceTranslationCommand, Result<Unit>>
     {

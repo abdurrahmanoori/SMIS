@@ -15,19 +15,19 @@ namespace SMIS.Api.Controllers
     {
         [HttpPost]
         [AllowAnonymous]
-        public async Task<ActionResult<Guid>> Create(UserCreateDto dto)
+        public async Task<ActionResult<int>> Create(UserCreateDto dto)
         {
-            return HandleResultResponse<Guid>(await Mediator.Send(new CreateUserCommand(dto)));
+            return HandleResultResponse<int>(await Mediator.Send(new CreateUserCommand(dto)));
         }
 
         [HttpPut("{id}")]
-        public async Task<ActionResult<UserDto>> Update(Guid id, UserUpdateDto dto)
+        public async Task<ActionResult<UserDto>> Update(int id, UserUpdateDto dto)
         {
             return HandleResultResponse<UserDto>(await Mediator.Send(new UpdateUserCommand(id, dto)));
         }
 
         [HttpDelete("{id}")]
-        public async Task<ActionResult<Unit>> Delete(Guid id)
+        public async Task<ActionResult<Unit>> Delete(int id)
         {
             return HandleResultResponse<Unit>(await Mediator.Send(new DeleteUserCommand(id)));
         }
@@ -39,19 +39,19 @@ namespace SMIS.Api.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<UserDto>> GetById(Guid id)
+        public async Task<ActionResult<UserDto>> GetById(int id)
         {
             return HandleResultResponse<UserDto>(await Mediator.Send(new GetUserByIdQuery(id)));
         }
 
         [HttpPost("{id}/change-password")]
-        public async Task<ActionResult<Unit>> ChangePassword(Guid id, ChangePasswordDto dto)
+        public async Task<ActionResult<Unit>> ChangePassword(int id, ChangePasswordDto dto)
         {
             return HandleResultResponse<Unit>(await Mediator.Send(new ChangePasswordCommand(id, dto)));
         }
 
         [HttpPost("{id}/roles")]
-        public async Task<ActionResult<Unit>> AssignRoles(Guid id, [FromBody] IEnumerable<string> roles)
+        public async Task<ActionResult<Unit>> AssignRoles(int id, [FromBody] IEnumerable<string> roles)
         {
             return HandleResultResponse<Unit>(await Mediator.Send(new AssignRolesCommand(id, roles)));
         }

@@ -32,10 +32,10 @@ namespace SMIS.Application.Features.Provinces.Commands
             var entity = _mapper.Map<ProvinceTranslation>(request.Dto);
 
             // Resolve LanguageId if not provided but LanguageCode exists
-            if (request.Dto.LanguageId == Guid.Empty && !string.IsNullOrWhiteSpace(request.Dto.LanguageCode))
+            if (request.Dto.LanguageId == 0 && !string.IsNullOrWhiteSpace(request.Dto.LanguageCode))
             {
                 var lang = await _languageRepo.GetFirstOrDefaultAsync(x => x.Code == request.Dto.LanguageCode);
-                if (lang != null)
+                if (lang != null) 
                 {
                     entity.LanguageId = lang.Id;
                 }
@@ -44,7 +44,7 @@ namespace SMIS.Application.Features.Provinces.Commands
                     return Result<ProvinceTranslationDto>.FailureResult($"Language with code '{request.Dto.LanguageCode}' not found");
                 }
             }
-            else if (request.Dto.LanguageId != Guid.Empty)
+            else if (request.Dto.LanguageId > 0)
             {
                 // Validate that the LanguageId exists
                 var lang = await _languageRepo.GetByIdAsync(request.Dto.LanguageId);

@@ -4,9 +4,9 @@ namespace SMIS.Domain.Common.BaseAbstract
 {
     public abstract class BaseAuditableEntity : BaseEntity, IAuditableEntity
     {
-        public Guid? CreatedBy { get; set; }
+        public int? CreatedBy { get; set; }
         public DateTime? CreatedDate { get; set; } = DateTime.Now;
-        public Guid? UpdatedBy { get; set; }
+        public int? UpdatedBy { get; set; }
         public DateTime? UpdatedDate { get; set; } = DateTime.Now;
 
         //public virtual void Validate()

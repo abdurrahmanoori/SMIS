@@ -6,7 +6,7 @@ using SMIS.Application.Repositories.Localization;
 
 namespace SMIS.Application.Features.Localization.Queries
 {
-    public record GetLanguageByIdQuery(Guid Id) : IRequest<Result<LanguageDto>>;
+    public record GetLanguageByIdQuery(int Id) : IRequest<Result<LanguageDto>>;
 
     internal sealed class GetLanguageByIdQueryHandler : IRequestHandler<GetLanguageByIdQuery, Result<LanguageDto>>
     {

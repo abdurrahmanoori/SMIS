@@ -6,7 +6,7 @@ namespace SMIS.Domain.Common.BaseAbstract
     public abstract class BaseEntity : IEntity
     {
         [Key]
-        public Guid Id { get; set; } = Guid.NewGuid();
+        public int Id { get; set; }
 
         public string Name { get; set; }
         [Required]
