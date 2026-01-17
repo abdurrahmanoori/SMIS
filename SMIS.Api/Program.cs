@@ -30,7 +30,7 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.ConfigurePersistenceServices(builder.Configuration);
 builder.Services.ConfigureApplicationServices();
 builder.Services.ConfigureIdentityServices<AppDbContext>(builder.Configuration);
-
+var enf = builder.Environment.EnvironmentName;
 // Add database logging
 builder.Services.AddDatabaseLogging();
 

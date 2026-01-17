@@ -29,7 +29,7 @@ namespace SMIS.Infrastructure.Extensions
     {
         public static IServiceCollection ConfigurePersistenceServices(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddApplicationDbContext();
+            services.AddApplicationDbContext(configuration);
             services.AddScoped<AuditInterceptor>();
 
             // Automatically register repositories with Scrutor (no magic strings)
