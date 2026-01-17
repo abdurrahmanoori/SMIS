@@ -1,9 +1,9 @@
 using Serilog.Events;
 using Serilog.Sinks.PeriodicBatching;
-using SMIS.Application.Repositories.Logs;
 using SMIS.Domain.Entities;
 using System.Text.Json;
 using Microsoft.Extensions.DependencyInjection;
+using SMIS.Infrastructure.Repositories;
 
 namespace SMIS.Infrastructure.Logging
 {
@@ -19,7 +19,7 @@ namespace SMIS.Infrastructure.Logging
         public async Task EmitBatchAsync(IEnumerable<LogEvent> batch)
         {
             using var scope = _serviceProvider.CreateScope();
-            var logRepository = scope.ServiceProvider.GetRequiredService<ILogRepository>();
+            var logRepository = scope.ServiceProvider.GetRequiredService<LogRepository>();
 
             var logs = batch.Select(MapLogEvent).ToList();
             await logRepository.SaveLogsAsync(logs);
