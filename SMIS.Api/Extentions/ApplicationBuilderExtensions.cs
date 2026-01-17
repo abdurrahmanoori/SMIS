@@ -11,8 +11,11 @@
             }
             else
             {
+                app.UseSwagger();
+                app.UseSwaggerUI();
+
                 // Uncomment if you have custom exception handling
-                // app.UseMiddleware<ExceptionMiddleware>();
+                //app.UseMiddleware<ExceptionMiddleware>();
             }
 
             return app;

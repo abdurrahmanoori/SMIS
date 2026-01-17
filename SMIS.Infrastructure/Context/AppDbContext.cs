@@ -35,5 +35,6 @@ namespace SMIS.Infrastructure.Context
         public DbSet<Province> Provinces { get; set; }
         public DbSet<ProvinceTranslation> ProvinceTranslations { get; set; }
         public DbSet<Language> Languages { get; set; }
+        public DbSet<AppLog> AppLogs { get; set; }
     }
 }

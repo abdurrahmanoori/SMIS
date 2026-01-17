@@ -18,6 +18,12 @@ namespace SMIS.Api.Controllers
             _mediator = mediator;
         }
 
+        [HttpGet("test")]
+        public IActionResult Get() 
+            {
+            throw new Exception("test data from provice controller.");
+
+            }
         [HttpPost]
         public async Task<ActionResult<ProvinceCreateDto>> Create(ProvinceCreateDto dto) =>
             HandleResultResponse(await _mediator.Send(new CreateProvinceCommand(dto)));

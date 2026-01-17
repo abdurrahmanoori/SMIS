@@ -8,16 +8,11 @@ using SMIS.Identity.Extensions;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
 builder.AddSerilogService();
 
 // Add services to the container.
 builder.Services.AddControllers()
     .AddControllersAsServices();
-
-
-//builder.Services.AddCustomModelStateValidation();
-
 
 builder.Services.AddFluentValidationAutoValidation();
 builder.Services.AddEndpointsApiExplorer();
@@ -28,34 +23,31 @@ builder.Services.AddHttpClient("ApiClient", client =>
 });
 
 builder.Services.AddReactAppCors();
-
 builder.Services.AddSwaggerGen();
 builder.Services.AddHttpContextAccessor();
+
+// Configure services
 builder.Services.ConfigurePersistenceServices(builder.Configuration);
 builder.Services.ConfigureApplicationServices();
 builder.Services.ConfigureIdentityServices<AppDbContext>(builder.Configuration);
 
+// Add database logging
+builder.Services.AddDatabaseLogging();
+
 // MiniProfiler registration
 builder.Services.AddMiniProfilerServices();
 
-
-
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-
 var app = builder.Build();
 
+// Configure middleware pipeline
+app.UseExceptionLogging();
+
 app.UseSwaggerWithUI(app.Environment);
-
-// MiniProfiler middleware
 app.UseMiniProfiler();
-
 app.UseCors("AllowReactApp");
-
 app.UseHttpsRedirection();
-
 app.UseAuthentication();
 app.UseAuthorization();
-
 app.MapControllers();
 
 app.Run();

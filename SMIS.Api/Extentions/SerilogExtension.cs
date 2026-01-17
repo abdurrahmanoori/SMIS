@@ -1,9 +1,11 @@
 ﻿using Serilog;
+using Serilog.Core;
 using Serilog.Events;
+using Serilog.Sinks.PeriodicBatching;
+using SMIS.Infrastructure.Logging;
 
 namespace SMIS.Api.Extensions
 {
-
     public static class SerilogExtension
     {
         public static WebApplicationBuilder AddSerilogService(this WebApplicationBuilder builder)
@@ -19,12 +21,24 @@ namespace SMIS.Api.Extensions
                 .MinimumLevel.Override("Microsoft.EntityFrameworkCore.Model.Validation", LogEventLevel.Error)
                 .Enrich.FromLogContext()
                 .WriteTo.Console()
-                // .WriteTo.Console(outputTemplate: "[{Timestamp:HH:mm:ss} {Level:u3}] [{SourceContext}] {Message:lj}{NewLine}{Exception}")
                 .WriteTo.Seq("http://localhost:5341")
                 .CreateLogger();
 
             builder.Host.UseSerilog();
             return builder;
+        }
+
+        public static void AddDatabaseLogging(this IServiceCollection services)
+        {
+            services.AddSingleton<ILogEventSink>(provider =>
+            {
+                var databaseSink = new DatabaseSink(provider);
+                return new PeriodicBatchingSink(databaseSink, new PeriodicBatchingSinkOptions
+                {
+                    BatchSizeLimit = 50,
+                    Period = TimeSpan.FromSeconds(10)
+                });
+            });
         }
     }
 }

@@ -76,7 +76,7 @@ namespace SMIS.Application.Repositories.Base
         Task<bool> RecordExistsAsync<T>(Expression<Func<T, bool>> predicate) where T : class;
         Task<int> ExecuteDeleteAsync(Expression<Func<T, bool>> predicate);
         Task<T?> GetFirstOrDefaultAsyncWithInclude(Expression<Func<T, bool>> filter, Func<IQueryable<T>, IQueryable<T>>? include = null, bool tracked = true);
-
+        Task AddRangeAsync(List<T> entities);
     }
 
 }

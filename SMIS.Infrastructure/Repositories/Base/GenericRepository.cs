@@ -33,6 +33,12 @@ namespace SMIS.Infrastructure.Repositories.Base
             await this.dbSet.AddAsync(entity);
             return entity;
         }
+        public async Task AddRangeAsync(List<T> entities)
+        {
+            //var entities = this._context.ChangeTracker.Entries();
+            await this.dbSet.AddRangeAsync(entities);
+            
+        }
 
         /// <inheritdoc/>
         public async Task<bool> ExistsAsync(int id)
