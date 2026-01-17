@@ -27,18 +27,5 @@ namespace SMIS.Api.Extensions
             builder.Host.UseSerilog();
             return builder;
         }
-
-        public static void AddDatabaseLogging(this IServiceCollection services)
-        {
-            services.AddSingleton<ILogEventSink>(provider =>
-            {
-                var databaseSink = new DatabaseSink(provider);
-                return new PeriodicBatchingSink(databaseSink, new PeriodicBatchingSinkOptions
-                {
-                    BatchSizeLimit = 50,
-                    Period = TimeSpan.FromSeconds(10)
-                });
-            });
-        }
     }
 }
