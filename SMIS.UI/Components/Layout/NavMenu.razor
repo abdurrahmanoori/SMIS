@@ -1,42 +1,89 @@
-﻿<div class="top-row ps-3 navbar navbar-dark">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="">SMIS.UI</a>
+<div class="sf-navbar">
+    <div class="navbar-header">
+        <div class="brand-container">
+            <SfButton @onclick="ToggleSidebar" CssClass="menu-toggle" IconCss="e-icons e-menu"></SfButton>
+            <div class="brand-title">
+                <span class="brand-icon">📊</span>
+                <span class="brand-text">SMIS</span>
+            </div>
+        </div>
+        <div class="navbar-actions">
+            <SfButton CssClass="action-btn" IconCss="e-icons e-search"></SfButton>
+            <SfButton CssClass="action-btn" IconCss="e-icons e-notification"></SfButton>
+            <SfButton CssClass="action-btn" IconCss="e-icons e-user"></SfButton>
+        </div>
     </div>
 </div>
 
-<input type="checkbox" title="Navigation menu" class="navbar-toggler" />
+<SfSidebar @ref="SidebarObj" Width="280px" IsOpen="@sidebarToggle" EnableGestures="false" Type="SidebarType.Over" Position="SidebarPosition.Left">
+    <ChildContent>
+        <div class="sidebar-content">
+            <div class="sidebar-header">
+                <div class="user-profile">
+                    <div class="avatar">👤</div>
+                    <div class="user-info">
+                        <div class="user-name">Admin User</div>
+                        <div class="user-role">Administrator</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="sidebar-menu">
+                <div class="menu-items">
+                    @foreach (var item in MenuItems)
+                    {
+                        <div class="menu-item-content" @onclick="() => NavigateToPage(item.Url)">
+                            <span class="menu-icon @item.IconCss"></span>
+                            <span class="menu-text">@item.Text</span>
+                        </div>
+                    }
+                </div>
+            </div>
+            
+            <div class="sidebar-footer">
+                <SfButton CssClass="logout-btn" IconCss="e-icons e-logout" Content="Logout"></SfButton>
+            </div>
+        </div>
+    </ChildContent>
+</SfSidebar>
 
-<div class="nav-scrollable" onclick="document.querySelector('.navbar-toggler').click()">
-    <nav class="flex-column">
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Home
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="counter">
-                <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Counter
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="weather">
-                <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Weather
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="datagrid">
-                <span class="bi bi-grid-nav-menu" aria-hidden="true"></span> Data Grid
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="charts">
-                <span class="bi bi-bar-chart-nav-menu" aria-hidden="true"></span> Charts
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="simpleform">
-                <span class="bi bi-form-nav-menu" aria-hidden="true"></span> Simple Form
-            </NavLink>
-        </div>
-    </nav>
-</div>
+@if (sidebarToggle)
+{
+    <div class="sidebar-overlay" @onclick="CloseSidebar"></div>
+}
+
+@code {
+    private SfSidebar SidebarObj;
+    private bool sidebarToggle = false;
+    
+    [Inject] private NavigationManager Navigation { get; set; }
+    
+    private List<MenuItem> MenuItems = new List<MenuItem>
+    {
+        new MenuItem { Text = "Dashboard", IconCss = "e-icons e-home", Url = "" },
+        new MenuItem { Text = "Counter", IconCss = "e-icons e-plus", Url = "counter" },
+        new MenuItem { Text = "Weather", IconCss = "e-icons e-weather", Url = "weather" },
+        new MenuItem { Text = "Data Grid", IconCss = "e-icons e-grid", Url = "datagrid" },
+        new MenuItem { Text = "Charts", IconCss = "e-icons e-chart", Url = "charts" },
+        new MenuItem { Text = "Forms", IconCss = "e-icons e-form", Url = "simpleform" }
+    };
+    
+    private void ToggleSidebar()
+    {
+        sidebarToggle = !sidebarToggle;
+    }
+    
+    private void CloseSidebar()
+    {
+        sidebarToggle = false;
+    }
+    
+    private void NavigateToPage(string url)
+    {
+        if (!string.IsNullOrEmpty(url))
+        {
+            Navigation.NavigateTo(url);
+            sidebarToggle = false;
+        }
+    }
+}
