@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.14.36811.4 d17.14
+# Visual Studio Version 18
+VisualStudioVersion = 18.3.11408.92 d18.3
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SMIS.Api", "SMIS.Api\SMIS.Api.csproj", "{6094DC5B-079C-4458-A6DB-BADB2C97FDBB}"
 EndProject
@@ -14,6 +14,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SMIS.Identity", "SMIS.Identity\SMIS.Identity.csproj", "{F36AF43C-6B5B-03EC-5B54-DC1D80D65BA5}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SMIS.Test", "SMIS.Test\SMIS.Test.csproj", "{4E0F3CD3-6ACA-4836-907F-D50862411270}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SMIS.UI", "SMIS.UI\SMIS.UI.csproj", "{3A5E182A-2E3B-4B5B-A426-1DAE3CBD6B84}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,6 +47,11 @@ Global
 		{4E0F3CD3-6ACA-4836-907F-D50862411270}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4E0F3CD3-6ACA-4836-907F-D50862411270}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4E0F3CD3-6ACA-4836-907F-D50862411270}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3A5E182A-2E3B-4B5B-A426-1DAE3CBD6B84}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3A5E182A-2E3B-4B5B-A426-1DAE3CBD6B84}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3A5E182A-2E3B-4B5B-A426-1DAE3CBD6B84}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{3A5E182A-2E3B-4B5B-A426-1DAE3CBD6B84}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3A5E182A-2E3B-4B5B-A426-1DAE3CBD6B84}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
