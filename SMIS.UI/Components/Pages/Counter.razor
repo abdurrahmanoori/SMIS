@@ -1,16 +1,76 @@
 ﻿@page "/counter"
 
-<h1>Counter</h1>
-
-<p role="status">Current count: @currentCount</p>
-
-<button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
+<div class="counter-container">
+    <SfCard>
+        <CardHeader Title="Counter Demo" SubTitle="Simple counter with Syncfusion components"></CardHeader>
+        <CardContent>
+            <div class="counter-content">
+                <h2>Current Count: @currentCount</h2>
+                
+                <div class="counter-controls">
+                    <SfButton IsPrimary="true" Content="Increment" @onclick="IncrementCount"></SfButton>
+                    <SfButton Content="Decrement" @onclick="DecrementCount" CssClass="e-outline"></SfButton>
+                    <SfButton Content="Reset" @onclick="ResetCount" CssClass="e-danger"></SfButton>
+                </div>
+            </div>
+        </CardContent>
+    </SfCard>
+    
+    <SfToast @ref="ToastObj" Title="Counter Updated" Content="@toastContent" ShowCloseButton="true">
+        <ToastPosition X="Right" Y="Top"></ToastPosition>
+    </SfToast>
+</div>
 
 @code {
     private int currentCount = 0;
+    private SfToast ToastObj;
+    private string toastContent = "";
 
     private void IncrementCount()
     {
         currentCount++;
+        ShowToast($"Count incremented to {currentCount}");
+    }
+    
+    private void DecrementCount()
+    {
+        if (currentCount > 0)
+        {
+            currentCount--;
+            ShowToast($"Count decremented to {currentCount}");
+        }
+    }
+    
+    private void ResetCount()
+    {
+        currentCount = 0;
+        ShowToast("Counter reset to 0");
+    }
+    
+    private async void ShowToast(string message)
+    {
+        toastContent = message;
+        await ToastObj.ShowAsync();
     }
 }
+
+<style>
+    .counter-container {
+        padding: 20px;
+        max-width: 600px;
+        margin: 0 auto;
+    }
+    
+    .counter-content {
+        text-align: center;
+        padding: 20px;
+    }
+    
+    .counter-controls {
+        margin: 30px 0;
+        display: flex;
+        gap: 10px;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+</style>

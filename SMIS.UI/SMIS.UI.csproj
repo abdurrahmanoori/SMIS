@@ -64,6 +64,21 @@
         <PackageReference Include="Microsoft.Maui.Controls" />
         <PackageReference Include="Microsoft.AspNetCore.Components.WebView.Maui" />
         <PackageReference Include="Microsoft.Extensions.Logging.Debug" />
+        <PackageReference Include="Syncfusion.Blazor.Themes" />
+        <PackageReference Include="Syncfusion.Blazor.Buttons" />
+        <PackageReference Include="Syncfusion.Blazor.Cards" />
+        <PackageReference Include="Syncfusion.Blazor.Charts" />
+        <PackageReference Include="Syncfusion.Blazor.DataForm" />
+        <PackageReference Include="Syncfusion.Blazor.DropDowns" />
+        <PackageReference Include="Syncfusion.Blazor.Grid" />
+        <PackageReference Include="Syncfusion.Blazor.Inputs" />
+        <PackageReference Include="Syncfusion.Blazor.Layouts" />
+        <PackageReference Include="Syncfusion.Blazor.Lists" />
+        <PackageReference Include="Syncfusion.Blazor.Navigations" />
+        <PackageReference Include="Syncfusion.Blazor.Notifications" />
+        <PackageReference Include="Syncfusion.Blazor.Popups" />
+        <PackageReference Include="Syncfusion.Blazor.Schedule" />
+        <PackageReference Include="Syncfusion.Blazor.Spinner" />
     </ItemGroup>
 
 

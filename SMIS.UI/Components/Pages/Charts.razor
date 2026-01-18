@@ -1,0 +1,52 @@
+@page "/charts"
+
+<div class="charts-container">
+    <SfCard>
+        <CardHeader Title="Simple Charts" SubTitle="Basic chart components demo"></CardHeader>
+        <CardContent>
+            <div class="chart-panel">
+                <h4>Sample Data Chart</h4>
+                <SfChart Width="100%" Height="300px">
+                    <ChartSeriesCollection>
+                        <ChartSeries DataSource="@chartData" XName="Month" YName="Sales" Type="ChartSeriesType.Column">
+                        </ChartSeries>
+                    </ChartSeriesCollection>
+                </SfChart>
+            </div>
+        </CardContent>
+    </SfCard>
+</div>
+
+@code {
+    private List<object> chartData = new();
+
+    protected override void OnInitialized()
+    {
+        chartData = new List<object>
+        {
+            new { Month = "Jan", Sales = 35 },
+            new { Month = "Feb", Sales = 28 },
+            new { Month = "Mar", Sales = 42 },
+            new { Month = "Apr", Sales = 38 },
+            new { Month = "May", Sales = 45 },
+            new { Month = "Jun", Sales = 52 }
+        };
+    }
+}
+
+<style>
+    .charts-container {
+        padding: 20px;
+        max-width: 800px;
+        margin: 0 auto;
+    }
+    
+    .chart-panel {
+        padding: 15px;
+    }
+    
+    .chart-panel h4 {
+        margin: 0 0 15px 0;
+        color: #333;
+    }
+</style>

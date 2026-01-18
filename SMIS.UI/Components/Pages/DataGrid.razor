@@ -1,0 +1,42 @@
+@page "/datagrid"
+
+<div class="datagrid-container">
+    <SfCard>
+        <CardHeader Title="Simple Data Grid" SubTitle="Basic data grid demo"></CardHeader>
+        <CardContent>
+            <SfGrid DataSource="@gridData" AllowPaging="true" AllowSorting="true">
+                <GridPageSettings PageSize="10"></GridPageSettings>
+                <GridColumns>
+                    <GridColumn Field="Id" HeaderText="ID" Width="80"></GridColumn>
+                    <GridColumn Field="Name" HeaderText="Name" Width="150"></GridColumn>
+                    <GridColumn Field="Email" HeaderText="Email" Width="200"></GridColumn>
+                    <GridColumn Field="Course" HeaderText="Course" Width="120"></GridColumn>
+                </GridColumns>
+            </SfGrid>
+        </CardContent>
+    </SfCard>
+</div>
+
+@code {
+    private List<object> gridData = new();
+
+    protected override void OnInitialized()
+    {
+        gridData = new List<object>
+        {
+            new { Id = 1, Name = "John Doe", Email = "john@test.com", Course = "Computer Science" },
+            new { Id = 2, Name = "Jane Smith", Email = "jane@test.com", Course = "Mathematics" },
+            new { Id = 3, Name = "Mike Johnson", Email = "mike@test.com", Course = "Physics" },
+            new { Id = 4, Name = "Sarah Wilson", Email = "sarah@test.com", Course = "Chemistry" },
+            new { Id = 5, Name = "David Brown", Email = "david@test.com", Course = "Biology" }
+        };
+    }
+}
+
+<style>
+    .datagrid-container {
+        padding: 20px;
+        max-width: 1000px;
+        margin: 0 auto;
+    }
+</style>

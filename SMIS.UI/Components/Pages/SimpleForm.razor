@@ -1,0 +1,112 @@
+@page "/simpleform"
+
+<div class="forms-container">
+    <SfCard>
+        <CardHeader Title="Simple Form" SubTitle="Basic Syncfusion components demo"></CardHeader>
+        <CardContent>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Name</label>
+                    <SfTextBox Value="@name" ValueChanged="@((string val) => name = val)" Placeholder="Enter your name"></SfTextBox>
+                </div>
+                
+                <div class="form-group">
+                    <label>Email</label>
+                    <SfTextBox Value="@email" ValueChanged="@((string val) => email = val)" Placeholder="Enter email"></SfTextBox>
+                </div>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Date</label>
+                    <SfDatePicker Value="@selectedDate" ValueChanged="@((DateTime? val) => selectedDate = val)" Placeholder="Select date"></SfDatePicker>
+                </div>
+                
+                <div class="form-group">
+                    <label>Category</label>
+                    <SfDropDownList Value="@selectedCategory" ValueChanged="@((string val) => selectedCategory = val)" DataSource="@categories" Placeholder="Select category">
+                    </SfDropDownList>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label>Message</label>
+                <SfTextBox Value="@message" ValueChanged="@((string val) => message = val)" Multiline="true" Placeholder="Enter your message"></SfTextBox>
+            </div>
+            
+            <div class="form-group">
+                <SfCheckBox Checked="@isActive" CheckedChanged="@((bool val) => isActive = val)" Label="Active"></SfCheckBox>
+            </div>
+            
+            <div class="form-actions">
+                <SfButton IsPrimary="true" Content="Submit" @onclick="SubmitForm"></SfButton>
+                <SfButton Content="Clear" @onclick="ClearForm" CssClass="e-outline"></SfButton>
+            </div>
+        </CardContent>
+    </SfCard>
+    
+    <SfToast @ref="ToastObj" Title="Form" Content="@toastMessage" ShowCloseButton="true">
+        <ToastPosition X="Right" Y="Top"></ToastPosition>
+    </SfToast>
+</div>
+
+@code {
+    private string name = "";
+    private string email = "";
+    private DateTime? selectedDate;
+    private string selectedCategory = "";
+    private string message = "";
+    private bool isActive = false;
+    private SfToast ToastObj;
+    private string toastMessage = "";
+    
+    private List<string> categories = new() { "General", "Support", "Feedback", "Bug Report" };
+
+    private async Task SubmitForm()
+    {
+        toastMessage = "Form submitted successfully!";
+        await ToastObj.ShowAsync();
+    }
+    
+    private void ClearForm()
+    {
+        name = "";
+        email = "";
+        selectedDate = null;
+        selectedCategory = "";
+        message = "";
+        isActive = false;
+    }
+}
+
+<style>
+    .forms-container {
+        padding: 20px;
+        max-width: 600px;
+        margin: 0 auto;
+    }
+    
+    .form-row {
+        display: flex;
+        gap: 20px;
+        margin-bottom: 20px;
+    }
+    
+    .form-group {
+        flex: 1;
+        margin-bottom: 20px;
+    }
+    
+    .form-group label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: 500;
+    }
+    
+    .form-actions {
+        display: flex;
+        gap: 15px;
+        justify-content: center;
+        margin-top: 30px;
+    }
+</style>

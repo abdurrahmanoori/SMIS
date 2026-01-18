@@ -1,61 +1,63 @@
 ﻿@page "/weather"
 
-<h1>Weather</h1>
-
-<p>This component demonstrates showing data.</p>
-
-@if (forecasts == null)
-{
-    <p><em>Loading...</em></p>
-}
-else
-{
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Date</th>
-                <th>Temp. (C)</th>
-                <th>Temp. (F)</th>
-                <th>Summary</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var forecast in forecasts)
+<div class="weather-container">
+    <SfCard>
+        <CardHeader Title="Weather Forecast" SubTitle="Simple weather data display"></CardHeader>
+        <CardContent>
+            @if (forecasts == null)
             {
-                <tr>
-                    <td>@forecast.Date.ToShortDateString()</td>
-                    <td>@forecast.TemperatureC</td>
-                    <td>@forecast.TemperatureF</td>
-                    <td>@forecast.Summary</td>
-                </tr>
+                <div class="loading-container">
+                    <SfSpinner @bind-Visible="@IsLoading" Label="Loading weather data..."></SfSpinner>
+                </div>
             }
-        </tbody>
-    </table>
-}
+            else
+            {
+                <SfGrid DataSource="@forecasts" AllowPaging="true" AllowSorting="true">
+                    <GridPageSettings PageSize="5"></GridPageSettings>
+                    <GridColumns>
+                        <GridColumn Field="DateString" HeaderText="Date" Width="120"></GridColumn>
+                        <GridColumn Field="TemperatureC" HeaderText="Temp. (°C)" Width="120"></GridColumn>
+                        <GridColumn Field="TemperatureF" HeaderText="Temp. (°F)" Width="120"></GridColumn>
+                        <GridColumn Field="Summary" HeaderText="Summary" Width="150"></GridColumn>
+                    </GridColumns>
+                </SfGrid>
+            }
+        </CardContent>
+    </SfCard>
+</div>
 
 @code {
-    private WeatherForecast[]? forecasts;
+    private List<object> forecasts;
+    private bool IsLoading = true;
 
     protected override async Task OnInitializedAsync()
     {
-        // Simulate asynchronous loading to demonstrate a loading indicator
-        await Task.Delay(500);
+        await Task.Delay(1000);
 
         var startDate = DateOnly.FromDateTime(DateTime.Now);
         var summaries = new[] { "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching" };
-        forecasts = Enumerable.Range(1, 5).Select(index => new WeatherForecast
+        
+        forecasts = Enumerable.Range(1, 5).Select(index => new
         {
-            Date = startDate.AddDays(index),
+            DateString = startDate.AddDays(index).ToString("MMM dd"),
             TemperatureC = Random.Shared.Next(-20, 55),
+            TemperatureF = 32 + (int)(Random.Shared.Next(-20, 55) / 0.5556),
             Summary = summaries[Random.Shared.Next(summaries.Length)]
-        }).ToArray();
-    }
-
-    private class WeatherForecast
-    {
-        public DateOnly Date { get; set; }
-        public int TemperatureC { get; set; }
-        public string? Summary { get; set; }
-        public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
+        }).ToList<object>();
+        
+        IsLoading = false;
     }
 }
+
+<style>
+    .weather-container {
+        padding: 20px;
+        max-width: 800px;
+        margin: 0 auto;
+    }
+    
+    .loading-container {
+        text-align: center;
+        padding: 50px;
+    }
+</style>
