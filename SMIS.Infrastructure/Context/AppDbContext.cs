@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using SMIS.Domain.Entities;
 using SMIS.Domain.Entities.Identity.Entity;
 using SMIS.Domain.Entities.Localization;
@@ -29,11 +30,20 @@ namespace SMIS.Infrastructure.Context
             // Allow extension from other layers via partial method
             OnModelCreatingPartial(modelBuilder);
         }
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            base.OnConfiguring(optionsBuilder);
+
+
+       //     optionsBuilder.ConfigureWarnings(warnings =>
+       //warnings.Ignore(RelationalEventId.PendingModelChangesWarning));
+        }
 
         partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
 
         public DbSet<Province> Provinces { get; set; }
         public DbSet<ProvinceTranslation> ProvinceTranslations { get; set; }
+        public DbSet<District> Districts { get; set; }
         public DbSet<Language> Languages { get; set; }
         public DbSet<AppLog> AppLogs { get; set; }
     }

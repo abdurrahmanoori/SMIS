@@ -213,7 +213,11 @@ namespace SMIS.Infrastructure.Repositories.Base
             return await query.FirstOrDefaultAsync();
         }
 
-        /// <inheritdoc/>
+        public async Task<T?> GetByIdAsync(string PublicId)
+        {
+            return await this.dbSet.FindAsync(PublicId);
+        }
+
         public async Task<T?> GetByIdAsync(int Id)
         {
             return await this.dbSet.FindAsync(Id);

@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using SMIS.Application.DTO.Localization;
 using SMIS.Application.DTO.Provinces;
+using SMIS.Application.DTO.Districts;
 using SMIS.Domain.Entities;
 using SMIS.Domain.Entities.Localization;
 using System.Globalization;
@@ -66,6 +67,10 @@ public class MappingProfile : Profile
             .ReverseMap()
             .ForMember(dest => dest.LanguageCode, opt => opt.MapFrom(src => src.LanguageCode))
             .ForMember(dest => dest.LanguageId, opt => opt.MapFrom(src => src.LanguageId));
+
+        // District mapping
+        CreateMap<District, DistrictDto>().ReverseMap();
+        CreateMap<District, DistrictCreateDto>().ReverseMap();
     }
 
     private static string ResolveProvinceName(Province src)

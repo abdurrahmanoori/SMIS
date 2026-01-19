@@ -35,6 +35,7 @@ namespace SMIS.Application.Repositories.Base
             Expression<Func<T, object>>[]? includeProperties = null,
             params Expression<Func<T, object>>[] orderByProperties);
 
+        Task<T?> GetByIdAsync(string PublicId);
         Task<T?> GetByIdAsync(int Id);
 
         public Task<List<T>> GetWhenAsync(Expression<Func<T, bool>> condition);
