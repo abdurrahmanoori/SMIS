@@ -11,14 +11,14 @@ using SMIS.Infrastructure.Context;
 namespace SMIS.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260116173922_addLog")]
-    partial class addLog
+    [Migration("20260119110052_se")]
+    partial class se
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder.HasAnnotation("ProductVersion", "8.0.10");
+            modelBuilder.HasAnnotation("ProductVersion", "9.0.0");
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>
                 {
@@ -151,7 +151,6 @@ namespace SMIS.Infrastructure.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("PublicId")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<int?>("UserId")
@@ -166,6 +165,41 @@ namespace SMIS.Infrastructure.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("AppLogs");
+                });
+
+            modelBuilder.Entity("SMIS.Domain.Entities.District", b =>
+                {
+                    b.Property<string>("PublicId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int?>("CreatedBy")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime?>("CreatedDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER")
+                        .HasDefaultValue(0);
+
+                    b.Property<bool>("IsPublic")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("TEXT");
+
+                    b.Property<int?>("UpdatedBy")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime?>("UpdatedDate")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("PublicId");
+
+                    b.ToTable("Districts");
                 });
 
             modelBuilder.Entity("SMIS.Domain.Entities.Identity.Entity.ApplicationRole", b =>
@@ -270,7 +304,7 @@ namespace SMIS.Infrastructure.Migrations
                         {
                             Id = 1,
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "ffa29746-9a09-4c4e-b4c2-cb24ba71c05b",
+                            ConcurrencyStamp = "bf2d2e7c-0273-41b0-ae2f-de68232d4dc8",
                             Email = "admin@local",
                             EmailConfirmed = true,
                             FirstName = "System",
@@ -278,7 +312,7 @@ namespace SMIS.Infrastructure.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@LOCAL",
                             NormalizedUserName = "ADMIN",
-                            PasswordHash = "AQAAAAIAAYagAAAAEJX01M2CG7C0LHQ60DetMBeQLb26NpdanH3tRx67Pbrkg+fi37uiphaN1jm4yhGc8w==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEP5Y4fNb19Lk6XiFTl69WmVwqa155pER8ifMvj5DzJHnbwHLueSt15WZkVgyYWi8zw==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "admin-seed",
                             TwoFactorEnabled = false,
@@ -288,7 +322,7 @@ namespace SMIS.Infrastructure.Migrations
                         {
                             Id = 2,
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "2b015644-adff-45b0-ba06-c5b86fb8d530",
+                            ConcurrencyStamp = "e0ccd321-de5c-4ddd-b3e4-a654cf14de0f",
                             Email = "user@local",
                             EmailConfirmed = true,
                             FirstName = "Default",
@@ -296,7 +330,7 @@ namespace SMIS.Infrastructure.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "USER@LOCAL",
                             NormalizedUserName = "USER",
-                            PasswordHash = "AQAAAAIAAYagAAAAEHqFo3n5y5knOzXm9c/FXBoqSf8ktS95fehnKvipCi1e2bv2ORaAc7LPsiaDuhlQRA==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEHV5GS511kzX/LQxJZWY/4marXqLjkpkaRHQhQcz8o9x8x3GFY5jmyz/7b2T1DaAyg==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "user-seed",
                             TwoFactorEnabled = false,
@@ -354,6 +388,12 @@ namespace SMIS.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
+                    b.Property<int?>("CreatedBy")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime?>("CreatedDate")
+                        .HasColumnType("TEXT");
+
                     b.Property<bool>("IsPublic")
                         .HasColumnType("INTEGER");
 
@@ -363,7 +403,12 @@ namespace SMIS.Infrastructure.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("PublicId")
-                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<int?>("UpdatedBy")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime?>("UpdatedDate")
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
@@ -374,30 +419,38 @@ namespace SMIS.Infrastructure.Migrations
                         new
                         {
                             Id = 1,
+                            CreatedDate = new DateTime(2026, 1, 19, 15, 30, 52, 238, DateTimeKind.Local).AddTicks(2032),
                             IsPublic = false,
                             Name = "Kabul",
-                            PublicId = "26fb2f48-1455-4550-8469-c69453b604f6"
+                            PublicId = "a5cd8883-b785-4ea1-af98-b7da4a656e7a",
+                            UpdatedDate = new DateTime(2026, 1, 19, 15, 30, 52, 238, DateTimeKind.Local).AddTicks(8516)
                         },
                         new
                         {
                             Id = 2,
+                            CreatedDate = new DateTime(2026, 1, 19, 15, 30, 52, 238, DateTimeKind.Local).AddTicks(9444),
                             IsPublic = false,
                             Name = "Herat",
-                            PublicId = "a165ae3d-d95e-44f4-9653-fde5d21811c5"
+                            PublicId = "41d70769-fbf0-4340-aa68-4561ffabd2a4",
+                            UpdatedDate = new DateTime(2026, 1, 19, 15, 30, 52, 238, DateTimeKind.Local).AddTicks(9446)
                         },
                         new
                         {
                             Id = 3,
+                            CreatedDate = new DateTime(2026, 1, 19, 15, 30, 52, 238, DateTimeKind.Local).AddTicks(9451),
                             IsPublic = false,
                             Name = "Kandahar",
-                            PublicId = "515929d1-3c6a-45ba-baec-24c5ac548046"
+                            PublicId = "3295dc23-9bd5-4b47-bca1-576e530e3522",
+                            UpdatedDate = new DateTime(2026, 1, 19, 15, 30, 52, 238, DateTimeKind.Local).AddTicks(9451)
                         },
                         new
                         {
                             Id = 4,
+                            CreatedDate = new DateTime(2026, 1, 19, 15, 30, 52, 238, DateTimeKind.Local).AddTicks(9461),
                             IsPublic = false,
                             Name = "Balkh",
-                            PublicId = "c568b3b3-dc02-4b7e-b8b4-037f7ca779d3"
+                            PublicId = "e868839c-0c1f-47df-a8c3-6e72bc5b3e27",
+                            UpdatedDate = new DateTime(2026, 1, 19, 15, 30, 52, 238, DateTimeKind.Local).AddTicks(9461)
                         });
                 });
 

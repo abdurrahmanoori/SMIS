@@ -12,7 +12,7 @@ public class MappingProfile : Profile
 {
     public MappingProfile()
     {
-      
+
         // Language mappings
         CreateMap<Language, LanguageDto>().ReverseMap();
         CreateMap<Language, LanguageCreateDto>().ReverseMap();
@@ -22,7 +22,6 @@ public class MappingProfile : Profile
             .ForMember(dest => dest.Name, opt => opt.MapFrom(src =>
                 ResolveProvinceName(src)))
             ;
-
         CreateMap<Province, ProvinceCreateDto>()
             .ReverseMap()
             .AfterMap((src, dest) =>

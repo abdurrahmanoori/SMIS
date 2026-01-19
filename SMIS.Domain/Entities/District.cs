@@ -2,8 +2,8 @@ using SMIS.Domain.Common.BaseAbstract;
 
 namespace SMIS.Domain.Entities
 {
-    public class District : BaseEntity
+    public class District : BaseAuditableEntity
     {
-        public string Name { get; set; } = string.Empty;
+        // Name property is already inherited from BaseEntity
     }
 }

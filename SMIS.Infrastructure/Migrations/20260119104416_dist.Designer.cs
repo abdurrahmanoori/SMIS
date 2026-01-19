@@ -11,14 +11,14 @@ using SMIS.Infrastructure.Context;
 namespace SMIS.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260107023305_InitilaMig")]
-    partial class InitilaMig
+    [Migration("20260119104416_dist")]
+    partial class dist
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder.HasAnnotation("ProductVersion", "8.0.10");
+            modelBuilder.HasAnnotation("ProductVersion", "9.0.0");
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>
                 {
@@ -117,6 +117,77 @@ namespace SMIS.Infrastructure.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens", (string)null);
+                });
+
+            modelBuilder.Entity("SMIS.Domain.Entities.AppLog", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Exception")
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("IsPublic")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Level")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Message")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Properties")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("PublicId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int?>("UserId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CreatedAt");
+
+                    b.HasIndex("Level");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("AppLogs");
+                });
+
+            modelBuilder.Entity("SMIS.Domain.Entities.District", b =>
+                {
+                    b.Property<string>("PublicId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER")
+                        .HasDefaultValue(0);
+
+                    b.Property<bool>("IsPublic")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("PublicId");
+
+                    b.ToTable("Districts");
                 });
 
             modelBuilder.Entity("SMIS.Domain.Entities.Identity.Entity.ApplicationRole", b =>
@@ -221,7 +292,7 @@ namespace SMIS.Infrastructure.Migrations
                         {
                             Id = 1,
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "1c885327-4d29-4764-9158-293d628f1848",
+                            ConcurrencyStamp = "38ef7a94-0202-4a28-8b83-57e2d66169f6",
                             Email = "admin@local",
                             EmailConfirmed = true,
                             FirstName = "System",
@@ -229,7 +300,7 @@ namespace SMIS.Infrastructure.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@LOCAL",
                             NormalizedUserName = "ADMIN",
-                            PasswordHash = "AQAAAAIAAYagAAAAEAwsHlVvjp5ufMHjS+n3+b//c/ms1YvfeAxn6ik/brKNkW3AHTOLX9xYlqFSYpWjSw==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEJH1YGiKn8GXWn642b7GV21lk6zN/glF5ksqIK6NadHGTG/0jP2nhCs1EpnP4CyRWQ==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "admin-seed",
                             TwoFactorEnabled = false,
@@ -239,7 +310,7 @@ namespace SMIS.Infrastructure.Migrations
                         {
                             Id = 2,
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "e50ecd89-5d34-4941-b308-c40ae608c976",
+                            ConcurrencyStamp = "742671df-a2ab-49f7-a85a-381ed7e25bfe",
                             Email = "user@local",
                             EmailConfirmed = true,
                             FirstName = "Default",
@@ -247,7 +318,7 @@ namespace SMIS.Infrastructure.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "USER@LOCAL",
                             NormalizedUserName = "USER",
-                            PasswordHash = "AQAAAAIAAYagAAAAED9+yDp5byfzGEmM28Io1QMU+m1X53VXr3p0TJ0umheJ2VuHlfL9WYbZCsHPvCSZvA==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEEtPASPf2tSCh1G6VEoig+acAaHIG3SU+0i710cSkAB/iRsUREUPS1U5mVWPNJsJYw==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "user-seed",
                             TwoFactorEnabled = false,
@@ -314,7 +385,6 @@ namespace SMIS.Infrastructure.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("PublicId")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
@@ -327,28 +397,28 @@ namespace SMIS.Infrastructure.Migrations
                             Id = 1,
                             IsPublic = false,
                             Name = "Kabul",
-                            PublicId = "3c247f4f-eb5c-4cf3-bbf2-ef935f9202aa"
+                            PublicId = "cad27c1f-be9f-4e2b-93e1-a8f6c11bebae"
                         },
                         new
                         {
                             Id = 2,
                             IsPublic = false,
                             Name = "Herat",
-                            PublicId = "94a9b785-371d-4eb2-8b6e-874bebae9f2d"
+                            PublicId = "1fb591d6-4f2e-4929-994d-2ba092a67ac7"
                         },
                         new
                         {
                             Id = 3,
                             IsPublic = false,
                             Name = "Kandahar",
-                            PublicId = "0c67327b-7848-410b-9f02-94d68b17166d"
+                            PublicId = "8864d9fb-18db-4a55-b1fd-3e2169134a3b"
                         },
                         new
                         {
                             Id = 4,
                             IsPublic = false,
                             Name = "Balkh",
-                            PublicId = "8abc44c2-b91f-47bb-a84b-526562fb9eaf"
+                            PublicId = "580950a2-5b84-4cae-a1f5-a604bfbc917a"
                         });
                 });
 

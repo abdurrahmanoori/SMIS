@@ -2,12 +2,14 @@
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using SMIS.Application.Identity.IServices;
 using SMIS.Domain.Common.BaseAbstract;
+using SMIS.Infrastructure.Context;
 
 namespace SMIS.Infrastructure.Interceptors
 {
     public class AuditInterceptor : SaveChangesInterceptor
     {
         private readonly ICurrentUser _currentUser;
+        //private readonly AppDbContext context;
 
         public AuditInterceptor(ICurrentUser currentUser)
         {
@@ -22,6 +24,7 @@ namespace SMIS.Infrastructure.Interceptors
             var context = eventData.Context;
 
             if (context == null) return await base.SavingChangesAsync(eventData, result, cancellationToken);
+            var rest = context.ChangeTracker.Entries<BaseAuditableEntity>();
 
             foreach (var entry in context.ChangeTracker.Entries<BaseAuditableEntity>())
             {
@@ -29,6 +32,7 @@ namespace SMIS.Infrastructure.Interceptors
                 {
                     entry.Entity.CreatedDate = DateTime.UtcNow;
                     entry.Entity.CreatedBy = _currentUser.GetId();
+                    await AssignSequenceNumber(entry.Entity, context);
                 }
 
                 if (entry.State == EntityState.Modified)
@@ -45,6 +49,7 @@ namespace SMIS.Infrastructure.Interceptors
                     //entry.Entity.DeletedBy = _currentUser.GetId();
                 }
             }
+
             //foreach (var entry in context.ChangeTracker.Entries<AuditableEntity>())
             //{
             //    if (entry.State == EntityState.Added)
@@ -69,6 +74,18 @@ namespace SMIS.Infrastructure.Interceptors
             //}
 
             return await base.SavingChangesAsync(eventData, result, cancellationToken);
+        }
+        private async Task AssignSequenceNumber(BaseAuditableEntity entity, DbContext context)
+        {
+            var entityType = entity.GetType();
+            var setMethod = typeof(DbContext).GetMethod("Set", new Type[0])?.MakeGenericMethod(entityType);
+            var dbSet = setMethod?.Invoke(context, null) as IQueryable<BaseAuditableEntity>;
+
+            if (dbSet != null)
+            {
+                var lastId = await dbSet.MaxAsync(e => (int?)e.Id) ?? 0;
+                entity.Id = lastId + 1;
+            }
         }
     }
 }

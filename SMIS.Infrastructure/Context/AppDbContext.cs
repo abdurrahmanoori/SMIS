@@ -35,8 +35,8 @@ namespace SMIS.Infrastructure.Context
             base.OnConfiguring(optionsBuilder);
 
 
-       //     optionsBuilder.ConfigureWarnings(warnings =>
-       //warnings.Ignore(RelationalEventId.PendingModelChangesWarning));
+            optionsBuilder.ConfigureWarnings(warnings =>
+       warnings.Ignore(RelationalEventId.PendingModelChangesWarning));
         }
 
         partial void OnModelCreatingPartial(ModelBuilder modelBuilder);

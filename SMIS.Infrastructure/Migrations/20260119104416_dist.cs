@@ -8,11 +8,32 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace SMIS.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class InitilaMig : Migration
+    public partial class dist : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.CreateTable(
+                name: "AppLogs",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    Level = table.Column<string>(type: "TEXT", maxLength: 50, nullable: false),
+                    Message = table.Column<string>(type: "TEXT", nullable: false),
+                    Exception = table.Column<string>(type: "TEXT", nullable: true),
+                    Properties = table.Column<string>(type: "TEXT", nullable: true),
+                    UserId = table.Column<int>(type: "INTEGER", nullable: true),
+                    CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    PublicId = table.Column<string>(type: "TEXT", nullable: true),
+                    Name = table.Column<string>(type: "TEXT", nullable: false),
+                    IsPublic = table.Column<bool>(type: "INTEGER", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AppLogs", x => x.Id);
+                });
+
             migrationBuilder.CreateTable(
                 name: "AspNetRoles",
                 columns: table => new
@@ -57,6 +78,20 @@ namespace SMIS.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Districts",
+                columns: table => new
+                {
+                    PublicId = table.Column<string>(type: "TEXT", nullable: false),
+                    Name = table.Column<string>(type: "TEXT", maxLength: 200, nullable: false),
+                    Id = table.Column<int>(type: "INTEGER", nullable: false, defaultValue: 0),
+                    IsPublic = table.Column<bool>(type: "INTEGER", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Districts", x => x.PublicId);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Languages",
                 columns: table => new
                 {
@@ -77,8 +112,8 @@ namespace SMIS.Infrastructure.Migrations
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
+                    PublicId = table.Column<string>(type: "TEXT", nullable: true),
                     Name = table.Column<string>(type: "TEXT", maxLength: 200, nullable: false),
-                    PublicId = table.Column<string>(type: "TEXT", nullable: false),
                     IsPublic = table.Column<bool>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
@@ -226,8 +261,8 @@ namespace SMIS.Infrastructure.Migrations
                 columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "FirstName", "LastName", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
                 values: new object[,]
                 {
-                    { 1, 0, "1c885327-4d29-4764-9158-293d628f1848", "admin@local", true, "System", "Admin", false, null, "ADMIN@LOCAL", "ADMIN", "AQAAAAIAAYagAAAAEAwsHlVvjp5ufMHjS+n3+b//c/ms1YvfeAxn6ik/brKNkW3AHTOLX9xYlqFSYpWjSw==", null, false, "admin-seed", false, "admin" },
-                    { 2, 0, "e50ecd89-5d34-4941-b308-c40ae608c976", "user@local", true, "Default", "User", false, null, "USER@LOCAL", "USER", "AQAAAAIAAYagAAAAED9+yDp5byfzGEmM28Io1QMU+m1X53VXr3p0TJ0umheJ2VuHlfL9WYbZCsHPvCSZvA==", null, false, "user-seed", false, "user" }
+                    { 1, 0, "38ef7a94-0202-4a28-8b83-57e2d66169f6", "admin@local", true, "System", "Admin", false, null, "ADMIN@LOCAL", "ADMIN", "AQAAAAIAAYagAAAAEJH1YGiKn8GXWn642b7GV21lk6zN/glF5ksqIK6NadHGTG/0jP2nhCs1EpnP4CyRWQ==", null, false, "admin-seed", false, "admin" },
+                    { 2, 0, "742671df-a2ab-49f7-a85a-381ed7e25bfe", "user@local", true, "Default", "User", false, null, "USER@LOCAL", "USER", "AQAAAAIAAYagAAAAEEtPASPf2tSCh1G6VEoig+acAaHIG3SU+0i710cSkAB/iRsUREUPS1U5mVWPNJsJYw==", null, false, "user-seed", false, "user" }
                 });
 
             migrationBuilder.InsertData(
@@ -245,10 +280,10 @@ namespace SMIS.Infrastructure.Migrations
                 columns: new[] { "Id", "IsPublic", "Name", "PublicId" },
                 values: new object[,]
                 {
-                    { 1, false, "Kabul", "3c247f4f-eb5c-4cf3-bbf2-ef935f9202aa" },
-                    { 2, false, "Herat", "94a9b785-371d-4eb2-8b6e-874bebae9f2d" },
-                    { 3, false, "Kandahar", "0c67327b-7848-410b-9f02-94d68b17166d" },
-                    { 4, false, "Balkh", "8abc44c2-b91f-47bb-a84b-526562fb9eaf" }
+                    { 1, false, "Kabul", "cad27c1f-be9f-4e2b-93e1-a8f6c11bebae" },
+                    { 2, false, "Herat", "1fb591d6-4f2e-4929-994d-2ba092a67ac7" },
+                    { 3, false, "Kandahar", "8864d9fb-18db-4a55-b1fd-3e2169134a3b" },
+                    { 4, false, "Balkh", "580950a2-5b84-4cae-a1f5-a604bfbc917a" }
                 });
 
             migrationBuilder.InsertData(
@@ -269,6 +304,21 @@ namespace SMIS.Infrastructure.Migrations
                     { 11, false, "ps", 2, "بلخ", 4 },
                     { 12, false, "fa", 3, "بلخ", 4 }
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AppLogs_CreatedAt",
+                table: "AppLogs",
+                column: "CreatedAt");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AppLogs_Level",
+                table: "AppLogs",
+                column: "Level");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AppLogs_UserId",
+                table: "AppLogs",
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
@@ -323,6 +373,9 @@ namespace SMIS.Infrastructure.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
+                name: "AppLogs");
+
+            migrationBuilder.DropTable(
                 name: "AspNetRoleClaims");
 
             migrationBuilder.DropTable(
@@ -336,6 +389,9 @@ namespace SMIS.Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetUserTokens");
+
+            migrationBuilder.DropTable(
+                name: "Districts");
 
             migrationBuilder.DropTable(
                 name: "ProvinceTranslations");
