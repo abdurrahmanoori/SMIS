@@ -28,9 +28,9 @@ namespace SMIS.Api.Controllers
             return HandleResultResponse(await _mediator.Send(new GetDistrictListQuery(pageNumber, pageSize)));
         }
 
-        [HttpGet("{id}")]
-        public async Task<ActionResult<DistrictDto>> GetById(int id) =>
-            HandleResultResponse(await _mediator.Send(new GetDistrictByIdQuery(id)));
+        [HttpGet("{publicId}")]
+        public async Task<ActionResult<DistrictDto>> GetById(string publicId) =>
+            HandleResultResponse(await _mediator.Send(new GetDistrictByIdQuery(publicId)));
 
         [HttpPut("{id}")]
         public async Task<ActionResult<DistrictDto>> Update(string PublicId, DistrictCreateDto dto) =>
