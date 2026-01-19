@@ -5,16 +5,14 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace SMIS.Domain.Entities.Localization
 {
     [Table("SIGTAS_DICT")]
-    public class SigtasDict : BaseAuditableEntity
+    public class TranslationKey : BaseAuditableEntity
     {
         public int? MessageCode { get; set; }
 
-
         public string Description { get; set; } = string.Empty;
 
+        public bool IsActive { get; set; } = true;
 
-        public bool IsActive { get; set; }
-
-        public ICollection<SigtasDictOther> Translations { get; set; } = new List<SigtasDictOther>();
+        public ICollection<Translation> Translations { get; set; } = new List<Translation>();
     }
 }
