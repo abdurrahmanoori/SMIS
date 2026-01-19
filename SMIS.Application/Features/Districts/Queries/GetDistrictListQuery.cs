@@ -23,7 +23,8 @@ namespace SMIS.Application.Features.Districts.Queries
                 .Select(d => new DistrictDto
                 {
                     Id = d.Id,
-                    Name = d.Name
+                    Name = d.Name,
+                    PublicId = d.PublicId,
                 });
 
             var pagedEntities = await query.ToPagedList(request.PageNumber, request.PageSize);
