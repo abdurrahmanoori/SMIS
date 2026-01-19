@@ -10,7 +10,6 @@ namespace SMIS.Domain.Entities.Localization
 
         public int LanguageNo { get; set; }
 
-        public string? Description { get; set; } = string.Empty;
 
         // Navigation properties
         [ForeignKey(nameof(TranslationKeyPublicId))]

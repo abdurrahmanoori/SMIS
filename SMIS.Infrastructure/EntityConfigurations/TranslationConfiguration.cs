@@ -13,7 +13,6 @@ namespace SMIS.Infrastructure.EntityConfigurations
             builder.Property(x => x.Id)
                 .HasDefaultValue(0);
 
-            builder.Property(x => x.Description).HasMaxLength(500).IsRequired();
 
             // Configure relationship with TranslationKey using PublicId
             builder.HasOne(t => t.TranslationKey)
