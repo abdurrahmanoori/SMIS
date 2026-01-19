@@ -11,6 +11,9 @@ namespace SMIS.Identity.Services
             //_httpContextAccessor = httpContextAccessor;
         }
 
+        public int PageNumber { get; set; } = 1;
+        public int PageSize { get; set; } = 25;
+
         public Guid GetGuid( )
         {
             return Guid.Empty;

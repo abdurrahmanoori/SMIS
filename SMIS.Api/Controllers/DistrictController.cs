@@ -32,7 +32,7 @@ namespace SMIS.Api.Controllers
         public async Task<ActionResult<DistrictDto>> GetById(string publicId) =>
             HandleResultResponse(await _mediator.Send(new GetDistrictByIdQuery(publicId)));
 
-        [HttpPut("{id}")]
+        [HttpPut("{PublicId}")]
         public async Task<ActionResult<DistrictDto>> Update(string PublicId, DistrictCreateDto dto) =>
             HandleResultResponse(await _mediator.Send(new UpdateDistrictCommand(PublicId, dto)));
 
