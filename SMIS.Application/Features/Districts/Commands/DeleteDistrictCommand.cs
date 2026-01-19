@@ -1,11 +1,12 @@
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using SMIS.Application.DTO.Common.Response;
 using SMIS.Application.Repositories.Base;
 using SMIS.Application.Repositories.Districts;
 
 namespace SMIS.Application.Features.Districts.Commands
 {
-    public record DeleteDistrictCommand(int Id) : IRequest<Result<Unit>>;
+    public record DeleteDistrictCommand(string PublicId) : IRequest<Result<Unit>>;
 
     internal sealed class DeleteDistrictCommandHandler : IRequestHandler<DeleteDistrictCommand, Result<Unit>>
     {
@@ -20,10 +21,12 @@ namespace SMIS.Application.Features.Districts.Commands
 
         public async Task<Result<Unit>> Handle(DeleteDistrictCommand request, CancellationToken cancellationToken)
         {
-            var entity = await _districtRepository.GetByIdAsync(request.Id);
+            var entity = await _districtRepository.GetFirstOrDefaultAsyncWithInclude(x => x.PublicId == request.PublicId,
+            x => x.Include(x => x.TranslationKey));
+
             if (entity == null)
             {
-                return Result<Unit>.NotFoundResult(entity?.Id);
+                return Result<Unit>.NotFoundResult(request?.PublicId);
             }
 
             await _districtRepository.RemoveAsync(entity);
