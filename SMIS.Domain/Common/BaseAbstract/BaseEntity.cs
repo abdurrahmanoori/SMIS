@@ -11,7 +11,7 @@ namespace SMIS.Domain.Common.BaseAbstract
         //[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
-        public string Name { get; set; }
+        public string Name { get; set; } = string.Empty;
         [Required]
         public bool IsPublic { get; set; } = false;
     }

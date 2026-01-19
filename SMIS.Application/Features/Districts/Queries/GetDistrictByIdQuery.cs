@@ -27,7 +27,8 @@ namespace SMIS.Application.Features.Districts.Queries
             var dto = new DistrictDto
             {
                 Id = district.Id,
-                Name = district.Name
+                Name = district.Name,
+                TranslationKeyId = district.TranslationKeyId
             };
 
             return Result<DistrictDto>.SuccessResult(dto);

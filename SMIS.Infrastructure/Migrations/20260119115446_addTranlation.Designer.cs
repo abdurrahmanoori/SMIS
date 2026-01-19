@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SMIS.Infrastructure.Context;
 
@@ -10,9 +11,11 @@ using SMIS.Infrastructure.Context;
 namespace SMIS.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260119115446_addTranlation")]
+    partial class addTranlation
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.0");
@@ -307,7 +310,7 @@ namespace SMIS.Infrastructure.Migrations
                         {
                             Id = 1,
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "20bf741f-ce34-471e-b2ac-a67608667fd7",
+                            ConcurrencyStamp = "1669a354-ca9b-4ac4-ba85-e1b58da9c06e",
                             Email = "admin@local",
                             EmailConfirmed = true,
                             FirstName = "System",
@@ -315,7 +318,7 @@ namespace SMIS.Infrastructure.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@LOCAL",
                             NormalizedUserName = "ADMIN",
-                            PasswordHash = "AQAAAAIAAYagAAAAEM8mIN38rSCRdyVXzrB9z7osnl3t0gVUUetxN/C2Uz3iXD863GESshiGBOFdijwwwg==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEFQmfWMWAYvwfYIG63T8m7VdO+eUfokmL/Drdw2C8XZVr7xRKRGQylea8XhVUPz4bw==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "admin-seed",
                             TwoFactorEnabled = false,
@@ -325,7 +328,7 @@ namespace SMIS.Infrastructure.Migrations
                         {
                             Id = 2,
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "db1a4e25-03fe-4cf8-acb8-c575f4cc17c5",
+                            ConcurrencyStamp = "57b54246-52f5-4f24-a823-e6826cf06657",
                             Email = "user@local",
                             EmailConfirmed = true,
                             FirstName = "Default",
@@ -333,7 +336,7 @@ namespace SMIS.Infrastructure.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "USER@LOCAL",
                             NormalizedUserName = "USER",
-                            PasswordHash = "AQAAAAIAAYagAAAAEA80jQw7/pwzHGTw38no0zTl4/Yb8RGthUzJsPiKjppX1RoHjjzkT7YPSNvMiDlG9Q==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEEyJaIgrAWbiJCd2gIRQ/rNzPfAXF2BC+HFI5ZRY5lBsuNQmqkxtrEhm85etSxJWXQ==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "user-seed",
                             TwoFactorEnabled = false,
@@ -447,6 +450,7 @@ namespace SMIS.Infrastructure.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Description")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<int>("Id")
@@ -513,38 +517,38 @@ namespace SMIS.Infrastructure.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedDate = new DateTime(2026, 1, 19, 16, 33, 15, 252, DateTimeKind.Local).AddTicks(8252),
+                            CreatedDate = new DateTime(2026, 1, 19, 16, 24, 45, 806, DateTimeKind.Local).AddTicks(1384),
                             IsPublic = false,
                             Name = "Kabul",
-                            PublicId = "372d16df-8f84-40cb-8f78-49e00e46a83b",
-                            UpdatedDate = new DateTime(2026, 1, 19, 16, 33, 15, 254, DateTimeKind.Local).AddTicks(5152)
+                            PublicId = "57997926-b268-4c70-a48f-372a2f7a98df",
+                            UpdatedDate = new DateTime(2026, 1, 19, 16, 24, 45, 807, DateTimeKind.Local).AddTicks(4995)
                         },
                         new
                         {
                             Id = 2,
-                            CreatedDate = new DateTime(2026, 1, 19, 16, 33, 15, 254, DateTimeKind.Local).AddTicks(7593),
+                            CreatedDate = new DateTime(2026, 1, 19, 16, 24, 45, 807, DateTimeKind.Local).AddTicks(6881),
                             IsPublic = false,
                             Name = "Herat",
-                            PublicId = "e239b6ed-dde5-4f18-a4f3-1d0e1e3bba22",
-                            UpdatedDate = new DateTime(2026, 1, 19, 16, 33, 15, 254, DateTimeKind.Local).AddTicks(7601)
+                            PublicId = "52f264c1-eb97-478c-a604-8d772dd45ca4",
+                            UpdatedDate = new DateTime(2026, 1, 19, 16, 24, 45, 807, DateTimeKind.Local).AddTicks(6884)
                         },
                         new
                         {
                             Id = 3,
-                            CreatedDate = new DateTime(2026, 1, 19, 16, 33, 15, 254, DateTimeKind.Local).AddTicks(7974),
+                            CreatedDate = new DateTime(2026, 1, 19, 16, 24, 45, 807, DateTimeKind.Local).AddTicks(6905),
                             IsPublic = false,
                             Name = "Kandahar",
-                            PublicId = "929c1ac2-1870-4875-a625-f9e73902a552",
-                            UpdatedDate = new DateTime(2026, 1, 19, 16, 33, 15, 254, DateTimeKind.Local).AddTicks(7979)
+                            PublicId = "0bdfac84-703b-45a7-9d19-ff215b2c34eb",
+                            UpdatedDate = new DateTime(2026, 1, 19, 16, 24, 45, 807, DateTimeKind.Local).AddTicks(6906)
                         },
                         new
                         {
                             Id = 4,
-                            CreatedDate = new DateTime(2026, 1, 19, 16, 33, 15, 254, DateTimeKind.Local).AddTicks(7993),
+                            CreatedDate = new DateTime(2026, 1, 19, 16, 24, 45, 807, DateTimeKind.Local).AddTicks(6914),
                             IsPublic = false,
                             Name = "Balkh",
-                            PublicId = "3936f804-4c2d-42a3-a880-c80a941bf870",
-                            UpdatedDate = new DateTime(2026, 1, 19, 16, 33, 15, 254, DateTimeKind.Local).AddTicks(7994)
+                            PublicId = "1e996013-eee4-40b2-933a-1e8bc3815495",
+                            UpdatedDate = new DateTime(2026, 1, 19, 16, 24, 45, 807, DateTimeKind.Local).AddTicks(6915)
                         });
                 });
 

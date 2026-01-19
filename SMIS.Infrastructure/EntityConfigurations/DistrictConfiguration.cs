@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using SMIS.Domain.Entities;
+using SMIS.Domain.Entities.Localization;
 
 namespace SMIS.Infrastructure.EntityConfigurations
 {
@@ -14,6 +15,13 @@ namespace SMIS.Infrastructure.EntityConfigurations
                 .HasDefaultValue(0);
                 
             builder.Property(x => x.Name).HasMaxLength(200).IsRequired();
+
+            // Configure one-to-one relationship with TranslationKey using PublicId
+            builder.HasOne(d => d.TranslationKey)
+                .WithOne()
+                .HasForeignKey<District>(d => d.TranslationKeyId)
+                .HasPrincipalKey<TranslationKey>(tk => tk.PublicId)
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

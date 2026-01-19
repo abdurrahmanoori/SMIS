@@ -6,11 +6,11 @@ namespace SMIS.Domain.Entities.Localization
 {
     public class Translation : BaseAuditableEntity
     {
-        public int TranslationKeyPublicId { get; set; }
+        public string TranslationKeyPublicId { get; set; } = string.Empty;
 
         public int LanguageNo { get; set; }
 
-        public string Description { get; set; } = string.Empty;
+        public string? Description { get; set; } = string.Empty;
 
         // Navigation properties
         [ForeignKey(nameof(TranslationKeyPublicId))]

@@ -1,0 +1,32 @@
+// Example of creating a District with translations using the TranslationKey approach
+// POST /api/district
+
+{
+  "name": "Sample District",
+  "translations": [
+    {
+      "languageCode": "en",
+      "languageId": 1,
+      "name": "Sample District",
+      "isDefault": true
+    },
+    {
+      "languageCode": "fa",
+      "languageId": 2,
+      "name": "ولسوالی نمونه",
+      "isDefault": false
+    },
+    {
+      "languageCode": "ps",
+      "languageId": 3,
+      "name": "د نمونې ولسوالۍ",
+      "isDefault": false
+    }
+  ]
+}
+
+// The system will:
+// 1. Create a TranslationKey with description "District: Sample District"
+// 2. Create Translation records for each language
+// 3. Link the District to the TranslationKey via TranslationKeyId
+// 4. When retrieving the District, translations will be included in the response

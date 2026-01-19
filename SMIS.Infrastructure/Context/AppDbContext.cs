@@ -46,5 +46,7 @@ namespace SMIS.Infrastructure.Context
         public DbSet<District> Districts { get; set; }
         public DbSet<Language> Languages { get; set; }
         public DbSet<AppLog> AppLogs { get; set; }
+        public DbSet<TranslationKey> TranslationKeys { get; set; }
+        public DbSet<Translation> Translations { get; set; }
     }
 }

@@ -5,7 +5,7 @@ namespace SMIS.Domain.Entities
 {
     public class District : BaseAuditableEntity
     {
-        public int? TranslationKeyId { get; set; }
-        public TranslationKey? TranslationKey { get; set; }
+        public string? TranslationKeyId { get; set; }
+        public TranslationKey TranslationKey { get; set; } = null!;
     }
 }
