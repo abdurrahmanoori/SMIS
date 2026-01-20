@@ -1,5 +1,5 @@
 using SMIS.Application.Repositories.Base;
-using SMIS.Domain.Entities.Shop;
+using SMIS.Domain.Entities;
 
 namespace SMIS.Application.Repositories.Shops
 {

@@ -5,7 +5,6 @@ using SMIS.Application.DTO.Districts;
 using SMIS.Application.DTO.Shops;
 using SMIS.Domain.Entities;
 using SMIS.Domain.Entities.Localization;
-using SMIS.Domain.Entities.Shop;
 using System.Globalization;
 
 namespace SMIS.Application.Mappings;

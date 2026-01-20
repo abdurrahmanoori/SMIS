@@ -1,5 +1,5 @@
 using SMIS.Application.Repositories.Shops;
-using SMIS.Domain.Entities.Shop;
+using SMIS.Domain.Entities;
 using SMIS.Infrastructure.Context;
 using SMIS.Infrastructure.Repositories.Base;
 

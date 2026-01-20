@@ -1,7 +1,7 @@
 using SMIS.Domain.Common.BaseAbstract;
 using SMIS.Domain.Enums;
 
-namespace SMIS.Domain.Entities.Shop
+namespace SMIS.Domain.Entities
 {
     public class Shop : BaseAuditableEntity
     {
