@@ -2,7 +2,9 @@ using AutoMapper;
 using MediatR;
 using SMIS.Application.DTO.Common.Response;
 using SMIS.Application.DTO.Shops;
+using SMIS.Application.Extensions;
 using SMIS.Application.Repositories.Base;
+using SMIS.Application.Repositories.Localization;
 using SMIS.Application.Repositories.Shops;
 
 namespace SMIS.Application.Features.Shops.Commands
@@ -12,14 +14,16 @@ namespace SMIS.Application.Features.Shops.Commands
     internal sealed class UpdateShopCommandHandler : IRequestHandler<UpdateShopCommand, Result<ShopDto>>
     {
         private readonly IShopRepository _shopRepository;
+        private readonly ITranslationKeyRepository _translationKeyRepository;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
 
-        public UpdateShopCommandHandler(IUnitOfWork unitOfWork, IMapper mapper, IShopRepository shopRepository)
+        public UpdateShopCommandHandler(IUnitOfWork unitOfWork, IMapper mapper, IShopRepository shopRepository, ITranslationKeyRepository translationKeyRepository)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _shopRepository = shopRepository;
+            _translationKeyRepository = translationKeyRepository;
         }
 
         public async Task<Result<ShopDto>> Handle(UpdateShopCommand request, CancellationToken cancellationToken)
@@ -30,6 +34,7 @@ namespace SMIS.Application.Features.Shops.Commands
                 return Result<ShopDto>.NotFoundResult(nameof(ShopDto.PublicId));
             }
 
+            await _translationKeyRepository.AddTranslationKeysForChangedProperties(request.ShopCreateDto, entity);
             _mapper.Map(request.ShopCreateDto, entity);
             await _unitOfWork.SaveChanges(cancellationToken);
 
