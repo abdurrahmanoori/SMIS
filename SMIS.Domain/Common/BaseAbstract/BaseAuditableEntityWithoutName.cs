@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace SMIS.Domain.Common.BaseAbstract
 {
-    public abstract class BaseAuditableEntityWithoutName : IAuditableEntity, IEntity
+    public abstract class BaseAuditableEntityWithoutName : IAuditableEntity
     {
         [Key]
         public int Id { get; set; }

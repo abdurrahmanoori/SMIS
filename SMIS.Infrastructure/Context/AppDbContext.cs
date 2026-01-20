@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore.Diagnostics;
 using SMIS.Domain.Entities;
 using SMIS.Domain.Entities.Identity.Entity;
 using SMIS.Domain.Entities.Localization;
+using SMIS.Domain.Entities.Shop;
 using SMIS.Infrastructure.DatabaseSeeders;
 using System.Reflection;
 
@@ -47,5 +48,6 @@ namespace SMIS.Infrastructure.Context
         public DbSet<AppLog> AppLogs { get; set; }
         public DbSet<TranslationKey> TranslationKeys { get; set; }
         public DbSet<Translation> Translations { get; set; }
+        public DbSet<Shop> Shops { get; set; }
     }
 }

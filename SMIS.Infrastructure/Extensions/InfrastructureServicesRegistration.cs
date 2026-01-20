@@ -3,8 +3,10 @@ using AutoMapper.EquivalencyExpression;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using SMIS.Application.Mappings;
+using SMIS.Application.Services;
 using SMIS.Infrastructure.Context;
 using SMIS.Infrastructure.Interceptors;
+using SMIS.Infrastructure.Services;
 using Scrutor;
 
 // Plan (pseudocode):
@@ -45,6 +47,9 @@ namespace SMIS.Infrastructure.Extensions
             services.AddScoped(typeof(SMIS.Application.Repositories.Base.IGenericRepository<>), typeof(SMIS.Infrastructure.Repositories.Base.GenericRepository<>));
             services.AddScoped<SMIS.Infrastructure.RepositoryStores.RepositoriesStore>();
             services.AddScoped<SMIS.Application.Repositories.Base.IUnitOfWork, SMIS.Infrastructure.Repositories.Base.UnitOfWork>();
+
+            // Register services
+            services.AddScoped<ITranslationService, TranslationService>();
 
             services.AddAutoMapper((serviceProvider, cfg) =>
             {
