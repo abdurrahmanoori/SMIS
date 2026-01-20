@@ -203,6 +203,38 @@ namespace SMIS.Infrastructure.Migrations
                         .IsUnique();
 
                     b.ToTable("Districts");
+
+                    b.HasData(
+                        new
+                        {
+                            PublicId = "district-kabul-center-guid",
+                            CreatedDate = new DateTime(2026, 1, 19, 19, 56, 33, 870, DateTimeKind.Local).AddTicks(2117),
+                            Id = 1,
+                            IsPublic = false,
+                            Name = "Kabul Center",
+                            TranslationKeyId = "district_kabul_center",
+                            UpdatedDate = new DateTime(2026, 1, 19, 19, 56, 33, 870, DateTimeKind.Local).AddTicks(2120)
+                        },
+                        new
+                        {
+                            PublicId = "district-kabul-north-guid",
+                            CreatedDate = new DateTime(2026, 1, 19, 19, 56, 33, 870, DateTimeKind.Local).AddTicks(2480),
+                            Id = 2,
+                            IsPublic = false,
+                            Name = "Kabul North",
+                            TranslationKeyId = "district_kabul_north",
+                            UpdatedDate = new DateTime(2026, 1, 19, 19, 56, 33, 870, DateTimeKind.Local).AddTicks(2483)
+                        },
+                        new
+                        {
+                            PublicId = "district-herat-center-guid",
+                            CreatedDate = new DateTime(2026, 1, 19, 19, 56, 33, 870, DateTimeKind.Local).AddTicks(2493),
+                            Id = 3,
+                            IsPublic = false,
+                            Name = "Herat Center",
+                            TranslationKeyId = "district_herat_center",
+                            UpdatedDate = new DateTime(2026, 1, 19, 19, 56, 33, 870, DateTimeKind.Local).AddTicks(2493)
+                        });
                 });
 
             modelBuilder.Entity("SMIS.Domain.Entities.Identity.Entity.ApplicationRole", b =>
@@ -307,7 +339,7 @@ namespace SMIS.Infrastructure.Migrations
                         {
                             Id = 1,
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "20bf741f-ce34-471e-b2ac-a67608667fd7",
+                            ConcurrencyStamp = "7c115599-c02c-49a0-a016-0bd4674274e3",
                             Email = "admin@local",
                             EmailConfirmed = true,
                             FirstName = "System",
@@ -315,7 +347,7 @@ namespace SMIS.Infrastructure.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@LOCAL",
                             NormalizedUserName = "ADMIN",
-                            PasswordHash = "AQAAAAIAAYagAAAAEM8mIN38rSCRdyVXzrB9z7osnl3t0gVUUetxN/C2Uz3iXD863GESshiGBOFdijwwwg==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEMMSO8VPFQU1um5Jf6+4hLBm9Ttr5sFwNbf6QZZOc95j3dXdKH9MbuFJWENjnDbSXw==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "admin-seed",
                             TwoFactorEnabled = false,
@@ -325,7 +357,7 @@ namespace SMIS.Infrastructure.Migrations
                         {
                             Id = 2,
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "db1a4e25-03fe-4cf8-acb8-c575f4cc17c5",
+                            ConcurrencyStamp = "f5d678c6-6a0c-40f4-96c8-02554c0c890e",
                             Email = "user@local",
                             EmailConfirmed = true,
                             FirstName = "Default",
@@ -333,7 +365,7 @@ namespace SMIS.Infrastructure.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "USER@LOCAL",
                             NormalizedUserName = "USER",
-                            PasswordHash = "AQAAAAIAAYagAAAAEA80jQw7/pwzHGTw38no0zTl4/Yb8RGthUzJsPiKjppX1RoHjjzkT7YPSNvMiDlG9Q==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEL7xJw4Awx64PkS1D2rJdNJQMLf5UNpqmLCH0rnc/3ef8uugt/iU5TXmnOeU/jD3GQ==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "user-seed",
                             TwoFactorEnabled = false,
@@ -396,11 +428,6 @@ namespace SMIS.Infrastructure.Migrations
                     b.Property<DateTime?>("CreatedDate")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("TEXT");
-
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER")
@@ -433,6 +460,173 @@ namespace SMIS.Infrastructure.Migrations
                     b.HasIndex("TranslationKeyPublicId");
 
                     b.ToTable("Translations");
+
+                    b.HasData(
+                        new
+                        {
+                            PublicId = "70f47b9b-6235-43cd-9403-fa8a19b497ab",
+                            CreatedDate = new DateTime(2026, 1, 19, 19, 56, 33, 868, DateTimeKind.Local).AddTicks(8081),
+                            Id = 1,
+                            IsPublic = false,
+                            LanguageNo = 1,
+                            Name = "",
+                            TranslationKeyPublicId = "district_kabul_center",
+                            UpdatedDate = new DateTime(2026, 1, 19, 19, 56, 33, 868, DateTimeKind.Local).AddTicks(8085)
+                        },
+                        new
+                        {
+                            PublicId = "70937a31-eb87-412b-af7c-01e0ef078972",
+                            CreatedDate = new DateTime(2026, 1, 19, 19, 56, 33, 868, DateTimeKind.Local).AddTicks(8771),
+                            Id = 2,
+                            IsPublic = false,
+                            LanguageNo = 2,
+                            Name = "",
+                            TranslationKeyPublicId = "district_kabul_center",
+                            UpdatedDate = new DateTime(2026, 1, 19, 19, 56, 33, 868, DateTimeKind.Local).AddTicks(8774)
+                        },
+                        new
+                        {
+                            PublicId = "71c75022-5237-4d52-b043-8573033d7542",
+                            CreatedDate = new DateTime(2026, 1, 19, 19, 56, 33, 868, DateTimeKind.Local).AddTicks(8784),
+                            Id = 3,
+                            IsPublic = false,
+                            LanguageNo = 3,
+                            Name = "",
+                            TranslationKeyPublicId = "district_kabul_center",
+                            UpdatedDate = new DateTime(2026, 1, 19, 19, 56, 33, 868, DateTimeKind.Local).AddTicks(8785)
+                        },
+                        new
+                        {
+                            PublicId = "c0e5b266-9e16-4ae1-835a-b3d02f3f94ca",
+                            CreatedDate = new DateTime(2026, 1, 19, 19, 56, 33, 868, DateTimeKind.Local).AddTicks(8787),
+                            Id = 4,
+                            IsPublic = false,
+                            LanguageNo = 1,
+                            Name = "",
+                            TranslationKeyPublicId = "district_kabul_north",
+                            UpdatedDate = new DateTime(2026, 1, 19, 19, 56, 33, 868, DateTimeKind.Local).AddTicks(8788)
+                        },
+                        new
+                        {
+                            PublicId = "18d0ade6-1047-4c77-bb19-a3910717fe01",
+                            CreatedDate = new DateTime(2026, 1, 19, 19, 56, 33, 868, DateTimeKind.Local).AddTicks(8791),
+                            Id = 5,
+                            IsPublic = false,
+                            LanguageNo = 2,
+                            Name = "",
+                            TranslationKeyPublicId = "district_kabul_north",
+                            UpdatedDate = new DateTime(2026, 1, 19, 19, 56, 33, 868, DateTimeKind.Local).AddTicks(8791)
+                        },
+                        new
+                        {
+                            PublicId = "5b0e233e-c804-417d-8575-4c2af651867e",
+                            CreatedDate = new DateTime(2026, 1, 19, 19, 56, 33, 868, DateTimeKind.Local).AddTicks(8821),
+                            Id = 6,
+                            IsPublic = false,
+                            LanguageNo = 3,
+                            Name = "",
+                            TranslationKeyPublicId = "district_kabul_north",
+                            UpdatedDate = new DateTime(2026, 1, 19, 19, 56, 33, 868, DateTimeKind.Local).AddTicks(8821)
+                        },
+                        new
+                        {
+                            PublicId = "311fff13-a944-4768-9e85-ea4d7a6c5825",
+                            CreatedDate = new DateTime(2026, 1, 19, 19, 56, 33, 868, DateTimeKind.Local).AddTicks(8824),
+                            Id = 7,
+                            IsPublic = false,
+                            LanguageNo = 1,
+                            Name = "",
+                            TranslationKeyPublicId = "district_herat_center",
+                            UpdatedDate = new DateTime(2026, 1, 19, 19, 56, 33, 868, DateTimeKind.Local).AddTicks(8824)
+                        },
+                        new
+                        {
+                            PublicId = "f08664da-f030-4d0c-bb99-c71ee1364092",
+                            CreatedDate = new DateTime(2026, 1, 19, 19, 56, 33, 868, DateTimeKind.Local).AddTicks(8827),
+                            Id = 8,
+                            IsPublic = false,
+                            LanguageNo = 2,
+                            Name = "",
+                            TranslationKeyPublicId = "district_herat_center",
+                            UpdatedDate = new DateTime(2026, 1, 19, 19, 56, 33, 868, DateTimeKind.Local).AddTicks(8827)
+                        },
+                        new
+                        {
+                            PublicId = "0dd05a1b-6cb0-40e4-9add-0637471cfb79",
+                            CreatedDate = new DateTime(2026, 1, 19, 19, 56, 33, 868, DateTimeKind.Local).AddTicks(8838),
+                            Id = 9,
+                            IsPublic = false,
+                            LanguageNo = 3,
+                            Name = "",
+                            TranslationKeyPublicId = "district_herat_center",
+                            UpdatedDate = new DateTime(2026, 1, 19, 19, 56, 33, 868, DateTimeKind.Local).AddTicks(8838)
+                        },
+                        new
+                        {
+                            PublicId = "cac3e32e-92fc-40e5-bd2b-8341a5489792",
+                            CreatedDate = new DateTime(2026, 1, 19, 19, 56, 33, 868, DateTimeKind.Local).AddTicks(8840),
+                            Id = 10,
+                            IsPublic = false,
+                            LanguageNo = 1,
+                            Name = "",
+                            TranslationKeyPublicId = "province_kabul",
+                            UpdatedDate = new DateTime(2026, 1, 19, 19, 56, 33, 868, DateTimeKind.Local).AddTicks(8841)
+                        },
+                        new
+                        {
+                            PublicId = "46cb7ca1-4a43-47f5-b49e-8b1daa4c4c9f",
+                            CreatedDate = new DateTime(2026, 1, 19, 19, 56, 33, 868, DateTimeKind.Local).AddTicks(8843),
+                            Id = 11,
+                            IsPublic = false,
+                            LanguageNo = 2,
+                            Name = "",
+                            TranslationKeyPublicId = "province_kabul",
+                            UpdatedDate = new DateTime(2026, 1, 19, 19, 56, 33, 868, DateTimeKind.Local).AddTicks(8844)
+                        },
+                        new
+                        {
+                            PublicId = "5ded76fc-9fd6-43f6-a168-4e592827699c",
+                            CreatedDate = new DateTime(2026, 1, 19, 19, 56, 33, 868, DateTimeKind.Local).AddTicks(8846),
+                            Id = 12,
+                            IsPublic = false,
+                            LanguageNo = 3,
+                            Name = "",
+                            TranslationKeyPublicId = "province_kabul",
+                            UpdatedDate = new DateTime(2026, 1, 19, 19, 56, 33, 868, DateTimeKind.Local).AddTicks(8846)
+                        },
+                        new
+                        {
+                            PublicId = "462fd37e-4c02-42bf-946b-799c5e22024d",
+                            CreatedDate = new DateTime(2026, 1, 19, 19, 56, 33, 868, DateTimeKind.Local).AddTicks(8849),
+                            Id = 13,
+                            IsPublic = false,
+                            LanguageNo = 1,
+                            Name = "",
+                            TranslationKeyPublicId = "province_herat",
+                            UpdatedDate = new DateTime(2026, 1, 19, 19, 56, 33, 868, DateTimeKind.Local).AddTicks(8849)
+                        },
+                        new
+                        {
+                            PublicId = "4b117deb-9a69-4e49-8b56-3618127edc62",
+                            CreatedDate = new DateTime(2026, 1, 19, 19, 56, 33, 868, DateTimeKind.Local).AddTicks(8851),
+                            Id = 14,
+                            IsPublic = false,
+                            LanguageNo = 2,
+                            Name = "",
+                            TranslationKeyPublicId = "province_herat",
+                            UpdatedDate = new DateTime(2026, 1, 19, 19, 56, 33, 868, DateTimeKind.Local).AddTicks(8852)
+                        },
+                        new
+                        {
+                            PublicId = "9f4c961e-c323-4a13-9263-f649575d1c4b",
+                            CreatedDate = new DateTime(2026, 1, 19, 19, 56, 33, 868, DateTimeKind.Local).AddTicks(8854),
+                            Id = 15,
+                            IsPublic = false,
+                            LanguageNo = 3,
+                            Name = "",
+                            TranslationKeyPublicId = "province_herat",
+                            UpdatedDate = new DateTime(2026, 1, 19, 19, 56, 33, 868, DateTimeKind.Local).AddTicks(8855)
+                        });
                 });
 
             modelBuilder.Entity("SMIS.Domain.Entities.Localization.TranslationKey", b =>
@@ -444,9 +638,6 @@ namespace SMIS.Infrastructure.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<DateTime?>("CreatedDate")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Description")
                         .HasColumnType("TEXT");
 
                     b.Property<int>("Id")
@@ -474,6 +665,63 @@ namespace SMIS.Infrastructure.Migrations
                     b.HasKey("PublicId");
 
                     b.ToTable("TranslationKeys");
+
+                    b.HasData(
+                        new
+                        {
+                            PublicId = "district_kabul_center",
+                            CreatedDate = new DateTime(2026, 1, 19, 19, 56, 33, 866, DateTimeKind.Local).AddTicks(7187),
+                            Id = 1,
+                            IsActive = true,
+                            IsPublic = false,
+                            MessageCode = 1001,
+                            Name = "Kabul Center District",
+                            UpdatedDate = new DateTime(2026, 1, 19, 19, 56, 33, 867, DateTimeKind.Local).AddTicks(9784)
+                        },
+                        new
+                        {
+                            PublicId = "district_kabul_north",
+                            CreatedDate = new DateTime(2026, 1, 19, 19, 56, 33, 868, DateTimeKind.Local).AddTicks(2622),
+                            Id = 2,
+                            IsActive = true,
+                            IsPublic = false,
+                            MessageCode = 1002,
+                            Name = "Kabul North District",
+                            UpdatedDate = new DateTime(2026, 1, 19, 19, 56, 33, 868, DateTimeKind.Local).AddTicks(2625)
+                        },
+                        new
+                        {
+                            PublicId = "district_herat_center",
+                            CreatedDate = new DateTime(2026, 1, 19, 19, 56, 33, 868, DateTimeKind.Local).AddTicks(2639),
+                            Id = 3,
+                            IsActive = true,
+                            IsPublic = false,
+                            MessageCode = 1003,
+                            Name = "Herat Center District",
+                            UpdatedDate = new DateTime(2026, 1, 19, 19, 56, 33, 868, DateTimeKind.Local).AddTicks(2640)
+                        },
+                        new
+                        {
+                            PublicId = "province_kabul",
+                            CreatedDate = new DateTime(2026, 1, 19, 19, 56, 33, 868, DateTimeKind.Local).AddTicks(2643),
+                            Id = 4,
+                            IsActive = true,
+                            IsPublic = false,
+                            MessageCode = 2001,
+                            Name = "Kabul Province",
+                            UpdatedDate = new DateTime(2026, 1, 19, 19, 56, 33, 868, DateTimeKind.Local).AddTicks(2643)
+                        },
+                        new
+                        {
+                            PublicId = "province_herat",
+                            CreatedDate = new DateTime(2026, 1, 19, 19, 56, 33, 868, DateTimeKind.Local).AddTicks(2646),
+                            Id = 5,
+                            IsActive = true,
+                            IsPublic = false,
+                            MessageCode = 2002,
+                            Name = "Herat Province",
+                            UpdatedDate = new DateTime(2026, 1, 19, 19, 56, 33, 868, DateTimeKind.Local).AddTicks(2647)
+                        });
                 });
 
             modelBuilder.Entity("SMIS.Domain.Entities.Province", b =>
@@ -513,38 +761,38 @@ namespace SMIS.Infrastructure.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedDate = new DateTime(2026, 1, 19, 16, 33, 15, 252, DateTimeKind.Local).AddTicks(8252),
+                            CreatedDate = new DateTime(2026, 1, 19, 19, 56, 33, 869, DateTimeKind.Local).AddTicks(6319),
                             IsPublic = false,
                             Name = "Kabul",
-                            PublicId = "372d16df-8f84-40cb-8f78-49e00e46a83b",
-                            UpdatedDate = new DateTime(2026, 1, 19, 16, 33, 15, 254, DateTimeKind.Local).AddTicks(5152)
+                            PublicId = "09e942d8-8520-4ae1-9518-5e4ef8a1d909",
+                            UpdatedDate = new DateTime(2026, 1, 19, 19, 56, 33, 869, DateTimeKind.Local).AddTicks(6323)
                         },
                         new
                         {
                             Id = 2,
-                            CreatedDate = new DateTime(2026, 1, 19, 16, 33, 15, 254, DateTimeKind.Local).AddTicks(7593),
+                            CreatedDate = new DateTime(2026, 1, 19, 19, 56, 33, 869, DateTimeKind.Local).AddTicks(6358),
                             IsPublic = false,
                             Name = "Herat",
-                            PublicId = "e239b6ed-dde5-4f18-a4f3-1d0e1e3bba22",
-                            UpdatedDate = new DateTime(2026, 1, 19, 16, 33, 15, 254, DateTimeKind.Local).AddTicks(7601)
+                            PublicId = "4f23fe62-2e17-452b-8abc-36664ccc9d08",
+                            UpdatedDate = new DateTime(2026, 1, 19, 19, 56, 33, 869, DateTimeKind.Local).AddTicks(6359)
                         },
                         new
                         {
                             Id = 3,
-                            CreatedDate = new DateTime(2026, 1, 19, 16, 33, 15, 254, DateTimeKind.Local).AddTicks(7974),
+                            CreatedDate = new DateTime(2026, 1, 19, 19, 56, 33, 869, DateTimeKind.Local).AddTicks(6362),
                             IsPublic = false,
                             Name = "Kandahar",
-                            PublicId = "929c1ac2-1870-4875-a625-f9e73902a552",
-                            UpdatedDate = new DateTime(2026, 1, 19, 16, 33, 15, 254, DateTimeKind.Local).AddTicks(7979)
+                            PublicId = "6bce773d-28b3-4349-8739-2714fa8ef291",
+                            UpdatedDate = new DateTime(2026, 1, 19, 19, 56, 33, 869, DateTimeKind.Local).AddTicks(6362)
                         },
                         new
                         {
                             Id = 4,
-                            CreatedDate = new DateTime(2026, 1, 19, 16, 33, 15, 254, DateTimeKind.Local).AddTicks(7993),
+                            CreatedDate = new DateTime(2026, 1, 19, 19, 56, 33, 869, DateTimeKind.Local).AddTicks(6365),
                             IsPublic = false,
                             Name = "Balkh",
-                            PublicId = "3936f804-4c2d-42a3-a880-c80a941bf870",
-                            UpdatedDate = new DateTime(2026, 1, 19, 16, 33, 15, 254, DateTimeKind.Local).AddTicks(7994)
+                            PublicId = "973f4757-7d32-499a-9e2c-cb7685bc5c18",
+                            UpdatedDate = new DateTime(2026, 1, 19, 19, 56, 33, 869, DateTimeKind.Local).AddTicks(6365)
                         });
                 });
 

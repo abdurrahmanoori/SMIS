@@ -36,8 +36,8 @@ namespace SMIS.Api.Controllers
         public async Task<ActionResult<DistrictDto>> Update(string PublicId, DistrictCreateDto dto) =>
             HandleResultResponse(await _mediator.Send(new UpdateDistrictCommand(PublicId, dto)));
 
-        [HttpDelete("{id}")]
-        public async Task<ActionResult<Unit>> Delete(int id) =>
-            HandleResultResponse(await _mediator.Send(new DeleteDistrictCommand(id)));
+        [HttpDelete("{publicId}")]
+        public async Task<ActionResult<Unit>> Delete(string publicId) =>
+            HandleResultResponse(await _mediator.Send(new DeleteDistrictCommand(publicId)));
     }
 }

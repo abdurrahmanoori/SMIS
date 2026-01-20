@@ -24,7 +24,6 @@ namespace SMIS.Infrastructure.Context
 
             #region Seed Database
             UserSeed.DataSeed(modelBuilder);
-            LanguageSeed.DataSeed(modelBuilder);
             #endregion
 
             // Allow extension from other layers via partial method
