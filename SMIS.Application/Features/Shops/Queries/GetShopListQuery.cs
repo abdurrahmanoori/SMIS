@@ -1,8 +1,9 @@
+using AutoMapper;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 using SMIS.Application.DTO.Common;
 using SMIS.Application.DTO.Common.Response;
 using SMIS.Application.DTO.Shops;
+using SMIS.Application.Extensions;
 using SMIS.Application.Identity.IServices;
 using SMIS.Application.Repositories.Localization;
 using SMIS.Application.Repositories.Shops;
@@ -16,46 +17,40 @@ namespace SMIS.Application.Features.Shops.Queries
         private readonly IShopRepository _shopRepository;
         private readonly ITranslationKeyRepository _translationKeyRepository;
         private readonly ICurrentUser _currentUser;
+        private readonly IMapper _mapper;
 
-        public GetShopListQueryHandler(IShopRepository shopRepository, ITranslationKeyRepository translationKeyRepository, ICurrentUser currentUser)
+        public GetShopListQueryHandler(IShopRepository shopRepository, ITranslationKeyRepository translationKeyRepository, ICurrentUser currentUser, IMapper mapper)
         {
             _shopRepository = shopRepository;
             _translationKeyRepository = translationKeyRepository;
             _currentUser = currentUser;
+            _mapper = mapper;
         }
 
         public async Task<Result<PagedList<ShopDto>>> Handle(GetShopListQuery request, CancellationToken cancellationToken)
         {
-            var userLangId = _currentUser.GetLangId();
+            var shops = await _shopRepository.GetAllQueryable()
+                .ToPagedList(request.PageNumber, request.PageSize);
 
-            var translationKeys = _translationKeyRepository.GetAllQueryable();
-
-            var query = _shopRepository.GetAllQueryable()
-                .Select(s => new ShopDto
-                {
-                    Id = s.Id,
-                    PublicId = s.PublicId,
-                    Name = translationKeys
-                        .Where(tk => tk.Name == s.Name)
-                        .SelectMany(tk => tk.Translations)
-                        .Where(t => t.LanguageNo == userLangId)
-                        .Select(t => t.Name)
-                        .FirstOrDefault() ?? s.Name,
-                    ShopType = s.ShopType,
-                    Address = s.Address,
-                    PhoneNumber = s.PhoneNumber,
-                    Email = s.Email,
-                    TaxNumber = s.TaxNumber,
-                    IsActive = s.IsActive
-                });
-
-            var pagedEntities = await query.ToPagedList(request.PageNumber, request.PageSize);
-            if (pagedEntities.Items.Count == 0)
+            if (!shops.Items.Any())
             {
                 return Result<PagedList<ShopDto>>.EmptyResult(nameof(ShopDto));
             }
 
-            return Result<PagedList<ShopDto>>.SuccessResult(pagedEntities);
+            var shopDtos = _mapper.Map<List<ShopDto>>(shops.Items);
+            var translationKeys = _translationKeyRepository.GetAllQueryable();
+            var userLangId = _currentUser.GetLangId();
+
+            shopDtos.ForEach(shop => shop.TranslateEntityByAttributes(translationKeys, userLangId));
+
+            return Result<PagedList<ShopDto>>.SuccessResult(new PagedList<ShopDto>
+            {
+                Items = shopDtos,
+                TotalCount = shops.TotalCount,
+                PageNumber = shops.PageNumber,
+                PageSize = shops.PageSize,
+                TotalPages = shops.TotalPages
+            });
         }
     }
 }

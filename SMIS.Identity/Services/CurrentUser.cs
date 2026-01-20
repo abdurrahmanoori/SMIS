@@ -44,7 +44,7 @@ namespace SMIS.Identity.Services
 
         public int GetLangId( )
         {
-            return (3);
+            return (2);
         }
     }
 }
