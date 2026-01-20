@@ -2,6 +2,7 @@ using AutoMapper;
 using MediatR;
 using SMIS.Application.DTO.Common.Response;
 using SMIS.Application.DTO.Shops;
+using SMIS.Application.Extensions;
 using SMIS.Application.Repositories.Base;
 using SMIS.Application.Repositories.Localization;
 using SMIS.Application.Repositories.Shops;
@@ -29,15 +30,9 @@ namespace SMIS.Application.Features.Shops.Commands
 
         public async Task<Result<ShopCreateDto>> Handle(CreateShopCommand request, CancellationToken cancellationToken)
         {
-            var translationKey = new TranslationKey
-            {
-                Name = request.ShopCreateDto.Name,
-                IsActive = true
-            };
-
             var entity = _mapper.Map<Shop>(request.ShopCreateDto);
             
-            await _translationKeyRepository.AddAsync(translationKey);
+            await _translationKeyRepository.AddTranslationKeysForEntity(request.ShopCreateDto);
             await _shopRepository.AddAsync(entity);
             await _unitOfWork.SaveChanges(cancellationToken);
 
