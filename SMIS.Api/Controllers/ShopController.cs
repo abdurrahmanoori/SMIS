@@ -41,3 +41,4 @@ namespace SMIS.Api.Controllers
             HandleResultResponse(await _mediator.Send(new DeleteShopCommand(publicId)));
     }
 }
+
