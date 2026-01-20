@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using SMIS.Domain.Entities.Shop;
+using SMIS.Domain.Entities;
 
 namespace SMIS.Infrastructure.EntityConfigurations
 {

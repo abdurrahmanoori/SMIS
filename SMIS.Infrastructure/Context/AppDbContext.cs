@@ -4,7 +4,6 @@ using Microsoft.EntityFrameworkCore.Diagnostics;
 using SMIS.Domain.Entities;
 using SMIS.Domain.Entities.Identity.Entity;
 using SMIS.Domain.Entities.Localization;
-using SMIS.Domain.Entities.Shop;
 using SMIS.Infrastructure.DatabaseSeeders;
 using System.Reflection;
 

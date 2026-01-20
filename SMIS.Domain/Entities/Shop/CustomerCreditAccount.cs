@@ -1,7 +1,7 @@
 using SMIS.Domain.Common.BaseAbstract;
 using SMIS.Domain.Enums;
 
-namespace SMIS.Domain.Entities.Shop
+namespace SMIS.Domain.Entities.Shopp
 {
     public class CustomerCreditAccount : BaseAuditableEntityWithoutName
     {
