@@ -1,7 +1,8 @@
+using AutoMapper;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 using SMIS.Application.DTO.Common.Response;
 using SMIS.Application.DTO.Shops;
+using SMIS.Application.Extensions;
 using SMIS.Application.Identity.IServices;
 using SMIS.Application.Repositories.Localization;
 using SMIS.Application.Repositories.Shops;
@@ -15,44 +16,27 @@ namespace SMIS.Application.Features.Shops.Queries
         private readonly IShopRepository _shopRepository;
         private readonly ITranslationKeyRepository _translationKeyRepository;
         private readonly ICurrentUser _currentUser;
+        private readonly IMapper _mapper;
 
-        public GetShopByIdQueryHandler(IShopRepository shopRepository, ITranslationKeyRepository translationKeyRepository, ICurrentUser currentUser)
+        public GetShopByIdQueryHandler(IShopRepository shopRepository, ITranslationKeyRepository translationKeyRepository, ICurrentUser currentUser, IMapper mapper)
         {
             _shopRepository = shopRepository;
             _translationKeyRepository = translationKeyRepository;
             _currentUser = currentUser;
+            _mapper = mapper;
         }
 
         public async Task<Result<ShopDto>> Handle(GetShopByIdQuery request, CancellationToken cancellationToken)
         {
-            var userLangId = _currentUser.GetLangId();
-            var translationKeys = _translationKeyRepository.GetAllQueryable();
-
-            var shop = await _shopRepository.GetAllQueryable()
-                .Where(s => s.PublicId == request.PublicId)
-                .Select(s => new ShopDto
-                {
-                    Id = s.Id,
-                    PublicId = s.PublicId,
-                    Name = translationKeys
-                        .Where(tk => tk.Name == s.Name)
-                        .SelectMany(tk => tk.Translations)
-                        .Where(t => t.LanguageNo == userLangId)
-                        .Select(t => t.Name)
-                        .FirstOrDefault() ?? s.Name,
-                    ShopType = s.ShopType,
-                    Address = s.Address,
-                    PhoneNumber = s.PhoneNumber,
-                    Email = s.Email,
-                    TaxNumber = s.TaxNumber,
-                    IsActive = s.IsActive
-                })
-                .FirstOrDefaultAsync(cancellationToken);
-
-            if (shop == null)
+            var dbShop = await _shopRepository.GetFirstOrDefaultAsync(x => x.PublicId == request.PublicId);
+            
+            if (dbShop == null)
             {
                 return Result<ShopDto>.NotFoundResult(nameof(ShopDto));
             }
+
+            var shop = _mapper.Map<ShopDto>(dbShop);
+            shop.TranslateEntityByAttributes(_translationKeyRepository.GetAllQueryable(), _currentUser.GetLangId());
 
             return Result<ShopDto>.SuccessResult(shop);
         }
