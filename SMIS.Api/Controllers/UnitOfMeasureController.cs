@@ -23,15 +23,15 @@ namespace SMIS.Api.Controllers
             return HandleResultResponse(await Mediator.Send(new GetUnitOfMeasureListQuery(pageNumber, pageSize)));
         }
 
-        [HttpGet("{publicId}")]
+        [HttpGet("{id}")]
         public async Task<ActionResult<UnitOfMeasureDto>> GetById(string id) =>
             HandleResultResponse(await Mediator.Send(new GetUnitOfMeasureByIdQuery(id)));
 
-        [HttpPut("{publicId}")]
+        [HttpPut("{id}")]
         public async Task<ActionResult<UnitOfMeasureDto>> Update(string id, UnitOfMeasureCreateDto dto) =>
             HandleResultResponse(await Mediator.Send(new UpdateUnitOfMeasureCommand(id, dto)));
 
-        [HttpDelete("{publicId}")]
+        [HttpDelete("{id}")]
         public async Task<ActionResult<Unit>> Delete(string id) =>
             HandleResultResponse(await Mediator.Send(new DeleteUnitOfMeasureCommand(id)));
     }
