@@ -13,12 +13,16 @@ namespace SMIS.Domain.Entities
         public string? Description { get; set; }
         // Can we sell this product or not?
         public bool IsActive { get; set; } = true;
-        //public string SKU { get; set; }
+        public string SKU { get; set; } = string.Empty; // Unique identifier
+        public string? Barcode { get; set; }
+        public string? ImageUrl { get; set; }
+        public string? CategoryId { get; set; }
 
 
         // Navigation Properties
         public virtual Shop Shop { get; set; } = null!;
         public UnitOfMeasure UnitOfMeasure { get; set; } = null!;
+        public virtual Category? Category { get; set; }
         //public virtual ICollection<InvoiceItem> InvoiceItems { get; set; } = new List<InvoiceItem>();
         //public virtual ICollection<StockMovement> StockMovements { get; set; } = new List<StockMovement>();
     }

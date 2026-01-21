@@ -1,4 +1,5 @@
 using SMIS.Application.Attributes;
+using SMIS.Application.DTO.Categories;
 
 namespace SMIS.Application.DTO.Products
 {
@@ -14,5 +15,10 @@ namespace SMIS.Application.DTO.Products
         public int SalePricePerBaseUnit { get; set; }
         public string? Description { get; set; }
         public bool IsActive { get; set; }
+        public string SKU { get; set; } = string.Empty; // Unique identifier
+        public string? Barcode { get; set; }
+        public string? ImageUrl { get; set; }
+        public string? CategoryId { get; set; }
+        public CategoryDto? Category { get; set; }
     }
 }

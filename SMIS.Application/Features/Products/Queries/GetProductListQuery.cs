@@ -10,7 +10,7 @@ using SMIS.Application.Repositories.Products;
 
 namespace SMIS.Application.Features.Products.Queries
 {
-    public record GetProductListQuery(int PageNumber = 1, int PageSize = 25) : IRequest<Result<PagedList<ProductDto>>>;
+    public record GetProductListQuery(int PageNumber = 1, int PageSize = 25, bool IncludeCategory = false) : IRequest<Result<PagedList<ProductDto>>>;
 
     internal sealed class GetProductListQueryHandler : IRequestHandler<GetProductListQuery, Result<PagedList<ProductDto>>>
     {
@@ -29,8 +29,8 @@ namespace SMIS.Application.Features.Products.Queries
 
         public async Task<Result<PagedList<ProductDto>>> Handle(GetProductListQuery request, CancellationToken cancellationToken)
         {
-            var products = await _productRepository.GetAllQueryable()
-                .ToPagedList(request.PageNumber, request.PageSize);
+            var query = _productRepository.GetAllQueryable(includeProperties: request.IncludeCategory ? "Category" : null);
+            var products = await query.ToPagedList(request.PageNumber, request.PageSize);
 
             if (!products.Items.Any())
             {

@@ -9,7 +9,7 @@ using SMIS.Application.Repositories.Products;
 
 namespace SMIS.Application.Features.Products.Queries
 {
-    public record GetProductByIdQuery(string Id) : IRequest<Result<ProductDto>>;
+    public record GetProductByIdQuery(string Id, bool IncludeCategory = false) : IRequest<Result<ProductDto>>;
 
     internal sealed class GetProductByIdQueryHandler : IRequestHandler<GetProductByIdQuery, Result<ProductDto>>
     {
@@ -28,7 +28,9 @@ namespace SMIS.Application.Features.Products.Queries
 
         public async Task<Result<ProductDto>> Handle(GetProductByIdQuery request, CancellationToken cancellationToken)
         {
-            var dbProduct = await _productRepository.GetFirstOrDefaultAsync(x => x.Id == request.Id);
+            var dbProduct = await _productRepository.GetFirstOrDefaultAsync(
+                x => x.Id == request.Id,
+                includeProperties: request.IncludeCategory ? "Category" : null);
 
             if (dbProduct == null)
             {

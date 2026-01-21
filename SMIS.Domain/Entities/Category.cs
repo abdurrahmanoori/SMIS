@@ -10,6 +10,6 @@ namespace SMIS.Domain.Entities
         public bool IsActive { get; set; } = true;
 
         // Navigation Properties
-        //public virtual ICollection<Product> Products { get; set; } = new List<Product>();
+        public virtual ICollection<Product> Products { get; set; } = new List<Product>();
     }
 }

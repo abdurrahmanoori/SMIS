@@ -31,6 +31,19 @@ namespace SMIS.Infrastructure.EntityConfigurations
             builder.Property(p => p.IsActive)
                 .IsRequired();
 
+            builder.Property(p => p.SKU)
+                .IsRequired()
+                .HasMaxLength(100);
+
+            builder.Property(p => p.Barcode)
+                .HasMaxLength(100);
+
+            builder.Property(p => p.ImageUrl)
+                .HasMaxLength(500);
+
+            builder.Property(p => p.CategoryId)
+                .HasMaxLength(50);
+
             // Foreign keys
             builder.HasOne(p => p.Shop)
                 .WithMany() // Shop has commented navigation to Products
@@ -41,6 +54,11 @@ namespace SMIS.Infrastructure.EntityConfigurations
                 .WithMany()
                 .HasForeignKey(p => p.BaseUnitId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            builder.HasOne(p => p.Category)
+                .WithMany(c => c.Products)
+                .HasForeignKey(p => p.CategoryId)
+                .OnDelete(DeleteBehavior.SetNull);
         }
     }
 }

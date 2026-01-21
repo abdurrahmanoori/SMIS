@@ -1,0 +1,6 @@
+Add product categories and enhance product attributes
+
+Added category relationship to products with navigation properties.
+Enhanced product model with SKU, barcode, and image URL fields.
+Updated DTOs, validators, entity configurations, and database migrations.
+Seeded sample data with new product attributes.

@@ -12,32 +12,26 @@ namespace SMIS.Api.Controllers
     [ApiController]
     public class ProductController : BaseApiController
     {
-        private readonly IMediator _mediator;
-        public ProductController(IMediator mediator)
-        {
-            _mediator = mediator;
-        }
-
         [HttpPost]
         public async Task<ActionResult<ProductCreateDto>> Create(ProductCreateDto dto) =>
-            HandleResultResponse(await _mediator.Send(new CreateProductCommand(dto)));
+            HandleResultResponse(await Mediator.Send(new CreateProductCommand(dto)));
 
         [HttpGet]
-        public async Task<ActionResult<PagedList<ProductDto>>> GetAll([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 25)
+        public async Task<ActionResult<PagedList<ProductDto>>> GetAll([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 25, [FromQuery] bool includeCategory = false)
         {
-            return HandleResultResponse(await _mediator.Send(new GetProductListQuery(pageNumber, pageSize)));
+            return HandleResultResponse(await Mediator.Send(new GetProductListQuery(pageNumber, pageSize, includeCategory)));
         }
 
-        [HttpGet("{publicId}")]
-        public async Task<ActionResult<ProductDto>> GetById(string id) =>
-            HandleResultResponse(await _mediator.Send(new GetProductByIdQuery(id)));
+        [HttpGet("{id}")]
+        public async Task<ActionResult<ProductDto>> GetById(string id, [FromQuery] bool includeCategory = false) =>
+            HandleResultResponse(await Mediator.Send(new GetProductByIdQuery(id, includeCategory)));
 
-        [HttpPut("{PublicId}")]
+        [HttpPut("{id}")]
         public async Task<ActionResult<ProductDto>> Update(string id, ProductCreateDto dto) =>
-            HandleResultResponse(await _mediator.Send(new UpdateProductCommand(id, dto)));
+            HandleResultResponse(await Mediator.Send(new UpdateProductCommand(id, dto)));
 
-        [HttpDelete("{publicId}")]
+        [HttpDelete("{id}")]
         public async Task<ActionResult<Unit>> Delete(string id) =>
-            HandleResultResponse(await _mediator.Send(new DeleteProductCommand(id)));
+            HandleResultResponse(await Mediator.Send(new DeleteProductCommand(id)));
     }
 }
