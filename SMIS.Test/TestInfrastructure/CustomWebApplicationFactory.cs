@@ -38,8 +38,8 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>, IAsyn
             db.Database.EnsureCreated();
         });
 
-        // Prevent the factory from trying to resolve deps.json in test context
-        builder.UseEnvironment("Testing");
+        // Set development environment for integration tests
+        builder.UseEnvironment("Development");
     }
 
     public async Task InitializeAsync( )
