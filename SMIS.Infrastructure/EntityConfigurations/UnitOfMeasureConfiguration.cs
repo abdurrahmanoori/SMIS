@@ -10,7 +10,7 @@ namespace SMIS.Infrastructure.EntityConfigurations
         {
             builder.ToTable(nameof(UnitOfMeasure));
 
-            builder.HasKey(u => u.PublicId);
+            builder.HasKey(u => u.Id);
 
             builder.Property(u => u.Name)
                 .IsRequired()

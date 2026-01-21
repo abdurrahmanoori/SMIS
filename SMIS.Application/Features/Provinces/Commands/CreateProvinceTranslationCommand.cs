@@ -35,9 +35,9 @@ namespace SMIS.Application.Features.Provinces.Commands
             if (string.IsNullOrEmpty(request.Dto.LanguageId) && !string.IsNullOrWhiteSpace(request.Dto.LanguageCode))
             {
                 var lang = await _languageRepo.GetFirstOrDefaultAsync(x => x.Code == request.Dto.LanguageCode);
-                if (lang != null) 
+                if (lang != null)
                 {
-                    entity.LanguageId = lang.PublicId;
+                    entity.LanguageId = lang.Id;
                 }
                 else
                 {

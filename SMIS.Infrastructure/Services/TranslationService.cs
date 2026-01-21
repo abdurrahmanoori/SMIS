@@ -53,7 +53,7 @@ namespace SMIS.Infrastructure.Services
             }
 
             var existingTranslation = await _translationRepository
-                .GetFirstOrDefaultAsync(t => t.TranslationKeyPublicId == translationKey.PublicId && t.LanguageNo == languageNo);
+                .GetFirstOrDefaultAsync(t => t.TranslationKeyId == translationKey.Id && t.LanguageNo == languageNo);
 
             if (existingTranslation != null)
             {
@@ -64,7 +64,7 @@ namespace SMIS.Infrastructure.Services
             {
                 var translation = new Translation
                 {
-                    TranslationKeyPublicId = translationKey.PublicId,
+                    TranslationKeyId = translationKey.Id,
                     LanguageNo = languageNo,
                     Name = translatedValue
                 };
@@ -75,7 +75,7 @@ namespace SMIS.Infrastructure.Services
             await _unitOfWork.SaveChanges(cancellationToken);
 
             return await _translationRepository
-                .GetFirstOrDefaultAsync(t => t.TranslationKeyPublicId == translationKey.PublicId && t.LanguageNo == languageNo);
+                .GetFirstOrDefaultAsync(t => t.TranslationKeyId == translationKey.Id && t.LanguageNo == languageNo);
         }
 
         public async Task<string> GetTranslationAsync(string keyValue, string languageNo, CancellationToken cancellationToken = default)

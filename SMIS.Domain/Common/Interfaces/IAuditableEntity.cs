@@ -4,9 +4,9 @@ namespace SMIS.Domain.Common.Interfaces;
 
 public interface IAuditableEntity /*: IEntity*/
 {
-    int? CreatedBy { get; set; }
+    string? CreatedBy { get; set; }
     DateTime? CreatedDate { get; set; }
-    int? UpdatedBy { get; set; }
+    string? UpdatedBy { get; set; }
     DateTime? UpdatedDate { get; set; }
     //DateTime ExpireDate { get; set; }
 }

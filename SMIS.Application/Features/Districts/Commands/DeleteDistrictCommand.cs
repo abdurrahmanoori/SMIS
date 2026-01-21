@@ -6,7 +6,7 @@ using SMIS.Application.Repositories.Districts;
 
 namespace SMIS.Application.Features.Districts.Commands
 {
-    public record DeleteDistrictCommand(string PublicId) : IRequest<Result<Unit>>;
+    public record DeleteDistrictCommand(string Id) : IRequest<Result<Unit>>;
 
     internal sealed class DeleteDistrictCommandHandler : IRequestHandler<DeleteDistrictCommand, Result<Unit>>
     {
@@ -21,12 +21,12 @@ namespace SMIS.Application.Features.Districts.Commands
 
         public async Task<Result<Unit>> Handle(DeleteDistrictCommand request, CancellationToken cancellationToken)
         {
-            var entity = await _districtRepository.GetFirstOrDefaultAsyncWithInclude(x => x.PublicId == request.PublicId,
+            var entity = await _districtRepository.GetFirstOrDefaultAsyncWithInclude(x => x.Id == request.Id,
             x => x.Include(x => x.TranslationKey));
 
             if (entity == null)
             {
-                return Result<Unit>.NotFoundResult(request?.PublicId);
+                return Result<Unit>.NotFoundResult(request?.Id);
             }
 
             await _districtRepository.RemoveAsync(entity);

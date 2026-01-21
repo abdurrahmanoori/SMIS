@@ -29,15 +29,15 @@ namespace SMIS.Api.Controllers
         }
 
         [HttpGet("{publicId}")]
-        public async Task<ActionResult<DistrictDto>> GetById(string publicId) =>
-            HandleResultResponse(await _mediator.Send(new GetDistrictByIdQuery(publicId)));
+        public async Task<ActionResult<DistrictDto>> GetById(string id) =>
+            HandleResultResponse(await _mediator.Send(new GetDistrictByIdQuery(id)));
 
         [HttpPut("{PublicId}")]
-        public async Task<ActionResult<DistrictDto>> Update(string PublicId, DistrictCreateDto dto) =>
-            HandleResultResponse(await _mediator.Send(new UpdateDistrictCommand(PublicId, dto)));
+        public async Task<ActionResult<DistrictDto>> Update(string id, DistrictCreateDto dto) =>
+            HandleResultResponse(await _mediator.Send(new UpdateDistrictCommand(id, dto)));
 
         [HttpDelete("{publicId}")]
-        public async Task<ActionResult<Unit>> Delete(string publicId) =>
-            HandleResultResponse(await _mediator.Send(new DeleteDistrictCommand(publicId)));
+        public async Task<ActionResult<Unit>> Delete(string id) =>
+            HandleResultResponse(await _mediator.Send(new DeleteDistrictCommand(id)));
     }
 }

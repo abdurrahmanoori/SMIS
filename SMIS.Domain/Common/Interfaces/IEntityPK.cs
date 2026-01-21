@@ -5,6 +5,6 @@ namespace SMIS.Domain.Common.Interfaces
     public interface IEntityPK
     {
         [Key]
-        public string PublicId { get; set; }
+        public string Id { get; set; }
     }
 }

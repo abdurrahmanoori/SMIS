@@ -7,7 +7,7 @@ using SMIS.Application.Repositories.Localization;
 
 namespace SMIS.Application.Features.Localization.Commands
 {
-    public record UpdateLanguageCommand(string PublicId, LanguageCreateDto LanguageCreateDto) : IRequest<Result<LanguageDto>> { }
+    public record UpdateLanguageCommand(string Id, LanguageCreateDto LanguageCreateDto) : IRequest<Result<LanguageDto>> { }
 
     internal sealed class UpdateLanguageCommandHandler : IRequestHandler<UpdateLanguageCommand, Result<LanguageDto>>
     {
@@ -24,10 +24,10 @@ namespace SMIS.Application.Features.Localization.Commands
 
         public async Task<Result<LanguageDto>> Handle(UpdateLanguageCommand request, CancellationToken cancellationToken)
         {
-            var entity = await _languageRepository.GetByIdAsync(request.PublicId);
+            var entity = await _languageRepository.GetByIdAsync(request.Id);
             if (entity is null)
             {
-                return Result<LanguageDto>.NotFoundResult(request.PublicId);
+                return Result<LanguageDto>.NotFoundResult(request.Id);
             }
 
             _mapper.Map(request.LanguageCreateDto, entity);

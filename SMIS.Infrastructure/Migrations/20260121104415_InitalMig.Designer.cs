@@ -11,8 +11,8 @@ using SMIS.Infrastructure.Context;
 namespace SMIS.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260121080837_AddDbSeedeFroShop")]
-    partial class AddDbSeedeFroShop
+    [Migration("20260121104415_InitalMig")]
+    partial class InitalMig
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -20,7 +20,7 @@ namespace SMIS.Infrastructure.Migrations
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.0");
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -32,8 +32,9 @@ namespace SMIS.Infrastructure.Migrations
                     b.Property<string>("ClaimValue")
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("RoleId")
-                        .HasColumnType("INTEGER");
+                    b.Property<string>("RoleId")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
@@ -42,7 +43,7 @@ namespace SMIS.Infrastructure.Migrations
                     b.ToTable("AspNetRoleClaims", (string)null);
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<int>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -54,8 +55,9 @@ namespace SMIS.Infrastructure.Migrations
                     b.Property<string>("ClaimValue")
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("INTEGER");
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
@@ -64,7 +66,7 @@ namespace SMIS.Infrastructure.Migrations
                     b.ToTable("AspNetUserClaims", (string)null);
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<int>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
                     b.Property<string>("LoginProvider")
                         .HasColumnType("TEXT");
@@ -75,8 +77,9 @@ namespace SMIS.Infrastructure.Migrations
                     b.Property<string>("ProviderDisplayName")
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("INTEGER");
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
 
                     b.HasKey("LoginProvider", "ProviderKey");
 
@@ -85,13 +88,13 @@ namespace SMIS.Infrastructure.Migrations
                     b.ToTable("AspNetUserLogins", (string)null);
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<int>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
                 {
-                    b.Property<int>("UserId")
-                        .HasColumnType("INTEGER");
+                    b.Property<string>("UserId")
+                        .HasColumnType("TEXT");
 
-                    b.Property<int>("RoleId")
-                        .HasColumnType("INTEGER");
+                    b.Property<string>("RoleId")
+                        .HasColumnType("TEXT");
 
                     b.HasKey("UserId", "RoleId");
 
@@ -100,10 +103,10 @@ namespace SMIS.Infrastructure.Migrations
                     b.ToTable("AspNetUserRoles", (string)null);
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<int>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
-                    b.Property<int>("UserId")
-                        .HasColumnType("INTEGER");
+                    b.Property<string>("UserId")
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("LoginProvider")
                         .HasColumnType("TEXT");
@@ -121,7 +124,7 @@ namespace SMIS.Infrastructure.Migrations
 
             modelBuilder.Entity("SMIS.Domain.Entities.AppLog", b =>
                 {
-                    b.Property<string>("PublicId")
+                    b.Property<string>("Id")
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("CreatedAt")
@@ -129,11 +132,6 @@ namespace SMIS.Infrastructure.Migrations
 
                     b.Property<string>("Exception")
                         .HasColumnType("TEXT");
-
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER")
-                        .HasDefaultValue(0);
 
                     b.Property<bool>("IsPublic")
                         .HasColumnType("INTEGER");
@@ -154,10 +152,10 @@ namespace SMIS.Infrastructure.Migrations
                     b.Property<string>("Properties")
                         .HasColumnType("TEXT");
 
-                    b.Property<int?>("UserId")
-                        .HasColumnType("INTEGER");
+                    b.Property<string>("UserId")
+                        .HasColumnType("TEXT");
 
-                    b.HasKey("PublicId");
+                    b.HasKey("Id");
 
                     b.HasIndex("CreatedAt");
 
@@ -170,19 +168,14 @@ namespace SMIS.Infrastructure.Migrations
 
             modelBuilder.Entity("SMIS.Domain.Entities.District", b =>
                 {
-                    b.Property<string>("PublicId")
+                    b.Property<string>("Id")
                         .HasColumnType("TEXT");
 
-                    b.Property<int?>("CreatedBy")
-                        .HasColumnType("INTEGER");
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("TEXT");
 
                     b.Property<DateTime?>("CreatedDate")
                         .HasColumnType("TEXT");
-
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER")
-                        .HasDefaultValue(0);
 
                     b.Property<bool>("IsPublic")
                         .HasColumnType("INTEGER");
@@ -195,13 +188,13 @@ namespace SMIS.Infrastructure.Migrations
                     b.Property<string>("TranslationKeyId")
                         .HasColumnType("TEXT");
 
-                    b.Property<int?>("UpdatedBy")
-                        .HasColumnType("INTEGER");
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnType("TEXT");
 
                     b.Property<DateTime?>("UpdatedDate")
                         .HasColumnType("TEXT");
 
-                    b.HasKey("PublicId");
+                    b.HasKey("Id");
 
                     b.HasIndex("TranslationKeyId")
                         .IsUnique();
@@ -211,41 +204,37 @@ namespace SMIS.Infrastructure.Migrations
                     b.HasData(
                         new
                         {
-                            PublicId = "1",
-                            CreatedDate = new DateTime(2026, 1, 21, 12, 38, 36, 970, DateTimeKind.Local).AddTicks(3970),
-                            Id = 1,
+                            Id = "1",
+                            CreatedDate = new DateTime(2026, 1, 21, 15, 14, 14, 804, DateTimeKind.Local).AddTicks(2251),
                             IsPublic = false,
                             Name = "Kabul Center",
                             TranslationKeyId = "1",
-                            UpdatedDate = new DateTime(2026, 1, 21, 12, 38, 36, 970, DateTimeKind.Local).AddTicks(3973)
+                            UpdatedDate = new DateTime(2026, 1, 21, 15, 14, 14, 804, DateTimeKind.Local).AddTicks(2252)
                         },
                         new
                         {
-                            PublicId = "2",
-                            CreatedDate = new DateTime(2026, 1, 21, 12, 38, 36, 970, DateTimeKind.Local).AddTicks(4113),
-                            Id = 2,
+                            Id = "2",
+                            CreatedDate = new DateTime(2026, 1, 21, 15, 14, 14, 804, DateTimeKind.Local).AddTicks(2371),
                             IsPublic = false,
                             Name = "Kabul North",
                             TranslationKeyId = "2",
-                            UpdatedDate = new DateTime(2026, 1, 21, 12, 38, 36, 970, DateTimeKind.Local).AddTicks(4113)
+                            UpdatedDate = new DateTime(2026, 1, 21, 15, 14, 14, 804, DateTimeKind.Local).AddTicks(2372)
                         },
                         new
                         {
-                            PublicId = "3",
-                            CreatedDate = new DateTime(2026, 1, 21, 12, 38, 36, 970, DateTimeKind.Local).AddTicks(4114),
-                            Id = 3,
+                            Id = "3",
+                            CreatedDate = new DateTime(2026, 1, 21, 15, 14, 14, 804, DateTimeKind.Local).AddTicks(2373),
                             IsPublic = false,
                             Name = "Herat Center",
                             TranslationKeyId = "3",
-                            UpdatedDate = new DateTime(2026, 1, 21, 12, 38, 36, 970, DateTimeKind.Local).AddTicks(4114)
+                            UpdatedDate = new DateTime(2026, 1, 21, 15, 14, 14, 804, DateTimeKind.Local).AddTicks(2373)
                         });
                 });
 
             modelBuilder.Entity("SMIS.Domain.Entities.Identity.Entity.ApplicationRole", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                    b.Property<string>("Id")
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
@@ -270,9 +259,8 @@ namespace SMIS.Infrastructure.Migrations
 
             modelBuilder.Entity("SMIS.Domain.Entities.Identity.Entity.ApplicationUser", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                    b.Property<string>("Id")
+                        .HasColumnType("TEXT");
 
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("INTEGER");
@@ -317,10 +305,6 @@ namespace SMIS.Infrastructure.Migrations
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("PublicId")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("TEXT");
 
@@ -345,9 +329,9 @@ namespace SMIS.Infrastructure.Migrations
                     b.HasData(
                         new
                         {
-                            Id = 1,
+                            Id = "1",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "86282817-376a-42ad-947f-1611e67b264d",
+                            ConcurrencyStamp = "706ca6d0-69a8-456c-9fa4-f7a677b4a089",
                             Email = "admin@local",
                             EmailConfirmed = true,
                             FirstName = "System",
@@ -355,18 +339,17 @@ namespace SMIS.Infrastructure.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@LOCAL",
                             NormalizedUserName = "ADMIN",
-                            PasswordHash = "AQAAAAIAAYagAAAAEIgY7+DydSdK9UAE5UIE/0iSHfxl+IDcQ1cCHMdIpqYh+TrzHIoRjZlWRzRroeJoiw==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEGcfTMnAhd1vwdVvDvoa2q8fSRU5Mn/iKyL+KzLbxyiGNmKEST9aAjzAeousDa4pZg==",
                             PhoneNumberConfirmed = false,
-                            PublicId = "1",
                             SecurityStamp = "admin-seed",
                             TwoFactorEnabled = false,
                             UserName = "admin"
                         },
                         new
                         {
-                            Id = 2,
+                            Id = "2",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "8a502a25-569e-44f3-9988-6f986e9db6fd",
+                            ConcurrencyStamp = "298e1b4f-240e-4626-8500-2cef7559495a",
                             Email = "user@local",
                             EmailConfirmed = true,
                             FirstName = "Default",
@@ -374,9 +357,8 @@ namespace SMIS.Infrastructure.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "USER@LOCAL",
                             NormalizedUserName = "USER",
-                            PasswordHash = "AQAAAAIAAYagAAAAEN2GGpwqvwq8oR6eAi8InNPQQkKofWMALVKF8uXLZ88BmaIgoEf9RGfjGOSEubnoMA==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEPEoAISbUASJ9c2RBAxVW7iwkwzVmgQ5awsb2rA6XEzwrmA/XfOy28GZYil/yIae7w==",
                             PhoneNumberConfirmed = false,
-                            PublicId = "2",
                             SecurityStamp = "user-seed",
                             TwoFactorEnabled = false,
                             UserName = "user"
@@ -385,17 +367,12 @@ namespace SMIS.Infrastructure.Migrations
 
             modelBuilder.Entity("SMIS.Domain.Entities.Localization.Language", b =>
                 {
-                    b.Property<string>("PublicId")
+                    b.Property<string>("Id")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Code")
                         .HasMaxLength(10)
                         .HasColumnType("TEXT");
-
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER")
-                        .HasDefaultValue(0);
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("INTEGER");
@@ -405,7 +382,7 @@ namespace SMIS.Infrastructure.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("TEXT");
 
-                    b.HasKey("PublicId");
+                    b.HasKey("Id");
 
                     b.HasIndex("Code")
                         .IsUnique();
@@ -415,25 +392,22 @@ namespace SMIS.Infrastructure.Migrations
                     b.HasData(
                         new
                         {
-                            PublicId = "1",
+                            Id = "1",
                             Code = "en",
-                            Id = 1,
                             IsActive = true,
                             Name = "English"
                         },
                         new
                         {
-                            PublicId = "2",
+                            Id = "2",
                             Code = "ps",
-                            Id = 2,
                             IsActive = true,
                             Name = "Pashto"
                         },
                         new
                         {
-                            PublicId = "3",
+                            Id = "3",
                             Code = "fa",
-                            Id = 3,
                             IsActive = true,
                             Name = "Farsi"
                         });
@@ -441,231 +415,207 @@ namespace SMIS.Infrastructure.Migrations
 
             modelBuilder.Entity("SMIS.Domain.Entities.Localization.Translation", b =>
                 {
-                    b.Property<string>("PublicId")
+                    b.Property<string>("Id")
                         .HasColumnType("TEXT");
 
-                    b.Property<int?>("CreatedBy")
-                        .HasColumnType("INTEGER");
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("TEXT");
 
                     b.Property<DateTime?>("CreatedDate")
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER")
-                        .HasDefaultValue(0);
-
                     b.Property<bool>("IsPublic")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("LanguageNo")
-                        .HasColumnType("INTEGER");
+                    b.Property<string>("LanguageNo")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("TranslationKeyPublicId")
+                    b.Property<string>("TranslationKeyId")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<int?>("UpdatedBy")
-                        .HasColumnType("INTEGER");
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnType("TEXT");
 
                     b.Property<DateTime?>("UpdatedDate")
                         .HasColumnType("TEXT");
 
-                    b.HasKey("PublicId");
+                    b.HasKey("Id");
 
                     b.HasIndex("LanguageNo");
 
-                    b.HasIndex("TranslationKeyPublicId");
+                    b.HasIndex("TranslationKeyId");
 
                     b.ToTable("Translations");
 
                     b.HasData(
                         new
                         {
-                            PublicId = "1",
-                            CreatedDate = new DateTime(2026, 1, 21, 12, 38, 36, 969, DateTimeKind.Local).AddTicks(7685),
-                            Id = 1,
+                            Id = "1",
+                            CreatedDate = new DateTime(2026, 1, 21, 15, 14, 14, 803, DateTimeKind.Local).AddTicks(6213),
                             IsPublic = false,
-                            LanguageNo = 1,
+                            LanguageNo = "1",
                             Name = "",
-                            TranslationKeyPublicId = "1",
-                            UpdatedDate = new DateTime(2026, 1, 21, 12, 38, 36, 969, DateTimeKind.Local).AddTicks(7687)
+                            TranslationKeyId = "1",
+                            UpdatedDate = new DateTime(2026, 1, 21, 15, 14, 14, 803, DateTimeKind.Local).AddTicks(6215)
                         },
                         new
                         {
-                            PublicId = "2",
-                            CreatedDate = new DateTime(2026, 1, 21, 12, 38, 36, 969, DateTimeKind.Local).AddTicks(7926),
-                            Id = 2,
+                            Id = "2",
+                            CreatedDate = new DateTime(2026, 1, 21, 15, 14, 14, 803, DateTimeKind.Local).AddTicks(6468),
                             IsPublic = false,
-                            LanguageNo = 2,
+                            LanguageNo = "2",
                             Name = "",
-                            TranslationKeyPublicId = "1",
-                            UpdatedDate = new DateTime(2026, 1, 21, 12, 38, 36, 969, DateTimeKind.Local).AddTicks(7927)
+                            TranslationKeyId = "1",
+                            UpdatedDate = new DateTime(2026, 1, 21, 15, 14, 14, 803, DateTimeKind.Local).AddTicks(6468)
                         },
                         new
                         {
-                            PublicId = "3",
-                            CreatedDate = new DateTime(2026, 1, 21, 12, 38, 36, 969, DateTimeKind.Local).AddTicks(7928),
-                            Id = 3,
+                            Id = "3",
+                            CreatedDate = new DateTime(2026, 1, 21, 15, 14, 14, 803, DateTimeKind.Local).AddTicks(6470),
                             IsPublic = false,
-                            LanguageNo = 3,
+                            LanguageNo = "3",
                             Name = "",
-                            TranslationKeyPublicId = "1",
-                            UpdatedDate = new DateTime(2026, 1, 21, 12, 38, 36, 969, DateTimeKind.Local).AddTicks(7928)
+                            TranslationKeyId = "1",
+                            UpdatedDate = new DateTime(2026, 1, 21, 15, 14, 14, 803, DateTimeKind.Local).AddTicks(6470)
                         },
                         new
                         {
-                            PublicId = "4",
-                            CreatedDate = new DateTime(2026, 1, 21, 12, 38, 36, 969, DateTimeKind.Local).AddTicks(7929),
-                            Id = 4,
+                            Id = "4",
+                            CreatedDate = new DateTime(2026, 1, 21, 15, 14, 14, 803, DateTimeKind.Local).AddTicks(6471),
                             IsPublic = false,
-                            LanguageNo = 1,
+                            LanguageNo = "1",
                             Name = "",
-                            TranslationKeyPublicId = "2",
-                            UpdatedDate = new DateTime(2026, 1, 21, 12, 38, 36, 969, DateTimeKind.Local).AddTicks(7930)
+                            TranslationKeyId = "2",
+                            UpdatedDate = new DateTime(2026, 1, 21, 15, 14, 14, 803, DateTimeKind.Local).AddTicks(6471)
                         },
                         new
                         {
-                            PublicId = "5",
-                            CreatedDate = new DateTime(2026, 1, 21, 12, 38, 36, 969, DateTimeKind.Local).AddTicks(7931),
-                            Id = 5,
+                            Id = "5",
+                            CreatedDate = new DateTime(2026, 1, 21, 15, 14, 14, 803, DateTimeKind.Local).AddTicks(6472),
                             IsPublic = false,
-                            LanguageNo = 2,
+                            LanguageNo = "2",
                             Name = "",
-                            TranslationKeyPublicId = "2",
-                            UpdatedDate = new DateTime(2026, 1, 21, 12, 38, 36, 969, DateTimeKind.Local).AddTicks(7931)
+                            TranslationKeyId = "2",
+                            UpdatedDate = new DateTime(2026, 1, 21, 15, 14, 14, 803, DateTimeKind.Local).AddTicks(6472)
                         },
                         new
                         {
-                            PublicId = "6",
-                            CreatedDate = new DateTime(2026, 1, 21, 12, 38, 36, 969, DateTimeKind.Local).AddTicks(7932),
-                            Id = 6,
+                            Id = "6",
+                            CreatedDate = new DateTime(2026, 1, 21, 15, 14, 14, 803, DateTimeKind.Local).AddTicks(6473),
                             IsPublic = false,
-                            LanguageNo = 3,
+                            LanguageNo = "3",
                             Name = "",
-                            TranslationKeyPublicId = "2",
-                            UpdatedDate = new DateTime(2026, 1, 21, 12, 38, 36, 969, DateTimeKind.Local).AddTicks(7932)
+                            TranslationKeyId = "2",
+                            UpdatedDate = new DateTime(2026, 1, 21, 15, 14, 14, 803, DateTimeKind.Local).AddTicks(6474)
                         },
                         new
                         {
-                            PublicId = "7",
-                            CreatedDate = new DateTime(2026, 1, 21, 12, 38, 36, 969, DateTimeKind.Local).AddTicks(7933),
-                            Id = 7,
+                            Id = "7",
+                            CreatedDate = new DateTime(2026, 1, 21, 15, 14, 14, 803, DateTimeKind.Local).AddTicks(6475),
                             IsPublic = false,
-                            LanguageNo = 1,
+                            LanguageNo = "1",
                             Name = "",
-                            TranslationKeyPublicId = "3",
-                            UpdatedDate = new DateTime(2026, 1, 21, 12, 38, 36, 969, DateTimeKind.Local).AddTicks(7933)
+                            TranslationKeyId = "3",
+                            UpdatedDate = new DateTime(2026, 1, 21, 15, 14, 14, 803, DateTimeKind.Local).AddTicks(6475)
                         },
                         new
                         {
-                            PublicId = "8",
-                            CreatedDate = new DateTime(2026, 1, 21, 12, 38, 36, 969, DateTimeKind.Local).AddTicks(7934),
-                            Id = 8,
+                            Id = "8",
+                            CreatedDate = new DateTime(2026, 1, 21, 15, 14, 14, 803, DateTimeKind.Local).AddTicks(6476),
                             IsPublic = false,
-                            LanguageNo = 2,
+                            LanguageNo = "2",
                             Name = "",
-                            TranslationKeyPublicId = "3",
-                            UpdatedDate = new DateTime(2026, 1, 21, 12, 38, 36, 969, DateTimeKind.Local).AddTicks(7934)
+                            TranslationKeyId = "3",
+                            UpdatedDate = new DateTime(2026, 1, 21, 15, 14, 14, 803, DateTimeKind.Local).AddTicks(6476)
                         },
                         new
                         {
-                            PublicId = "9",
-                            CreatedDate = new DateTime(2026, 1, 21, 12, 38, 36, 969, DateTimeKind.Local).AddTicks(7935),
-                            Id = 9,
+                            Id = "9",
+                            CreatedDate = new DateTime(2026, 1, 21, 15, 14, 14, 803, DateTimeKind.Local).AddTicks(6477),
                             IsPublic = false,
-                            LanguageNo = 3,
+                            LanguageNo = "3",
                             Name = "",
-                            TranslationKeyPublicId = "3",
-                            UpdatedDate = new DateTime(2026, 1, 21, 12, 38, 36, 969, DateTimeKind.Local).AddTicks(7936)
+                            TranslationKeyId = "3",
+                            UpdatedDate = new DateTime(2026, 1, 21, 15, 14, 14, 803, DateTimeKind.Local).AddTicks(6477)
                         },
                         new
                         {
-                            PublicId = "10",
-                            CreatedDate = new DateTime(2026, 1, 21, 12, 38, 36, 969, DateTimeKind.Local).AddTicks(7936),
-                            Id = 10,
+                            Id = "10",
+                            CreatedDate = new DateTime(2026, 1, 21, 15, 14, 14, 803, DateTimeKind.Local).AddTicks(6478),
                             IsPublic = false,
-                            LanguageNo = 1,
+                            LanguageNo = "1",
                             Name = "",
-                            TranslationKeyPublicId = "4",
-                            UpdatedDate = new DateTime(2026, 1, 21, 12, 38, 36, 969, DateTimeKind.Local).AddTicks(7937)
+                            TranslationKeyId = "4",
+                            UpdatedDate = new DateTime(2026, 1, 21, 15, 14, 14, 803, DateTimeKind.Local).AddTicks(6479)
                         },
                         new
                         {
-                            PublicId = "11",
-                            CreatedDate = new DateTime(2026, 1, 21, 12, 38, 36, 969, DateTimeKind.Local).AddTicks(7938),
-                            Id = 11,
+                            Id = "11",
+                            CreatedDate = new DateTime(2026, 1, 21, 15, 14, 14, 803, DateTimeKind.Local).AddTicks(6479),
                             IsPublic = false,
-                            LanguageNo = 2,
+                            LanguageNo = "2",
                             Name = "",
-                            TranslationKeyPublicId = "4",
-                            UpdatedDate = new DateTime(2026, 1, 21, 12, 38, 36, 969, DateTimeKind.Local).AddTicks(7938)
+                            TranslationKeyId = "4",
+                            UpdatedDate = new DateTime(2026, 1, 21, 15, 14, 14, 803, DateTimeKind.Local).AddTicks(6480)
                         },
                         new
                         {
-                            PublicId = "12",
-                            CreatedDate = new DateTime(2026, 1, 21, 12, 38, 36, 969, DateTimeKind.Local).AddTicks(7939),
-                            Id = 12,
+                            Id = "12",
+                            CreatedDate = new DateTime(2026, 1, 21, 15, 14, 14, 803, DateTimeKind.Local).AddTicks(6481),
                             IsPublic = false,
-                            LanguageNo = 3,
+                            LanguageNo = "3",
                             Name = "",
-                            TranslationKeyPublicId = "4",
-                            UpdatedDate = new DateTime(2026, 1, 21, 12, 38, 36, 969, DateTimeKind.Local).AddTicks(7939)
+                            TranslationKeyId = "4",
+                            UpdatedDate = new DateTime(2026, 1, 21, 15, 14, 14, 803, DateTimeKind.Local).AddTicks(6481)
                         },
                         new
                         {
-                            PublicId = "13",
-                            CreatedDate = new DateTime(2026, 1, 21, 12, 38, 36, 969, DateTimeKind.Local).AddTicks(7940),
-                            Id = 13,
+                            Id = "13",
+                            CreatedDate = new DateTime(2026, 1, 21, 15, 14, 14, 803, DateTimeKind.Local).AddTicks(6482),
                             IsPublic = false,
-                            LanguageNo = 1,
+                            LanguageNo = "1",
                             Name = "",
-                            TranslationKeyPublicId = "5",
-                            UpdatedDate = new DateTime(2026, 1, 21, 12, 38, 36, 969, DateTimeKind.Local).AddTicks(7940)
+                            TranslationKeyId = "5",
+                            UpdatedDate = new DateTime(2026, 1, 21, 15, 14, 14, 803, DateTimeKind.Local).AddTicks(6482)
                         },
                         new
                         {
-                            PublicId = "14",
-                            CreatedDate = new DateTime(2026, 1, 21, 12, 38, 36, 969, DateTimeKind.Local).AddTicks(7941),
-                            Id = 14,
+                            Id = "14",
+                            CreatedDate = new DateTime(2026, 1, 21, 15, 14, 14, 803, DateTimeKind.Local).AddTicks(6483),
                             IsPublic = false,
-                            LanguageNo = 2,
+                            LanguageNo = "2",
                             Name = "",
-                            TranslationKeyPublicId = "5",
-                            UpdatedDate = new DateTime(2026, 1, 21, 12, 38, 36, 969, DateTimeKind.Local).AddTicks(7941)
+                            TranslationKeyId = "5",
+                            UpdatedDate = new DateTime(2026, 1, 21, 15, 14, 14, 803, DateTimeKind.Local).AddTicks(6483)
                         },
                         new
                         {
-                            PublicId = "15",
-                            CreatedDate = new DateTime(2026, 1, 21, 12, 38, 36, 969, DateTimeKind.Local).AddTicks(7942),
-                            Id = 15,
+                            Id = "15",
+                            CreatedDate = new DateTime(2026, 1, 21, 15, 14, 14, 803, DateTimeKind.Local).AddTicks(6484),
                             IsPublic = false,
-                            LanguageNo = 3,
+                            LanguageNo = "3",
                             Name = "",
-                            TranslationKeyPublicId = "5",
-                            UpdatedDate = new DateTime(2026, 1, 21, 12, 38, 36, 969, DateTimeKind.Local).AddTicks(7942)
+                            TranslationKeyId = "5",
+                            UpdatedDate = new DateTime(2026, 1, 21, 15, 14, 14, 803, DateTimeKind.Local).AddTicks(6485)
                         });
                 });
 
             modelBuilder.Entity("SMIS.Domain.Entities.Localization.TranslationKey", b =>
                 {
-                    b.Property<string>("PublicId")
+                    b.Property<string>("Id")
                         .HasColumnType("TEXT");
 
-                    b.Property<int?>("CreatedBy")
-                        .HasColumnType("INTEGER");
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("TEXT");
 
                     b.Property<DateTime?>("CreatedDate")
                         .HasColumnType("TEXT");
-
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER")
-                        .HasDefaultValue(0);
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("INTEGER");
@@ -673,100 +623,89 @@ namespace SMIS.Infrastructure.Migrations
                     b.Property<bool>("IsPublic")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int?>("MessageCode")
-                        .HasColumnType("INTEGER");
+                    b.Property<string>("MessageCode")
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("TEXT");
 
-                    b.Property<int?>("UpdatedBy")
-                        .HasColumnType("INTEGER");
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnType("TEXT");
 
                     b.Property<DateTime?>("UpdatedDate")
                         .HasColumnType("TEXT");
 
-                    b.HasKey("PublicId");
+                    b.HasKey("Id");
 
-                    b.HasIndex("MessageCode")
-                        .IsUnique();
+                    b.HasIndex("MessageCode");
 
                     b.ToTable("TranslationKeys");
 
                     b.HasData(
                         new
                         {
-                            PublicId = "1",
-                            CreatedDate = new DateTime(2026, 1, 21, 12, 38, 36, 968, DateTimeKind.Local).AddTicks(6936),
-                            Id = 1,
+                            Id = "1",
+                            CreatedDate = new DateTime(2026, 1, 21, 15, 14, 14, 802, DateTimeKind.Local).AddTicks(4732),
                             IsActive = true,
                             IsPublic = false,
-                            MessageCode = 1001,
+                            MessageCode = "1001",
                             Name = "Kabul Center District",
-                            UpdatedDate = new DateTime(2026, 1, 21, 12, 38, 36, 969, DateTimeKind.Local).AddTicks(3541)
+                            UpdatedDate = new DateTime(2026, 1, 21, 15, 14, 14, 803, DateTimeKind.Local).AddTicks(2111)
                         },
                         new
                         {
-                            PublicId = "2",
-                            CreatedDate = new DateTime(2026, 1, 21, 12, 38, 36, 969, DateTimeKind.Local).AddTicks(4807),
-                            Id = 2,
+                            Id = "2",
+                            CreatedDate = new DateTime(2026, 1, 21, 15, 14, 14, 803, DateTimeKind.Local).AddTicks(3254),
                             IsActive = true,
                             IsPublic = false,
-                            MessageCode = 1002,
+                            MessageCode = "1002",
                             Name = "Kabul North District",
-                            UpdatedDate = new DateTime(2026, 1, 21, 12, 38, 36, 969, DateTimeKind.Local).AddTicks(4808)
+                            UpdatedDate = new DateTime(2026, 1, 21, 15, 14, 14, 803, DateTimeKind.Local).AddTicks(3258)
                         },
                         new
                         {
-                            PublicId = "3",
-                            CreatedDate = new DateTime(2026, 1, 21, 12, 38, 36, 969, DateTimeKind.Local).AddTicks(4810),
-                            Id = 3,
+                            Id = "3",
+                            CreatedDate = new DateTime(2026, 1, 21, 15, 14, 14, 803, DateTimeKind.Local).AddTicks(3260),
                             IsActive = true,
                             IsPublic = false,
-                            MessageCode = 1003,
+                            MessageCode = "1003",
                             Name = "Herat Center District",
-                            UpdatedDate = new DateTime(2026, 1, 21, 12, 38, 36, 969, DateTimeKind.Local).AddTicks(4811)
+                            UpdatedDate = new DateTime(2026, 1, 21, 15, 14, 14, 803, DateTimeKind.Local).AddTicks(3261)
                         },
                         new
                         {
-                            PublicId = "4",
-                            CreatedDate = new DateTime(2026, 1, 21, 12, 38, 36, 969, DateTimeKind.Local).AddTicks(4812),
-                            Id = 4,
+                            Id = "4",
+                            CreatedDate = new DateTime(2026, 1, 21, 15, 14, 14, 803, DateTimeKind.Local).AddTicks(3262),
                             IsActive = true,
                             IsPublic = false,
-                            MessageCode = 2001,
+                            MessageCode = "2001",
                             Name = "Kabul Province",
-                            UpdatedDate = new DateTime(2026, 1, 21, 12, 38, 36, 969, DateTimeKind.Local).AddTicks(4812)
+                            UpdatedDate = new DateTime(2026, 1, 21, 15, 14, 14, 803, DateTimeKind.Local).AddTicks(3262)
                         },
                         new
                         {
-                            PublicId = "5",
-                            CreatedDate = new DateTime(2026, 1, 21, 12, 38, 36, 969, DateTimeKind.Local).AddTicks(4813),
-                            Id = 5,
+                            Id = "5",
+                            CreatedDate = new DateTime(2026, 1, 21, 15, 14, 14, 803, DateTimeKind.Local).AddTicks(3263),
                             IsActive = true,
                             IsPublic = false,
-                            MessageCode = 2002,
+                            MessageCode = "2002",
                             Name = "Herat Province",
-                            UpdatedDate = new DateTime(2026, 1, 21, 12, 38, 36, 969, DateTimeKind.Local).AddTicks(4814)
+                            UpdatedDate = new DateTime(2026, 1, 21, 15, 14, 14, 803, DateTimeKind.Local).AddTicks(3264)
                         });
                 });
 
             modelBuilder.Entity("SMIS.Domain.Entities.Province", b =>
                 {
-                    b.Property<string>("PublicId")
+                    b.Property<string>("Id")
                         .HasColumnType("TEXT");
 
-                    b.Property<int?>("CreatedBy")
-                        .HasColumnType("INTEGER");
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("TEXT");
 
                     b.Property<DateTime?>("CreatedDate")
                         .HasColumnType("TEXT");
-
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER")
-                        .HasDefaultValue(0);
 
                     b.Property<bool>("IsPublic")
                         .HasColumnType("INTEGER");
@@ -776,64 +715,55 @@ namespace SMIS.Infrastructure.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("TEXT");
 
-                    b.Property<int?>("UpdatedBy")
-                        .HasColumnType("INTEGER");
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnType("TEXT");
 
                     b.Property<DateTime?>("UpdatedDate")
                         .HasColumnType("TEXT");
 
-                    b.HasKey("PublicId");
+                    b.HasKey("Id");
 
                     b.ToTable("Provinces");
 
                     b.HasData(
                         new
                         {
-                            PublicId = "1",
-                            CreatedDate = new DateTime(2026, 1, 21, 12, 38, 36, 970, DateTimeKind.Local).AddTicks(1541),
-                            Id = 1,
+                            Id = "1",
+                            CreatedDate = new DateTime(2026, 1, 21, 15, 14, 14, 804, DateTimeKind.Local).AddTicks(182),
                             IsPublic = false,
                             Name = "Kabul",
-                            UpdatedDate = new DateTime(2026, 1, 21, 12, 38, 36, 970, DateTimeKind.Local).AddTicks(1543)
+                            UpdatedDate = new DateTime(2026, 1, 21, 15, 14, 14, 804, DateTimeKind.Local).AddTicks(185)
                         },
                         new
                         {
-                            PublicId = "2",
-                            CreatedDate = new DateTime(2026, 1, 21, 12, 38, 36, 970, DateTimeKind.Local).AddTicks(1545),
-                            Id = 2,
+                            Id = "2",
+                            CreatedDate = new DateTime(2026, 1, 21, 15, 14, 14, 804, DateTimeKind.Local).AddTicks(188),
                             IsPublic = false,
                             Name = "Herat",
-                            UpdatedDate = new DateTime(2026, 1, 21, 12, 38, 36, 970, DateTimeKind.Local).AddTicks(1545)
+                            UpdatedDate = new DateTime(2026, 1, 21, 15, 14, 14, 804, DateTimeKind.Local).AddTicks(189)
                         },
                         new
                         {
-                            PublicId = "3",
-                            CreatedDate = new DateTime(2026, 1, 21, 12, 38, 36, 970, DateTimeKind.Local).AddTicks(1546),
-                            Id = 3,
+                            Id = "3",
+                            CreatedDate = new DateTime(2026, 1, 21, 15, 14, 14, 804, DateTimeKind.Local).AddTicks(190),
                             IsPublic = false,
                             Name = "Kandahar",
-                            UpdatedDate = new DateTime(2026, 1, 21, 12, 38, 36, 970, DateTimeKind.Local).AddTicks(1547)
+                            UpdatedDate = new DateTime(2026, 1, 21, 15, 14, 14, 804, DateTimeKind.Local).AddTicks(190)
                         },
                         new
                         {
-                            PublicId = "4",
-                            CreatedDate = new DateTime(2026, 1, 21, 12, 38, 36, 970, DateTimeKind.Local).AddTicks(1548),
-                            Id = 4,
+                            Id = "4",
+                            CreatedDate = new DateTime(2026, 1, 21, 15, 14, 14, 804, DateTimeKind.Local).AddTicks(191),
                             IsPublic = false,
                             Name = "Balkh",
-                            UpdatedDate = new DateTime(2026, 1, 21, 12, 38, 36, 970, DateTimeKind.Local).AddTicks(1548)
+                            UpdatedDate = new DateTime(2026, 1, 21, 15, 14, 14, 804, DateTimeKind.Local).AddTicks(192)
                         });
                 });
 
             modelBuilder.Entity("SMIS.Domain.Entities.ProvinceTranslation", b =>
                 {
-                    b.Property<string>("PublicId")
+                    b.Property<string>("Id")
                         .HasColumnType("TEXT");
-
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER")
-                        .HasDefaultValue(0);
 
                     b.Property<bool>("IsDefault")
                         .HasColumnType("INTEGER");
@@ -843,18 +773,20 @@ namespace SMIS.Infrastructure.Migrations
                         .HasMaxLength(10)
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("LanguageId")
-                        .HasColumnType("INTEGER");
+                    b.Property<string>("LanguageId")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("ProvinceId")
-                        .HasColumnType("INTEGER");
+                    b.Property<string>("ProvinceId")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
 
-                    b.HasKey("PublicId");
+                    b.HasKey("Id");
 
                     b.HasIndex("LanguageId");
 
@@ -866,129 +798,117 @@ namespace SMIS.Infrastructure.Migrations
                     b.HasData(
                         new
                         {
-                            PublicId = "1",
-                            Id = 1,
+                            Id = "1",
                             IsDefault = true,
                             LanguageCode = "en",
-                            LanguageId = 1,
+                            LanguageId = "1",
                             Name = "Kabul",
-                            ProvinceId = 1
+                            ProvinceId = "1"
                         },
                         new
                         {
-                            PublicId = "2",
-                            Id = 2,
+                            Id = "2",
                             IsDefault = false,
                             LanguageCode = "ps",
-                            LanguageId = 2,
+                            LanguageId = "2",
                             Name = "کابل",
-                            ProvinceId = 1
+                            ProvinceId = "1"
                         },
                         new
                         {
-                            PublicId = "3",
-                            Id = 3,
+                            Id = "3",
                             IsDefault = false,
                             LanguageCode = "fa",
-                            LanguageId = 3,
+                            LanguageId = "3",
                             Name = "کابل",
-                            ProvinceId = 1
+                            ProvinceId = "1"
                         },
                         new
                         {
-                            PublicId = "4",
-                            Id = 4,
+                            Id = "4",
                             IsDefault = true,
                             LanguageCode = "en",
-                            LanguageId = 1,
+                            LanguageId = "1",
                             Name = "Herat",
-                            ProvinceId = 2
+                            ProvinceId = "2"
                         },
                         new
                         {
-                            PublicId = "5",
-                            Id = 5,
+                            Id = "5",
                             IsDefault = false,
                             LanguageCode = "ps",
-                            LanguageId = 2,
+                            LanguageId = "2",
                             Name = "هرات",
-                            ProvinceId = 2
+                            ProvinceId = "2"
                         },
                         new
                         {
-                            PublicId = "6",
-                            Id = 6,
+                            Id = "6",
                             IsDefault = false,
                             LanguageCode = "fa",
-                            LanguageId = 3,
+                            LanguageId = "3",
                             Name = "هرات",
-                            ProvinceId = 2
+                            ProvinceId = "2"
                         },
                         new
                         {
-                            PublicId = "7",
-                            Id = 7,
+                            Id = "7",
                             IsDefault = true,
                             LanguageCode = "en",
-                            LanguageId = 1,
+                            LanguageId = "1",
                             Name = "Kandahar",
-                            ProvinceId = 3
+                            ProvinceId = "3"
                         },
                         new
                         {
-                            PublicId = "8",
-                            Id = 8,
+                            Id = "8",
                             IsDefault = false,
                             LanguageCode = "ps",
-                            LanguageId = 2,
+                            LanguageId = "2",
                             Name = "کندهار",
-                            ProvinceId = 3
+                            ProvinceId = "3"
                         },
                         new
                         {
-                            PublicId = "9",
-                            Id = 9,
+                            Id = "9",
                             IsDefault = false,
                             LanguageCode = "fa",
-                            LanguageId = 3,
+                            LanguageId = "3",
                             Name = "قندهار",
-                            ProvinceId = 3
+                            ProvinceId = "3"
                         },
                         new
                         {
-                            PublicId = "10",
-                            Id = 10,
+                            Id = "10",
                             IsDefault = true,
                             LanguageCode = "en",
-                            LanguageId = 1,
+                            LanguageId = "1",
                             Name = "Balkh",
-                            ProvinceId = 4
+                            ProvinceId = "4"
                         },
                         new
                         {
-                            PublicId = "11",
-                            Id = 11,
+                            Id = "11",
                             IsDefault = false,
                             LanguageCode = "ps",
-                            LanguageId = 2,
+                            LanguageId = "2",
                             Name = "بلخ",
-                            ProvinceId = 4
+                            ProvinceId = "4"
                         },
                         new
                         {
-                            PublicId = "12",
-                            Id = 12,
+                            Id = "12",
                             IsDefault = false,
                             LanguageCode = "fa",
-                            LanguageId = 3,
+                            LanguageId = "3",
                             Name = "بلخ",
-                            ProvinceId = 4
+                            ProvinceId = "4"
                         });
                 });
 
             modelBuilder.Entity("SMIS.Domain.Entities.Shop", b =>
                 {
-                    b.Property<string>("PublicId")
+                    b.Property<string>("Id")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Address")
@@ -996,8 +916,8 @@ namespace SMIS.Infrastructure.Migrations
                         .HasMaxLength(500)
                         .HasColumnType("TEXT");
 
-                    b.Property<int?>("CreatedBy")
-                        .HasColumnType("INTEGER");
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("TEXT");
 
                     b.Property<DateTime?>("CreatedDate")
                         .HasColumnType("TEXT");
@@ -1006,9 +926,6 @@ namespace SMIS.Infrastructure.Migrations
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("TEXT");
-
-                    b.Property<int>("Id")
-                        .HasColumnType("INTEGER");
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("INTEGER");
@@ -1034,75 +951,69 @@ namespace SMIS.Infrastructure.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("TEXT");
 
-                    b.Property<int?>("UpdatedBy")
-                        .HasColumnType("INTEGER");
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnType("TEXT");
 
                     b.Property<DateTime?>("UpdatedDate")
                         .HasColumnType("TEXT");
 
-                    b.HasKey("PublicId");
+                    b.HasKey("Id");
 
                     b.ToTable("Shops", (string)null);
 
                     b.HasData(
                         new
                         {
-                            PublicId = "1",
+                            Id = "1",
                             Address = "Kabul Center",
-                            CreatedDate = new DateTime(2026, 1, 21, 12, 38, 36, 970, DateTimeKind.Local).AddTicks(7539),
+                            CreatedDate = new DateTime(2026, 1, 21, 15, 14, 14, 804, DateTimeKind.Local).AddTicks(4916),
                             Email = "main@pharmacy.local",
-                            Id = 1,
                             IsActive = true,
                             IsPublic = false,
                             Name = "Main Pharmacy",
                             PhoneNumber = "0700000001",
                             ShopType = 1,
                             TaxNumber = "TAX001",
-                            UpdatedDate = new DateTime(2026, 1, 21, 12, 38, 36, 970, DateTimeKind.Local).AddTicks(7542)
+                            UpdatedDate = new DateTime(2026, 1, 21, 15, 14, 14, 804, DateTimeKind.Local).AddTicks(4919)
                         },
                         new
                         {
-                            PublicId = "2",
+                            Id = "2",
                             Address = "Herat Center",
-                            CreatedDate = new DateTime(2026, 1, 21, 12, 38, 36, 970, DateTimeKind.Local).AddTicks(8264),
+                            CreatedDate = new DateTime(2026, 1, 21, 15, 14, 14, 804, DateTimeKind.Local).AddTicks(5463),
                             Email = "city@pharmacy.local",
-                            Id = 2,
                             IsActive = true,
                             IsPublic = false,
                             Name = "City Pharmacy",
                             PhoneNumber = "0700000002",
                             ShopType = 2,
                             TaxNumber = "TAX002",
-                            UpdatedDate = new DateTime(2026, 1, 21, 12, 38, 36, 970, DateTimeKind.Local).AddTicks(8265)
+                            UpdatedDate = new DateTime(2026, 1, 21, 15, 14, 14, 804, DateTimeKind.Local).AddTicks(5464)
                         },
                         new
                         {
-                            PublicId = "3",
+                            Id = "3",
                             Address = "Kandahar Center",
-                            CreatedDate = new DateTime(2026, 1, 21, 12, 38, 36, 970, DateTimeKind.Local).AddTicks(8268),
+                            CreatedDate = new DateTime(2026, 1, 21, 15, 14, 14, 804, DateTimeKind.Local).AddTicks(5466),
                             Email = "health@store.local",
-                            Id = 3,
                             IsActive = true,
                             IsPublic = false,
                             Name = "Health Store",
                             PhoneNumber = "0700000003",
                             ShopType = 1,
                             TaxNumber = "TAX003",
-                            UpdatedDate = new DateTime(2026, 1, 21, 12, 38, 36, 970, DateTimeKind.Local).AddTicks(8268)
+                            UpdatedDate = new DateTime(2026, 1, 21, 15, 14, 14, 804, DateTimeKind.Local).AddTicks(5467)
                         });
                 });
 
             modelBuilder.Entity("SMIS.Domain.Entities.UnitOfMeasure", b =>
                 {
-                    b.Property<string>("PublicId")
+                    b.Property<string>("Id")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Description")
                         .HasMaxLength(500)
                         .HasColumnType("TEXT");
-
-                    b.Property<int>("Id")
-                        .HasColumnType("INTEGER");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -1114,49 +1025,44 @@ namespace SMIS.Infrastructure.Migrations
                         .HasMaxLength(20)
                         .HasColumnType("TEXT");
 
-                    b.HasKey("PublicId");
+                    b.HasKey("Id");
 
                     b.ToTable("UnitOfMeasure", (string)null);
 
                     b.HasData(
                         new
                         {
-                            PublicId = "1",
-                            Id = 1,
+                            Id = "1",
                             Name = "Piece",
                             Symbol = "pcs"
                         },
                         new
                         {
-                            PublicId = "2",
-                            Id = 2,
+                            Id = "2",
                             Name = "Gram",
                             Symbol = "g"
                         },
                         new
                         {
-                            PublicId = "3",
-                            Id = 3,
+                            Id = "3",
                             Name = "Milliliter",
                             Symbol = "ml"
                         },
                         new
                         {
-                            PublicId = "4",
-                            Id = 4,
+                            Id = "4",
                             Name = "Box",
                             Symbol = "box"
                         },
                         new
                         {
-                            PublicId = "5",
-                            Id = 5,
+                            Id = "5",
                             Name = "Bottle",
                             Symbol = "btl"
                         });
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("SMIS.Domain.Entities.Identity.Entity.ApplicationRole", null)
                         .WithMany()
@@ -1165,7 +1071,7 @@ namespace SMIS.Infrastructure.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<int>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
                     b.HasOne("SMIS.Domain.Entities.Identity.Entity.ApplicationUser", null)
                         .WithMany()
@@ -1174,7 +1080,7 @@ namespace SMIS.Infrastructure.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<int>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
                     b.HasOne("SMIS.Domain.Entities.Identity.Entity.ApplicationUser", null)
                         .WithMany()
@@ -1183,7 +1089,7 @@ namespace SMIS.Infrastructure.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<int>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
                 {
                     b.HasOne("SMIS.Domain.Entities.Identity.Entity.ApplicationRole", null)
                         .WithMany()
@@ -1198,7 +1104,7 @@ namespace SMIS.Infrastructure.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<int>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
                     b.HasOne("SMIS.Domain.Entities.Identity.Entity.ApplicationUser", null)
                         .WithMany()
@@ -1222,13 +1128,12 @@ namespace SMIS.Infrastructure.Migrations
                     b.HasOne("SMIS.Domain.Entities.Localization.Language", "Language")
                         .WithMany()
                         .HasForeignKey("LanguageNo")
-                        .HasPrincipalKey("Id")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("SMIS.Domain.Entities.Localization.TranslationKey", "TranslationKey")
                         .WithMany("Translations")
-                        .HasForeignKey("TranslationKeyPublicId")
+                        .HasForeignKey("TranslationKeyId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -1242,14 +1147,12 @@ namespace SMIS.Infrastructure.Migrations
                     b.HasOne("SMIS.Domain.Entities.Localization.Language", "Language")
                         .WithMany()
                         .HasForeignKey("LanguageId")
-                        .HasPrincipalKey("Id")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("SMIS.Domain.Entities.Province", "Province")
                         .WithMany("Translations")
                         .HasForeignKey("ProvinceId")
-                        .HasPrincipalKey("Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

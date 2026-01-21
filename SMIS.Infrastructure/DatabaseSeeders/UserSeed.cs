@@ -11,8 +11,7 @@ namespace SMIS.Infrastructure.DatabaseSeeders
             var hasher = new PasswordHasher<ApplicationUser>();
             var admin = new ApplicationUser
             {
-                Id = 1,
-                PublicId = "1",
+                Id = "1",
                 UserName = "admin",
                 NormalizedUserName = "ADMIN",
                 Email = "admin@local",
@@ -26,8 +25,7 @@ namespace SMIS.Infrastructure.DatabaseSeeders
 
             var user = new ApplicationUser
             {
-                Id = 2,
-                PublicId = "2",
+                Id = "2",
                 UserName = "user",
                 NormalizedUserName = "USER",
                 Email = "user@local",

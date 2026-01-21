@@ -9,7 +9,7 @@ using SMIS.Domain.Entities;
 
 namespace SMIS.Application.Features.Provinces.Commands
 {
-    public record UpdateProvinceCommand(string PublicId, ProvinceCreateDto ProvinceDto) : IRequest<Result<ProvinceDto>>;
+    public record UpdateProvinceCommand(string Id, ProvinceCreateDto ProvinceDto) : IRequest<Result<ProvinceDto>>;
 
     internal sealed class UpdateProvinceCommandHandler : IRequestHandler<UpdateProvinceCommand, Result<ProvinceDto>>
     {
@@ -26,10 +26,10 @@ namespace SMIS.Application.Features.Provinces.Commands
 
         public async Task<Result<ProvinceDto>> Handle(UpdateProvinceCommand request, CancellationToken cancellationToken)
         {
-            var existing = await _provinceRepository.GetFirstOrDefaultAsync(x => x.PublicId == request.PublicId, includeProperties: nameof(Domain.Entities.Province.Translations));
+            var existing = await _provinceRepository.GetFirstOrDefaultAsync(x => x.Id == request.Id, includeProperties: nameof(Domain.Entities.Province.Translations));
             if (existing is null)
             {
-                return Result<ProvinceDto>.NotFoundResult(request.PublicId);
+                return Result<ProvinceDto>.NotFoundResult(request.Id);
             }
 
             // Map simple fields (keeping backward compatibility)

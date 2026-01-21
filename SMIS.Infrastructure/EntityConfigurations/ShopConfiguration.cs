@@ -10,7 +10,7 @@ namespace SMIS.Infrastructure.EntityConfigurations
         {
             builder.ToTable("Shops");
 
-            builder.HasKey(s => s.PublicId);
+            builder.HasKey(s => s.Id);
 
             builder.Property(s => s.Name)
                 .IsRequired()

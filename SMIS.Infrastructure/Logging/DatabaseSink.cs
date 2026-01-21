@@ -45,12 +45,11 @@ namespace SMIS.Infrastructure.Logging
             };
         }
 
-        private static int? ExtractUserId(Dictionary<string, string> properties)
+        private static string? ExtractUserId(Dictionary<string, string> properties)
         {
-            if (properties.TryGetValue("UserId", out var userIdStr) && 
-                int.TryParse(userIdStr, out var userId))
+            if (properties.TryGetValue("UserId", out var userIdStr))
             {
-                return userId;
+                return userIdStr;
             }
             return null;
         }

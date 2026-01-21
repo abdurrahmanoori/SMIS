@@ -5,18 +5,18 @@ using SMIS.Application.Identity.Models;
 
 namespace SMIS.Application.Features.Identity.Users.Commands
 {
-    public record CreateUserCommand(UserCreateDto Dto) : IRequest<Result<int>>;
+    public record CreateUserCommand(UserCreateDto Dto) : IRequest<Result<string>>;
 
-    public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, Result<int>>
+    public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, Result<string>>
     {
         private readonly IUserService _userService;
         public CreateUserCommandHandler(IUserService userService)
         {
             _userService = userService;
         }
-        public Task<Result<int>> Handle(CreateUserCommand request, CancellationToken cancellationToken)
+        public async Task<Result<string>> Handle(CreateUserCommand request, CancellationToken cancellationToken)
         {
-            return _userService.CreateUserAsync(request.Dto);
+            return await _userService.CreateUserAsync(request.Dto);
         }
     }
 }

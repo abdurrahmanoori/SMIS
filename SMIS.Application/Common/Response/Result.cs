@@ -2,7 +2,7 @@
 
 public class Result
 {
-    public long Id { get; set; }
+    public string? Id { get; set; }
 
     public bool Success { get; set; } = true;
 
@@ -15,7 +15,7 @@ public class Result
 
 public class Result<T>
 {
-    public long Id { get; set; }
+    public string? Id { get; set; }
 
     public T? Response { get; set; }
 
@@ -33,12 +33,12 @@ public class Result<T>
             Response = result,
         };
     }
-    public static Result<T> NotFoundResult(int? id = null)
+    public static Result<T> NotFoundResult(string? Id = null)
     {
         return new Result<T>
         {
             Success = false,
-            Message = $"Entity with the {id} not found",
+            Message = $"Entity with the {Id} not found",
         };
     }
     public static Result<T> EmptyResult(string? entity = null)

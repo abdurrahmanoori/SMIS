@@ -5,16 +5,16 @@ namespace SMIS.Application.DTO.Shops
 {
     public class ShopDto
     {
-        public string PublicId { get; set; } = string.Empty;
-        
+        public string Id { get; set; } = string.Empty;
+
         [Translatable]
         public string Name { get; set; } = string.Empty;
-        
+
         public ShopType ShopType { get; set; }
-        
+
         [Translatable]
         public string Address { get; set; } = string.Empty;
-        
+
         public string PhoneNumber { get; set; } = string.Empty;
         public string Email { get; set; } = string.Empty;
         public string TaxNumber { get; set; } = string.Empty;

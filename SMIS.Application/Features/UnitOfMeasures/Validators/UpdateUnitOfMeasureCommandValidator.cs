@@ -7,8 +7,8 @@ namespace SMIS.Application.Features.UnitOfMeasures.Validators
     {
         public UpdateUnitOfMeasureCommandValidator()
         {
-            RuleFor(x => x.PublicId)
-                .NotEmpty().WithMessage("PublicId is required");
+            RuleFor(x => x.Id)
+                .NotEmpty().WithMessage("Id is required");
 
             RuleFor(x => x.UnitOfMeasureCreateDto.Name)
                 .NotEmpty().WithMessage("Name is required")

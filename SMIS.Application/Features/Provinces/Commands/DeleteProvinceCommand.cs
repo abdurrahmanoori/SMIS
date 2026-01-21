@@ -5,7 +5,7 @@ using SMIS.Application.Repositories.Provinces;
 
 namespace SMIS.Application.Features.Provinces.Commands
 {
-    public record DeleteProvinceCommand(string PublicId) : IRequest<Result<Unit>>;
+    public record DeleteProvinceCommand(string Id) : IRequest<Result<Unit>>;
 
     internal sealed class DeleteProvinceCommandHandler : IRequestHandler<DeleteProvinceCommand, Result<Unit>>
     {
@@ -20,10 +20,10 @@ namespace SMIS.Application.Features.Provinces.Commands
 
         public async Task<Result<Unit>> Handle(DeleteProvinceCommand request, CancellationToken cancellationToken)
         {
-            var entity = await _provinceRepository.GetByIdAsync(request.PublicId);
+            var entity = await _provinceRepository.GetByIdAsync(request.Id);
             if (entity is null)
             {
-                return Result<Unit>.NotFoundResult(request.PublicId);
+                return Result<Unit>.NotFoundResult(request.Id);
             }
 
             await _provinceRepository.RemoveAsync(entity);

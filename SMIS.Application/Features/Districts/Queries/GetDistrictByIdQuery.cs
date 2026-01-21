@@ -7,7 +7,7 @@ using SMIS.Application.Repositories.Districts;
 
 namespace SMIS.Application.Features.Districts.Queries
 {
-    public record GetDistrictByIdQuery(string PublicId) : IRequest<Result<DistrictDto>>;
+    public record GetDistrictByIdQuery(string Id) : IRequest<Result<DistrictDto>>;
 
     internal sealed class GetDistrictByIdQueryHandler : IRequestHandler<GetDistrictByIdQuery, Result<DistrictDto>>
     {
@@ -27,10 +27,10 @@ namespace SMIS.Application.Features.Districts.Queries
             var district = await _districtRepository.GetAllQueryable()
                 .Include(d => d.TranslationKey)
                 .ThenInclude(tk => tk.Translations)
-                .Where(d => d.PublicId == request.PublicId)
+                .Where(d => d.Id == request.Id)
                 .Select(d => new DistrictDto
                 {
-                    PublicId = d.PublicId,
+                    Id = d.Id,
                     TranslationKeyId = d.TranslationKeyId,
                     Name = d.TranslationKey.Translations
                         .Where(t => t.LanguageNo == userLangId)

@@ -8,7 +8,7 @@ using SMIS.Application.Repositories.Localization;
 
 namespace SMIS.Application.Features.Districts.Commands
 {
-    public record UpdateDistrictCommand(string PublicId, DistrictCreateDto DistrictCreateDto) : IRequest<Result<DistrictDto>>;
+    public record UpdateDistrictCommand(string Id, DistrictCreateDto DistrictCreateDto) : IRequest<Result<DistrictDto>>;
 
     internal sealed class UpdateDistrictCommandHandler : IRequestHandler<UpdateDistrictCommand, Result<DistrictDto>>
     {
@@ -27,10 +27,10 @@ namespace SMIS.Application.Features.Districts.Commands
 
         public async Task<Result<DistrictDto>> Handle(UpdateDistrictCommand request, CancellationToken cancellationToken)
         {
-            var entity = await _districtRepository.GetByIdAsync(request.PublicId);
+            var entity = await _districtRepository.GetByIdAsync(request.Id);
             if (entity == null)
             {
-                return Result<DistrictDto>.NotFoundResult(nameof(DistrictDto.PublicId));
+                return Result<DistrictDto>.NotFoundResult(nameof(DistrictDto.Id));
             }
 
             _mapper.Map(request.DistrictCreateDto, entity);

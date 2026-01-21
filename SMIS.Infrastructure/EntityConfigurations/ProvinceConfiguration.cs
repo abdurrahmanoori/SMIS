@@ -8,7 +8,7 @@ namespace SMIS.Infrastructure.EntityConfigurations
     {
         public void Configure(EntityTypeBuilder<Province> builder)
         {
-            builder.HasKey(x => x.PublicId);
+            builder.HasKey(x => x.Id);
             builder.Property(x => x.Name).HasMaxLength(200).IsRequired();
 
             builder.HasMany(x => x.Translations)

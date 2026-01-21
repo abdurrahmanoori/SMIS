@@ -5,7 +5,7 @@ using SMIS.Application.Repositories.Shops;
 
 namespace SMIS.Application.Features.Shops.Commands
 {
-    public record DeleteShopCommand(string PublicId) : IRequest<Result<Unit>>;
+    public record DeleteShopCommand(string Id) : IRequest<Result<Unit>>;
 
     internal sealed class DeleteShopCommandHandler : IRequestHandler<DeleteShopCommand, Result<Unit>>
     {
@@ -20,10 +20,10 @@ namespace SMIS.Application.Features.Shops.Commands
 
         public async Task<Result<Unit>> Handle(DeleteShopCommand request, CancellationToken cancellationToken)
         {
-            var entity = await _shopRepository.GetByIdAsync(request.PublicId);
+            var entity = await _shopRepository.GetByIdAsync(request.Id);
             if (entity == null)
             {
-                return Result<Unit>.NotFoundResult(request?.PublicId);
+                return Result<Unit>.NotFoundResult(request?.Id);
             }
 
             await _shopRepository.RemoveAsync(entity);

@@ -7,7 +7,7 @@ using SMIS.Application.Repositories.UnitOfMeasures;
 
 namespace SMIS.Application.Features.UnitOfMeasures.Commands
 {
-    public record UpdateUnitOfMeasureCommand(string PublicId, UnitOfMeasureCreateDto UnitOfMeasureCreateDto) : IRequest<Result<UnitOfMeasureDto>>;
+    public record UpdateUnitOfMeasureCommand(string Id, UnitOfMeasureCreateDto UnitOfMeasureCreateDto) : IRequest<Result<UnitOfMeasureDto>>;
 
     internal sealed class UpdateUnitOfMeasureCommandHandler : IRequestHandler<UpdateUnitOfMeasureCommand, Result<UnitOfMeasureDto>>
     {
@@ -24,10 +24,10 @@ namespace SMIS.Application.Features.UnitOfMeasures.Commands
 
         public async Task<Result<UnitOfMeasureDto>> Handle(UpdateUnitOfMeasureCommand request, CancellationToken cancellationToken)
         {
-            var entity = await _unitOfMeasureRepository.GetByIdAsync(request.PublicId);
+            var entity = await _unitOfMeasureRepository.GetByIdAsync(request.Id);
             if (entity == null)
             {
-                return Result<UnitOfMeasureDto>.NotFoundResult(nameof(UnitOfMeasureDto.PublicId));
+                return Result<UnitOfMeasureDto>.NotFoundResult(nameof(UnitOfMeasureDto.Id));
             }
 
             _mapper.Map(request.UnitOfMeasureCreateDto, entity);

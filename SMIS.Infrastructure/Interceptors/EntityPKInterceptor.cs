@@ -33,9 +33,9 @@ namespace SMIS.Infrastructure.Interceptors
                 if (entry.State == EntityState.Added)
                 {
                     await AssignSequenceNumber(entry.Entity, context);
-                    if (string.IsNullOrEmpty(entry.Entity.PublicId))
+                    if (string.IsNullOrEmpty(entry.Entity.Id))
                     {
-                        entry.Entity.PublicId = _publicIdGenerator.Generate();
+                        entry.Entity.Id = _publicIdGenerator.Generate();
                     }
                 }
 
@@ -85,20 +85,20 @@ namespace SMIS.Infrastructure.Interceptors
             var setMethod = typeof(DbContext).GetMethod("Set", new Type[0])?.MakeGenericMethod(entityType);
             var dbSet = setMethod?.Invoke(context, null) as IQueryable<EntityPK>;
 
-            if (dbSet != null && string.IsNullOrEmpty(entity.PublicId))
+            if (dbSet != null && string.IsNullOrEmpty(entity.Id))
             {
                 var lastPublicId = await dbSet
-                    .Where(e => !string.IsNullOrEmpty(e.PublicId))
-                    .Select(e => e.PublicId)
+                    .Where(e => !string.IsNullOrEmpty(e.Id))
+                    .Select(e => e.Id)
                     .ToListAsync();
-                
+
                 var maxNumericId = lastPublicId
                     .Where(id => int.TryParse(id, out _))
                     .Select(id => int.Parse(id))
                     .DefaultIfEmpty(0)
                     .Max();
-                
-                entity.PublicId = (maxNumericId + 1).ToString();
+
+                entity.Id = (maxNumericId + 1).ToString();
             }
         }
     }

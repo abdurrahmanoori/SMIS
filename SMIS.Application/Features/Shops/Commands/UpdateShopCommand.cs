@@ -9,7 +9,7 @@ using SMIS.Application.Repositories.Shops;
 
 namespace SMIS.Application.Features.Shops.Commands
 {
-    public record UpdateShopCommand(string PublicId, ShopCreateDto ShopCreateDto) : IRequest<Result<ShopDto>>;
+    public record UpdateShopCommand(string Id, ShopCreateDto ShopCreateDto) : IRequest<Result<ShopDto>>;
 
     internal sealed class UpdateShopCommandHandler : IRequestHandler<UpdateShopCommand, Result<ShopDto>>
     {
@@ -28,10 +28,10 @@ namespace SMIS.Application.Features.Shops.Commands
 
         public async Task<Result<ShopDto>> Handle(UpdateShopCommand request, CancellationToken cancellationToken)
         {
-            var entity = await _shopRepository.GetByIdAsync(request.PublicId);
+            var entity = await _shopRepository.GetByIdAsync(request.Id);
             if (entity == null)
             {
-                return Result<ShopDto>.NotFoundResult(nameof(ShopDto.PublicId));
+                return Result<ShopDto>.NotFoundResult(nameof(ShopDto.Id));
             }
 
             await _translationKeyRepository.AddTranslationKeysForChangedProperties(request.ShopCreateDto, entity);

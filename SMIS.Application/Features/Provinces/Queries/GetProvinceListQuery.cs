@@ -39,7 +39,7 @@ namespace SMIS.Application.Features.Provinces.Queries
 
             var dtoItems = pagedEntities.Items.Select(item => new ProvinceDto
             {
-                PublicId = item.Province.PublicId,
+                Id = item.Province.Id,
                 Name = item.Translation?.Name ?? string.Empty
             }).ToList();
 

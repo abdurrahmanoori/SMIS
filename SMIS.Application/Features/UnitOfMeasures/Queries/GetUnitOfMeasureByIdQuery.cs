@@ -6,7 +6,7 @@ using SMIS.Application.Repositories.UnitOfMeasures;
 
 namespace SMIS.Application.Features.UnitOfMeasures.Queries
 {
-    public record GetUnitOfMeasureByIdQuery(string PublicId) : IRequest<Result<UnitOfMeasureDto>>;
+    public record GetUnitOfMeasureByIdQuery(string Id) : IRequest<Result<UnitOfMeasureDto>>;
 
     internal sealed class GetUnitOfMeasureByIdQueryHandler : IRequestHandler<GetUnitOfMeasureByIdQuery, Result<UnitOfMeasureDto>>
     {
@@ -21,8 +21,8 @@ namespace SMIS.Application.Features.UnitOfMeasures.Queries
 
         public async Task<Result<UnitOfMeasureDto>> Handle(GetUnitOfMeasureByIdQuery request, CancellationToken cancellationToken)
         {
-            var dbUnitOfMeasure = await _unitOfMeasureRepository.GetFirstOrDefaultAsync(x => x.PublicId == request.PublicId);
-            
+            var dbUnitOfMeasure = await _unitOfMeasureRepository.GetFirstOrDefaultAsync(x => x.Id == request.Id);
+
             if (dbUnitOfMeasure == null)
             {
                 return Result<UnitOfMeasureDto>.NotFoundResult(nameof(UnitOfMeasureDto));

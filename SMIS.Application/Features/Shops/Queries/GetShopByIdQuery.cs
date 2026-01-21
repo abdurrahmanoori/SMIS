@@ -9,7 +9,7 @@ using SMIS.Application.Repositories.Shops;
 
 namespace SMIS.Application.Features.Shops.Queries
 {
-    public record GetShopByIdQuery(string PublicId) : IRequest<Result<ShopDto>>;
+    public record GetShopByIdQuery(string Id) : IRequest<Result<ShopDto>>;
 
     internal sealed class GetShopByIdQueryHandler : IRequestHandler<GetShopByIdQuery, Result<ShopDto>>
     {
@@ -28,8 +28,8 @@ namespace SMIS.Application.Features.Shops.Queries
 
         public async Task<Result<ShopDto>> Handle(GetShopByIdQuery request, CancellationToken cancellationToken)
         {
-            var dbShop = await _shopRepository.GetFirstOrDefaultAsync(x => x.PublicId == request.PublicId);
-            
+            var dbShop = await _shopRepository.GetFirstOrDefaultAsync(x => x.Id == request.Id);
+
             if (dbShop == null)
             {
                 return Result<ShopDto>.NotFoundResult(nameof(ShopDto));

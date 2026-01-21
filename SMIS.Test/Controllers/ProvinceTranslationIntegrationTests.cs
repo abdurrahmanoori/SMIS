@@ -46,7 +46,7 @@ namespace SMIS.Test.Controllers
             var created = list!.Items.First(x => x.Name == provinceCreate.Name);
 
             // Create translation - use LanguageId for seeded Pashto (2) with appropriate code
-            var trans = new ProvinceTranslationDto { ProvinceId = created.PublicId, LanguageCode = "ps", LanguageId = "2", IsDefault = false, Name = "Province Test" };
+            var trans = new ProvinceTranslationDto { ProvinceId = created.Id, LanguageCode = "ps", LanguageId = "2", IsDefault = false, Name = "Province Test" };
             var postTrans = await _client.PostAsJsonAsync("/api/provincetranslation", trans);
             await LogIfError(postTrans, "CreateTrans");
             postTrans.EnsureSuccessStatusCode();
@@ -55,32 +55,32 @@ namespace SMIS.Test.Controllers
             createdTrans!.Name.Should().Be(trans.Name);
 
             // Get by id
-            var getById = await _client.GetAsync($"/api/provincetranslation/{createdTrans.PublicId}");
+            var getById = await _client.GetAsync($"/api/provincetranslation/{createdTrans.Id}");
             await LogIfError(getById, "GetById");
             getById.StatusCode.Should().Be(HttpStatusCode.OK);
 
             // Update
             createdTrans.Name = "Provincia Actualizada";
-            var put = await _client.PutAsJsonAsync($"/api/provincetranslation/{createdTrans.PublicId}", createdTrans);
+            var put = await _client.PutAsJsonAsync($"/api/provincetranslation/{createdTrans.Id}", createdTrans);
             await LogIfError(put, "Update");
             put.EnsureSuccessStatusCode();
             var updated = await put.Content.ReadFromJsonAsync<ProvinceTranslationDto>();
             updated!.Name.Should().Be("Provincia Actualizada");
 
             // List translations for province
-            var listTrans = await _client.GetAsync($"/api/provincetranslation/province/{created.PublicId}");
+            var listTrans = await _client.GetAsync($"/api/provincetranslation/province/{created.Id}");
             await LogIfError(listTrans, "ListTrans");
             listTrans.EnsureSuccessStatusCode();
             var listDto = await listTrans.Content.ReadFromJsonAsync<List<ProvinceTranslationDto>>();
             listDto!.Should().Contain(x => x.Name == "Provincia Actualizada");
 
             // Delete
-            var del = await _client.DeleteAsync($"/api/provincetranslation/{createdTrans.PublicId}");
+            var del = await _client.DeleteAsync($"/api/provincetranslation/{createdTrans.Id}");
             await LogIfError(del, "Delete");
             del.EnsureSuccessStatusCode();
 
             // Delete again -> NotFound
-            var delAgain = await _client.DeleteAsync($"/api/provincetranslation/{createdTrans.PublicId}");
+            var delAgain = await _client.DeleteAsync($"/api/provincetranslation/{createdTrans.Id}");
             await LogIfError(delAgain, "DeleteAgain");
             delAgain.StatusCode.Should().Be(HttpStatusCode.NotFound);
         }

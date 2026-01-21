@@ -24,15 +24,15 @@ namespace SMIS.Api.Controllers
         }
 
         [HttpGet("{publicId}")]
-        public async Task<ActionResult<UnitOfMeasureDto>> GetById(string publicId) =>
-            HandleResultResponse(await Mediator.Send(new GetUnitOfMeasureByIdQuery(publicId)));
+        public async Task<ActionResult<UnitOfMeasureDto>> GetById(string id) =>
+            HandleResultResponse(await Mediator.Send(new GetUnitOfMeasureByIdQuery(id)));
 
         [HttpPut("{publicId}")]
-        public async Task<ActionResult<UnitOfMeasureDto>> Update(string publicId, UnitOfMeasureCreateDto dto) =>
-            HandleResultResponse(await Mediator.Send(new UpdateUnitOfMeasureCommand(publicId, dto)));
+        public async Task<ActionResult<UnitOfMeasureDto>> Update(string id, UnitOfMeasureCreateDto dto) =>
+            HandleResultResponse(await Mediator.Send(new UpdateUnitOfMeasureCommand(id, dto)));
 
         [HttpDelete("{publicId}")]
-        public async Task<ActionResult<Unit>> Delete(string publicId) =>
-            HandleResultResponse(await Mediator.Send(new DeleteUnitOfMeasureCommand(publicId)));
+        public async Task<ActionResult<Unit>> Delete(string id) =>
+            HandleResultResponse(await Mediator.Send(new DeleteUnitOfMeasureCommand(id)));
     }
 }

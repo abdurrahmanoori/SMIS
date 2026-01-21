@@ -19,7 +19,7 @@ namespace SMIS.Identity.Services
             _roleManager = roleManager;
         }
 
-        public async Task<Result<int>> CreateUserAsync(UserCreateDto input)
+        public async Task<Result<string>> CreateUserAsync(UserCreateDto input)
         {
             var user = new ApplicationUser
             {
@@ -34,7 +34,7 @@ namespace SMIS.Identity.Services
             var createResult = await _userManager.CreateAsync(user, input.Password);
             if (!createResult.Succeeded)
             {
-                return Result<int>.WithErrors(createResult.Errors.Select(e => new ValidationError
+                return Result<string>.WithErrors(createResult.Errors.Select(e => new ValidationError
                 {
                     Code = e.Code,
                     Description = e.Description
@@ -50,7 +50,7 @@ namespace SMIS.Identity.Services
                         var roleResult = await _roleManager.CreateAsync(new ApplicationRole { Name = role });
                         if (!roleResult.Succeeded)
                         {
-                            return Result<int>.WithErrors(roleResult.Errors.Select(e => new ValidationError
+                            return Result<string>.WithErrors(roleResult.Errors.Select(e => new ValidationError
                             {
                                 Code = e.Code,
                                 Description = e.Description
@@ -61,7 +61,7 @@ namespace SMIS.Identity.Services
                 var addToRoles = await _userManager.AddToRolesAsync(user, input.Roles.Distinct());
                 if (!addToRoles.Succeeded)
                 {
-                    return Result<int>.WithErrors(addToRoles.Errors.Select(e => new ValidationError
+                    return Result<string>.WithErrors(addToRoles.Errors.Select(e => new ValidationError
                     {
                         Code = e.Code,
                         Description = e.Description
@@ -69,12 +69,12 @@ namespace SMIS.Identity.Services
                 }
             }
 
-            return Result<int>.SuccessResult(user.Id, "User created successfully");
+            return Result<string>.SuccessResult(user.Id, "User created successfully");
         }
 
-        public async Task<Result<UserDto>> UpdateUserAsync(int userId, UserUpdateDto input)
+        public async Task<Result<UserDto>> UpdateUserAsync(string userId, UserUpdateDto input)
         {
-            var user = await _userManager.Users.FirstOrDefaultAsync(x => x.Id == userId);
+            var user = await _userManager.FindByIdAsync(userId);
             if (user == null)
             {
                 return Result<UserDto>.NotFoundResult(userId);
@@ -124,9 +124,9 @@ namespace SMIS.Identity.Services
             return Result<UserDto>.SuccessResult(ToDto(user), "User updated successfully");
         }
 
-        public async Task<Result<Unit>> DeleteUserAsync(int userId)
+        public async Task<Result<Unit>> DeleteUserAsync(string userId)
         {
-            var user = await _userManager.FindByIdAsync(userId.ToString());
+            var user = await _userManager.FindByIdAsync(userId);
             if (user == null)
                 return Result<Unit>.FailureResult("User not found");
 
@@ -138,9 +138,9 @@ namespace SMIS.Identity.Services
             return Result<Unit>.SuccessResult(Unit.Value, "User deleted successfully");
         }
 
-        public async Task<Result<UserDto>> GetByIdAsync(int userId)
+        public async Task<Result<UserDto>> GetByIdAsync(string userId)
         {
-            var user = await _userManager.Users.FirstOrDefaultAsync(x => x.Id == userId);
+            var user = await _userManager.FindByIdAsync(userId);
             if (user == null) return Result<UserDto>.NotFoundResult(userId);
             return Result<UserDto>.SuccessResult(ToDto(user));
         }
@@ -152,9 +152,9 @@ namespace SMIS.Identity.Services
             return Result<List<UserDto>>.SuccessResult(dtos);
         }
 
-        public async Task<Result<Unit>> ChangePasswordAsync(int userId, ChangePasswordDto input)
+        public async Task<Result<Unit>> ChangePasswordAsync(string userId, ChangePasswordDto input)
         {
-            var user = await _userManager.FindByIdAsync(userId.ToString());
+            var user = await _userManager.FindByIdAsync(userId);
             if (user == null) return Result<Unit>.FailureResult("User not found");
             var res = await _userManager.ChangePasswordAsync(user, input.CurrentPassword, input.NewPassword);
             if (!res.Succeeded)
@@ -164,9 +164,9 @@ namespace SMIS.Identity.Services
             return Result<Unit>.SuccessResult(Unit.Value, "Password changed");
         }
 
-        public async Task<Result<Unit>> AssignRolesAsync(int userId, IEnumerable<string> roles)
+        public async Task<Result<Unit>> AssignRolesAsync(string userId, IEnumerable<string> roles)
         {
-            var user = await _userManager.FindByIdAsync(userId.ToString());
+            var user = await _userManager.FindByIdAsync(userId);
             if (user == null) return Result<Unit>.FailureResult("User not found");
 
             var current = await _userManager.GetRolesAsync(user);

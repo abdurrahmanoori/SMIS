@@ -5,7 +5,7 @@ using SMIS.Application.Repositories.UnitOfMeasures;
 
 namespace SMIS.Application.Features.UnitOfMeasures.Commands
 {
-    public record DeleteUnitOfMeasureCommand(string PublicId) : IRequest<Result<Unit>>;
+    public record DeleteUnitOfMeasureCommand(string Id) : IRequest<Result<Unit>>;
 
     internal sealed class DeleteUnitOfMeasureCommandHandler : IRequestHandler<DeleteUnitOfMeasureCommand, Result<Unit>>
     {
@@ -20,10 +20,10 @@ namespace SMIS.Application.Features.UnitOfMeasures.Commands
 
         public async Task<Result<Unit>> Handle(DeleteUnitOfMeasureCommand request, CancellationToken cancellationToken)
         {
-            var entity = await _unitOfMeasureRepository.GetByIdAsync(request.PublicId);
+            var entity = await _unitOfMeasureRepository.GetByIdAsync(request.Id);
             if (entity == null)
             {
-                return Result<Unit>.NotFoundResult(request.PublicId);
+                return Result<Unit>.NotFoundResult(request.Id);
             }
 
             await _unitOfMeasureRepository.RemoveAsync(entity);

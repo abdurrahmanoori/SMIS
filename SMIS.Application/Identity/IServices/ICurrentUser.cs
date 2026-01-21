@@ -5,7 +5,7 @@ namespace SMIS.Application.Identity.IServices
     {
         public int PageNumber { get; set; }
         public int PageSize { get; set; }
-        int GetId();
+        string GetId();
         Guid GetGuid();
         string GetLangId( );
     }

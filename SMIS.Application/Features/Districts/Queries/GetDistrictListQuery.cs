@@ -30,7 +30,7 @@ namespace SMIS.Application.Features.Districts.Queries
                 .ThenInclude(tk => tk.Translations)
                 .Select(d => new DistrictDto
                 {
-                    PublicId = d.PublicId,
+                    Id = d.Id,
                     TranslationKeyId = d.TranslationKeyId,
                     Name = d.TranslationKey.Translations
                         .Where(t => t.LanguageNo == userLangId)

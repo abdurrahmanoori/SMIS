@@ -9,7 +9,7 @@ using System.Reflection;
 
 namespace SMIS.Infrastructure.Context
 {
-    public partial class AppDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, int>
+    public partial class AppDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, string>
     {
         public AppDbContext(DbContextOptions options) : base(options)
         {
