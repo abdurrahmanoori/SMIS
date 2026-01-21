@@ -3,14 +3,14 @@ using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.VisualStudio.TestPlatform.TestHost;
+using Microsoft.Extensions.Hosting;
 using SMIS.Infrastructure.Context;
 using Xunit;
 
 namespace SMIS.Test.TestInfrastructure;
 public class CustomWebApplicationFactory : WebApplicationFactory<Program>, IAsyncLifetime
 {
-    private SqliteConnection _connection;
+    private SqliteConnection? _connection;
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
@@ -37,6 +37,9 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>, IAsyn
             var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
             db.Database.EnsureCreated();
         });
+
+        // Prevent the factory from trying to resolve deps.json in test context
+        builder.UseEnvironment("Testing");
     }
 
     public async Task InitializeAsync( )
@@ -49,7 +52,11 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>, IAsyn
 
     public new async Task DisposeAsync( )
     {
-        await _connection.CloseAsync();
-        await _connection.DisposeAsync();
+        if (_connection != null)
+        {
+            await _connection.CloseAsync();
+            await _connection.DisposeAsync();
+            _connection = null;
+        }
     }
 }
