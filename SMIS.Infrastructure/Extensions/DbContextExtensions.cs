@@ -1,8 +1,9 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using SMIS.Infrastructure.Context;
-using Microsoft.EntityFrameworkCore;
-using SMIS.Infrastructure.Interceptors;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using SMIS.Domain.Common.Interfaces;
+using SMIS.Infrastructure.Context;
+using SMIS.Infrastructure.Interceptors;
 
 namespace SMIS.Infrastructure.Extensions
 {
@@ -14,10 +15,11 @@ namespace SMIS.Infrastructure.Extensions
             {
                 var connectionString = configuration.GetConnectionString("DefaultConnection");
                 var interceptor = serviceProvider.GetRequiredService<AuditInterceptor>();
+                var pkEntityInterceptor = serviceProvider.GetRequiredService<EntityPKInterceptor>();
 
-                options.UseSqlite(connectionString,
-                    o => o.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery))
-                       .AddInterceptors(interceptor);
+                options.UseSqlite(connectionString)
+                    //o => o.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery))
+                       .AddInterceptors(interceptor, pkEntityInterceptor);
 
                 options.EnableSensitiveDataLogging(true);
             });

@@ -13,6 +13,7 @@ namespace SMIS.Infrastructure.Context
             TranslationSeed.DataSeed(modelBuilder);
             ProvinceSeed.DataSeed(modelBuilder);
             DistrictSeed.DataSeed(modelBuilder);
+            UnitOfMeasureSeed.DataSeed(modelBuilder);
         }
     }
 }

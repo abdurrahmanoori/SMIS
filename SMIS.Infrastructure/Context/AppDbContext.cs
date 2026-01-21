@@ -48,5 +48,6 @@ namespace SMIS.Infrastructure.Context
         public DbSet<TranslationKey> TranslationKeys { get; set; }
         public DbSet<Translation> Translations { get; set; }
         public DbSet<Shop> Shops { get; set; }
+        public DbSet<UnitOfMeasure> UnitOfMeasures { get; set; }
     }
 }

@@ -3,6 +3,7 @@ using SMIS.Application.DTO.Localization;
 using SMIS.Application.DTO.Provinces;
 using SMIS.Application.DTO.Districts;
 using SMIS.Application.DTO.Shops;
+using SMIS.Application.DTO.UnitOfMeasures;
 using SMIS.Domain.Entities;
 using SMIS.Domain.Entities.Localization;
 using System.Globalization;
@@ -75,6 +76,10 @@ public class MappingProfile : Profile
         // Shop mapping
         CreateMap<Shop, ShopDto>().ReverseMap();
         CreateMap<Shop, ShopCreateDto>().ReverseMap();
+
+        // UnitOfMeasure mapping
+        CreateMap<UnitOfMeasure, UnitOfMeasureDto>().ReverseMap();
+        CreateMap<UnitOfMeasure, UnitOfMeasureCreateDto>().ReverseMap();
     }
 
     private static string ResolveProvinceName(Province src)

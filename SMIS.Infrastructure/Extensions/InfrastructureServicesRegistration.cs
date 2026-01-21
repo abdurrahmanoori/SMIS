@@ -2,12 +2,14 @@
 using AutoMapper.EquivalencyExpression;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Scrutor;
 using SMIS.Application.Mappings;
 using SMIS.Application.Services;
+using SMIS.Domain.Common.BaseAbstract;
+using SMIS.Domain.Common.Interfaces;
 using SMIS.Infrastructure.Context;
 using SMIS.Infrastructure.Interceptors;
 using SMIS.Infrastructure.Services;
-using Scrutor;
 
 // Plan (pseudocode):
 // - Add internal marker types in the target namespaces to avoid magic strings.
@@ -33,6 +35,7 @@ namespace SMIS.Infrastructure.Extensions
         {
             services.AddApplicationDbContext(configuration);
             services.AddScoped<AuditInterceptor>();
+            services.AddScoped<EntityPKInterceptor>();
 
             // Automatically register repositories with Scrutor (no magic strings)
             services.Scan(scan => scan
