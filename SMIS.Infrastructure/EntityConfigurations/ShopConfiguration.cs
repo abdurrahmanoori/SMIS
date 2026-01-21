@@ -29,7 +29,8 @@ namespace SMIS.Infrastructure.EntityConfigurations
                 .HasMaxLength(50);
 
             builder.Property(s => s.ShopType)
-                .IsRequired();
+                .IsRequired()
+                .HasConversion<string>();
 
             builder.Property(s => s.IsActive)
                 .IsRequired();

@@ -1,0 +1,7 @@
+Add comprehensive CRUD operations and audit functionality
+
+Added comprehensive CRUD operations for Districts, Shops, UnitOfMeasures, and Users.
+Implemented audit functionality with interceptors and auditable entities.
+Updated database configurations and seeders for all entities.
+Refactored DTOs and command/query patterns for consistent API operations.
+Fixed database migration issues and cleaned up redundant migration files.

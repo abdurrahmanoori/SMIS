@@ -4,6 +4,8 @@ using SMIS.Infrastructure.Extensions;
 using SMIS.Application.Extensions;
 using SMIS.Infrastructure.Context;
 using SMIS.Identity.Extensions;
+using SMIS.Api.Converters;
+using SMIS.Domain.Enums;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,7 +14,11 @@ builder.AddSerilogService();
 
 // Add services to the container.
 builder.Services.AddControllers()
-    .AddControllersAsServices();
+    .AddControllersAsServices()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.Converters.Add(new StringEnumConverter<ShopType>());
+    });
 
 builder.Services.AddFluentValidationAutoValidation();
 builder.Services.AddEndpointsApiExplorer();
