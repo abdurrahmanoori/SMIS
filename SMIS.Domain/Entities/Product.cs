@@ -1,6 +1,7 @@
 using SMIS.Domain.Common.BaseAbstract;
+using SMIS.Domain.Entities.Shopp;
 
-namespace SMIS.Domain.Entities.Shopp
+namespace SMIS.Domain.Entities
 {
     public class Product : BaseAuditableEntity
     {
