@@ -1,23 +1,25 @@
 using SMIS.Domain.Common.BaseAbstract;
-using SMIS.Domain.Entities.Shopp;
 
 namespace SMIS.Domain.Entities
 {
     public class Product : BaseAuditableEntity
     {
-        public int ShopId { get; set; }
-        public string SKU { get; set; }
-        public string Description { get; set; }
-        public string Category { get; set; }
-        public decimal UnitPrice { get; set; }
-        public decimal StockQuantity { get; set; }
-        public decimal ReorderLevel { get; set; }
-        public string Unit { get; set; } // e.g., piece, kg, liter
+        public string ShopId { get; set; } = string.Empty;
+        // The ONE unit used to store inventory internally (Every product has ONE base unit:Milliliter,Piece,Gram)
+        public string BaseUnitId { get; set; } = string.Empty;
+
+        // Price for ONE base unit (not pack, not box)
+        public int SalePricePerBaseUnit { get; set; }
+        public string? Description { get; set; }
+        // Can we sell this product or not?
         public bool IsActive { get; set; } = true;
+        //public string SKU { get; set; }
+
 
         // Navigation Properties
-        public virtual Shop Shop { get; set; }
-        public virtual ICollection<InvoiceItem> InvoiceItems { get; set; } = new List<InvoiceItem>();
-        public virtual ICollection<StockMovement> StockMovements { get; set; } = new List<StockMovement>();
+        public virtual Shop Shop { get; set; } = null!;
+        public UnitOfMeasure UnitOfMeasure { get; set; } = null!;
+        //public virtual ICollection<InvoiceItem> InvoiceItems { get; set; } = new List<InvoiceItem>();
+        //public virtual ICollection<StockMovement> StockMovements { get; set; } = new List<StockMovement>();
     }
 }

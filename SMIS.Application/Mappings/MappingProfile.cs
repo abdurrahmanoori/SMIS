@@ -4,6 +4,7 @@ using SMIS.Application.DTO.Provinces;
 using SMIS.Application.DTO.Districts;
 using SMIS.Application.DTO.Shops;
 using SMIS.Application.DTO.UnitOfMeasures;
+using SMIS.Application.DTO.Products;
 using SMIS.Domain.Entities;
 using SMIS.Domain.Entities.Localization;
 using System.Globalization;
@@ -76,6 +77,10 @@ public class MappingProfile : Profile
         // Shop mapping
         CreateMap<Shop, ShopDto>().ReverseMap();
         CreateMap<Shop, ShopCreateDto>().ReverseMap();
+
+        // Product mapping
+        CreateMap<Product, ProductDto>().ReverseMap();
+        CreateMap<Product, ProductCreateDto>().ReverseMap();
 
         // UnitOfMeasure mapping
         CreateMap<UnitOfMeasure, UnitOfMeasureDto>().ReverseMap();

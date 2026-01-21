@@ -8,7 +8,7 @@ namespace SMIS.Infrastructure.EntityConfigurations
     {
         public void Configure(EntityTypeBuilder<Shop> builder)
         {
-            builder.ToTable("Shops");
+            builder.ToTable(nameof(Shop));
 
             builder.HasKey(s => s.Id);
 

@@ -15,6 +15,7 @@ namespace SMIS.Infrastructure.Context
             DistrictSeed.DataSeed(modelBuilder);
             UnitOfMeasureSeed.DataSeed(modelBuilder);
             ShopSeed.DataSeed(modelBuilder);
+            ProductSeed.DataSeed(modelBuilder);
         }
     }
 }
