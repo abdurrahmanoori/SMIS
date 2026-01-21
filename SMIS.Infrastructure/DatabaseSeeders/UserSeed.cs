@@ -12,6 +12,7 @@ namespace SMIS.Infrastructure.DatabaseSeeders
             var admin = new ApplicationUser
             {
                 Id = 1,
+                PublicId = "1",
                 UserName = "admin",
                 NormalizedUserName = "ADMIN",
                 Email = "admin@local",
@@ -26,6 +27,7 @@ namespace SMIS.Infrastructure.DatabaseSeeders
             var user = new ApplicationUser
             {
                 Id = 2,
+                PublicId = "2",
                 UserName = "user",
                 NormalizedUserName = "USER",
                 Email = "user@local",

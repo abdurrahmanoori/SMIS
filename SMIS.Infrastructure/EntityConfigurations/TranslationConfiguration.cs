@@ -25,6 +25,7 @@ namespace SMIS.Infrastructure.EntityConfigurations
             builder.HasOne(t => t.Language)
                 .WithMany()
                 .HasForeignKey(t => t.LanguageNo)
+                .HasPrincipalKey(l => l.Id)
                 .OnDelete(DeleteBehavior.Restrict);
         }
     }

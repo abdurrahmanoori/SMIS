@@ -8,9 +8,9 @@ namespace SMIS.Infrastructure.DatabaseSeeders
         public static void DataSeed(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<District>().HasData(
-                new District { Id = 1, PublicId = "district-kabul-center-guid", Name = "Kabul Center", TranslationKeyId = "district_kabul_center" },
-                new District { Id = 2, PublicId = "district-kabul-north-guid", Name = "Kabul North", TranslationKeyId = "district_kabul_north" },
-                new District { Id = 3, PublicId = "district-herat-center-guid", Name = "Herat Center", TranslationKeyId = "district_herat_center" }
+                new District { Id = 1, PublicId = "1", Name = "Kabul Center", TranslationKeyId = "1" },
+                new District { Id = 2, PublicId = "2", Name = "Kabul North", TranslationKeyId = "2" },
+                new District { Id = 3, PublicId = "3", Name = "Herat Center", TranslationKeyId = "3" }
             );
         }
     }

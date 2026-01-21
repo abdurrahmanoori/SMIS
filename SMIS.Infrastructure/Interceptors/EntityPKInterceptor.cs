@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using SMIS.Application.Identity.IServices;
+using SMIS.Application.Services;
 using SMIS.Domain.Common.BaseAbstract;
 using SMIS.Domain.Common.Interfaces;
 
@@ -9,11 +10,12 @@ namespace SMIS.Infrastructure.Interceptors
     public class EntityPKInterceptor : SaveChangesInterceptor
     {
         private readonly ICurrentUser _currentUser;
-        //private readonly AppDbContext context;
+        private readonly IPublicIdGenerator _publicIdGenerator;
 
-        public EntityPKInterceptor(ICurrentUser currentUser)
+        public EntityPKInterceptor(ICurrentUser currentUser, IPublicIdGenerator publicIdGenerator)
         {
             _currentUser = currentUser;
+            _publicIdGenerator = publicIdGenerator;
         }
 
         public override async ValueTask<InterceptionResult<int>> SavingChangesAsync(
@@ -31,6 +33,10 @@ namespace SMIS.Infrastructure.Interceptors
                 if (entry.State == EntityState.Added)
                 {
                     await AssignSequenceNumber(entry.Entity, context);
+                    if (string.IsNullOrEmpty(entry.Entity.PublicId))
+                    {
+                        entry.Entity.PublicId = _publicIdGenerator.Generate();
+                    }
                 }
 
                 //if (entry.State == EntityState.Modified)
@@ -83,6 +89,22 @@ namespace SMIS.Infrastructure.Interceptors
             {
                 var lastId = await dbSet.MaxAsync(e => (int?)e.Id) ?? 0;
                 entity.Id = lastId + 1;
+                
+                if (string.IsNullOrEmpty(entity.PublicId))
+                {
+                    var lastPublicId = await dbSet
+                        .Where(e => !string.IsNullOrEmpty(e.PublicId))
+                        .Select(e => e.PublicId)
+                        .ToListAsync();
+                    
+                    var maxNumericId = lastPublicId
+                        .Where(id => int.TryParse(id, out _))
+                        .Select(id => int.Parse(id))
+                        .DefaultIfEmpty(0)
+                        .Max();
+                    
+                    entity.PublicId = (maxNumericId + 1).ToString();
+                }
             }
         }
     }

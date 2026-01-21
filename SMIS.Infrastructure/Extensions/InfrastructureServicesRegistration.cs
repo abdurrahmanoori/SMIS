@@ -53,6 +53,7 @@ namespace SMIS.Infrastructure.Extensions
 
             // Register services
             services.AddScoped<ITranslationService, TranslationService>();
+            services.AddSingleton<IPublicIdGenerator, SMIS.Infrastructure.Services.PublicIdGenerator>();
 
             services.AddAutoMapper((serviceProvider, cfg) =>
             {

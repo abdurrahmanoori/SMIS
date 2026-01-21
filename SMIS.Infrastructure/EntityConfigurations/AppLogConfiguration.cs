@@ -8,7 +8,10 @@ namespace SMIS.Infrastructure.EntityConfigurations
     {
         public void Configure(EntityTypeBuilder<AppLog> builder)
         {
-            builder.HasKey(x => x.Id);
+            builder.HasKey(x => x.PublicId);
+            
+            builder.Property(x => x.Id)
+                .HasDefaultValue(0);
             
             builder.Property(x => x.Level)
                 .IsRequired()

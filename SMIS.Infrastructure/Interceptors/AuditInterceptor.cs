@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using SMIS.Application.Identity.IServices;
+using SMIS.Application.Services;
 using SMIS.Domain.Common.BaseAbstract;
 using SMIS.Infrastructure.Context;
 
@@ -9,11 +10,12 @@ namespace SMIS.Infrastructure.Interceptors
     public class AuditInterceptor : SaveChangesInterceptor
     {
         private readonly ICurrentUser _currentUser;
-        //private readonly AppDbContext context;
+        private readonly IPublicIdGenerator _publicIdGenerator;
 
-        public AuditInterceptor(ICurrentUser currentUser)
+        public AuditInterceptor(ICurrentUser currentUser, IPublicIdGenerator publicIdGenerator)
         {
             _currentUser = currentUser;
+            _publicIdGenerator = publicIdGenerator;
         }
 
         public override async ValueTask<InterceptionResult<int>> SavingChangesAsync(
@@ -85,6 +87,22 @@ namespace SMIS.Infrastructure.Interceptors
             {
                 var lastId = await dbSet.MaxAsync(e => (int?)e.Id) ?? 0;
                 entity.Id = lastId + 1;
+                
+                if (string.IsNullOrEmpty(entity.PublicId))
+                {
+                    var lastPublicId = await dbSet
+                        .Where(e => !string.IsNullOrEmpty(e.PublicId))
+                        .Select(e => e.PublicId)
+                        .ToListAsync();
+                    
+                    var maxNumericId = lastPublicId
+                        .Where(id => int.TryParse(id, out _))
+                        .Select(id => int.Parse(id))
+                        .DefaultIfEmpty(0)
+                        .Max();
+                    
+                    entity.PublicId = (maxNumericId + 1).ToString();
+                }
             }
         }
     }

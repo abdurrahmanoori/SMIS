@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace SMIS.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class IntailMig : Migration
+    public partial class Inital : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -17,21 +17,20 @@ namespace SMIS.Infrastructure.Migrations
                 name: "AppLogs",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
+                    PublicId = table.Column<string>(type: "TEXT", nullable: false),
                     Level = table.Column<string>(type: "TEXT", maxLength: 50, nullable: false),
                     Message = table.Column<string>(type: "TEXT", nullable: false),
                     Exception = table.Column<string>(type: "TEXT", nullable: true),
                     Properties = table.Column<string>(type: "TEXT", nullable: true),
                     UserId = table.Column<int>(type: "INTEGER", nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    PublicId = table.Column<string>(type: "TEXT", nullable: true),
+                    Id = table.Column<int>(type: "INTEGER", nullable: false, defaultValue: 0),
                     Name = table.Column<string>(type: "TEXT", nullable: false),
                     IsPublic = table.Column<bool>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_AppLogs", x => x.Id);
+                    table.PrimaryKey("PK_AppLogs", x => x.PublicId);
                 });
 
             migrationBuilder.CreateTable(
@@ -55,6 +54,7 @@ namespace SMIS.Infrastructure.Migrations
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
+                    PublicId = table.Column<string>(type: "TEXT", nullable: false),
                     FirstName = table.Column<string>(type: "TEXT", nullable: true),
                     LastName = table.Column<string>(type: "TEXT", nullable: true),
                     UserName = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
@@ -81,24 +81,24 @@ namespace SMIS.Infrastructure.Migrations
                 name: "Languages",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    Name = table.Column<string>(type: "TEXT", nullable: false),
-                    Code = table.Column<string>(type: "TEXT", nullable: true),
-                    IsActive = table.Column<bool>(type: "INTEGER", nullable: false)
+                    PublicId = table.Column<string>(type: "TEXT", nullable: false),
+                    Name = table.Column<string>(type: "TEXT", maxLength: 100, nullable: false),
+                    Code = table.Column<string>(type: "TEXT", maxLength: 10, nullable: true),
+                    IsActive = table.Column<bool>(type: "INTEGER", nullable: false),
+                    Id = table.Column<int>(type: "INTEGER", nullable: false, defaultValue: 0)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Languages", x => x.Id);
+                    table.PrimaryKey("PK_Languages", x => x.PublicId);
+                    table.UniqueConstraint("AK_Languages_Id", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
                 name: "Provinces",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    PublicId = table.Column<string>(type: "TEXT", nullable: true),
+                    PublicId = table.Column<string>(type: "TEXT", nullable: false),
+                    Id = table.Column<int>(type: "INTEGER", nullable: false, defaultValue: 0),
                     Name = table.Column<string>(type: "TEXT", maxLength: 200, nullable: false),
                     IsPublic = table.Column<bool>(type: "INTEGER", nullable: false),
                     CreatedBy = table.Column<int>(type: "INTEGER", nullable: true),
@@ -108,7 +108,32 @@ namespace SMIS.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Provinces", x => x.Id);
+                    table.PrimaryKey("PK_Provinces", x => x.PublicId);
+                    table.UniqueConstraint("AK_Provinces_Id", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Shops",
+                columns: table => new
+                {
+                    PublicId = table.Column<string>(type: "TEXT", nullable: false),
+                    ShopType = table.Column<int>(type: "INTEGER", nullable: false),
+                    Address = table.Column<string>(type: "TEXT", maxLength: 500, nullable: false),
+                    PhoneNumber = table.Column<string>(type: "TEXT", maxLength: 50, nullable: false),
+                    Email = table.Column<string>(type: "TEXT", maxLength: 100, nullable: false),
+                    TaxNumber = table.Column<string>(type: "TEXT", maxLength: 50, nullable: false),
+                    IsActive = table.Column<bool>(type: "INTEGER", nullable: false),
+                    Id = table.Column<int>(type: "INTEGER", nullable: false),
+                    Name = table.Column<string>(type: "TEXT", maxLength: 200, nullable: false),
+                    IsPublic = table.Column<bool>(type: "INTEGER", nullable: false),
+                    CreatedBy = table.Column<int>(type: "INTEGER", nullable: true),
+                    CreatedDate = table.Column<DateTime>(type: "TEXT", nullable: true),
+                    UpdatedBy = table.Column<int>(type: "INTEGER", nullable: true),
+                    UpdatedDate = table.Column<DateTime>(type: "TEXT", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Shops", x => x.PublicId);
                 });
 
             migrationBuilder.CreateTable(
@@ -118,8 +143,8 @@ namespace SMIS.Infrastructure.Migrations
                     PublicId = table.Column<string>(type: "TEXT", nullable: false),
                     MessageCode = table.Column<int>(type: "INTEGER", nullable: true),
                     IsActive = table.Column<bool>(type: "INTEGER", nullable: false),
-                    Id = table.Column<int>(type: "INTEGER", nullable: false),
-                    Name = table.Column<string>(type: "TEXT", nullable: false),
+                    Id = table.Column<int>(type: "INTEGER", nullable: false, defaultValue: 0),
+                    Name = table.Column<string>(type: "TEXT", maxLength: 200, nullable: false),
                     IsPublic = table.Column<bool>(type: "INTEGER", nullable: false),
                     CreatedBy = table.Column<int>(type: "INTEGER", nullable: true),
                     CreatedDate = table.Column<DateTime>(type: "TEXT", nullable: true),
@@ -129,6 +154,21 @@ namespace SMIS.Infrastructure.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_TranslationKeys", x => x.PublicId);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "UnitOfMeasure",
+                columns: table => new
+                {
+                    PublicId = table.Column<string>(type: "TEXT", nullable: false),
+                    Name = table.Column<string>(type: "TEXT", maxLength: 100, nullable: false),
+                    Symbol = table.Column<string>(type: "TEXT", maxLength: 20, nullable: false),
+                    Description = table.Column<string>(type: "TEXT", maxLength: 500, nullable: true),
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UnitOfMeasure", x => x.PublicId);
                 });
 
             migrationBuilder.CreateTable(
@@ -241,17 +281,17 @@ namespace SMIS.Infrastructure.Migrations
                 name: "ProvinceTranslations",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
+                    PublicId = table.Column<string>(type: "TEXT", nullable: false),
                     ProvinceId = table.Column<int>(type: "INTEGER", nullable: false),
                     Name = table.Column<string>(type: "TEXT", maxLength: 200, nullable: false),
+                    Id = table.Column<int>(type: "INTEGER", nullable: false, defaultValue: 0),
                     LanguageCode = table.Column<string>(type: "TEXT", maxLength: 10, nullable: false),
                     LanguageId = table.Column<int>(type: "INTEGER", nullable: false),
                     IsDefault = table.Column<bool>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ProvinceTranslations", x => x.Id);
+                    table.PrimaryKey("PK_ProvinceTranslations", x => x.PublicId);
                     table.ForeignKey(
                         name: "FK_ProvinceTranslations_Languages_LanguageId",
                         column: x => x.LanguageId,
@@ -325,32 +365,32 @@ namespace SMIS.Infrastructure.Migrations
 
             migrationBuilder.InsertData(
                 table: "AspNetUsers",
-                columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "FirstName", "LastName", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
+                columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "FirstName", "LastName", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "PublicId", "SecurityStamp", "TwoFactorEnabled", "UserName" },
                 values: new object[,]
                 {
-                    { 1, 0, "c3f098f9-4fb4-4c8e-b7cb-a59df53a4be6", "admin@local", true, "System", "Admin", false, null, "ADMIN@LOCAL", "ADMIN", "AQAAAAIAAYagAAAAENTsGBYh0SKmnXk8SlGYXwVstdvixnSoCYYN+DjreLtIDgS4P2KGIbBwmoH6iwjgJg==", null, false, "admin-seed", false, "admin" },
-                    { 2, 0, "de2bbebf-b2c2-496a-8840-edeeca5c6f13", "user@local", true, "Default", "User", false, null, "USER@LOCAL", "USER", "AQAAAAIAAYagAAAAECRZANrhX+c12xSiLOSnxy8vhaDYhxMIZXRintS5RMT0zZaEuDHe2HlbQ5urFyK62g==", null, false, "user-seed", false, "user" }
+                    { 1, 0, "2bd06897-de6d-44af-a9e8-367affb98dd2", "admin@local", true, "System", "Admin", false, null, "ADMIN@LOCAL", "ADMIN", "AQAAAAIAAYagAAAAEFo4Wk1Z/eb0FMgSjCDrXoXvdqDejQDSa+rz/e6aWsHwjfGy9GJPT/fJt95/Rwz0Dg==", null, false, "1", "admin-seed", false, "admin" },
+                    { 2, 0, "09fe8ffd-72a4-48b4-8cc6-c624495f812f", "user@local", true, "Default", "User", false, null, "USER@LOCAL", "USER", "AQAAAAIAAYagAAAAEFv8//Id7RqUsttTrZJblZittfzfLieQup5NsMS+t3mANiiHbDAEKgJhBGFty5mYEQ==", null, false, "2", "user-seed", false, "user" }
                 });
 
             migrationBuilder.InsertData(
                 table: "Languages",
-                columns: new[] { "Id", "Code", "IsActive", "Name" },
+                columns: new[] { "PublicId", "Code", "Id", "IsActive", "Name" },
                 values: new object[,]
                 {
-                    { 1, "en", true, "English" },
-                    { 2, "ps", true, "Pashto" },
-                    { 3, "fa", true, "Farsi" }
+                    { "1", "en", 1, true, "English" },
+                    { "2", "ps", 2, true, "Pashto" },
+                    { "3", "fa", 3, true, "Farsi" }
                 });
 
             migrationBuilder.InsertData(
                 table: "Provinces",
-                columns: new[] { "Id", "CreatedBy", "CreatedDate", "IsPublic", "Name", "PublicId", "UpdatedBy", "UpdatedDate" },
+                columns: new[] { "PublicId", "CreatedBy", "CreatedDate", "Id", "IsPublic", "Name", "UpdatedBy", "UpdatedDate" },
                 values: new object[,]
                 {
-                    { 1, null, new DateTime(2026, 1, 19, 19, 44, 40, 464, DateTimeKind.Local).AddTicks(6453), false, "Kabul", "9b304f04-2ea4-4820-8579-46ee622b4080", null, new DateTime(2026, 1, 19, 19, 44, 40, 464, DateTimeKind.Local).AddTicks(6461) },
-                    { 2, null, new DateTime(2026, 1, 19, 19, 44, 40, 464, DateTimeKind.Local).AddTicks(6527), false, "Herat", "054edae0-6f68-46fc-b2b4-17bbc3452b39", null, new DateTime(2026, 1, 19, 19, 44, 40, 464, DateTimeKind.Local).AddTicks(6528) },
-                    { 3, null, new DateTime(2026, 1, 19, 19, 44, 40, 464, DateTimeKind.Local).AddTicks(6531), false, "Kandahar", "1ef4f354-dc47-41b5-81c9-cd5f11e99084", null, new DateTime(2026, 1, 19, 19, 44, 40, 464, DateTimeKind.Local).AddTicks(6531) },
-                    { 4, null, new DateTime(2026, 1, 19, 19, 44, 40, 464, DateTimeKind.Local).AddTicks(6544), false, "Balkh", "29f2d416-4afc-4b36-a7b9-2f8ed5a9f927", null, new DateTime(2026, 1, 19, 19, 44, 40, 464, DateTimeKind.Local).AddTicks(6545) }
+                    { "1", null, new DateTime(2026, 1, 21, 12, 35, 16, 324, DateTimeKind.Local).AddTicks(5024), 1, false, "Kabul", null, new DateTime(2026, 1, 21, 12, 35, 16, 324, DateTimeKind.Local).AddTicks(5029) },
+                    { "2", null, new DateTime(2026, 1, 21, 12, 35, 16, 324, DateTimeKind.Local).AddTicks(5033), 2, false, "Herat", null, new DateTime(2026, 1, 21, 12, 35, 16, 324, DateTimeKind.Local).AddTicks(5033) },
+                    { "3", null, new DateTime(2026, 1, 21, 12, 35, 16, 324, DateTimeKind.Local).AddTicks(5035), 3, false, "Kandahar", null, new DateTime(2026, 1, 21, 12, 35, 16, 324, DateTimeKind.Local).AddTicks(5036) },
+                    { "4", null, new DateTime(2026, 1, 21, 12, 35, 16, 324, DateTimeKind.Local).AddTicks(5037), 4, false, "Balkh", null, new DateTime(2026, 1, 21, 12, 35, 16, 324, DateTimeKind.Local).AddTicks(5037) }
                 });
 
             migrationBuilder.InsertData(
@@ -358,11 +398,23 @@ namespace SMIS.Infrastructure.Migrations
                 columns: new[] { "PublicId", "CreatedBy", "CreatedDate", "Id", "IsActive", "IsPublic", "MessageCode", "Name", "UpdatedBy", "UpdatedDate" },
                 values: new object[,]
                 {
-                    { "district_herat_center", null, new DateTime(2026, 1, 19, 19, 44, 40, 463, DateTimeKind.Local).AddTicks(1122), 3, true, false, 1003, "Herat Center District", null, new DateTime(2026, 1, 19, 19, 44, 40, 463, DateTimeKind.Local).AddTicks(1123) },
-                    { "district_kabul_center", null, new DateTime(2026, 1, 19, 19, 44, 40, 460, DateTimeKind.Local).AddTicks(9499), 1, true, false, 1001, "Kabul Center District", null, new DateTime(2026, 1, 19, 19, 44, 40, 462, DateTimeKind.Local).AddTicks(7345) },
-                    { "district_kabul_north", null, new DateTime(2026, 1, 19, 19, 44, 40, 463, DateTimeKind.Local).AddTicks(1102), 2, true, false, 1002, "Kabul North District", null, new DateTime(2026, 1, 19, 19, 44, 40, 463, DateTimeKind.Local).AddTicks(1107) },
-                    { "province_herat", null, new DateTime(2026, 1, 19, 19, 44, 40, 463, DateTimeKind.Local).AddTicks(1141), 5, true, false, 2002, "Herat Province", null, new DateTime(2026, 1, 19, 19, 44, 40, 463, DateTimeKind.Local).AddTicks(1141) },
-                    { "province_kabul", null, new DateTime(2026, 1, 19, 19, 44, 40, 463, DateTimeKind.Local).AddTicks(1137), 4, true, false, 2001, "Kabul Province", null, new DateTime(2026, 1, 19, 19, 44, 40, 463, DateTimeKind.Local).AddTicks(1137) }
+                    { "1", null, new DateTime(2026, 1, 21, 12, 35, 16, 321, DateTimeKind.Local).AddTicks(3143), 1, true, false, 1001, "Kabul Center District", null, new DateTime(2026, 1, 21, 12, 35, 16, 322, DateTimeKind.Local).AddTicks(9063) },
+                    { "2", null, new DateTime(2026, 1, 21, 12, 35, 16, 323, DateTimeKind.Local).AddTicks(2232), 2, true, false, 1002, "Kabul North District", null, new DateTime(2026, 1, 21, 12, 35, 16, 323, DateTimeKind.Local).AddTicks(2236) },
+                    { "3", null, new DateTime(2026, 1, 21, 12, 35, 16, 323, DateTimeKind.Local).AddTicks(2240), 3, true, false, 1003, "Herat Center District", null, new DateTime(2026, 1, 21, 12, 35, 16, 323, DateTimeKind.Local).AddTicks(2241) },
+                    { "4", null, new DateTime(2026, 1, 21, 12, 35, 16, 323, DateTimeKind.Local).AddTicks(2243), 4, true, false, 2001, "Kabul Province", null, new DateTime(2026, 1, 21, 12, 35, 16, 323, DateTimeKind.Local).AddTicks(2243) },
+                    { "5", null, new DateTime(2026, 1, 21, 12, 35, 16, 323, DateTimeKind.Local).AddTicks(2245), 5, true, false, 2002, "Herat Province", null, new DateTime(2026, 1, 21, 12, 35, 16, 323, DateTimeKind.Local).AddTicks(2246) }
+                });
+
+            migrationBuilder.InsertData(
+                table: "UnitOfMeasure",
+                columns: new[] { "PublicId", "Description", "Id", "Name", "Symbol" },
+                values: new object[,]
+                {
+                    { "1", null, 1, "Piece", "pcs" },
+                    { "2", null, 2, "Gram", "g" },
+                    { "3", null, 3, "Milliliter", "ml" },
+                    { "4", null, 4, "Box", "box" },
+                    { "5", null, 5, "Bottle", "btl" }
                 });
 
             migrationBuilder.InsertData(
@@ -370,28 +422,28 @@ namespace SMIS.Infrastructure.Migrations
                 columns: new[] { "PublicId", "CreatedBy", "CreatedDate", "Id", "IsPublic", "Name", "TranslationKeyId", "UpdatedBy", "UpdatedDate" },
                 values: new object[,]
                 {
-                    { "district-herat-center-guid", null, new DateTime(2026, 1, 19, 19, 44, 40, 465, DateTimeKind.Local).AddTicks(1584), 3, false, "Herat Center", "district_herat_center", null, new DateTime(2026, 1, 19, 19, 44, 40, 465, DateTimeKind.Local).AddTicks(1584) },
-                    { "district-kabul-center-guid", null, new DateTime(2026, 1, 19, 19, 44, 40, 465, DateTimeKind.Local).AddTicks(1263), 1, false, "Kabul Center", "district_kabul_center", null, new DateTime(2026, 1, 19, 19, 44, 40, 465, DateTimeKind.Local).AddTicks(1266) },
-                    { "district-kabul-north-guid", null, new DateTime(2026, 1, 19, 19, 44, 40, 465, DateTimeKind.Local).AddTicks(1574), 2, false, "Kabul North", "district_kabul_north", null, new DateTime(2026, 1, 19, 19, 44, 40, 465, DateTimeKind.Local).AddTicks(1576) }
+                    { "1", null, new DateTime(2026, 1, 21, 12, 35, 16, 324, DateTimeKind.Local).AddTicks(9899), 1, false, "Kabul Center", "1", null, new DateTime(2026, 1, 21, 12, 35, 16, 324, DateTimeKind.Local).AddTicks(9902) },
+                    { "2", null, new DateTime(2026, 1, 21, 12, 35, 16, 325, DateTimeKind.Local).AddTicks(231), 2, false, "Kabul North", "2", null, new DateTime(2026, 1, 21, 12, 35, 16, 325, DateTimeKind.Local).AddTicks(233) },
+                    { "3", null, new DateTime(2026, 1, 21, 12, 35, 16, 325, DateTimeKind.Local).AddTicks(236), 3, false, "Herat Center", "3", null, new DateTime(2026, 1, 21, 12, 35, 16, 325, DateTimeKind.Local).AddTicks(236) }
                 });
 
             migrationBuilder.InsertData(
                 table: "ProvinceTranslations",
-                columns: new[] { "Id", "IsDefault", "LanguageCode", "LanguageId", "Name", "ProvinceId" },
+                columns: new[] { "PublicId", "Id", "IsDefault", "LanguageCode", "LanguageId", "Name", "ProvinceId" },
                 values: new object[,]
                 {
-                    { 1, true, "en", 1, "Kabul", 1 },
-                    { 2, false, "ps", 2, "کابل", 1 },
-                    { 3, false, "fa", 3, "کابل", 1 },
-                    { 4, true, "en", 1, "Herat", 2 },
-                    { 5, false, "ps", 2, "هرات", 2 },
-                    { 6, false, "fa", 3, "هرات", 2 },
-                    { 7, true, "en", 1, "Kandahar", 3 },
-                    { 8, false, "ps", 2, "کندهار", 3 },
-                    { 9, false, "fa", 3, "قندهار", 3 },
-                    { 10, true, "en", 1, "Balkh", 4 },
-                    { 11, false, "ps", 2, "بلخ", 4 },
-                    { 12, false, "fa", 3, "بلخ", 4 }
+                    { "1", 1, true, "en", 1, "Kabul", 1 },
+                    { "10", 10, true, "en", 1, "Balkh", 4 },
+                    { "11", 11, false, "ps", 2, "بلخ", 4 },
+                    { "12", 12, false, "fa", 3, "بلخ", 4 },
+                    { "2", 2, false, "ps", 2, "کابل", 1 },
+                    { "3", 3, false, "fa", 3, "کابل", 1 },
+                    { "4", 4, true, "en", 1, "Herat", 2 },
+                    { "5", 5, false, "ps", 2, "هرات", 2 },
+                    { "6", 6, false, "fa", 3, "هرات", 2 },
+                    { "7", 7, true, "en", 1, "Kandahar", 3 },
+                    { "8", 8, false, "ps", 2, "کندهار", 3 },
+                    { "9", 9, false, "fa", 3, "قندهار", 3 }
                 });
 
             migrationBuilder.InsertData(
@@ -399,21 +451,21 @@ namespace SMIS.Infrastructure.Migrations
                 columns: new[] { "PublicId", "CreatedBy", "CreatedDate", "Id", "IsPublic", "LanguageNo", "Name", "TranslationKeyPublicId", "UpdatedBy", "UpdatedDate" },
                 values: new object[,]
                 {
-                    { "0190ce58-1112-4f55-a90a-e96e11c32d12", null, new DateTime(2026, 1, 19, 19, 44, 40, 463, DateTimeKind.Local).AddTicks(7557), 2, false, 2, "", "district_kabul_center", null, new DateTime(2026, 1, 19, 19, 44, 40, 463, DateTimeKind.Local).AddTicks(7559) },
-                    { "12e54a53-152d-49da-a420-901848d7d327", null, new DateTime(2026, 1, 19, 19, 44, 40, 463, DateTimeKind.Local).AddTicks(7599), 12, false, 3, "", "province_kabul", null, new DateTime(2026, 1, 19, 19, 44, 40, 463, DateTimeKind.Local).AddTicks(7600) },
-                    { "217a1115-ec3c-4cb9-af45-340aa1a9ac93", null, new DateTime(2026, 1, 19, 19, 44, 40, 463, DateTimeKind.Local).AddTicks(7574), 5, false, 2, "", "district_kabul_north", null, new DateTime(2026, 1, 19, 19, 44, 40, 463, DateTimeKind.Local).AddTicks(7574) },
-                    { "308ae1f8-abad-4908-8523-b5f25f87ab78", null, new DateTime(2026, 1, 19, 19, 44, 40, 463, DateTimeKind.Local).AddTicks(7577), 6, false, 3, "", "district_kabul_north", null, new DateTime(2026, 1, 19, 19, 44, 40, 463, DateTimeKind.Local).AddTicks(7577) },
-                    { "37bd2739-be75-46d5-990b-e834444af56c", null, new DateTime(2026, 1, 19, 19, 44, 40, 463, DateTimeKind.Local).AddTicks(7594), 10, false, 1, "", "province_kabul", null, new DateTime(2026, 1, 19, 19, 44, 40, 463, DateTimeKind.Local).AddTicks(7595) },
-                    { "3e85fb43-d242-4a91-a1bf-bd39def471ec", null, new DateTime(2026, 1, 19, 19, 44, 40, 463, DateTimeKind.Local).AddTicks(7586), 7, false, 1, "", "district_herat_center", null, new DateTime(2026, 1, 19, 19, 44, 40, 463, DateTimeKind.Local).AddTicks(7586) },
-                    { "728aeec2-4c25-4335-b4f4-94012c22433b", null, new DateTime(2026, 1, 19, 19, 44, 40, 463, DateTimeKind.Local).AddTicks(7630), 14, false, 2, "", "province_herat", null, new DateTime(2026, 1, 19, 19, 44, 40, 463, DateTimeKind.Local).AddTicks(7631) },
-                    { "77c6fc32-80ad-4808-8d65-e1382622590d", null, new DateTime(2026, 1, 19, 19, 44, 40, 463, DateTimeKind.Local).AddTicks(7597), 11, false, 2, "", "province_kabul", null, new DateTime(2026, 1, 19, 19, 44, 40, 463, DateTimeKind.Local).AddTicks(7597) },
-                    { "82391871-5c0e-40f1-8b6a-0bd5001d0527", null, new DateTime(2026, 1, 19, 19, 44, 40, 463, DateTimeKind.Local).AddTicks(7635), 15, false, 3, "", "province_herat", null, new DateTime(2026, 1, 19, 19, 44, 40, 463, DateTimeKind.Local).AddTicks(7635) },
-                    { "a6783979-a527-4426-a2ca-5d1b42993a84", null, new DateTime(2026, 1, 19, 19, 44, 40, 463, DateTimeKind.Local).AddTicks(6698), 1, false, 1, "", "district_kabul_center", null, new DateTime(2026, 1, 19, 19, 44, 40, 463, DateTimeKind.Local).AddTicks(6701) },
-                    { "a72f57b6-5b63-4af8-b786-1d44ed4235f5", null, new DateTime(2026, 1, 19, 19, 44, 40, 463, DateTimeKind.Local).AddTicks(7588), 8, false, 2, "", "district_herat_center", null, new DateTime(2026, 1, 19, 19, 44, 40, 463, DateTimeKind.Local).AddTicks(7589) },
-                    { "b482a6e7-6790-4f2f-84c5-85a29342ea9a", null, new DateTime(2026, 1, 19, 19, 44, 40, 463, DateTimeKind.Local).AddTicks(7591), 9, false, 3, "", "district_herat_center", null, new DateTime(2026, 1, 19, 19, 44, 40, 463, DateTimeKind.Local).AddTicks(7592) },
-                    { "bf128153-1822-405c-af47-35c9404d478f", null, new DateTime(2026, 1, 19, 19, 44, 40, 463, DateTimeKind.Local).AddTicks(7568), 3, false, 3, "", "district_kabul_center", null, new DateTime(2026, 1, 19, 19, 44, 40, 463, DateTimeKind.Local).AddTicks(7569) },
-                    { "d234cb50-a752-4692-b110-491df6ce1986", null, new DateTime(2026, 1, 19, 19, 44, 40, 463, DateTimeKind.Local).AddTicks(7602), 13, false, 1, "", "province_herat", null, new DateTime(2026, 1, 19, 19, 44, 40, 463, DateTimeKind.Local).AddTicks(7603) },
-                    { "daa72ad0-7b53-4f9c-a965-58421ff5fad3", null, new DateTime(2026, 1, 19, 19, 44, 40, 463, DateTimeKind.Local).AddTicks(7571), 4, false, 1, "", "district_kabul_north", null, new DateTime(2026, 1, 19, 19, 44, 40, 463, DateTimeKind.Local).AddTicks(7571) }
+                    { "1", null, new DateTime(2026, 1, 21, 12, 35, 16, 323, DateTimeKind.Local).AddTicks(7603), 1, false, 1, "", "1", null, new DateTime(2026, 1, 21, 12, 35, 16, 323, DateTimeKind.Local).AddTicks(7607) },
+                    { "10", null, new DateTime(2026, 1, 21, 12, 35, 16, 323, DateTimeKind.Local).AddTicks(8310), 10, false, 1, "", "4", null, new DateTime(2026, 1, 21, 12, 35, 16, 323, DateTimeKind.Local).AddTicks(8311) },
+                    { "11", null, new DateTime(2026, 1, 21, 12, 35, 16, 323, DateTimeKind.Local).AddTicks(8312), 11, false, 2, "", "4", null, new DateTime(2026, 1, 21, 12, 35, 16, 323, DateTimeKind.Local).AddTicks(8313) },
+                    { "12", null, new DateTime(2026, 1, 21, 12, 35, 16, 323, DateTimeKind.Local).AddTicks(8314), 12, false, 3, "", "4", null, new DateTime(2026, 1, 21, 12, 35, 16, 323, DateTimeKind.Local).AddTicks(8315) },
+                    { "13", null, new DateTime(2026, 1, 21, 12, 35, 16, 323, DateTimeKind.Local).AddTicks(8316), 13, false, 1, "", "5", null, new DateTime(2026, 1, 21, 12, 35, 16, 323, DateTimeKind.Local).AddTicks(8316) },
+                    { "14", null, new DateTime(2026, 1, 21, 12, 35, 16, 323, DateTimeKind.Local).AddTicks(8318), 14, false, 2, "", "5", null, new DateTime(2026, 1, 21, 12, 35, 16, 323, DateTimeKind.Local).AddTicks(8318) },
+                    { "15", null, new DateTime(2026, 1, 21, 12, 35, 16, 323, DateTimeKind.Local).AddTicks(8319), 15, false, 3, "", "5", null, new DateTime(2026, 1, 21, 12, 35, 16, 323, DateTimeKind.Local).AddTicks(8320) },
+                    { "2", null, new DateTime(2026, 1, 21, 12, 35, 16, 323, DateTimeKind.Local).AddTicks(8291), 2, false, 2, "", "1", null, new DateTime(2026, 1, 21, 12, 35, 16, 323, DateTimeKind.Local).AddTicks(8294) },
+                    { "3", null, new DateTime(2026, 1, 21, 12, 35, 16, 323, DateTimeKind.Local).AddTicks(8297), 3, false, 3, "", "1", null, new DateTime(2026, 1, 21, 12, 35, 16, 323, DateTimeKind.Local).AddTicks(8298) },
+                    { "4", null, new DateTime(2026, 1, 21, 12, 35, 16, 323, DateTimeKind.Local).AddTicks(8299), 4, false, 1, "", "2", null, new DateTime(2026, 1, 21, 12, 35, 16, 323, DateTimeKind.Local).AddTicks(8300) },
+                    { "5", null, new DateTime(2026, 1, 21, 12, 35, 16, 323, DateTimeKind.Local).AddTicks(8301), 5, false, 2, "", "2", null, new DateTime(2026, 1, 21, 12, 35, 16, 323, DateTimeKind.Local).AddTicks(8302) },
+                    { "6", null, new DateTime(2026, 1, 21, 12, 35, 16, 323, DateTimeKind.Local).AddTicks(8303), 6, false, 3, "", "2", null, new DateTime(2026, 1, 21, 12, 35, 16, 323, DateTimeKind.Local).AddTicks(8304) },
+                    { "7", null, new DateTime(2026, 1, 21, 12, 35, 16, 323, DateTimeKind.Local).AddTicks(8305), 7, false, 1, "", "3", null, new DateTime(2026, 1, 21, 12, 35, 16, 323, DateTimeKind.Local).AddTicks(8305) },
+                    { "8", null, new DateTime(2026, 1, 21, 12, 35, 16, 323, DateTimeKind.Local).AddTicks(8307), 8, false, 2, "", "3", null, new DateTime(2026, 1, 21, 12, 35, 16, 323, DateTimeKind.Local).AddTicks(8307) },
+                    { "9", null, new DateTime(2026, 1, 21, 12, 35, 16, 323, DateTimeKind.Local).AddTicks(8309), 9, false, 3, "", "3", null, new DateTime(2026, 1, 21, 12, 35, 16, 323, DateTimeKind.Local).AddTicks(8309) }
                 });
 
             migrationBuilder.CreateIndex(
@@ -475,6 +527,12 @@ namespace SMIS.Infrastructure.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_Languages_Code",
+                table: "Languages",
+                column: "Code",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_ProvinceTranslations_LanguageId",
                 table: "ProvinceTranslations",
                 column: "LanguageId");
@@ -483,6 +541,12 @@ namespace SMIS.Infrastructure.Migrations
                 name: "IX_ProvinceTranslations_ProvinceId_LanguageId",
                 table: "ProvinceTranslations",
                 columns: new[] { "ProvinceId", "LanguageId" },
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TranslationKeys_MessageCode",
+                table: "TranslationKeys",
+                column: "MessageCode",
                 unique: true);
 
             migrationBuilder.CreateIndex(
@@ -524,7 +588,13 @@ namespace SMIS.Infrastructure.Migrations
                 name: "ProvinceTranslations");
 
             migrationBuilder.DropTable(
+                name: "Shops");
+
+            migrationBuilder.DropTable(
                 name: "Translations");
+
+            migrationBuilder.DropTable(
+                name: "UnitOfMeasure");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");

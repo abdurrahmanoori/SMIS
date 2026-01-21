@@ -7,7 +7,7 @@ namespace SMIS.Domain.Common.BaseAbstract
     public abstract class BaseEntity : IEntity
     {
         [Key]
-        public string PublicId { get; set; } = Guid.NewGuid().ToString();
+        public string PublicId { get; set; } = string.Empty;
         //[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 

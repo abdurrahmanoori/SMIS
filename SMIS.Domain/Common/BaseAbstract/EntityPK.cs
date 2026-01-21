@@ -6,7 +6,7 @@ namespace SMIS.Domain.Common.BaseAbstract
     public class EntityPK : IEntityPK
     {
         [Key]
-        public string PublicId { get; set; } = Guid.NewGuid().ToString();
+        public string PublicId { get; set; } = string.Empty;
         public int Id { get; set; }
     }
 }

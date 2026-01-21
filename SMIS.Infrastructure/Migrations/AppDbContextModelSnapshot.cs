@@ -118,15 +118,19 @@ namespace SMIS.Infrastructure.Migrations
 
             modelBuilder.Entity("SMIS.Domain.Entities.AppLog", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                    b.Property<string>("PublicId")
+                        .HasColumnType("TEXT");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Exception")
                         .HasColumnType("TEXT");
+
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER")
+                        .HasDefaultValue(0);
 
                     b.Property<bool>("IsPublic")
                         .HasColumnType("INTEGER");
@@ -147,13 +151,10 @@ namespace SMIS.Infrastructure.Migrations
                     b.Property<string>("Properties")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("PublicId")
-                        .HasColumnType("TEXT");
-
                     b.Property<int?>("UserId")
                         .HasColumnType("INTEGER");
 
-                    b.HasKey("Id");
+                    b.HasKey("PublicId");
 
                     b.HasIndex("CreatedAt");
 
@@ -207,33 +208,33 @@ namespace SMIS.Infrastructure.Migrations
                     b.HasData(
                         new
                         {
-                            PublicId = "district-kabul-center-guid",
-                            CreatedDate = new DateTime(2026, 1, 21, 9, 42, 6, 318, DateTimeKind.Local).AddTicks(2614),
+                            PublicId = "1",
+                            CreatedDate = new DateTime(2026, 1, 21, 12, 38, 36, 970, DateTimeKind.Local).AddTicks(3970),
                             Id = 1,
                             IsPublic = false,
                             Name = "Kabul Center",
-                            TranslationKeyId = "district_kabul_center",
-                            UpdatedDate = new DateTime(2026, 1, 21, 9, 42, 6, 318, DateTimeKind.Local).AddTicks(2616)
+                            TranslationKeyId = "1",
+                            UpdatedDate = new DateTime(2026, 1, 21, 12, 38, 36, 970, DateTimeKind.Local).AddTicks(3973)
                         },
                         new
                         {
-                            PublicId = "district-kabul-north-guid",
-                            CreatedDate = new DateTime(2026, 1, 21, 9, 42, 6, 318, DateTimeKind.Local).AddTicks(2747),
+                            PublicId = "2",
+                            CreatedDate = new DateTime(2026, 1, 21, 12, 38, 36, 970, DateTimeKind.Local).AddTicks(4113),
                             Id = 2,
                             IsPublic = false,
                             Name = "Kabul North",
-                            TranslationKeyId = "district_kabul_north",
-                            UpdatedDate = new DateTime(2026, 1, 21, 9, 42, 6, 318, DateTimeKind.Local).AddTicks(2747)
+                            TranslationKeyId = "2",
+                            UpdatedDate = new DateTime(2026, 1, 21, 12, 38, 36, 970, DateTimeKind.Local).AddTicks(4113)
                         },
                         new
                         {
-                            PublicId = "district-herat-center-guid",
-                            CreatedDate = new DateTime(2026, 1, 21, 9, 42, 6, 318, DateTimeKind.Local).AddTicks(2752),
+                            PublicId = "3",
+                            CreatedDate = new DateTime(2026, 1, 21, 12, 38, 36, 970, DateTimeKind.Local).AddTicks(4114),
                             Id = 3,
                             IsPublic = false,
                             Name = "Herat Center",
-                            TranslationKeyId = "district_herat_center",
-                            UpdatedDate = new DateTime(2026, 1, 21, 9, 42, 6, 318, DateTimeKind.Local).AddTicks(2752)
+                            TranslationKeyId = "3",
+                            UpdatedDate = new DateTime(2026, 1, 21, 12, 38, 36, 970, DateTimeKind.Local).AddTicks(4114)
                         });
                 });
 
@@ -313,6 +314,10 @@ namespace SMIS.Infrastructure.Migrations
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("INTEGER");
 
+                    b.Property<string>("PublicId")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("TEXT");
 
@@ -339,7 +344,7 @@ namespace SMIS.Infrastructure.Migrations
                         {
                             Id = 1,
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "0dc01c7a-a6ce-4cdb-8907-431cb40e7c58",
+                            ConcurrencyStamp = "86282817-376a-42ad-947f-1611e67b264d",
                             Email = "admin@local",
                             EmailConfirmed = true,
                             FirstName = "System",
@@ -347,8 +352,9 @@ namespace SMIS.Infrastructure.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@LOCAL",
                             NormalizedUserName = "ADMIN",
-                            PasswordHash = "AQAAAAIAAYagAAAAEOQQdctpPGyjA0BrYklJErlBkNnMbkndt43SWEVQln4Tbvo9U6H9v4610VaekDiaag==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEIgY7+DydSdK9UAE5UIE/0iSHfxl+IDcQ1cCHMdIpqYh+TrzHIoRjZlWRzRroeJoiw==",
                             PhoneNumberConfirmed = false,
+                            PublicId = "1",
                             SecurityStamp = "admin-seed",
                             TwoFactorEnabled = false,
                             UserName = "admin"
@@ -357,7 +363,7 @@ namespace SMIS.Infrastructure.Migrations
                         {
                             Id = 2,
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "93d71dd7-c807-4b8e-bf5e-8cf47b27fe57",
+                            ConcurrencyStamp = "8a502a25-569e-44f3-9988-6f986e9db6fd",
                             Email = "user@local",
                             EmailConfirmed = true,
                             FirstName = "Default",
@@ -365,8 +371,9 @@ namespace SMIS.Infrastructure.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "USER@LOCAL",
                             NormalizedUserName = "USER",
-                            PasswordHash = "AQAAAAIAAYagAAAAEKRt1QYI2CH2Etmd1cMs4UIChA1CHRgR6VOaFH3xW2Y8N0Uc4KOPOLnPQzHau46/Jg==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEN2GGpwqvwq8oR6eAi8InNPQQkKofWMALVKF8uXLZ88BmaIgoEf9RGfjGOSEubnoMA==",
                             PhoneNumberConfirmed = false,
+                            PublicId = "2",
                             SecurityStamp = "user-seed",
                             TwoFactorEnabled = false,
                             UserName = "user"
@@ -375,43 +382,55 @@ namespace SMIS.Infrastructure.Migrations
 
             modelBuilder.Entity("SMIS.Domain.Entities.Localization.Language", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                    b.Property<string>("PublicId")
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Code")
+                        .HasMaxLength(10)
                         .HasColumnType("TEXT");
+
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER")
+                        .HasDefaultValue(0);
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Name")
                         .IsRequired()
+                        .HasMaxLength(100)
                         .HasColumnType("TEXT");
 
-                    b.HasKey("Id");
+                    b.HasKey("PublicId");
+
+                    b.HasIndex("Code")
+                        .IsUnique();
 
                     b.ToTable("Languages");
 
                     b.HasData(
                         new
                         {
-                            Id = 1,
+                            PublicId = "1",
                             Code = "en",
+                            Id = 1,
                             IsActive = true,
                             Name = "English"
                         },
                         new
                         {
-                            Id = 2,
+                            PublicId = "2",
                             Code = "ps",
+                            Id = 2,
                             IsActive = true,
                             Name = "Pashto"
                         },
                         new
                         {
-                            Id = 3,
+                            PublicId = "3",
                             Code = "fa",
+                            Id = 3,
                             IsActive = true,
                             Name = "Farsi"
                         });
@@ -464,168 +483,168 @@ namespace SMIS.Infrastructure.Migrations
                     b.HasData(
                         new
                         {
-                            PublicId = "b1433f0f-f83a-4ada-9f12-b3f23635d4a6",
-                            CreatedDate = new DateTime(2026, 1, 21, 9, 42, 6, 317, DateTimeKind.Local).AddTicks(6937),
+                            PublicId = "1",
+                            CreatedDate = new DateTime(2026, 1, 21, 12, 38, 36, 969, DateTimeKind.Local).AddTicks(7685),
                             Id = 1,
                             IsPublic = false,
                             LanguageNo = 1,
                             Name = "",
-                            TranslationKeyPublicId = "district_kabul_center",
-                            UpdatedDate = new DateTime(2026, 1, 21, 9, 42, 6, 317, DateTimeKind.Local).AddTicks(6939)
+                            TranslationKeyPublicId = "1",
+                            UpdatedDate = new DateTime(2026, 1, 21, 12, 38, 36, 969, DateTimeKind.Local).AddTicks(7687)
                         },
                         new
                         {
-                            PublicId = "b2980dee-595d-4f9f-9feb-4c55a4d43735",
-                            CreatedDate = new DateTime(2026, 1, 21, 9, 42, 6, 317, DateTimeKind.Local).AddTicks(7144),
+                            PublicId = "2",
+                            CreatedDate = new DateTime(2026, 1, 21, 12, 38, 36, 969, DateTimeKind.Local).AddTicks(7926),
                             Id = 2,
                             IsPublic = false,
                             LanguageNo = 2,
                             Name = "",
-                            TranslationKeyPublicId = "district_kabul_center",
-                            UpdatedDate = new DateTime(2026, 1, 21, 9, 42, 6, 317, DateTimeKind.Local).AddTicks(7145)
+                            TranslationKeyPublicId = "1",
+                            UpdatedDate = new DateTime(2026, 1, 21, 12, 38, 36, 969, DateTimeKind.Local).AddTicks(7927)
                         },
                         new
                         {
-                            PublicId = "94b6f2b6-2c3f-4a1d-86c0-9247aed0b184",
-                            CreatedDate = new DateTime(2026, 1, 21, 9, 42, 6, 317, DateTimeKind.Local).AddTicks(7150),
+                            PublicId = "3",
+                            CreatedDate = new DateTime(2026, 1, 21, 12, 38, 36, 969, DateTimeKind.Local).AddTicks(7928),
                             Id = 3,
                             IsPublic = false,
                             LanguageNo = 3,
                             Name = "",
-                            TranslationKeyPublicId = "district_kabul_center",
-                            UpdatedDate = new DateTime(2026, 1, 21, 9, 42, 6, 317, DateTimeKind.Local).AddTicks(7150)
+                            TranslationKeyPublicId = "1",
+                            UpdatedDate = new DateTime(2026, 1, 21, 12, 38, 36, 969, DateTimeKind.Local).AddTicks(7928)
                         },
                         new
                         {
-                            PublicId = "165e745d-1440-42f9-a8ee-c0d0ab58d190",
-                            CreatedDate = new DateTime(2026, 1, 21, 9, 42, 6, 317, DateTimeKind.Local).AddTicks(7158),
+                            PublicId = "4",
+                            CreatedDate = new DateTime(2026, 1, 21, 12, 38, 36, 969, DateTimeKind.Local).AddTicks(7929),
                             Id = 4,
                             IsPublic = false,
                             LanguageNo = 1,
                             Name = "",
-                            TranslationKeyPublicId = "district_kabul_north",
-                            UpdatedDate = new DateTime(2026, 1, 21, 9, 42, 6, 317, DateTimeKind.Local).AddTicks(7158)
+                            TranslationKeyPublicId = "2",
+                            UpdatedDate = new DateTime(2026, 1, 21, 12, 38, 36, 969, DateTimeKind.Local).AddTicks(7930)
                         },
                         new
                         {
-                            PublicId = "94cbdac7-24c9-41bb-bb36-7c3dbebc7cb7",
-                            CreatedDate = new DateTime(2026, 1, 21, 9, 42, 6, 317, DateTimeKind.Local).AddTicks(7167),
+                            PublicId = "5",
+                            CreatedDate = new DateTime(2026, 1, 21, 12, 38, 36, 969, DateTimeKind.Local).AddTicks(7931),
                             Id = 5,
                             IsPublic = false,
                             LanguageNo = 2,
                             Name = "",
-                            TranslationKeyPublicId = "district_kabul_north",
-                            UpdatedDate = new DateTime(2026, 1, 21, 9, 42, 6, 317, DateTimeKind.Local).AddTicks(7167)
+                            TranslationKeyPublicId = "2",
+                            UpdatedDate = new DateTime(2026, 1, 21, 12, 38, 36, 969, DateTimeKind.Local).AddTicks(7931)
                         },
                         new
                         {
-                            PublicId = "7305a23a-c4c1-4a0c-a046-478c550cb6f3",
-                            CreatedDate = new DateTime(2026, 1, 21, 9, 42, 6, 317, DateTimeKind.Local).AddTicks(7171),
+                            PublicId = "6",
+                            CreatedDate = new DateTime(2026, 1, 21, 12, 38, 36, 969, DateTimeKind.Local).AddTicks(7932),
                             Id = 6,
                             IsPublic = false,
                             LanguageNo = 3,
                             Name = "",
-                            TranslationKeyPublicId = "district_kabul_north",
-                            UpdatedDate = new DateTime(2026, 1, 21, 9, 42, 6, 317, DateTimeKind.Local).AddTicks(7171)
+                            TranslationKeyPublicId = "2",
+                            UpdatedDate = new DateTime(2026, 1, 21, 12, 38, 36, 969, DateTimeKind.Local).AddTicks(7932)
                         },
                         new
                         {
-                            PublicId = "4bc2ff52-11cb-4632-b699-56d10ebbc7f6",
-                            CreatedDate = new DateTime(2026, 1, 21, 9, 42, 6, 317, DateTimeKind.Local).AddTicks(7174),
+                            PublicId = "7",
+                            CreatedDate = new DateTime(2026, 1, 21, 12, 38, 36, 969, DateTimeKind.Local).AddTicks(7933),
                             Id = 7,
                             IsPublic = false,
                             LanguageNo = 1,
                             Name = "",
-                            TranslationKeyPublicId = "district_herat_center",
-                            UpdatedDate = new DateTime(2026, 1, 21, 9, 42, 6, 317, DateTimeKind.Local).AddTicks(7174)
+                            TranslationKeyPublicId = "3",
+                            UpdatedDate = new DateTime(2026, 1, 21, 12, 38, 36, 969, DateTimeKind.Local).AddTicks(7933)
                         },
                         new
                         {
-                            PublicId = "8e07ac3e-c705-456e-ae27-b4e32a800ab1",
-                            CreatedDate = new DateTime(2026, 1, 21, 9, 42, 6, 317, DateTimeKind.Local).AddTicks(7197),
+                            PublicId = "8",
+                            CreatedDate = new DateTime(2026, 1, 21, 12, 38, 36, 969, DateTimeKind.Local).AddTicks(7934),
                             Id = 8,
                             IsPublic = false,
                             LanguageNo = 2,
                             Name = "",
-                            TranslationKeyPublicId = "district_herat_center",
-                            UpdatedDate = new DateTime(2026, 1, 21, 9, 42, 6, 317, DateTimeKind.Local).AddTicks(7198)
+                            TranslationKeyPublicId = "3",
+                            UpdatedDate = new DateTime(2026, 1, 21, 12, 38, 36, 969, DateTimeKind.Local).AddTicks(7934)
                         },
                         new
                         {
-                            PublicId = "75e9a018-41c5-48d6-822a-51ba52f2bc31",
-                            CreatedDate = new DateTime(2026, 1, 21, 9, 42, 6, 317, DateTimeKind.Local).AddTicks(7201),
+                            PublicId = "9",
+                            CreatedDate = new DateTime(2026, 1, 21, 12, 38, 36, 969, DateTimeKind.Local).AddTicks(7935),
                             Id = 9,
                             IsPublic = false,
                             LanguageNo = 3,
                             Name = "",
-                            TranslationKeyPublicId = "district_herat_center",
-                            UpdatedDate = new DateTime(2026, 1, 21, 9, 42, 6, 317, DateTimeKind.Local).AddTicks(7201)
+                            TranslationKeyPublicId = "3",
+                            UpdatedDate = new DateTime(2026, 1, 21, 12, 38, 36, 969, DateTimeKind.Local).AddTicks(7936)
                         },
                         new
                         {
-                            PublicId = "15255650-5536-4a0e-8024-710bee436069",
-                            CreatedDate = new DateTime(2026, 1, 21, 9, 42, 6, 317, DateTimeKind.Local).AddTicks(7204),
+                            PublicId = "10",
+                            CreatedDate = new DateTime(2026, 1, 21, 12, 38, 36, 969, DateTimeKind.Local).AddTicks(7936),
                             Id = 10,
                             IsPublic = false,
                             LanguageNo = 1,
                             Name = "",
-                            TranslationKeyPublicId = "province_kabul",
-                            UpdatedDate = new DateTime(2026, 1, 21, 9, 42, 6, 317, DateTimeKind.Local).AddTicks(7205)
+                            TranslationKeyPublicId = "4",
+                            UpdatedDate = new DateTime(2026, 1, 21, 12, 38, 36, 969, DateTimeKind.Local).AddTicks(7937)
                         },
                         new
                         {
-                            PublicId = "eff3ef08-8c4d-4cca-9696-d74a5df1a7fb",
-                            CreatedDate = new DateTime(2026, 1, 21, 9, 42, 6, 317, DateTimeKind.Local).AddTicks(7208),
+                            PublicId = "11",
+                            CreatedDate = new DateTime(2026, 1, 21, 12, 38, 36, 969, DateTimeKind.Local).AddTicks(7938),
                             Id = 11,
                             IsPublic = false,
                             LanguageNo = 2,
                             Name = "",
-                            TranslationKeyPublicId = "province_kabul",
-                            UpdatedDate = new DateTime(2026, 1, 21, 9, 42, 6, 317, DateTimeKind.Local).AddTicks(7208)
+                            TranslationKeyPublicId = "4",
+                            UpdatedDate = new DateTime(2026, 1, 21, 12, 38, 36, 969, DateTimeKind.Local).AddTicks(7938)
                         },
                         new
                         {
-                            PublicId = "384e3842-dab6-4994-a29c-cfbab3dd2a66",
-                            CreatedDate = new DateTime(2026, 1, 21, 9, 42, 6, 317, DateTimeKind.Local).AddTicks(7211),
+                            PublicId = "12",
+                            CreatedDate = new DateTime(2026, 1, 21, 12, 38, 36, 969, DateTimeKind.Local).AddTicks(7939),
                             Id = 12,
                             IsPublic = false,
                             LanguageNo = 3,
                             Name = "",
-                            TranslationKeyPublicId = "province_kabul",
-                            UpdatedDate = new DateTime(2026, 1, 21, 9, 42, 6, 317, DateTimeKind.Local).AddTicks(7211)
+                            TranslationKeyPublicId = "4",
+                            UpdatedDate = new DateTime(2026, 1, 21, 12, 38, 36, 969, DateTimeKind.Local).AddTicks(7939)
                         },
                         new
                         {
-                            PublicId = "d8187247-3882-4b07-a9cf-0a71e761b290",
-                            CreatedDate = new DateTime(2026, 1, 21, 9, 42, 6, 317, DateTimeKind.Local).AddTicks(7216),
+                            PublicId = "13",
+                            CreatedDate = new DateTime(2026, 1, 21, 12, 38, 36, 969, DateTimeKind.Local).AddTicks(7940),
                             Id = 13,
                             IsPublic = false,
                             LanguageNo = 1,
                             Name = "",
-                            TranslationKeyPublicId = "province_herat",
-                            UpdatedDate = new DateTime(2026, 1, 21, 9, 42, 6, 317, DateTimeKind.Local).AddTicks(7216)
+                            TranslationKeyPublicId = "5",
+                            UpdatedDate = new DateTime(2026, 1, 21, 12, 38, 36, 969, DateTimeKind.Local).AddTicks(7940)
                         },
                         new
                         {
-                            PublicId = "97acfcc2-d59f-48b2-be29-7e258267bb92",
-                            CreatedDate = new DateTime(2026, 1, 21, 9, 42, 6, 317, DateTimeKind.Local).AddTicks(7219),
+                            PublicId = "14",
+                            CreatedDate = new DateTime(2026, 1, 21, 12, 38, 36, 969, DateTimeKind.Local).AddTicks(7941),
                             Id = 14,
                             IsPublic = false,
                             LanguageNo = 2,
                             Name = "",
-                            TranslationKeyPublicId = "province_herat",
-                            UpdatedDate = new DateTime(2026, 1, 21, 9, 42, 6, 317, DateTimeKind.Local).AddTicks(7219)
+                            TranslationKeyPublicId = "5",
+                            UpdatedDate = new DateTime(2026, 1, 21, 12, 38, 36, 969, DateTimeKind.Local).AddTicks(7941)
                         },
                         new
                         {
-                            PublicId = "715a1f93-0d75-4b7d-8d09-01444d6e93cb",
-                            CreatedDate = new DateTime(2026, 1, 21, 9, 42, 6, 317, DateTimeKind.Local).AddTicks(7222),
+                            PublicId = "15",
+                            CreatedDate = new DateTime(2026, 1, 21, 12, 38, 36, 969, DateTimeKind.Local).AddTicks(7942),
                             Id = 15,
                             IsPublic = false,
                             LanguageNo = 3,
                             Name = "",
-                            TranslationKeyPublicId = "province_herat",
-                            UpdatedDate = new DateTime(2026, 1, 21, 9, 42, 6, 317, DateTimeKind.Local).AddTicks(7222)
+                            TranslationKeyPublicId = "5",
+                            UpdatedDate = new DateTime(2026, 1, 21, 12, 38, 36, 969, DateTimeKind.Local).AddTicks(7942)
                         });
                 });
 
@@ -641,7 +660,9 @@ namespace SMIS.Infrastructure.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<int>("Id")
-                        .HasColumnType("INTEGER");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER")
+                        .HasDefaultValue(0);
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("INTEGER");
@@ -654,6 +675,7 @@ namespace SMIS.Infrastructure.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
+                        .HasMaxLength(200)
                         .HasColumnType("TEXT");
 
                     b.Property<int?>("UpdatedBy")
@@ -664,77 +686,84 @@ namespace SMIS.Infrastructure.Migrations
 
                     b.HasKey("PublicId");
 
+                    b.HasIndex("MessageCode")
+                        .IsUnique();
+
                     b.ToTable("TranslationKeys");
 
                     b.HasData(
                         new
                         {
-                            PublicId = "district_kabul_center",
-                            CreatedDate = new DateTime(2026, 1, 21, 9, 42, 6, 316, DateTimeKind.Local).AddTicks(6362),
+                            PublicId = "1",
+                            CreatedDate = new DateTime(2026, 1, 21, 12, 38, 36, 968, DateTimeKind.Local).AddTicks(6936),
                             Id = 1,
                             IsActive = true,
                             IsPublic = false,
                             MessageCode = 1001,
                             Name = "Kabul Center District",
-                            UpdatedDate = new DateTime(2026, 1, 21, 9, 42, 6, 317, DateTimeKind.Local).AddTicks(2988)
+                            UpdatedDate = new DateTime(2026, 1, 21, 12, 38, 36, 969, DateTimeKind.Local).AddTicks(3541)
                         },
                         new
                         {
-                            PublicId = "district_kabul_north",
-                            CreatedDate = new DateTime(2026, 1, 21, 9, 42, 6, 317, DateTimeKind.Local).AddTicks(4614),
+                            PublicId = "2",
+                            CreatedDate = new DateTime(2026, 1, 21, 12, 38, 36, 969, DateTimeKind.Local).AddTicks(4807),
                             Id = 2,
                             IsActive = true,
                             IsPublic = false,
                             MessageCode = 1002,
                             Name = "Kabul North District",
-                            UpdatedDate = new DateTime(2026, 1, 21, 9, 42, 6, 317, DateTimeKind.Local).AddTicks(4616)
+                            UpdatedDate = new DateTime(2026, 1, 21, 12, 38, 36, 969, DateTimeKind.Local).AddTicks(4808)
                         },
                         new
                         {
-                            PublicId = "district_herat_center",
-                            CreatedDate = new DateTime(2026, 1, 21, 9, 42, 6, 317, DateTimeKind.Local).AddTicks(4623),
+                            PublicId = "3",
+                            CreatedDate = new DateTime(2026, 1, 21, 12, 38, 36, 969, DateTimeKind.Local).AddTicks(4810),
                             Id = 3,
                             IsActive = true,
                             IsPublic = false,
                             MessageCode = 1003,
                             Name = "Herat Center District",
-                            UpdatedDate = new DateTime(2026, 1, 21, 9, 42, 6, 317, DateTimeKind.Local).AddTicks(4623)
+                            UpdatedDate = new DateTime(2026, 1, 21, 12, 38, 36, 969, DateTimeKind.Local).AddTicks(4811)
                         },
                         new
                         {
-                            PublicId = "province_kabul",
-                            CreatedDate = new DateTime(2026, 1, 21, 9, 42, 6, 317, DateTimeKind.Local).AddTicks(4627),
+                            PublicId = "4",
+                            CreatedDate = new DateTime(2026, 1, 21, 12, 38, 36, 969, DateTimeKind.Local).AddTicks(4812),
                             Id = 4,
                             IsActive = true,
                             IsPublic = false,
                             MessageCode = 2001,
                             Name = "Kabul Province",
-                            UpdatedDate = new DateTime(2026, 1, 21, 9, 42, 6, 317, DateTimeKind.Local).AddTicks(4628)
+                            UpdatedDate = new DateTime(2026, 1, 21, 12, 38, 36, 969, DateTimeKind.Local).AddTicks(4812)
                         },
                         new
                         {
-                            PublicId = "province_herat",
-                            CreatedDate = new DateTime(2026, 1, 21, 9, 42, 6, 317, DateTimeKind.Local).AddTicks(4631),
+                            PublicId = "5",
+                            CreatedDate = new DateTime(2026, 1, 21, 12, 38, 36, 969, DateTimeKind.Local).AddTicks(4813),
                             Id = 5,
                             IsActive = true,
                             IsPublic = false,
                             MessageCode = 2002,
                             Name = "Herat Province",
-                            UpdatedDate = new DateTime(2026, 1, 21, 9, 42, 6, 317, DateTimeKind.Local).AddTicks(4631)
+                            UpdatedDate = new DateTime(2026, 1, 21, 12, 38, 36, 969, DateTimeKind.Local).AddTicks(4814)
                         });
                 });
 
             modelBuilder.Entity("SMIS.Domain.Entities.Province", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                    b.Property<string>("PublicId")
+                        .HasColumnType("TEXT");
 
                     b.Property<int?>("CreatedBy")
                         .HasColumnType("INTEGER");
 
                     b.Property<DateTime?>("CreatedDate")
                         .HasColumnType("TEXT");
+
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER")
+                        .HasDefaultValue(0);
 
                     b.Property<bool>("IsPublic")
                         .HasColumnType("INTEGER");
@@ -744,63 +773,64 @@ namespace SMIS.Infrastructure.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("PublicId")
-                        .HasColumnType("TEXT");
-
                     b.Property<int?>("UpdatedBy")
                         .HasColumnType("INTEGER");
 
                     b.Property<DateTime?>("UpdatedDate")
                         .HasColumnType("TEXT");
 
-                    b.HasKey("Id");
+                    b.HasKey("PublicId");
 
                     b.ToTable("Provinces");
 
                     b.HasData(
                         new
                         {
+                            PublicId = "1",
+                            CreatedDate = new DateTime(2026, 1, 21, 12, 38, 36, 970, DateTimeKind.Local).AddTicks(1541),
                             Id = 1,
-                            CreatedDate = new DateTime(2026, 1, 21, 9, 42, 6, 318, DateTimeKind.Local).AddTicks(333),
                             IsPublic = false,
                             Name = "Kabul",
-                            PublicId = "d7cedbaf-9384-4d9c-a91c-a3c37dffacff",
-                            UpdatedDate = new DateTime(2026, 1, 21, 9, 42, 6, 318, DateTimeKind.Local).AddTicks(336)
+                            UpdatedDate = new DateTime(2026, 1, 21, 12, 38, 36, 970, DateTimeKind.Local).AddTicks(1543)
                         },
                         new
                         {
+                            PublicId = "2",
+                            CreatedDate = new DateTime(2026, 1, 21, 12, 38, 36, 970, DateTimeKind.Local).AddTicks(1545),
                             Id = 2,
-                            CreatedDate = new DateTime(2026, 1, 21, 9, 42, 6, 318, DateTimeKind.Local).AddTicks(349),
                             IsPublic = false,
                             Name = "Herat",
-                            PublicId = "a3d83459-8522-4ca5-a88d-7ba726ffea8e",
-                            UpdatedDate = new DateTime(2026, 1, 21, 9, 42, 6, 318, DateTimeKind.Local).AddTicks(350)
+                            UpdatedDate = new DateTime(2026, 1, 21, 12, 38, 36, 970, DateTimeKind.Local).AddTicks(1545)
                         },
                         new
                         {
+                            PublicId = "3",
+                            CreatedDate = new DateTime(2026, 1, 21, 12, 38, 36, 970, DateTimeKind.Local).AddTicks(1546),
                             Id = 3,
-                            CreatedDate = new DateTime(2026, 1, 21, 9, 42, 6, 318, DateTimeKind.Local).AddTicks(353),
                             IsPublic = false,
                             Name = "Kandahar",
-                            PublicId = "e39be51e-32b8-4d79-b327-f0ea971afd94",
-                            UpdatedDate = new DateTime(2026, 1, 21, 9, 42, 6, 318, DateTimeKind.Local).AddTicks(354)
+                            UpdatedDate = new DateTime(2026, 1, 21, 12, 38, 36, 970, DateTimeKind.Local).AddTicks(1547)
                         },
                         new
                         {
+                            PublicId = "4",
+                            CreatedDate = new DateTime(2026, 1, 21, 12, 38, 36, 970, DateTimeKind.Local).AddTicks(1548),
                             Id = 4,
-                            CreatedDate = new DateTime(2026, 1, 21, 9, 42, 6, 318, DateTimeKind.Local).AddTicks(357),
                             IsPublic = false,
                             Name = "Balkh",
-                            PublicId = "eb5a1bd8-8292-4958-977d-077a85d00f34",
-                            UpdatedDate = new DateTime(2026, 1, 21, 9, 42, 6, 318, DateTimeKind.Local).AddTicks(357)
+                            UpdatedDate = new DateTime(2026, 1, 21, 12, 38, 36, 970, DateTimeKind.Local).AddTicks(1548)
                         });
                 });
 
             modelBuilder.Entity("SMIS.Domain.Entities.ProvinceTranslation", b =>
                 {
+                    b.Property<string>("PublicId")
+                        .HasColumnType("TEXT");
+
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("INTEGER")
+                        .HasDefaultValue(0);
 
                     b.Property<bool>("IsDefault")
                         .HasColumnType("INTEGER");
@@ -821,7 +851,7 @@ namespace SMIS.Infrastructure.Migrations
                     b.Property<int>("ProvinceId")
                         .HasColumnType("INTEGER");
 
-                    b.HasKey("Id");
+                    b.HasKey("PublicId");
 
                     b.HasIndex("LanguageId");
 
@@ -833,6 +863,7 @@ namespace SMIS.Infrastructure.Migrations
                     b.HasData(
                         new
                         {
+                            PublicId = "1",
                             Id = 1,
                             IsDefault = true,
                             LanguageCode = "en",
@@ -842,6 +873,7 @@ namespace SMIS.Infrastructure.Migrations
                         },
                         new
                         {
+                            PublicId = "2",
                             Id = 2,
                             IsDefault = false,
                             LanguageCode = "ps",
@@ -851,6 +883,7 @@ namespace SMIS.Infrastructure.Migrations
                         },
                         new
                         {
+                            PublicId = "3",
                             Id = 3,
                             IsDefault = false,
                             LanguageCode = "fa",
@@ -860,6 +893,7 @@ namespace SMIS.Infrastructure.Migrations
                         },
                         new
                         {
+                            PublicId = "4",
                             Id = 4,
                             IsDefault = true,
                             LanguageCode = "en",
@@ -869,6 +903,7 @@ namespace SMIS.Infrastructure.Migrations
                         },
                         new
                         {
+                            PublicId = "5",
                             Id = 5,
                             IsDefault = false,
                             LanguageCode = "ps",
@@ -878,6 +913,7 @@ namespace SMIS.Infrastructure.Migrations
                         },
                         new
                         {
+                            PublicId = "6",
                             Id = 6,
                             IsDefault = false,
                             LanguageCode = "fa",
@@ -887,6 +923,7 @@ namespace SMIS.Infrastructure.Migrations
                         },
                         new
                         {
+                            PublicId = "7",
                             Id = 7,
                             IsDefault = true,
                             LanguageCode = "en",
@@ -896,6 +933,7 @@ namespace SMIS.Infrastructure.Migrations
                         },
                         new
                         {
+                            PublicId = "8",
                             Id = 8,
                             IsDefault = false,
                             LanguageCode = "ps",
@@ -905,6 +943,7 @@ namespace SMIS.Infrastructure.Migrations
                         },
                         new
                         {
+                            PublicId = "9",
                             Id = 9,
                             IsDefault = false,
                             LanguageCode = "fa",
@@ -914,6 +953,7 @@ namespace SMIS.Infrastructure.Migrations
                         },
                         new
                         {
+                            PublicId = "10",
                             Id = 10,
                             IsDefault = true,
                             LanguageCode = "en",
@@ -923,6 +963,7 @@ namespace SMIS.Infrastructure.Migrations
                         },
                         new
                         {
+                            PublicId = "11",
                             Id = 11,
                             IsDefault = false,
                             LanguageCode = "ps",
@@ -932,6 +973,7 @@ namespace SMIS.Infrastructure.Migrations
                         },
                         new
                         {
+                            PublicId = "12",
                             Id = 12,
                             IsDefault = false,
                             LanguageCode = "fa",
@@ -998,6 +1040,53 @@ namespace SMIS.Infrastructure.Migrations
                     b.HasKey("PublicId");
 
                     b.ToTable("Shops", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            PublicId = "1",
+                            Address = "Kabul Center",
+                            CreatedDate = new DateTime(2026, 1, 21, 12, 38, 36, 970, DateTimeKind.Local).AddTicks(7539),
+                            Email = "main@pharmacy.local",
+                            Id = 1,
+                            IsActive = true,
+                            IsPublic = false,
+                            Name = "Main Pharmacy",
+                            PhoneNumber = "0700000001",
+                            ShopType = 1,
+                            TaxNumber = "TAX001",
+                            UpdatedDate = new DateTime(2026, 1, 21, 12, 38, 36, 970, DateTimeKind.Local).AddTicks(7542)
+                        },
+                        new
+                        {
+                            PublicId = "2",
+                            Address = "Herat Center",
+                            CreatedDate = new DateTime(2026, 1, 21, 12, 38, 36, 970, DateTimeKind.Local).AddTicks(8264),
+                            Email = "city@pharmacy.local",
+                            Id = 2,
+                            IsActive = true,
+                            IsPublic = false,
+                            Name = "City Pharmacy",
+                            PhoneNumber = "0700000002",
+                            ShopType = 2,
+                            TaxNumber = "TAX002",
+                            UpdatedDate = new DateTime(2026, 1, 21, 12, 38, 36, 970, DateTimeKind.Local).AddTicks(8265)
+                        },
+                        new
+                        {
+                            PublicId = "3",
+                            Address = "Kandahar Center",
+                            CreatedDate = new DateTime(2026, 1, 21, 12, 38, 36, 970, DateTimeKind.Local).AddTicks(8268),
+                            Email = "health@store.local",
+                            Id = 3,
+                            IsActive = true,
+                            IsPublic = false,
+                            Name = "Health Store",
+                            PhoneNumber = "0700000003",
+                            ShopType = 1,
+                            TaxNumber = "TAX003",
+                            UpdatedDate = new DateTime(2026, 1, 21, 12, 38, 36, 970, DateTimeKind.Local).AddTicks(8268)
+                        });
                 });
 
             modelBuilder.Entity("SMIS.Domain.Entities.UnitOfMeasure", b =>
@@ -1029,35 +1118,35 @@ namespace SMIS.Infrastructure.Migrations
                     b.HasData(
                         new
                         {
-                            PublicId = "eee75272-ca66-4782-9dbd-96e7ac0a88d4",
+                            PublicId = "1",
                             Id = 1,
                             Name = "Piece",
                             Symbol = "pcs"
                         },
                         new
                         {
-                            PublicId = "43d1c372-1fba-4967-8d12-d43536332d0a",
+                            PublicId = "2",
                             Id = 2,
                             Name = "Gram",
                             Symbol = "g"
                         },
                         new
                         {
-                            PublicId = "96dec467-b8d2-4811-9aa7-b2bdbb31a0ea",
+                            PublicId = "3",
                             Id = 3,
                             Name = "Milliliter",
                             Symbol = "ml"
                         },
                         new
                         {
-                            PublicId = "03b70143-39b7-40b4-8c67-d0cb7389f4ad",
+                            PublicId = "4",
                             Id = 4,
                             Name = "Box",
                             Symbol = "box"
                         },
                         new
                         {
-                            PublicId = "c53691a7-2bcb-485d-8b26-88033f253114",
+                            PublicId = "5",
                             Id = 5,
                             Name = "Bottle",
                             Symbol = "btl"
@@ -1130,6 +1219,7 @@ namespace SMIS.Infrastructure.Migrations
                     b.HasOne("SMIS.Domain.Entities.Localization.Language", "Language")
                         .WithMany()
                         .HasForeignKey("LanguageNo")
+                        .HasPrincipalKey("Id")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
@@ -1149,12 +1239,14 @@ namespace SMIS.Infrastructure.Migrations
                     b.HasOne("SMIS.Domain.Entities.Localization.Language", "Language")
                         .WithMany()
                         .HasForeignKey("LanguageId")
+                        .HasPrincipalKey("Id")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("SMIS.Domain.Entities.Province", "Province")
                         .WithMany("Translations")
                         .HasForeignKey("ProvinceId")
+                        .HasPrincipalKey("Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
