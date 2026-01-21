@@ -14,7 +14,7 @@ namespace SMIS.Api.Controllers
     {
 
         [HttpPost]
-        public async Task<ActionResult<CategoryCreateDto>> Create(CategoryCreateDto dto) =>
+        public async Task<ActionResult<CategoryDto>> Create(CategoryCreateDto dto) =>
             HandleResultResponse(await Mediator.Send(new CreateCategoryCommand(dto)));
 
         [HttpGet]

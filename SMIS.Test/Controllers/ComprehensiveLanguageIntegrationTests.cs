@@ -59,6 +59,7 @@ namespace SMIS.Test.Controllers
             
             response.StatusCode.Should().Be(HttpStatusCode.OK);
             var created = await response.Content.ReadFromJsonAsync<LanguageDto>();
+            created.Id.Should().NotBeNullOrEmpty();
             created.Should().NotBeNull();
             created!.Name.Should().Be(dto.Name);
             created.Code.Should().Be(dto.Code);

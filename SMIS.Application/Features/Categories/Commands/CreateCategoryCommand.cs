@@ -10,9 +10,9 @@ using SMIS.Domain.Entities;
 
 namespace SMIS.Application.Features.Categories.Commands
 {
-    public record CreateCategoryCommand(CategoryCreateDto CategoryCreateDto) : IRequest<Result<CategoryCreateDto>>;
+    public record CreateCategoryCommand(CategoryCreateDto CategoryCreateDto) : IRequest<Result<CategoryDto>>;
 
-    internal sealed class CreateCategoryCommandHandler : IRequestHandler<CreateCategoryCommand, Result<CategoryCreateDto>>
+    internal sealed class CreateCategoryCommandHandler : IRequestHandler<CreateCategoryCommand, Result<CategoryDto>>
     {
         private readonly ICategoryRepository _categoryRepository;
         private readonly ITranslationKeyRepository _translationKeyRepository;
@@ -27,7 +27,7 @@ namespace SMIS.Application.Features.Categories.Commands
             _translationKeyRepository = translationKeyRepository;
         }
 
-        public async Task<Result<CategoryCreateDto>> Handle(CreateCategoryCommand request, CancellationToken cancellationToken)
+        public async Task<Result<CategoryDto>> Handle(CreateCategoryCommand request, CancellationToken cancellationToken)
         {
             await _translationKeyRepository.AddTranslationKeysForEntity(request.CategoryCreateDto, _unitOfWork);
 
@@ -35,7 +35,7 @@ namespace SMIS.Application.Features.Categories.Commands
             await _categoryRepository.AddAsync(entity);
             await _unitOfWork.SaveChanges(cancellationToken);
 
-            return Result<CategoryCreateDto>.SuccessResult(request.CategoryCreateDto);
+            return Result<CategoryDto>.SuccessResult(_mapper.Map<CategoryDto>(entity));
         }
     }
 }
