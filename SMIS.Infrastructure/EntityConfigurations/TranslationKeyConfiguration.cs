@@ -16,8 +16,8 @@ namespace SMIS.Infrastructure.EntityConfigurations
             builder.Property(x => x.Name)
                 .IsRequired()
                 .HasMaxLength(200);
-                
-            builder.HasIndex(x => x.MessageCode).IsUnique();
+
+            builder.HasIndex(x => x.MessageCode);
             
             builder.HasMany(tk => tk.Translations)
                 .WithOne(t => t.TranslationKey)

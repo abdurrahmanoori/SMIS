@@ -6,7 +6,7 @@ namespace SMIS.Domain.Entities.Localization
 {
     public class TranslationKey : BaseAuditableEntity
     {
-        public int? MessageCode { get; set; }
+        public string? MessageCode { get; set; }
 
 
         public bool IsActive { get; set; } = true;

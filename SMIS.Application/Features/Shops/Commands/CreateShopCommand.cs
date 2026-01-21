@@ -30,9 +30,9 @@ namespace SMIS.Application.Features.Shops.Commands
 
         public async Task<Result<ShopCreateDto>> Handle(CreateShopCommand request, CancellationToken cancellationToken)
         {
-            var entity = _mapper.Map<Shop>(request.ShopCreateDto);
+            await _translationKeyRepository.AddTranslationKeysForEntity(request.ShopCreateDto, _unitOfWork);
             
-            await _translationKeyRepository.AddTranslationKeysForEntity(request.ShopCreateDto);
+            var entity = _mapper.Map<Shop>(request.ShopCreateDto);
             await _shopRepository.AddAsync(entity);
             await _unitOfWork.SaveChanges(cancellationToken);
 
