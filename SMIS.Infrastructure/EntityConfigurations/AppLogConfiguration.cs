@@ -10,9 +10,6 @@ namespace SMIS.Infrastructure.EntityConfigurations
         {
             builder.HasKey(x => x.PublicId);
             
-            builder.Property(x => x.Id)
-                .HasDefaultValue(0);
-            
             builder.Property(x => x.Level)
                 .IsRequired()
                 .HasMaxLength(50);

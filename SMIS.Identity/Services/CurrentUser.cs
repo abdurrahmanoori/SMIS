@@ -42,9 +42,9 @@ namespace SMIS.Identity.Services
             //return null!; // Or handle appropriately when user ID is missing
         }
 
-        public int GetLangId( )
+        public string GetLangId( )
         {
-            return (2);
+            return "2";
         }
     }
 }

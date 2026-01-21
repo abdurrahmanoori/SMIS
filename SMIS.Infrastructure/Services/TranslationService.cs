@@ -42,7 +42,7 @@ namespace SMIS.Infrastructure.Services
             return translationKey;
         }
 
-        public async Task<Translation> AddTranslationAsync(string keyValue, int languageNo, string translatedValue, CancellationToken cancellationToken = default)
+        public async Task<Translation> AddTranslationAsync(string keyValue, string languageNo, string translatedValue, CancellationToken cancellationToken = default)
         {
             var translationKey = await _translationKeyRepository
                 .GetFirstOrDefaultAsync(tk => tk.Name == keyValue);
@@ -78,7 +78,7 @@ namespace SMIS.Infrastructure.Services
                 .GetFirstOrDefaultAsync(t => t.TranslationKeyPublicId == translationKey.PublicId && t.LanguageNo == languageNo);
         }
 
-        public async Task<string> GetTranslationAsync(string keyValue, int languageNo, CancellationToken cancellationToken = default)
+        public async Task<string> GetTranslationAsync(string keyValue, string languageNo, CancellationToken cancellationToken = default)
         {
             var translation = await _translationKeyRepository.GetAllQueryable()
                 .Where(tk => tk.Name == keyValue)

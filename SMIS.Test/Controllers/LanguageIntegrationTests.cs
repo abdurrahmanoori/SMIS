@@ -47,7 +47,7 @@ namespace SMIS.Test.Controllers
             created!.Name.Should().Be(dto.Name);
             created.Code.Should().Be(dto.Code);
 
-            var getById = await _client.GetAsync($"/api/language/{created.Id}");
+            var getById = await _client.GetAsync($"/api/language/{created.PublicId}");
             await LogIfError(getById, "GetById");
             getById.StatusCode.Should().Be(HttpStatusCode.OK);
             var got = await getById.Content.ReadFromJsonAsync<LanguageDto>();
@@ -75,7 +75,7 @@ namespace SMIS.Test.Controllers
             var created = await postResponse.Content.ReadFromJsonAsync<LanguageDto>();
 
             var updated = new LanguageCreateDto { Name = "German Updated", Code = "de", IsActive = false };
-            var putResponse = await _client.PutAsJsonAsync($"/api/language/{created.Id}", updated);
+            var putResponse = await _client.PutAsJsonAsync($"/api/language/{created.PublicId}", updated);
             await LogIfError(putResponse, "Put_UpdateLanguage_Update");
             putResponse.StatusCode.Should().Be(HttpStatusCode.OK);
             var got = await putResponse.Content.ReadFromJsonAsync<LanguageDto>();
@@ -92,11 +92,11 @@ namespace SMIS.Test.Controllers
             postResponse.EnsureSuccessStatusCode();
             var created = await postResponse.Content.ReadFromJsonAsync<LanguageDto>();
 
-            var deleteResponse = await _client.DeleteAsync($"/api/language/{created.Id}");
+            var deleteResponse = await _client.DeleteAsync($"/api/language/{created.PublicId}");
             await LogIfError(deleteResponse, "Delete_Language_Delete");
             deleteResponse.StatusCode.Should().Be(HttpStatusCode.OK);
 
-            var deleteAgain = await _client.DeleteAsync($"/api/language/{created.Id}");
+            var deleteAgain = await _client.DeleteAsync($"/api/language/{created.PublicId}");
             await LogIfError(deleteAgain, "Delete_Language_DeleteAgain");
             deleteAgain.StatusCode.Should().Be(HttpStatusCode.NotFound);
         }

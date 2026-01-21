@@ -9,7 +9,7 @@ using SMIS.Application.DTO.Common.Response;
 
 namespace SMIS.Application.Features.Provinces.Commands
 {
-    public record UpdateProvinceTranslationCommand(int Id, ProvinceTranslationDto Dto) : IRequest<Result<ProvinceTranslationDto>>;
+    public record UpdateProvinceTranslationCommand(string PublicId, ProvinceTranslationDto Dto) : IRequest<Result<ProvinceTranslationDto>>;
 
     internal sealed class UpdateProvinceTranslationCommandHandler : IRequestHandler<UpdateProvinceTranslationCommand, Result<ProvinceTranslationDto>>
     {
@@ -25,24 +25,24 @@ namespace SMIS.Application.Features.Provinces.Commands
 
         public async Task<Result<ProvinceTranslationDto>> Handle(UpdateProvinceTranslationCommand request, CancellationToken cancellationToken)
         {
-            var province = await _repo.GetFirstOrDefaultAsync(x => x.Translations.Any(t => t.Id == request.Id), includeProperties: nameof(Province.Translations));
-            if (province is null) return Result<ProvinceTranslationDto>.NotFoundResult(request.Id);
+            var province = await _repo.GetFirstOrDefaultAsync(x => x.Translations.Any(t => t.PublicId == request.PublicId), includeProperties: nameof(Province.Translations));
+            if (province is null) return Result<ProvinceTranslationDto>.NotFoundResult(request.PublicId);
 
-            var trans = province.Translations.FirstOrDefault(t => t.Id == request.Id);
-            if (trans is null) return Result<ProvinceTranslationDto>.NotFoundResult(request.Id);
+            var trans = province.Translations.FirstOrDefault(t => t.PublicId == request.PublicId);
+            if (trans is null) return Result<ProvinceTranslationDto>.NotFoundResult(request.PublicId);
 
             // Map incoming values onto the tracked entity
             _mapper.Map(request.Dto, trans);
 
             // Resolve language id if provided or by code
-            if (request.Dto.LanguageId > 0)
+            if (!string.IsNullOrEmpty(request.Dto.LanguageId))
             {
                 trans.LanguageId = request.Dto.LanguageId;
             }
             else if (!string.IsNullOrWhiteSpace(request.Dto.LanguageCode))
             {
                 var lang = await _languageRepo.GetFirstOrDefaultAsync(x => x.Code == request.Dto.LanguageCode);
-                if (lang != null) trans.LanguageId = lang.Id;
+                if (lang != null) trans.LanguageId = lang.PublicId;
             }
 
             // Ensure LanguageCode is synced

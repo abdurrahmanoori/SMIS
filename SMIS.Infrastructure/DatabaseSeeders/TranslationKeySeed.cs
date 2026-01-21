@@ -8,11 +8,11 @@ namespace SMIS.Infrastructure.DatabaseSeeders
         public static void DataSeed(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<TranslationKey>().HasData(
-                new TranslationKey { Id = 1, PublicId = "1", Name = "Kabul Center District", MessageCode = "1001", IsActive = true },
-                new TranslationKey { Id = 2, PublicId = "2", Name = "Kabul North District", MessageCode = "1002", IsActive = true },
-                new TranslationKey { Id = 3, PublicId = "3", Name = "Herat Center District", MessageCode = "1003", IsActive = true },
-                new TranslationKey { Id = 4, PublicId = "4", Name = "Kabul Province", MessageCode = "2001", IsActive = true },
-                new TranslationKey { Id = 5, PublicId = "5", Name = "Herat Province", MessageCode = "2002", IsActive = true }
+                new TranslationKey { PublicId = "1", Name = "Kabul Center District", MessageCode = "1001", IsActive = true },
+                new TranslationKey { PublicId = "2", Name = "Kabul North District", MessageCode = "1002", IsActive = true },
+                new TranslationKey { PublicId = "3", Name = "Herat Center District", MessageCode = "1003", IsActive = true },
+                new TranslationKey { PublicId = "4", Name = "Kabul Province", MessageCode = "2001", IsActive = true },
+                new TranslationKey { PublicId = "5", Name = "Herat Province", MessageCode = "2002", IsActive = true }
             );
         }
     }

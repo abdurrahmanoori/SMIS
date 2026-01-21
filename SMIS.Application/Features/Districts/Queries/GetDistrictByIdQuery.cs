@@ -30,7 +30,6 @@ namespace SMIS.Application.Features.Districts.Queries
                 .Where(d => d.PublicId == request.PublicId)
                 .Select(d => new DistrictDto
                 {
-                    Id = d.Id,
                     PublicId = d.PublicId,
                     TranslationKeyId = d.TranslationKeyId,
                     Name = d.TranslationKey.Translations

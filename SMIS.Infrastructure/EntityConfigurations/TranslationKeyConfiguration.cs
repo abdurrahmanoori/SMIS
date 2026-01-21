@@ -9,9 +9,6 @@ namespace SMIS.Infrastructure.EntityConfigurations
         public void Configure(EntityTypeBuilder<TranslationKey> builder)
         {
             builder.HasKey(x => x.PublicId);
-            
-            builder.Property(x => x.Id)
-                .HasDefaultValue(0);
                 
             builder.Property(x => x.Name)
                 .IsRequired()

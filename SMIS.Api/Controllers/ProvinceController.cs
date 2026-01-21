@@ -35,15 +35,15 @@ namespace SMIS.Api.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<ProvinceDto>> GetById(int id) =>
+        public async Task<ActionResult<ProvinceDto>> GetById(string id) =>
             HandleResultResponse(await _mediator.Send(new GetProvinceByIdQuery(id)));
 
         [HttpPut("{id}")]
-        public async Task<ActionResult<ProvinceDto>> Update(int id, ProvinceCreateDto dto) =>
+        public async Task<ActionResult<ProvinceDto>> Update(string id, ProvinceCreateDto dto) =>
             HandleResultResponse(await _mediator.Send(new UpdateProvinceCommand(id, dto)));
 
         [HttpDelete("{id}")]
-        public async Task<ActionResult<Unit>> Delete(int id) =>
+        public async Task<ActionResult<Unit>> Delete(string id) =>
             HandleResultResponse(await _mediator.Send(new DeleteProvinceCommand(id)));
     }
 }

@@ -6,7 +6,7 @@ using SMIS.Application.Repositories.Localization;
 
 namespace SMIS.Application.Features.Localization.Queries
 {
-    public record GetLanguageByIdQuery(int Id) : IRequest<Result<LanguageDto>>;
+    public record GetLanguageByIdQuery(string PublicId) : IRequest<Result<LanguageDto>>;
 
     internal sealed class GetLanguageByIdQueryHandler : IRequestHandler<GetLanguageByIdQuery, Result<LanguageDto>>
     {
@@ -21,10 +21,10 @@ namespace SMIS.Application.Features.Localization.Queries
 
         public async Task<Result<LanguageDto>> Handle(GetLanguageByIdQuery request, CancellationToken cancellationToken)
         {
-            var entity = await _languageRepository.GetByIdAsync(request.Id);
+            var entity = await _languageRepository.GetByIdAsync(request.PublicId);
             if (entity is null)
             {
-                return Result<LanguageDto>.NotFoundResult(request.Id);
+                return Result<LanguageDto>.NotFoundResult(request.PublicId);
             }
 
             var dto = _mapper.Map<LanguageDto>(entity);

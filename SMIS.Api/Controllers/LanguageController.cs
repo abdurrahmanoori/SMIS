@@ -21,15 +21,15 @@ namespace SMIS.Api.Controllers
             HandleResultResponse(await Mediator.Send(new GetLanguageListQuery(pageNumber, pageSize)));
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<LanguageDto>> GetById(int id) =>
+        public async Task<ActionResult<LanguageDto>> GetById(string id) =>
             HandleResultResponse(await Mediator.Send(new GetLanguageByIdQuery(id)));
 
         [HttpPut("{id}")]
-        public async Task<ActionResult<LanguageDto>> Update(int id, LanguageCreateDto dto) =>
+        public async Task<ActionResult<LanguageDto>> Update(string id, LanguageCreateDto dto) =>
             HandleResultResponse(await Mediator.Send(new UpdateLanguageCommand(id, dto)));
 
         [HttpDelete("{id}")]
-        public async Task<ActionResult<Unit>> Delete(int id) =>
+        public async Task<ActionResult<Unit>> Delete(string id) =>
             HandleResultResponse(await Mediator.Send(new DeleteLanguageCommand(id)));
     }
 }

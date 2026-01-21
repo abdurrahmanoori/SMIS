@@ -48,7 +48,7 @@ public class MappingProfile : Profile
                         dest.Translations.Add(new ProvinceTranslation
                         {
                             LanguageCode = "en",
-                            LanguageId = 1,
+                            LanguageId = "1",
                             IsDefault = true,
                             Name = src.Name
                         });

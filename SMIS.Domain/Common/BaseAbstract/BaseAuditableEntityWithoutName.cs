@@ -5,8 +5,8 @@ namespace SMIS.Domain.Common.BaseAbstract
 {
     public abstract class BaseAuditableEntityWithoutName : IAuditableEntity
     {
-        [Key]
-        public int Id { get; set; }
+        //[Key]
+        //public int Id { get; set; }
         
         [Required]
         public string PublicId { get; set; } = Guid.NewGuid().ToString();

@@ -7,6 +7,5 @@ namespace SMIS.Domain.Common.BaseAbstract
     {
         [Key]
         public string PublicId { get; set; } = string.Empty;
-        public int Id { get; set; }
     }
 }

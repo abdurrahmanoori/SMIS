@@ -4,17 +4,17 @@ namespace SMIS.Application.DTO.Provinces
 {
     public class ProvinceTranslationDto
     {
-        public int Id { get; set; }
+        public string PublicId { get; set; } = string.Empty;
         
         [Required]
-        public int ProvinceId { get; set; }
+        public string ProvinceId { get; set; } = string.Empty;
         
         [Required]
         [StringLength(10)]
         public string LanguageCode { get; set; } = "en";
         
         [Required]
-        public int LanguageId { get; set; }
+        public string LanguageId { get; set; } = string.Empty;
         
         public bool IsDefault { get; set; }
         

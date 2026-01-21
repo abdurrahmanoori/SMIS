@@ -8,7 +8,7 @@ namespace SMIS.Application.Extensions
     public static class TranslationExtensions
     {
         public static string GetTranslation(this IQueryable<Domain.Entities.Localization.TranslationKey> translationKeys, 
-            string originalValue, int languageId)
+            string originalValue, string languageId)
         {
             return translationKeys
                 .Where(tk => tk.Name == originalValue)
@@ -20,7 +20,7 @@ namespace SMIS.Application.Extensions
 
         public static T TranslateEntity<T>(this T entity, 
             IQueryable<Domain.Entities.Localization.TranslationKey> translationKeys, 
-            int languageId,
+            string languageId,
             params (Func<T, string> getter, Action<T, string> setter)[] properties)
         {
             foreach (var (getter, setter) in properties)
@@ -34,7 +34,7 @@ namespace SMIS.Application.Extensions
 
         public static T TranslateEntityByAttributes<T>(this T entity,
             IQueryable<Domain.Entities.Localization.TranslationKey> translationKeys,
-            int languageId)
+            string languageId)
         {
             var properties = typeof(T).GetProperties()
                 .Where(p => p.GetCustomAttribute<TranslatableAttribute>() != null && p.PropertyType == typeof(string));

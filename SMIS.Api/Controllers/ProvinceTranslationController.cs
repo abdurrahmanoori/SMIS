@@ -17,19 +17,19 @@ namespace SMIS.Api.Controllers
             HandleResultResponse(await Mediator.Send(new CreateProvinceTranslationCommand(dto)));
 
         [HttpGet("province/{provinceId}")]
-        public async Task<ActionResult<List<ProvinceTranslationDto>>> GetByProvince(int provinceId) =>
+        public async Task<ActionResult<List<ProvinceTranslationDto>>> GetByProvince(string provinceId) =>
             HandleResultResponse(await Mediator.Send(new GetProvinceTranslationListQuery(provinceId)));
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<ProvinceTranslationDto>> GetById(int id) =>
+        public async Task<ActionResult<ProvinceTranslationDto>> GetById(string id) =>
             HandleResultResponse(await Mediator.Send(new GetProvinceTranslationByIdQuery(id)));
 
         [HttpPut("{id}")]
-        public async Task<ActionResult<ProvinceTranslationDto>> Update(int id, ProvinceTranslationDto dto) =>
+        public async Task<ActionResult<ProvinceTranslationDto>> Update(string id, ProvinceTranslationDto dto) =>
             HandleResultResponse(await Mediator.Send(new UpdateProvinceTranslationCommand(id, dto)));
 
         [HttpDelete("{id}")]
-        public async Task<ActionResult<Unit>> Delete(int id) =>
+        public async Task<ActionResult<Unit>> Delete(string id) =>
             HandleResultResponse(await Mediator.Send(new DeleteProvinceTranslationCommand(id)));
     }
 }

@@ -8,7 +8,7 @@ namespace SMIS.Domain.Entities.Localization
     {
         public string TranslationKeyPublicId { get; set; } = string.Empty;
 
-        public int LanguageNo { get; set; }
+        public string LanguageNo { get; set; } = string.Empty;
 
 
         // Navigation properties

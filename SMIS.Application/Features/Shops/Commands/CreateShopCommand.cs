@@ -7,7 +7,6 @@ using SMIS.Application.Repositories.Base;
 using SMIS.Application.Repositories.Localization;
 using SMIS.Application.Repositories.Shops;
 using SMIS.Domain.Entities;
-using SMIS.Domain.Entities.Localization;
 
 namespace SMIS.Application.Features.Shops.Commands
 {

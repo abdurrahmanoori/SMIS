@@ -4,7 +4,7 @@ namespace SMIS.Domain.Entities
 {
     public class ProvinceTranslation : TranslationBase
     {
-        public int ProvinceId { get; set; }
+        public string ProvinceId { get; set; } = string.Empty;
         public Province Province { get; set; } = default!;
 
         public string Name { get; set; } = string.Empty;

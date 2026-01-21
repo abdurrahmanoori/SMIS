@@ -6,7 +6,6 @@ namespace SMIS.Application.DTO.Shops
     public class ShopDto
     {
         public string PublicId { get; set; } = string.Empty;
-        public int Id { get; set; }
         
         [Translatable]
         public string Name { get; set; } = string.Empty;

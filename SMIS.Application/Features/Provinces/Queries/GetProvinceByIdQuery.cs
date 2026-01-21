@@ -6,7 +6,7 @@ using SMIS.Application.Repositories.Provinces;
 
 namespace SMIS.Application.Features.Provinces.Queries
 {
-    public record GetProvinceByIdQuery(int Id) : IRequest<Result<ProvinceDto>>;
+    public record GetProvinceByIdQuery(string PublicId) : IRequest<Result<ProvinceDto>>;
 
     internal sealed class GetProvinceByIdQueryHandler : IRequestHandler<GetProvinceByIdQuery, Result<ProvinceDto>>
     {
@@ -21,10 +21,10 @@ namespace SMIS.Application.Features.Provinces.Queries
 
         public async Task<Result<ProvinceDto>> Handle(GetProvinceByIdQuery request, CancellationToken cancellationToken)
         {
-            var entity = await _provinceRepository.GetFirstOrDefaultAsync(x => x.Id == request.Id, includeProperties: nameof(Domain.Entities.Province.Translations));
+            var entity = await _provinceRepository.GetFirstOrDefaultAsync(x => x.PublicId == request.PublicId, includeProperties: nameof(Domain.Entities.Province.Translations));
             if (entity is null)
             {
-                return Result<ProvinceDto>.NotFoundResult(request.Id);
+                return Result<ProvinceDto>.NotFoundResult(request.PublicId);
             }
 
             var userLangId = _currentUser.GetLangId();
@@ -33,7 +33,7 @@ namespace SMIS.Application.Features.Provinces.Queries
 
             var dto = new ProvinceDto
             {
-                Id = entity.Id,
+                PublicId = entity.PublicId,
                 Name = translation?.Name ?? string.Empty
             };
 

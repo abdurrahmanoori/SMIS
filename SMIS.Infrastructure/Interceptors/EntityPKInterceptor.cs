@@ -85,26 +85,20 @@ namespace SMIS.Infrastructure.Interceptors
             var setMethod = typeof(DbContext).GetMethod("Set", new Type[0])?.MakeGenericMethod(entityType);
             var dbSet = setMethod?.Invoke(context, null) as IQueryable<EntityPK>;
 
-            if (dbSet != null)
+            if (dbSet != null && string.IsNullOrEmpty(entity.PublicId))
             {
-                var lastId = await dbSet.MaxAsync(e => (int?)e.Id) ?? 0;
-                entity.Id = lastId + 1;
+                var lastPublicId = await dbSet
+                    .Where(e => !string.IsNullOrEmpty(e.PublicId))
+                    .Select(e => e.PublicId)
+                    .ToListAsync();
                 
-                if (string.IsNullOrEmpty(entity.PublicId))
-                {
-                    var lastPublicId = await dbSet
-                        .Where(e => !string.IsNullOrEmpty(e.PublicId))
-                        .Select(e => e.PublicId)
-                        .ToListAsync();
-                    
-                    var maxNumericId = lastPublicId
-                        .Where(id => int.TryParse(id, out _))
-                        .Select(id => int.Parse(id))
-                        .DefaultIfEmpty(0)
-                        .Max();
-                    
-                    entity.PublicId = (maxNumericId + 1).ToString();
-                }
+                var maxNumericId = lastPublicId
+                    .Where(id => int.TryParse(id, out _))
+                    .Select(id => int.Parse(id))
+                    .DefaultIfEmpty(0)
+                    .Max();
+                
+                entity.PublicId = (maxNumericId + 1).ToString();
             }
         }
     }

@@ -5,7 +5,7 @@ namespace SMIS.Domain.Common.BaseAbstract
 {
     public abstract class AuditableCreatedDateAndCreatedBy : IAuditableCreatedDateAndCreatedBy
     {
-        public int Id { get; set; }
+        //public int Id { get; set; }
         public string? CreatedBy { get; set; }
         public DateTime CreatedDate { get; set; } = DateTime.Now;
 

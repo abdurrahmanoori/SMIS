@@ -2,7 +2,7 @@ namespace SMIS.Application.DTO.Localization
 {
     public class LanguageDto
     {
-        public int Id { get; set; }
+        public string PublicId { get; set; } = string.Empty;
         public string Name { get; set; } = string.Empty;
         public string? Code { get; set; } = string.Empty;
         public bool IsActive { get; set; } = true;

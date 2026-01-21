@@ -5,7 +5,7 @@ using SMIS.Application.Repositories.Localization;
 
 namespace SMIS.Application.Features.Localization.Commands
 {
-    public record DeleteLanguageCommand(int Id) : IRequest<Result<Unit>> { }
+    public record DeleteLanguageCommand(string PublicId) : IRequest<Result<Unit>> { }
 
     internal sealed class DeleteLanguageCommandHandler : IRequestHandler<DeleteLanguageCommand, Result<Unit>>
     {
@@ -20,10 +20,10 @@ namespace SMIS.Application.Features.Localization.Commands
 
         public async Task<Result<Unit>> Handle(DeleteLanguageCommand request, CancellationToken cancellationToken)
         {
-            var entity = await _languageRepository.GetByIdAsync(request.Id);
+            var entity = await _languageRepository.GetByIdAsync(request.PublicId);
             if (entity is null)
             {
-                return Result<Unit>.NotFoundResult(request.Id);
+                return Result<Unit>.NotFoundResult(request.PublicId);
             }
 
             await _languageRepository.RemoveAsync(entity);

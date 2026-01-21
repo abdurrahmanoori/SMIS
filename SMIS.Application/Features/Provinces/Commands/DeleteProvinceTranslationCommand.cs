@@ -6,7 +6,7 @@ using SMIS.Application.DTO.Common.Response;
 
 namespace SMIS.Application.Features.Provinces.Commands
 {
-    public record DeleteProvinceTranslationCommand(int Id) : IRequest<Result<Unit>>;
+    public record DeleteProvinceTranslationCommand(string PublicId) : IRequest<Result<Unit>>;
 
     internal sealed class DeleteProvinceTranslationCommandHandler : IRequestHandler<DeleteProvinceTranslationCommand, Result<Unit>>
     {
@@ -20,11 +20,11 @@ namespace SMIS.Application.Features.Provinces.Commands
 
         public async Task<Result<Unit>> Handle(DeleteProvinceTranslationCommand request, CancellationToken cancellationToken)
         {
-            var province = await _repo.GetFirstOrDefaultAsync(x => x.Translations.Any(t => t.Id == request.Id), includeProperties: nameof(Province.Translations));
-            if (province is null) return Result<Unit>.NotFoundResult(request.Id);
+            var province = await _repo.GetFirstOrDefaultAsync(x => x.Translations.Any(t => t.PublicId == request.PublicId), includeProperties: nameof(Province.Translations));
+            if (province is null) return Result<Unit>.NotFoundResult(request.PublicId);
 
-            var trans = province.Translations.FirstOrDefault(t => t.Id == request.Id);
-            if (trans is null) return Result<Unit>.NotFoundResult(request.Id);
+            var trans = province.Translations.FirstOrDefault(t => t.PublicId == request.PublicId);
+            if (trans is null) return Result<Unit>.NotFoundResult(request.PublicId);
 
             province.Translations.Remove(trans);
             await _uow.SaveChanges(cancellationToken);

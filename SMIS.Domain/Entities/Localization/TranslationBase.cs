@@ -5,8 +5,8 @@ namespace SMIS.Domain.Entities.Localization
 {
     public abstract class TranslationBase : EntityPK
     {
-        public string LanguageCode { get; set; } = "en"; // RFC5646 language tag, e.g., en, fa-AF
-        public int LanguageId { get; set; }
+        public string LanguageCode { get; set; } = "en";
+        public string LanguageId { get; set; } = string.Empty;
         public bool IsDefault { get; set; } = false;
         [ForeignKey(nameof(LanguageId))]
         public Language? Language { get; set; }
