@@ -4,6 +4,7 @@ using FluentAssertions;
 using SMIS.Application.DTO.Common;
 using SMIS.Application.DTO.Categories;
 using SMIS.Test.TestInfrastructure;
+using SMIS.Test.Utilities;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -28,7 +29,10 @@ namespace SMIS.Test.Controllers
             {
                 var errorContent = await response.Content.ReadAsStringAsync();
                 _output.WriteLine($"[{context}] Status: {(int)response.StatusCode} {response.StatusCode}");
-                _output.WriteLine($"[{context}] Error: {errorContent}");
+
+                // Use centralized exception formatter for clean output
+                var formattedError = ExceptionFormatter.FormatApiResponseError(errorContent);
+                _output.WriteLine($"[{context}] Formatted Error:\n{formattedError}");
             }
         }
 
