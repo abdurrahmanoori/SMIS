@@ -1,0 +1,38 @@
+using MediatR;
+using Microsoft.AspNetCore.Mvc;
+using SMIS.Application.DTO.Categories;
+using SMIS.Application.DTO.Common;
+using SMIS.Application.Features.Categories.Commands;
+using SMIS.Application.Features.Categories.Queries;
+using SMIS.Api.Controllers.Base;
+
+namespace SMIS.Api.Controllers
+{
+    [Route("api/[controller]")]
+    [ApiController]
+    public class CategoryController : BaseApiController
+    {
+
+        [HttpPost]
+        public async Task<ActionResult<CategoryCreateDto>> Create(CategoryCreateDto dto) =>
+            HandleResultResponse(await Mediator.Send(new CreateCategoryCommand(dto)));
+
+        [HttpGet]
+        public async Task<ActionResult<PagedList<CategoryDto>>> GetAll([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 25)
+        {
+            return HandleResultResponse(await Mediator.Send(new GetCategoryListQuery(pageNumber, pageSize)));
+        }
+
+        [HttpGet("{id}")]
+        public async Task<ActionResult<CategoryDto>> GetById(string id) =>
+            HandleResultResponse(await Mediator.Send(new GetCategoryByIdQuery(id)));
+
+        [HttpPut("{id}")]
+        public async Task<ActionResult<CategoryDto>> Update(string id, CategoryCreateDto dto) =>
+            HandleResultResponse(await Mediator.Send(new UpdateCategoryCommand(id, dto)));
+
+        [HttpDelete("{id}")]
+        public async Task<ActionResult<Unit>> Delete(string id) =>
+            HandleResultResponse(await Mediator.Send(new DeleteCategoryCommand(id)));
+    }
+}

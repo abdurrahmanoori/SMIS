@@ -12,33 +12,27 @@ namespace SMIS.Api.Controllers
     [ApiController]
     public class ShopController : BaseApiController
     {
-        private readonly IMediator _mediator;
-        public ShopController(IMediator mediator)
-        {
-            _mediator = mediator;
-        }
-
         [HttpPost]
         public async Task<ActionResult<ShopCreateDto>> Create(ShopCreateDto dto) =>
-            HandleResultResponse(await _mediator.Send(new CreateShopCommand(dto)));
+            HandleResultResponse(await Mediator.Send(new CreateShopCommand(dto)));
 
         [HttpGet]
         public async Task<ActionResult<PagedList<ShopDto>>> GetAll([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 25)
         {
-            return HandleResultResponse(await _mediator.Send(new GetShopListQuery(pageNumber, pageSize)));
+            return HandleResultResponse(await Mediator.Send(new GetShopListQuery(pageNumber, pageSize)));
         }
 
-        [HttpGet("{publicId}")]
+        [HttpGet("{id}")]
         public async Task<ActionResult<ShopDto>> GetById(string id) =>
-            HandleResultResponse(await _mediator.Send(new GetShopByIdQuery(id)));
+            HandleResultResponse(await Mediator.Send(new GetShopByIdQuery(id)));
 
-        [HttpPut("{PublicId}")]
+        [HttpPut("{id}")]
         public async Task<ActionResult<ShopDto>> Update(string id, ShopCreateDto dto) =>
-            HandleResultResponse(await _mediator.Send(new UpdateShopCommand(id, dto)));
+            HandleResultResponse(await Mediator.Send(new UpdateShopCommand(id, dto)));
 
-        [HttpDelete("{publicId}")]
+        [HttpDelete("{id}")]
         public async Task<ActionResult<Unit>> Delete(string id) =>
-            HandleResultResponse(await _mediator.Send(new DeleteShopCommand(id)));
+            HandleResultResponse(await Mediator.Send(new DeleteShopCommand(id)));
     }
 }
 
