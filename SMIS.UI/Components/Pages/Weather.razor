@@ -1,34 +1,44 @@
 ﻿@page "/weather"
 
-<div class="weather-container">
-    <SfCard>
-        <CardHeader Title="Weather Forecast" SubTitle="Simple weather data display"></CardHeader>
-        <CardContent>
+<MudContainer MaxWidth="MaxWidth.Medium" Class="mt-4">
+    <MudCard>
+        <MudCardHeader>
+            <CardHeaderContent>
+                <MudText Typo="Typo.h5">Weather Forecast</MudText>
+                <MudText Typo="Typo.body2">Simple weather data display</MudText>
+            </CardHeaderContent>
+        </MudCardHeader>
+        <MudCardContent>
             @if (forecasts == null)
             {
-                <div class="loading-container">
-                    <SfSpinner @bind-Visible="@IsLoading" Label="Loading weather data..."></SfSpinner>
-                </div>
+                <MudStack AlignItems="AlignItems.Center" Class="pa-8">
+                    <MudProgressCircular Indeterminate="true" />
+                    <MudText>Loading weather data...</MudText>
+                </MudStack>
             }
             else
             {
-                <SfGrid DataSource="@forecasts" AllowPaging="true" AllowSorting="true">
-                    <GridPageSettings PageSize="5"></GridPageSettings>
-                    <GridColumns>
-                        <GridColumn Field="DateString" HeaderText="Date" Width="120"></GridColumn>
-                        <GridColumn Field="TemperatureC" HeaderText="Temp. (°C)" Width="120"></GridColumn>
-                        <GridColumn Field="TemperatureF" HeaderText="Temp. (°F)" Width="120"></GridColumn>
-                        <GridColumn Field="Summary" HeaderText="Summary" Width="150"></GridColumn>
-                    </GridColumns>
-                </SfGrid>
+                <MudTable Items="@forecasts" Hover="true" Striped="true" Dense="true">
+                    <HeaderContent>
+                        <MudTh>Date</MudTh>
+                        <MudTh>Temp. (°C)</MudTh>
+                        <MudTh>Temp. (°F)</MudTh>
+                        <MudTh>Summary</MudTh>
+                    </HeaderContent>
+                    <RowTemplate>
+                        <MudTd DataLabel="Date">@context.DateString</MudTd>
+                        <MudTd DataLabel="Temp. (°C)">@context.TemperatureC</MudTd>
+                        <MudTd DataLabel="Temp. (°F)">@context.TemperatureF</MudTd>
+                        <MudTd DataLabel="Summary">@context.Summary</MudTd>
+                    </RowTemplate>
+                </MudTable>
             }
-        </CardContent>
-    </SfCard>
-</div>
+        </MudCardContent>
+    </MudCard>
+</MudContainer>
 
 @code {
-    private List<object> forecasts;
-    private bool IsLoading = true;
+    private List<WeatherForecast> forecasts;
 
     protected override async Task OnInitializedAsync()
     {
@@ -37,27 +47,20 @@
         var startDate = DateOnly.FromDateTime(DateTime.Now);
         var summaries = new[] { "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching" };
         
-        forecasts = Enumerable.Range(1, 5).Select(index => new
+        forecasts = Enumerable.Range(1, 5).Select(index => new WeatherForecast
         {
             DateString = startDate.AddDays(index).ToString("MMM dd"),
             TemperatureC = Random.Shared.Next(-20, 55),
             TemperatureF = 32 + (int)(Random.Shared.Next(-20, 55) / 0.5556),
             Summary = summaries[Random.Shared.Next(summaries.Length)]
-        }).ToList<object>();
-        
-        IsLoading = false;
+        }).ToList();
+    }
+
+    public class WeatherForecast
+    {
+        public string DateString { get; set; }
+        public int TemperatureC { get; set; }
+        public int TemperatureF { get; set; }
+        public string Summary { get; set; }
     }
 }
-
-<style>
-    .weather-container {
-        padding: 20px;
-        max-width: 800px;
-        margin: 0 auto;
-    }
-    
-    .loading-container {
-        text-align: center;
-        padding: 50px;
-    }
-</style>

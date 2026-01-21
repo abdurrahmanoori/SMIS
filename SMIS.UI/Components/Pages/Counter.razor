@@ -1,35 +1,34 @@
 ﻿@page "/counter"
 
-<div class="counter-container">
-    <SfCard>
-        <CardHeader Title="Counter Demo" SubTitle="Simple counter with Syncfusion components"></CardHeader>
-        <CardContent>
-            <div class="counter-content">
-                <h2>Current Count: @currentCount</h2>
-                
-                <div class="counter-controls">
-                    <SfButton IsPrimary="true" Content="Increment" @onclick="IncrementCount"></SfButton>
-                    <SfButton Content="Decrement" @onclick="DecrementCount" CssClass="e-outline"></SfButton>
-                    <SfButton Content="Reset" @onclick="ResetCount" CssClass="e-danger"></SfButton>
-                </div>
-            </div>
-        </CardContent>
-    </SfCard>
-    
-    <SfToast @ref="ToastObj" Title="Counter Updated" Content="@toastContent" ShowCloseButton="true">
-        <ToastPosition X="Right" Y="Top"></ToastPosition>
-    </SfToast>
-</div>
+<MudContainer MaxWidth="MaxWidth.Small" Class="mt-4">
+    <MudCard>
+        <MudCardHeader>
+            <CardHeaderContent>
+                <MudText Typo="Typo.h5">Counter Demo</MudText>
+                <MudText Typo="Typo.body2">Simple counter with MudBlazor components</MudText>
+            </CardHeaderContent>
+        </MudCardHeader>
+        <MudCardContent>
+            <MudStack AlignItems="AlignItems.Center" Spacing="4">
+                <MudText Typo="Typo.h4">Current Count: @currentCount</MudText>
+                <MudStack Row="true" Spacing="2">
+                    <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="IncrementCount">Increment</MudButton>
+                    <MudButton Variant="Variant.Outlined" OnClick="DecrementCount">Decrement</MudButton>
+                    <MudButton Variant="Variant.Filled" Color="Color.Error" OnClick="ResetCount">Reset</MudButton>
+                </MudStack>
+            </MudStack>
+        </MudCardContent>
+    </MudCard>
+</MudContainer>
 
 @code {
+    [Inject] private ISnackbar Snackbar { get; set; }
     private int currentCount = 0;
-    private SfToast ToastObj;
-    private string toastContent = "";
 
     private void IncrementCount()
     {
         currentCount++;
-        ShowToast($"Count incremented to {currentCount}");
+        Snackbar.Add($"Count incremented to {currentCount}", Severity.Success);
     }
     
     private void DecrementCount()
@@ -37,40 +36,13 @@
         if (currentCount > 0)
         {
             currentCount--;
-            ShowToast($"Count decremented to {currentCount}");
+            Snackbar.Add($"Count decremented to {currentCount}", Severity.Info);
         }
     }
     
     private void ResetCount()
     {
         currentCount = 0;
-        ShowToast("Counter reset to 0");
-    }
-    
-    private async void ShowToast(string message)
-    {
-        toastContent = message;
-        await ToastObj.ShowAsync();
+        Snackbar.Add("Counter reset to 0", Severity.Warning);
     }
 }
-
-<style>
-    .counter-container {
-        padding: 20px;
-        max-width: 600px;
-        margin: 0 auto;
-    }
-    
-    .counter-content {
-        text-align: center;
-        padding: 20px;
-    }
-    
-    .counter-controls {
-        margin: 30px 0;
-        display: flex;
-        gap: 10px;
-        justify-content: center;
-        flex-wrap: wrap;
-    }
-</style>

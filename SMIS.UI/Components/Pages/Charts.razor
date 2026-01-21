@@ -1,52 +1,29 @@
 @page "/charts"
 
-<div class="charts-container">
-    <SfCard>
-        <CardHeader Title="Simple Charts" SubTitle="Basic chart components demo"></CardHeader>
-        <CardContent>
-            <div class="chart-panel">
-                <h4>Sample Data Chart</h4>
-                <SfChart Width="100%" Height="300px">
-                    <ChartSeriesCollection>
-                        <ChartSeries DataSource="@chartData" XName="Month" YName="Sales" Type="ChartSeriesType.Column">
-                        </ChartSeries>
-                    </ChartSeriesCollection>
-                </SfChart>
-            </div>
-        </CardContent>
-    </SfCard>
-</div>
+<MudContainer MaxWidth="MaxWidth.Medium" Class="mt-4">
+    <MudCard>
+        <MudCardHeader>
+            <CardHeaderContent>
+                <MudText Typo="Typo.h5">Simple Charts</MudText>
+                <MudText Typo="Typo.body2">Basic chart components demo</MudText>
+            </CardHeaderContent>
+        </MudCardHeader>
+        <MudCardContent>
+            <MudText Typo="Typo.h6" Class="mb-4">Sample Data Chart</MudText>
+            <MudChart ChartType="ChartType.Bar" ChartSeries="@Series" XAxisLabels="@XAxisLabels" Width="100%" Height="300px"/>
+        </MudCardContent>
+    </MudCard>
+</MudContainer>
 
 @code {
-    private List<object> chartData = new();
+    private List<ChartSeries> Series = new();
+    private string[] XAxisLabels = { "Jan", "Feb", "Mar", "Apr", "May", "Jun" };
 
     protected override void OnInitialized()
     {
-        chartData = new List<object>
+        Series = new List<ChartSeries>
         {
-            new { Month = "Jan", Sales = 35 },
-            new { Month = "Feb", Sales = 28 },
-            new { Month = "Mar", Sales = 42 },
-            new { Month = "Apr", Sales = 38 },
-            new { Month = "May", Sales = 45 },
-            new { Month = "Jun", Sales = 52 }
+            new ChartSeries { Name = "Sales", Data = new double[] { 35, 28, 42, 38, 45, 52 } }
         };
     }
 }
-
-<style>
-    .charts-container {
-        padding: 20px;
-        max-width: 800px;
-        margin: 0 auto;
-    }
-    
-    .chart-panel {
-        padding: 15px;
-    }
-    
-    .chart-panel h4 {
-        margin: 0 0 15px 0;
-        color: #333;
-    }
-</style>

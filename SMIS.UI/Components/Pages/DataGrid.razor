@@ -1,42 +1,52 @@
 @page "/datagrid"
 
-<div class="datagrid-container">
-    <SfCard>
-        <CardHeader Title="Simple Data Grid" SubTitle="Basic data grid demo"></CardHeader>
-        <CardContent>
-            <SfGrid DataSource="@gridData" AllowPaging="true" AllowSorting="true">
-                <GridPageSettings PageSize="10"></GridPageSettings>
-                <GridColumns>
-                    <GridColumn Field="Id" HeaderText="ID" Width="80"></GridColumn>
-                    <GridColumn Field="Name" HeaderText="Name" Width="150"></GridColumn>
-                    <GridColumn Field="Email" HeaderText="Email" Width="200"></GridColumn>
-                    <GridColumn Field="Course" HeaderText="Course" Width="120"></GridColumn>
-                </GridColumns>
-            </SfGrid>
-        </CardContent>
-    </SfCard>
-</div>
+<MudContainer MaxWidth="MaxWidth.Large" Class="mt-4">
+    <MudCard>
+        <MudCardHeader>
+            <CardHeaderContent>
+                <MudText Typo="Typo.h5">Simple Data Grid</MudText>
+                <MudText Typo="Typo.body2">Basic data grid demo</MudText>
+            </CardHeaderContent>
+        </MudCardHeader>
+        <MudCardContent>
+            <MudTable Items="@gridData" Hover="true" Striped="true" Dense="true">
+                <HeaderContent>
+                    <MudTh>ID</MudTh>
+                    <MudTh>Name</MudTh>
+                    <MudTh>Email</MudTh>
+                    <MudTh>Course</MudTh>
+                </HeaderContent>
+                <RowTemplate>
+                    <MudTd DataLabel="ID">@context.Id</MudTd>
+                    <MudTd DataLabel="Name">@context.Name</MudTd>
+                    <MudTd DataLabel="Email">@context.Email</MudTd>
+                    <MudTd DataLabel="Course">@context.Course</MudTd>
+                </RowTemplate>
+            </MudTable>
+        </MudCardContent>
+    </MudCard>
+</MudContainer>
 
 @code {
-    private List<object> gridData = new();
+    private List<StudentData> gridData = new();
 
     protected override void OnInitialized()
     {
-        gridData = new List<object>
+        gridData = new List<StudentData>
         {
-            new { Id = 1, Name = "John Doe", Email = "john@test.com", Course = "Computer Science" },
-            new { Id = 2, Name = "Jane Smith", Email = "jane@test.com", Course = "Mathematics" },
-            new { Id = 3, Name = "Mike Johnson", Email = "mike@test.com", Course = "Physics" },
-            new { Id = 4, Name = "Sarah Wilson", Email = "sarah@test.com", Course = "Chemistry" },
-            new { Id = 5, Name = "David Brown", Email = "david@test.com", Course = "Biology" }
+            new StudentData { Id = 1, Name = "John Doe", Email = "john@test.com", Course = "Computer Science" },
+            new StudentData { Id = 2, Name = "Jane Smith", Email = "jane@test.com", Course = "Mathematics" },
+            new StudentData { Id = 3, Name = "Mike Johnson", Email = "mike@test.com", Course = "Physics" },
+            new StudentData { Id = 4, Name = "Sarah Wilson", Email = "sarah@test.com", Course = "Chemistry" },
+            new StudentData { Id = 5, Name = "David Brown", Email = "david@test.com", Course = "Biology" }
         };
     }
-}
 
-<style>
-    .datagrid-container {
-        padding: 20px;
-        max-width: 1000px;
-        margin: 0 auto;
+    public class StudentData
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public string Email { get; set; }
+        public string Course { get; set; }
     }
-</style>
+}

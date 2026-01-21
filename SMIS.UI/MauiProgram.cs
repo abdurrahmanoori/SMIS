@@ -1,5 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
-using Syncfusion.Blazor;
+using MudBlazor.Services;
 
 namespace SMIS.UI
 {
@@ -16,7 +16,7 @@ namespace SMIS.UI
                 });
 
             builder.Services.AddMauiBlazorWebView();
-            builder.Services.AddSyncfusionBlazor();
+            builder.Services.AddMudServices();
 
 #if DEBUG
     		builder.Services.AddBlazorWebViewDeveloperTools();

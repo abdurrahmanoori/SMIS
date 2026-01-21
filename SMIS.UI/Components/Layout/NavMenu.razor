@@ -1,89 +1,62 @@
-<div class="sf-navbar">
-    <div class="navbar-header">
-        <div class="brand-container">
-            <SfButton @onclick="ToggleSidebar" CssClass="menu-toggle" IconCss="e-icons e-menu"></SfButton>
-            <div class="brand-title">
-                <span class="brand-icon">📊</span>
-                <span class="brand-text">SMIS</span>
-            </div>
-        </div>
-        <div class="navbar-actions">
-            <SfButton CssClass="action-btn" IconCss="e-icons e-search"></SfButton>
-            <SfButton CssClass="action-btn" IconCss="e-icons e-notification"></SfButton>
-            <SfButton CssClass="action-btn" IconCss="e-icons e-user"></SfButton>
-        </div>
-    </div>
-</div>
+<MudAppBar Elevation="1">
+    <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@ToggleDrawer" />
+    <MudText Typo="Typo.h6">📊 SMIS</MudText>
+    <MudSpacer />
+    <MudIconButton Icon="@Icons.Material.Filled.Search" Color="Color.Inherit" />
+    <MudIconButton Icon="@Icons.Material.Filled.Notifications" Color="Color.Inherit" />
+    <MudIconButton Icon="@Icons.Material.Filled.Person" Color="Color.Inherit" />
+</MudAppBar>
 
-<SfSidebar @ref="SidebarObj" Width="280px" IsOpen="@sidebarToggle" EnableGestures="false" Type="SidebarType.Over" Position="SidebarPosition.Left">
-    <ChildContent>
-        <div class="sidebar-content">
-            <div class="sidebar-header">
-                <div class="user-profile">
-                    <div class="avatar">👤</div>
-                    <div class="user-info">
-                        <div class="user-name">Admin User</div>
-                        <div class="user-role">Administrator</div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="sidebar-menu">
-                <div class="menu-items">
-                    @foreach (var item in MenuItems)
-                    {
-                        <div class="menu-item-content" @onclick="() => NavigateToPage(item.Url)">
-                            <span class="menu-icon @item.IconCss"></span>
-                            <span class="menu-text">@item.Text</span>
-                        </div>
-                    }
-                </div>
-            </div>
-            
-            <div class="sidebar-footer">
-                <SfButton CssClass="logout-btn" IconCss="e-icons e-logout" Content="Logout"></SfButton>
-            </div>
-        </div>
-    </ChildContent>
-</SfSidebar>
-
-@if (sidebarToggle)
-{
-    <div class="sidebar-overlay" @onclick="CloseSidebar"></div>
-}
+<MudDrawer @bind-Open="@drawerOpen" Elevation="1" Variant="@DrawerVariant.Temporary">
+    <MudDrawerHeader>
+        <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="2">
+            <MudAvatar>👤</MudAvatar>
+            <MudStack Spacing="0">
+                <MudText Typo="Typo.body1">Admin User</MudText>
+                <MudText Typo="Typo.body2" Color="Color.Secondary">Administrator</MudText>
+            </MudStack>
+        </MudStack>
+    </MudDrawerHeader>
+    <MudNavMenu>
+        @foreach (var item in MenuItems)
+        {
+            <MudNavLink Href="@item.Url" Icon="@item.Icon" OnClick="@CloseDrawer">@item.Text</MudNavLink>
+        }
+    </MudNavMenu>
+    <MudSpacer />
+    <MudDivider />
+    <MudNavMenu>
+        <MudNavLink Icon="@Icons.Material.Filled.Logout">Logout</MudNavLink>
+    </MudNavMenu>
+</MudDrawer>
 
 @code {
-    private SfSidebar SidebarObj;
-    private bool sidebarToggle = false;
+    private bool drawerOpen = false;
     
-    [Inject] private NavigationManager Navigation { get; set; }
-    
-    private List<MenuItem> MenuItems = new List<MenuItem>
+    private List<MenuItem> MenuItems = new()
     {
-        new MenuItem { Text = "Dashboard", IconCss = "e-icons e-home", Url = "" },
-        new MenuItem { Text = "Counter", IconCss = "e-icons e-plus", Url = "counter" },
-        new MenuItem { Text = "Weather", IconCss = "e-icons e-weather", Url = "weather" },
-        new MenuItem { Text = "Data Grid", IconCss = "e-icons e-grid", Url = "datagrid" },
-        new MenuItem { Text = "Charts", IconCss = "e-icons e-chart", Url = "charts" },
-        new MenuItem { Text = "Forms", IconCss = "e-icons e-form", Url = "simpleform" }
+        new MenuItem { Text = "Dashboard", Icon = Icons.Material.Filled.Home, Url = "" },
+        new MenuItem { Text = "Counter", Icon = Icons.Material.Filled.Add, Url = "counter" },
+        new MenuItem { Text = "Weather", Icon = Icons.Material.Filled.Cloud, Url = "weather" },
+        new MenuItem { Text = "Data Grid", Icon = Icons.Material.Filled.GridOn, Url = "datagrid" },
+        new MenuItem { Text = "Charts", Icon = Icons.Material.Filled.BarChart, Url = "charts" },
+        new MenuItem { Text = "Forms", Icon = Icons.Material.Filled.Description, Url = "simpleform" }
     };
     
-    private void ToggleSidebar()
+    private void ToggleDrawer()
     {
-        sidebarToggle = !sidebarToggle;
+        drawerOpen = !drawerOpen;
     }
     
-    private void CloseSidebar()
+    private void CloseDrawer()
     {
-        sidebarToggle = false;
+        drawerOpen = false;
     }
-    
-    private void NavigateToPage(string url)
+
+    public class MenuItem
     {
-        if (!string.IsNullOrEmpty(url))
-        {
-            Navigation.NavigateTo(url);
-            sidebarToggle = false;
-        }
+        public string Text { get; set; }
+        public string Icon { get; set; }
+        public string Url { get; set; }
     }
 }

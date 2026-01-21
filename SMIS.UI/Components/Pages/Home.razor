@@ -1,95 +1,55 @@
 ﻿@page "/"
 
-<div class="home-container">
-    <SfCard>
-        <CardHeader Title="Welcome to SMIS" SubTitle="Student Management Information System"></CardHeader>
-        <CardContent>
-            <div class="card-content">
-                <h3>Hello, world!</h3>
-                <p>Welcome to your new Syncfusion Blazor MAUI app with modern UI components.</p>
-                
-                <div class="button-group">
-                    <SfButton IsPrimary="true" Content="Get Started"></SfButton>
-                    <SfButton Content="Learn More" CssClass="e-outline"></SfButton>
-                </div>
-            </div>
-        </CardContent>
-    </SfCard>
+<MudContainer MaxWidth="MaxWidth.Large" Class="mt-4">
+    <MudCard>
+        <MudCardHeader>
+            <CardHeaderContent>
+                <MudText Typo="Typo.h4">Welcome to SMIS</MudText>
+                <MudText Typo="Typo.body2">Student Management Information System</MudText>
+            </CardHeaderContent>
+        </MudCardHeader>
+        <MudCardContent>
+            <MudStack AlignItems="AlignItems.Center" Spacing="3">
+                <MudText Typo="Typo.h5">Hello, world!</MudText>
+                <MudText Typo="Typo.body1">Welcome to your new MudBlazor MAUI app with modern UI components.</MudText>
+                <MudStack Row="true" Spacing="2">
+                    <MudButton Variant="Variant.Filled" Color="Color.Primary">Get Started</MudButton>
+                    <MudButton Variant="Variant.Outlined">Learn More</MudButton>
+                </MudStack>
+            </MudStack>
+        </MudCardContent>
+    </MudCard>
 
-    <div class="stats-section">
-        <div class="stats-grid">
-            <SfCard>
-                <CardContent>
-                    <div class="stat-card">
-                        <h4>Students</h4>
-                        <h2>1,234</h2>
-                    </div>
-                </CardContent>
-            </SfCard>
-            
-            <SfCard>
-                <CardContent>
-                    <div class="stat-card">
-                        <h4>Courses</h4>
-                        <h2>56</h2>
-                    </div>
-                </CardContent>
-            </SfCard>
-            
-            <SfCard>
-                <CardContent>
-                    <div class="stat-card">
-                        <h4>Faculty</h4>
-                        <h2>89</h2>
-                    </div>
-                </CardContent>
-            </SfCard>
-        </div>
-    </div>
-</div>
-
-<style>
-    .home-container {
-        padding: 20px;
-        max-width: 1200px;
-        margin: 0 auto;
-    }
-    
-    .card-content {
-        text-align: center;
-        padding: 20px;
-    }
-    
-    .button-group {
-        margin-top: 20px;
-        display: flex;
-        gap: 15px;
-        justify-content: center;
-    }
-    
-    .stats-section {
-        margin-top: 30px;
-    }
-    
-    .stats-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-        gap: 20px;
-    }
-    
-    .stat-card {
-        text-align: center;
-        padding: 20px;
-    }
-    
-    .stat-card h4 {
-        margin: 0;
-        color: #666;
-    }
-    
-    .stat-card h2 {
-        margin: 10px 0 0 0;
-        color: #333;
-        font-size: 2.5em;
-    }
-</style>
+    <MudGrid Class="mt-4">
+        <MudItem xs="12" sm="4">
+            <MudCard>
+                <MudCardContent>
+                    <MudStack AlignItems="AlignItems.Center">
+                        <MudText Typo="Typo.h6" Color="Color.Secondary">Students</MudText>
+                        <MudText Typo="Typo.h3">1,234</MudText>
+                    </MudStack>
+                </MudCardContent>
+            </MudCard>
+        </MudItem>
+        <MudItem xs="12" sm="4">
+            <MudCard>
+                <MudCardContent>
+                    <MudStack AlignItems="AlignItems.Center">
+                        <MudText Typo="Typo.h6" Color="Color.Secondary">Courses</MudText>
+                        <MudText Typo="Typo.h3">56</MudText>
+                    </MudStack>
+                </MudCardContent>
+            </MudCard>
+        </MudItem>
+        <MudItem xs="12" sm="4">
+            <MudCard>
+                <MudCardContent>
+                    <MudStack AlignItems="AlignItems.Center">
+                        <MudText Typo="Typo.h6" Color="Color.Secondary">Faculty</MudText>
+                        <MudText Typo="Typo.h3">89</MudText>
+                    </MudStack>
+                </MudCardContent>
+            </MudCard>
+        </MudItem>
+    </MudGrid>
+</MudContainer>
