@@ -11,8 +11,8 @@ using SMIS.Infrastructure.Context;
 namespace SMIS.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260122034504_sdfs")]
-    partial class sdfs
+    [Migration("20260122162053_InitialMigraiton")]
+    partial class InitialMigraiton
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -211,34 +211,34 @@ namespace SMIS.Infrastructure.Migrations
                         {
                             Id = "1",
                             Code = "BEV",
-                            CreatedDate = new DateTime(2026, 1, 22, 8, 15, 4, 427, DateTimeKind.Local).AddTicks(2362),
+                            CreatedDate = new DateTime(2026, 1, 22, 20, 50, 52, 729, DateTimeKind.Local).AddTicks(2583),
                             Description = "Drinks and beverages",
                             IsActive = true,
                             IsPublic = false,
                             Name = "Beverages",
-                            UpdatedDate = new DateTime(2026, 1, 22, 8, 15, 4, 427, DateTimeKind.Local).AddTicks(2363)
+                            UpdatedDate = new DateTime(2026, 1, 22, 20, 50, 52, 729, DateTimeKind.Local).AddTicks(2594)
                         },
                         new
                         {
                             Id = "2",
                             Code = "SOFT",
-                            CreatedDate = new DateTime(2026, 1, 22, 8, 15, 4, 427, DateTimeKind.Local).AddTicks(2727),
+                            CreatedDate = new DateTime(2026, 1, 22, 20, 50, 52, 729, DateTimeKind.Local).AddTicks(4916),
                             Description = "Carbonated and non-carbonated drinks",
                             IsActive = true,
                             IsPublic = false,
                             Name = "Soft Drinks",
-                            UpdatedDate = new DateTime(2026, 1, 22, 8, 15, 4, 427, DateTimeKind.Local).AddTicks(2728)
+                            UpdatedDate = new DateTime(2026, 1, 22, 20, 50, 52, 729, DateTimeKind.Local).AddTicks(4924)
                         },
                         new
                         {
                             Id = "3",
                             Code = "FOOD",
-                            CreatedDate = new DateTime(2026, 1, 22, 8, 15, 4, 427, DateTimeKind.Local).AddTicks(2730),
+                            CreatedDate = new DateTime(2026, 1, 22, 20, 50, 52, 729, DateTimeKind.Local).AddTicks(4931),
                             Description = "Edible products",
                             IsActive = true,
                             IsPublic = false,
                             Name = "Food Items",
-                            UpdatedDate = new DateTime(2026, 1, 22, 8, 15, 4, 427, DateTimeKind.Local).AddTicks(2730)
+                            UpdatedDate = new DateTime(2026, 1, 22, 20, 50, 52, 729, DateTimeKind.Local).AddTicks(4933)
                         });
                 });
 
@@ -342,7 +342,7 @@ namespace SMIS.Infrastructure.Migrations
                         {
                             Id = "1",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "5e7accd3-fdf3-40e3-bc1f-f53155a36aaf",
+                            ConcurrencyStamp = "11ccf456-d270-472b-89e0-38d26c0305d7",
                             Email = "admin@local",
                             EmailConfirmed = true,
                             FirstName = "System",
@@ -350,7 +350,7 @@ namespace SMIS.Infrastructure.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@LOCAL",
                             NormalizedUserName = "ADMIN",
-                            PasswordHash = "AQAAAAIAAYagAAAAEKZJFHXKkYsWoISZcHFGt6LKuPh/NPFCHE75kd5U6y/fW/5Fiadpu7eKLnx2fahzpw==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEFvqRn2KCmjYvMDdZ1ubID5Zgb8/eGQmUVxI7fVF51FFwhE3yQk726Ehqb6QuMjlAg==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "admin-seed",
                             TwoFactorEnabled = false,
@@ -360,7 +360,7 @@ namespace SMIS.Infrastructure.Migrations
                         {
                             Id = "2",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "cc0003cd-1435-4666-9e7a-66abe2b4c855",
+                            ConcurrencyStamp = "68c05f9c-6cb6-4948-9732-91c6032fc72d",
                             Email = "user@local",
                             EmailConfirmed = true,
                             FirstName = "Default",
@@ -368,7 +368,7 @@ namespace SMIS.Infrastructure.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "USER@LOCAL",
                             NormalizedUserName = "USER",
-                            PasswordHash = "AQAAAAIAAYagAAAAEBmY4S4PILC9v77NelOn4BurRM2IGOcIzLts6+El1pvTTVqkCevQNlLFCl3sFmOaOg==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEAb1FV00CELiQcmlhCs4qFO7RQyLaYehn8T0Rf4elXtzAUoHRDRY+eVFoQDDGoup2A==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "user-seed",
                             TwoFactorEnabled = false,
@@ -444,6 +444,7 @@ namespace SMIS.Infrastructure.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
+                        .HasMaxLength(500)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("TranslationKeyId")
@@ -460,7 +461,8 @@ namespace SMIS.Infrastructure.Migrations
 
                     b.HasIndex("LanguageNo");
 
-                    b.HasIndex("TranslationKeyId");
+                    b.HasIndex("TranslationKeyId", "LanguageNo")
+                        .IsUnique();
 
                     b.ToTable("Translations");
 
@@ -468,152 +470,122 @@ namespace SMIS.Infrastructure.Migrations
                         new
                         {
                             Id = "1",
-                            CreatedDate = new DateTime(2026, 1, 22, 8, 15, 4, 425, DateTimeKind.Local).AddTicks(3941),
+                            CreatedDate = new DateTime(2026, 1, 22, 20, 50, 52, 720, DateTimeKind.Local).AddTicks(1881),
                             IsPublic = false,
                             LanguageNo = "1",
-                            Name = "",
+                            Name = "Kabul Center District",
                             TranslationKeyId = "1",
-                            UpdatedDate = new DateTime(2026, 1, 22, 8, 15, 4, 425, DateTimeKind.Local).AddTicks(3951)
+                            UpdatedDate = new DateTime(2026, 1, 22, 20, 50, 52, 720, DateTimeKind.Local).AddTicks(1889)
                         },
                         new
                         {
                             Id = "2",
-                            CreatedDate = new DateTime(2026, 1, 22, 8, 15, 4, 425, DateTimeKind.Local).AddTicks(4352),
+                            CreatedDate = new DateTime(2026, 1, 22, 20, 50, 52, 721, DateTimeKind.Local).AddTicks(1763),
                             IsPublic = false,
                             LanguageNo = "2",
-                            Name = "",
+                            Name = "منطقه مرکز کابل",
                             TranslationKeyId = "1",
-                            UpdatedDate = new DateTime(2026, 1, 22, 8, 15, 4, 425, DateTimeKind.Local).AddTicks(4352)
+                            UpdatedDate = new DateTime(2026, 1, 22, 20, 50, 52, 721, DateTimeKind.Local).AddTicks(1778)
                         },
                         new
                         {
                             Id = "3",
-                            CreatedDate = new DateTime(2026, 1, 22, 8, 15, 4, 425, DateTimeKind.Local).AddTicks(4354),
+                            CreatedDate = new DateTime(2026, 1, 22, 20, 50, 52, 721, DateTimeKind.Local).AddTicks(1789),
                             IsPublic = false,
-                            LanguageNo = "3",
-                            Name = "",
-                            TranslationKeyId = "1",
-                            UpdatedDate = new DateTime(2026, 1, 22, 8, 15, 4, 425, DateTimeKind.Local).AddTicks(4354)
+                            LanguageNo = "1",
+                            Name = "Kabul North District",
+                            TranslationKeyId = "2",
+                            UpdatedDate = new DateTime(2026, 1, 22, 20, 50, 52, 721, DateTimeKind.Local).AddTicks(1790)
                         },
                         new
                         {
                             Id = "4",
-                            CreatedDate = new DateTime(2026, 1, 22, 8, 15, 4, 425, DateTimeKind.Local).AddTicks(4355),
+                            CreatedDate = new DateTime(2026, 1, 22, 20, 50, 52, 721, DateTimeKind.Local).AddTicks(1792),
                             IsPublic = false,
-                            LanguageNo = "1",
-                            Name = "",
+                            LanguageNo = "2",
+                            Name = "منطقه شمال کابل",
                             TranslationKeyId = "2",
-                            UpdatedDate = new DateTime(2026, 1, 22, 8, 15, 4, 425, DateTimeKind.Local).AddTicks(4355)
+                            UpdatedDate = new DateTime(2026, 1, 22, 20, 50, 52, 721, DateTimeKind.Local).AddTicks(1793)
                         },
                         new
                         {
                             Id = "5",
-                            CreatedDate = new DateTime(2026, 1, 22, 8, 15, 4, 425, DateTimeKind.Local).AddTicks(4356),
+                            CreatedDate = new DateTime(2026, 1, 22, 20, 50, 52, 721, DateTimeKind.Local).AddTicks(1795),
                             IsPublic = false,
-                            LanguageNo = "2",
-                            Name = "",
-                            TranslationKeyId = "2",
-                            UpdatedDate = new DateTime(2026, 1, 22, 8, 15, 4, 425, DateTimeKind.Local).AddTicks(4356)
+                            LanguageNo = "1",
+                            Name = "Herat Center District",
+                            TranslationKeyId = "3",
+                            UpdatedDate = new DateTime(2026, 1, 22, 20, 50, 52, 721, DateTimeKind.Local).AddTicks(1795)
                         },
                         new
                         {
                             Id = "6",
-                            CreatedDate = new DateTime(2026, 1, 22, 8, 15, 4, 425, DateTimeKind.Local).AddTicks(4357),
+                            CreatedDate = new DateTime(2026, 1, 22, 20, 50, 52, 721, DateTimeKind.Local).AddTicks(1797),
                             IsPublic = false,
-                            LanguageNo = "3",
-                            Name = "",
-                            TranslationKeyId = "2",
-                            UpdatedDate = new DateTime(2026, 1, 22, 8, 15, 4, 425, DateTimeKind.Local).AddTicks(4358)
+                            LanguageNo = "2",
+                            Name = "منطقه مرکز هرات",
+                            TranslationKeyId = "3",
+                            UpdatedDate = new DateTime(2026, 1, 22, 20, 50, 52, 721, DateTimeKind.Local).AddTicks(1797)
                         },
                         new
                         {
                             Id = "7",
-                            CreatedDate = new DateTime(2026, 1, 22, 8, 15, 4, 425, DateTimeKind.Local).AddTicks(4358),
+                            CreatedDate = new DateTime(2026, 1, 22, 20, 50, 52, 721, DateTimeKind.Local).AddTicks(1799),
                             IsPublic = false,
                             LanguageNo = "1",
-                            Name = "",
-                            TranslationKeyId = "3",
-                            UpdatedDate = new DateTime(2026, 1, 22, 8, 15, 4, 425, DateTimeKind.Local).AddTicks(4359)
+                            Name = "Kabul Province",
+                            TranslationKeyId = "4",
+                            UpdatedDate = new DateTime(2026, 1, 22, 20, 50, 52, 721, DateTimeKind.Local).AddTicks(1815)
                         },
                         new
                         {
                             Id = "8",
-                            CreatedDate = new DateTime(2026, 1, 22, 8, 15, 4, 425, DateTimeKind.Local).AddTicks(4359),
+                            CreatedDate = new DateTime(2026, 1, 22, 20, 50, 52, 721, DateTimeKind.Local).AddTicks(1818),
                             IsPublic = false,
                             LanguageNo = "2",
-                            Name = "",
-                            TranslationKeyId = "3",
-                            UpdatedDate = new DateTime(2026, 1, 22, 8, 15, 4, 425, DateTimeKind.Local).AddTicks(4360)
+                            Name = "ولایت کابل",
+                            TranslationKeyId = "4",
+                            UpdatedDate = new DateTime(2026, 1, 22, 20, 50, 52, 721, DateTimeKind.Local).AddTicks(1818)
                         },
                         new
                         {
                             Id = "9",
-                            CreatedDate = new DateTime(2026, 1, 22, 8, 15, 4, 425, DateTimeKind.Local).AddTicks(4361),
+                            CreatedDate = new DateTime(2026, 1, 22, 20, 50, 52, 721, DateTimeKind.Local).AddTicks(1820),
                             IsPublic = false,
-                            LanguageNo = "3",
-                            Name = "",
-                            TranslationKeyId = "3",
-                            UpdatedDate = new DateTime(2026, 1, 22, 8, 15, 4, 425, DateTimeKind.Local).AddTicks(4361)
+                            LanguageNo = "1",
+                            Name = "Herat Province",
+                            TranslationKeyId = "5",
+                            UpdatedDate = new DateTime(2026, 1, 22, 20, 50, 52, 721, DateTimeKind.Local).AddTicks(1821)
                         },
                         new
                         {
                             Id = "10",
-                            CreatedDate = new DateTime(2026, 1, 22, 8, 15, 4, 425, DateTimeKind.Local).AddTicks(4362),
+                            CreatedDate = new DateTime(2026, 1, 22, 20, 50, 52, 721, DateTimeKind.Local).AddTicks(1823),
                             IsPublic = false,
-                            LanguageNo = "1",
-                            Name = "",
-                            TranslationKeyId = "4",
-                            UpdatedDate = new DateTime(2026, 1, 22, 8, 15, 4, 425, DateTimeKind.Local).AddTicks(4362)
+                            LanguageNo = "2",
+                            Name = "ولایت هرات",
+                            TranslationKeyId = "5",
+                            UpdatedDate = new DateTime(2026, 1, 22, 20, 50, 52, 721, DateTimeKind.Local).AddTicks(1823)
                         },
                         new
                         {
                             Id = "11",
-                            CreatedDate = new DateTime(2026, 1, 22, 8, 15, 4, 425, DateTimeKind.Local).AddTicks(4363),
+                            CreatedDate = new DateTime(2026, 1, 22, 20, 50, 52, 721, DateTimeKind.Local).AddTicks(1825),
                             IsPublic = false,
-                            LanguageNo = "2",
-                            Name = "",
-                            TranslationKeyId = "4",
-                            UpdatedDate = new DateTime(2026, 1, 22, 8, 15, 4, 425, DateTimeKind.Local).AddTicks(4363)
+                            LanguageNo = "1",
+                            Name = "Welcome Message",
+                            TranslationKeyId = "6",
+                            UpdatedDate = new DateTime(2026, 1, 22, 20, 50, 52, 721, DateTimeKind.Local).AddTicks(1826)
                         },
                         new
                         {
                             Id = "12",
-                            CreatedDate = new DateTime(2026, 1, 22, 8, 15, 4, 425, DateTimeKind.Local).AddTicks(4364),
-                            IsPublic = false,
-                            LanguageNo = "3",
-                            Name = "",
-                            TranslationKeyId = "4",
-                            UpdatedDate = new DateTime(2026, 1, 22, 8, 15, 4, 425, DateTimeKind.Local).AddTicks(4364)
-                        },
-                        new
-                        {
-                            Id = "13",
-                            CreatedDate = new DateTime(2026, 1, 22, 8, 15, 4, 425, DateTimeKind.Local).AddTicks(4365),
-                            IsPublic = false,
-                            LanguageNo = "1",
-                            Name = "",
-                            TranslationKeyId = "5",
-                            UpdatedDate = new DateTime(2026, 1, 22, 8, 15, 4, 425, DateTimeKind.Local).AddTicks(4365)
-                        },
-                        new
-                        {
-                            Id = "14",
-                            CreatedDate = new DateTime(2026, 1, 22, 8, 15, 4, 425, DateTimeKind.Local).AddTicks(4366),
+                            CreatedDate = new DateTime(2026, 1, 22, 20, 50, 52, 721, DateTimeKind.Local).AddTicks(1828),
                             IsPublic = false,
                             LanguageNo = "2",
-                            Name = "",
-                            TranslationKeyId = "5",
-                            UpdatedDate = new DateTime(2026, 1, 22, 8, 15, 4, 425, DateTimeKind.Local).AddTicks(4366)
-                        },
-                        new
-                        {
-                            Id = "15",
-                            CreatedDate = new DateTime(2026, 1, 22, 8, 15, 4, 425, DateTimeKind.Local).AddTicks(4367),
-                            IsPublic = false,
-                            LanguageNo = "3",
-                            Name = "",
-                            TranslationKeyId = "5",
-                            UpdatedDate = new DateTime(2026, 1, 22, 8, 15, 4, 425, DateTimeKind.Local).AddTicks(4368)
+                            Name = "پیام خوش آمدید",
+                            TranslationKeyId = "6",
+                            UpdatedDate = new DateTime(2026, 1, 22, 20, 50, 52, 721, DateTimeKind.Local).AddTicks(1829)
                         });
                 });
 
@@ -635,6 +607,7 @@ namespace SMIS.Infrastructure.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("MessageCode")
+                        .HasMaxLength(100)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Name")
@@ -658,52 +631,82 @@ namespace SMIS.Infrastructure.Migrations
                         new
                         {
                             Id = "1",
-                            CreatedDate = new DateTime(2026, 1, 22, 8, 15, 4, 423, DateTimeKind.Local).AddTicks(5798),
+                            CreatedDate = new DateTime(2026, 1, 22, 20, 50, 52, 716, DateTimeKind.Local).AddTicks(2632),
                             IsActive = true,
                             IsPublic = false,
                             MessageCode = "1001",
                             Name = "Kabul Center District",
-                            UpdatedDate = new DateTime(2026, 1, 22, 8, 15, 4, 424, DateTimeKind.Local).AddTicks(6055)
+                            UpdatedDate = new DateTime(2026, 1, 22, 20, 50, 52, 718, DateTimeKind.Local).AddTicks(6913)
                         },
                         new
                         {
                             Id = "2",
-                            CreatedDate = new DateTime(2026, 1, 22, 8, 15, 4, 424, DateTimeKind.Local).AddTicks(8910),
+                            CreatedDate = new DateTime(2026, 1, 22, 20, 50, 52, 719, DateTimeKind.Local).AddTicks(2208),
                             IsActive = true,
                             IsPublic = false,
                             MessageCode = "1002",
                             Name = "Kabul North District",
-                            UpdatedDate = new DateTime(2026, 1, 22, 8, 15, 4, 424, DateTimeKind.Local).AddTicks(8916)
+                            UpdatedDate = new DateTime(2026, 1, 22, 20, 50, 52, 719, DateTimeKind.Local).AddTicks(2221)
                         },
                         new
                         {
                             Id = "3",
-                            CreatedDate = new DateTime(2026, 1, 22, 8, 15, 4, 424, DateTimeKind.Local).AddTicks(8918),
+                            CreatedDate = new DateTime(2026, 1, 22, 20, 50, 52, 719, DateTimeKind.Local).AddTicks(2236),
                             IsActive = true,
                             IsPublic = false,
                             MessageCode = "1003",
                             Name = "Herat Center District",
-                            UpdatedDate = new DateTime(2026, 1, 22, 8, 15, 4, 424, DateTimeKind.Local).AddTicks(8918)
+                            UpdatedDate = new DateTime(2026, 1, 22, 20, 50, 52, 719, DateTimeKind.Local).AddTicks(2236)
                         },
                         new
                         {
                             Id = "4",
-                            CreatedDate = new DateTime(2026, 1, 22, 8, 15, 4, 424, DateTimeKind.Local).AddTicks(8920),
+                            CreatedDate = new DateTime(2026, 1, 22, 20, 50, 52, 719, DateTimeKind.Local).AddTicks(2241),
                             IsActive = true,
                             IsPublic = false,
                             MessageCode = "2001",
                             Name = "Kabul Province",
-                            UpdatedDate = new DateTime(2026, 1, 22, 8, 15, 4, 424, DateTimeKind.Local).AddTicks(8920)
+                            UpdatedDate = new DateTime(2026, 1, 22, 20, 50, 52, 719, DateTimeKind.Local).AddTicks(2241)
                         },
                         new
                         {
                             Id = "5",
-                            CreatedDate = new DateTime(2026, 1, 22, 8, 15, 4, 424, DateTimeKind.Local).AddTicks(8921),
+                            CreatedDate = new DateTime(2026, 1, 22, 20, 50, 52, 719, DateTimeKind.Local).AddTicks(2244),
                             IsActive = true,
                             IsPublic = false,
                             MessageCode = "2002",
                             Name = "Herat Province",
-                            UpdatedDate = new DateTime(2026, 1, 22, 8, 15, 4, 424, DateTimeKind.Local).AddTicks(8921)
+                            UpdatedDate = new DateTime(2026, 1, 22, 20, 50, 52, 719, DateTimeKind.Local).AddTicks(2244)
+                        },
+                        new
+                        {
+                            Id = "6",
+                            CreatedDate = new DateTime(2026, 1, 22, 20, 50, 52, 719, DateTimeKind.Local).AddTicks(2246),
+                            IsActive = true,
+                            IsPublic = false,
+                            MessageCode = "3001",
+                            Name = "Welcome Message",
+                            UpdatedDate = new DateTime(2026, 1, 22, 20, 50, 52, 719, DateTimeKind.Local).AddTicks(2246)
+                        },
+                        new
+                        {
+                            Id = "7",
+                            CreatedDate = new DateTime(2026, 1, 22, 20, 50, 52, 719, DateTimeKind.Local).AddTicks(2249),
+                            IsActive = true,
+                            IsPublic = false,
+                            MessageCode = "3002",
+                            Name = "Error Message",
+                            UpdatedDate = new DateTime(2026, 1, 22, 20, 50, 52, 719, DateTimeKind.Local).AddTicks(2249)
+                        },
+                        new
+                        {
+                            Id = "8",
+                            CreatedDate = new DateTime(2026, 1, 22, 20, 50, 52, 719, DateTimeKind.Local).AddTicks(2251),
+                            IsActive = true,
+                            IsPublic = false,
+                            MessageCode = "3003",
+                            Name = "Success Message",
+                            UpdatedDate = new DateTime(2026, 1, 22, 20, 50, 52, 719, DateTimeKind.Local).AddTicks(2252)
                         });
                 });
 
@@ -746,29 +749,29 @@ namespace SMIS.Infrastructure.Migrations
                         new
                         {
                             Id = "1",
-                            CreatedDate = new DateTime(2026, 1, 22, 8, 15, 4, 426, DateTimeKind.Local).AddTicks(3191),
+                            CreatedDate = new DateTime(2026, 1, 22, 20, 50, 52, 723, DateTimeKind.Local).AddTicks(7019),
                             IsPublic = false,
                             Name = "Kabul Center",
                             TranslationKeyId = "1",
-                            UpdatedDate = new DateTime(2026, 1, 22, 8, 15, 4, 426, DateTimeKind.Local).AddTicks(3194)
+                            UpdatedDate = new DateTime(2026, 1, 22, 20, 50, 52, 723, DateTimeKind.Local).AddTicks(7032)
                         },
                         new
                         {
                             Id = "2",
-                            CreatedDate = new DateTime(2026, 1, 22, 8, 15, 4, 426, DateTimeKind.Local).AddTicks(3388),
+                            CreatedDate = new DateTime(2026, 1, 22, 20, 50, 52, 723, DateTimeKind.Local).AddTicks(7547),
                             IsPublic = false,
                             Name = "Kabul North",
                             TranslationKeyId = "2",
-                            UpdatedDate = new DateTime(2026, 1, 22, 8, 15, 4, 426, DateTimeKind.Local).AddTicks(3389)
+                            UpdatedDate = new DateTime(2026, 1, 22, 20, 50, 52, 723, DateTimeKind.Local).AddTicks(7549)
                         },
                         new
                         {
                             Id = "3",
-                            CreatedDate = new DateTime(2026, 1, 22, 8, 15, 4, 426, DateTimeKind.Local).AddTicks(3390),
+                            CreatedDate = new DateTime(2026, 1, 22, 20, 50, 52, 723, DateTimeKind.Local).AddTicks(7553),
                             IsPublic = false,
                             Name = "Herat Center",
                             TranslationKeyId = "3",
-                            UpdatedDate = new DateTime(2026, 1, 22, 8, 15, 4, 426, DateTimeKind.Local).AddTicks(3391)
+                            UpdatedDate = new DateTime(2026, 1, 22, 20, 50, 52, 723, DateTimeKind.Local).AddTicks(7553)
                         });
                 });
 
@@ -805,34 +808,34 @@ namespace SMIS.Infrastructure.Migrations
                         new
                         {
                             Id = "1",
-                            CreatedDate = new DateTime(2026, 1, 22, 8, 15, 4, 425, DateTimeKind.Local).AddTicks(9910),
+                            CreatedDate = new DateTime(2026, 1, 22, 20, 50, 52, 722, DateTimeKind.Local).AddTicks(7931),
                             IsPublic = false,
                             Name = "Kabul",
-                            UpdatedDate = new DateTime(2026, 1, 22, 8, 15, 4, 425, DateTimeKind.Local).AddTicks(9914)
+                            UpdatedDate = new DateTime(2026, 1, 22, 20, 50, 52, 722, DateTimeKind.Local).AddTicks(7948)
                         },
                         new
                         {
                             Id = "2",
-                            CreatedDate = new DateTime(2026, 1, 22, 8, 15, 4, 425, DateTimeKind.Local).AddTicks(9916),
+                            CreatedDate = new DateTime(2026, 1, 22, 20, 50, 52, 722, DateTimeKind.Local).AddTicks(7963),
                             IsPublic = false,
                             Name = "Herat",
-                            UpdatedDate = new DateTime(2026, 1, 22, 8, 15, 4, 425, DateTimeKind.Local).AddTicks(9917)
+                            UpdatedDate = new DateTime(2026, 1, 22, 20, 50, 52, 722, DateTimeKind.Local).AddTicks(7965)
                         },
                         new
                         {
                             Id = "3",
-                            CreatedDate = new DateTime(2026, 1, 22, 8, 15, 4, 425, DateTimeKind.Local).AddTicks(9918),
+                            CreatedDate = new DateTime(2026, 1, 22, 20, 50, 52, 722, DateTimeKind.Local).AddTicks(7970),
                             IsPublic = false,
                             Name = "Kandahar",
-                            UpdatedDate = new DateTime(2026, 1, 22, 8, 15, 4, 425, DateTimeKind.Local).AddTicks(9918)
+                            UpdatedDate = new DateTime(2026, 1, 22, 20, 50, 52, 722, DateTimeKind.Local).AddTicks(7972)
                         },
                         new
                         {
                             Id = "4",
-                            CreatedDate = new DateTime(2026, 1, 22, 8, 15, 4, 425, DateTimeKind.Local).AddTicks(9919),
+                            CreatedDate = new DateTime(2026, 1, 22, 20, 50, 52, 722, DateTimeKind.Local).AddTicks(7976),
                             IsPublic = false,
                             Name = "Balkh",
-                            UpdatedDate = new DateTime(2026, 1, 22, 8, 15, 4, 425, DateTimeKind.Local).AddTicks(9919)
+                            UpdatedDate = new DateTime(2026, 1, 22, 20, 50, 52, 722, DateTimeKind.Local).AddTicks(7978)
                         });
                 });
 
@@ -1059,7 +1062,7 @@ namespace SMIS.Infrastructure.Migrations
                             Barcode = "1234567890123",
                             BaseUnitId = "1",
                             CategoryId = "1",
-                            CreatedDate = new DateTime(2026, 1, 22, 8, 15, 4, 427, DateTimeKind.Local).AddTicks(19),
+                            CreatedDate = new DateTime(2026, 1, 22, 20, 50, 52, 727, DateTimeKind.Local).AddTicks(4254),
                             Description = "Pain reliever",
                             ImageUrl = "https://example.com/images/paracetamol.jpg",
                             IsActive = true,
@@ -1068,7 +1071,7 @@ namespace SMIS.Infrastructure.Migrations
                             SKU = "PAR-500MG-001",
                             SalePricePerBaseUnit = 50,
                             ShopId = "1",
-                            UpdatedDate = new DateTime(2026, 1, 22, 8, 15, 4, 427, DateTimeKind.Local).AddTicks(19)
+                            UpdatedDate = new DateTime(2026, 1, 22, 20, 50, 52, 727, DateTimeKind.Local).AddTicks(4271)
                         },
                         new
                         {
@@ -1076,7 +1079,7 @@ namespace SMIS.Infrastructure.Migrations
                             Barcode = "1234567890124",
                             BaseUnitId = "1",
                             CategoryId = "1",
-                            CreatedDate = new DateTime(2026, 1, 22, 8, 15, 4, 427, DateTimeKind.Local).AddTicks(870),
+                            CreatedDate = new DateTime(2026, 1, 22, 20, 50, 52, 728, DateTimeKind.Local).AddTicks(5873),
                             Description = "Anti-inflammatory",
                             ImageUrl = "https://example.com/images/ibuprofen.jpg",
                             IsActive = true,
@@ -1085,7 +1088,7 @@ namespace SMIS.Infrastructure.Migrations
                             SKU = "IBU-200MG-002",
                             SalePricePerBaseUnit = 30,
                             ShopId = "1",
-                            UpdatedDate = new DateTime(2026, 1, 22, 8, 15, 4, 427, DateTimeKind.Local).AddTicks(870)
+                            UpdatedDate = new DateTime(2026, 1, 22, 20, 50, 52, 728, DateTimeKind.Local).AddTicks(5886)
                         },
                         new
                         {
@@ -1093,7 +1096,7 @@ namespace SMIS.Infrastructure.Migrations
                             Barcode = "1234567890125",
                             BaseUnitId = "1",
                             CategoryId = "2",
-                            CreatedDate = new DateTime(2026, 1, 22, 8, 15, 4, 427, DateTimeKind.Local).AddTicks(873),
+                            CreatedDate = new DateTime(2026, 1, 22, 20, 50, 52, 728, DateTimeKind.Local).AddTicks(5910),
                             Description = "Blood thinner",
                             ImageUrl = "https://example.com/images/aspirin.jpg",
                             IsActive = true,
@@ -1102,7 +1105,7 @@ namespace SMIS.Infrastructure.Migrations
                             SKU = "ASP-100MG-003",
                             SalePricePerBaseUnit = 20,
                             ShopId = "2",
-                            UpdatedDate = new DateTime(2026, 1, 22, 8, 15, 4, 427, DateTimeKind.Local).AddTicks(873)
+                            UpdatedDate = new DateTime(2026, 1, 22, 20, 50, 52, 728, DateTimeKind.Local).AddTicks(5910)
                         });
                 });
 
@@ -1216,7 +1219,7 @@ namespace SMIS.Infrastructure.Migrations
                         {
                             Id = "1",
                             Address = "Kabul Center",
-                            CreatedDate = new DateTime(2026, 1, 22, 8, 15, 4, 426, DateTimeKind.Local).AddTicks(7978),
+                            CreatedDate = new DateTime(2026, 1, 22, 20, 50, 52, 725, DateTimeKind.Local).AddTicks(6626),
                             Email = "main@pharmacy.local",
                             IsActive = true,
                             IsPublic = false,
@@ -1224,13 +1227,13 @@ namespace SMIS.Infrastructure.Migrations
                             PhoneNumber = "0700000001",
                             ShopType = "RetailShop",
                             TaxNumber = "TAX001",
-                            UpdatedDate = new DateTime(2026, 1, 22, 8, 15, 4, 426, DateTimeKind.Local).AddTicks(7982)
+                            UpdatedDate = new DateTime(2026, 1, 22, 20, 50, 52, 725, DateTimeKind.Local).AddTicks(6638)
                         },
                         new
                         {
                             Id = "2",
                             Address = "Herat Center",
-                            CreatedDate = new DateTime(2026, 1, 22, 8, 15, 4, 426, DateTimeKind.Local).AddTicks(8518),
+                            CreatedDate = new DateTime(2026, 1, 22, 20, 50, 52, 726, DateTimeKind.Local).AddTicks(185),
                             Email = "city@pharmacy.local",
                             IsActive = true,
                             IsPublic = false,
@@ -1238,13 +1241,13 @@ namespace SMIS.Infrastructure.Migrations
                             PhoneNumber = "0700000002",
                             ShopType = "WholesaleShop",
                             TaxNumber = "TAX002",
-                            UpdatedDate = new DateTime(2026, 1, 22, 8, 15, 4, 426, DateTimeKind.Local).AddTicks(8518)
+                            UpdatedDate = new DateTime(2026, 1, 22, 20, 50, 52, 726, DateTimeKind.Local).AddTicks(192)
                         },
                         new
                         {
                             Id = "3",
                             Address = "Kandahar Center",
-                            CreatedDate = new DateTime(2026, 1, 22, 8, 15, 4, 426, DateTimeKind.Local).AddTicks(8521),
+                            CreatedDate = new DateTime(2026, 1, 22, 20, 50, 52, 726, DateTimeKind.Local).AddTicks(205),
                             Email = "health@store.local",
                             IsActive = true,
                             IsPublic = false,
@@ -1252,7 +1255,7 @@ namespace SMIS.Infrastructure.Migrations
                             PhoneNumber = "0700000003",
                             ShopType = "RetailShop",
                             TaxNumber = "TAX003",
-                            UpdatedDate = new DateTime(2026, 1, 22, 8, 15, 4, 426, DateTimeKind.Local).AddTicks(8521)
+                            UpdatedDate = new DateTime(2026, 1, 22, 20, 50, 52, 726, DateTimeKind.Local).AddTicks(207)
                         });
                 });
 

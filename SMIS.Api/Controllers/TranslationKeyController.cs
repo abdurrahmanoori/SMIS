@@ -17,14 +17,14 @@ namespace SMIS.Api.Controllers
             HandleResultResponse(await Mediator.Send(new TranslationKeyCreateCommand(dto)));
 
         [HttpGet]
-        public async Task<ActionResult<PagedList<TranslationKeyDto>>> GetAll([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 25)
+        public async Task<ActionResult<PagedList<TranslationKeyDto>>> GetAll([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 25, [FromQuery] bool includeTranslations = false)
         {
-            return HandleResultResponse(await Mediator.Send(new TranslationKeyGetListQuery(pageNumber, pageSize)));
+            return HandleResultResponse(await Mediator.Send(new TranslationKeyGetListQuery(pageNumber, pageSize, includeTranslations)));
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<TranslationKeyDto>> GetById(string id) =>
-            HandleResultResponse(await Mediator.Send(new TranslationKeyGetByIdQuery(id)));
+        public async Task<ActionResult<TranslationKeyDto>> GetById(string id, [FromQuery] bool includeTranslations = false) =>
+            HandleResultResponse(await Mediator.Send(new TranslationKeyGetByIdQuery(id, includeTranslations)));
 
         [HttpPut("{id}")]
         public async Task<ActionResult<TranslationKeyDto>> Update(string id, TranslationKeyCreateDto dto) =>

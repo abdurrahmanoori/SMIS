@@ -1,3 +1,5 @@
+using SMIS.Application.DTO.Translations;
+
 namespace SMIS.Application.DTO.TranslationKeys
 {
     public class TranslationKeyDto
@@ -6,5 +8,6 @@ namespace SMIS.Application.DTO.TranslationKeys
         public string Name { get; set; } = string.Empty;
         public string? MessageCode { get; set; }
         public bool IsActive { get; set; }
+        public ICollection<TranslationEntityDto> Translations { get; set; } = new List<TranslationEntityDto>();
     }
 }
