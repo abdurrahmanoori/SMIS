@@ -14,6 +14,9 @@ namespace SMIS.Infrastructure.EntityConfigurations
                 .IsRequired()
                 .HasMaxLength(200);
 
+            builder.Property(x => x.MessageCode)
+                .HasMaxLength(100);
+
             builder.HasIndex(x => x.MessageCode);
 
             builder.HasMany(tk => tk.Translations)

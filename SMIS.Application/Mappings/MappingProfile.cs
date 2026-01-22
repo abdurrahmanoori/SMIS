@@ -11,6 +11,7 @@ using System.Globalization;
 using SMIS.Application.DTO.Categories;
 using SMIS.Domain.Entities.LocationEntities;
 using SMIS.Application.DTO.ProductUnits;
+using SMIS.Application.DTO.TranslationKeys;
 
 namespace SMIS.Application.Mappings;
 
@@ -96,6 +97,10 @@ public class MappingProfile : Profile
         // ProductUnit mapping
         CreateMap<ProductUnit, ProductUnitDto>().ReverseMap();
         CreateMap<ProductUnit, ProductUnitCreateDto>().ReverseMap();
+
+        // TranslationKey mapping
+        CreateMap<TranslationKey, TranslationKeyDto>().ReverseMap();
+        CreateMap<TranslationKey, TranslationKeyCreateDto>().ReverseMap();
     }
 
     private static string ResolveProvinceName(Province src)
