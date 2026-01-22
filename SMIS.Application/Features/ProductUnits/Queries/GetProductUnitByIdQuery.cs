@@ -6,7 +6,7 @@ using SMIS.Application.Repositories.ProductUnits;
 
 namespace SMIS.Application.Features.ProductUnits.Queries
 {
-    public record GetProductUnitByIdQuery(string Id) : IRequest<Result<ProductUnitDto>>;
+    public record GetProductUnitByIdQuery(string Id, bool IncludeProduct = false, bool IncludeUnitOfMeasure = false) : IRequest<Result<ProductUnitDto>>;
 
     internal sealed class GetProductUnitByIdQueryHandler : IRequestHandler<GetProductUnitByIdQuery, Result<ProductUnitDto>>
     {
@@ -21,7 +21,13 @@ namespace SMIS.Application.Features.ProductUnits.Queries
 
         public async Task<Result<ProductUnitDto>> Handle(GetProductUnitByIdQuery request, CancellationToken cancellationToken)
         {
-            var dbProductUnit = await _productUnitRepository.GetFirstOrDefaultAsync(x => x.Id == request.Id);
+            var includeProperties = new List<string>();
+            if (request.IncludeProduct) includeProperties.Add("Product");
+            if (request.IncludeUnitOfMeasure) includeProperties.Add("UnitOfMeasure");
+            var re = string.Join(",", includeProperties);
+            var dbProductUnit = await _productUnitRepository.GetFirstOrDefaultAsync(
+                x => x.Id == request.Id,
+                includeProperties: includeProperties.Any() ? string.Join(",", includeProperties) : null);
 
             if (dbProductUnit == null)
             {

@@ -17,14 +17,14 @@ namespace SMIS.Api.Controllers
             HandleResultResponse(await Mediator.Send(new CreateProductUnitCommand(dto)));
 
         [HttpGet]
-        public async Task<ActionResult<PagedList<ProductUnitDto>>> GetAll([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 25)
+        public async Task<ActionResult<PagedList<ProductUnitDto>>> GetAll([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 25, [FromQuery] bool includeProduct = false, [FromQuery] bool includeUnitOfMeasure = false)
         {
-            return HandleResultResponse(await Mediator.Send(new GetProductUnitListQuery(pageNumber, pageSize)));
+            return HandleResultResponse(await Mediator.Send(new GetProductUnitListQuery(pageNumber, pageSize, includeProduct, includeUnitOfMeasure)));
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<ProductUnitDto>> GetById(string id) =>
-            HandleResultResponse(await Mediator.Send(new GetProductUnitByIdQuery(id)));
+        public async Task<ActionResult<ProductUnitDto>> GetById(string id, [FromQuery] bool includeProduct = false, [FromQuery] bool includeUnitOfMeasure = false) =>
+            HandleResultResponse(await Mediator.Send(new GetProductUnitByIdQuery(id, includeProduct, includeUnitOfMeasure)));
 
         [HttpPut("{id}")]
         public async Task<ActionResult<ProductUnitDto>> Update(string id, ProductUnitCreateDto dto) =>

@@ -3,12 +3,11 @@ using MediatR;
 using SMIS.Application.DTO.Common;
 using SMIS.Application.DTO.Common.Response;
 using SMIS.Application.DTO.ProductUnits;
-using SMIS.Application.Extensions;
 using SMIS.Application.Repositories.ProductUnits;
 
 namespace SMIS.Application.Features.ProductUnits.Queries
 {
-    public record GetProductUnitListQuery(int PageNumber = 1, int PageSize = 25) : IRequest<Result<PagedList<ProductUnitDto>>>;
+    public record GetProductUnitListQuery(int PageNumber = 1, int PageSize = 25, bool IncludeProduct = false, bool IncludeUnitOfMeasure = false) : IRequest<Result<PagedList<ProductUnitDto>>>;
 
     internal sealed class GetProductUnitListQueryHandler : IRequestHandler<GetProductUnitListQuery, Result<PagedList<ProductUnitDto>>>
     {
@@ -23,8 +22,12 @@ namespace SMIS.Application.Features.ProductUnits.Queries
 
         public async Task<Result<PagedList<ProductUnitDto>>> Handle(GetProductUnitListQuery request, CancellationToken cancellationToken)
         {
-            var productUnits = await _productUnitRepository.GetAllQueryable()
-                .ToPagedList(request.PageNumber, request.PageSize);
+            var includeProperties = new List<string>();
+            if (request.IncludeProduct) includeProperties.Add("Product");
+            if (request.IncludeUnitOfMeasure) includeProperties.Add("UnitOfMeasure");
+
+            var query = _productUnitRepository.GetAllQueryable(includeProperties: includeProperties.Any() ? string.Join(",", includeProperties) : null);
+            var productUnits = await query.ToPagedList(request.PageNumber, request.PageSize);
 
             if (!productUnits.Items.Any())
             {

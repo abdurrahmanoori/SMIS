@@ -29,6 +29,8 @@ namespace SMIS.Application.Features.Products.Queries
 
         public async Task<Result<PagedList<ProductDto>>> Handle(GetProductListQuery request, CancellationToken cancellationToken)
         {
+
+
             var query = _productRepository.GetAllQueryable(includeProperties: request.IncludeCategory ? "Category" : null);
             var products = await query.ToPagedList(request.PageNumber, request.PageSize);
 
