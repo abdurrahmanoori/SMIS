@@ -10,6 +10,8 @@ namespace SMIS.Domain.Entities
         // pcs, g, ml, l, box, pack
         public string? Description { get; set; } = null!;
 
+        // Navigation Properties
+        public virtual ICollection<ProductUnit> ProductUnits { get; set; } = new List<ProductUnit>();
     }
 }
 

@@ -23,6 +23,7 @@ namespace SMIS.Domain.Entities
         public virtual Shop Shop { get; set; } = null!;
         public UnitOfMeasure UnitOfMeasure { get; set; } = null!;
         public virtual Category? Category { get; set; }
+        public virtual ICollection<ProductUnit> ProductUnits { get; set; } = new List<ProductUnit>();
         //public virtual ICollection<InvoiceItem> InvoiceItems { get; set; } = new List<InvoiceItem>();
         //public virtual ICollection<StockMovement> StockMovements { get; set; } = new List<StockMovement>();
     }
