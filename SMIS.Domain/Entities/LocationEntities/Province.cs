@@ -1,7 +1,7 @@
 using SMIS.Domain.Common.BaseAbstract;
 using SMIS.Domain.Common.Interfaces;
 
-namespace SMIS.Domain.Entities
+namespace SMIS.Domain.Entities.LocationEntities
 {
     public class Province : BaseAuditableEntity, IHasTranslations<ProvinceTranslation>
     {

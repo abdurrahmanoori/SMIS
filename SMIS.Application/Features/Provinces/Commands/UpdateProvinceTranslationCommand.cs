@@ -3,9 +3,9 @@ using MediatR;
 using SMIS.Application.DTO.Provinces;
 using SMIS.Application.Repositories.Provinces;
 using SMIS.Application.Repositories.Base;
-using SMIS.Domain.Entities;
 using SMIS.Application.Repositories.Localization;
 using SMIS.Application.DTO.Common.Response;
+using SMIS.Domain.Entities.LocationEntities;
 
 namespace SMIS.Application.Features.Provinces.Commands
 {

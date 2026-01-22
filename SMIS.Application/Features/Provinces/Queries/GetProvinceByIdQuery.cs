@@ -3,6 +3,7 @@ using SMIS.Application.DTO.Common.Response;
 using SMIS.Application.DTO.Provinces;
 using SMIS.Application.Identity.IServices;
 using SMIS.Application.Repositories.Provinces;
+using SMIS.Domain.Entities.LocationEntities;
 
 namespace SMIS.Application.Features.Provinces.Queries
 {
@@ -21,7 +22,7 @@ namespace SMIS.Application.Features.Provinces.Queries
 
         public async Task<Result<ProvinceDto>> Handle(GetProvinceByIdQuery request, CancellationToken cancellationToken)
         {
-            var entity = await _provinceRepository.GetFirstOrDefaultAsync(x => x.Id == request.Id, includeProperties: nameof(Domain.Entities.Province.Translations));
+            var entity = await _provinceRepository.GetFirstOrDefaultAsync(x => x.Id == request.Id, includeProperties: nameof(Province.Translations));
             if (entity is null)
             {
                 return Result<ProvinceDto>.NotFoundResult(request.Id);

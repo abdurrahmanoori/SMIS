@@ -4,6 +4,7 @@ using MediatR;
 using SMIS.Application.DTO.Common.Response;
 using SMIS.Application.DTO.Provinces;
 using SMIS.Application.Repositories.Provinces;
+using SMIS.Domain.Entities.LocationEntities;
 using System.Linq;
 
 namespace SMIS.Application.Features.Provinces.Queries
@@ -22,7 +23,7 @@ namespace SMIS.Application.Features.Provinces.Queries
 
         public async Task<Result<List<ProvinceTranslationDto>>> Handle(GetProvinceTranslationListQuery request, CancellationToken cancellationToken)
         {
-            var province = await _repo.GetFirstOrDefaultAsync(x => x.Id == request.ProvinceId, includeProperties: $"{nameof(Domain.Entities.Province.Translations)}.{nameof(Domain.Entities.ProvinceTranslation.Language)}");
+            var province = await _repo.GetFirstOrDefaultAsync(x => x.Id == request.ProvinceId, includeProperties: $"{nameof(Province.Translations)}.{nameof(ProvinceTranslation.Language)}");
             if (province is null) return Result<List<ProvinceTranslationDto>>.NotFoundResult(request.ProvinceId);
 
             var dto = _mapper.Map<List<ProvinceTranslationDto>>(province.Translations.ToList());

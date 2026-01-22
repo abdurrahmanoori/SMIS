@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using SMIS.Domain.Entities;
+using SMIS.Domain.Entities.LocationEntities;
 
 namespace SMIS.Infrastructure.EntityConfigurations
 {

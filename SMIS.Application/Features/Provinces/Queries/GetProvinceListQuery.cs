@@ -4,6 +4,7 @@ using SMIS.Application.DTO.Common.Response;
 using SMIS.Application.DTO.Provinces;
 using SMIS.Application.Identity.IServices;
 using SMIS.Application.Repositories.Provinces;
+using SMIS.Domain.Entities.LocationEntities;
 
 namespace SMIS.Application.Features.Provinces.Queries
 {
@@ -23,7 +24,7 @@ namespace SMIS.Application.Features.Provinces.Queries
         public async Task<Result<PagedList<ProvinceDto>>> Handle(GetProvinceListQuery request, CancellationToken cancellationToken)
         {
             var userLangId = _currentUser.GetLangId();
-            var query = _provinceRepository.GetAllQueryable(includeProperties: nameof(Domain.Entities.Province.Translations))
+            var query = _provinceRepository.GetAllQueryable(includeProperties: nameof(Province.Translations))
                 .Select(p => new
                 {
                     Province = p,

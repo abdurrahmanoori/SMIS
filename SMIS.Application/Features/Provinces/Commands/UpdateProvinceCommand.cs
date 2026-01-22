@@ -5,7 +5,7 @@ using SMIS.Application.DTO.Common.Response;
 using SMIS.Application.DTO.Provinces;
 using SMIS.Application.Repositories.Base;
 using SMIS.Application.Repositories.Provinces;
-using SMIS.Domain.Entities;
+using SMIS.Domain.Entities.LocationEntities;
 
 namespace SMIS.Application.Features.Provinces.Commands
 {
@@ -26,7 +26,7 @@ namespace SMIS.Application.Features.Provinces.Commands
 
         public async Task<Result<ProvinceDto>> Handle(UpdateProvinceCommand request, CancellationToken cancellationToken)
         {
-            var existing = await _provinceRepository.GetFirstOrDefaultAsync(x => x.Id == request.Id, includeProperties: nameof(Domain.Entities.Province.Translations));
+            var existing = await _provinceRepository.GetFirstOrDefaultAsync(x => x.Id == request.Id, includeProperties: nameof(Province.Translations));
             if (existing is null)
             {
                 return Result<ProvinceDto>.NotFoundResult(request.Id);

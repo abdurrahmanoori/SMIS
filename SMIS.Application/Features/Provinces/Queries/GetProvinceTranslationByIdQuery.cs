@@ -3,6 +3,7 @@ using MediatR;
 using SMIS.Application.DTO.Common.Response;
 using SMIS.Application.DTO.Provinces;
 using SMIS.Application.Repositories.Provinces;
+using SMIS.Domain.Entities.LocationEntities;
 
 namespace SMIS.Application.Features.Provinces.Queries
 {
@@ -20,7 +21,7 @@ namespace SMIS.Application.Features.Provinces.Queries
 
         public async Task<Result<ProvinceTranslationDto>> Handle(GetProvinceTranslationByIdQuery request, CancellationToken cancellationToken)
         {
-            var province = await _repo.GetFirstOrDefaultAsync(x => x.Translations.Any(t => t.Id == request.Id), includeProperties: nameof(Domain.Entities.Province.Translations));
+            var province = await _repo.GetFirstOrDefaultAsync(x => x.Translations.Any(t => t.Id == request.Id), includeProperties: nameof(Province.Translations));
             if (province is null) return Result<ProvinceTranslationDto>.NotFoundResult(request.Id);
 
             var trans = province.Translations.FirstOrDefault(t => t.Id == request.Id);

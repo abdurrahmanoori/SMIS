@@ -1,7 +1,7 @@
 using SMIS.Domain.Common.BaseAbstract;
 using SMIS.Domain.Entities.Localization;
 
-namespace SMIS.Domain.Entities
+namespace SMIS.Domain.Entities.LocationEntities
 {
     public class District : BaseAuditableEntity
     {

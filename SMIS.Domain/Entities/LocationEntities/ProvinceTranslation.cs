@@ -1,6 +1,6 @@
 using SMIS.Domain.Entities.Localization;
 
-namespace SMIS.Domain.Entities
+namespace SMIS.Domain.Entities.LocationEntities
 {
     public class ProvinceTranslation : TranslationBase
     {

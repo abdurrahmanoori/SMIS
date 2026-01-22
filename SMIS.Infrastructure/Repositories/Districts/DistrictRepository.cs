@@ -1,5 +1,5 @@
 using SMIS.Application.Repositories.Districts;
-using SMIS.Domain.Entities;
+using SMIS.Domain.Entities.LocationEntities;
 using SMIS.Infrastructure.Context;
 using SMIS.Infrastructure.Repositories.Base;
 

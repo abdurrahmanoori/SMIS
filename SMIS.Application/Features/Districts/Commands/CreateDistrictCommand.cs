@@ -5,8 +5,8 @@ using SMIS.Application.DTO.Districts;
 using SMIS.Application.Repositories.Base;
 using SMIS.Application.Repositories.Districts;
 using SMIS.Application.Repositories.Localization;
-using SMIS.Domain.Entities;
 using SMIS.Domain.Entities.Localization;
+using SMIS.Domain.Entities.LocationEntities;
 
 namespace SMIS.Application.Features.Districts.Commands
 {

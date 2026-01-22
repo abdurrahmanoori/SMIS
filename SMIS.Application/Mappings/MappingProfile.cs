@@ -9,6 +9,7 @@ using SMIS.Domain.Entities;
 using SMIS.Domain.Entities.Localization;
 using System.Globalization;
 using SMIS.Application.DTO.Categories;
+using SMIS.Domain.Entities.LocationEntities;
 
 namespace SMIS.Application.Mappings;
 

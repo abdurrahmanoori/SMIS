@@ -1,5 +1,5 @@
 using Microsoft.EntityFrameworkCore;
-using SMIS.Domain.Entities;
+using SMIS.Domain.Entities.LocationEntities;
 
 namespace SMIS.Infrastructure.DatabaseSeeders
 {
