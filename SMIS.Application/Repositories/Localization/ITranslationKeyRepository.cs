@@ -5,5 +5,6 @@ namespace SMIS.Application.Repositories.Localization
 {
     public interface ITranslationKeyRepository : IGenericRepository<TranslationKey>
     {
+        Task SaveChangesAsync();
     }
 }
