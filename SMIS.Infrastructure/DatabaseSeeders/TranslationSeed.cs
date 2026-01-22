@@ -8,25 +8,18 @@ namespace SMIS.Infrastructure.DatabaseSeeders
         public static void DataSeed(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Translation>().HasData(
-                new Translation { Id = "1", TranslationKeyId = "1", LanguageNo = "1" },
-                new Translation { Id = "2", TranslationKeyId = "1", LanguageNo = "2" },
-                new Translation { Id = "3", TranslationKeyId = "1", LanguageNo = "3" },
-
-                new Translation { Id = "4", TranslationKeyId = "2", LanguageNo = "1" },
-                new Translation { Id = "5", TranslationKeyId = "2", LanguageNo = "2" },
-                new Translation { Id = "6", TranslationKeyId = "2", LanguageNo = "3" },
-
-                new Translation { Id = "7", TranslationKeyId = "3", LanguageNo = "1" },
-                new Translation { Id = "8", TranslationKeyId = "3", LanguageNo = "2" },
-                new Translation { Id = "9", TranslationKeyId = "3", LanguageNo = "3" },
-
-                new Translation { Id = "10", TranslationKeyId = "4", LanguageNo = "1" },
-                new Translation { Id = "11", TranslationKeyId = "4", LanguageNo = "2" },
-                new Translation { Id = "12", TranslationKeyId = "4", LanguageNo = "3" },
-
-                new Translation { Id = "13", TranslationKeyId = "5", LanguageNo = "1" },
-                new Translation { Id = "14", TranslationKeyId = "5", LanguageNo = "2" },
-                new Translation { Id = "15", TranslationKeyId = "5", LanguageNo = "3" }
+                new Translation { Id = "1", Name = "Kabul Center District", TranslationKeyId = "1", LanguageNo = "1" },
+                new Translation { Id = "2", Name = "منطقه مرکز کابل", TranslationKeyId = "1", LanguageNo = "2" },
+                new Translation { Id = "3", Name = "Kabul North District", TranslationKeyId = "2", LanguageNo = "1" },
+                new Translation { Id = "4", Name = "منطقه شمال کابل", TranslationKeyId = "2", LanguageNo = "2" },
+                new Translation { Id = "5", Name = "Herat Center District", TranslationKeyId = "3", LanguageNo = "1" },
+                new Translation { Id = "6", Name = "منطقه مرکز هرات", TranslationKeyId = "3", LanguageNo = "2" },
+                new Translation { Id = "7", Name = "Kabul Province", TranslationKeyId = "4", LanguageNo = "1" },
+                new Translation { Id = "8", Name = "ولایت کابل", TranslationKeyId = "4", LanguageNo = "2" },
+                new Translation { Id = "9", Name = "Herat Province", TranslationKeyId = "5", LanguageNo = "1" },
+                new Translation { Id = "10", Name = "ولایت هرات", TranslationKeyId = "5", LanguageNo = "2" },
+                new Translation { Id = "11", Name = "Welcome Message", TranslationKeyId = "6", LanguageNo = "1" },
+                new Translation { Id = "12", Name = "پیام خوش آمدید", TranslationKeyId = "6", LanguageNo = "2" }
             );
         }
     }

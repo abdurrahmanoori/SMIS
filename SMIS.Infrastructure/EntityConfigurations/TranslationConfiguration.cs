@@ -10,6 +10,16 @@ namespace SMIS.Infrastructure.EntityConfigurations
         {
             builder.HasKey(x => x.Id);
 
+            builder.Property(x => x.Name)
+                .IsRequired()
+                .HasMaxLength(500);
+
+            builder.Property(x => x.TranslationKeyId)
+                .IsRequired();
+
+            builder.Property(x => x.LanguageNo)
+                .IsRequired();
+
             builder.HasOne(t => t.TranslationKey)
                 .WithMany(tk => tk.Translations)
                 .HasForeignKey(t => t.TranslationKeyId)
