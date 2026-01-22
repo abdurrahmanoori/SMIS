@@ -31,13 +31,7 @@ namespace SMIS.Test.Utilities
                 if (root.TryGetProperty("Message", out var messageElement))
                 {
                     var message = messageElement.GetString() ?? "N/A";
-                    // Clean up common escape sequences
-                    message = message
-                        .Replace("\\u0027", "'")    // Unicode single quote
-                        .Replace("\\u0060", "`")    // Unicode backtick
-                        .Replace("\\n", "\n")       // Newline
-                        .Replace("\\r", "\r");      // Carriage return
-                    
+                    message = CleanEscapeSequences(message);
                     sb.AppendLine($"Message: {message}");
                 }
                 
@@ -48,13 +42,9 @@ namespace SMIS.Test.Utilities
                     {
                         sb.AppendLine("\nStack Trace:");
                         sb.AppendLine("-".PadRight(40, '-'));
-                        // Clean up and format the stack trace
-                        var cleanStackTrace = stackTrace
-                            .Replace("\\r\\n", "\n")
-                            .Replace("\\n", "\n")
-                            .Replace("\\u0027", "'");
+                        var cleanStackTrace = CleanEscapeSequences(stackTrace);
                         
-                        var lines = cleanStackTrace.Split('\n');
+                        var lines = cleanStackTrace.Split(new[] { '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries);
                         foreach (var line in lines)
                         {
                             var trimmedLine = line.Trim();
@@ -76,7 +66,7 @@ namespace SMIS.Test.Utilities
                 {
                     sb.AppendLine("\nInner Exception:");
                     sb.AppendLine("-".PadRight(40, '-'));
-                    sb.AppendLine($"  {innerElement}");
+                    FormatInnerException(innerElement, sb);
                 }
             }
             catch (JsonException)
@@ -116,12 +106,9 @@ namespace SMIS.Test.Utilities
             {
                 sb.AppendLine("\nStack Trace:");
                 sb.AppendLine("-".PadRight(40, '-'));
-                var cleanStackTrace = exception.StackTrace
-                    .Replace("\\r\\n", "\n")
-                    .Replace("\\n", "\n")
-                    .Replace("\\u0027", "'");
+                var cleanStackTrace = CleanEscapeSequences(exception.StackTrace);
                 
-                var lines = cleanStackTrace.Split('\n');
+                var lines = cleanStackTrace.Split(new[] { '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries);
                 foreach (var line in lines)
                 {
                     var trimmedLine = line.Trim();
@@ -145,20 +132,61 @@ namespace SMIS.Test.Utilities
         }
         
         /// <summary>
+        /// Formats inner exception from JSON element
+        /// </summary>
+        private static void FormatInnerException(JsonElement innerElement, StringBuilder sb)
+        {
+            if (innerElement.TryGetProperty("Message", out var innerMsg))
+            {
+                var msg = CleanEscapeSequences(innerMsg.GetString() ?? "N/A");
+                msg = System.Net.WebUtility.HtmlDecode(msg);
+                sb.AppendLine($"  Message: {msg}");
+            }
+            
+            if (innerElement.TryGetProperty("StackTrace", out var innerStack))
+            {
+                var stackTrace = innerStack.GetString();
+                if (!string.IsNullOrEmpty(stackTrace))
+                {
+                    sb.AppendLine("  Stack Trace:");
+                    var cleanStack = CleanEscapeSequences(stackTrace);
+                    var lines = cleanStack.Split(new[] { '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries);
+                    foreach (var line in lines)
+                    {
+                        var trimmedLine = line.Trim();
+                        if (!string.IsNullOrEmpty(trimmedLine))
+                        {
+                            sb.AppendLine($"    {trimmedLine}");
+                        }
+                    }
+                }
+            }
+        }
+        
+        /// <summary>
+        /// Cleans escape sequences from text
+        /// </summary>
+        private static string CleanEscapeSequences(string text)
+        {
+            if (string.IsNullOrEmpty(text)) return text;
+            
+            return text
+                .Replace("\\r\\n", Environment.NewLine)
+                .Replace("\\n", Environment.NewLine)
+                .Replace("\\r", "")
+                .Replace("\\u0027", "'")
+                .Replace("\\u0060", "`")
+                .Replace("\\\"", "\"");
+        }
+        
+        /// <summary>
         /// Extracts and cleans up a message by removing common escape sequences
         /// </summary>
         /// <param name="message">The raw message to clean</param>
         /// <returns>Cleaned message</returns>
         public static string ExtractCleanMessage(string message)
         {
-            if (string.IsNullOrEmpty(message)) return message;
-            
-            return message
-                .Replace("\\u0027", "'")    // Unicode single quote
-                .Replace("\\u0060", "`")    // Unicode backtick
-                .Replace("\\n", "\n")       // Newline
-                .Replace("\\r", "\r")       // Carriage return
-                .Replace("\\\"", "\"");     // Escaped quotes
+            return CleanEscapeSequences(message);
         }
     }
 }
