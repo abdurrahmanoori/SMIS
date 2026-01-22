@@ -14,22 +14,22 @@ namespace SMIS.Api.Controllers
     {
         [HttpPost]
         public async Task<ActionResult<LanguageDto>> Create(LanguageCreateDto dto) =>
-            HandleResultResponse(await Mediator.Send(new CreateLanguageCommand(dto)));
+            HandleResultResponse(await Mediator.Send(new LanguageCreateCommand(dto)));
 
         [HttpGet]
         public async Task<ActionResult<PagedList<LanguageDto>>> GetAll([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 25) =>
-            HandleResultResponse(await Mediator.Send(new GetLanguageListQuery(pageNumber, pageSize)));
+            HandleResultResponse(await Mediator.Send(new LanguageGetListQuery(pageNumber, pageSize)));
 
         [HttpGet("{id}")]
         public async Task<ActionResult<LanguageDto>> GetById(string id) =>
-            HandleResultResponse(await Mediator.Send(new GetLanguageByIdQuery(id)));
+            HandleResultResponse(await Mediator.Send(new LanguageGetByIdQuery(id)));
 
         [HttpPut("{id}")]
         public async Task<ActionResult<LanguageDto>> Update(string id, LanguageCreateDto dto) =>
-            HandleResultResponse(await Mediator.Send(new UpdateLanguageCommand(id, dto)));
+            HandleResultResponse(await Mediator.Send(new LanguageUpdateCommand(id, dto)));
 
         [HttpDelete("{id}")]
         public async Task<ActionResult<Unit>> Delete(string id) =>
-            HandleResultResponse(await Mediator.Send(new DeleteLanguageCommand(id)));
+            HandleResultResponse(await Mediator.Send(new LanguageDeleteCommand(id)));
     }
 }

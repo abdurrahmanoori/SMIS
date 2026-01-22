@@ -15,24 +15,24 @@ namespace SMIS.Api.Controllers
 
         [HttpPost]
         public async Task<ActionResult<UnitOfMeasureCreateDto>> Create(UnitOfMeasureCreateDto dto) =>
-            HandleResultResponse(await Mediator.Send(new CreateUnitOfMeasureCommand(dto)));
+            HandleResultResponse(await Mediator.Send(new UnitOfMeasureCreateCommand(dto)));
 
         [HttpGet]
         public async Task<ActionResult<PagedList<UnitOfMeasureDto>>> GetAll([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 25)
         {
-            return HandleResultResponse(await Mediator.Send(new GetUnitOfMeasureListQuery(pageNumber, pageSize)));
+            return HandleResultResponse(await Mediator.Send(new UnitOfMeasureGetListQuery(pageNumber, pageSize)));
         }
 
         [HttpGet("{id}")]
         public async Task<ActionResult<UnitOfMeasureDto>> GetById(string id) =>
-            HandleResultResponse(await Mediator.Send(new GetUnitOfMeasureByIdQuery(id)));
+            HandleResultResponse(await Mediator.Send(new UnitOfMeasureGetByIdQuery(id)));
 
         [HttpPut("{id}")]
         public async Task<ActionResult<UnitOfMeasureDto>> Update(string id, UnitOfMeasureCreateDto dto) =>
-            HandleResultResponse(await Mediator.Send(new UpdateUnitOfMeasureCommand(id, dto)));
+            HandleResultResponse(await Mediator.Send(new UnitOfMeasureUpdateCommand(id, dto)));
 
         [HttpDelete("{id}")]
         public async Task<ActionResult<Unit>> Delete(string id) =>
-            HandleResultResponse(await Mediator.Send(new DeleteUnitOfMeasureCommand(id)));
+            HandleResultResponse(await Mediator.Send(new UnitOfMeasureDeleteCommand(id)));
     }
 }

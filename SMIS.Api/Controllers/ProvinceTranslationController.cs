@@ -14,22 +14,22 @@ namespace SMIS.Api.Controllers
     {
         [HttpPost]
         public async Task<ActionResult<ProvinceTranslationDto>> Create(ProvinceTranslationDto dto) =>
-            HandleResultResponse(await Mediator.Send(new CreateProvinceTranslationCommand(dto)));
+            HandleResultResponse(await Mediator.Send(new ProvinceTranslationCreateCommand(dto)));
 
         [HttpGet("province/{provinceId}")]
         public async Task<ActionResult<List<ProvinceTranslationDto>>> GetByProvince(string provinceId) =>
-            HandleResultResponse(await Mediator.Send(new GetProvinceTranslationListQuery(provinceId)));
+            HandleResultResponse(await Mediator.Send(new ProvinceTranslationGetListQuery(provinceId)));
 
         [HttpGet("{id}")]
         public async Task<ActionResult<ProvinceTranslationDto>> GetById(string id) =>
-            HandleResultResponse(await Mediator.Send(new GetProvinceTranslationByIdQuery(id)));
+            HandleResultResponse(await Mediator.Send(new ProvinceTranslationGetByIdQuery(id)));
 
         [HttpPut("{id}")]
         public async Task<ActionResult<ProvinceTranslationDto>> Update(string id, ProvinceTranslationDto dto) =>
-            HandleResultResponse(await Mediator.Send(new UpdateProvinceTranslationCommand(id, dto)));
+            HandleResultResponse(await Mediator.Send(new ProvinceTranslationUpdateCommand(id, dto)));
 
         [HttpDelete("{id}")]
         public async Task<ActionResult<Unit>> Delete(string id) =>
-            HandleResultResponse(await Mediator.Send(new DeleteProvinceTranslationCommand(id)));
+            HandleResultResponse(await Mediator.Send(new ProvinceTranslationDeleteCommand(id)));
     }
 }

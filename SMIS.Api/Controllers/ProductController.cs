@@ -14,24 +14,24 @@ namespace SMIS.Api.Controllers
     {
         [HttpPost]
         public async Task<ActionResult<ProductCreateDto>> Create(ProductCreateDto dto) =>
-            HandleResultResponse(await Mediator.Send(new CreateProductCommand(dto)));
+            HandleResultResponse(await Mediator.Send(new ProductCreateCommand(dto)));
 
         [HttpGet]
         public async Task<ActionResult<PagedList<ProductDto>>> GetAll([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 25, [FromQuery] bool includeCategory = false)
         {
-            return HandleResultResponse(await Mediator.Send(new GetProductListQuery(pageNumber, pageSize, includeCategory)));
+            return HandleResultResponse(await Mediator.Send(new ProductGetListQuery(pageNumber, pageSize, includeCategory)));
         }
 
         [HttpGet("{id}")]
         public async Task<ActionResult<ProductDto>> GetById(string id, [FromQuery] bool includeCategory = false) =>
-            HandleResultResponse(await Mediator.Send(new GetProductByIdQuery(id, includeCategory)));
+            HandleResultResponse(await Mediator.Send(new ProductGetByIdQuery(id, includeCategory)));
 
         [HttpPut("{id}")]
         public async Task<ActionResult<ProductDto>> Update(string id, ProductCreateDto dto) =>
-            HandleResultResponse(await Mediator.Send(new UpdateProductCommand(id, dto)));
+            HandleResultResponse(await Mediator.Send(new ProductUpdateCommand(id, dto)));
 
         [HttpDelete("{id}")]
         public async Task<ActionResult<Unit>> Delete(string id) =>
-            HandleResultResponse(await Mediator.Send(new DeleteProductCommand(id)));
+            HandleResultResponse(await Mediator.Send(new ProductDeleteCommand(id)));
     }
 }
