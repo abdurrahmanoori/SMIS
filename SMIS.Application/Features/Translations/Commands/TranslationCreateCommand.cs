@@ -8,9 +8,9 @@ using SMIS.Domain.Entities.Localization;
 
 namespace SMIS.Application.Features.Translations.Commands
 {
-    public record TranslationCreateCommand(TranslationEntityCreateDto TranslationCreateDto) : IRequest<Result<TranslationEntityCreateDto>>;
+    public record TranslationCreateCommand(TranslationEntityCreateDto TranslationCreateDto) : IRequest<Result<TranslationEntityDto>>;
 
-    internal sealed class TranslationCreateCommandHandler : IRequestHandler<TranslationCreateCommand, Result<TranslationEntityCreateDto>>
+    internal sealed class TranslationCreateCommandHandler : IRequestHandler<TranslationCreateCommand, Result<TranslationEntityDto>>
     {
         private readonly ITranslationRepository _translationRepository;
         private readonly IUnitOfWork _unitOfWork;
@@ -23,13 +23,13 @@ namespace SMIS.Application.Features.Translations.Commands
             _translationRepository = translationRepository;
         }
 
-        public async Task<Result<TranslationEntityCreateDto>> Handle(TranslationCreateCommand request, CancellationToken cancellationToken)
+        public async Task<Result<TranslationEntityDto>> Handle(TranslationCreateCommand request, CancellationToken cancellationToken)
         {
             var entity = _mapper.Map<Translation>(request.TranslationCreateDto);
             await _translationRepository.AddAsync(entity);
             await _unitOfWork.SaveChanges(cancellationToken);
 
-            return Result<TranslationEntityCreateDto>.SuccessResult(_mapper.Map<TranslationEntityCreateDto>(entity));
+            return Result<TranslationEntityDto>.SuccessResult(_mapper.Map<TranslationEntityDto>(entity));
         }
     }
 }

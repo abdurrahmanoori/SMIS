@@ -10,9 +10,9 @@ using SMIS.Domain.Entities;
 
 namespace SMIS.Application.Features.Shops.Commands
 {
-    public record ShopCreateCommand(ShopCreateDto ShopCreateDto) : IRequest<Result<ShopCreateDto>>;
+    public record ShopCreateCommand(ShopCreateDto ShopCreateDto) : IRequest<Result<ShopDto>>;
 
-    internal sealed class ShopCreateCommandHandler : IRequestHandler<ShopCreateCommand, Result<ShopCreateDto>>
+    internal sealed class ShopCreateCommandHandler : IRequestHandler<ShopCreateCommand, Result<ShopDto>>
     {
         private readonly IShopRepository _shopRepository;
         private readonly ITranslationKeyRepository _translationKeyRepository;
@@ -27,7 +27,7 @@ namespace SMIS.Application.Features.Shops.Commands
             _translationKeyRepository = translationKeyRepository;
         }
 
-        public async Task<Result<ShopCreateDto>> Handle(ShopCreateCommand request, CancellationToken cancellationToken)
+        public async Task<Result<ShopDto>> Handle(ShopCreateCommand request, CancellationToken cancellationToken)
         {
             await _translationKeyRepository.AddTranslationKeysForEntity(request.ShopCreateDto, _unitOfWork);
 
@@ -35,7 +35,7 @@ namespace SMIS.Application.Features.Shops.Commands
             await _shopRepository.AddAsync(entity);
             await _unitOfWork.SaveChanges(cancellationToken);
 
-            return Result<ShopCreateDto>.SuccessResult(_mapper.Map<ShopCreateDto>(entity));
+            return Result<ShopDto>.SuccessResult(_mapper.Map<ShopDto>(entity));
         }
     }
 }

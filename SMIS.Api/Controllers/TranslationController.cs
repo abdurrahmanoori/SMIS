@@ -13,7 +13,7 @@ namespace SMIS.Api.Controllers
     public class TranslationController : BaseApiController
     {
         [HttpPost]
-        public async Task<ActionResult<TranslationEntityCreateDto>> Create(TranslationEntityCreateDto dto) =>
+        public async Task<ActionResult<TranslationEntityDto>> Create(TranslationEntityCreateDto dto) =>
             HandleResultResponse(await Mediator.Send(new TranslationCreateCommand(dto)));
 
         [HttpGet]

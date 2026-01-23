@@ -10,9 +10,9 @@ using SMIS.Domain.Entities;
 
 namespace SMIS.Application.Features.Products.Commands
 {
-    public record ProductCreateCommand(ProductCreateDto ProductCreateDto) : IRequest<Result<ProductCreateDto>>;
+    public record ProductCreateCommand(ProductCreateDto ProductCreateDto) : IRequest<Result<ProductDto>>;
 
-    internal sealed class ProductCreateCommandHandler : IRequestHandler<ProductCreateCommand, Result<ProductCreateDto>>
+    internal sealed class ProductCreateCommandHandler : IRequestHandler<ProductCreateCommand, Result<ProductDto>>
     {
         private readonly IProductRepository _productRepository;
         private readonly ITranslationKeyRepository _translationKeyRepository;
@@ -27,7 +27,7 @@ namespace SMIS.Application.Features.Products.Commands
             _translationKeyRepository = translationKeyRepository;
         }
 
-        public async Task<Result<ProductCreateDto>> Handle(ProductCreateCommand request, CancellationToken cancellationToken)
+        public async Task<Result<ProductDto>> Handle(ProductCreateCommand request, CancellationToken cancellationToken)
         {
             await _translationKeyRepository.AddTranslationKeysForEntity(request.ProductCreateDto, _unitOfWork);
 
@@ -35,7 +35,7 @@ namespace SMIS.Application.Features.Products.Commands
             await _productRepository.AddAsync(entity);
             await _unitOfWork.SaveChanges(cancellationToken);
 
-            return Result<ProductCreateDto>.SuccessResult(request.ProductCreateDto);
+            return Result<ProductDto>.SuccessResult(_mapper.Map<ProductDto>(entity));
         }
     }
 }

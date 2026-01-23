@@ -25,7 +25,7 @@ namespace SMIS.Api.Controllers
 
             }
         [HttpPost]
-        public async Task<ActionResult<ProvinceCreateDto>> Create(ProvinceCreateDto dto) =>
+        public async Task<ActionResult<ProvinceDto>> Create(ProvinceCreateDto dto) =>
             HandleResultResponse(await _mediator.Send(new ProvinceCreateCommand(dto)));
 
         [HttpGet]

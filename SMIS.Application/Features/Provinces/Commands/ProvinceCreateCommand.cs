@@ -8,9 +8,9 @@ using SMIS.Domain.Entities.LocationEntities;
 
 namespace SMIS.Application.Features.Provinces.Commands
 {
-    public record ProvinceCreateCommand(ProvinceCreateDto ProvinceCreateDto) : IRequest<Result<ProvinceCreateDto>>;
+    public record ProvinceCreateCommand(ProvinceCreateDto ProvinceCreateDto) : IRequest<Result<ProvinceDto>>;
 
-    internal sealed class ProvinceCreateCommandHandler : IRequestHandler<ProvinceCreateCommand, Result<ProvinceCreateDto>>
+    internal sealed class ProvinceCreateCommandHandler : IRequestHandler<ProvinceCreateCommand, Result<ProvinceDto>>
     {
         private readonly IProvinceRepository _provinceRepository;
         private readonly IUnitOfWork _unitOfWork;
@@ -23,7 +23,7 @@ namespace SMIS.Application.Features.Provinces.Commands
             _provinceRepository = provinceRepository;
         }
 
-        public async Task<Result<ProvinceCreateDto>> Handle(ProvinceCreateCommand request,
+        public async Task<Result<ProvinceDto>> Handle(ProvinceCreateCommand request,
             CancellationToken cancellationToken)
         {
             var entity = _mapper.Map<Province>(request.ProvinceCreateDto);
@@ -39,7 +39,7 @@ namespace SMIS.Application.Features.Provinces.Commands
 
             await _provinceRepository.AddAsync(entity);
             await _unitOfWork.SaveChanges(cancellationToken);
-            return Result<ProvinceCreateDto>.SuccessResult(request.ProvinceCreateDto);
+            return Result<ProvinceDto>.SuccessResult(_mapper.Map<ProvinceDto>(entity));
         }
     }
 }

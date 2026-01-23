@@ -13,7 +13,7 @@ namespace SMIS.Api.Controllers
     public class TranslationKeyController : BaseApiController
     {
         [HttpPost]
-        public async Task<ActionResult<TranslationKeyCreateDto>> Create(TranslationKeyCreateDto dto) =>
+        public async Task<ActionResult<TranslationKeyDto>> Create(TranslationKeyCreateDto dto) =>
             HandleResultResponse(await Mediator.Send(new TranslationKeyCreateCommand(dto)));
 
         [HttpGet]

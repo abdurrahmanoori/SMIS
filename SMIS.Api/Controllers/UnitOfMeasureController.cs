@@ -14,7 +14,7 @@ namespace SMIS.Api.Controllers
     {
 
         [HttpPost]
-        public async Task<ActionResult<UnitOfMeasureCreateDto>> Create(UnitOfMeasureCreateDto dto) =>
+        public async Task<ActionResult<UnitOfMeasureDto>> Create(UnitOfMeasureCreateDto dto) =>
             HandleResultResponse(await Mediator.Send(new UnitOfMeasureCreateCommand(dto)));
 
         [HttpGet]

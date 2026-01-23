@@ -13,7 +13,7 @@ namespace SMIS.Api.Controllers
     public class ProductController : BaseApiController
     {
         [HttpPost]
-        public async Task<ActionResult<ProductCreateDto>> Create(ProductCreateDto dto) =>
+        public async Task<ActionResult<ProductDto>> Create(ProductCreateDto dto) =>
             HandleResultResponse(await Mediator.Send(new ProductCreateCommand(dto)));
 
         [HttpGet]
