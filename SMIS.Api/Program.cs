@@ -1,11 +1,13 @@
 using FluentValidation.AspNetCore;
-using SMIS.Api.Extensions;
-using SMIS.Infrastructure.Extensions;
-using SMIS.Application.Extensions;
-using SMIS.Infrastructure.Context;
-using SMIS.Identity.Extensions;
 using SMIS.Api.Converters;
+using SMIS.Api.Extensions;
+using SMIS.Application.Extensions;
 using SMIS.Domain.Enums;
+using SMIS.Identity.Extensions;
+using SMIS.Infrastructure.Context;
+using SMIS.Infrastructure.Extensions;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,7 +19,9 @@ builder.Services.AddControllers()
     .AddControllersAsServices()
     .AddJsonOptions(options =>
     {
-        options.JsonSerializerOptions.Converters.Add(new StringEnumConverter<ShopType>());
+        //options.JsonSerializerOptions.Converters.Add(new StringEnumConverter<ShopType>());
+        options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter(JsonNamingPolicy.CamelCase));
+
     });
 
 builder.Services.AddFluentValidationAutoValidation();
