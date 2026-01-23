@@ -1,11 +1,11 @@
 using System.Net;
-using System.Net.Http.Json;
 using FluentAssertions;
 using SMIS.Application.DTO.Common;
 using SMIS.Application.DTO.Categories;
 using SMIS.Application.DTO.Products;
 using SMIS.Application.DTO.Shops;
 using SMIS.Application.DTO.UnitOfMeasures;
+using SMIS.Test.Extensions;
 using SMIS.Test.TestInfrastructure;
 using SMIS.Test.Utilities;
 using Xunit;
@@ -26,7 +26,7 @@ namespace SMIS.Test.Controllers
             _output = output;
         }
 
-        private async Task<(string shopId, string unitId, string categoryId)> SetupProductDependencies()
+        private async Task<(string shopId, string unitId, string categoryId)> SetupProductDependencies( )
         {
             // Create a category first
             var categoryDto = new CategoryCreateDto
@@ -69,23 +69,23 @@ namespace SMIS.Test.Controllers
             var shopResponse = await _client.PostAsJsonAsync("/api/shop", shopDto);
             await LogIfError(shopResponse, "SetupProductDependencies_Shop");
             shopResponse.EnsureSuccessStatusCode();
-            // The ShopCreateDto doesn't have an ID, so we need to get the ID from the GET endpoint
+
             // Get the most recently created shop ID
             var shopsResponse = await _client.GetAsync("/api/shop");
             shopsResponse.EnsureSuccessStatusCode();
-            var shopsList = await shopsResponse.Content.ReadFromJsonAsync<PagedList<ShopDto>>(); // Use ShopDto which has ID
-            var shopId = shopsList!.Items.Last().Id; // Get the most recently created shop ID
+            var shopsList = await shopsResponse.Content.ReadFromJsonAsync<PagedList<ShopDto>>();
+            var shopId = shopsList!.Items.Last().Id;
 
             // Get the most recently created unit ID
             var unitsResponse = await _client.GetAsync("/api/unitofmeasure");
             unitsResponse.EnsureSuccessStatusCode();
-            var unitsList = await unitsResponse.Content.ReadFromJsonAsync<PagedList<UnitOfMeasureDto>>(); // Use UnitOfMeasureDto which has ID
-            var unitId = unitsList!.Items.Last().Id; // Get the most recently created unit ID
+            var unitsList = await unitsResponse.Content.ReadFromJsonAsync<PagedList<UnitOfMeasureDto>>();
+            var unitId = unitsList!.Items.Last().Id;
 
             return (shopId, unitId, createdCategory!.Id);
         }
 
-        private async Task<string> GetMostRecentShopId()
+        private async Task<string> GetMostRecentShopId( )
         {
             var response = await _client.GetAsync("/api/shop");
             response.EnsureSuccessStatusCode();
@@ -93,7 +93,7 @@ namespace SMIS.Test.Controllers
             return shopsList!.Items.Last().Id;
         }
 
-        private async Task<string> GetMostRecentUnitId()
+        private async Task<string> GetMostRecentUnitId( )
         {
             var response = await _client.GetAsync("/api/unitofmeasure");
             response.EnsureSuccessStatusCode();
@@ -114,15 +114,15 @@ namespace SMIS.Test.Controllers
             }
         }
 
-        public async Task InitializeAsync()
+        public async Task InitializeAsync( )
         {
             // Setup any required test data here
         }
 
-        public Task DisposeAsync() => Task.CompletedTask;
+        public Task DisposeAsync( ) => Task.CompletedTask;
 
         [Fact]
-        public async Task Post_CreateValidProduct_ReturnsOk()
+        public async Task Post_CreateValidProduct_ReturnsOk( )
         {
             // Setup required dependencies
             var (shopId, unitId, categoryId) = await SetupProductDependencies();
@@ -160,7 +160,7 @@ namespace SMIS.Test.Controllers
         }
 
         [Fact]
-        public async Task Post_CreateProductWithEmptyDescription_ReturnsOk()
+        public async Task Post_CreateProductWithEmptyDescription_ReturnsOk( )
         {
             var dto = new ProductCreateDto
             {
@@ -184,7 +184,7 @@ namespace SMIS.Test.Controllers
         }
 
         [Fact]
-        public async Task Post_CreateProductWithNullDescription_ReturnsOk()
+        public async Task Post_CreateProductWithNullDescription_ReturnsOk( )
         {
             var dto = new ProductCreateDto
             {
@@ -208,7 +208,7 @@ namespace SMIS.Test.Controllers
         }
 
         [Fact]
-        public async Task Get_ListProducts_ReturnsPagedList()
+        public async Task Get_ListProducts_ReturnsPagedList( )
         {
             var response = await _client.GetAsync("/api/product?pageNumber=1&pageSize=10");
             await LogIfError(response, "Get_ListProducts");
@@ -217,13 +217,18 @@ namespace SMIS.Test.Controllers
             var paged = await response.Content.ReadFromJsonAsync<PagedList<ProductDto>>();
             paged.Should().NotBeNull();
             paged!.Items.Should().NotBeNull();
-            paged.Items.Count.Should().BeGreaterOrEqualTo(0); // Could be empty initially
+            paged.Items.Count.Should().BeGreaterOrEqualTo(0);
+            paged.PageNumber.Should().Be(1);
+            paged.PageSize.Should().Be(10);
+
+            paged!.Items.Should().NotBeNull();
+            paged.Items.Count.Should().BeGreaterOrEqualTo(0);
             paged.PageNumber.Should().Be(1);
             paged.PageSize.Should().Be(10);
         }
 
         [Fact]
-        public async Task Get_ListProducts_WithPagination_ReturnsCorrectPage()
+        public async Task Get_ListProducts_WithPagination_ReturnsCorrectPage( )
         {
             // Create multiple products to test pagination
             var products = new[]
@@ -256,7 +261,7 @@ namespace SMIS.Test.Controllers
         }
 
         [Fact]
-        public async Task Get_ProductById_Existing_ReturnsProduct()
+        public async Task Get_ProductById_Existing_ReturnsProduct( )
         {
             // Create a product first
             var createDto = new ProductCreateDto
@@ -295,7 +300,7 @@ namespace SMIS.Test.Controllers
         }
 
         [Fact]
-        public async Task Get_ProductById_NonExisting_ReturnsNotFound()
+        public async Task Get_ProductById_NonExisting_ReturnsNotFound( )
         {
             var fakeId = "non-existing-id";
             var response = await _client.GetAsync($"/api/product/{fakeId}");
@@ -305,7 +310,7 @@ namespace SMIS.Test.Controllers
         }
 
         [Fact]
-        public async Task Put_UpdateExistingProduct_ReturnsUpdatedProduct()
+        public async Task Put_UpdateExistingProduct_ReturnsUpdatedProduct( )
         {
             // Create a product first
             var createDto = new ProductCreateDto
@@ -355,7 +360,7 @@ namespace SMIS.Test.Controllers
         }
 
         [Fact]
-        public async Task Put_UpdateNonExistingProduct_ReturnsNotFound()
+        public async Task Put_UpdateNonExistingProduct_ReturnsNotFound( )
         {
             var updateDto = new ProductCreateDto
             {
@@ -375,7 +380,7 @@ namespace SMIS.Test.Controllers
         }
 
         [Fact]
-        public async Task Delete_ExistingProduct_ReturnsOk()
+        public async Task Delete_ExistingProduct_ReturnsOk( )
         {
             // Create a product first
             var createDto = new ProductCreateDto
@@ -408,7 +413,7 @@ namespace SMIS.Test.Controllers
         }
 
         [Fact]
-        public async Task Delete_NonExistingProduct_ReturnsNotFound()
+        public async Task Delete_NonExistingProduct_ReturnsNotFound( )
         {
             var response = await _client.DeleteAsync("/api/product/non-existing-id");
             await LogIfError(response, "Delete_NonExistingProduct");
@@ -417,7 +422,7 @@ namespace SMIS.Test.Controllers
         }
 
         [Fact]
-        public async Task Post_CreateProductThenGetList_VerifyInList()
+        public async Task Post_CreateProductThenGetList_VerifyInList( )
         {
             var newProduct = new ProductCreateDto
             {
@@ -450,7 +455,7 @@ namespace SMIS.Test.Controllers
         }
 
         [Fact]
-        public async Task Put_UpdateProductThenGetById_VerifyUpdated()
+        public async Task Put_UpdateProductThenGetById_VerifyUpdated( )
         {
             // Create a product
             var createDto = new ProductCreateDto
@@ -504,7 +509,7 @@ namespace SMIS.Test.Controllers
         }
 
         [Fact]
-        public async Task MultipleOperations_Sequence_Test()
+        public async Task MultipleOperations_Sequence_Test( )
         {
             // Test a sequence of operations to ensure data consistency
             var prod1 = new ProductCreateDto
@@ -598,7 +603,7 @@ namespace SMIS.Test.Controllers
         }
 
         [Fact]
-        public async Task Get_ProductById_WithSpecialCharactersInName_ReturnsCorrectly()
+        public async Task Get_ProductById_WithSpecialCharactersInName_ReturnsCorrectly( )
         {
             var specialName = "Office Chair & Desk";
             var createDto = new ProductCreateDto
@@ -628,4 +633,4 @@ namespace SMIS.Test.Controllers
             retrieved!.Name.Should().Be(specialName);
         }
     }
-} 
+}
