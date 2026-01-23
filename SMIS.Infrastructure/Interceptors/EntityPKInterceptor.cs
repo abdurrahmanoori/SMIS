@@ -33,10 +33,10 @@ namespace SMIS.Infrastructure.Interceptors
                 if (entry.State == EntityState.Added)
                 {
                     await AssignSequenceNumber(entry.Entity, context);
-                    if (string.IsNullOrEmpty(entry.Entity.Id))
-                    {
+                    //if (string.IsNullOrEmpty(entry.Entity.Id))
+                    //{
                         entry.Entity.Id = _publicIdGenerator.Generate();
-                    }
+                    //}
                 }
 
                 //if (entry.State == EntityState.Modified)
