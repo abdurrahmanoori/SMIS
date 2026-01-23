@@ -4,6 +4,7 @@ using SMIS.Application.DTO.Common.Response;
 using SMIS.Application.DTO.TranslationKeys;
 using SMIS.Application.Repositories.Base;
 using SMIS.Application.Repositories.Localization;
+using SMIS.Domain.Entities.Localization;
 
 namespace SMIS.Application.Features.TranslationKeys.Commands
 {
@@ -24,12 +25,31 @@ namespace SMIS.Application.Features.TranslationKeys.Commands
 
         public async Task<Result<TranslationKeyDto>> Handle(TranslationKeyUpdateCommand request, CancellationToken cancellationToken)
         {
-            var entity = await _translationKeyRepository.GetByIdAsync(request.Id);
+            var entity = await _translationKeyRepository.GetFirstOrDefaultAsync(
+                x => x.Id == request.Id, 
+                includeProperties: "Translations");
+                
             if (entity == null)
             {
                 return Result<TranslationKeyDto>.NotFoundResult(nameof(TranslationKeyDto.Id));
             }
 
+            // Update basic properties
+
+            // Update translations if provided
+            //if (request.TranslationKeyCreateDto.Translations?.Any() == true)
+            //{
+            //    // Clear existing translations
+            //    entity.Translations.Clear();
+
+            //    // Add new translations
+            //    var newTranslations = _mapper.Map<List<Translation>>(request.TranslationKeyCreateDto.Translations);
+            //    foreach (var translation in newTranslations)
+            //    {
+            //        translation.TranslationKeyId = entity.Id;
+            //        entity.Translations.Add(translation);
+            //    }
+            //}
             _mapper.Map(request.TranslationKeyCreateDto, entity);
             await _unitOfWork.SaveChanges(cancellationToken);
 

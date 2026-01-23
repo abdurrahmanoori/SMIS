@@ -1,12 +1,17 @@
 using FluentValidation;
 using SMIS.Application.Features.Translations.Commands;
+using SMIS.Application.Repositories.Localization;
 
 namespace SMIS.Application.Features.Translations.Validators
 {
     public class TranslationUpdateCommandValidator : AbstractValidator<TranslationUpdateCommand>
     {
-        public TranslationUpdateCommandValidator()
+        private readonly ITranslationRepository _translationRepository;
+
+        public TranslationUpdateCommandValidator(ITranslationRepository translationRepository)
         {
+            _translationRepository = translationRepository;
+
             RuleFor(x => x.Id)
                 .NotEmpty().WithMessage("Id is required");
 
@@ -19,6 +24,17 @@ namespace SMIS.Application.Features.Translations.Validators
 
             RuleFor(x => x.TranslationCreateDto.LanguageNo)
                 .NotEmpty().WithMessage("LanguageNo is required");
+
+            RuleFor(x => x)
+                .MustAsync(async (command, cancellation) => 
+                {
+                    var existing = await _translationRepository.GetFirstOrDefaultAsync(
+                        t => t.TranslationKeyId == command.TranslationCreateDto.TranslationKeyId && 
+                             t.LanguageNo == command.TranslationCreateDto.LanguageNo &&
+                             t.Id != command.Id);
+                    return existing == null;
+                })
+                .WithMessage("A translation for this TranslationKey and Language combination already exists");
         }
     }
 }

@@ -248,9 +248,71 @@ namespace SMIS.Infrastructure.Repositories.Base
             var entities = this._context.ChangeTracker.Entries();
             //// var taxP = this._context.Entry(test);
             ///
-
-
             var result = new
+            {
+                AddedEntities = this._context.ChangeTracker.Entries()
+                    .Where(x => x.State == EntityState.Added)
+                    .Select(e => new
+                    {
+                        Entity = e.Entity,
+                        EntityName = e.Entity.GetType().Name,
+                        State = e.State.ToString(),
+                    }
+                    ).ToList(),
+
+                ModifiedEntities = this._context.ChangeTracker.Entries()
+                    .Where(x => x.State == EntityState.Modified)
+                    .Select(e => new
+                    {
+                        Entity = e.Entity,
+                        EntityName = e.Entity.GetType().Name,
+                        State = e.State.ToString(),
+                        ChangedProperties = e.Properties
+                                .Where(p => p.IsModified)
+                                .Select(p => new
+                                {
+                                    PropertyName = p.Metadata.Name,
+                                    OriginalValue = p.OriginalValue?.ToString() ?? "null",
+                                    CurrentValue = p.CurrentValue?.ToString() ?? "null",
+                                    IsModified = p.IsModified,
+                                }
+                                ).ToList(),
+                    }
+                    ).ToList(),
+
+                DeletedEntities = this._context.ChangeTracker.Entries()
+                    .Where(x => x.State == EntityState.Deleted)
+                    .Select(e => new
+                    {
+                        Entity = e.Entity,
+                        EntityName = e.Entity.GetType().Name,
+                        State = e.State.ToString(),
+                    }
+                    ).ToList(),
+
+                UnchangedEntities = this._context.ChangeTracker.Entries()
+                    .Where(x => x.State == EntityState.Unchanged)
+                    .Select(e => new
+                    {
+                        Entity = e.Entity,
+                        EntityName = e.Entity.GetType().Name,
+                        State = e.State.ToString(),
+                    }
+                    ).ToList(),
+
+                DetachedEntities = this._context.ChangeTracker.Entries()
+                    .Where(x => x.State == EntityState.Detached)
+                    .Select(e => new
+                    {
+                        Entity = e.Entity,
+                        State = e.State.ToString(),
+                        EntityName = e.Entity.GetType().Name,
+                    }
+                    ).ToList(),
+            };
+
+            int sdf = 12;
+            var result1 = new
             {
                 AddedEntities = entities
                     .Where(x => x.State == EntityState.Added)

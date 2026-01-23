@@ -26,6 +26,17 @@ namespace SMIS.Application.Features.TranslationKeys.Commands
         public async Task<Result<TranslationKeyCreateDto>> Handle(TranslationKeyCreateCommand request, CancellationToken cancellationToken)
         {
             var entity = _mapper.Map<TranslationKey>(request.TranslationKeyCreateDto);
+            
+            //// Map nested translations
+            //if (request.TranslationKeyCreateDto.Translations?.Any() == true)
+            //{
+            //    entity.Translations = _mapper.Map<List<Translation>>(request.TranslationKeyCreateDto.Translations);
+            //    foreach (var translation in entity.Translations)
+            //    {
+            //        translation.TranslationKeyId = entity.Id;
+            //    }
+            //}
+            
             await _translationKeyRepository.AddAsync(entity);
             await _unitOfWork.SaveChanges(cancellationToken);
 

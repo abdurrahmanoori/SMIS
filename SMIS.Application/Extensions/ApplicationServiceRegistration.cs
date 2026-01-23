@@ -3,6 +3,7 @@ using MediatR;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using SMIS.Application.Common.Behaviors;
+using SMIS.Application.Features.Translations.Validators;
 using System.Reflection;
 
 namespace SMIS.Application.Extensions;

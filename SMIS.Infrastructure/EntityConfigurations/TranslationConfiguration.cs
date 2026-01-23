@@ -14,6 +14,9 @@ namespace SMIS.Infrastructure.EntityConfigurations
                 .IsRequired()
                 .HasMaxLength(500);
 
+            builder.HasIndex(x => new { x.TranslationKeyId, x.LanguageNo })
+                .IsUnique();
+
             builder.Property(x => x.TranslationKeyId)
                 .IsRequired();
 
