@@ -10,13 +10,13 @@ using Xunit.Abstractions;
 
 namespace SMIS.Test.Controllers
 {
-    public class ComprehensiveCategoryIntegrationTests : IClassFixture<CustomWebApplicationFactory>, IAsyncLifetime
+    public class CategoryIntegrationTests : IClassFixture<CustomWebApplicationFactory>, IAsyncLifetime
     {
         private readonly CustomWebApplicationFactory _factory;
         private readonly HttpClient _client;
         private readonly ITestOutputHelper _output;
 
-        public ComprehensiveCategoryIntegrationTests(CustomWebApplicationFactory factory, ITestOutputHelper output)
+        public CategoryIntegrationTests(CustomWebApplicationFactory factory, ITestOutputHelper output)
         {
             _factory = factory;
             _client = factory.CreateClient();

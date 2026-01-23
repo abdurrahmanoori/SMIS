@@ -11,13 +11,13 @@ using Xunit.Abstractions;
 
 namespace SMIS.Test.Controllers
 {
-    public class ComprehensiveTranslationKeyIntegrationTests : IClassFixture<CustomWebApplicationFactory>, IAsyncLifetime
+    public class TranslationKeyIntegrationTests : IClassFixture<CustomWebApplicationFactory>, IAsyncLifetime
     {
         private readonly CustomWebApplicationFactory _factory;
         private readonly HttpClient _client;
         private readonly ITestOutputHelper _output;
 
-        public ComprehensiveTranslationKeyIntegrationTests(CustomWebApplicationFactory factory, ITestOutputHelper output)
+        public TranslationKeyIntegrationTests(CustomWebApplicationFactory factory, ITestOutputHelper output)
         {
             _factory = factory;
             _client = factory.CreateClient();
