@@ -83,7 +83,7 @@ namespace SMIS.Infrastructure.Interceptors
             var setMethod = typeof(DbContext).GetMethod("Set", new Type[0])?.MakeGenericMethod(entityType);
             var dbSet = setMethod?.Invoke(context, null) as IQueryable<BaseAuditableEntity>;
 
-            if (dbSet != null && string.IsNullOrEmpty(entity.Id))
+            if (dbSet != null)
             {
                 var lastPublicId = await dbSet
                     .Where(e => !string.IsNullOrEmpty(e.Id))

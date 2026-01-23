@@ -184,7 +184,7 @@ namespace SMIS.Test.Controllers
         public async Task Delete_ExistingDistrict_ReturnsOk()
         {
             // Create a district first
-            var createDto = new DistrictCreateDto { Name = "Balkh District" };
+            var createDto = new DistrictCreateDto { Name = "Balkh District from test" };
             var createResponse = await _client.PostAsJsonAsync("/api/district", createDto);
             await LogIfError(createResponse, "Delete_ExistingDistrict_Seed");
             createResponse.EnsureSuccessStatusCode();
@@ -259,6 +259,7 @@ namespace SMIS.Test.Controllers
             getResponse.EnsureSuccessStatusCode();
 
             var retrieved = await getResponse.Content.ReadFromJsonAsync<DistrictDto>();
+            retrieved?.Name.Equals("Ghazni Province Updatedd");
             retrieved.Should().NotBeNull();
             retrieved!.Name.Should().Be(updateDto.Name);
         }

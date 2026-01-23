@@ -10,9 +10,9 @@ using SMIS.Domain.Entities.LocationEntities;
 
 namespace SMIS.Application.Features.Districts.Commands
 {
-    public record DistrictCreateCommand(DistrictCreateDto DistrictCreateDto) : IRequest<Result<DistrictCreateDto>>;
+    public record DistrictCreateCommand(DistrictCreateDto DistrictCreateDto) : IRequest<Result<DistrictDto>>;
 
-    internal sealed class DistrictCreateCommandHandler : IRequestHandler<DistrictCreateCommand, Result<DistrictCreateDto>>
+    internal sealed class DistrictCreateCommandHandler : IRequestHandler<DistrictCreateCommand, Result<DistrictDto>>
     {
 
         private readonly IDistrictRepository _districtRepository;
@@ -28,7 +28,7 @@ namespace SMIS.Application.Features.Districts.Commands
             _translationKeyRepository = translationKeyRepository;
         }
 
-        public async Task<Result<DistrictCreateDto>> Handle(DistrictCreateCommand request,
+        public async Task<Result<DistrictDto>> Handle(DistrictCreateCommand request,
             CancellationToken cancellationToken)
         {
             var translationKey = new TranslationKey
@@ -41,7 +41,7 @@ namespace SMIS.Application.Features.Districts.Commands
 
             await _districtRepository.AddAsync(entity);
             await _unitOfWork.SaveChanges(cancellationToken);
-            return Result<DistrictCreateDto>.SuccessResult(request.DistrictCreateDto);
+            return Result<DistrictDto>.SuccessResult(_mapper.Map<DistrictDto>(entity));
         }
     }
 }

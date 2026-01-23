@@ -19,7 +19,7 @@ namespace SMIS.Api.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<DistrictCreateDto>> Create(DistrictCreateDto dto) =>
+        public async Task<ActionResult<DistrictDto>> Create(DistrictCreateDto dto) =>
             HandleResultResponse(await _mediator.Send(new DistrictCreateCommand(dto)));
 
         [HttpGet]
@@ -28,15 +28,15 @@ namespace SMIS.Api.Controllers
             return HandleResultResponse(await _mediator.Send(new DistrictGetListQuery(pageNumber, pageSize)));
         }
 
-        [HttpGet("{publicId}")]
+        [HttpGet("{id}")]
         public async Task<ActionResult<DistrictDto>> GetById(string id) =>
             HandleResultResponse(await _mediator.Send(new DistrictGetByIdQuery(id)));
 
-        [HttpPut("{PublicId}")]
+        [HttpPut("{id}")]
         public async Task<ActionResult<DistrictDto>> Update(string id, DistrictCreateDto dto) =>
             HandleResultResponse(await _mediator.Send(new DistrictUpdateCommand(id, dto)));
 
-        [HttpDelete("{publicId}")]
+        [HttpDelete("{id}")]
         public async Task<ActionResult<Unit>> Delete(string id) =>
             HandleResultResponse(await _mediator.Send(new DistrictDeleteCommand(id)));
     }
