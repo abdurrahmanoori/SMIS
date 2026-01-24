@@ -51,7 +51,7 @@ namespace SMIS.Test.Controllers
             var unitResponse = await _client.PostAsJsonAsync("/api/unitofmeasure", unitDto);
             await LogIfError(unitResponse, "SetupProductDependencies_Unit");
             unitResponse.EnsureSuccessStatusCode();
-            var createdUnit = await unitResponse.Content.ReadFromJsonAsync<UnitOfMeasureCreateDto>();
+            var createdUnit = await unitResponse.Content.ReadFromJsonAsync<UnitOfMeasureDto>();
             createdUnit.Should().NotBeNull();
 
             // Create a shop

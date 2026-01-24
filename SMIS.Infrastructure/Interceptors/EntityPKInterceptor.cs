@@ -33,10 +33,10 @@ namespace SMIS.Infrastructure.Interceptors
                 if (entry.State == EntityState.Added)
                 {
                     await AssignSequenceNumber(entry.Entity, context);
-                    //if (string.IsNullOrEmpty(entry.Entity.Id))
-                    //{
+                    if (string.IsNullOrEmpty(entry.Entity.Id))
+                    {
                         entry.Entity.Id = _publicIdGenerator.Generate();
-                    //}
+                    }
                 }
 
                 //if (entry.State == EntityState.Modified)
@@ -85,7 +85,7 @@ namespace SMIS.Infrastructure.Interceptors
             var setMethod = typeof(DbContext).GetMethod("Set", new Type[0])?.MakeGenericMethod(entityType);
             var dbSet = setMethod?.Invoke(context, null) as IQueryable<EntityPK>;
 
-            if (dbSet != null && string.IsNullOrEmpty(entity.Id))
+            if (dbSet != null )
             {
                 var lastPublicId = await dbSet
                     .Where(e => !string.IsNullOrEmpty(e.Id))
