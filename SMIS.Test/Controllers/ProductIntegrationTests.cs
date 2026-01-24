@@ -19,6 +19,11 @@ namespace SMIS.Test.Controllers
         private readonly HttpClient _client;
         private readonly ITestOutputHelper _output;
 
+        // Store IDs of created dependencies to reuse them across tests
+        private string _cachedShopId = string.Empty;
+        private string _cachedUnitId = string.Empty;
+        private string _cachedCategoryId = string.Empty;
+
         public ProductIntegrationTests(CustomWebApplicationFactory factory, ITestOutputHelper output)
         {
             _factory = factory;
@@ -26,8 +31,18 @@ namespace SMIS.Test.Controllers
             _output = output;
         }
 
-        private async Task<(string shopId, string unitId, string categoryId)> SetupProductDependencies( )
+        /// <summary>
+        /// Sets up product dependencies (shop, unit of measure, and category) if they don't already exist.
+        /// This method caches the created dependencies to avoid recreating them for each test.
+        /// </summary>
+        private async Task<(string shopId, string unitId, string categoryId)> SetupProductDependencies()
         {
+            // Check if dependencies are already cached
+            if (!string.IsNullOrEmpty(_cachedShopId) && !string.IsNullOrEmpty(_cachedUnitId) && !string.IsNullOrEmpty(_cachedCategoryId))
+            {
+                return (_cachedShopId, _cachedUnitId, _cachedCategoryId);
+            }
+
             // Create a category first
             var categoryDto = new CategoryCreateDto
             {
@@ -81,7 +96,57 @@ namespace SMIS.Test.Controllers
             var unitsList = await unitsResponse.Content.ReadFromJsonAsync<PagedList<UnitOfMeasureDto>>();
             var unitId = unitsList!.Items.Last().Id;
 
-            return (shopId, unitId, createdCategory!.Id);
+            // Cache the IDs for reuse
+            _cachedShopId = shopId;
+            _cachedUnitId = unitId;
+            _cachedCategoryId = createdCategory!.Id;
+
+            return (shopId, unitId, createdCategory.Id);
+        }
+
+        /// <summary>
+        /// Gets the most recently created shop ID without creating a new one.
+        /// </summary>
+        private async Task<string> GetOrCreateShopId()
+        {
+            if (!string.IsNullOrEmpty(_cachedShopId))
+            {
+                return _cachedShopId;
+            }
+
+            // If not cached, create dependencies and cache them
+            var (shopId, _, _) = await SetupProductDependencies();
+            return shopId;
+        }
+
+        /// <summary>
+        /// Gets the most recently created unit ID without creating a new one.
+        /// </summary>
+        private async Task<string> GetOrCreateUnitId()
+        {
+            if (!string.IsNullOrEmpty(_cachedUnitId))
+            {
+                return _cachedUnitId;
+            }
+
+            // If not cached, create dependencies and cache them
+            var (_, unitId, _) = await SetupProductDependencies();
+            return unitId;
+        }
+
+        /// <summary>
+        /// Gets the most recently created category ID without creating a new one.
+        /// </summary>
+        private async Task<string> GetOrCreateCategoryId()
+        {
+            if (!string.IsNullOrEmpty(_cachedCategoryId))
+            {
+                return _cachedCategoryId;
+            }
+
+            // If not cached, create dependencies and cache them
+            var (_, _, categoryId) = await SetupProductDependencies();
+            return categoryId;
         }
 
         private async Task<string> GetMostRecentShopId( )
@@ -115,7 +180,8 @@ namespace SMIS.Test.Controllers
 
         public async Task InitializeAsync( )
         {
-            // Setup any required test data here
+            // Pre-populate dependencies to avoid creating them multiple times
+            await SetupProductDependencies();
         }
 
         public Task DisposeAsync( ) => Task.CompletedTask;
@@ -161,15 +227,18 @@ namespace SMIS.Test.Controllers
         [Fact]
         public async Task Post_CreateProductWithEmptyDescription_ReturnsOk( )
         {
+            var (shopId, unitId, categoryId) = await SetupProductDependencies();
+
             var dto = new ProductCreateDto
             {
                 Name = "Smartphone",
-                ShopId = "shop-1",
-                BaseUnitId = "unit-1",
+                ShopId = shopId,
+                BaseUnitId = unitId,
                 SalePricePerBaseUnit = 59999,
                 Description = "",
                 IsActive = true,
-                SKU = "PHONE-001"
+                SKU = "PHONE-001",
+                CategoryId = categoryId
             };
 
             var response = await _client.PostAsJsonAsync("/api/product", dto);
@@ -185,15 +254,18 @@ namespace SMIS.Test.Controllers
         [Fact]
         public async Task Post_CreateProductWithNullDescription_ReturnsOk( )
         {
+            var (shopId, unitId, categoryId) = await SetupProductDependencies();
+
             var dto = new ProductCreateDto
             {
                 Name = "Tablet",
-                ShopId = "shop-1",
-                BaseUnitId = "unit-1",
+                ShopId = shopId,
+                BaseUnitId = unitId,
                 SalePricePerBaseUnit = 39999,
                 Description = null,
                 IsActive = true,
-                SKU = "TABLET-001"
+                SKU = "TABLET-001",
+                CategoryId = categoryId
             };
 
             var response = await _client.PostAsJsonAsync("/api/product", dto);
@@ -229,14 +301,16 @@ namespace SMIS.Test.Controllers
         [Fact]
         public async Task Get_ListProducts_WithPagination_ReturnsCorrectPage( )
         {
+            var (shopId, unitId, categoryId) = await SetupProductDependencies();
+
             // Create multiple products to test pagination
             var products = new[]
             {
-                new ProductCreateDto { Name = "Test Product 1", ShopId = "shop-1", BaseUnitId = "unit-1", SalePricePerBaseUnit = 10000, Description = "Test product 1", IsActive = true, SKU = "TP1" },
-                new ProductCreateDto { Name = "Test Product 2", ShopId = "shop-1", BaseUnitId = "unit-1", SalePricePerBaseUnit = 20000, Description = "Test product 2", IsActive = true, SKU = "TP2" },
-                new ProductCreateDto { Name = "Test Product 3", ShopId = "shop-1", BaseUnitId = "unit-1", SalePricePerBaseUnit = 30000, Description = "Test product 3", IsActive = true, SKU = "TP3" },
-                new ProductCreateDto { Name = "Test Product 4", ShopId = "shop-1", BaseUnitId = "unit-1", SalePricePerBaseUnit = 40000, Description = "Test product 4", IsActive = true, SKU = "TP4" },
-                new ProductCreateDto { Name = "Test Product 5", ShopId = "shop-1", BaseUnitId = "unit-1", SalePricePerBaseUnit = 50000, Description = "Test product 5", IsActive = true, SKU = "TP5" }
+                new ProductCreateDto { Name = "Test Product 1", ShopId = shopId, BaseUnitId = unitId, SalePricePerBaseUnit = 10000, Description = "Test product 1", IsActive = true, SKU = "TP1", CategoryId = categoryId },
+                new ProductCreateDto { Name = "Test Product 2", ShopId = shopId, BaseUnitId = unitId, SalePricePerBaseUnit = 20000, Description = "Test product 2", IsActive = true, SKU = "TP2", CategoryId = categoryId },
+                new ProductCreateDto { Name = "Test Product 3", ShopId = shopId, BaseUnitId = unitId, SalePricePerBaseUnit = 30000, Description = "Test product 3", IsActive = true, SKU = "TP3", CategoryId = categoryId },
+                new ProductCreateDto { Name = "Test Product 4", ShopId = shopId, BaseUnitId = unitId, SalePricePerBaseUnit = 40000, Description = "Test product 4", IsActive = true, SKU = "TP4", CategoryId = categoryId },
+                new ProductCreateDto { Name = "Test Product 5", ShopId = shopId, BaseUnitId = unitId, SalePricePerBaseUnit = 50000, Description = "Test product 5", IsActive = true, SKU = "TP5", CategoryId = categoryId }
             };
 
             foreach (var prod in products)
@@ -262,16 +336,19 @@ namespace SMIS.Test.Controllers
         [Fact]
         public async Task Get_ProductById_Existing_ReturnsProduct( )
         {
+            var (shopId, unitId, categoryId) = await SetupProductDependencies();
+
             // Create a product first
             var createDto = new ProductCreateDto
             {
                 Name = "Camera",
-                ShopId = "shop-1",
-                BaseUnitId = "unit-1",
+                ShopId = shopId,
+                BaseUnitId = unitId,
                 SalePricePerBaseUnit = 29999,
                 Description = "Digital camera",
                 IsActive = true,
-                SKU = "CAMERA-001"
+                SKU = "CAMERA-001",
+                CategoryId = categoryId
             };
 
             var createResponse = await _client.PostAsJsonAsync("/api/product", createDto);
@@ -311,16 +388,19 @@ namespace SMIS.Test.Controllers
         [Fact]
         public async Task Put_UpdateExistingProduct_ReturnsUpdatedProduct( )
         {
+            var (shopId, unitId, categoryId) = await SetupProductDependencies();
+
             // Create a product first
             var createDto = new ProductCreateDto
             {
                 Name = "Headphones",
-                ShopId = "shop-1",
-                BaseUnitId = "unit-1",
+                ShopId = shopId,
+                BaseUnitId = unitId,
                 SalePricePerBaseUnit = 9999,
                 Description = "Wireless headphones",
                 IsActive = true,
-                SKU = "HEAD-001"
+                SKU = "HEAD-001",
+                CategoryId = categoryId
             };
 
             var createResponse = await _client.PostAsJsonAsync("/api/product", createDto);
@@ -334,12 +414,13 @@ namespace SMIS.Test.Controllers
             var updateDto = new ProductCreateDto
             {
                 Name = "Wireless Headphones Updated",
-                ShopId = "shop-2",
-                BaseUnitId = "unit-2",
+                ShopId = shopId, // Using the same shop for consistency
+                BaseUnitId = unitId, // Using the same unit for consistency
                 SalePricePerBaseUnit = 12999,
                 Description = "Updated wireless headphones",
                 IsActive = false,
-                SKU = "HEAD-U001"
+                SKU = "HEAD-U001",
+                CategoryId = categoryId // Using the same category for consistency
             };
 
             var updateResponse = await _client.PutAsJsonAsync($"/api/product/{created!.Id}", updateDto);
@@ -361,15 +442,18 @@ namespace SMIS.Test.Controllers
         [Fact]
         public async Task Put_UpdateNonExistingProduct_ReturnsNotFound( )
         {
+            var (shopId, unitId, categoryId) = await SetupProductDependencies();
+
             var updateDto = new ProductCreateDto
             {
                 Name = "Fake Product",
-                ShopId = "shop-1",
-                BaseUnitId = "unit-1",
+                ShopId = shopId,
+                BaseUnitId = unitId,
                 SalePricePerBaseUnit = 10000,
                 Description = "Fake product",
                 IsActive = true,
-                SKU = "FAKE-001"
+                SKU = "FAKE-001",
+                CategoryId = categoryId
             };
 
             var response = await _client.PutAsJsonAsync("/api/product/non-existing-id", updateDto);
@@ -381,16 +465,19 @@ namespace SMIS.Test.Controllers
         [Fact]
         public async Task Delete_ExistingProduct_ReturnsOk( )
         {
+            var (shopId, unitId, categoryId) = await SetupProductDependencies();
+
             // Create a product first
             var createDto = new ProductCreateDto
             {
                 Name = "Speaker",
-                ShopId = "shop-1",
-                BaseUnitId = "unit-1",
+                ShopId = shopId,
+                BaseUnitId = unitId,
                 SalePricePerBaseUnit = 7999,
                 Description = "Bluetooth speaker",
                 IsActive = true,
-                SKU = "SPKR-001"
+                SKU = "SPKR-001",
+                CategoryId = categoryId
             };
 
             var createResponse = await _client.PostAsJsonAsync("/api/product", createDto);
@@ -423,15 +510,18 @@ namespace SMIS.Test.Controllers
         [Fact]
         public async Task Post_CreateProductThenGetList_VerifyInList( )
         {
+            var (shopId, unitId, categoryId) = await SetupProductDependencies();
+
             var newProduct = new ProductCreateDto
             {
                 Name = "Monitor",
-                ShopId = "shop-1",
-                BaseUnitId = "unit-1",
+                ShopId = shopId,
+                BaseUnitId = unitId,
                 SalePricePerBaseUnit = 19999,
                 Description = "Computer monitor",
                 IsActive = true,
-                SKU = "MON-001"
+                SKU = "MON-001",
+                CategoryId = categoryId
             };
 
             var createResponse = await _client.PostAsJsonAsync("/api/product", newProduct);
@@ -456,16 +546,19 @@ namespace SMIS.Test.Controllers
         [Fact]
         public async Task Put_UpdateProductThenGetById_VerifyUpdated( )
         {
+            var (shopId, unitId, categoryId) = await SetupProductDependencies();
+
             // Create a product
             var createDto = new ProductCreateDto
             {
                 Name = "Keyboard",
-                ShopId = "shop-1",
-                BaseUnitId = "unit-1",
+                ShopId = shopId,
+                BaseUnitId = unitId,
                 SalePricePerBaseUnit = 4999,
                 Description = "Mechanical keyboard",
                 IsActive = true,
-                SKU = "KEYB-001"
+                SKU = "KEYB-001",
+                CategoryId = categoryId
             };
 
             var createResponse = await _client.PostAsJsonAsync("/api/product", createDto);
@@ -479,12 +572,13 @@ namespace SMIS.Test.Controllers
             var updateDto = new ProductCreateDto
             {
                 Name = "Mechanical Keyboard Updated",
-                ShopId = "shop-2",
-                BaseUnitId = "unit-2",
+                ShopId = shopId, // Using the same shop for consistency
+                BaseUnitId = unitId, // Using the same unit for consistency
                 SalePricePerBaseUnit = 5999,
                 Description = "Updated mechanical keyboard",
                 IsActive = false,
-                SKU = "KEYB-U001"
+                SKU = "KEYB-U001",
+                CategoryId = categoryId // Using the same category for consistency
             };
 
             var updateResponse = await _client.PutAsJsonAsync($"/api/product/{created!.Id}", updateDto);
@@ -510,27 +604,31 @@ namespace SMIS.Test.Controllers
         [Fact]
         public async Task MultipleOperations_Sequence_Test( )
         {
+            var (shopId, unitId, categoryId) = await SetupProductDependencies();
+
             // Test a sequence of operations to ensure data consistency
             var prod1 = new ProductCreateDto
             {
                 Name = "Sequence Test 1",
-                ShopId = "shop-1",
-                BaseUnitId = "unit-1",
+                ShopId = shopId,
+                BaseUnitId = unitId,
                 SalePricePerBaseUnit = 10000,
                 Description = "First sequence test",
                 IsActive = true,
-                SKU = "SEQ-001"
+                SKU = "SEQ-001",
+                CategoryId = categoryId
             };
 
             var prod2 = new ProductCreateDto
             {
                 Name = "Sequence Test 2",
-                ShopId = "shop-1",
-                BaseUnitId = "unit-1",
+                ShopId = shopId,
+                BaseUnitId = unitId,
                 SalePricePerBaseUnit = 20000,
                 Description = "Second sequence test",
                 IsActive = false,
-                SKU = "SEQ-002"
+                SKU = "SEQ-002",
+                CategoryId = categoryId
             };
 
             // Create first product
@@ -561,12 +659,13 @@ namespace SMIS.Test.Controllers
             var updateDto = new ProductCreateDto
             {
                 Name = "Updated Sequence Test 1",
-                ShopId = "shop-2",
-                BaseUnitId = "unit-2",
+                ShopId = shopId, // Using the same shop for consistency
+                BaseUnitId = unitId, // Using the same unit for consistency
                 SalePricePerBaseUnit = 15000,
                 Description = "Updated first sequence test",
                 IsActive = false,
-                SKU = "SEQ-U001"
+                SKU = "SEQ-U001",
+                CategoryId = categoryId // Using the same category for consistency
             };
 
             var updateResponse = await _client.PutAsJsonAsync($"/api/product/{created1!.Id}", updateDto);
@@ -604,16 +703,19 @@ namespace SMIS.Test.Controllers
         [Fact]
         public async Task Get_ProductById_WithSpecialCharactersInName_ReturnsCorrectly( )
         {
+            var (shopId, unitId, categoryId) = await SetupProductDependencies();
+
             var specialName = "Office Chair & Desk";
             var createDto = new ProductCreateDto
             {
                 Name = specialName,
-                ShopId = "shop-1",
-                BaseUnitId = "unit-1",
+                ShopId = shopId,
+                BaseUnitId = unitId,
                 SalePricePerBaseUnit = 14999,
                 Description = "Office furniture",
                 IsActive = true,
-                SKU = "FURN-001"
+                SKU = "FURN-001",
+                CategoryId = categoryId
             };
 
             var createResponse = await _client.PostAsJsonAsync("/api/product", createDto);
