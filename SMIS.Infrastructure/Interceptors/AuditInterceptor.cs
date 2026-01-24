@@ -85,18 +85,37 @@ namespace SMIS.Infrastructure.Interceptors
 
             if (dbSet != null)
             {
-                var lastId = await dbSet
-                    .Where(e => !string.IsNullOrEmpty(e.Id))
-                    .Select(e => e.Id)
-                    .ToListAsync();
+                // Get max ID from database
+                var maxDbId = 0;
+                try
+                {
+                    var maxDbIdString = await dbSet.MaxAsync(x => x.Id);
+                    if (!string.IsNullOrEmpty(maxDbIdString) && int.TryParse(maxDbIdString, out var parsed))
+                    {
+                        maxDbId = parsed;
+                    }
+                }
+                catch
+                {
+                    // Handle case when table is empty
+                    maxDbId = 0;
+                }
 
-                var maxNumericId = lastId
+                // Get max ID from pending entities in change tracker
+                var pendingEntities = context.ChangeTracker.Entries<BaseAuditableEntity>()
+                    .Where(e => e.State == EntityState.Added && 
+                               e.Entity.GetType() == entityType && 
+                               !string.IsNullOrEmpty(e.Entity.Id))
+                    .Select(e => e.Entity.Id)
                     .Where(id => int.TryParse(id, out _))
                     .Select(id => int.Parse(id))
-                    .DefaultIfEmpty(0)
-                    .Max();
+                    .ToList();
 
-                entity.Id = (maxNumericId + 1).ToString();
+                var maxPendingId = pendingEntities.Any() ? pendingEntities.Max() : 0;
+
+                // Use the higher of the two
+                var nextId = Math.Max(maxDbId, maxPendingId) + 1;
+                entity.Id = nextId.ToString();
             }
         }
     }
