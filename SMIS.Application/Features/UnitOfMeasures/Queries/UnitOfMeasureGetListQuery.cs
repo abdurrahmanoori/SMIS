@@ -1,7 +1,8 @@
 using AutoMapper;
 using MediatR;
+using SMIS.Application.Common.Response;
 using SMIS.Application.DTO.Common;
-using SMIS.Application.DTO.Common.Response;
+using SMIS.Application.Common.Response;
 using SMIS.Application.DTO.UnitOfMeasures;
 using SMIS.Application.Extensions;
 using SMIS.Application.Repositories.UnitOfMeasures;

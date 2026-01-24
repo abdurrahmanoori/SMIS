@@ -2,7 +2,7 @@ using AutoMapper;
 using MediatR;
 using SMIS.Application.DTO.Categories;
 using SMIS.Application.DTO.Common;
-using SMIS.Application.DTO.Common.Response;
+using SMIS.Application.Common.Response;
 using SMIS.Application.Extensions;
 using SMIS.Application.Identity.IServices;
 using SMIS.Application.Repositories.Categories;

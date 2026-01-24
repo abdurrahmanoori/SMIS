@@ -4,7 +4,7 @@ using MediatR;
 using SMIS.Application.Identity.IServices;
 using SMIS.Application.Identity.Models;
 using SMIS.Domain.Entities.Identity.Entity;
-using SMIS.Application.DTO.Common.Response;
+using SMIS.Application.Common.Response;
 
 namespace SMIS.Identity.Services
 {

@@ -2,7 +2,7 @@ using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using MediatR;
 using SMIS.Application.DTO.Common;
-using SMIS.Application.DTO.Common.Response;
+using SMIS.Application.Common.Response;
 using SMIS.Application.DTO.Localization;
 using SMIS.Application.Repositories.Localization;
 

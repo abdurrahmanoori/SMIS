@@ -1,7 +1,7 @@
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using SMIS.Application.DTO.Common;
-using SMIS.Application.DTO.Common.Response;
+using SMIS.Application.Common.Response;
 using SMIS.Application.DTO.Districts;
 using SMIS.Application.Identity.IServices;
 using SMIS.Application.Repositories.Districts;

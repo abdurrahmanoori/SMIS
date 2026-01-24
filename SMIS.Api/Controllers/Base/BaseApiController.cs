@@ -1,6 +1,6 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using SMIS.Application.DTO.Common.Response;
+using SMIS.Application.Common.Response;
 
 namespace SMIS.Api.Controllers.Base
 {

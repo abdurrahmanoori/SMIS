@@ -1,5 +1,5 @@
 using MediatR;
-using SMIS.Application.DTO.Common.Response;
+using SMIS.Application.Common.Response;
 using SMIS.Application.Identity.IServices;
 using SMIS.Application.Identity.Models;
 using System.Collections.Generic;

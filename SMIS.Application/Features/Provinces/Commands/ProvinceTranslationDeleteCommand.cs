@@ -1,7 +1,7 @@
 using MediatR;
 using SMIS.Application.Repositories.Provinces;
 using SMIS.Application.Repositories.Base;
-using SMIS.Application.DTO.Common.Response;
+using SMIS.Application.Common.Response;
 using SMIS.Domain.Entities.LocationEntities;
 
 namespace SMIS.Application.Features.Provinces.Commands
