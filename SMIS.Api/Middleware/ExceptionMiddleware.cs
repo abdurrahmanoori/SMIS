@@ -1,6 +1,7 @@
 using SMIS.Application.Common.Exceptions;
 using System.Text.Json;
 using Serilog;
+using Microsoft.EntityFrameworkCore;
 
 namespace SMIS.Api.Middleware
 {
@@ -36,9 +37,12 @@ namespace SMIS.Api.Middleware
             Log.Error(exception, "Unhandled exception occurred. ExceptionId: {ExceptionId}", log.Id);
 
             context.Response.Clear();
-            context.Response.StatusCode = exception is UnauthorizedAccessException 
-                ? StatusCodes.Status401Unauthorized 
-                : StatusCodes.Status500InternalServerError;
+            context.Response.StatusCode = exception switch
+            {
+                UnauthorizedAccessException => StatusCodes.Status401Unauthorized,
+                DbUpdateException dbEx when dbEx.InnerException?.Message.Contains("FOREIGN KEY constraint failed") == true => StatusCodes.Status409Conflict,
+                _ => StatusCodes.Status500InternalServerError
+            };
             context.Response.ContentType = "application/json";
 
             var response = hostEnvironment.IsDevelopment()
