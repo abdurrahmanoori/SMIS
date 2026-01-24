@@ -1,6 +1,6 @@
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using SMIS.Application.DTO.Common;
+using SMIS.Application.Common;
 using SMIS.Application.DTO.TranslationKeys;
 using SMIS.Application.Features.TranslationKeys.Commands;
 using SMIS.Application.Features.TranslationKeys.Queries;

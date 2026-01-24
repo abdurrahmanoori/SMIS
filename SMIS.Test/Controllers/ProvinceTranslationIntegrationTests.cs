@@ -1,7 +1,7 @@
 using System.Net;
 using System.Net.Http.Json;
 using FluentAssertions;
-using SMIS.Application.DTO.Common;
+using SMIS.Application.Common;
 using SMIS.Application.DTO.Provinces;
 using SMIS.Test.TestInfrastructure;
 using Xunit;

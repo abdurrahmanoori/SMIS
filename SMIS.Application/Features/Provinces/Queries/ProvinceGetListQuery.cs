@@ -1,5 +1,5 @@
 using MediatR;
-using SMIS.Application.DTO.Common;
+using SMIS.Application.Common;
 using SMIS.Application.Common.Response;
 using SMIS.Application.DTO.Provinces;
 using SMIS.Application.Identity.IServices;

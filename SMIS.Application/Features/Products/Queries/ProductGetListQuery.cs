@@ -1,6 +1,6 @@
 using AutoMapper;
 using MediatR;
-using SMIS.Application.DTO.Common;
+using SMIS.Application.Common;
 using SMIS.Application.Common.Response;
 using SMIS.Application.DTO.Products;
 using SMIS.Application.Extensions;

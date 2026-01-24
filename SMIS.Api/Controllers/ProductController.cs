@@ -1,6 +1,6 @@
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using SMIS.Application.DTO.Common;
+using SMIS.Application.Common;
 using SMIS.Application.DTO.Products;
 using SMIS.Application.Features.Products.Commands;
 using SMIS.Application.Features.Products.Queries;

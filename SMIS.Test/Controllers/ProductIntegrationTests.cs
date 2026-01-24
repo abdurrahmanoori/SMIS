@@ -1,6 +1,6 @@
 using System.Net;
 using FluentAssertions;
-using SMIS.Application.DTO.Common;
+using SMIS.Application.Common;
 using SMIS.Application.DTO.Products;
 using SMIS.Test.Extensions;
 using SMIS.Test.TestInfrastructure;

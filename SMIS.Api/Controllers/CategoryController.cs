@@ -1,10 +1,11 @@
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using SMIS.Application.DTO.Categories;
-using SMIS.Application.DTO.Common;
+using SMIS.Application.Common;
 using SMIS.Application.Features.Categories.Commands;
 using SMIS.Application.Features.Categories.Queries;
 using SMIS.Api.Controllers.Base;
+using SMIS.Application.Common;
 
 namespace SMIS.Api.Controllers
 {

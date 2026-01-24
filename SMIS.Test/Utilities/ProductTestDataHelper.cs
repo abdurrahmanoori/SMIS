@@ -1,6 +1,6 @@
 //using System.Net.Http.Json;
 using SMIS.Application.DTO.Categories;
-using SMIS.Application.DTO.Common;
+using SMIS.Application.Common;
 using SMIS.Application.DTO.Shops;
 using SMIS.Application.DTO.UnitOfMeasures;
 using SMIS.Test.Extensions;
