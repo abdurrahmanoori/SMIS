@@ -85,12 +85,12 @@ namespace SMIS.Infrastructure.Interceptors
 
             if (dbSet != null)
             {
-                var lastPublicId = await dbSet
+                var lastId = await dbSet
                     .Where(e => !string.IsNullOrEmpty(e.Id))
                     .Select(e => e.Id)
                     .ToListAsync();
 
-                var maxNumericId = lastPublicId
+                var maxNumericId = lastId
                     .Where(id => int.TryParse(id, out _))
                     .Select(id => int.Parse(id))
                     .DefaultIfEmpty(0)

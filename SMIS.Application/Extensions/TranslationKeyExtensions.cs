@@ -29,7 +29,7 @@ namespace SMIS.Application.Extensions
                             MessageCode = typeof(T).Name,
                         };
                         await repository.AddAsync(translationKey);
-                        await unitOfWork.SaveChanges(default);
+                        //await unitOfWork.SaveChanges(default);
                     }
                 }
             }

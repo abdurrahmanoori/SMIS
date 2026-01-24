@@ -26,7 +26,7 @@ namespace SMIS.Infrastructure.Interceptors
             var context = eventData.Context;
 
             if (context == null) return await base.SavingChangesAsync(eventData, result, cancellationToken);
-            var rest = context.ChangeTracker.Entries<EntityPK>();
+            //var rest = context.ChangeTracker.Entries<EntityPK>();
 
             foreach (var entry in context.ChangeTracker.Entries<EntityPK>())
             {
