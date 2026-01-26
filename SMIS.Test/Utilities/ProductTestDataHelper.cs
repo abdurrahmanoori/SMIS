@@ -52,7 +52,7 @@ public class ProductTestDataHelper
             IsActive = true
         };
         
-        var response = await _client.PostAsJsonAsync("/api/category", categoryDto);
+        var response = await _client.PostAsJsonAsync(ApiEndpoints.Category, categoryDto);
         response.EnsureSuccessStatusCode();
         
         var createdCategory = await response.Content.ReadFromJsonAsync<CategoryDto>();
@@ -68,7 +68,7 @@ public class ProductTestDataHelper
             Description = "Piece unit"
         };
         
-        var response = await _client.PostAsJsonAsync("/api/unitofmeasure", unitDto);
+        var response = await _client.PostAsJsonAsync(ApiEndpoints.UnitOfMeasure, unitDto);
         response.EnsureSuccessStatusCode();
         
         var createdUnit = await response.Content.ReadFromJsonAsync<UnitOfMeasureDto>();
@@ -88,10 +88,10 @@ public class ProductTestDataHelper
             IsActive = true
         };
         
-        var createResponse = await _client.PostAsJsonAsync("/api/shop", shopDto);
+        var createResponse = await _client.PostAsJsonAsync(ApiEndpoints.Shop, shopDto);
         createResponse.EnsureSuccessStatusCode();
 
-        var listResponse = await _client.GetAsync("/api/shop");
+        var listResponse = await _client.GetAsync(ApiEndpoints.Shop);
         listResponse.EnsureSuccessStatusCode();
         
         var shopsList = await listResponse.Content.ReadFromJsonAsync<PagedList<ShopDto>>();
