@@ -1,4 +1,5 @@
 using System.Net.Http.Json;
+using SMIS.Test.Extensions;
 using SMIS.Test.Utilities;
 using Xunit;
 using Xunit.Abstractions;
@@ -20,13 +21,13 @@ public abstract class BaseIntegrationTest : IClassFixture<CustomWebApplicationFa
 
     protected async Task LogIfError(HttpResponseMessage response, string context = "")
     {
-        if (!response.IsSuccessStatusCode)
-        {
-            var errorContent = await response.Content.ReadAsStringAsync();
-            Output.WriteLine($"[{context}] Status: {(int)response.StatusCode} {response.StatusCode}");
-            var formattedError = ExceptionFormatter.FormatApiResponseError(errorContent);
-            Output.WriteLine($"[{context}] Formatted Error:\n{formattedError}");
-        }
+        if (response.IsSuccessStatusCode) return;
+        
+        var errorContent = await response.Content.ReadAsStringAsync();
+        Output.WriteLine($"[{context}] Status: {(int)response.StatusCode} {response.StatusCode}");
+        
+        var formattedError = ExceptionFormatter.FormatApiResponseError(errorContent);
+        Output.WriteLine($"[{context}] Formatted Error:\n{formattedError}");
     }
 
     protected async Task<T?> PostAndGetAsync<T>(string endpoint, object dto, string context = "")
@@ -44,6 +45,12 @@ public abstract class BaseIntegrationTest : IClassFixture<CustomWebApplicationFa
         response.EnsureSuccessStatusCode();
         return await response.Content.ReadFromJsonAsync<T>();
     }
+
+    protected async Task<HttpResponseMessage> PostAsJsonAsync<T>(string endpoint, T dto) =>
+        await Client.PostAsJsonAsync(endpoint, dto);
+
+    protected async Task<HttpResponseMessage> PutAsJsonAsync<T>(string endpoint, T dto) =>
+        await Client.PutAsJsonAsync(endpoint, dto);
 
     public virtual Task InitializeAsync() => Task.CompletedTask;
     public virtual Task DisposeAsync() => Task.CompletedTask;
