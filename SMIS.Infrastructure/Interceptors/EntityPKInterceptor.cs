@@ -2,7 +2,6 @@
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using SMIS.Application.Identity.IServices;
 using SMIS.Application.Services;
-using SMIS.Domain.Common.BaseAbstract;
 using SMIS.Domain.Common.Interfaces;
 namespace SMIS.Infrastructure.Interceptors;
 
