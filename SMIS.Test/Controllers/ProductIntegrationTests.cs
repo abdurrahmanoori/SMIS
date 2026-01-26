@@ -411,4 +411,28 @@ public class ProductIntegrationTests : BaseIntegrationTest
         updated.Should().NotBeNull();
         updated!.SKU.Should().Be("NEW-SKU-001");
     }
+
+    [Fact]
+    public async Task Post_CreateProductWithExplicitNullDescription_ReturnsOk()
+    {
+        var dto = _dataHelper.CreateProductBuilder().WithDescription(null).Build();
+        var response = await CreateProductResponseAsync(dto, "Post_CreateProductWithExplicitNullDescription");
+        
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+        var created = await response.Content.ReadFromJsonAsync<ProductDto>();
+        created.Should().NotBeNull();
+        created!.Description.Should().BeNull();
+    }
+
+    [Fact]
+    public async Task Post_CreateProductWithExplicitNullBarcode_ReturnsOk()
+    {
+        var dto = _dataHelper.CreateProductBuilder().WithBarcode(null).Build();
+        var response = await CreateProductResponseAsync(dto, "Post_CreateProductWithExplicitNullBarcode");
+        
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+        var created = await response.Content.ReadFromJsonAsync<ProductDto>();
+        created.Should().NotBeNull();
+        created!.Barcode.Should().BeNull();
+    }
 }

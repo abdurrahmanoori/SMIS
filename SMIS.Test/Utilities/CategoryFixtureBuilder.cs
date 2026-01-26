@@ -14,7 +14,7 @@ public class CategoryFixtureBuilder
     private bool _codeSet;
     private bool _descriptionSet;
 
-    public CategoryFixtureBuilder()
+    public CategoryFixtureBuilder( )
     {
         _fixture = new Fixture();
     }
@@ -46,7 +46,7 @@ public class CategoryFixtureBuilder
         return this;
     }
 
-    public CategoryCreateDto Build() => new()
+    public CategoryCreateDto Build( ) => new()
     {
         Name = _nameSet ? _name! : GenerateUniqueName(),
         Code = _codeSet ? _code : GenerateUniqueCode(),
@@ -54,7 +54,7 @@ public class CategoryFixtureBuilder
         IsActive = _isActive ?? true
     };
 
-    private static string GenerateUniqueName() => $"Name{Guid.NewGuid()}";
-    private static string GenerateUniqueCode() => $"CODE{Guid.NewGuid()}";
-    private static string GenerateUniqueDescription() => $"Description{Guid.NewGuid()}";
+    private static string GenerateUniqueName( ) => $"Name{Guid.NewGuid()}";
+    private static string GenerateUniqueCode( ) => $"CODE{Guid.NewGuid()}";
+    private static string GenerateUniqueDescription( ) => $"Description{Guid.NewGuid()}";
 }

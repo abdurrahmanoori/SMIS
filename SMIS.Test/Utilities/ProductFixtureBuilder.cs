@@ -16,6 +16,12 @@ public class ProductFixtureBuilder
     private string? _imageUrl;
     private int? _price;
     private bool? _isActive;
+    private bool _categoryIdSet;
+    private bool _nameSet;
+    private bool _descriptionSet;
+    private bool _skuSet;
+    private bool _barcodeSet;
+    private bool _imageUrlSet;
 
     public ProductFixtureBuilder()
     {
@@ -37,6 +43,7 @@ public class ProductFixtureBuilder
     public ProductFixtureBuilder WithCategoryId(string? categoryId)
     {
         _categoryId = categoryId;
+        _categoryIdSet = true;
         return this;
     }
 
@@ -45,36 +52,42 @@ public class ProductFixtureBuilder
         _shopId = shopId;
         _unitId = unitId;
         _categoryId = categoryId;
+        _categoryIdSet = true;
         return this;
     }
 
     public ProductFixtureBuilder WithName(string name)
     {
         _name = name;
+        _nameSet = true;
         return this;
     }
 
     public ProductFixtureBuilder WithDescription(string? description)
     {
         _description = description;
+        _descriptionSet = true;
         return this;
     }
 
     public ProductFixtureBuilder WithSKU(string sku)
     {
         _sku = sku;
+        _skuSet = true;
         return this;
     }
 
     public ProductFixtureBuilder WithBarcode(string? barcode)
     {
         _barcode = barcode;
+        _barcodeSet = true;
         return this;
     }
 
     public ProductFixtureBuilder WithImageUrl(string? imageUrl)
     {
         _imageUrl = imageUrl;
+        _imageUrlSet = true;
         return this;
     }
 
@@ -94,12 +107,12 @@ public class ProductFixtureBuilder
     {
         ShopId = _shopId ?? _fixture.Create<string>(),
         BaseUnitId = _unitId ?? _fixture.Create<string>(),
-        CategoryId = _categoryId,
-        Name = _name ?? GenerateUniqueName(),
-        Description = _description ?? GenerateUniqueDescription(),
-        SKU = _sku ?? GenerateUniqueSKU(),
-        Barcode = _barcode,
-        ImageUrl = _imageUrl,
+        CategoryId = _categoryIdSet ? _categoryId : _categoryId,
+        Name = _nameSet ? _name! : GenerateUniqueName(),
+        Description = _descriptionSet ? _description : GenerateUniqueDescription(),
+        SKU = _skuSet ? _sku! : GenerateUniqueSKU(),
+        Barcode = _barcodeSet ? _barcode : null,
+        ImageUrl = _imageUrlSet ? _imageUrl : null,
         SalePricePerBaseUnit = _price ?? GenerateRandomPrice(),
         IsActive = _isActive ?? true
     };
