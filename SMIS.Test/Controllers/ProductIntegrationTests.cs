@@ -28,21 +28,8 @@ namespace SMIS.Test.Controllers
         [Fact]
         public async Task Post_CreateValidProduct_ReturnsOk()
         {
-            var (shopId, unitId, categoryId) = await _dataHelper.GetOrCreateDependencies();
-
-            var dto = new ProductCreateDto
-            {
-                Name = "Laptop Computer",
-                ShopId = shopId,
-                BaseUnitId = unitId,
-                SalePricePerBaseUnit = 99999,
-                Description = "High-performance laptop computer",
-                IsActive = true,
-                SKU = "LAPTOP-001",
-                Barcode = "1234567890123",
-                ImageUrl = "https://example.com/laptop.jpg",
-                CategoryId = categoryId
-            };
+            await _dataHelper.GetOrCreateDependencies();
+            var dto = _dataHelper.CreateProductBuilder().Build();
 
             var response = await Client.PostAsJsonAsync("/api/product", dto);
             await LogIfError(response, "Post_CreateValidProduct");
@@ -65,19 +52,9 @@ namespace SMIS.Test.Controllers
         [Fact]
         public async Task Post_CreateProductWithEmptyDescription_ReturnsOk()
         {
-            var (shopId, unitId, categoryId) = await _dataHelper.GetOrCreateDependencies();
-
-            var dto = new ProductCreateDto
-            {
-                Name = "Smartphone",
-                ShopId = shopId,
-                BaseUnitId = unitId,
-                SalePricePerBaseUnit = 59999,
-                Description = "",
-                IsActive = true,
-                SKU = "PHONE-001",
-                CategoryId = categoryId
-            };
+            await _dataHelper.GetOrCreateDependencies();
+            var dto = _dataHelper.CreateProductBuilder().Build();
+            dto.Description = "";
 
             var response = await Client.PostAsJsonAsync("/api/product", dto);
             await LogIfError(response, "Post_CreateProductWithEmptyDescription");
@@ -92,19 +69,9 @@ namespace SMIS.Test.Controllers
         [Fact]
         public async Task Post_CreateProductWithNullDescription_ReturnsOk()
         {
-            var (shopId, unitId, categoryId) = await _dataHelper.GetOrCreateDependencies();
-
-            var dto = new ProductCreateDto
-            {
-                Name = "Tablet",
-                ShopId = shopId,
-                BaseUnitId = unitId,
-                SalePricePerBaseUnit = 39999,
-                Description = null,
-                IsActive = true,
-                SKU = "TABLET-001",
-                CategoryId = categoryId
-            };
+            await _dataHelper.GetOrCreateDependencies();
+            var dto = _dataHelper.CreateProductBuilder().Build();
+            dto.Description = null;
 
             var response = await Client.PostAsJsonAsync("/api/product", dto);
             await LogIfError(response, "Post_CreateProductWithNullDescription");
@@ -136,14 +103,9 @@ namespace SMIS.Test.Controllers
         {
             var (shopId, unitId, categoryId) = await _dataHelper.GetOrCreateDependencies();
 
-            var products = new[]
-            {
-                new ProductCreateDto { Name = "Test Product 1", ShopId = shopId, BaseUnitId = unitId, SalePricePerBaseUnit = 10000, Description = "Test product 1", IsActive = true, SKU = "TP1", CategoryId = categoryId },
-                new ProductCreateDto { Name = "Test Product 2", ShopId = shopId, BaseUnitId = unitId, SalePricePerBaseUnit = 20000, Description = "Test product 2", IsActive = true, SKU = "TP2", CategoryId = categoryId },
-                new ProductCreateDto { Name = "Test Product 3", ShopId = shopId, BaseUnitId = unitId, SalePricePerBaseUnit = 30000, Description = "Test product 3", IsActive = true, SKU = "TP3", CategoryId = categoryId },
-                new ProductCreateDto { Name = "Test Product 4", ShopId = shopId, BaseUnitId = unitId, SalePricePerBaseUnit = 40000, Description = "Test product 4", IsActive = true, SKU = "TP4", CategoryId = categoryId },
-                new ProductCreateDto { Name = "Test Product 5", ShopId = shopId, BaseUnitId = unitId, SalePricePerBaseUnit = 50000, Description = "Test product 5", IsActive = true, SKU = "TP5", CategoryId = categoryId }
-            };
+            var products = Enumerable.Range(1, 5)
+                .Select(i => _dataHelper.CreateProductBuilder().Build())
+                .ToArray();
 
             foreach (var prod in products)
             {
@@ -167,19 +129,8 @@ namespace SMIS.Test.Controllers
         [Fact]
         public async Task Get_ProductById_Existing_ReturnsProduct()
         {
-            var (shopId, unitId, categoryId) = await _dataHelper.GetOrCreateDependencies();
-
-            var createDto = new ProductCreateDto
-            {
-                Name = "Camera",
-                ShopId = shopId,
-                BaseUnitId = unitId,
-                SalePricePerBaseUnit = 29999,
-                Description = "Digital camera",
-                IsActive = true,
-                SKU = "CAMERA-001",
-                CategoryId = categoryId
-            };
+            await _dataHelper.GetOrCreateDependencies();
+            var createDto = _dataHelper.CreateProductBuilder().Build();
 
             var created = await PostAndGetAsync<ProductDto>("/api/product", createDto, "Get_ProductById_Seed");
             created.Should().NotBeNull();
@@ -213,34 +164,13 @@ namespace SMIS.Test.Controllers
         [Fact]
         public async Task Put_UpdateExistingProduct_ReturnsUpdatedProduct()
         {
-            var (shopId, unitId, categoryId) = await _dataHelper.GetOrCreateDependencies();
-
-            var createDto = new ProductCreateDto
-            {
-                Name = "Headphones",
-                ShopId = shopId,
-                BaseUnitId = unitId,
-                SalePricePerBaseUnit = 9999,
-                Description = "Wireless headphones",
-                IsActive = true,
-                SKU = "HEAD-001",
-                CategoryId = categoryId
-            };
-
+            await _dataHelper.GetOrCreateDependencies();
+            var createDto = _dataHelper.CreateProductBuilder().Build();
             var created = await PostAndGetAsync<ProductDto>("/api/product", createDto, "Put_UpdateProduct_Seed");
             created.Should().NotBeNull();
 
-            var updateDto = new ProductCreateDto
-            {
-                Name = "Wireless Headphones Updated",
-                ShopId = shopId,
-                BaseUnitId = unitId,
-                SalePricePerBaseUnit = 12999,
-                Description = "Updated wireless headphones",
-                IsActive = false,
-                SKU = "HEAD-U001",
-                CategoryId = categoryId
-            };
+            var updateDto = _dataHelper.CreateProductBuilder().Build();
+            updateDto.IsActive = false;
 
             var updateResponse = await Client.PutAsJsonAsync($"/api/product/{created!.Id}", updateDto);
             await LogIfError(updateResponse, "Put_UpdateProduct_Update");
@@ -261,19 +191,8 @@ namespace SMIS.Test.Controllers
         [Fact]
         public async Task Put_UpdateNonExistingProduct_ReturnsNotFound()
         {
-            var (shopId, unitId, categoryId) = await _dataHelper.GetOrCreateDependencies();
-
-            var updateDto = new ProductCreateDto
-            {
-                Name = "Fake Product",
-                ShopId = shopId,
-                BaseUnitId = unitId,
-                SalePricePerBaseUnit = 10000,
-                Description = "Fake product",
-                IsActive = true,
-                SKU = "FAKE-001",
-                CategoryId = categoryId
-            };
+            await _dataHelper.GetOrCreateDependencies();
+            var updateDto = _dataHelper.CreateProductBuilder().Build();
 
             var response = await Client.PutAsJsonAsync("/api/product/non-existing-id", updateDto);
             await LogIfError(response, "Put_UpdateNonExistingProduct");
@@ -284,19 +203,8 @@ namespace SMIS.Test.Controllers
         [Fact]
         public async Task Delete_ExistingProduct_ReturnsOk()
         {
-            var (shopId, unitId, categoryId) = await _dataHelper.GetOrCreateDependencies();
-
-            var createDto = new ProductCreateDto
-            {
-                Name = "Speaker",
-                ShopId = shopId,
-                BaseUnitId = unitId,
-                SalePricePerBaseUnit = 7999,
-                Description = "Bluetooth speaker",
-                IsActive = true,
-                SKU = "SPKR-001",
-                CategoryId = categoryId
-            };
+            await _dataHelper.GetOrCreateDependencies();
+            var createDto = _dataHelper.CreateProductBuilder().Build();
 
             var created = await PostAndGetAsync<ProductDto>("/api/product", createDto, "Delete_ExistingProduct_Seed");
             created.Should().NotBeNull();
@@ -322,19 +230,9 @@ namespace SMIS.Test.Controllers
         [Fact]
         public async Task Post_CreateProductWithInvalidShopId_ReturnsConflict()
         {
-            var (_, unitId, categoryId) = await _dataHelper.GetOrCreateDependencies();
-
-            var dto = new ProductCreateDto
-            {
-                Name = "Product with Invalid Shop",
-                ShopId = "invalid-shop-id",
-                BaseUnitId = unitId,
-                SalePricePerBaseUnit = 5000,
-                Description = "Product with invalid shop reference",
-                IsActive = true,
-                SKU = "INVALID-SHOP-001",
-                CategoryId = categoryId
-            };
+            await _dataHelper.GetOrCreateDependencies();
+            var dto = _dataHelper.CreateProductBuilder().Build();
+            dto.ShopId = "invalid-shop-id";
 
             var response = await Client.PostAsJsonAsync("/api/product", dto);
             await LogIfError(response, "Post_CreateProductWithInvalidShopId");
@@ -345,19 +243,9 @@ namespace SMIS.Test.Controllers
         [Fact]
         public async Task Post_CreateProductWithInvalidUnitId_ReturnsConflict()
         {
-            var (shopId, _, categoryId) = await _dataHelper.GetOrCreateDependencies();
-
-            var dto = new ProductCreateDto
-            {
-                Name = "Product with Invalid Unit",
-                ShopId = shopId,
-                BaseUnitId = "invalid-unit-id",
-                SalePricePerBaseUnit = 5000,
-                Description = "Product with invalid unit reference",
-                IsActive = true,
-                SKU = "INVALID-UNIT-001",
-                CategoryId = categoryId
-            };
+            await _dataHelper.GetOrCreateDependencies();
+            var dto = _dataHelper.CreateProductBuilder().Build();
+            dto.BaseUnitId = "invalid-unit-id";
 
             var response = await Client.PostAsJsonAsync("/api/product", dto);
             await LogIfError(response, "Post_CreateProductWithInvalidUnitId");
@@ -368,19 +256,9 @@ namespace SMIS.Test.Controllers
         [Fact]
         public async Task Post_CreateProductWithInvalidCategoryId_ReturnsConflict()
         {
-            var (shopId, unitId, _) = await _dataHelper.GetOrCreateDependencies();
-
-            var dto = new ProductCreateDto
-            {
-                Name = "Product with Invalid Category",
-                ShopId = shopId,
-                BaseUnitId = unitId,
-                SalePricePerBaseUnit = 5000,
-                Description = "Product with invalid category reference",
-                IsActive = true,
-                SKU = "INVALID-CAT-001",
-                CategoryId = "invalid-category-id"
-            };
+            await _dataHelper.GetOrCreateDependencies();
+            var dto = _dataHelper.CreateProductBuilder().Build();
+            dto.CategoryId = "invalid-category-id";
 
             var response = await Client.PostAsJsonAsync("/api/product", dto);
             await LogIfError(response, "Post_CreateProductWithInvalidCategoryId");
@@ -392,19 +270,9 @@ namespace SMIS.Test.Controllers
         [Fact]
         public async Task Post_CreateProductWithNegativePrice_ReturnsBadRequest()
         {
-            var (shopId, unitId, categoryId) = await _dataHelper.GetOrCreateDependencies();
-
-            var dto = new ProductCreateDto
-            {
-                Name = "Product with Negative Price",
-                ShopId = shopId,
-                BaseUnitId = unitId,
-                SalePricePerBaseUnit = -100,
-                Description = "Product with negative price",
-                IsActive = true,
-                SKU = "NEG-PRICE-001",
-                CategoryId = categoryId
-            };
+            await _dataHelper.GetOrCreateDependencies();
+            var dto = _dataHelper.CreateProductBuilder().Build();
+            dto.SalePricePerBaseUnit = -100;
 
             var response = await Client.PostAsJsonAsync("/api/product", dto);
             await LogIfError(response, "Post_CreateProductWithNegativePrice");
@@ -415,19 +283,9 @@ namespace SMIS.Test.Controllers
         [Fact]
         public async Task Post_CreateProductWithZeroPrice_ReturnsOk()
         {
-            var (shopId, unitId, categoryId) = await _dataHelper.GetOrCreateDependencies();
-
-            var dto = new ProductCreateDto
-            {
-                Name = "Product with Zero Price",
-                ShopId = shopId,
-                BaseUnitId = unitId,
-                SalePricePerBaseUnit = 0,
-                Description = "Product with zero price",
-                IsActive = true,
-                SKU = "ZERO-PRICE-001",
-                CategoryId = categoryId
-            };
+            await _dataHelper.GetOrCreateDependencies();
+            var dto = _dataHelper.CreateProductBuilder().Build();
+            dto.SalePricePerBaseUnit = 0;
 
             var response = await Client.PostAsJsonAsync("/api/product", dto);
             await LogIfError(response, "Post_CreateProductWithZeroPrice");
@@ -441,37 +299,18 @@ namespace SMIS.Test.Controllers
         [Fact]
         public async Task Post_CreateProductWithDuplicateSKU_ReturnsConflict()
         {
-            var (shopId, unitId, categoryId) = await _dataHelper.GetOrCreateDependencies();
-
+            await _dataHelper.GetOrCreateDependencies();
             var sku = "DUPLICATE-SKU-TEST";
 
-            var firstProduct = new ProductCreateDto
-            {
-                Name = "First Product with SKU",
-                ShopId = shopId,
-                BaseUnitId = unitId,
-                SalePricePerBaseUnit = 1000,
-                Description = "First product with duplicate SKU",
-                IsActive = true,
-                SKU = sku,
-                CategoryId = categoryId
-            };
+            var firstProduct = _dataHelper.CreateProductBuilder().Build();
+            firstProduct.SKU = sku;
 
             var firstResponse = await Client.PostAsJsonAsync("/api/product", firstProduct);
             await LogIfError(firstResponse, "Post_CreateProductWithDuplicateSKU_First");
             firstResponse.EnsureSuccessStatusCode();
 
-            var secondProduct = new ProductCreateDto
-            {
-                Name = "Second Product with Same SKU",
-                ShopId = shopId,
-                BaseUnitId = unitId,
-                SalePricePerBaseUnit = 2000,
-                Description = "Second product with duplicate SKU",
-                IsActive = true,
-                SKU = sku,
-                CategoryId = categoryId
-            };
+            var secondProduct = _dataHelper.CreateProductBuilder().Build();
+            secondProduct.SKU = sku;
 
             var secondResponse = await Client.PostAsJsonAsync("/api/product", secondProduct);
             await LogIfError(secondResponse, "Post_CreateProductWithDuplicateSKU_Second");

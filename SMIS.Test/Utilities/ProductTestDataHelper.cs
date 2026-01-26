@@ -68,4 +68,10 @@ public class ProductTestDataHelper
 
         return (_cachedShopId, _cachedUnitId, _cachedCategoryId);
     }
+
+    public ProductFixtureBuilder CreateProductBuilder()
+    {
+        return new ProductFixtureBuilder()
+            .WithDependencies(_cachedShopId!, _cachedUnitId!, _cachedCategoryId!);
+    }
 }
