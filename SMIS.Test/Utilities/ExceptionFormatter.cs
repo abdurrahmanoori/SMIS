@@ -23,6 +23,28 @@ namespace SMIS.Test.Utilities
                 using var doc = JsonDocument.Parse(rawErrorResponse);
                 var root = doc.RootElement;
                 
+                // Check if it's an array (validation errors)
+                if (root.ValueKind == JsonValueKind.Array)
+                {
+                    sb.AppendLine("Validation Errors:");
+                    sb.AppendLine("-".PadRight(40, '-'));
+                    
+                    foreach (var error in root.EnumerateArray())
+                    {
+                        foreach (var property in error.EnumerateObject())
+                        {
+                            var value = property.Value.ValueKind == JsonValueKind.String 
+                                ? property.Value.GetString() 
+                                : property.Value.ToString();
+                            sb.AppendLine($"  {property.Name}: {value}");
+                        }
+                        sb.AppendLine();
+                    }
+                    
+                    sb.AppendLine("=".PadRight(60, '='));
+                    return sb.ToString();
+                }
+                
                 if (root.TryGetProperty("Id", out var idElement))
                 {
                     sb.AppendLine($"Error ID: {idElement.GetString() ?? "N/A"}");
