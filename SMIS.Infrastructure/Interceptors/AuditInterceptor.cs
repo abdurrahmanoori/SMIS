@@ -34,7 +34,7 @@ namespace SMIS.Infrastructure.Interceptors
                 {
                     entry.Entity.CreatedDate = DateTime.UtcNow;
                     entry.Entity.CreatedBy = _currentUser.GetId();
-                    await AssignSequenceNumber(entry.Entity, context);
+                    //await AssignSequenceNumber(entry.Entity, context);
                 }
 
                 if (entry.State == EntityState.Modified)

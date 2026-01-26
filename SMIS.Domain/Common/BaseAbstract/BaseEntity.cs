@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace SMIS.Domain.Common.BaseAbstract
 {
-    public abstract class BaseEntity : IEntity
+    public abstract class BaseEntity : IEntity, IEntityPK
     {
         [Key]
         public string Id { get; set; } = Guid.NewGuid().ToString();
