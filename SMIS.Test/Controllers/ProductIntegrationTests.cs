@@ -29,7 +29,8 @@ namespace SMIS.Test.Controllers
         public async Task Post_CreateValidProduct_ReturnsOk()
         {
             await _dataHelper.GetOrCreateDependencies();
-            var dto = _dataHelper.CreateProductBuilder().Build();
+            var dto = _dataHelper.CreateProductBuilder()
+                .Build();
 
             var response = await Client.PostAsJsonAsync("/api/product", dto);
             await LogIfError(response, "Post_CreateValidProduct");

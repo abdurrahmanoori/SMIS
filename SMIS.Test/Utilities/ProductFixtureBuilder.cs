@@ -9,6 +9,13 @@ public class ProductFixtureBuilder
     private string? _shopId;
     private string? _unitId;
     private string? _categoryId;
+    private string? _name;
+    private string? _description;
+    private string? _sku;
+    private string? _barcode;
+    private string? _imageUrl;
+    private int? _price;
+    private bool? _isActive;
 
     public ProductFixtureBuilder()
     {
@@ -41,17 +48,63 @@ public class ProductFixtureBuilder
         return this;
     }
 
+    public ProductFixtureBuilder WithName(string name)
+    {
+        _name = name;
+        return this;
+    }
+
+    public ProductFixtureBuilder WithDescription(string? description)
+    {
+        _description = description;
+        return this;
+    }
+
+    public ProductFixtureBuilder WithSKU(string sku)
+    {
+        _sku = sku;
+        return this;
+    }
+
+    public ProductFixtureBuilder WithBarcode(string? barcode)
+    {
+        _barcode = barcode;
+        return this;
+    }
+
+    public ProductFixtureBuilder WithImageUrl(string? imageUrl)
+    {
+        _imageUrl = imageUrl;
+        return this;
+    }
+
+    public ProductFixtureBuilder WithPrice(int price)
+    {
+        _price = price;
+        return this;
+    }
+
+    public ProductFixtureBuilder WithIsActive(bool isActive)
+    {
+        _isActive = isActive;
+        return this;
+    }
+
     public ProductCreateDto Build()
     {
-        var product = _fixture.Build<ProductCreateDto>()
-            .With(p => p.ShopId, _shopId ?? _fixture.Create<string>())
-            .With(p => p.BaseUnitId, _unitId ?? _fixture.Create<string>())
-            .With(p => p.CategoryId, _categoryId)
-            .With(p => p.SalePricePerBaseUnit, Math.Abs(_fixture.Create<int>()) % 100000)
-            .With(p => p.IsActive, true)
-            .With(p => p.ImageUrl, (string?)null)
-            .With(p => p.Barcode, (string?)null)
-            .Create();
+        var product = new ProductCreateDto
+        {
+            ShopId = _shopId ?? _fixture.Create<string>(),
+            BaseUnitId = _unitId ?? _fixture.Create<string>(),
+            CategoryId = _categoryId,
+            Name = _name ?? $"Name{Guid.NewGuid()}",
+            Description = _description ?? $"Description{Guid.NewGuid()}",
+            SKU = _sku ?? $"SKU{Guid.NewGuid()}",
+            Barcode = _barcode,
+            ImageUrl = _imageUrl,
+            SalePricePerBaseUnit = _price ?? Math.Abs(_fixture.Create<int>()) % 100000,
+            IsActive = _isActive ?? true
+        };
 
         return product;
     }
