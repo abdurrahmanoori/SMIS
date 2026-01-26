@@ -34,13 +34,13 @@ public class ProductFixtureBuilder
         return this;
     }
 
-    public ProductFixtureBuilder WithCategoryId(string categoryId)
+    public ProductFixtureBuilder WithCategoryId(string? categoryId)
     {
         _categoryId = categoryId;
         return this;
     }
 
-    public ProductFixtureBuilder WithDependencies(string shopId, string unitId, string categoryId)
+    public ProductFixtureBuilder WithDependencies(string shopId, string unitId, string? categoryId)
     {
         _shopId = shopId;
         _unitId = unitId;
@@ -90,22 +90,22 @@ public class ProductFixtureBuilder
         return this;
     }
 
-    public ProductCreateDto Build()
+    public ProductCreateDto Build() => new()
     {
-        var product = new ProductCreateDto
-        {
-            ShopId = _shopId ?? _fixture.Create<string>(),
-            BaseUnitId = _unitId ?? _fixture.Create<string>(),
-            CategoryId = _categoryId,
-            Name = _name ?? $"Name{Guid.NewGuid()}",
-            Description = _description ?? $"Description{Guid.NewGuid()}",
-            SKU = _sku ?? $"SKU{Guid.NewGuid()}",
-            Barcode = _barcode,
-            ImageUrl = _imageUrl,
-            SalePricePerBaseUnit = _price ?? Math.Abs(_fixture.Create<int>()) % 100000,
-            IsActive = _isActive ?? true
-        };
+        ShopId = _shopId ?? _fixture.Create<string>(),
+        BaseUnitId = _unitId ?? _fixture.Create<string>(),
+        CategoryId = _categoryId,
+        Name = _name ?? GenerateUniqueName(),
+        Description = _description ?? GenerateUniqueDescription(),
+        SKU = _sku ?? GenerateUniqueSKU(),
+        Barcode = _barcode,
+        ImageUrl = _imageUrl,
+        SalePricePerBaseUnit = _price ?? GenerateRandomPrice(),
+        IsActive = _isActive ?? true
+    };
 
-        return product;
-    }
+    private static string GenerateUniqueName() => $"Name{Guid.NewGuid()}";
+    private static string GenerateUniqueDescription() => $"Description{Guid.NewGuid()}";
+    private static string GenerateUniqueSKU() => $"SKU{Guid.NewGuid()}";
+    private int GenerateRandomPrice() => Math.Abs(_fixture.Create<int>()) % 100000;
 }
