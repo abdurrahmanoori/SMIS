@@ -1,14 +1,9 @@
 using SMIS.Domain.Common.Interfaces;
-using System.ComponentModel.DataAnnotations;
-
 namespace SMIS.Domain.Common.BaseAbstract
 {
-    public abstract class BaseAuditableEntityWithoutName : IAuditableEntity
+    public abstract class BaseAuditableEntityWithoutName : IAuditableEntity,IEntityPK
     {
-        //[Key]
-        //public int Id { get; set; }
 
-        [Required]
         public string Id { get; set; } = Guid.NewGuid().ToString();
 
         public bool IsPublic { get; set; } = false;
