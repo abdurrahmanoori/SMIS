@@ -1,5 +1,5 @@
 using System.Net;
-using FluentAssertions;
+using Shouldly;
 using SMIS.Application.Common;
 using SMIS.Application.DTO.Products;
 using SMIS.Test.Extensions;
@@ -49,17 +49,17 @@ public class ProductIntegrationTests : BaseIntegrationTest
 
     private static void AssertProductMatches(ProductDto actual, ProductCreateDto expected)
     {
-        actual.Should().NotBeNull();
-        actual.Name.Should().Be(expected.Name);
-        actual.ShopId.Should().Be(expected.ShopId);
-        actual.BaseUnitId.Should().Be(expected.BaseUnitId);
-        actual.SalePricePerBaseUnit.Should().Be(expected.SalePricePerBaseUnit);
-        actual.Description.Should().Be(expected.Description);
-        actual.IsActive.Should().Be(expected.IsActive);
-        actual.SKU.Should().Be(expected.SKU);
-        actual.Barcode.Should().Be(expected.Barcode);
-        actual.ImageUrl.Should().Be(expected.ImageUrl);
-        actual.CategoryId.Should().Be(expected.CategoryId);
+        actual.ShouldNotBeNull();
+        actual.Name.ShouldBe(expected.Name);
+        actual.ShopId.ShouldBe(expected.ShopId);
+        actual.BaseUnitId.ShouldBe(expected.BaseUnitId);
+        actual.SalePricePerBaseUnit.ShouldBe(expected.SalePricePerBaseUnit);
+        actual.Description.ShouldBe(expected.Description);
+        actual.IsActive.ShouldBe(expected.IsActive);
+        actual.SKU.ShouldBe(expected.SKU);
+        actual.Barcode.ShouldBe(expected.Barcode);
+        actual.ImageUrl.ShouldBe(expected.ImageUrl);
+        actual.CategoryId.ShouldBe(expected.CategoryId);
     }
 
     [Fact]
@@ -68,7 +68,7 @@ public class ProductIntegrationTests : BaseIntegrationTest
         var dto = _dataHelper.CreateProductBuilder().Build();
         var response = await CreateProductResponseAsync(dto, "Post_CreateValidProduct");
         
-        response.StatusCode.Should().Be(HttpStatusCode.OK);
+        response.StatusCode.ShouldBe(HttpStatusCode.OK);
         var created = await response.Content.ReadFromJsonAsync<ProductDto>();
         AssertProductMatches(created!, dto);
     }
@@ -81,10 +81,10 @@ public class ProductIntegrationTests : BaseIntegrationTest
 
         var response = await CreateProductResponseAsync(dto, "Post_CreateProductWithEmptyDescription");
         
-        response.StatusCode.Should().Be(HttpStatusCode.OK);
+        response.StatusCode.ShouldBe(HttpStatusCode.OK);
         var created = await response.Content.ReadFromJsonAsync<ProductDto>();
-        created.Should().NotBeNull();
-        created!.Description.Should().Be("");
+        created.ShouldNotBeNull();
+        created!.Description.ShouldBe("");
     }
 
     [Fact]
@@ -95,10 +95,10 @@ public class ProductIntegrationTests : BaseIntegrationTest
 
         var response = await CreateProductResponseAsync(dto, "Post_CreateProductWithNullDescription");
         
-        response.StatusCode.Should().Be(HttpStatusCode.OK);
+        response.StatusCode.ShouldBe(HttpStatusCode.OK);
         var created = await response.Content.ReadFromJsonAsync<ProductDto>();
-        created.Should().NotBeNull();
-        created!.Description.Should().BeNull();
+        created.ShouldNotBeNull();
+        created!.Description.ShouldBeNull();
     }
 
     [Fact]
@@ -107,13 +107,13 @@ public class ProductIntegrationTests : BaseIntegrationTest
         var response = await Client.GetAsync($"{ApiEndpoints.Product}?pageNumber=1&pageSize=10");
         await LogIfError(response, "Get_ListProducts");
 
-        response.StatusCode.Should().Be(HttpStatusCode.OK);
+        response.StatusCode.ShouldBe(HttpStatusCode.OK);
         var paged = await response.Content.ReadFromJsonAsync<PagedList<ProductDto>>();
-        paged.Should().NotBeNull();
-        paged!.Items.Should().NotBeNull();
-        paged.Items.Count.Should().BeGreaterOrEqualTo(0);
-        paged.PageNumber.Should().Be(1);
-        paged.PageSize.Should().Be(10);
+        paged.ShouldNotBeNull();
+        paged!.Items.ShouldNotBeNull();
+        paged.Items.Count.ShouldBeGreaterThanOrEqualTo(0);
+        paged.PageNumber.ShouldBe(1);
+        paged.PageSize.ShouldBe(10);
     }
 
     [Fact]
@@ -131,13 +131,13 @@ public class ProductIntegrationTests : BaseIntegrationTest
         var paginatedResponse = await Client.GetAsync($"{ApiEndpoints.Product}?pageNumber=1&pageSize=2");
         await LogIfError(paginatedResponse, "Get_ListProducts_Pagination");
 
-        paginatedResponse.StatusCode.Should().Be(HttpStatusCode.OK);
+        paginatedResponse.StatusCode.ShouldBe(HttpStatusCode.OK);
         var paged = await paginatedResponse.Content.ReadFromJsonAsync<PagedList<ProductDto>>();
-        paged.Should().NotBeNull();
-        paged!.Items.Count.Should().BeLessOrEqualTo(2);
-        paged.PageNumber.Should().Be(1);
-        paged.PageSize.Should().Be(2);
-        paged.TotalCount.Should().BeGreaterOrEqualTo(5);
+        paged.ShouldNotBeNull();
+        paged!.Items.Count.ShouldBeLessThanOrEqualTo(2);
+        paged.PageNumber.ShouldBe(1);
+        paged.PageSize.ShouldBe(2);
+        paged.TotalCount.ShouldBeGreaterThanOrEqualTo(5);
     }
 
     [Fact]
@@ -145,15 +145,15 @@ public class ProductIntegrationTests : BaseIntegrationTest
     {
         var createDto = _dataHelper.CreateProductBuilder().Build();
         var created = await PostAndGetAsync<ProductDto>(ApiEndpoints.Product, createDto, "Get_ProductById_Seed");
-        created.Should().NotBeNull();
+        created.ShouldNotBeNull();
 
         var getResponse = await Client.GetAsync($"{ApiEndpoints.Product}/{created!.Id}");
         await LogIfError(getResponse, "Get_ProductById_Get");
 
-        getResponse.StatusCode.Should().Be(HttpStatusCode.OK);
+        getResponse.StatusCode.ShouldBe(HttpStatusCode.OK);
         var retrieved = await getResponse.Content.ReadFromJsonAsync<ProductDto>();
-        retrieved.Should().NotBeNull();
-        retrieved!.Id.Should().Be(created.Id);
+        retrieved.ShouldNotBeNull();
+        retrieved!.Id.ShouldBe(created.Id);
         AssertProductMatches(retrieved, createDto);
     }
 
@@ -163,7 +163,7 @@ public class ProductIntegrationTests : BaseIntegrationTest
         var response = await Client.GetAsync($"{ApiEndpoints.Product}/non-existing-id");
         await LogIfError(response, "Get_ProductById_NonExisting");
 
-        response.StatusCode.Should().Be(HttpStatusCode.NotFound);
+        response.StatusCode.ShouldBe(HttpStatusCode.NotFound);
     }
 
     [Fact]
@@ -171,15 +171,15 @@ public class ProductIntegrationTests : BaseIntegrationTest
     {
         var createDto = _dataHelper.CreateProductBuilder().Build();
         var created = await PostAndGetAsync<ProductDto>(ApiEndpoints.Product, createDto, "Put_UpdateProduct_Seed");
-        created.Should().NotBeNull();
+        created.ShouldNotBeNull();
 
         var updateDto = _dataHelper.CreateProductBuilder().WithIsActive(false).Build();
         var updateResponse = await UpdateProductResponseAsync(created!.Id, updateDto, "Put_UpdateProduct_Update");
 
-        updateResponse.StatusCode.Should().Be(HttpStatusCode.OK);
+        updateResponse.StatusCode.ShouldBe(HttpStatusCode.OK);
         var updated = await updateResponse.Content.ReadFromJsonAsync<ProductDto>();
-        updated.Should().NotBeNull();
-        updated!.Id.Should().Be(created.Id);
+        updated.ShouldNotBeNull();
+        updated!.Id.ShouldBe(created.Id);
         AssertProductMatches(updated, updateDto);
     }
 
@@ -189,7 +189,7 @@ public class ProductIntegrationTests : BaseIntegrationTest
         var updateDto = _dataHelper.CreateProductBuilder().Build();
         var response = await UpdateProductResponseAsync("non-existing-id", updateDto, "Put_UpdateNonExistingProduct");
 
-        response.StatusCode.Should().Be(HttpStatusCode.NotFound);
+        response.StatusCode.ShouldBe(HttpStatusCode.NotFound);
     }
 
     [Fact]
@@ -197,15 +197,15 @@ public class ProductIntegrationTests : BaseIntegrationTest
     {
         var createDto = _dataHelper.CreateProductBuilder().Build();
         var created = await PostAndGetAsync<ProductDto>(ApiEndpoints.Product, createDto, "Delete_ExistingProduct_Seed");
-        created.Should().NotBeNull();
+        created.ShouldNotBeNull();
 
         var deleteResponse = await Client.DeleteAsync($"{ApiEndpoints.Product}/{created!.Id}");
         await LogIfError(deleteResponse, "Delete_ExistingProduct_Delete");
 
-        deleteResponse.StatusCode.Should().Be(HttpStatusCode.OK);
+        deleteResponse.StatusCode.ShouldBe(HttpStatusCode.OK);
 
         var getResponse = await Client.GetAsync($"{ApiEndpoints.Product}/{created.Id}");
-        getResponse.StatusCode.Should().Be(HttpStatusCode.NotFound);
+        getResponse.StatusCode.ShouldBe(HttpStatusCode.NotFound);
     }
 
     [Fact]
@@ -214,7 +214,7 @@ public class ProductIntegrationTests : BaseIntegrationTest
         var response = await Client.DeleteAsync($"{ApiEndpoints.Product}/non-existing-id");
         await LogIfError(response, "Delete_NonExistingProduct");
 
-        response.StatusCode.Should().Be(HttpStatusCode.NotFound);
+        response.StatusCode.ShouldBe(HttpStatusCode.NotFound);
     }
 
         [Fact]
@@ -224,7 +224,7 @@ public class ProductIntegrationTests : BaseIntegrationTest
             dto.ShopId = "invalid-shop-id";
 
             var response = await CreateProductResponseAsync(dto, "Post_CreateProductWithInvalidShopId");
-            response.StatusCode.Should().Match(code => code == HttpStatusCode.Conflict || code == HttpStatusCode.BadRequest);
+            (response.StatusCode == HttpStatusCode.Conflict || response.StatusCode == HttpStatusCode.BadRequest).ShouldBeTrue();
         }
 
         [Fact]
@@ -234,7 +234,7 @@ public class ProductIntegrationTests : BaseIntegrationTest
             dto.BaseUnitId = "invalid-unit-id";
 
             var response = await CreateProductResponseAsync(dto, "Post_CreateProductWithInvalidUnitId");
-            response.StatusCode.Should().Match(code => code == HttpStatusCode.Conflict || code == HttpStatusCode.BadRequest);
+            (response.StatusCode == HttpStatusCode.Conflict || response.StatusCode == HttpStatusCode.BadRequest).ShouldBeTrue();
         }
 
         [Fact]
@@ -244,7 +244,7 @@ public class ProductIntegrationTests : BaseIntegrationTest
             dto.CategoryId = "invalid-category-id";
 
             var response = await CreateProductResponseAsync(dto, "Post_CreateProductWithInvalidCategoryId");
-            response.StatusCode.Should().Match(code => code == HttpStatusCode.InternalServerError || code == HttpStatusCode.Conflict);
+            (response.StatusCode == HttpStatusCode.InternalServerError || response.StatusCode == HttpStatusCode.Conflict).ShouldBeTrue();
         }
 
         [Fact]
@@ -254,7 +254,7 @@ public class ProductIntegrationTests : BaseIntegrationTest
             dto.SalePricePerBaseUnit = -100;
 
             var response = await CreateProductResponseAsync(dto, "Post_CreateProductWithNegativePrice");
-            response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            response.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
         }
 
         [Fact]
@@ -265,10 +265,10 @@ public class ProductIntegrationTests : BaseIntegrationTest
 
             var response = await CreateProductResponseAsync(dto, "Post_CreateProductWithZeroPrice");
             
-            response.StatusCode.Should().Be(HttpStatusCode.OK);
+            response.StatusCode.ShouldBe(HttpStatusCode.OK);
             var created = await response.Content.ReadFromJsonAsync<ProductDto>();
-            created.Should().NotBeNull();
-            created!.SalePricePerBaseUnit.Should().Be(0);
+            created.ShouldNotBeNull();
+            created!.SalePricePerBaseUnit.ShouldBe(0);
         }
 
         [Fact]
@@ -282,16 +282,15 @@ public class ProductIntegrationTests : BaseIntegrationTest
             var secondProduct = _dataHelper.CreateProductBuilder().WithSKU(sku).Build();
             var secondResponse = await CreateProductResponseAsync(secondProduct, "Post_CreateProductWithDuplicateSKU_Second");
 
-            secondResponse.StatusCode.Should().Match(code =>
-                code == HttpStatusCode.BadRequest ||
-                code == HttpStatusCode.Conflict ||
-                code == HttpStatusCode.OK);
+            (secondResponse.StatusCode == HttpStatusCode.BadRequest ||
+             secondResponse.StatusCode == HttpStatusCode.Conflict ||
+             secondResponse.StatusCode == HttpStatusCode.OK).ShouldBeTrue();
 
             if (secondResponse.StatusCode == HttpStatusCode.OK)
             {
                 var createdSecond = await secondResponse.Content.ReadFromJsonAsync<ProductDto>();
-                createdSecond.Should().NotBeNull();
-                createdSecond!.SKU.Should().Be(sku);
+                createdSecond.ShouldNotBeNull();
+                createdSecond!.SKU.ShouldBe(sku);
 
                 var deleteResponse = await Client.DeleteAsync($"{ApiEndpoints.Product}/{createdSecond.Id}");
                 deleteResponse.EnsureSuccessStatusCode();
@@ -304,7 +303,7 @@ public class ProductIntegrationTests : BaseIntegrationTest
             var dto = _dataHelper.CreateProductBuilder().WithName("").Build();
             var response = await CreateProductResponseAsync(dto, "Post_CreateProductWithEmptyName");
 
-            response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            response.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
         }
 
         [Fact]
@@ -313,7 +312,7 @@ public class ProductIntegrationTests : BaseIntegrationTest
             var dto = _dataHelper.CreateProductBuilder().WithSKU("").Build();
             var response = await CreateProductResponseAsync(dto, "Post_CreateProductWithEmptySKU");
 
-            response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            response.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
         }
 
         [Fact]
@@ -322,10 +321,10 @@ public class ProductIntegrationTests : BaseIntegrationTest
             var dto = _dataHelper.CreateProductBuilder().WithCategoryId(null).Build();
             var response = await CreateProductResponseAsync(dto, "Post_CreateProductWithNullCategoryId");
 
-            response.StatusCode.Should().Be(HttpStatusCode.OK);
+            response.StatusCode.ShouldBe(HttpStatusCode.OK);
             var created = await response.Content.ReadFromJsonAsync<ProductDto>();
-            created.Should().NotBeNull();
-            created!.CategoryId.Should().BeNull();
+            created.ShouldNotBeNull();
+            created!.CategoryId.ShouldBeNull();
         }
 
         [Fact]
@@ -334,10 +333,10 @@ public class ProductIntegrationTests : BaseIntegrationTest
             var dto = _dataHelper.CreateProductBuilder().WithPrice(int.MaxValue).Build();
             var response = await CreateProductResponseAsync(dto, "Post_CreateProductWithMaxPrice");
 
-            response.StatusCode.Should().Be(HttpStatusCode.OK);
+            response.StatusCode.ShouldBe(HttpStatusCode.OK);
             var created = await response.Content.ReadFromJsonAsync<ProductDto>();
-            created.Should().NotBeNull();
-            created!.SalePricePerBaseUnit.Should().Be(int.MaxValue);
+            created.ShouldNotBeNull();
+            created!.SalePricePerBaseUnit.ShouldBe(int.MaxValue);
         }
 
     [Fact]
@@ -345,15 +344,15 @@ public class ProductIntegrationTests : BaseIntegrationTest
     {
         var createDto = _dataHelper.CreateProductBuilder().WithPrice(1000).Build();
         var created = await PostAndGetAsync<ProductDto>(ApiEndpoints.Product, createDto, "Put_UpdateProductPrice_Seed");
-        created.Should().NotBeNull();
+        created.ShouldNotBeNull();
 
         var updateDto = _dataHelper.CreateProductBuilder().WithPrice(2000).Build();
         var updateResponse = await UpdateProductResponseAsync(created!.Id, updateDto, "Put_UpdateProductPrice_Update");
 
-        updateResponse.StatusCode.Should().Be(HttpStatusCode.OK);
+        updateResponse.StatusCode.ShouldBe(HttpStatusCode.OK);
         var updated = await updateResponse.Content.ReadFromJsonAsync<ProductDto>();
-        updated.Should().NotBeNull();
-        updated!.SalePricePerBaseUnit.Should().Be(2000);
+        updated.ShouldNotBeNull();
+        updated!.SalePricePerBaseUnit.ShouldBe(2000);
     }
 
     [Fact]
@@ -361,16 +360,16 @@ public class ProductIntegrationTests : BaseIntegrationTest
     {
         var createDto = _dataHelper.CreateProductBuilder().WithIsActive(true).Build();
         var created = await PostAndGetAsync<ProductDto>(ApiEndpoints.Product, createDto, "Put_UpdateProductToInactive_Seed");
-        created.Should().NotBeNull();
-        created!.IsActive.Should().BeTrue();
+        created.ShouldNotBeNull();
+        created!.IsActive.ShouldBeTrue();
 
         var updateDto = _dataHelper.CreateProductBuilder().WithIsActive(false).Build();
         var updateResponse = await UpdateProductResponseAsync(created.Id, updateDto, "Put_UpdateProductToInactive_Update");
 
-        updateResponse.StatusCode.Should().Be(HttpStatusCode.OK);
+        updateResponse.StatusCode.ShouldBe(HttpStatusCode.OK);
         var updated = await updateResponse.Content.ReadFromJsonAsync<ProductDto>();
-        updated.Should().NotBeNull();
-        updated!.IsActive.Should().BeFalse();
+        updated.ShouldNotBeNull();
+        updated!.IsActive.ShouldBeFalse();
     }
 
     [Fact]
@@ -379,7 +378,7 @@ public class ProductIntegrationTests : BaseIntegrationTest
         var response = await Client.GetAsync($"{ApiEndpoints.Product}?pageNumber=1&pageSize=0");
         await LogIfError(response, "Get_ListProducts_InvalidPageSize");
 
-        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        response.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
     }
 
     [Fact]
@@ -392,7 +391,7 @@ public class ProductIntegrationTests : BaseIntegrationTest
         foreach (var product in products)
         {
             var response = await CreateProductResponseAsync(product, $"Post_CreateMultipleProducts_{product.SKU}");
-            response.StatusCode.Should().Be(HttpStatusCode.OK);
+            response.StatusCode.ShouldBe(HttpStatusCode.OK);
         }
     }
 
@@ -401,15 +400,15 @@ public class ProductIntegrationTests : BaseIntegrationTest
     {
         var createDto = _dataHelper.CreateProductBuilder().WithSKU("OLD-SKU-001").Build();
         var created = await PostAndGetAsync<ProductDto>(ApiEndpoints.Product, createDto, "Put_UpdateProductSKU_Seed");
-        created.Should().NotBeNull();
+        created.ShouldNotBeNull();
 
         var updateDto = _dataHelper.CreateProductBuilder().WithSKU("NEW-SKU-001").Build();
         var updateResponse = await UpdateProductResponseAsync(created!.Id, updateDto, "Put_UpdateProductSKU_Update");
 
-        updateResponse.StatusCode.Should().Be(HttpStatusCode.OK);
+        updateResponse.StatusCode.ShouldBe(HttpStatusCode.OK);
         var updated = await updateResponse.Content.ReadFromJsonAsync<ProductDto>();
-        updated.Should().NotBeNull();
-        updated!.SKU.Should().Be("NEW-SKU-001");
+        updated.ShouldNotBeNull();
+        updated!.SKU.ShouldBe("NEW-SKU-001");
     }
 
     [Fact]
@@ -418,10 +417,10 @@ public class ProductIntegrationTests : BaseIntegrationTest
         var dto = _dataHelper.CreateProductBuilder().WithDescription(null).Build();
         var response = await CreateProductResponseAsync(dto, "Post_CreateProductWithExplicitNullDescription");
         
-        response.StatusCode.Should().Be(HttpStatusCode.OK);
+        response.StatusCode.ShouldBe(HttpStatusCode.OK);
         var created = await response.Content.ReadFromJsonAsync<ProductDto>();
-        created.Should().NotBeNull();
-        created!.Description.Should().BeNull();
+        created.ShouldNotBeNull();
+        created!.Description.ShouldBeNull();
     }
 
     [Fact]
@@ -430,9 +429,9 @@ public class ProductIntegrationTests : BaseIntegrationTest
         var dto = _dataHelper.CreateProductBuilder().WithBarcode(null).Build();
         var response = await CreateProductResponseAsync(dto, "Post_CreateProductWithExplicitNullBarcode");
         
-        response.StatusCode.Should().Be(HttpStatusCode.OK);
+        response.StatusCode.ShouldBe(HttpStatusCode.OK);
         var created = await response.Content.ReadFromJsonAsync<ProductDto>();
-        created.Should().NotBeNull();
-        created!.Barcode.Should().BeNull();
+        created.ShouldNotBeNull();
+        created!.Barcode.ShouldBeNull();
     }
 }
