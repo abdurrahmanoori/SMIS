@@ -3,16 +3,17 @@ namespace SMIS.Domain.Enums
     public enum TransactionType
     {
         // Invoice types
-        Sale = 1,
-        Purchase = 2,
+        In = 1,
+        Out = 2,
         Return = 3,
+        Adujstment = 4,
+
+        //// Payment types
+        //CashPayment = 4,
+        //CreditPayment = 5,
         
-        // Payment types
-        CashPayment = 4,
-        CreditPayment = 5,
-        
-        // Credit operations
-        CreditIssued = 6,
-        CreditAdjustment = 7
+        //// Credit operations
+        //CreditIssued = 6,
+        //CreditAdjustment = 7
     }
 }
