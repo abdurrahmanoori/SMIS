@@ -1,47 +1,38 @@
-using AutoFixture;
+using Bogus;
 using SMIS.Application.DTO.Localization;
 
 namespace SMIS.Test.TestDataBuilders
 {
     public class LanguageFixtureBuilder
     {
-        private readonly Fixture _fixture;
-        private LanguageCreateDto _dto;
+        private readonly Faker<LanguageCreateDto> _faker;
 
         public LanguageFixtureBuilder()
         {
-            _fixture = new Fixture();
-            _fixture.Behaviors.Remove(new ThrowingRecursionBehavior());
-            _fixture.Behaviors.Add(new OmitOnRecursionBehavior());
-
-            _dto = _fixture.Build<LanguageCreateDto>()
-                .With(x => x.Name, $"Language_{Guid.NewGuid():N}")
-                .With(x => x.Code, $"LC_{Guid.NewGuid():N}")
-                .With(x => x.IsActive, true)
-                .Create();
+            _faker = new Faker<LanguageCreateDto>()
+                .RuleFor(l => l.Name, f => f.Address.Country())
+                .RuleFor(l => l.Code, f => f.Address.CountryCode())
+                .RuleFor(l => l.IsActive, true);
         }
 
         public LanguageFixtureBuilder WithName(string name)
         {
-            _dto.Name = name;
+            _faker.RuleFor(l => l.Name, name);
             return this;
         }
 
         public LanguageFixtureBuilder WithCode(string? code)
         {
-            _dto.Code = code;
+            _faker.RuleFor(l => l.Code, code);
             return this;
         }
 
         public LanguageFixtureBuilder WithIsActive(bool isActive)
         {
-            _dto.IsActive = isActive;
+            _faker.RuleFor(l => l.IsActive, isActive);
             return this;
         }
 
-        public LanguageCreateDto Build()
-        {
-            return _dto;
-        }
+        public LanguageCreateDto Build() => _faker.Generate();
     }
 }
