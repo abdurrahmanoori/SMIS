@@ -28,3 +28,16 @@ namespace SMIS.Domain.Entities
         //public virtual ICollection<StockMovement> StockMovements { get; set; } = new List<StockMovement>();
     }
 }
+
+
+/*
+ 
+ | Id | Name        | Category   | Base Unit |
+| -- | ----------- | ---------- | --------- |
+| 1  | Coca Cola   | Drinks     | Bottle    |
+| 2  | Pepsi       | Drinks     | Bottle    |
+| 3  | Biscuit     | Food       | Pack      |
+| 4  | Notebook    | Stationery | Piece     |
+| 5  | Cooking Oil | Grocery    | Liter     |
+
+ */

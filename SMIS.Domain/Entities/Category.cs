@@ -12,3 +12,16 @@ public class Category : BaseAuditableEntity
     // Navigation Properties
     public virtual ICollection<Product> Products { get; set; } = new List<Product>();
 }
+
+/*
+ Purpose
+
+Groups products (Drink, Food, Stationery, etc.)
+| Id | Name       |
+| -- | ---------- |
+| 1  | Drinks     |
+| 2  | Food       |
+| 3  | Stationery |
+| 4  | Grocery    |
+
+ */
