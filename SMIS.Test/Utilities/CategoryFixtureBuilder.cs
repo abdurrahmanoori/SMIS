@@ -1,60 +1,44 @@
-using AutoFixture;
+using Bogus;
 using SMIS.Application.DTO.Categories;
 
 namespace SMIS.Test.Utilities;
 
 public class CategoryFixtureBuilder
 {
-    private readonly IFixture _fixture;
-    private string? _name;
-    private string? _code;
-    private string? _description;
-    private bool? _isActive;
-    private bool _nameSet;
-    private bool _codeSet;
-    private bool _descriptionSet;
+    private readonly Faker<CategoryCreateDto> _faker;
 
-    public CategoryFixtureBuilder( )
+    public CategoryFixtureBuilder()
     {
-        _fixture = new Fixture();
+        _faker = new Faker<CategoryCreateDto>()
+            .RuleFor(c => c.Name, f => f.Commerce.Department())
+            .RuleFor(c => c.Code, f => f.Commerce.Categories(1)[0].ToUpper().Replace(" ", ""))
+            .RuleFor(c => c.Description, f => f.Lorem.Sentence())
+            .RuleFor(c => c.IsActive, true);
     }
 
     public CategoryFixtureBuilder WithName(string name)
     {
-        _name = name;
-        _nameSet = true;
+        _faker.RuleFor(c => c.Name, name);
         return this;
     }
 
     public CategoryFixtureBuilder WithCode(string? code)
     {
-        _code = code;
-        _codeSet = true;
+        _faker.RuleFor(c => c.Code, code);
         return this;
     }
 
     public CategoryFixtureBuilder WithDescription(string? description)
     {
-        _description = description;
-        _descriptionSet = true;
+        _faker.RuleFor(c => c.Description, description);
         return this;
     }
 
     public CategoryFixtureBuilder WithIsActive(bool isActive)
     {
-        _isActive = isActive;
+        _faker.RuleFor(c => c.IsActive, isActive);
         return this;
     }
 
-    public CategoryCreateDto Build( ) => new()
-    {
-        Name = _nameSet ? _name! : GenerateUniqueName(),
-        Code = _codeSet ? _code : GenerateUniqueCode(),
-        Description = _descriptionSet ? _description : GenerateUniqueDescription(),
-        IsActive = _isActive ?? true
-    };
-
-    private static string GenerateUniqueName( ) => $"Name{Guid.NewGuid()}";
-    private static string GenerateUniqueCode( ) => $"CODE{Guid.NewGuid()}";
-    private static string GenerateUniqueDescription( ) => $"Description{Guid.NewGuid()}";
+    public CategoryCreateDto Build() => _faker.Generate();
 }
