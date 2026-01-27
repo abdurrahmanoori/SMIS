@@ -1,31 +1,25 @@
-using AutoFixture;
+using Bogus;
 using SMIS.Application.DTO.Products;
 
 namespace SMIS.Test.Utilities;
 
 public class ProductFixtureBuilder
 {
-    private readonly IFixture _fixture;
+    private readonly Faker<ProductCreateDto> _faker;
     private string? _shopId;
     private string? _unitId;
     private string? _categoryId;
-    private string? _name;
-    private string? _description;
-    private string? _sku;
-    private string? _barcode;
-    private string? _imageUrl;
-    private int? _price;
-    private bool? _isActive;
-    private bool _categoryIdSet;
-    private bool _nameSet;
-    private bool _descriptionSet;
-    private bool _skuSet;
-    private bool _barcodeSet;
-    private bool _imageUrlSet;
 
     public ProductFixtureBuilder()
     {
-        _fixture = new Fixture();
+        _faker = new Faker<ProductCreateDto>()
+            .RuleFor(p => p.Name, f => f.Commerce.ProductName())
+            .RuleFor(p => p.Description, f => f.Commerce.ProductDescription())
+            .RuleFor(p => p.SKU, f => f.Commerce.Ean13())
+            .RuleFor(p => p.Barcode, f => f.Random.Bool() ? f.Commerce.Ean8() : null)
+            .RuleFor(p => p.ImageUrl, f => f.Random.Bool() ? f.Image.PicsumUrl() : null)
+            .RuleFor(p => p.SalePricePerBaseUnit, f => f.Random.Int(100, 50000))
+            .RuleFor(p => p.IsActive, true);
     }
 
     public ProductFixtureBuilder WithShopId(string shopId)
@@ -43,7 +37,6 @@ public class ProductFixtureBuilder
     public ProductFixtureBuilder WithCategoryId(string? categoryId)
     {
         _categoryId = categoryId;
-        _categoryIdSet = true;
         return this;
     }
 
@@ -52,73 +45,57 @@ public class ProductFixtureBuilder
         _shopId = shopId;
         _unitId = unitId;
         _categoryId = categoryId;
-        _categoryIdSet = true;
         return this;
     }
 
     public ProductFixtureBuilder WithName(string name)
     {
-        _name = name;
-        _nameSet = true;
+        _faker.RuleFor(p => p.Name, name);
         return this;
     }
 
     public ProductFixtureBuilder WithDescription(string? description)
     {
-        _description = description;
-        _descriptionSet = true;
+        _faker.RuleFor(p => p.Description, description);
         return this;
     }
 
     public ProductFixtureBuilder WithSKU(string sku)
     {
-        _sku = sku;
-        _skuSet = true;
+        _faker.RuleFor(p => p.SKU, sku);
         return this;
     }
 
     public ProductFixtureBuilder WithBarcode(string? barcode)
     {
-        _barcode = barcode;
-        _barcodeSet = true;
+        _faker.RuleFor(p => p.Barcode, barcode);
         return this;
     }
 
     public ProductFixtureBuilder WithImageUrl(string? imageUrl)
     {
-        _imageUrl = imageUrl;
-        _imageUrlSet = true;
+        _faker.RuleFor(p => p.ImageUrl, imageUrl);
         return this;
     }
 
     public ProductFixtureBuilder WithPrice(int price)
     {
-        _price = price;
+        _faker.RuleFor(p => p.SalePricePerBaseUnit, price);
         return this;
     }
 
     public ProductFixtureBuilder WithIsActive(bool isActive)
     {
-        _isActive = isActive;
+        _faker.RuleFor(p => p.IsActive, isActive);
         return this;
     }
 
-    public ProductCreateDto Build() => new()
+    public ProductCreateDto Build()
     {
-        ShopId = _shopId ?? _fixture.Create<string>(),
-        BaseUnitId = _unitId ?? _fixture.Create<string>(),
-        CategoryId = _categoryIdSet ? _categoryId : _categoryId,
-        Name = _nameSet ? _name! : GenerateUniqueName(),
-        Description = _descriptionSet ? _description : GenerateUniqueDescription(),
-        SKU = _skuSet ? _sku! : GenerateUniqueSKU(),
-        Barcode = _barcodeSet ? _barcode : null,
-        ImageUrl = _imageUrlSet ? _imageUrl : null,
-        SalePricePerBaseUnit = _price ?? GenerateRandomPrice(),
-        IsActive = _isActive ?? true
-    };
-
-    private static string GenerateUniqueName() => $"Name{Guid.NewGuid()}";
-    private static string GenerateUniqueDescription() => $"Description{Guid.NewGuid()}";
-    private static string GenerateUniqueSKU() => $"SKU{Guid.NewGuid()}";
-    private int GenerateRandomPrice() => Math.Abs(_fixture.Create<int>()) % 100000;
+        var product = _faker.Generate();
+        product.ShopId = _shopId ?? throw new InvalidOperationException("ShopId is required");
+        product.BaseUnitId = _unitId ?? throw new InvalidOperationException("BaseUnitId is required");
+        product.CategoryId = _categoryId;
+        return product;
+    }
 }
