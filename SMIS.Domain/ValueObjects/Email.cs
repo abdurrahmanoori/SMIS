@@ -13,8 +13,8 @@ namespace SMIS.Domain.ValueObjects
 
         public static Email Create(string email)
         {
-            if (string.IsNullOrWhiteSpace(email))
-                throw new DomainValidationException("Email cannot be empty");
+            //if (string.IsNullOrWhiteSpace(email))
+            //    throw new DomainValidationException("Email cannot be empty");
 
             if (email.Length > 100)
                 throw new DomainValidationException("Email cannot exceed 100 characters");

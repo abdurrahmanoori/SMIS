@@ -13,8 +13,8 @@ namespace SMIS.Domain.ValueObjects
 
         public static PhoneNumber Create(string phoneNumber)
         {
-            if (string.IsNullOrWhiteSpace(phoneNumber))
-                throw new DomainValidationException("Phone number cannot be empty");
+            //if (string.IsNullOrWhiteSpace(phoneNumber))
+            //    throw new DomainValidationException("Phone number cannot be empty");
 
             var cleaned = phoneNumber.Trim();
 

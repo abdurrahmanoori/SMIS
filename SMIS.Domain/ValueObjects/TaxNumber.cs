@@ -13,8 +13,8 @@ namespace SMIS.Domain.ValueObjects
 
         public static TaxNumber Create(string taxNumber)
         {
-            if (string.IsNullOrWhiteSpace(taxNumber))
-                throw new DomainValidationException("Tax number cannot be empty");
+        //    if (string.IsNullOrWhiteSpace(taxNumber))
+        //        throw new DomainValidationException("Tax number cannot be empty");
 
             var cleaned = taxNumber.Trim().ToUpperInvariant();
 

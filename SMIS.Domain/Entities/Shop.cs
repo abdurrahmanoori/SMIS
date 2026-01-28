@@ -8,10 +8,10 @@ namespace SMIS.Domain.Entities
     public class Shop : BaseAuditableEntity
     {
         public ShopType ShopType { get; private set; }
-        public string Address { get; private set; } = string.Empty;
-        public string PhoneNumber { get; private set; } = string.Empty;
-        public string Email { get; private set; } = string.Empty;
-        public string TaxNumber { get; private set; } = string.Empty;
+        public string? Address { get; private set; } = string.Empty;
+        public string? PhoneNumber { get; private set; } = string.Empty;
+        public string? Email { get; private set; } = string.Empty;
+        public string? TaxNumber { get; private set; } = string.Empty;
         public bool IsActive { get; private set; } = true;
 
         // Navigation Properties
@@ -57,8 +57,8 @@ namespace SMIS.Domain.Entities
 
         public void SetAddress(string address)
         {
-            if (string.IsNullOrWhiteSpace(address))
-                throw new DomainValidationException("Address cannot be empty");
+            //if (string.IsNullOrWhiteSpace(address))
+            //    throw new DomainValidationException("Address cannot be empty");
 
             if (address.Length > 500)
                 throw new DomainValidationException("Address cannot exceed 500 characters");
