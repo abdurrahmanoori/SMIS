@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 namespace SMIS.Infrastructure.Repositories.Base
 {
 
-    public class GenericRepository<T> : IGenericRepository<T> where T : class, new()
+    public class GenericRepository<T> : IGenericRepository<T> where T : class
     {
         private readonly AppDbContext _context;
         private readonly DbSet<T> dbSet;

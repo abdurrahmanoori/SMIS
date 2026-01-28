@@ -81,7 +81,15 @@ public class MappingProfile : Profile
 
         // Shop mapping
         CreateMap<Shop, ShopDto>().ReverseMap();
-        CreateMap<Shop, ShopCreateDto>().ReverseMap();
+        CreateMap<ShopCreateDto, Shop>()
+            .ConstructUsing(src => Shop.Create(
+                src.Name,
+                src.ShopType,
+                src.Address,
+                src.PhoneNumber,
+                src.Email,
+                src.TaxNumber
+            ));
 
         // Product mapping
         CreateMap<Product, ProductDto>().ReverseMap();

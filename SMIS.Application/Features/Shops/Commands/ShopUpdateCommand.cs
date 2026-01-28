@@ -35,7 +35,15 @@ namespace SMIS.Application.Features.Shops.Commands
             }
 
             await _translationKeyRepository.AddTranslationKeysForChangedProperties(request.ShopCreateDto, entity);
-            _mapper.Map(request.ShopCreateDto, entity);
+            
+            entity.SetName(request.ShopCreateDto.Name);
+            entity.SetShopType(request.ShopCreateDto.ShopType);
+            entity.SetAddress(request.ShopCreateDto.Address);
+            entity.SetPhoneNumber(request.ShopCreateDto.PhoneNumber);
+            entity.SetEmail(request.ShopCreateDto.Email);
+            entity.SetTaxNumber(request.ShopCreateDto.TaxNumber);
+            if (request.ShopCreateDto.IsActive) entity.Activate(); else entity.Deactivate();
+            
             await _unitOfWork.SaveChanges(cancellationToken);
 
             var dto = _mapper.Map<ShopDto>(entity);

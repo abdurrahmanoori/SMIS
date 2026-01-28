@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using SMIS.Domain.Entities;
 using SMIS.Domain.Enums;
+using System.Reflection;
 
 namespace SMIS.Infrastructure.DatabaseSeeders
 {
@@ -8,11 +9,30 @@ namespace SMIS.Infrastructure.DatabaseSeeders
     {
         public static void DataSeed(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Shop>().HasData(
-                new Shop { Id = "1", Name = "Main Pharmacy", ShopType = ShopType.RetailShop, Address = "Kabul Center", PhoneNumber = "0700000001", Email = "main@pharmacy.local", TaxNumber = "TAX001", IsActive = true },
-                new Shop { Id = "2", Name = "City Pharmacy", ShopType = ShopType.WholesaleShop, Address = "Herat Center", PhoneNumber = "0700000002", Email = "city@pharmacy.local", TaxNumber = "TAX002", IsActive = true },
-                new Shop { Id = "3", Name = "Health Store", ShopType = ShopType.RetailShop, Address = "Kandahar Center", PhoneNumber = "0700000003", Email = "health@store.local", TaxNumber = "TAX003", IsActive = true }
-            );
+            var shops = new[]
+            {
+                CreateShop("1", "Main Pharmacy", ShopType.RetailShop, "Kabul Center", "0700000001", "main@pharmacy.local", "TAX001", true),
+                CreateShop("2", "City Pharmacy", ShopType.WholesaleShop, "Herat Center", "0700000002", "city@pharmacy.local", "TAX002", true),
+                CreateShop("3", "Health Store", ShopType.RetailShop, "Kandahar Center", "0700000003", "health@store.local", "TAX003", true)
+            };
+
+            modelBuilder.Entity<Shop>().HasData(shops);
+        }
+
+        private static Shop CreateShop(string id, string name, ShopType shopType, string address, string phoneNumber, string email, string taxNumber, bool isActive)
+        {
+            var shop = (Shop)Activator.CreateInstance(typeof(Shop), true)!;
+            
+            typeof(Shop).GetProperty("Id")!.SetValue(shop, id);
+            typeof(Shop).GetProperty("Name")!.SetValue(shop, name);
+            typeof(Shop).GetProperty("ShopType")!.SetValue(shop, shopType);
+            typeof(Shop).GetProperty("Address")!.SetValue(shop, address);
+            typeof(Shop).GetProperty("PhoneNumber")!.SetValue(shop, phoneNumber);
+            typeof(Shop).GetProperty("Email")!.SetValue(shop, email);
+            typeof(Shop).GetProperty("TaxNumber")!.SetValue(shop, taxNumber);
+            typeof(Shop).GetProperty("IsActive")!.SetValue(shop, isActive);
+            
+            return shop;
         }
     }
 }
