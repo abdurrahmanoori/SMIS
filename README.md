@@ -132,14 +132,43 @@ dotnet test /p:CollectCoverage=true
 
 #### Shop
 Represents a shop/store in the system.
+- **Properties**:
+  - `Id` (string) - Unique identifier
+  - `Name` (string) - Shop name
+  - `ShopType` (enum) - Type of shop
+  - `Address` (string) - Physical address
+  - `PhoneNumber` (string) - Contact number
+  - `Email` (string) - Email address
+  - `TaxNumber` (string) - Tax identification number
+  - `IsActive` (bool) - Active status
+  - `CreatedAt`, `UpdatedAt`, `CreatedBy`, `UpdatedBy` - Audit fields
 
 #### Category
 Groups products into logical categories (Drinks, Food, Stationery, Grocery).
+- **Properties**:
+  - `Id` (string) - Unique identifier
+  - `Name` (string) - Category name
+  - `Code` (string?) - Category code
+  - `Description` (string?) - Category description
+  - `IsActive` (bool) - Active status
+  - `CreatedAt`, `UpdatedAt`, `CreatedBy`, `UpdatedBy` - Audit fields
 - **Relationships**: One-to-Many with Products
 
 #### Product
 Represents items available for sale.
-- **Properties**: Name, Category, Base Unit
+- **Properties**:
+  - `Id` (string) - Unique identifier
+  - `Name` (string) - Product name
+  - `ShopId` (string) - Foreign key to Shop
+  - `BaseUnitId` (string) - Foreign key to UnitOfMeasure
+  - `CategoryId` (string?) - Foreign key to Category
+  - `SalePricePerBaseUnit` (int) - Sale price per base unit
+  - `SKU` (string) - Stock keeping unit
+  - `Barcode` (string?) - Product barcode
+  - `Description` (string?) - Product description
+  - `ImageUrl` (string?) - Product image URL
+  - `IsActive` (bool) - Active status
+  - `CreatedAt`, `UpdatedAt`, `CreatedBy`, `UpdatedBy` - Audit fields
 - **Relationships**: 
   - Belongs to Shop
   - Belongs to Category
@@ -148,41 +177,83 @@ Represents items available for sale.
 
 #### UnitOfMeasure
 Defines measurement units (Piece, Bottle, Pack, Liter, Box).
+- **Properties**:
+  - `Id` (string) - Unique identifier
+  - `Name` (string) - Unit name
+  - `Symbol` (string) - Unit symbol
+  - `Description` (string?) - Unit description
+  - `CreatedAt`, `UpdatedAt` - Audit fields
 - **Relationships**: One-to-Many with ProductUnits
 
 #### ProductUnit
 Defines product-specific unit conversions. Critical for inventory accuracy.
 - **Purpose**: Same unit name means different quantities for different products
+- **Properties**:
+  - `Id` (string) - Unique identifier
+  - `ProductId` (string) - Foreign key to Product
+  - `UnitOfMeasureId` (string) - Foreign key to UnitOfMeasure
+  - `ConversionFactor` (decimal) - How many base units in this unit
+  - `CreatedAt`, `UpdatedAt` - Audit fields
 - **Example**: 
-  - Biscuit: 1 Box = 12 Packs
-  - Notebook: 1 Box = 10 Pieces
-  - Coca Cola: 1 Carton = 24 Bottles
-- **Properties**: ProductId, UnitOfMeasureId, ConversionFactor
+  - Biscuit: 1 Box = 12 Packs (ConversionFactor = 12)
+  - Notebook: 1 Box = 10 Pieces (ConversionFactor = 10)
+  - Coca Cola: 1 Carton = 24 Bottles (ConversionFactor = 24)
 
 ### Inventory Management
 
 #### StockBatch
 Tracks individual stock receipts with expiration dates.
 - **Purpose**: Manages same product with different expiry dates (FIFO/FEFO)
-- **Properties**: ProductId, BatchNumber, Quantity, ReceivedDate, ExpirationDate, PurchasePrice, Status
+- **Properties**:
+  - `Id` (int) - Unique identifier
+  - `ProductId` (int) - Foreign key to Product
+  - `BatchNumber` (string?) - Batch identification number
+  - `Quantity` (decimal) - Remaining quantity in base unit
+  - `UnitId` (int) - Foreign key to UnitOfMeasure
+  - `ReceivedDate` (DateTime) - Date batch was received
+  - `ExpirationDate` (DateTime) - Expiration date (null for non-perishables)
+  - `PurchasePrice` (long) - Purchase price per unit
+  - `Status` (enum) - Batch status (Active, Expired, etc.)
+  - `CreatedAt`, `UpdatedAt`, `CreatedBy`, `UpdatedBy` - Audit fields
 - **Example**: Two batches of Coca Cola with different expiry dates
 
 #### StockTransaction
 Records all inventory movements (audit trail).
-- **Types**: In (Purchase), Out (Sale), Adjustment (Damage/Loss)
-- **Properties**: ProductId, StockBatchId, Quantity, Type, TransactionDate, Reference
 - **Purpose**: Complete inventory history - nothing is deleted
+- **Properties**:
+  - `Id` (int) - Unique identifier
+  - `ProductId` (int) - Foreign key to Product
+  - `StockBatchId` (int) - Foreign key to StockBatch
+  - `Quantity` (decimal) - Transaction quantity
+  - `UnitId` (int) - Foreign key to UnitOfMeasure
+  - `Type` (enum) - Transaction type (In, Out, Adjustment)
+  - `TransactionDate` (DateTime) - Date of transaction
+  - `Reference` (string?) - Reference number or note
+- **Types**: In (Purchase), Out (Sale), Adjustment (Damage/Loss)
 
 #### StockConsumption
 Explicit record of batch consumption during sales.
 - **Purpose**: Tracks which specific batch was used (FIFO/FEFO enforcement)
-- **Properties**: StockBatchId, Quantity, ConsumedDate, ConsumedBy
+- **Properties**:
+  - `Id` (int) - Unique identifier
+  - `StockBatchId` (int) - Foreign key to StockBatch
+  - `Quantity` (decimal) - Consumed quantity
+  - `ConsumedDate` (DateTime?) - Date consumed
+  - `ConsumedBy` (string?) - User or system that consumed
+  - `CreatedAt`, `UpdatedAt`, `CreatedBy`, `UpdatedBy` - Audit fields
 
 ### System
 
 #### AppLog
 Application logging for monitoring and debugging.
-- **Properties**: Level, Message, Exception, Properties, UserId, CreatedAt
+- **Properties**:
+  - `Id` (string) - Unique identifier
+  - `Level` (string) - Log level (Info, Warning, Error, etc.)
+  - `Message` (string) - Log message
+  - `Exception` (string?) - Exception details if any
+  - `Properties` (string?) - Additional properties (JSON)
+  - `UserId` (string?) - User who triggered the log
+  - `CreatedAt` (DateTime) - Timestamp
 
 ## 📦 Project Structure
 
