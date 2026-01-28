@@ -36,6 +36,7 @@ namespace SMIS.Application.Features.Shops.Commands
 
             await _translationKeyRepository.AddTranslationKeysForChangedProperties(request.ShopCreateDto, entity);
             
+            // Update existing entity using domain methods
             entity.SetName(request.ShopCreateDto.Name);
             entity.SetShopType(request.ShopCreateDto.ShopType);
             entity.SetAddress(request.ShopCreateDto.Address);

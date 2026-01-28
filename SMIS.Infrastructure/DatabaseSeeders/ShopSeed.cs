@@ -21,16 +21,12 @@ namespace SMIS.Infrastructure.DatabaseSeeders
 
         private static Shop CreateShop(string id, string name, ShopType shopType, string address, string phoneNumber, string email, string taxNumber, bool isActive)
         {
-            var shop = (Shop)Activator.CreateInstance(typeof(Shop), true)!;
+            var shop = Shop.Create(name, shopType, address, phoneNumber, email, taxNumber);
             
+            // Set ID for seeding (bypass domain validation for infrastructure concerns)
             typeof(Shop).GetProperty(nameof(Shop.Id))!.SetValue(shop, id);
-            typeof(Shop).GetProperty(nameof(Shop.Name))!.SetValue(shop, name);
-            typeof(Shop).GetProperty(nameof(Shop.ShopType))!.SetValue(shop, shopType);
-            typeof(Shop).GetProperty(nameof(Shop.Address))!.SetValue(shop, address);
-            typeof(Shop).GetProperty(nameof(Shop.PhoneNumber))!.SetValue(shop, phoneNumber);
-            typeof(Shop).GetProperty(nameof(Shop.Email))!.SetValue(shop, email);
-            typeof(Shop).GetProperty(nameof(Shop.TaxNumber))!.SetValue(shop, taxNumber);
-            typeof(Shop).GetProperty(nameof(Shop.IsActive))!.SetValue(shop, isActive);
+            
+            if (!isActive) shop.Deactivate();
             
             return shop;
         }
