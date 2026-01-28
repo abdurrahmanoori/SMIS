@@ -126,6 +126,64 @@ dotnet test
 dotnet test /p:CollectCoverage=true
 ```
 
+## 📊 Domain Model (SMIS.Domain.Entities)
+
+### Core Entities
+
+#### Shop
+Represents a shop/store in the system.
+
+#### Category
+Groups products into logical categories (Drinks, Food, Stationery, Grocery).
+- **Relationships**: One-to-Many with Products
+
+#### Product
+Represents items available for sale.
+- **Properties**: Name, Category, Base Unit
+- **Relationships**: 
+  - Belongs to Shop
+  - Belongs to Category
+  - Has UnitOfMeasure (base unit)
+  - Has many ProductUnits (conversion units)
+
+#### UnitOfMeasure
+Defines measurement units (Piece, Bottle, Pack, Liter, Box).
+- **Relationships**: One-to-Many with ProductUnits
+
+#### ProductUnit
+Defines product-specific unit conversions. Critical for inventory accuracy.
+- **Purpose**: Same unit name means different quantities for different products
+- **Example**: 
+  - Biscuit: 1 Box = 12 Packs
+  - Notebook: 1 Box = 10 Pieces
+  - Coca Cola: 1 Carton = 24 Bottles
+- **Properties**: ProductId, UnitOfMeasureId, ConversionFactor
+
+### Inventory Management
+
+#### StockBatch
+Tracks individual stock receipts with expiration dates.
+- **Purpose**: Manages same product with different expiry dates (FIFO/FEFO)
+- **Properties**: ProductId, BatchNumber, Quantity, ReceivedDate, ExpirationDate, PurchasePrice, Status
+- **Example**: Two batches of Coca Cola with different expiry dates
+
+#### StockTransaction
+Records all inventory movements (audit trail).
+- **Types**: In (Purchase), Out (Sale), Adjustment (Damage/Loss)
+- **Properties**: ProductId, StockBatchId, Quantity, Type, TransactionDate, Reference
+- **Purpose**: Complete inventory history - nothing is deleted
+
+#### StockConsumption
+Explicit record of batch consumption during sales.
+- **Purpose**: Tracks which specific batch was used (FIFO/FEFO enforcement)
+- **Properties**: StockBatchId, Quantity, ConsumedDate, ConsumedBy
+
+### System
+
+#### AppLog
+Application logging for monitoring and debugging.
+- **Properties**: Level, Message, Exception, Properties, UserId, CreatedAt
+
 ## 📦 Project Structure
 
 ### SMIS.Api
