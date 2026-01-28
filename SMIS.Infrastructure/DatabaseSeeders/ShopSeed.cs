@@ -23,14 +23,14 @@ namespace SMIS.Infrastructure.DatabaseSeeders
         {
             var shop = (Shop)Activator.CreateInstance(typeof(Shop), true)!;
             
-            typeof(Shop).GetProperty("Id")!.SetValue(shop, id);
-            typeof(Shop).GetProperty("Name")!.SetValue(shop, name);
-            typeof(Shop).GetProperty("ShopType")!.SetValue(shop, shopType);
-            typeof(Shop).GetProperty("Address")!.SetValue(shop, address);
-            typeof(Shop).GetProperty("PhoneNumber")!.SetValue(shop, phoneNumber);
-            typeof(Shop).GetProperty("Email")!.SetValue(shop, email);
-            typeof(Shop).GetProperty("TaxNumber")!.SetValue(shop, taxNumber);
-            typeof(Shop).GetProperty("IsActive")!.SetValue(shop, isActive);
+            typeof(Shop).GetProperty(nameof(Shop.Id))!.SetValue(shop, id);
+            typeof(Shop).GetProperty(nameof(Shop.Name))!.SetValue(shop, name);
+            typeof(Shop).GetProperty(nameof(Shop.ShopType))!.SetValue(shop, shopType);
+            typeof(Shop).GetProperty(nameof(Shop.Address))!.SetValue(shop, address);
+            typeof(Shop).GetProperty(nameof(Shop.PhoneNumber))!.SetValue(shop, phoneNumber);
+            typeof(Shop).GetProperty(nameof(Shop.Email))!.SetValue(shop, email);
+            typeof(Shop).GetProperty(nameof(Shop.TaxNumber))!.SetValue(shop, taxNumber);
+            typeof(Shop).GetProperty(nameof(Shop.IsActive))!.SetValue(shop, isActive);
             
             return shop;
         }
