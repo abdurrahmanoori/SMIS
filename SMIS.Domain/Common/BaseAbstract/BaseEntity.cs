@@ -1,4 +1,5 @@
-﻿using SMIS.Domain.Common.Interfaces;
+﻿using Microsoft.EntityFrameworkCore;
+using SMIS.Domain.Common.Interfaces;
 using System.ComponentModel.DataAnnotations;
 
 namespace SMIS.Domain.Common.BaseAbstract
@@ -10,5 +11,8 @@ namespace SMIS.Domain.Common.BaseAbstract
         public string Name { get; set; } = string.Empty;
         [Required]
         public bool IsPublic { get; set; } = false;
+        public int Version { get; set; }
+        public EntityState State { get; set; }
+        public DateTimeOffset LastModifiedUtc { get; set; } = DateTimeOffset.UtcNow;
     }
 }

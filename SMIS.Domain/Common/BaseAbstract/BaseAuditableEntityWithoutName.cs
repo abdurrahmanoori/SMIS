@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using SMIS.Domain.Common.Interfaces;
 namespace SMIS.Domain.Common.BaseAbstract
 {
@@ -12,5 +13,8 @@ namespace SMIS.Domain.Common.BaseAbstract
         public DateTime? CreatedDate { get; set; } = DateTime.Now;
         public string? UpdatedBy { get; set; }
         public DateTime? UpdatedDate { get; set; } = DateTime.Now;
+        public int Version { get ; set ; }
+        public EntityState State { get ; set ; }
+        public DateTimeOffset LastModifiedUtc { get;  set; }
     }
 }
