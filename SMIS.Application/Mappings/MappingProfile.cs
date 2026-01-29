@@ -100,6 +100,7 @@ public class MappingProfile : Profile
                 src.BaseUnitId,
                 src.SKU,
                 src.SalePricePerBaseUnit,
+                src.IsActive,
                 src.Description,
                 src.Barcode,
                 src.ImageUrl,

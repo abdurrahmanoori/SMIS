@@ -23,7 +23,7 @@ namespace SMIS.Domain.Entities
 
         internal Product() { } // EF Core & Seeding
 
-        public static Product Create(string name, string shopId, string baseUnitId, string sku, int salePricePerBaseUnit, string? description = null, string? barcode = null, string? imageUrl = null, string? categoryId = null)
+        public static Product Create(string name, string shopId, string baseUnitId, string sku, int salePricePerBaseUnit, bool isActive = true, string? description = null, string? barcode = null, string? imageUrl = null, string? categoryId = null)
         {
             var product = new Product();
             product.SetName(name);
@@ -35,6 +35,7 @@ namespace SMIS.Domain.Entities
             if (!string.IsNullOrWhiteSpace(barcode)) product.SetBarcode(barcode);
             product.SetImageUrl(imageUrl);
             product.SetCategoryId(categoryId);
+            if (!isActive) product.Deactivate();
             return product;
         }
 

@@ -40,12 +40,10 @@ namespace SMIS.Infrastructure.DatabaseSeeders
 
         private static Product CreateProduct(string id, string name, string shopId, string baseUnitId, string sku, int salePricePerBaseUnit, string? description, string? barcode, string? imageUrl, string? categoryId, bool isActive)
         {
-            var product = Product.Create(name, shopId, baseUnitId, sku, salePricePerBaseUnit, description, barcode, imageUrl, categoryId);
+            var product = Product.Create(name, shopId, baseUnitId, sku, salePricePerBaseUnit, isActive, description, barcode, imageUrl, categoryId);
             
             // Set ID for seeding (bypass domain validation for infrastructure concerns)
             typeof(Product).GetProperty(nameof(Product.Id))!.SetValue(product, id);
-            
-            if (!isActive) product.Deactivate();
             
             return product;
         }
