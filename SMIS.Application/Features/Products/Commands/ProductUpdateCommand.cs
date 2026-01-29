@@ -35,7 +35,19 @@ namespace SMIS.Application.Features.Products.Commands
             }
 
             await _translationKeyRepository.AddTranslationKeysForChangedProperties(request.ProductCreateDto, entity);
-            _mapper.Map(request.ProductCreateDto, entity);
+            
+            // Update existing entity using domain methods
+            entity.SetName(request.ProductCreateDto.Name);
+            entity.SetShopId(request.ProductCreateDto.ShopId);
+            entity.SetBaseUnitId(request.ProductCreateDto.BaseUnitId);
+            entity.SetSKU(request.ProductCreateDto.SKU);
+            entity.SetSalePricePerBaseUnit(request.ProductCreateDto.SalePricePerBaseUnit);
+            entity.SetDescription(request.ProductCreateDto.Description);
+            if (!string.IsNullOrWhiteSpace(request.ProductCreateDto.Barcode)) entity.SetBarcode(request.ProductCreateDto.Barcode);
+            entity.SetImageUrl(request.ProductCreateDto.ImageUrl);
+            entity.SetCategoryId(request.ProductCreateDto.CategoryId);
+            if (request.ProductCreateDto.IsActive) entity.Activate(); else entity.Deactivate();
+            
             await _unitOfWork.SaveChanges(cancellationToken);
 
             var dto = _mapper.Map<ProductDto>(entity);

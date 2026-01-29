@@ -32,6 +32,8 @@ namespace SMIS.Application.Features.Products.Commands
             await _translationKeyRepository.AddTranslationKeysForEntity(request.ProductCreateDto, _unitOfWork);
 
             var entity = _mapper.Map<Product>(request.ProductCreateDto);
+            if (!request.ProductCreateDto.IsActive) entity.Deactivate();
+            
             await _productRepository.AddAsync(entity);
             await _unitOfWork.SaveChanges(cancellationToken);
 

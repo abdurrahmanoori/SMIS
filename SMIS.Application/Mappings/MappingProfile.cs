@@ -5,14 +5,14 @@ using SMIS.Application.DTO.Districts;
 using SMIS.Application.DTO.Shops;
 using SMIS.Application.DTO.UnitOfMeasures;
 using SMIS.Application.DTO.Products;
-using SMIS.Domain.Entities;
-using SMIS.Domain.Entities.Localization;
 using System.Globalization;
 using SMIS.Application.DTO.Categories;
-using SMIS.Domain.Entities.LocationEntities;
 using SMIS.Application.DTO.ProductUnits;
 using SMIS.Application.DTO.TranslationKeys;
 using SMIS.Application.DTO.Translations;
+using SMIS.Domain.Entities;
+using SMIS.Domain.Entities.Localization;
+using SMIS.Domain.Entities.LocationEntities;
 
 namespace SMIS.Application.Mappings;
 
@@ -93,7 +93,18 @@ public class MappingProfile : Profile
 
         // Product mapping
         CreateMap<Product, ProductDto>().ReverseMap();
-        CreateMap<Product, ProductCreateDto>().ReverseMap();
+        CreateMap<ProductCreateDto, Product>()
+            .ConstructUsing(src => Product.Create(
+                src.Name,
+                src.ShopId,
+                src.BaseUnitId,
+                src.SKU,
+                src.SalePricePerBaseUnit,
+                src.Description,
+                src.Barcode,
+                src.ImageUrl,
+                src.CategoryId
+            ));
 
         // UnitOfMeasure mapping
         CreateMap<UnitOfMeasure, UnitOfMeasureDto>().ReverseMap();
