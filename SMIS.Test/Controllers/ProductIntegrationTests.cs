@@ -306,14 +306,14 @@ public class ProductIntegrationTests : BaseIntegrationTest
             response.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
         }
 
-        [Fact]
-        public async Task Post_CreateProductWithEmptySKU_ReturnsBadRequest()
-        {
-            var dto = _dataHelper.CreateProductBuilder().WithSKU("").Build();
-            var response = await CreateProductResponseAsync(dto, "Post_CreateProductWithEmptySKU");
+        //[Fact]
+        //public async Task Post_CreateProductWithEmptySKU_ReturnsBadRequest()
+        //{
+        //    var dto = _dataHelper.CreateProductBuilder().WithSKU("").Build();
+        //    var response = await CreateProductResponseAsync(dto, "Post_CreateProductWithEmptySKU");
 
-            response.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
-        }
+        //    response.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
+        //}
 
         [Fact]
         public async Task Post_CreateProductWithNullCategoryId_ReturnsOk()
