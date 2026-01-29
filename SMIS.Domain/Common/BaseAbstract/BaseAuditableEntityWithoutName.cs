@@ -1,14 +1,10 @@
+using Microsoft.EntityFrameworkCore;
 using SMIS.Domain.Common.Interfaces;
-using System.ComponentModel.DataAnnotations;
-
 namespace SMIS.Domain.Common.BaseAbstract
 {
-    public abstract class BaseAuditableEntityWithoutName : IAuditableEntity
+    public abstract class BaseAuditableEntityWithoutName : IAuditableEntity,IEntityPK
     {
-        //[Key]
-        //public int Id { get; set; }
 
-        [Required]
         public string Id { get; set; } = Guid.NewGuid().ToString();
 
         public bool IsPublic { get; set; } = false;
@@ -17,5 +13,8 @@ namespace SMIS.Domain.Common.BaseAbstract
         public DateTime? CreatedDate { get; set; } = DateTime.Now;
         public string? UpdatedBy { get; set; }
         public DateTime? UpdatedDate { get; set; } = DateTime.Now;
+        public int Version { get ; set ; }
+        public EntityState State { get ; set ; }
+        public DateTimeOffset LastModifiedUtc { get;  set; }
     }
 }

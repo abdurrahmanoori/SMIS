@@ -17,15 +17,19 @@ namespace SMIS.Infrastructure.EntityConfigurations
                 .HasMaxLength(200);
 
             builder.Property(s => s.Address)
+                //.IsRequired()
                 .HasMaxLength(500);
 
             builder.Property(s => s.PhoneNumber)
+                //.IsRequired()
                 .HasMaxLength(50);
 
             builder.Property(s => s.Email)
+              //  .IsRequired()
                 .HasMaxLength(100);
 
             builder.Property(s => s.TaxNumber)
+               // .IsRequired()
                 .HasMaxLength(50);
 
             builder.Property(s => s.ShopType)

@@ -1,5 +1,5 @@
 using System.Net;
-using FluentAssertions;
+using Shouldly;
 using SMIS.Application.Common;
 using SMIS.Application.DTO.Products;
 using SMIS.Test.Extensions;
@@ -8,488 +8,430 @@ using SMIS.Test.Utilities;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace SMIS.Test.Controllers
+namespace SMIS.Test.Controllers;
+
+public class ProductIntegrationTests : BaseIntegrationTest
 {
-    public class ProductIntegrationTests : BaseIntegrationTest
+    private readonly ProductTestDataHelper _dataHelper;
+
+    public ProductIntegrationTests(CustomWebApplicationFactory factory, ITestOutputHelper output)
+        : base(factory, output)
     {
-        private readonly ProductTestDataHelper _dataHelper;
+        _dataHelper = new ProductTestDataHelper(Client);
+    }
 
-        public ProductIntegrationTests(CustomWebApplicationFactory factory, ITestOutputHelper output)
-            : base(factory, output)
+    public override async Task InitializeAsync()
+    {
+        await _dataHelper.GetOrCreateDependencies();
+    }
+
+    private async Task<ProductDto> CreateProductAsync(ProductCreateDto dto, string testName)
+    {
+        var response = await Client.PostAsJsonAsync(ApiEndpoints.Product, dto);
+        await LogIfError(response, testName);
+        response.EnsureSuccessStatusCode();
+        return (await response.Content.ReadFromJsonAsync<ProductDto>())!;
+    }
+
+    private async Task<HttpResponseMessage> CreateProductResponseAsync(ProductCreateDto dto, string testName)
+    {
+        var response = await Client.PostAsJsonAsync(ApiEndpoints.Product, dto);
+        await LogIfError(response, testName);
+        return response;
+    }
+
+    private async Task<HttpResponseMessage> UpdateProductResponseAsync(string productId, ProductCreateDto dto, string testName)
+    {
+        var response = await Client.PutAsJsonAsync($"{ApiEndpoints.Product}/{productId}", dto);
+        await LogIfError(response, testName);
+        return response;
+    }
+
+    private static void AssertProductMatches(ProductDto actual, ProductCreateDto expected)
+    {
+        actual.ShouldNotBeNull();
+        actual.Name.ShouldBe(expected.Name);
+        actual.ShopId.ShouldBe(expected.ShopId);
+        actual.BaseUnitId.ShouldBe(expected.BaseUnitId);
+        actual.SalePricePerBaseUnit.ShouldBe(expected.SalePricePerBaseUnit);
+        actual.Description.ShouldBe(expected.Description);
+        actual.IsActive.ShouldBe(expected.IsActive);
+        actual.SKU.ShouldBe(expected.SKU);
+        actual.Barcode.ShouldBe(expected.Barcode);
+        actual.ImageUrl.ShouldBe(expected.ImageUrl);
+        actual.CategoryId.ShouldBe(expected.CategoryId);
+    }
+
+    [Fact]
+    public async Task Post_CreateValidProduct_ReturnsOk()
+    {
+        var dto = _dataHelper.CreateProductBuilder().Build();
+        var response = await CreateProductResponseAsync(dto, "Post_CreateValidProduct");
+        
+        response.StatusCode.ShouldBe(HttpStatusCode.OK);
+        var created = await response.Content.ReadFromJsonAsync<ProductDto>();
+        AssertProductMatches(created!, dto);
+    }
+
+    [Fact]
+    public async Task Post_CreateProductWithEmptyDescription_ReturnsOk()
+    {
+        var dto = _dataHelper.CreateProductBuilder().Build();
+        dto.Description = "";
+
+        var response = await CreateProductResponseAsync(dto, "Post_CreateProductWithEmptyDescription");
+        
+        response.StatusCode.ShouldBe(HttpStatusCode.OK);
+        var created = await response.Content.ReadFromJsonAsync<ProductDto>();
+        created.ShouldNotBeNull();
+        created!.Description.ShouldBe("");
+    }
+
+    [Fact]
+    public async Task Post_CreateProductWithNullDescription_ReturnsOk()
+    {
+        var dto = _dataHelper.CreateProductBuilder().Build();
+        dto.Description = null;
+
+        var response = await CreateProductResponseAsync(dto, "Post_CreateProductWithNullDescription");
+        
+        response.StatusCode.ShouldBe(HttpStatusCode.OK);
+        var created = await response.Content.ReadFromJsonAsync<ProductDto>();
+        created.ShouldNotBeNull();
+        created!.Description.ShouldBeNull();
+    }
+
+    [Fact]
+    public async Task Get_ListProducts_ReturnsPagedList()
+    {
+        var response = await Client.GetAsync($"{ApiEndpoints.Product}?pageNumber=1&pageSize=10");
+        await LogIfError(response, "Get_ListProducts");
+
+        response.StatusCode.ShouldBe(HttpStatusCode.OK);
+        var paged = await response.Content.ReadFromJsonAsync<PagedList<ProductDto>>();
+        paged.ShouldNotBeNull();
+        paged!.Items.ShouldNotBeNull();
+        paged.Items.Count.ShouldBeGreaterThanOrEqualTo(0);
+        paged.PageNumber.ShouldBe(1);
+        paged.PageSize.ShouldBe(10);
+    }
+
+    [Fact]
+    public async Task Get_ListProducts_WithPagination_ReturnsCorrectPage()
+    {
+        var products = Enumerable.Range(1, 5)
+            .Select(i => _dataHelper.CreateProductBuilder().Build())
+            .ToArray();
+
+        foreach (var prod in products)
         {
-            _dataHelper = new ProductTestDataHelper(Client);
+            await CreateProductAsync(prod, $"CreateTestProduct_{prod.Name}");
         }
 
-        public override async Task InitializeAsync()
-        {
-            await _dataHelper.GetOrCreateDependencies();
-        }
+        var paginatedResponse = await Client.GetAsync($"{ApiEndpoints.Product}?pageNumber=1&pageSize=2");
+        await LogIfError(paginatedResponse, "Get_ListProducts_Pagination");
 
-        [Fact]
-        public async Task Post_CreateValidProduct_ReturnsOk()
-        {
-            var (shopId, unitId, categoryId) = await _dataHelper.GetOrCreateDependencies();
+        paginatedResponse.StatusCode.ShouldBe(HttpStatusCode.OK);
+        var paged = await paginatedResponse.Content.ReadFromJsonAsync<PagedList<ProductDto>>();
+        paged.ShouldNotBeNull();
+        paged!.Items.Count.ShouldBeLessThanOrEqualTo(2);
+        paged.PageNumber.ShouldBe(1);
+        paged.PageSize.ShouldBe(2);
+        paged.TotalCount.ShouldBeGreaterThanOrEqualTo(5);
+    }
 
-            var dto = new ProductCreateDto
-            {
-                Name = "Laptop Computer",
-                ShopId = shopId,
-                BaseUnitId = unitId,
-                SalePricePerBaseUnit = 99999,
-                Description = "High-performance laptop computer",
-                IsActive = true,
-                SKU = "LAPTOP-001",
-                Barcode = "1234567890123",
-                ImageUrl = "https://example.com/laptop.jpg",
-                CategoryId = categoryId
-            };
+    [Fact]
+    public async Task Get_ProductById_Existing_ReturnsProduct()
+    {
+        var createDto = _dataHelper.CreateProductBuilder().Build();
+        var created = await PostAndGetAsync<ProductDto>(ApiEndpoints.Product, createDto, "Get_ProductById_Seed");
+        created.ShouldNotBeNull();
 
-            var response = await Client.PostAsJsonAsync("/api/product", dto);
-            await LogIfError(response, "Post_CreateValidProduct");
+        var getResponse = await Client.GetAsync($"{ApiEndpoints.Product}/{created!.Id}");
+        await LogIfError(getResponse, "Get_ProductById_Get");
 
-            response.StatusCode.Should().Be(HttpStatusCode.OK);
-            var created = await response.Content.ReadFromJsonAsync<ProductDto>();
-            created.Should().NotBeNull();
-            created!.Name.Should().Be(dto.Name);
-            created.ShopId.Should().Be(dto.ShopId);
-            created.BaseUnitId.Should().Be(dto.BaseUnitId);
-            created.SalePricePerBaseUnit.Should().Be(dto.SalePricePerBaseUnit);
-            created.Description.Should().Be(dto.Description);
-            created.IsActive.Should().Be(dto.IsActive);
-            created.SKU.Should().Be(dto.SKU);
-            created.Barcode.Should().Be(dto.Barcode);
-            created.ImageUrl.Should().Be(dto.ImageUrl);
-            created.CategoryId.Should().Be(dto.CategoryId);
-        }
+        getResponse.StatusCode.ShouldBe(HttpStatusCode.OK);
+        var retrieved = await getResponse.Content.ReadFromJsonAsync<ProductDto>();
+        retrieved.ShouldNotBeNull();
+        retrieved!.Id.ShouldBe(created.Id);
+        AssertProductMatches(retrieved, createDto);
+    }
 
-        [Fact]
-        public async Task Post_CreateProductWithEmptyDescription_ReturnsOk()
-        {
-            var (shopId, unitId, categoryId) = await _dataHelper.GetOrCreateDependencies();
+    [Fact]
+    public async Task Get_ProductById_NonExisting_ReturnsNotFound()
+    {
+        var response = await Client.GetAsync($"{ApiEndpoints.Product}/non-existing-id");
+        await LogIfError(response, "Get_ProductById_NonExisting");
 
-            var dto = new ProductCreateDto
-            {
-                Name = "Smartphone",
-                ShopId = shopId,
-                BaseUnitId = unitId,
-                SalePricePerBaseUnit = 59999,
-                Description = "",
-                IsActive = true,
-                SKU = "PHONE-001",
-                CategoryId = categoryId
-            };
+        response.StatusCode.ShouldBe(HttpStatusCode.NotFound);
+    }
 
-            var response = await Client.PostAsJsonAsync("/api/product", dto);
-            await LogIfError(response, "Post_CreateProductWithEmptyDescription");
+    [Fact]
+    public async Task Put_UpdateExistingProduct_ReturnsUpdatedProduct()
+    {
+        var createDto = _dataHelper.CreateProductBuilder().Build();
+        var created = await PostAndGetAsync<ProductDto>(ApiEndpoints.Product, createDto, "Put_UpdateProduct_Seed");
+        created.ShouldNotBeNull();
 
-            response.StatusCode.Should().Be(HttpStatusCode.OK);
-            var created = await response.Content.ReadFromJsonAsync<ProductDto>();
-            created.Should().NotBeNull();
-            created!.Name.Should().Be(dto.Name);
-            created.Description.Should().Be(dto.Description);
-        }
+        var updateDto = _dataHelper.CreateProductBuilder().WithIsActive(false).Build();
+        var updateResponse = await UpdateProductResponseAsync(created!.Id, updateDto, "Put_UpdateProduct_Update");
 
-        [Fact]
-        public async Task Post_CreateProductWithNullDescription_ReturnsOk()
-        {
-            var (shopId, unitId, categoryId) = await _dataHelper.GetOrCreateDependencies();
+        updateResponse.StatusCode.ShouldBe(HttpStatusCode.OK);
+        var updated = await updateResponse.Content.ReadFromJsonAsync<ProductDto>();
+        updated.ShouldNotBeNull();
+        updated!.Id.ShouldBe(created.Id);
+        AssertProductMatches(updated, updateDto);
+    }
 
-            var dto = new ProductCreateDto
-            {
-                Name = "Tablet",
-                ShopId = shopId,
-                BaseUnitId = unitId,
-                SalePricePerBaseUnit = 39999,
-                Description = null,
-                IsActive = true,
-                SKU = "TABLET-001",
-                CategoryId = categoryId
-            };
+    [Fact]
+    public async Task Put_UpdateNonExistingProduct_ReturnsNotFound()
+    {
+        var updateDto = _dataHelper.CreateProductBuilder().Build();
+        var response = await UpdateProductResponseAsync("non-existing-id", updateDto, "Put_UpdateNonExistingProduct");
 
-            var response = await Client.PostAsJsonAsync("/api/product", dto);
-            await LogIfError(response, "Post_CreateProductWithNullDescription");
+        response.StatusCode.ShouldBe(HttpStatusCode.NotFound);
+    }
 
-            response.StatusCode.Should().Be(HttpStatusCode.OK);
-            var created = await response.Content.ReadFromJsonAsync<ProductDto>();
-            created.Should().NotBeNull();
-            created!.Name.Should().Be(dto.Name);
-            created.Description.Should().BeNull();
-        }
+    [Fact]
+    public async Task Delete_ExistingProduct_ReturnsOk()
+    {
+        var createDto = _dataHelper.CreateProductBuilder().Build();
+        var created = await PostAndGetAsync<ProductDto>(ApiEndpoints.Product, createDto, "Delete_ExistingProduct_Seed");
+        created.ShouldNotBeNull();
 
-        [Fact]
-        public async Task Get_ListProducts_ReturnsPagedList()
-        {
-            var response = await Client.GetAsync("/api/product?pageNumber=1&pageSize=10");
-            await LogIfError(response, "Get_ListProducts");
+        var deleteResponse = await Client.DeleteAsync($"{ApiEndpoints.Product}/{created!.Id}");
+        await LogIfError(deleteResponse, "Delete_ExistingProduct_Delete");
 
-            response.StatusCode.Should().Be(HttpStatusCode.OK);
-            var paged = await response.Content.ReadFromJsonAsync<PagedList<ProductDto>>();
-            paged.Should().NotBeNull();
-            paged!.Items.Should().NotBeNull();
-            paged.Items.Count.Should().BeGreaterOrEqualTo(0);
-            paged.PageNumber.Should().Be(1);
-            paged.PageSize.Should().Be(10);
-        }
+        deleteResponse.StatusCode.ShouldBe(HttpStatusCode.OK);
 
-        [Fact]
-        public async Task Get_ListProducts_WithPagination_ReturnsCorrectPage()
-        {
-            var (shopId, unitId, categoryId) = await _dataHelper.GetOrCreateDependencies();
+        var getResponse = await Client.GetAsync($"{ApiEndpoints.Product}/{created.Id}");
+        getResponse.StatusCode.ShouldBe(HttpStatusCode.NotFound);
+    }
 
-            var products = new[]
-            {
-                new ProductCreateDto { Name = "Test Product 1", ShopId = shopId, BaseUnitId = unitId, SalePricePerBaseUnit = 10000, Description = "Test product 1", IsActive = true, SKU = "TP1", CategoryId = categoryId },
-                new ProductCreateDto { Name = "Test Product 2", ShopId = shopId, BaseUnitId = unitId, SalePricePerBaseUnit = 20000, Description = "Test product 2", IsActive = true, SKU = "TP2", CategoryId = categoryId },
-                new ProductCreateDto { Name = "Test Product 3", ShopId = shopId, BaseUnitId = unitId, SalePricePerBaseUnit = 30000, Description = "Test product 3", IsActive = true, SKU = "TP3", CategoryId = categoryId },
-                new ProductCreateDto { Name = "Test Product 4", ShopId = shopId, BaseUnitId = unitId, SalePricePerBaseUnit = 40000, Description = "Test product 4", IsActive = true, SKU = "TP4", CategoryId = categoryId },
-                new ProductCreateDto { Name = "Test Product 5", ShopId = shopId, BaseUnitId = unitId, SalePricePerBaseUnit = 50000, Description = "Test product 5", IsActive = true, SKU = "TP5", CategoryId = categoryId }
-            };
+    [Fact]
+    public async Task Delete_NonExistingProduct_ReturnsNotFound()
+    {
+        var response = await Client.DeleteAsync($"{ApiEndpoints.Product}/non-existing-id");
+        await LogIfError(response, "Delete_NonExistingProduct");
 
-            foreach (var prod in products)
-            {
-                var response = await Client.PostAsJsonAsync("/api/product", prod);
-                await LogIfError(response, $"CreateTestProduct_{prod.Name}");
-                response.EnsureSuccessStatusCode();
-            }
-
-            var paginatedResponse = await Client.GetAsync("/api/product?pageNumber=1&pageSize=2");
-            await LogIfError(paginatedResponse, "Get_ListProducts_Pagination");
-
-            paginatedResponse.StatusCode.Should().Be(HttpStatusCode.OK);
-            var paged = await paginatedResponse.Content.ReadFromJsonAsync<PagedList<ProductDto>>();
-            paged.Should().NotBeNull();
-            paged!.Items.Count.Should().BeLessOrEqualTo(2);
-            paged.PageNumber.Should().Be(1);
-            paged.PageSize.Should().Be(2);
-            paged.TotalCount.Should().BeGreaterOrEqualTo(5);
-        }
-
-        [Fact]
-        public async Task Get_ProductById_Existing_ReturnsProduct()
-        {
-            var (shopId, unitId, categoryId) = await _dataHelper.GetOrCreateDependencies();
-
-            var createDto = new ProductCreateDto
-            {
-                Name = "Camera",
-                ShopId = shopId,
-                BaseUnitId = unitId,
-                SalePricePerBaseUnit = 29999,
-                Description = "Digital camera",
-                IsActive = true,
-                SKU = "CAMERA-001",
-                CategoryId = categoryId
-            };
-
-            var created = await PostAndGetAsync<ProductDto>("/api/product", createDto, "Get_ProductById_Seed");
-            created.Should().NotBeNull();
-
-            var getResponse = await Client.GetAsync($"/api/product/{created!.Id}");
-            await LogIfError(getResponse, "Get_ProductById_Get");
-
-            getResponse.StatusCode.Should().Be(HttpStatusCode.OK);
-            var retrieved = await getResponse.Content.ReadFromJsonAsync<ProductDto>();
-            retrieved.Should().NotBeNull();
-            retrieved!.Id.Should().Be(created.Id);
-            retrieved.Name.Should().Be(createDto.Name);
-            retrieved.ShopId.Should().Be(createDto.ShopId);
-            retrieved.BaseUnitId.Should().Be(createDto.BaseUnitId);
-            retrieved.SalePricePerBaseUnit.Should().Be(createDto.SalePricePerBaseUnit);
-            retrieved.Description.Should().Be(createDto.Description);
-            retrieved.IsActive.Should().Be(createDto.IsActive);
-            retrieved.SKU.Should().Be(createDto.SKU);
-        }
-
-        [Fact]
-        public async Task Get_ProductById_NonExisting_ReturnsNotFound()
-        {
-            var fakeId = "non-existing-id";
-            var response = await Client.GetAsync($"/api/product/{fakeId}");
-            await LogIfError(response, "Get_ProductById_NonExisting");
-
-            response.StatusCode.Should().Be(HttpStatusCode.NotFound);
-        }
-
-        [Fact]
-        public async Task Put_UpdateExistingProduct_ReturnsUpdatedProduct()
-        {
-            var (shopId, unitId, categoryId) = await _dataHelper.GetOrCreateDependencies();
-
-            var createDto = new ProductCreateDto
-            {
-                Name = "Headphones",
-                ShopId = shopId,
-                BaseUnitId = unitId,
-                SalePricePerBaseUnit = 9999,
-                Description = "Wireless headphones",
-                IsActive = true,
-                SKU = "HEAD-001",
-                CategoryId = categoryId
-            };
-
-            var created = await PostAndGetAsync<ProductDto>("/api/product", createDto, "Put_UpdateProduct_Seed");
-            created.Should().NotBeNull();
-
-            var updateDto = new ProductCreateDto
-            {
-                Name = "Wireless Headphones Updated",
-                ShopId = shopId,
-                BaseUnitId = unitId,
-                SalePricePerBaseUnit = 12999,
-                Description = "Updated wireless headphones",
-                IsActive = false,
-                SKU = "HEAD-U001",
-                CategoryId = categoryId
-            };
-
-            var updateResponse = await Client.PutAsJsonAsync($"/api/product/{created!.Id}", updateDto);
-            await LogIfError(updateResponse, "Put_UpdateProduct_Update");
-
-            updateResponse.StatusCode.Should().Be(HttpStatusCode.OK);
-            var updated = await updateResponse.Content.ReadFromJsonAsync<ProductDto>();
-            updated.Should().NotBeNull();
-            updated!.Id.Should().Be(created.Id);
-            updated.Name.Should().Be(updateDto.Name);
-            updated.ShopId.Should().Be(updateDto.ShopId);
-            updated.BaseUnitId.Should().Be(updateDto.BaseUnitId);
-            updated.SalePricePerBaseUnit.Should().Be(updateDto.SalePricePerBaseUnit);
-            updated.Description.Should().Be(updateDto.Description);
-            updated.IsActive.Should().Be(updateDto.IsActive);
-            updated.SKU.Should().Be(updateDto.SKU);
-        }
-
-        [Fact]
-        public async Task Put_UpdateNonExistingProduct_ReturnsNotFound()
-        {
-            var (shopId, unitId, categoryId) = await _dataHelper.GetOrCreateDependencies();
-
-            var updateDto = new ProductCreateDto
-            {
-                Name = "Fake Product",
-                ShopId = shopId,
-                BaseUnitId = unitId,
-                SalePricePerBaseUnit = 10000,
-                Description = "Fake product",
-                IsActive = true,
-                SKU = "FAKE-001",
-                CategoryId = categoryId
-            };
-
-            var response = await Client.PutAsJsonAsync("/api/product/non-existing-id", updateDto);
-            await LogIfError(response, "Put_UpdateNonExistingProduct");
-
-            response.StatusCode.Should().Be(HttpStatusCode.NotFound);
-        }
-
-        [Fact]
-        public async Task Delete_ExistingProduct_ReturnsOk()
-        {
-            var (shopId, unitId, categoryId) = await _dataHelper.GetOrCreateDependencies();
-
-            var createDto = new ProductCreateDto
-            {
-                Name = "Speaker",
-                ShopId = shopId,
-                BaseUnitId = unitId,
-                SalePricePerBaseUnit = 7999,
-                Description = "Bluetooth speaker",
-                IsActive = true,
-                SKU = "SPKR-001",
-                CategoryId = categoryId
-            };
-
-            var created = await PostAndGetAsync<ProductDto>("/api/product", createDto, "Delete_ExistingProduct_Seed");
-            created.Should().NotBeNull();
-
-            var deleteResponse = await Client.DeleteAsync($"/api/product/{created!.Id}");
-            await LogIfError(deleteResponse, "Delete_ExistingProduct_Delete");
-
-            deleteResponse.StatusCode.Should().Be(HttpStatusCode.OK);
-
-            var getResponse = await Client.GetAsync($"/api/product/{created.Id}");
-            getResponse.StatusCode.Should().Be(HttpStatusCode.NotFound);
-        }
-
-        [Fact]
-        public async Task Delete_NonExistingProduct_ReturnsNotFound()
-        {
-            var response = await Client.DeleteAsync("/api/product/non-existing-id");
-            await LogIfError(response, "Delete_NonExistingProduct");
-
-            response.StatusCode.Should().Be(HttpStatusCode.NotFound);
-        }
+        response.StatusCode.ShouldBe(HttpStatusCode.NotFound);
+    }
 
         [Fact]
         public async Task Post_CreateProductWithInvalidShopId_ReturnsConflict()
         {
-            var (_, unitId, categoryId) = await _dataHelper.GetOrCreateDependencies();
+            var dto = _dataHelper.CreateProductBuilder().Build();
+            dto.ShopId = "invalid-shop-id";
 
-            var dto = new ProductCreateDto
-            {
-                Name = "Product with Invalid Shop",
-                ShopId = "invalid-shop-id",
-                BaseUnitId = unitId,
-                SalePricePerBaseUnit = 5000,
-                Description = "Product with invalid shop reference",
-                IsActive = true,
-                SKU = "INVALID-SHOP-001",
-                CategoryId = categoryId
-            };
-
-            var response = await Client.PostAsJsonAsync("/api/product", dto);
-            await LogIfError(response, "Post_CreateProductWithInvalidShopId");
-
-            response.StatusCode.Should().Match(code => code == HttpStatusCode.Conflict || code == HttpStatusCode.BadRequest);
+            var response = await CreateProductResponseAsync(dto, "Post_CreateProductWithInvalidShopId");
+            (response.StatusCode == HttpStatusCode.Conflict || response.StatusCode == HttpStatusCode.BadRequest).ShouldBeTrue();
         }
 
         [Fact]
         public async Task Post_CreateProductWithInvalidUnitId_ReturnsConflict()
         {
-            var (shopId, _, categoryId) = await _dataHelper.GetOrCreateDependencies();
+            var dto = _dataHelper.CreateProductBuilder().Build();
+            dto.BaseUnitId = "invalid-unit-id";
 
-            var dto = new ProductCreateDto
-            {
-                Name = "Product with Invalid Unit",
-                ShopId = shopId,
-                BaseUnitId = "invalid-unit-id",
-                SalePricePerBaseUnit = 5000,
-                Description = "Product with invalid unit reference",
-                IsActive = true,
-                SKU = "INVALID-UNIT-001",
-                CategoryId = categoryId
-            };
-
-            var response = await Client.PostAsJsonAsync("/api/product", dto);
-            await LogIfError(response, "Post_CreateProductWithInvalidUnitId");
-
-            response.StatusCode.Should().Match(code => code == HttpStatusCode.Conflict || code == HttpStatusCode.BadRequest);
+            var response = await CreateProductResponseAsync(dto, "Post_CreateProductWithInvalidUnitId");
+            (response.StatusCode == HttpStatusCode.Conflict || response.StatusCode == HttpStatusCode.BadRequest).ShouldBeTrue();
         }
 
         [Fact]
         public async Task Post_CreateProductWithInvalidCategoryId_ReturnsConflict()
         {
-            var (shopId, unitId, _) = await _dataHelper.GetOrCreateDependencies();
+            var dto = _dataHelper.CreateProductBuilder().Build();
+            dto.CategoryId = "invalid-category-id";
 
-            var dto = new ProductCreateDto
-            {
-                Name = "Product with Invalid Category",
-                ShopId = shopId,
-                BaseUnitId = unitId,
-                SalePricePerBaseUnit = 5000,
-                Description = "Product with invalid category reference",
-                IsActive = true,
-                SKU = "INVALID-CAT-001",
-                CategoryId = "invalid-category-id"
-            };
-
-            var response = await Client.PostAsJsonAsync("/api/product", dto);
-            await LogIfError(response, "Post_CreateProductWithInvalidCategoryId");
-
-            response.StatusCode.Should().Match(code => code == HttpStatusCode.InternalServerError || code == HttpStatusCode.Conflict);
-            //response.StatusCode.Should().Match(code => code == HttpStatusCode.BadRequest || code == HttpStatusCode.NotFound);
+            var response = await CreateProductResponseAsync(dto, "Post_CreateProductWithInvalidCategoryId");
+            (response.StatusCode == HttpStatusCode.InternalServerError || response.StatusCode == HttpStatusCode.Conflict).ShouldBeTrue();
         }
 
         [Fact]
         public async Task Post_CreateProductWithNegativePrice_ReturnsBadRequest()
         {
-            var (shopId, unitId, categoryId) = await _dataHelper.GetOrCreateDependencies();
+            var dto = _dataHelper.CreateProductBuilder().Build();
+            dto.SalePricePerBaseUnit = -100;
 
-            var dto = new ProductCreateDto
-            {
-                Name = "Product with Negative Price",
-                ShopId = shopId,
-                BaseUnitId = unitId,
-                SalePricePerBaseUnit = -100,
-                Description = "Product with negative price",
-                IsActive = true,
-                SKU = "NEG-PRICE-001",
-                CategoryId = categoryId
-            };
-
-            var response = await Client.PostAsJsonAsync("/api/product", dto);
-            await LogIfError(response, "Post_CreateProductWithNegativePrice");
-
-            response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            var response = await CreateProductResponseAsync(dto, "Post_CreateProductWithNegativePrice");
+            response.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
         }
 
         [Fact]
         public async Task Post_CreateProductWithZeroPrice_ReturnsOk()
         {
-            var (shopId, unitId, categoryId) = await _dataHelper.GetOrCreateDependencies();
+            var dto = _dataHelper.CreateProductBuilder().Build();
+            dto.SalePricePerBaseUnit = 0;
 
-            var dto = new ProductCreateDto
-            {
-                Name = "Product with Zero Price",
-                ShopId = shopId,
-                BaseUnitId = unitId,
-                SalePricePerBaseUnit = 0,
-                Description = "Product with zero price",
-                IsActive = true,
-                SKU = "ZERO-PRICE-001",
-                CategoryId = categoryId
-            };
-
-            var response = await Client.PostAsJsonAsync("/api/product", dto);
-            await LogIfError(response, "Post_CreateProductWithZeroPrice");
-
-            response.StatusCode.Should().Be(HttpStatusCode.OK);
+            var response = await CreateProductResponseAsync(dto, "Post_CreateProductWithZeroPrice");
+            
+            response.StatusCode.ShouldBe(HttpStatusCode.OK);
             var created = await response.Content.ReadFromJsonAsync<ProductDto>();
-            created.Should().NotBeNull();
-            created!.SalePricePerBaseUnit.Should().Be(0);
+            created.ShouldNotBeNull();
+            created!.SalePricePerBaseUnit.ShouldBe(0);
         }
 
         [Fact]
         public async Task Post_CreateProductWithDuplicateSKU_ReturnsConflict()
         {
-            var (shopId, unitId, categoryId) = await _dataHelper.GetOrCreateDependencies();
+            const string sku = "DUPLICATE-SKU-TEST";
 
-            var sku = "DUPLICATE-SKU-TEST";
+            var firstProduct = _dataHelper.CreateProductBuilder().WithSKU(sku).Build();
+            await CreateProductAsync(firstProduct, "Post_CreateProductWithDuplicateSKU_First");
 
-            var firstProduct = new ProductCreateDto
-            {
-                Name = "First Product with SKU",
-                ShopId = shopId,
-                BaseUnitId = unitId,
-                SalePricePerBaseUnit = 1000,
-                Description = "First product with duplicate SKU",
-                IsActive = true,
-                SKU = sku,
-                CategoryId = categoryId
-            };
+            var secondProduct = _dataHelper.CreateProductBuilder().WithSKU(sku).Build();
+            var secondResponse = await CreateProductResponseAsync(secondProduct, "Post_CreateProductWithDuplicateSKU_Second");
 
-            var firstResponse = await Client.PostAsJsonAsync("/api/product", firstProduct);
-            await LogIfError(firstResponse, "Post_CreateProductWithDuplicateSKU_First");
-            firstResponse.EnsureSuccessStatusCode();
-
-            var secondProduct = new ProductCreateDto
-            {
-                Name = "Second Product with Same SKU",
-                ShopId = shopId,
-                BaseUnitId = unitId,
-                SalePricePerBaseUnit = 2000,
-                Description = "Second product with duplicate SKU",
-                IsActive = true,
-                SKU = sku,
-                CategoryId = categoryId
-            };
-
-            var secondResponse = await Client.PostAsJsonAsync("/api/product", secondProduct);
-            await LogIfError(secondResponse, "Post_CreateProductWithDuplicateSKU_Second");
-
-            secondResponse.StatusCode.Should().Match(code =>
-                code == HttpStatusCode.BadRequest ||
-                code == HttpStatusCode.Conflict ||
-                code == HttpStatusCode.OK);
+            (secondResponse.StatusCode == HttpStatusCode.BadRequest ||
+             secondResponse.StatusCode == HttpStatusCode.Conflict ||
+             secondResponse.StatusCode == HttpStatusCode.OK).ShouldBeTrue();
 
             if (secondResponse.StatusCode == HttpStatusCode.OK)
             {
                 var createdSecond = await secondResponse.Content.ReadFromJsonAsync<ProductDto>();
-                createdSecond.Should().NotBeNull();
-                createdSecond!.SKU.Should().Be(sku);
+                createdSecond.ShouldNotBeNull();
+                createdSecond!.SKU.ShouldBe(sku);
 
-                var deleteResponse = await Client.DeleteAsync($"/api/product/{createdSecond.Id}");
+                var deleteResponse = await Client.DeleteAsync($"{ApiEndpoints.Product}/{createdSecond.Id}");
                 deleteResponse.EnsureSuccessStatusCode();
             }
         }
+
+        [Fact]
+        public async Task Post_CreateProductWithEmptyName_ReturnsBadRequest()
+        {
+            var dto = _dataHelper.CreateProductBuilder().WithName("").Build();
+            var response = await CreateProductResponseAsync(dto, "Post_CreateProductWithEmptyName");
+
+            response.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
+        }
+
+        [Fact]
+        public async Task Post_CreateProductWithEmptySKU_ReturnsBadRequest()
+        {
+            var dto = _dataHelper.CreateProductBuilder().WithSKU("").Build();
+            var response = await CreateProductResponseAsync(dto, "Post_CreateProductWithEmptySKU");
+
+            response.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
+        }
+
+        [Fact]
+        public async Task Post_CreateProductWithNullCategoryId_ReturnsOk()
+        {
+            var dto = _dataHelper.CreateProductBuilder().WithCategoryId(null).Build();
+            var response = await CreateProductResponseAsync(dto, "Post_CreateProductWithNullCategoryId");
+
+            response.StatusCode.ShouldBe(HttpStatusCode.OK);
+            var created = await response.Content.ReadFromJsonAsync<ProductDto>();
+            created.ShouldNotBeNull();
+            created!.CategoryId.ShouldBeNull();
+        }
+
+        [Fact]
+        public async Task Post_CreateProductWithMaxPrice_ReturnsOk()
+        {
+            var dto = _dataHelper.CreateProductBuilder().WithPrice(int.MaxValue).Build();
+            var response = await CreateProductResponseAsync(dto, "Post_CreateProductWithMaxPrice");
+
+            response.StatusCode.ShouldBe(HttpStatusCode.OK);
+            var created = await response.Content.ReadFromJsonAsync<ProductDto>();
+            created.ShouldNotBeNull();
+            created!.SalePricePerBaseUnit.ShouldBe(int.MaxValue);
+        }
+
+    [Fact]
+    public async Task Put_UpdateProductPrice_ReturnsUpdatedPrice()
+    {
+        var createDto = _dataHelper.CreateProductBuilder().WithPrice(1000).Build();
+        var created = await PostAndGetAsync<ProductDto>(ApiEndpoints.Product, createDto, "Put_UpdateProductPrice_Seed");
+        created.ShouldNotBeNull();
+
+        var updateDto = _dataHelper.CreateProductBuilder().WithPrice(2000).Build();
+        var updateResponse = await UpdateProductResponseAsync(created!.Id, updateDto, "Put_UpdateProductPrice_Update");
+
+        updateResponse.StatusCode.ShouldBe(HttpStatusCode.OK);
+        var updated = await updateResponse.Content.ReadFromJsonAsync<ProductDto>();
+        updated.ShouldNotBeNull();
+        updated!.SalePricePerBaseUnit.ShouldBe(2000);
+    }
+
+    [Fact]
+    public async Task Put_UpdateProductToInactive_ReturnsInactiveProduct()
+    {
+        var createDto = _dataHelper.CreateProductBuilder().WithIsActive(true).Build();
+        var created = await PostAndGetAsync<ProductDto>(ApiEndpoints.Product, createDto, "Put_UpdateProductToInactive_Seed");
+        created.ShouldNotBeNull();
+        created!.IsActive.ShouldBeTrue();
+
+        var updateDto = _dataHelper.CreateProductBuilder().WithIsActive(false).Build();
+        var updateResponse = await UpdateProductResponseAsync(created.Id, updateDto, "Put_UpdateProductToInactive_Update");
+
+        updateResponse.StatusCode.ShouldBe(HttpStatusCode.OK);
+        var updated = await updateResponse.Content.ReadFromJsonAsync<ProductDto>();
+        updated.ShouldNotBeNull();
+        updated!.IsActive.ShouldBeFalse();
+    }
+
+    [Fact]
+    public async Task Get_ListProducts_WithInvalidPageSize_ReturnsBadRequest()
+    {
+        var response = await Client.GetAsync($"{ApiEndpoints.Product}?pageNumber=1&pageSize=0");
+        await LogIfError(response, "Get_ListProducts_InvalidPageSize");
+
+        response.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
+    }
+
+    [Fact]
+    public async Task Post_CreateMultipleProducts_AllSucceed()
+    {
+        var products = Enumerable.Range(1, 3)
+            .Select(i => _dataHelper.CreateProductBuilder().Build())
+            .ToList();
+
+        foreach (var product in products)
+        {
+            var response = await CreateProductResponseAsync(product, $"Post_CreateMultipleProducts_{product.SKU}");
+            response.StatusCode.ShouldBe(HttpStatusCode.OK);
+        }
+    }
+
+    [Fact]
+    public async Task Put_UpdateProductSKU_ReturnsUpdatedSKU()
+    {
+        var createDto = _dataHelper.CreateProductBuilder().WithSKU("OLD-SKU-001").Build();
+        var created = await PostAndGetAsync<ProductDto>(ApiEndpoints.Product, createDto, "Put_UpdateProductSKU_Seed");
+        created.ShouldNotBeNull();
+
+        var updateDto = _dataHelper.CreateProductBuilder().WithSKU("NEW-SKU-001").Build();
+        var updateResponse = await UpdateProductResponseAsync(created!.Id, updateDto, "Put_UpdateProductSKU_Update");
+
+        updateResponse.StatusCode.ShouldBe(HttpStatusCode.OK);
+        var updated = await updateResponse.Content.ReadFromJsonAsync<ProductDto>();
+        updated.ShouldNotBeNull();
+        updated!.SKU.ShouldBe("NEW-SKU-001");
+    }
+
+    [Fact]
+    public async Task Post_CreateProductWithExplicitNullDescription_ReturnsOk()
+    {
+        var dto = _dataHelper.CreateProductBuilder().WithDescription(null).Build();
+        var response = await CreateProductResponseAsync(dto, "Post_CreateProductWithExplicitNullDescription");
+        
+        response.StatusCode.ShouldBe(HttpStatusCode.OK);
+        var created = await response.Content.ReadFromJsonAsync<ProductDto>();
+        created.ShouldNotBeNull();
+        created!.Description.ShouldBeNull();
+    }
+
+    [Fact]
+    public async Task Post_CreateProductWithExplicitNullBarcode_ReturnsOk()
+    {
+        var dto = _dataHelper.CreateProductBuilder().WithBarcode(null).Build();
+        var response = await CreateProductResponseAsync(dto, "Post_CreateProductWithExplicitNullBarcode");
+        
+        response.StatusCode.ShouldBe(HttpStatusCode.OK);
+        var created = await response.Content.ReadFromJsonAsync<ProductDto>();
+        created.ShouldNotBeNull();
+        created!.Barcode.ShouldBeNull();
     }
 }

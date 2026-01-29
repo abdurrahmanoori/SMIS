@@ -46,8 +46,10 @@
     <PackageVersion Include="MiniProfiler.Shared" Version="4.3.8" />
     <!-- Testing (net9) -->
     <PackageVersion Include="AutoFixture" Version="4.18.1" />
+    <PackageVersion Include="Bogus" Version="35.6.1" />
     <PackageVersion Include="coverlet.collector" Version="6.0.2" />
     <PackageVersion Include="FluentAssertions" Version="6.12.1" />
+    <PackageVersion Include="Shouldly" Version="4.2.1" />
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.12.0" />
     <PackageVersion Include="Moq" Version="4.20.72" />
     <PackageVersion Include="xunit" Version="2.9.2" />

@@ -1,6 +1,5 @@
-//using System.Net.Http.Json;
-using SMIS.Application.DTO.Categories;
 using SMIS.Application.Common;
+using SMIS.Application.DTO.Categories;
 using SMIS.Application.DTO.Shops;
 using SMIS.Application.DTO.UnitOfMeasures;
 using SMIS.Test.Extensions;
@@ -21,9 +20,30 @@ public class ProductTestDataHelper
 
     public async Task<(string shopId, string unitId, string categoryId)> GetOrCreateDependencies()
     {
-        if (_cachedShopId != null && _cachedUnitId != null && _cachedCategoryId != null)
-            return (_cachedShopId, _cachedUnitId, _cachedCategoryId);
+        if (HasCachedDependencies())
+            return (_cachedShopId!, _cachedUnitId!, _cachedCategoryId!);
 
+        _cachedCategoryId = await CreateCategoryAsync();
+        _cachedUnitId = await CreateUnitAsync();
+        _cachedShopId = await CreateShopAsync();
+
+        return (_cachedShopId, _cachedUnitId, _cachedCategoryId);
+    }
+
+    public ProductFixtureBuilder CreateProductBuilder()
+    {
+        if (!HasCachedDependencies())
+            throw new InvalidOperationException("Dependencies must be created first. Call GetOrCreateDependencies().");
+            
+        return new ProductFixtureBuilder()
+            .WithDependencies(_cachedShopId!, _cachedUnitId!, _cachedCategoryId!);
+    }
+
+    private bool HasCachedDependencies() => 
+        _cachedShopId != null && _cachedUnitId != null && _cachedCategoryId != null;
+
+    private async Task<string> CreateCategoryAsync()
+    {
         var categoryDto = new CategoryCreateDto
         {
             Name = "Test Category for Products",
@@ -31,20 +51,32 @@ public class ProductTestDataHelper
             Description = "Test category created for product tests",
             IsActive = true
         };
-        var categoryResponse = await _client.PostAsJsonAsync("/api/category", categoryDto);
-        categoryResponse.EnsureSuccessStatusCode();
-        var createdCategory = await categoryResponse.Content.ReadFromJsonAsync<CategoryDto>();
+        
+        var response = await _client.PostAsJsonAsync(ApiEndpoints.Category, categoryDto);
+        response.EnsureSuccessStatusCode();
+        
+        var createdCategory = await response.Content.ReadFromJsonAsync<CategoryDto>();
+        return createdCategory!.Id;
+    }
 
+    private async Task<string> CreateUnitAsync()
+    {
         var unitDto = new UnitOfMeasureCreateDto
         {
             Name = "Piece",
             Symbol = "pcs",
             Description = "Piece unit"
         };
-        var unitResponse = await _client.PostAsJsonAsync("/api/unitofmeasure", unitDto);
-        unitResponse.EnsureSuccessStatusCode();
-        var createdUnit = await unitResponse.Content.ReadFromJsonAsync<UnitOfMeasureDto>();
+        
+        var response = await _client.PostAsJsonAsync(ApiEndpoints.UnitOfMeasure, unitDto);
+        response.EnsureSuccessStatusCode();
+        
+        var createdUnit = await response.Content.ReadFromJsonAsync<UnitOfMeasureDto>();
+        return createdUnit!.Id;
+    }
 
+    private async Task<string> CreateShopAsync()
+    {
         var shopDto = new ShopCreateDto
         {
             Name = "Test Shop",
@@ -55,17 +87,14 @@ public class ProductTestDataHelper
             TaxNumber = "TAX001",
             IsActive = true
         };
-        var shopResponse = await _client.PostAsJsonAsync("/api/shop", shopDto);
-        shopResponse.EnsureSuccessStatusCode();
+        
+        var createResponse = await _client.PostAsJsonAsync(ApiEndpoints.Shop, shopDto);
+        createResponse.EnsureSuccessStatusCode();
 
-        var shopsResponse = await _client.GetAsync("/api/shop");
-        shopsResponse.EnsureSuccessStatusCode();
-        var shopsList = await shopsResponse.Content.ReadFromJsonAsync<PagedList<ShopDto>>();
-
-        _cachedShopId = shopsList!.Items.Last().Id;
-        _cachedUnitId = createdUnit!.Id;
-        _cachedCategoryId = createdCategory!.Id;
-
-        return (_cachedShopId, _cachedUnitId, _cachedCategoryId);
+        var listResponse = await _client.GetAsync(ApiEndpoints.Shop);
+        listResponse.EnsureSuccessStatusCode();
+        
+        var shopsList = await listResponse.Content.ReadFromJsonAsync<PagedList<ShopDto>>();
+        return shopsList!.Items.Last().Id;
     }
 }

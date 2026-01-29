@@ -17,12 +17,12 @@ namespace SMIS.Domain.Entities
 
 /*
  Real data examples
-| Name       | Symbol |
-| ---------- | ------ |
-| Piece      | pcs    |
-| Gram       | g      |
-| Milliliter | ml     |
-| Box        | box    |
-| Bottle     | btl    |
- 
+| Id | Name   |
+| -- | ------ |
+| 1  | Piece  |
+| 2  | Bottle |
+| 3  | Pack   |
+| 4  | Liter  |
+| 5  | Box    |
+
  */
