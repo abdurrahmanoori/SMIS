@@ -1,10 +1,9 @@
-﻿namespace SMIS.Domain.Enums
+﻿namespace SMIS.Domain.Enums;
+
+public enum EntityState
 {
-    public enum EntityState
-    {
-        Unchanged,
-        Added,
-        Modified,
-        Deleted
-    }
+    Unchanged,
+    Added,
+    Modified,
+    Deleted
 }

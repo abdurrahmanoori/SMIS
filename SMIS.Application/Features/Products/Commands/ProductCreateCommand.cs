@@ -8,35 +8,34 @@ using SMIS.Application.Repositories.Localization;
 using SMIS.Application.Repositories.Products;
 using SMIS.Domain.Entities;
 
-namespace SMIS.Application.Features.Produmscts.Commands
+namespace SMIS.Application.Features.Produmscts.Commands;
+
+public record ProductCreateCommand(ProductCreateDto ProductCreateDto) : IRequest<Result<ProductDto>>;
+
+internal sealed class ProductCreateCommandHandler : IRequestHandler<ProductCreateCommand, Result<ProductDto>>
 {
-    public record ProductCreateCommand(ProductCreateDto ProductCreateDto) : IRequest<Result<ProductDto>>;
+    private readonly IProductRepository _productRepository;
+    private readonly ITranslationKeyRepository _translationKeyRepository;
+    private readonly IUnitOfWork _unitOfWork;
+    private readonly IMapper _mapper;
 
-    internal sealed class ProductCreateCommandHandler : IRequestHandler<ProductCreateCommand, Result<ProductDto>>
+    public ProductCreateCommandHandler(IUnitOfWork unitOfWork, IMapper mapper, IProductRepository productRepository, ITranslationKeyRepository translationKeyRepository)
     {
-        private readonly IProductRepository _productRepository;
-        private readonly ITranslationKeyRepository _translationKeyRepository;
-        private readonly IUnitOfWork _unitOfWork;
-        private readonly IMapper _mapper;
+        _unitOfWork = unitOfWork;
+        _mapper = mapper;
+        _productRepository = productRepository;
+        _translationKeyRepository = translationKeyRepository;
+    }
 
-        public ProductCreateCommandHandler(IUnitOfWork unitOfWork, IMapper mapper, IProductRepository productRepository, ITranslationKeyRepository translationKeyRepository)
-        {
-            _unitOfWork = unitOfWork;
-            _mapper = mapper;
-            _productRepository = productRepository;
-            _translationKeyRepository = translationKeyRepository;
-        }
+    public async Task<Result<ProductDto>> Handle(ProductCreateCommand request, CancellationToken cancellationToken)
+    {
+        await _translationKeyRepository.AddTranslationKeysForEntity(request.ProductCreateDto, _unitOfWork);
 
-        public async Task<Result<ProductDto>> Handle(ProductCreateCommand request, CancellationToken cancellationToken)
-        {
-            await _translationKeyRepository.AddTranslationKeysForEntity(request.ProductCreateDto, _unitOfWork);
+        var entity = _mapper.Map<Product>(request.ProductCreateDto);
+        
+        await _productRepository.AddAsync(entity);
+        await _unitOfWork.SaveChanges(cancellationToken);
 
-            var entity = _mapper.Map<Product>(request.ProductCreateDto);
-            
-            await _productRepository.AddAsync(entity);
-            await _unitOfWork.SaveChanges(cancellationToken);
-
-            return Result<ProductDto>.SuccessResult(_mapper.Map<ProductDto>(entity));
-        }
+        return Result<ProductDto>.SuccessResult(_mapper.Map<ProductDto>(entity));
     }
 }

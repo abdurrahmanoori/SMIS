@@ -1,27 +1,26 @@
 using SMIS.Domain.Exceptions;
 
-namespace SMIS.Domain.ValueObjects
+namespace SMIS.Domain.ValueObjects;
+
+public sealed class SKU
 {
-    public sealed class SKU
+    public string? Value { get; }
+
+    private SKU(string? value) => Value = value;
+
+    public static SKU Create(string? sku)
     {
-        public string? Value { get; }
+        //if (string.IsNullOrWhiteSpace(sku))
+        //    throw new DomainValidationException("SKU cannot be empty");
 
-        private SKU(string? value) => Value = value;
+        var cleaned = sku?.Trim().ToUpperInvariant();
 
-        public static SKU Create(string? sku)
-        {
-            //if (string.IsNullOrWhiteSpace(sku))
-            //    throw new DomainValidationException("SKU cannot be empty");
+        if (cleaned?.Length > 50)
+            throw new DomainValidationException("SKU cannot exceed 50 characters");
 
-            var cleaned = sku?.Trim().ToUpperInvariant();
-
-            if (cleaned?.Length > 50)
-                throw new DomainValidationException("SKU cannot exceed 50 characters");
-
-            return new SKU(cleaned);
-        }
-
-        public static implicit operator string?(SKU sku) => sku?.Value;
-        public override string? ToString() => Value;
+        return new SKU(cleaned);
     }
+
+    public static implicit operator string?(SKU sku) => sku?.Value;
+    public override string? ToString() => Value;
 }

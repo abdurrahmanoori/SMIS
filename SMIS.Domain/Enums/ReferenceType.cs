@@ -1,10 +1,9 @@
-namespace SMIS.Domain.Enums
+namespace SMIS.Domain.Enums;
+
+public enum ReferenceType
 {
-    public enum ReferenceType
-    {
-        Invoice = 1,
-        Adjustment = 2,
-        Transfer = 3,
-        Manual = 4
-    }
+    Invoice = 1,
+    Adjustment = 2,
+    Transfer = 3,
+    Manual = 4
 }

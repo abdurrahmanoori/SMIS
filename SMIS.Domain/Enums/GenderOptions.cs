@@ -1,7 +1,6 @@
-﻿namespace SMIS.Domain.Enums
+﻿namespace SMIS.Domain.Enums;
+
+public enum GenderOptions
 {
-    public enum GenderOptions
-    {
-        Male=1, Female, Other
-    }
+    Male=1, Female, Other
 }

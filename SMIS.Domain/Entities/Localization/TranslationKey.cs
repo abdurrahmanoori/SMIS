@@ -1,13 +1,12 @@
 using SMIS.Domain.Common.BaseAbstract;
 
-namespace SMIS.Domain.Entities.Localization
+namespace SMIS.Domain.Entities.Localization;
+
+public class TranslationKey : BaseAuditableEntity
 {
-    public class TranslationKey : BaseAuditableEntity
-    {
-        public string? MessageCode { get; set; }
+    public string? MessageCode { get; set; }
 
-        public bool IsActive { get; set; } = true;
+    public bool IsActive { get; set; } = true;
 
-        public ICollection<Translation> Translations { get; set; } = new List<Translation>();
-    }
+    public ICollection<Translation> Translations { get; set; } = new List<Translation>();
 }

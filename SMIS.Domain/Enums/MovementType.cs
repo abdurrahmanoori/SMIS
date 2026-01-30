@@ -1,12 +1,11 @@
-namespace SMIS.Domain.Enums
+namespace SMIS.Domain.Enums;
+
+public enum MovementType
 {
-    public enum MovementType
-    {
-        Purchase = 1,
-        Sale = 2,
-        Adjustment = 3,
-        Return = 4,
-        Damage = 5,
-        Transfer = 6
-    }
+    Purchase = 1,
+    Sale = 2,
+    Adjustment = 3,
+    Return = 4,
+    Damage = 5,
+    Transfer = 6
 }

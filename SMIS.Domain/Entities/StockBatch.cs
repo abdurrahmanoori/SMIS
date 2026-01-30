@@ -1,32 +1,30 @@
 ﻿using SMIS.Domain.Common.BaseAbstract;
 using SMIS.Domain.Enums;
 
-namespace SMIS.Domain.Entities
-{
-    public class StockBatch : BaseAuditableEntityWithoutName
-    {
-        public int ProductId { get; set; }
-        public string? BatchNumber { get; set; } = null;
-        // How much stock is left in THIS batch (base unit only)
-        public decimal Quantity { get; set; }
-        public int UnitId { get; set; }
-        public DateTime ReceivedDate { get; set; }
-        // When this batch expires (null for non-food items)
-        public DateTime ExpirationDate { get; set; }
-        public long PurchasePrice { get; set; }
-        public StatusEnum Status { get; set; } = StatusEnum.Active;
-    }
+namespace SMIS.Domain.Entities;
 
+public class StockBatch : BaseAuditableEntityWithoutName
+{
+    public int ProductId { get; set; }
+    public string? BatchNumber { get; set; } = null;
+    // How much stock is left in THIS batch (base unit only)
+    public decimal Quantity { get; set; }
+    public int UnitId { get; set; }
+    public DateTime? ReceivedDate { get; set; }
+    // When this batch expires (null for non-food items)
+    public DateTime? ExpirationDate { get; set; }
+    public long? PurchasePrice { get; set; }
+    public StatusEnum Status { get; set; } = StatusEnum.Active;
 }
 
 /*
- * What it is
+* What it is
 A StockBatch represents one physical receipt of a product.
 Same product → many batches → different expiration dates.
 
 👉 This is how you solve the “same product, different expiry” problem.
- I received THIS amount of a product on THIS date, and it expires on THAT date.
- Sample Data
+I received THIS amount of a product on THIS date, and it expires on THAT date.
+Sample Data
 | Id | Product   | BatchNo | Qty | Unit   | Expiry     | Price |
 | -- | --------- | ------- | --- | ------ | ---------- | ----- |
 | 1  | Coca Cola | CC-001  | 100 | Bottle | 2026-06-01 | 0.40  |
@@ -62,4 +60,4 @@ Pen (non-food)
 | PEN-01      | 120                | null       |
 Pens don’t expire. No drama.
 
- */
+*/

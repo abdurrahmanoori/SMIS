@@ -1,11 +1,10 @@
-﻿namespace SMIS.Domain.Enums
+﻿namespace SMIS.Domain.Enums;
+
+public enum StatusEnum
 {
-    public enum StatusEnum
-    {
-        Active,
-        Inactive,
-        Pending,
-        Completed,
-        Cancelled
-    }
+    Active,
+    Inactive,
+    Pending,
+    Completed,
+    Cancelled
 }
