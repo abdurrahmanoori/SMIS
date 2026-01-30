@@ -8,6 +8,7 @@ using SMIS.Application.DTO.Products;
 using System.Globalization;
 using SMIS.Application.DTO.Categories;
 using SMIS.Application.DTO.ProductUnits;
+using SMIS.Application.DTO.StockBatches;
 using SMIS.Application.DTO.TranslationKeys;
 using SMIS.Application.DTO.Translations;
 using SMIS.Domain.Entities;
@@ -127,6 +128,19 @@ public class MappingProfile : Profile
         // Translation mapping
         CreateMap<Translation, TranslationEntityDto>().ReverseMap();
         CreateMap<Translation, TranslationEntityCreateDto>().ReverseMap();
+
+        // StockBatch mapping
+        CreateMap<StockBatch, StockBatchDto>().ReverseMap();
+        CreateMap<StockBatchCreateDto, StockBatch>()
+            .ConstructUsing(src => StockBatch.Create(
+                src.ProductId,
+                src.UnitId,
+                src.Quantity,
+                src.PurchasePrice,
+                src.ReceivedDate,
+                src.BatchNumber,
+                src.ExpirationDate
+            ));
     }
 
     private static string ResolveProvinceName(Province src)
