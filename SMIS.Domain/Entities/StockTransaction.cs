@@ -1,9 +1,10 @@
 ﻿
+using SMIS.Domain.Common.BaseAbstract;
 using SMIS.Domain.Enums;
 
 namespace SMIS.Domain.Entities;
 
-public class StockTransaction
+public class StockTransaction : BaseAuditableEntityWithoutName
 {
     public int Id { get; set; }
     public int ProductId { get; set; }
