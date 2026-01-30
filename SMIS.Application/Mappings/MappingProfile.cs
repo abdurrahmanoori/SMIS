@@ -88,7 +88,8 @@ public class MappingProfile : Profile
                 src.Address,
                 src.PhoneNumber,
                 src.Email,
-                src.TaxNumber
+                src.TaxNumber,
+                src.IsActive
             ));
 
         // Product mapping

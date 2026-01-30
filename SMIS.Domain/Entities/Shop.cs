@@ -24,7 +24,7 @@ namespace SMIS.Domain.Entities
 
         internal Shop() { } // EF Core & Seeding
 
-        public static Shop Create(string name, ShopType shopType, string address, string phoneNumber, string email, string taxNumber)
+        public static Shop Create(string name, ShopType shopType, string address, string phoneNumber, string email, string taxNumber, bool isActive = true)
         {
             var shop = new Shop();
             shop.SetName(name);
@@ -33,6 +33,7 @@ namespace SMIS.Domain.Entities
             shop.SetPhoneNumber(phoneNumber);
             shop.SetEmail(email);
             shop.SetTaxNumber(taxNumber);
+            shop.IsActive = isActive;
             return shop;
         }
 
