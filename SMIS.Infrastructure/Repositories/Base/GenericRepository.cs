@@ -66,7 +66,7 @@ namespace SMIS.Infrastructure.Repositories.Base
         /// <inheritdoc/>
         public Task<T> UpdateAsync(T entity)
         {
-            //this._context.Entry(entity).State = EntityState.Modified;
+            //this._context.Entry(entity).State = EntityStateEnum.Modified;
             this._context.Update(entity);
             return Task.FromResult(entity);
         }

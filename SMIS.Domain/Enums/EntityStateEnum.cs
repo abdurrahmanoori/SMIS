@@ -1,6 +1,6 @@
 ﻿namespace SMIS.Domain.Enums;
 
-public enum EntityState
+public enum EntityStateEnum
 {
     Unchanged,
     Added,
