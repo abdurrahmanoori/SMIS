@@ -1,5 +1,6 @@
 using FluentValidation;
 using SMIS.Application.Features.Products.Commands;
+using SMIS.Application.Features.Produmscts.Commands;
 
 namespace SMIS.Application.Features.Products.Validators
 {

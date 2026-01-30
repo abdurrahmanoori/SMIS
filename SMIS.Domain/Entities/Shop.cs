@@ -33,7 +33,7 @@ namespace SMIS.Domain.Entities
             shop.SetPhoneNumber(phoneNumber);
             shop.SetEmail(email);
             shop.SetTaxNumber(taxNumber);
-            shop.IsActive = isActive;
+            if (!isActive) shop.Deactivate();
             return shop;
         }
 

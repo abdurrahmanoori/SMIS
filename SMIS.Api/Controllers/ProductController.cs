@@ -5,6 +5,7 @@ using SMIS.Application.DTO.Products;
 using SMIS.Application.Features.Products.Commands;
 using SMIS.Application.Features.Products.Queries;
 using SMIS.Api.Controllers.Base;
+using SMIS.Application.Features.Produmscts.Commands;
 
 namespace SMIS.Api.Controllers
 {

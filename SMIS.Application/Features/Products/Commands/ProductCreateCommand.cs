@@ -8,7 +8,7 @@ using SMIS.Application.Repositories.Localization;
 using SMIS.Application.Repositories.Products;
 using SMIS.Domain.Entities;
 
-namespace SMIS.Application.Features.Products.Commands
+namespace SMIS.Application.Features.Produmscts.Commands
 {
     public record ProductCreateCommand(ProductCreateDto ProductCreateDto) : IRequest<Result<ProductDto>>;
 
