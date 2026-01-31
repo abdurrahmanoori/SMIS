@@ -19,8 +19,14 @@ namespace SMIS.Infrastructure.EntityConfigurations
             builder.Property(p => p.ShopId)
                 .IsRequired();
 
+            builder.Property(p => p.ShopName)
+                .HasMaxLength(200);
+
             builder.Property(p => p.BaseUnitId)
                 .IsRequired();
+
+            builder.Property(p => p.BaseUnitName)
+                .HasMaxLength(100);
 
             builder.Property(p => p.SalePricePerBaseUnit)
                 .IsRequired();
@@ -43,6 +49,9 @@ namespace SMIS.Infrastructure.EntityConfigurations
 
             builder.Property(p => p.CategoryId)
                 .HasMaxLength(50);
+
+            builder.Property(p => p.CategoryName)
+                .HasMaxLength(200);
 
             // Foreign keys
             builder.HasOne(p => p.Shop)

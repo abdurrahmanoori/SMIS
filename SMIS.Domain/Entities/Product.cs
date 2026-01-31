@@ -6,7 +6,9 @@ namespace SMIS.Domain.Entities;
 public class Product : BaseAuditableEntity
 {
     public string ShopId { get; private set; } = string.Empty;
+    public string? ShopName { get; set; }
     public string BaseUnitId { get; private set; } = string.Empty;
+    public string? BaseUnitName { get; set; }
     public int SalePricePerBaseUnit { get; private set; }
     public string? Description { get; private set; }
     public bool IsActive { get; private set; } = true;
@@ -14,6 +16,7 @@ public class Product : BaseAuditableEntity
     public string? Barcode { get; private set; }
     public string? ImageUrl { get; private set; }
     public string? CategoryId { get; private set; }
+    public string? CategoryName { get; set; }
 
     // Navigation Properties
     public virtual Shop Shop { get; set; } = null!;
