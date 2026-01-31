@@ -3,7 +3,9 @@ using MediatR;
 using SMIS.Application.Common.Response;
 using SMIS.Application.DTO.StockBatches;
 using SMIS.Application.Repositories.Base;
+using SMIS.Application.Repositories.Products;
 using SMIS.Application.Repositories.StockBatches;
+using SMIS.Application.Repositories.UnitOfMeasures;
 
 namespace SMIS.Application.Features.StockBatches.Commands
 {
@@ -12,14 +14,18 @@ namespace SMIS.Application.Features.StockBatches.Commands
     internal sealed class StockBatchUpdateCommandHandler : IRequestHandler<StockBatchUpdateCommand, Result<StockBatchDto>>
     {
         private readonly IStockBatchRepository _stockBatchRepository;
+        private readonly IProductRepository _productRepository;
+        private readonly IUnitOfMeasureRepository _unitOfMeasureRepository;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
 
-        public StockBatchUpdateCommandHandler(IUnitOfWork unitOfWork, IMapper mapper, IStockBatchRepository stockBatchRepository)
+        public StockBatchUpdateCommandHandler(IUnitOfWork unitOfWork, IMapper mapper, IStockBatchRepository stockBatchRepository, IProductRepository productRepository, IUnitOfMeasureRepository unitOfMeasureRepository)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _stockBatchRepository = stockBatchRepository;
+            _productRepository = productRepository;
+            _unitOfMeasureRepository = unitOfMeasureRepository;
         }
 
         public async Task<Result<StockBatchDto>> Handle(StockBatchUpdateCommand request, CancellationToken cancellationToken)
@@ -39,6 +45,13 @@ namespace SMIS.Application.Features.StockBatches.Commands
                 entity.SetReceivedDate(request.StockBatchCreateDto.ReceivedDate.Value);
             entity.SetBatchNumber(request.StockBatchCreateDto.BatchNumber);
             entity.SetExpirationDate(request.StockBatchCreateDto.ExpirationDate);
+            
+            // Update name fields
+            var product = await _productRepository.GetByIdAsync(request.StockBatchCreateDto.ProductId);
+            entity.ProductName = product?.Name;
+            
+            var unit = await _unitOfMeasureRepository.GetByIdAsync(request.StockBatchCreateDto.UnitId);
+            entity.UnitName = unit?.Name;
             
             switch (request.StockBatchCreateDto.Status)
             {

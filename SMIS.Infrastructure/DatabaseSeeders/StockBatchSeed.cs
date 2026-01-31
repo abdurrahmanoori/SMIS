@@ -24,9 +24,27 @@ public static class StockBatchSeed
     {
         var batch = StockBatch.Create(productId, unitId, quantity, purchasePrice, receivedDate, batchNumber, expirationDate);
         
-        // Set ID for seeding (bypass domain validation for infrastructure concerns)
+        // Set ID and Name fields for seeding
         typeof(StockBatch).GetProperty(nameof(StockBatch.Id))!.SetValue(batch, id);
+        typeof(StockBatch).GetProperty(nameof(StockBatch.ProductName))!.SetValue(batch, GetProductName(productId));
+        typeof(StockBatch).GetProperty(nameof(StockBatch.UnitName))!.SetValue(batch, GetUnitName(unitId));
         
         return batch;
     }
+
+    private static string? GetProductName(string productId) => productId switch
+    {
+        "1" => "Coca Cola 500ml",
+        "2" => "Oreo Biscuits",
+        "3" => "A4 Notebook",
+        _ => null
+    };
+
+    private static string? GetUnitName(string unitId) => unitId switch
+    {
+        "1" => "Bottle",
+        "2" => "Pack",
+        "3" => "Piece",
+        _ => null
+    };
 }

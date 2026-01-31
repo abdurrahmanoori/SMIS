@@ -7,9 +7,11 @@ namespace SMIS.Domain.Entities;
 public class StockBatch : BaseAuditableEntityWithoutName
 {
     public string ProductId { get; private set; } = string.Empty;
+    public string? ProductName { get; set; }
     public string? BatchNumber { get; private set; }
     public decimal Quantity { get; private set; }
     public string UnitId { get; private set; } = string.Empty;
+    public string? UnitName { get; set; }
     public DateTime ReceivedDate { get; private set; }
     public DateTime? ExpirationDate { get; private set; }
     public long PurchasePrice { get; private set; }

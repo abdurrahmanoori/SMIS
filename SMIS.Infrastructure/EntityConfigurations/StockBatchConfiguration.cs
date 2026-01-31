@@ -16,6 +16,9 @@ namespace SMIS.Infrastructure.EntityConfigurations
                 .IsRequired()
                 .HasMaxLength(50);
 
+            builder.Property(s => s.ProductName)
+                .HasMaxLength(200);
+
             builder.Property(s => s.BatchNumber)
                 .HasMaxLength(50);
 
@@ -26,6 +29,9 @@ namespace SMIS.Infrastructure.EntityConfigurations
             builder.Property(s => s.UnitId)
                 .IsRequired()
                 .HasMaxLength(50);
+
+            builder.Property(s => s.UnitName)
+                .HasMaxLength(100);
 
             builder.Property(s => s.ReceivedDate)
                 .IsRequired();
