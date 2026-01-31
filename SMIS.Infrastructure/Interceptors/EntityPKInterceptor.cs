@@ -37,15 +37,15 @@ public class EntityPKInterceptor : SaveChangesInterceptor
                 }
             }
 
-            //if (entry.State == EntityState.Modified)
+            //if (entry.State == EntityStateEnum.Modified)
             //{
             //    entry.Entity.UpdatedDate = DateTime.UtcNow;
             //    entry.Entity.UpdatedBy = _currentUser.GetId();
             //    entry.Property(e => e.CreatedDate).IsModified = false; // Ensure CreatedDate is not updated
             //}
-            //if (entry.State == EntityState.Deleted)
+            //if (entry.State == EntityStateEnum.Deleted)
             //{
-            //    //entry.State = EntityState.Modified; // Soft-delete the entity
+            //    //entry.State = EntityStateEnum.Modified; // Soft-delete the entity
             //    //entry.Entity.IsDeleted = true;
             //    //entry.Entity.DeletedAt = DateTime.UtcNow;
             //    //entry.Entity.DeletedBy = _currentUser.GetId();
@@ -54,21 +54,21 @@ public class EntityPKInterceptor : SaveChangesInterceptor
 
         //foreach (var entry in context.ChangeTracker.Entries<AuditableEntity>())
         //{
-        //    if (entry.State == EntityState.Added)
+        //    if (entry.State == EntityStateEnum.Added)
         //    {
         //        entry.Entity.CreatedAt = DateTime.UtcNow;
         //        entry.Entity.CreatedBy = _currentUser.GetId();
         //    }
 
-        //    if (entry.State == EntityState.Modified)
+        //    if (entry.State == EntityStateEnum.Modified)
         //    {
         //        entry.Entity.UpdatedAt = DateTime.UtcNow;
         //        entry.Entity.UpdatedBy = _currentUser.GetId();
         //        entry.Property(e => e.CreatedAt).IsModified = false; // Ensure CreatedDate is not updated
         //    }
-        //    if (entry.State == EntityState.Deleted)
+        //    if (entry.State == EntityStateEnum.Deleted)
         //    {
-        //        entry.State = EntityState.Modified; // Soft-delete the entity
+        //        entry.State = EntityStateEnum.Modified; // Soft-delete the entity
         //        entry.Entity.IsDeleted = true;
         //        entry.Entity.DeletedAt = DateTime.UtcNow;
         //        entry.Entity.DeletedBy = _currentUser.GetId();

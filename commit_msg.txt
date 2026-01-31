@@ -1,7 +1,0 @@
-Move Shop entity to main Entities namespace
-
-- Move Shop entity from SMIS.Domain.Entities.Shop to SMIS.Domain.Entities
-- Update all related imports and references
-- Update repository interfaces and implementations
-- Update mapping profiles and configurations
-- Fix entity configurations to reflect new namespace location

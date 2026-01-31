@@ -3,7 +3,9 @@ using MediatR;
 using SMIS.Application.Common.Response;
 using SMIS.Application.DTO.ProductUnits;
 using SMIS.Application.Repositories.Base;
+using SMIS.Application.Repositories.Products;
 using SMIS.Application.Repositories.ProductUnits;
+using SMIS.Application.Repositories.UnitOfMeasures;
 using SMIS.Domain.Entities;
 
 namespace SMIS.Application.Features.ProductUnits.Commands
@@ -13,14 +15,18 @@ namespace SMIS.Application.Features.ProductUnits.Commands
     internal sealed class ProductUnitUpdateCommandHandler : IRequestHandler<ProductUnitUpdateCommand, Result<ProductUnitDto>>
     {
         private readonly IProductUnitRepository _productUnitRepository;
+        private readonly IProductRepository _productRepository;
+        private readonly IUnitOfMeasureRepository _unitOfMeasureRepository;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
 
-        public ProductUnitUpdateCommandHandler(IUnitOfWork unitOfWork, IMapper mapper, IProductUnitRepository productUnitRepository)
+        public ProductUnitUpdateCommandHandler(IUnitOfWork unitOfWork, IMapper mapper, IProductUnitRepository productUnitRepository, IProductRepository productRepository, IUnitOfMeasureRepository unitOfMeasureRepository)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _productUnitRepository = productUnitRepository;
+            _productRepository = productRepository;
+            _unitOfMeasureRepository = unitOfMeasureRepository;
         }
 
         public async Task<Result<ProductUnitDto>> Handle(ProductUnitUpdateCommand request, CancellationToken cancellationToken)
@@ -32,6 +38,14 @@ namespace SMIS.Application.Features.ProductUnits.Commands
             }
 
             _mapper.Map(request.ProductUnitCreateDto, entity);
+            
+            // Update name fields
+            var product = await _productRepository.GetByIdAsync(request.ProductUnitCreateDto.ProductId);
+            entity.ProductName = product?.Name;
+            
+            var unit = await _unitOfMeasureRepository.GetByIdAsync(request.ProductUnitCreateDto.UnitOfMeasureId);
+            entity.UnitName = unit?.Name;
+            
             await _unitOfWork.SaveChanges(cancellationToken);
 
             var dto = _mapper.Map<ProductUnitDto>(entity);

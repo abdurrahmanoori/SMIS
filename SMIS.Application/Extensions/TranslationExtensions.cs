@@ -2,12 +2,13 @@ using System.Linq.Expressions;
 using System.Reflection;
 using SMIS.Application.Attributes;
 using SMIS.Application.Repositories.Localization;
+using SMIS.Domain.Entities.Localization;
 
 namespace SMIS.Application.Extensions
 {
     public static class TranslationExtensions
     {
-        public static string GetTranslation(this IQueryable<Domain.Entities.Localization.TranslationKey> translationKeys, 
+        public static string GetTranslation(this IQueryable<TranslationKey> translationKeys, 
             string originalValue, string languageId)
         {
             return translationKeys
@@ -19,7 +20,7 @@ namespace SMIS.Application.Extensions
         }
 
         public static T TranslateEntity<T>(this T entity, 
-            IQueryable<Domain.Entities.Localization.TranslationKey> translationKeys, 
+            IQueryable<TranslationKey> translationKeys, 
             string languageId,
             params (Func<T, string> getter, Action<T, string> setter)[] properties)
         {
@@ -33,7 +34,7 @@ namespace SMIS.Application.Extensions
         }
 
         public static T TranslateEntityByAttributes<T>(this T entity,
-            IQueryable<Domain.Entities.Localization.TranslationKey> translationKeys,
+            IQueryable<TranslationKey> translationKeys,
             string languageId)
         {
             var properties = typeof(T).GetProperties()

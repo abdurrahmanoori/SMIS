@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SMIS.Domain.Common.Interfaces;
+using SMIS.Domain.Enums;
 using System.ComponentModel.DataAnnotations;
 
 namespace SMIS.Domain.Common.BaseAbstract
@@ -12,7 +13,7 @@ namespace SMIS.Domain.Common.BaseAbstract
         [Required]
         public bool IsPublic { get; set; } = false;
         public int Version { get; set; }
-        public EntityState State { get; set; }
+        public EntityStateEnum EntityState { get; set; }
         public DateTimeOffset LastModifiedUtc { get; set; } = DateTimeOffset.UtcNow;
     }
 }

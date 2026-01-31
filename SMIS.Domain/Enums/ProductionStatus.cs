@@ -1,10 +1,9 @@
-﻿namespace SMIS.Domain.Enums
+﻿namespace SMIS.Domain.Enums;
+
+public enum ProductionStatus
 {
-    public enum ProductionStatus
-    {
-        Pending = 1,
-        Cutting = 2,
-        Stitching = 3,
-        Ready = 4
-    }
+    Pending = 1,
+    Cutting = 2,
+    Stitching = 3,
+    Ready = 4
 }

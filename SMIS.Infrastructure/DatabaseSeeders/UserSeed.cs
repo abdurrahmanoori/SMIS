@@ -2,42 +2,41 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using SMIS.Domain.Entities.Identity.Entity;
 
-namespace SMIS.Infrastructure.DatabaseSeeders
+namespace SMIS.Infrastructure.DatabaseSeeders;
+
+public static class UserSeed
 {
-    public static class UserSeed
+    public static void DataSeed(ModelBuilder modelBuilder)
     {
-        public static void DataSeed(ModelBuilder modelBuilder)
+        var hasher = new PasswordHasher<ApplicationUser>();
+        var admin = new ApplicationUser
         {
-            var hasher = new PasswordHasher<ApplicationUser>();
-            var admin = new ApplicationUser
-            {
-                Id = "1",
-                UserName = "admin",
-                NormalizedUserName = "ADMIN",
-                Email = "admin@local",
-                NormalizedEmail = "ADMIN@LOCAL",
-                EmailConfirmed = true,
-                FirstName = "System",
-                LastName = "Admin",
-                SecurityStamp = "admin-seed"
-            };
-            admin.PasswordHash = hasher.HashPassword(admin, "Pass@123");
+            Id = "1",
+            UserName = "admin",
+            NormalizedUserName = "ADMIN",
+            Email = "admin@local",
+            NormalizedEmail = "ADMIN@LOCAL",
+            EmailConfirmed = true,
+            FirstName = "System",
+            LastName = "Admin",
+            SecurityStamp = "admin-seed"
+        };
+        admin.PasswordHash = hasher.HashPassword(admin, "Pass@123");
 
-            var user = new ApplicationUser
-            {
-                Id = "2",
-                UserName = "user",
-                NormalizedUserName = "USER",
-                Email = "user@local",
-                NormalizedEmail = "USER@LOCAL",
-                EmailConfirmed = true,
-                FirstName = "Default",
-                LastName = "User",
-                SecurityStamp = "user-seed"
-            };
-            user.PasswordHash = hasher.HashPassword(user, "Pass@123");
+        var user = new ApplicationUser
+        {
+            Id = "2",
+            UserName = "user",
+            NormalizedUserName = "USER",
+            Email = "user@local",
+            NormalizedEmail = "USER@LOCAL",
+            EmailConfirmed = true,
+            FirstName = "Default",
+            LastName = "User",
+            SecurityStamp = "user-seed"
+        };
+        user.PasswordHash = hasher.HashPassword(user, "Pass@123");
 
-            modelBuilder.Entity<ApplicationUser>().HasData(admin, user);
-        }
+        modelBuilder.Entity<ApplicationUser>().HasData(admin, user);
     }
 }
