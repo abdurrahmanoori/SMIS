@@ -11,9 +11,11 @@ using SMIS.Application.DTO.ProductUnits;
 using SMIS.Application.DTO.StockBatches;
 using SMIS.Application.DTO.TranslationKeys;
 using SMIS.Application.DTO.Translations;
+using SMIS.Application.DTO.StockTransactions;
 using SMIS.Domain.Entities;
 using SMIS.Domain.Entities.Localization;
 using SMIS.Domain.Entities.LocationEntities;
+using SMIS.Domain.Enums;
 
 namespace SMIS.Application.Mappings;
 
@@ -140,6 +142,20 @@ public class MappingProfile : Profile
                 src.ReceivedDate,
                 src.BatchNumber,
                 src.ExpirationDate
+            ));
+
+        // StockTransaction mapping
+        CreateMap<StockTransaction, StockTransactionDto>()
+            .ForMember(dest => dest.Type, opt => opt.MapFrom(src => Enum.Parse<TransactionType>(src.Type)));
+        CreateMap<StockTransactionCreateDto, StockTransaction>()
+            .ConstructUsing(src => StockTransaction.Create(
+                src.ProductId,
+                src.StockBatchId,
+                src.Quantity,
+                src.UnitId,
+                src.Type,
+                src.TransactionDate,
+                src.Reference
             ));
     }
 

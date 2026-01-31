@@ -40,6 +40,7 @@ public partial class AppDbContext : IdentityDbContext<ApplicationUser, Applicati
         UserSeed.DataSeed(modelBuilder);
         ProductUnitSeed.DataSeed(modelBuilder);
         StockBatchSeed.DataSeed(modelBuilder);
+        StockTransactionSeed.DataSeed(modelBuilder);
         #endregion
 
         // Allow extension from other layers via partial method
@@ -69,4 +70,5 @@ public partial class AppDbContext : IdentityDbContext<ApplicationUser, Applicati
     public DbSet<Category> Categories { get; set; }
     public DbSet<ProductUnit> ProductUnits { get; set; }
     public DbSet<StockBatch> StockBatches { get; set; }
+    public DbSet<StockTransaction> StockTransactions { get; set; }
 }
