@@ -1,12 +1,14 @@
 using SMIS.Domain.Common.BaseAbstract;
+using SMIS.Domain.Common.Interfaces;
 using SMIS.Domain.Enums;
 using SMIS.Domain.Exceptions;
 using SMIS.Domain.ValueObjects;
 
 namespace SMIS.Domain.Entities;
 
-public class Shop : BaseAuditableEntity
+public class Shop : BaseAuditableEntity, IEntity
 {
+    public string Name { get; set; } = string.Empty;
     public ShopType ShopType { get; private set; }
     public string? Address { get; private set; } = string.Empty;
     public string? PhoneNumber { get; private set; } = string.Empty;

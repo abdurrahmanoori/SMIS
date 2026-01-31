@@ -78,6 +78,12 @@ public class ProductFixtureBuilder
         return this;
     }
 
+    public ProductFixtureBuilder WithSalePricePerBaseUnit(int price)
+    {
+        _faker.RuleFor(p => p.SalePricePerBaseUnit, price);
+        return this;
+    }
+
     public ProductFixtureBuilder WithPrice(int price)
     {
         _faker.RuleFor(p => p.SalePricePerBaseUnit, price);
