@@ -1,10 +1,11 @@
 using SMIS.Domain.Common.BaseAbstract;
+using SMIS.Domain.Common.Interfaces;
 
 namespace SMIS.Domain.Entities;
 
-public class Category : BaseAuditableEntity
+public class Category : BaseAuditableEntity, IEntity
 {
-    //public string Name { get; set; } = string.Empty; // "Beverages", "Soft Drinks"
+    public string Name { get; set; } = string.Empty; // "Beverages", "Soft Drinks"
     public string? Code { get; set; } = string.Empty; // "BEV", "SOFT"
     public string? Description { get; set; }
     public bool IsActive { get; set; } = true;
