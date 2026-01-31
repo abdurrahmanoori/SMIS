@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
+using SMIS.Domain.Common.BaseAbstract;
 using SMIS.Domain.Entities;
 using SMIS.Domain.Entities.Identity.Entity;
 using SMIS.Domain.Entities.Localization;
@@ -22,6 +23,18 @@ public partial class AppDbContext : IdentityDbContext<ApplicationUser, Applicati
 
         // Apply all IEntityTypeConfiguration classes from this assembly
         modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+
+        // Configure EntityState as string for all entities
+        foreach (var entityType in modelBuilder.Model.GetEntityTypes())
+        {
+            var entityStateProperty = entityType.FindProperty(nameof(BaseEntity.EntityState));
+            if (entityStateProperty != null)
+            {
+                modelBuilder.Entity(entityType.ClrType)
+                    .Property(nameof(BaseEntity.EntityState))
+                    .HasConversion<string>();
+            }
+        }
 
         #region Seed Database
         UserSeed.DataSeed(modelBuilder);
