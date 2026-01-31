@@ -1,0 +1,6 @@
+Add foreign key relationships to StockBatch configuration
+
+• Add relationship between StockBatch and Product entities
+• Add relationship between StockBatch and UnitOfMeasure entities
+• Configure delete behavior to restrict deletion of referenced entities
+• Update entity configuration with proper foreign key mappings
