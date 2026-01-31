@@ -44,6 +44,16 @@ namespace SMIS.Infrastructure.EntityConfigurations
             builder.Property(s => s.Status)
                 .IsRequired()
                 .HasConversion<string>();
+            builder.HasOne<Product>()
+                .WithMany()
+                .HasForeignKey(s => s.ProductId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+
+            builder.HasOne<UnitOfMeasure>()
+                .WithMany()
+                .HasForeignKey(s => s.UnitId)
+                .OnDelete(DeleteBehavior.Restrict);
 
             builder.HasIndex(s => s.ProductId);
             builder.HasIndex(s => s.BatchNumber);
