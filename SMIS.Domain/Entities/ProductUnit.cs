@@ -14,6 +14,7 @@ public class ProductUnit : EntityPK
     /// Example: Biscuit, Notebook, Coca Cola
     /// </summary>
     public string ProductId { get; set; } = string.Empty;
+    public string? ProductName { get; set; }
 
 
     /// <summary>
@@ -21,6 +22,7 @@ public class ProductUnit : EntityPK
     /// Example: Box, Carton, Pack
     /// </summary>
     public string UnitOfMeasureId { get; set; } = string.Empty;
+    public string? UnitName { get; set; }
 
     /// <summary>
     /// How many Base Units of the Product are contained in this Unit.

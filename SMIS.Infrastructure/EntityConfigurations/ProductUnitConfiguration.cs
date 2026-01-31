@@ -19,6 +19,12 @@ namespace SMIS.Infrastructure.EntityConfigurations
                 .IsRequired()
                 .HasColumnType("decimal(18,2)");
 
+            builder.Property(pu => pu.ProductName)
+                .HasMaxLength(200);
+
+            builder.Property(pu => pu.UnitName)
+                .HasMaxLength(100);
+
             // Configure relationships
             builder.HasOne(pu => pu.Product)
                 .WithMany(p => p.ProductUnits) // Product has a navigation property called ProductUnits
