@@ -22,6 +22,14 @@ namespace SMIS.Infrastructure.EntityConfigurations
 
             builder.Property(u => u.Description)
                 .HasMaxLength(500);
+
+            builder.Property(u => u.ShopId)
+                .IsRequired();
+
+            builder.HasOne(u => u.Shop)
+                .WithMany()
+                .HasForeignKey(u => u.ShopId)
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

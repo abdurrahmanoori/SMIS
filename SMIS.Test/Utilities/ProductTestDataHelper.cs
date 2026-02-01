@@ -49,6 +49,7 @@ public class ProductTestDataHelper
             Name = "Test Category for Products",
             Code = "TCP",
             Description = "Test category created for product tests",
+            ShopId = await CreateShopAsync(),
             IsActive = true
         };
         
@@ -65,7 +66,9 @@ public class ProductTestDataHelper
         {
             Name = "Piece",
             Symbol = "pcs",
-            Description = "Piece unit"
+            Description = "Piece unit",
+            ShopId = await CreateShopAsync()
+
         };
         
         var response = await _client.PostAsJsonAsync(ApiEndpoints.UnitOfMeasure, unitDto);

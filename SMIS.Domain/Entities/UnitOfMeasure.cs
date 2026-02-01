@@ -9,8 +9,10 @@ public class UnitOfMeasure : EntityPK
     public string Symbol { get; set; } = null!;
     // pcs, g, ml, l, box, pack
     public string? Description { get; set; } = null!;
+    public string ShopId { get; set; } = string.Empty;
 
     // Navigation Properties
+    public virtual Shop Shop { get; set; } = null!;
     public virtual ICollection<ProductUnit> ProductUnits { get; set; } = new List<ProductUnit>();
 }
 

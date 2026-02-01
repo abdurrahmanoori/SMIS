@@ -12,7 +12,8 @@ public class UnitOfMeasureFixtureBuilder
         _faker = new Faker<UnitOfMeasureCreateDto>()
             .RuleFor(u => u.Name, f => f.Commerce.ProductMaterial())
             .RuleFor(u => u.Symbol, f => f.Random.String2(2, 5).ToLower())
-            .RuleFor(u => u.Description, f => f.Lorem.Sentence());
+            .RuleFor(u => u.Description, f => f.Lorem.Sentence())
+            .RuleFor(u => u.ShopId, "1"); // Default to shop ID "1" from seed data
     }
 
     public UnitOfMeasureFixtureBuilder WithName(string name)
@@ -30,6 +31,12 @@ public class UnitOfMeasureFixtureBuilder
     public UnitOfMeasureFixtureBuilder WithDescription(string? description)
     {
         _faker.RuleFor(u => u.Description, description);
+        return this;
+    }
+
+    public UnitOfMeasureFixtureBuilder WithShopId(string shopId)
+    {
+        _faker.RuleFor(u => u.ShopId, shopId);
         return this;
     }
 

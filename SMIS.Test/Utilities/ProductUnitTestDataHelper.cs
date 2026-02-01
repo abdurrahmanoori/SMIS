@@ -47,7 +47,8 @@ public class ProductUnitTestDataHelper
         {
             Name = "Box",
             Symbol = "box",
-            Description = "Box unit for product unit tests"
+            Description = "Box unit for product unit tests",
+            ShopId = await CreateShopAsync()
         };
         
         var response = await _client.PostAsJsonAsync(ApiEndpoints.UnitOfMeasure, unitDto);
@@ -88,7 +89,8 @@ public class ProductUnitTestDataHelper
             Name = "Test Category for ProductUnit",
             Code = "TCPU",
             Description = "Test category for product unit tests",
-            IsActive = true
+            IsActive = true,
+            ShopId = await CreateShopAsync()
         };
         
         var response = await _client.PostAsJsonAsync(ApiEndpoints.Category, categoryDto);
@@ -104,7 +106,8 @@ public class ProductUnitTestDataHelper
         {
             Name = "Piece",
             Symbol = "pcs",
-            Description = "Base unit for product"
+            Description = "Base unit for product",
+            ShopId = await CreateShopAsync()
         };
         
         var response = await _client.PostAsJsonAsync(ApiEndpoints.UnitOfMeasure, unitDto);
