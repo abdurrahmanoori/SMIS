@@ -9,8 +9,10 @@ public class Category : BaseAuditableEntity, IEntity
     public string? Code { get; set; } = string.Empty; // "BEV", "SOFT"
     public string? Description { get; set; }
     public bool IsActive { get; set; } = true;
+    public string ShopId { get; set; } = string.Empty;
 
     // Navigation Properties
+    public virtual Shop Shop { get; set; } = null!;
     public virtual ICollection<Product> Products { get; set; } = new List<Product>();
 }
 
