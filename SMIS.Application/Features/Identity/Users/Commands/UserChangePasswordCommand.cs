@@ -1,7 +1,8 @@
 using MediatR;
+using Microsoft.AspNetCore.Identity;
 using SMIS.Application.Common.Response;
-using SMIS.Application.Identity.IServices;
-using SMIS.Application.Identity.Models;
+using SMIS.Application.DTO.Users;
+using SMIS.Domain.Entities.Identity.Entity;
 
 namespace SMIS.Application.Features.Identity.Users.Commands
 {
@@ -9,14 +10,29 @@ namespace SMIS.Application.Features.Identity.Users.Commands
 
     public class UserChangePasswordCommandHandler : IRequestHandler<UserChangePasswordCommand, Result<Unit>>
     {
-        private readonly IUserService _userService;
-        public UserChangePasswordCommandHandler(IUserService userService)
+        private readonly UserManager<ApplicationUser> _userManager;
+
+        public UserChangePasswordCommandHandler(UserManager<ApplicationUser> userManager)
         {
-            _userService = userService;
+            _userManager = userManager;
         }
-        public Task<Result<Unit>> Handle(UserChangePasswordCommand request, CancellationToken cancellationToken)
+
+        public async Task<Result<Unit>> Handle(UserChangePasswordCommand request, CancellationToken cancellationToken)
         {
-            return _userService.ChangePasswordAsync(request.UserId, request.Dto);
+            var user = await _userManager.FindByIdAsync(request.UserId);
+            if (user == null) return Result<Unit>.NotFoundResult(request.UserId);
+
+            var result = await _userManager.ChangePasswordAsync(user, request.Dto.CurrentPassword, request.Dto.NewPassword);
+            if (!result.Succeeded)
+            {
+                return Result<Unit>.WithErrors(result.Errors.Select(e => new ValidationError
+                {
+                    Code = e.Code,
+                    Description = e.Description
+                }).ToList());
+            }
+
+            return Result<Unit>.SuccessResult(Unit.Value, "Password changed successfully");
         }
     }
 }

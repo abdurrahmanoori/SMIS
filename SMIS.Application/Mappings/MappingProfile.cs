@@ -1,10 +1,11 @@
-﻿using AutoMapper;
+using AutoMapper;
 using SMIS.Application.DTO.Localization;
 using SMIS.Application.DTO.Provinces;
 using SMIS.Application.DTO.Districts;
 using SMIS.Application.DTO.Shops;
 using SMIS.Application.DTO.UnitOfMeasures;
 using SMIS.Application.DTO.Products;
+using SMIS.Application.DTO.Users;
 using System.Globalization;
 using SMIS.Application.DTO.Categories;
 using SMIS.Application.DTO.ProductUnits;
@@ -15,6 +16,7 @@ using SMIS.Application.DTO.StockTransactions;
 using SMIS.Domain.Entities;
 using SMIS.Domain.Entities.Localization;
 using SMIS.Domain.Entities.LocationEntities;
+using SMIS.Domain.Entities.Identity.Entity;
 using SMIS.Domain.Enums;
 
 namespace SMIS.Application.Mappings;
@@ -23,6 +25,18 @@ public class MappingProfile : Profile
 {
     public MappingProfile()
     {
+        // User mappings
+        CreateMap<ApplicationUser, UserDto>().ReverseMap();
+        CreateMap<UserCreateDto, ApplicationUser>()
+            .ConstructUsing(src => ApplicationUser.Create(
+                src.UserName,
+                src.Email,
+                src.ShopId,
+                src.FirstName,
+                src.LastName,
+                src.PhoneNumber
+                
+            ));
 
         // Language mappings
         CreateMap<Language, LanguageDto>().ReverseMap();

@@ -1,6 +1,7 @@
 using MediatR;
+using Microsoft.AspNetCore.Identity;
 using SMIS.Application.Common.Response;
-using SMIS.Application.Identity.IServices;
+using SMIS.Domain.Entities.Identity.Entity;
 
 namespace SMIS.Application.Features.Identity.Users.Commands
 {
@@ -8,14 +9,29 @@ namespace SMIS.Application.Features.Identity.Users.Commands
 
     public class UserDeleteCommandHandler : IRequestHandler<UserDeleteCommand, Result<Unit>>
     {
-        private readonly IUserService _userService;
-        public UserDeleteCommandHandler(IUserService userService)
+        private readonly UserManager<ApplicationUser> _userManager;
+
+        public UserDeleteCommandHandler(UserManager<ApplicationUser> userManager)
         {
-            _userService = userService;
+            _userManager = userManager;
         }
-        public Task<Result<Unit>> Handle(UserDeleteCommand request, CancellationToken cancellationToken)
+
+        public async Task<Result<Unit>> Handle(UserDeleteCommand request, CancellationToken cancellationToken)
         {
-            return _userService.DeleteUserAsync(request.UserId);
+            var user = await _userManager.FindByIdAsync(request.UserId);
+            if (user == null) return Result<Unit>.NotFoundResult(request.UserId);
+
+            var result = await _userManager.DeleteAsync(user);
+            if (!result.Succeeded)
+            {
+                return Result<Unit>.WithErrors(result.Errors.Select(e => new ValidationError
+                {
+                    Code = e.Code,
+                    Description = e.Description
+                }).ToList());
+            }
+
+            return Result<Unit>.SuccessResult(Unit.Value, "User deleted successfully");
         }
     }
 }

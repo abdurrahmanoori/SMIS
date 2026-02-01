@@ -21,15 +21,14 @@ public class UserService : IUserService
 
     public async Task<Result<string>> CreateUserAsync(UserCreateDto input)
     {
-        var user = new ApplicationUser
-        {
-            UserName = input.UserName,
-            Email = input.Email,
-            PhoneNumber = input.PhoneNumber,
-            FirstName = input.FirstName,
-            LastName = input.LastName,
-            EmailConfirmed = false
-        };
+        var user = ApplicationUser.Create(
+            input.UserName,
+            input.Email,
+            "1", // Default shop ID - should be passed from input
+            input.FirstName,
+            input.LastName,
+            input.PhoneNumber
+        );
 
         var createResult = await _userManager.CreateAsync(user, input.Password);
         if (!createResult.Succeeded)
@@ -80,12 +79,12 @@ public class UserService : IUserService
             return Result<UserDto>.NotFoundResult(userId);
         }
 
-        if (!string.IsNullOrWhiteSpace(input.Email)) user.Email = input.Email;
-        if (!string.IsNullOrWhiteSpace(input.PhoneNumber)) user.PhoneNumber = input.PhoneNumber;
-        if (!string.IsNullOrWhiteSpace(input.FirstName)) user.FirstName = input.FirstName;
-        if (!string.IsNullOrWhiteSpace(input.LastName)) user.LastName = input.LastName;
-        if (input.EmailConfirmed.HasValue) user.EmailConfirmed = input.EmailConfirmed.Value;
-        if (input.PhoneNumberConfirmed.HasValue) user.PhoneNumberConfirmed = input.PhoneNumberConfirmed.Value;
+        if (!string.IsNullOrWhiteSpace(input.Email)) user.SetEmail(input.Email);
+        if (!string.IsNullOrWhiteSpace(input.PhoneNumber)) user.SetPhoneNumber(input.PhoneNumber);
+        if (!string.IsNullOrWhiteSpace(input.FirstName)) user.SetFirstName(input.FirstName);
+        if (!string.IsNullOrWhiteSpace(input.LastName)) user.SetLastName(input.LastName);
+        if (input.EmailConfirmed.HasValue && input.EmailConfirmed.Value) user.ConfirmEmail();
+        if (input.PhoneNumberConfirmed.HasValue && input.PhoneNumberConfirmed.Value) user.ConfirmPhoneNumber();
 
         var updateResult = await _userManager.UpdateAsync(user);
         if (!updateResult.Succeeded)

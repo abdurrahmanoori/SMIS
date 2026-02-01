@@ -28,15 +28,15 @@ public static class IdentityDataSeeder
         var admin = await userManager.FindByNameAsync(adminUserName);
         if (admin == null)
         {
-            admin = new ApplicationUser
-            {
-                UserName = adminUserName,
-                Email = adminEmail,
-                EmailConfirmed = true,
-                FirstName = "System",
-                LastName = "Admin"
-            };
-            // Simple but valid password given current Identity options (min length 6, no complexity requirements)
+            admin = ApplicationUser.Create(
+                adminUserName,
+                adminEmail,
+                "1", // Default shop ID
+                "System",
+                "Admin"
+            );
+            admin.ConfirmEmail();
+            
             var adminPassword = "Pass@123";
             var createAdmin = await userManager.CreateAsync(admin, adminPassword);
             if (createAdmin.Succeeded)
@@ -51,14 +51,15 @@ public static class IdentityDataSeeder
         var user = await userManager.FindByNameAsync(userUserName);
         if (user == null)
         {
-            user = new ApplicationUser
-            {
-                UserName = userUserName,
-                Email = userEmail,
-                EmailConfirmed = true,
-                FirstName = "Default",
-                LastName = "User"
-            };
+            user = ApplicationUser.Create(
+                userUserName,
+                userEmail,
+                "1", // Default shop ID
+                "Default",
+                "User"
+            );
+            user.ConfirmEmail();
+            
             var userPassword = "Pass@123";
             var createUser = await userManager.CreateAsync(user, userPassword);
             if (createUser.Succeeded)
