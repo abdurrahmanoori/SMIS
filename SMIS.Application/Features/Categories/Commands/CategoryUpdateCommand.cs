@@ -35,7 +35,14 @@ namespace SMIS.Application.Features.Categories.Commands
             }
 
             await _translationKeyRepository.AddTranslationKeysForChangedProperties(request.CategoryCreateDto, entity);
-            _mapper.Map(request.CategoryCreateDto, entity);
+            
+            // Update existing entity using domain methods
+            entity.SetName(request.CategoryCreateDto.Name);
+            entity.SetShopId(request.CategoryCreateDto.ShopId);
+            entity.SetCode(request.CategoryCreateDto.Code);
+            entity.SetDescription(request.CategoryCreateDto.Description);
+            if (request.CategoryCreateDto.IsActive) entity.Activate(); else entity.Deactivate();
+            
             await _unitOfWork.SaveChanges(cancellationToken);
 
             var dto = _mapper.Map<CategoryDto>(entity);

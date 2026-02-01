@@ -117,7 +117,14 @@ public class MappingProfile : Profile
 
         // Category mapping
         CreateMap<Category, CategoryDto>().ReverseMap();
-        CreateMap<Category, CategoryCreateDto>().ReverseMap();
+        CreateMap<CategoryCreateDto, Category>()
+            .ConstructUsing(src => Category.Create(
+                src.Name,
+                src.ShopId,
+                src.Code,
+                src.Description,
+                src.IsActive
+            ));
 
         // ProductUnit mapping
         CreateMap<ProductUnit, ProductUnitDto>().ReverseMap();
