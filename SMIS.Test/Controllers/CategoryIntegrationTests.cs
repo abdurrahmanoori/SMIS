@@ -54,6 +54,7 @@ public class CategoryIntegrationTests : BaseIntegrationTest
         actual.Code.Should().Be(expected.Code);
         actual.Description.Should().Be(expected.Description);
         actual.IsActive.Should().Be(expected.IsActive);
+        actual.ShopId.Should().Be(expected.ShopId);
     }
 
     [Fact]
@@ -61,7 +62,7 @@ public class CategoryIntegrationTests : BaseIntegrationTest
     {
         var dto = _dataHelper.CreateCategoryBuilder().Build();
         var response = await CreateCategoryResponseAsync(dto, "Post_CreateValidCategory");
-        
+
         response.StatusCode.Should().Be(HttpStatusCode.OK);
         var created = await response.Content.ReadFromJsonAsync<CategoryDto>();
         AssertCategoryMatches(created!, dto);
@@ -74,7 +75,7 @@ public class CategoryIntegrationTests : BaseIntegrationTest
         dto.Description = "";
 
         var response = await CreateCategoryResponseAsync(dto, "Post_CreateCategoryWithEmptyDescription");
-        
+
         response.StatusCode.Should().Be(HttpStatusCode.OK);
         var created = await response.Content.ReadFromJsonAsync<CategoryDto>();
         created.Should().NotBeNull();
@@ -88,7 +89,7 @@ public class CategoryIntegrationTests : BaseIntegrationTest
         dto.Description = null;
 
         var response = await CreateCategoryResponseAsync(dto, "Post_CreateCategoryWithNullDescription");
-        
+
         response.StatusCode.Should().Be(HttpStatusCode.OK);
         var created = await response.Content.ReadFromJsonAsync<CategoryDto>();
         created.Should().NotBeNull();
@@ -314,5 +315,14 @@ public class CategoryIntegrationTests : BaseIntegrationTest
         var updated = await updateResponse.Content.ReadFromJsonAsync<CategoryDto>();
         updated.Should().NotBeNull();
         updated!.Code.Should().Be("NEW-CODE");
+    }
+
+    [Fact]
+    public async Task Post_CreateCategoryWithEmptyShopId_ReturnsBadRequest()
+    {
+        var dto = _dataHelper.CreateCategoryBuilder().WithShopId("").Build();
+        var response = await CreateCategoryResponseAsync(dto, "Post_CreateCategoryWithEmptyShopId");
+
+        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
     }
 }
