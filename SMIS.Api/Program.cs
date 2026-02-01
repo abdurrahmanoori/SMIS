@@ -37,7 +37,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddHttpContextAccessor();
 
 // Configure services
-builder.Services.ConfigurePersistenceServices(builder.Configuration);
+builder.Services.ConfigurePersistenceServices(builder.Configuration,builder.Environment);
 builder.Services.ConfigureApplicationServices();
 builder.Services.ConfigureIdentityServices<AppDbContext>(builder.Configuration);
 var enf = builder.Environment.EnvironmentName;
