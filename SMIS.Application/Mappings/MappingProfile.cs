@@ -113,7 +113,13 @@ public class MappingProfile : Profile
 
         // UnitOfMeasure mapping
         CreateMap<UnitOfMeasure, UnitOfMeasureDto>().ReverseMap();
-        CreateMap<UnitOfMeasure, UnitOfMeasureCreateDto>().ReverseMap();
+        CreateMap<UnitOfMeasureCreateDto, UnitOfMeasure>()
+            .ConstructUsing(src => UnitOfMeasure.Create(
+                src.Name,
+                src.Symbol,
+                src.ShopId,
+                src.Description
+            ));
 
         // Category mapping
         CreateMap<Category, CategoryDto>().ReverseMap();
