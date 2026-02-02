@@ -24,7 +24,7 @@ jobs:
         run: dotnet build SMIS.Api/SMIS.Api.csproj --no-restore --configuration Release
 
       - name: Test API
-        run: dotnet test SMIS.Api.Tests/SMIS.Api.Tests.csproj --configuration Release
+        run: dotnet test SMIS.Tests/SMIS.Tests.csproj --configuration Release
 
       - name: Publish API
         run: dotnet publish SMIS.Api/SMIS.Api.csproj --configuration Release --output ./publish
