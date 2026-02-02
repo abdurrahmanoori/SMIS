@@ -1,39 +1,34 @@
 name: CI/CD Pipeline
-
-on:
+"on":
   push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
-    types: [ closed ]
-
+    branches:
+      - master
 jobs:
-  build-and-test:
-    if: github.event.pull_request.merged == true || github.event_name == 'push'
-    runs-on: windows-latest
-
+  build-test-publish-api:
+    runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
-
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v4
-      with:
-        dotnet-version: '9.0.x'
-
-    - name: Restore dependencies
-      run: dotnet restore
-
-    - name: Build
-      run: dotnet build --no-restore --configuration Release
-
-    - name: Test
-      run: dotnet test --no-build --configuration Release --collect:"XPlat Code Coverage"
-
-    - name: Publish API
-      run: dotnet publish SMIS.Api/SMIS.Api.csproj --configuration Release --output ./publish
-
-    - name: Upload artifacts
-      uses: actions/upload-artifact@v4
-      with:
-        name: smis-api
-        path: ./publish
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 9.0.x
+      - name: Restore API dependencies
+        run: dotnet restore SMIS.Api/SMIS.Api.csproj
+      - name: Build API
+        run: >-
+          dotnet build SMIS.Api/SMIS.Api.csproj --no-restore --configuration
+          Release
+      - name: Test API
+        run: >-
+          dotnet test SMIS.Api.Tests/SMIS.Api.Tests.csproj --configuration
+          Release
+      - name: Publish API
+        run: >-
+          dotnet publish SMIS.Api/SMIS.Api.csproj --configuration Release
+          --output ./publish
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: smis-api
+          path: ./publish
