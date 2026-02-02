@@ -54,6 +54,7 @@ public class StockTransactionIntegrationTests : BaseIntegrationTest
     private static void AssertStockTransactionMatches(StockTransactionDto actual, StockTransactionCreateDto expected)
     {
         actual.ShouldNotBeNull();
+        actual.ShopId.ShouldBe(expected.ShopId);
         actual.ProductId.ShouldBe(expected.ProductId);
         actual.StockBatchId.ShouldBe(expected.StockBatchId);
         actual.Quantity.ShouldBe(expected.Quantity);
@@ -168,6 +169,15 @@ public class StockTransactionIntegrationTests : BaseIntegrationTest
         await LogIfError(response, "Delete_NonExistingStockTransaction");
 
         response.StatusCode.ShouldBe(HttpStatusCode.NotFound);
+    }
+
+    [Fact]
+    public async Task Post_CreateStockTransactionWithEmptyShopId_ReturnsBadRequest()
+    {
+        var dto = _dataHelper.CreateStockTransactionBuilder().WithShopId("").Build();
+        var response = await CreateStockTransactionResponseAsync(dto, "Post_CreateStockTransactionWithEmptyShopId");
+
+        response.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
     }
 
     [Fact]

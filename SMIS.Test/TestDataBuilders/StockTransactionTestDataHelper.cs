@@ -28,6 +28,7 @@ namespace SMIS.Test.TestDataBuilders
     {
         private readonly StockTransactionCreateDto _dto = new()
         {
+            ShopId = "1", // Main Store
             ProductId = "1", // Coca Cola
             StockBatchId = "1",
             Quantity = 10m,
@@ -36,6 +37,12 @@ namespace SMIS.Test.TestDataBuilders
             TransactionDate = DateTime.Now,
             Reference = "Test Transaction"
         };
+
+        public StockTransactionBuilder WithShopId(string shopId)
+        {
+            _dto.ShopId = shopId;
+            return this;
+        }
 
         public StockTransactionBuilder WithProductId(string productId)
         {
