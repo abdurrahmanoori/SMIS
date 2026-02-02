@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using SMIS.Domain.Entities;
+using System.Reflection;
 
 namespace SMIS.Infrastructure.DatabaseSeeders;
 
@@ -75,17 +76,16 @@ public static class ProductUnitSeed
 
     private static ProductUnit CreateProductUnit(string id, string shopId, string productId, string unitOfMeasureId, decimal conversionFactor)
     {
-        var productUnit = new ProductUnit
-        {
-            Id = id,
-            ShopId = shopId,
-            ProductId = productId,
-            UnitOfMeasureId = unitOfMeasureId,
-            ConversionFactor = conversionFactor,
-            ShopName = GetShopName(shopId),
-            ProductName = GetProductName(productId),
-            UnitName = GetUnitName(unitOfMeasureId)
-        };
+        var productUnit = ProductUnit.Create(shopId, productId, unitOfMeasureId, conversionFactor);
+        
+        // Set ID for seeding (bypass domain validation for infrastructure concerns)
+        typeof(ProductUnit).GetProperty(nameof(ProductUnit.Id))!.SetValue(productUnit, id);
+        
+        // Set name fields for seeding
+        productUnit.SetShopName(GetShopName(shopId));
+        productUnit.SetProductName(GetProductName(productId));
+        productUnit.SetUnitName(GetUnitName(unitOfMeasureId));
+        
         return productUnit;
     }
 

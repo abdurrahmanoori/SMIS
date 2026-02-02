@@ -40,17 +40,21 @@ namespace SMIS.Application.Features.ProductUnits.Commands
                 return Result<ProductUnitDto>.NotFoundResult(nameof(ProductUnitDto.Id));
             }
 
-            _mapper.Map(request.ProductUnitCreateDto, entity);
+            // Update using domain methods
+            entity.SetShopId(request.ProductUnitCreateDto.ShopId);
+            entity.SetProductId(request.ProductUnitCreateDto.ProductId);
+            entity.SetUnitOfMeasureId(request.ProductUnitCreateDto.UnitOfMeasureId);
+            entity.SetConversionFactor(request.ProductUnitCreateDto.ConversionFactor);
             
-            // Update name fields
+            // Update name fields using domain methods
             var shop = await _shopRepository.GetByIdAsync(request.ProductUnitCreateDto.ShopId);
-            entity.ShopName = shop?.Name;
+            entity.SetShopName(shop?.Name);
             
             var product = await _productRepository.GetByIdAsync(request.ProductUnitCreateDto.ProductId);
-            entity.ProductName = product?.Name;
+            entity.SetProductName(product?.Name);
             
             var unit = await _unitOfMeasureRepository.GetByIdAsync(request.ProductUnitCreateDto.UnitOfMeasureId);
-            entity.UnitName = unit?.Name;
+            entity.SetUnitName(unit?.Name);
             
             await _unitOfWork.SaveChanges(cancellationToken);
 

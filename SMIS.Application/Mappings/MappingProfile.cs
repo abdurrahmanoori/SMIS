@@ -148,7 +148,13 @@ public class MappingProfile : Profile
 
         // ProductUnit mapping
         CreateMap<ProductUnit, ProductUnitDto>().ReverseMap();
-        CreateMap<ProductUnit, ProductUnitCreateDto>().ReverseMap();
+        CreateMap<ProductUnitCreateDto, ProductUnit>()
+            .ConstructUsing(src => ProductUnit.Create(
+                src.ShopId,
+                src.ProductId,
+                src.UnitOfMeasureId,
+                src.ConversionFactor
+            ));
 
         // TranslationKey mapping
         CreateMap<TranslationKey, TranslationKeyDto>().ReverseMap();

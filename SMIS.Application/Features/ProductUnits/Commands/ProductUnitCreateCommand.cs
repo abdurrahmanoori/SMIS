@@ -36,15 +36,15 @@ namespace SMIS.Application.Features.ProductUnits.Commands
         {
             var entity = _mapper.Map<ProductUnit>(request.ProductUnitCreateDto);
             
-            // Populate name fields
+            // Populate name fields using domain methods
             var shop = await _shopRepository.GetByIdAsync(request.ProductUnitCreateDto.ShopId);
-            entity.ShopName = shop?.Name;
+            entity.SetShopName(shop?.Name);
             
             var product = await _productRepository.GetByIdAsync(request.ProductUnitCreateDto.ProductId);
-            entity.ProductName = product?.Name;
+            entity.SetProductName(product?.Name);
             
             var unit = await _unitOfMeasureRepository.GetByIdAsync(request.ProductUnitCreateDto.UnitOfMeasureId);
-            entity.UnitName = unit?.Name;
+            entity.SetUnitName(unit?.Name);
             
             await _productUnitRepository.AddAsync(entity);
             await _unitOfWork.SaveChanges(cancellationToken);
