@@ -6,6 +6,7 @@ namespace SMIS.Test.Utilities;
 public class ProductUnitFixtureBuilder
 {
     private readonly Faker<ProductUnitCreateDto> _faker;
+    private string? _shopId;
     private string? _productId;
     private string? _unitOfMeasureId;
 
@@ -23,6 +24,12 @@ public class ProductUnitFixtureBuilder
 
     }
 
+    public ProductUnitFixtureBuilder WithShopId(string shopId)
+    {
+        _shopId = shopId;
+        return this;
+    }
+
     public ProductUnitFixtureBuilder WithProductId(string productId)
     {
         _productId = productId;
@@ -35,8 +42,9 @@ public class ProductUnitFixtureBuilder
         return this;
     }
 
-    public ProductUnitFixtureBuilder WithDependencies(string productId, string unitOfMeasureId)
+    public ProductUnitFixtureBuilder WithDependencies(string shopId, string productId, string unitOfMeasureId)
     {
+        _shopId = shopId;
         _productId = productId;
         _unitOfMeasureId = unitOfMeasureId;
         return this;
@@ -51,6 +59,7 @@ public class ProductUnitFixtureBuilder
     public ProductUnitCreateDto Build()
     {
         var productUnit = _faker.Generate();
+        productUnit.ShopId = _shopId ?? throw new InvalidOperationException("ShopId is required");
         productUnit.ProductId = _productId ?? throw new InvalidOperationException("ProductId is required");
         productUnit.UnitOfMeasureId = _unitOfMeasureId ?? throw new InvalidOperationException("UnitOfMeasureId is required");
         return productUnit;

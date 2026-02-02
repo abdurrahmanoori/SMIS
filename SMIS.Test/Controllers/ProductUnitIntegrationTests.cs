@@ -50,6 +50,7 @@ public class ProductUnitIntegrationTests : BaseIntegrationTest
     private static void AssertProductUnitMatches(ProductUnitDto actual, ProductUnitCreateDto expected)
     {
         actual.ShouldNotBeNull();
+        actual.ShopId.ShouldBe(expected.ShopId);
         actual.ProductId.ShouldBe(expected.ProductId);
         actual.UnitOfMeasureId.ShouldBe(expected.UnitOfMeasureId);
         actual.ConversionFactor.ShouldBe(expected.ConversionFactor);

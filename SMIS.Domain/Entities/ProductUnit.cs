@@ -1,4 +1,7 @@
 ﻿using SMIS.Domain.Common.BaseAbstract;
+using SMIS.Domain.Common.Interfaces;
+using SMIS.Domain.Exceptions;
+using SMIS.Domain.ValueObjects;
 
 namespace SMIS.Domain.Entities;
 
@@ -10,19 +13,24 @@ namespace SMIS.Domain.Entities;
 public class ProductUnit : EntityPK
 {
     /// <summary>
+    /// Foreign key to the Shop.
+    /// </summary>
+    public string ShopId { get; private set; } = string.Empty;
+    public string? ShopName { get; private set; }
+
+    /// <summary>
     /// Foreign key to the Product.
     /// Example: Biscuit, Notebook, Coca Cola
     /// </summary>
-    public string ProductId { get; set; } = string.Empty;
-    public string? ProductName { get; set; }
-
+    public string ProductId { get; private set; } = string.Empty;
+    public string? ProductName { get; private set; }
 
     /// <summary>
     /// Foreign key to Unit.
     /// Example: Box, Carton, Pack
     /// </summary>
-    public string UnitOfMeasureId { get; set; } = string.Empty;
-    public string? UnitName { get; set; }
+    public string UnitOfMeasureId { get; private set; } = string.Empty;
+    public string? UnitName { get; private set; }
 
     /// <summary>
     /// How many Base Units of the Product are contained in this Unit.
@@ -32,8 +40,12 @@ public class ProductUnit : EntityPK
     /// - Notebook: 1 Box = 10 Pieces → ConversionFactor = 10
     /// - Coca Cola: 1 Carton = 24 Bottles → ConversionFactor = 24
     /// </summary>
-    public decimal ConversionFactor { get; set; }
+    public decimal ConversionFactor { get; private set; }
 
+    /// <summary>
+    /// Navigation property to Shop.
+    /// </summary>
+    public Shop Shop { get; set; } = null!;
 
     /// <summary>
     /// Navigation property to Product.
@@ -44,6 +56,52 @@ public class ProductUnit : EntityPK
     /// Navigation property to Unit.
     /// </summary>
     public UnitOfMeasure UnitOfMeasure { get; set; } = null!;
+
+    internal ProductUnit() { } // EF Core & Seeding
+
+    public static ProductUnit Create(string shopId, string productId, string unitOfMeasureId, decimal conversionFactor)
+    {
+        var productUnit = new ProductUnit();
+        productUnit.SetShopId(shopId);
+        productUnit.SetProductId(productId);
+        productUnit.SetUnitOfMeasureId(unitOfMeasureId);
+        productUnit.SetConversionFactor(conversionFactor);
+        return productUnit;
+    }
+
+    public void SetShopId(string shopId)
+    {
+        if (string.IsNullOrWhiteSpace(shopId))
+            throw new DomainValidationException("Shop ID cannot be empty");
+
+        ShopId = shopId.Trim();
+    }
+
+    public void SetProductId(string productId)
+    {
+        if (string.IsNullOrWhiteSpace(productId))
+            throw new DomainValidationException("Product ID cannot be empty");
+
+        ProductId = productId.Trim();
+    }
+
+    public void SetUnitOfMeasureId(string unitOfMeasureId)
+    {
+        if (string.IsNullOrWhiteSpace(unitOfMeasureId))
+            throw new DomainValidationException("Unit of measure ID cannot be empty");
+
+        UnitOfMeasureId = unitOfMeasureId.Trim();
+    }
+
+    public void SetConversionFactor(decimal conversionFactor)
+    {
+        var conversionFactorVO = ValueObjects.ConversionFactor.Create(conversionFactor);
+        ConversionFactor = conversionFactorVO;
+    }
+
+    public void SetShopName(string? shopName) => ShopName = shopName?.Trim();
+    public void SetProductName(string? productName) => ProductName = productName?.Trim();
+    public void SetUnitName(string? unitName) => UnitName = unitName?.Trim();
 }
 
 
