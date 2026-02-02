@@ -182,6 +182,7 @@ public class MappingProfile : Profile
             .ForMember(dest => dest.Type, opt => opt.MapFrom(src => Enum.Parse<TransactionType>(src.Type)));
         CreateMap<StockTransactionCreateDto, StockTransaction>()
             .ConstructUsing(src => StockTransaction.Create(
+                src.ShopId,
                 src.ProductId,
                 src.StockBatchId,
                 src.Quantity,

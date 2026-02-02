@@ -7,6 +7,9 @@ namespace SMIS.Application.Features.StockTransactions.Validators
     {
         public StockTransactionCreateCommandValidator()
         {
+            RuleFor(x => x.StockTransactionCreateDto.ShopId)
+                .NotEmpty().WithMessage("ShopId is required");
+
             RuleFor(x => x.StockTransactionCreateDto.ProductId)
                 .NotEmpty().WithMessage("ProductId is required");
 
