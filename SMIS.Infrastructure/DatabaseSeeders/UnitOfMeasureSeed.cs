@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using SMIS.Domain.Entities;
+using System.Reflection;
 
 namespace SMIS.Infrastructure.DatabaseSeeders;
 
@@ -7,17 +8,30 @@ public static class UnitOfMeasureSeed
 {
     public static void DataSeed(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<UnitOfMeasure>().HasData(
-            new UnitOfMeasure { Id = "1", Name = "Piece", Symbol = "pcs", Description = "Individual items" },
-            new UnitOfMeasure { Id = "2", Name = "Bottle", Symbol = "btl", Description = "Liquid containers" },
-            new UnitOfMeasure { Id = "3", Name = "Pack", Symbol = "pk", Description = "Small packages" },
-            new UnitOfMeasure { Id = "4", Name = "Box", Symbol = "box", Description = "Medium containers" },
-            new UnitOfMeasure { Id = "5", Name = "Carton", Symbol = "ctn", Description = "Large containers" },
-            new UnitOfMeasure { Id = "6", Name = "Liter", Symbol = "L", Description = "Volume measurement" },
-            new UnitOfMeasure { Id = "7", Name = "Kilogram", Symbol = "kg", Description = "Weight measurement" },
-            new UnitOfMeasure { Id = "8", Name = "Gram", Symbol = "g", Description = "Small weight measurement" },
-            new UnitOfMeasure { Id = "9", Name = "Milliliter", Symbol = "ml", Description = "Small volume measurement" },
-            new UnitOfMeasure { Id = "10", Name = "Dozen", Symbol = "dz", Description = "12 pieces" }
-        );
+        var units = new[]
+        {
+            CreateUnit("1", "Piece", "pcs", "1", "Individual items"),
+            CreateUnit("2", "Bottle", "btl", "1", "Liquid containers"),
+            CreateUnit("3", "Pack", "pk", "1", "Small packages"),
+            CreateUnit("4", "Box", "box", "2", "Medium containers"),
+            CreateUnit("5", "Carton", "ctn", "2", "Large containers"),
+            CreateUnit("6", "Liter", "L", "2", "Volume measurement"),
+            CreateUnit("7", "Kilogram", "kg", "3", "Weight measurement"),
+            CreateUnit("8", "Gram", "g", "3", "Small weight measurement"),
+            CreateUnit("9", "Milliliter", "ml", "3", "Small volume measurement"),
+            CreateUnit("10", "Dozen", "dz", "1", "12 pieces")
+        };
+
+        modelBuilder.Entity<UnitOfMeasure>().HasData(units);
+    }
+
+    private static UnitOfMeasure CreateUnit(string id, string name, string? symbol, string shopId, string description)
+    {
+        var unit = UnitOfMeasure.Create(name, symbol, shopId, description);
+        
+        // Set ID for seeding (bypass domain validation for infrastructure concerns)
+        typeof(UnitOfMeasure).GetProperty(nameof(UnitOfMeasure.Id))!.SetValue(unit, id);
+        
+        return unit;
     }
 }

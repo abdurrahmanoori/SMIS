@@ -18,6 +18,9 @@ namespace SMIS.Application.Features.UnitOfMeasures.Validators
             RuleFor(x => x.UnitOfMeasureCreateDto.Description)
                 .MaximumLength(500).WithMessage("Description must not exceed 500 characters")
                 .When(x => !string.IsNullOrEmpty(x.UnitOfMeasureCreateDto.Description));
+
+            RuleFor(x => x.UnitOfMeasureCreateDto.ShopId)
+                .NotEmpty().WithMessage("ShopId is required");
         }
     }
 }

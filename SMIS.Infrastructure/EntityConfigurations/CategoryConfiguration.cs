@@ -24,6 +24,14 @@ namespace SMIS.Infrastructure.EntityConfigurations
 
             builder.Property(c => c.IsActive)
                 .IsRequired();
+
+            builder.Property(c => c.ShopId)
+                .IsRequired();
+
+            builder.HasOne(c => c.Shop)
+                .WithMany()
+                .HasForeignKey(c => c.ShopId)
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

@@ -47,7 +47,9 @@ public class StockBatchTestDataHelper
         {
             Name = "Bottle",
             Symbol = "btl",
-            Description = "Bottle unit for stock batch tests"
+            Description = "Bottle unit for stock batch tests",
+            ShopId =await CreateShopAsync()
+
         };
         
         var response = await _client.PostAsJsonAsync(ApiEndpoints.UnitOfMeasure, unitDto);
@@ -72,6 +74,7 @@ public class StockBatchTestDataHelper
             SalePricePerBaseUnit = 1000,
             SKU = $"SKU-SB-{Guid.NewGuid()}",
             IsActive = true
+            
         };
         
         var response = await _client.PostAsJsonAsync(ApiEndpoints.Product, productDto);
@@ -88,7 +91,8 @@ public class StockBatchTestDataHelper
             Name = "Test Category for StockBatch",
             Code = "TCSB",
             Description = "Test category for stock batch tests",
-            IsActive = true
+            IsActive = true,
+            ShopId = await CreateShopAsync()
         };
         
         var response = await _client.PostAsJsonAsync(ApiEndpoints.Category, categoryDto);
@@ -104,7 +108,8 @@ public class StockBatchTestDataHelper
         {
             Name = "Piece",
             Symbol = "pcs",
-            Description = "Base unit for product"
+            Description = "Base unit for product",
+            ShopId = await CreateShopAsync()
         };
         
         var response = await _client.PostAsJsonAsync(ApiEndpoints.UnitOfMeasure, unitDto);

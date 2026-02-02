@@ -53,6 +53,7 @@ public class UnitOfMeasureIntegrationTests : BaseIntegrationTest
         actual.Name.ShouldBe(expected.Name);
         actual.Symbol.ShouldBe(expected.Symbol);
         actual.Description.ShouldBe(expected.Description);
+        actual.ShopId.ShouldBe(expected.ShopId);
     }
 
     [Fact]
@@ -60,7 +61,7 @@ public class UnitOfMeasureIntegrationTests : BaseIntegrationTest
     {
         var dto = _dataHelper.CreateUnitOfMeasureBuilder().Build();
         var response = await CreateUnitOfMeasureResponseAsync(dto, "Post_CreateValidUnitOfMeasure");
-        
+
         response.StatusCode.ShouldBe(HttpStatusCode.OK);
         var created = await response.Content.ReadFromJsonAsync<UnitOfMeasureDto>();
         AssertUnitOfMeasureMatches(created!, dto);
@@ -73,7 +74,7 @@ public class UnitOfMeasureIntegrationTests : BaseIntegrationTest
         dto.Description = "";
 
         var response = await CreateUnitOfMeasureResponseAsync(dto, "Post_CreateUnitOfMeasureWithEmptyDescription");
-        
+
         response.StatusCode.ShouldBe(HttpStatusCode.OK);
         var created = await response.Content.ReadFromJsonAsync<UnitOfMeasureDto>();
         created.ShouldNotBeNull();
@@ -87,7 +88,7 @@ public class UnitOfMeasureIntegrationTests : BaseIntegrationTest
         dto.Description = null;
 
         var response = await CreateUnitOfMeasureResponseAsync(dto, "Post_CreateUnitOfMeasureWithNullDescription");
-        
+
         response.StatusCode.ShouldBe(HttpStatusCode.OK);
         var created = await response.Content.ReadFromJsonAsync<UnitOfMeasureDto>();
         created.ShouldNotBeNull();
@@ -233,7 +234,7 @@ public class UnitOfMeasureIntegrationTests : BaseIntegrationTest
     {
         var dto = _dataHelper.CreateUnitOfMeasureBuilder().WithDescription(null).Build();
         var response = await CreateUnitOfMeasureResponseAsync(dto, "Post_CreateUnitOfMeasureWithExplicitNullDescription");
-        
+
         response.StatusCode.ShouldBe(HttpStatusCode.OK);
         var created = await response.Content.ReadFromJsonAsync<UnitOfMeasureDto>();
         created.ShouldNotBeNull();
@@ -293,5 +294,14 @@ public class UnitOfMeasureIntegrationTests : BaseIntegrationTest
             var response = await CreateUnitOfMeasureResponseAsync(unit, $"Post_CreateMultipleUnitOfMeasures_{unit.Symbol}");
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
         }
+    }
+
+    [Fact]
+    public async Task Post_CreateUnitOfMeasureWithEmptyShopId_ReturnsBadRequest()
+    {
+        var dto = _dataHelper.CreateUnitOfMeasureBuilder().WithShopId("").Build();
+        var response = await CreateUnitOfMeasureResponseAsync(dto, "Post_CreateUnitOfMeasureWithEmptyShopId");
+
+        response.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
     }
 }

@@ -15,5 +15,6 @@ namespace SMIS.Application.DTO.Categories
         public string? Description { get; set; }
 
         public bool IsActive { get; set; } = true;
+        public string ShopId { get; set; } = string.Empty;
     }
 }
