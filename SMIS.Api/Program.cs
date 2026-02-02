@@ -3,9 +3,8 @@ using SMIS.Api.Converters;
 using SMIS.Api.Extensions;
 using SMIS.Application.Extensions;
 using SMIS.Domain.Enums;
-using SMIS.Identity.Extensions;
-using SMIS.Infrastructure.Context;
 using SMIS.Infrastructure.Extensions;
+using SMIS.Infrastructure.Context;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
