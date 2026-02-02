@@ -47,7 +47,6 @@ namespace SMIS.Test.Controllers
             { 
                 Name = "welcome_message", 
                 MessageCode = "WM001", 
-                ShopId = "1",
                 IsActive = true 
             };
             
@@ -59,7 +58,6 @@ namespace SMIS.Test.Controllers
             created.Should().NotBeNull();
             created!.Name.Should().Be(dto.Name);
             created.MessageCode.Should().Be(dto.MessageCode);
-            created.ShopId.Should().Be(dto.ShopId);
             created.IsActive.Should().Be(dto.IsActive);
         }
 
@@ -70,7 +68,6 @@ namespace SMIS.Test.Controllers
             { 
                 Name = "error_message", 
                 MessageCode = null, 
-                ShopId = "1",
                 IsActive = true 
             };
             
@@ -91,7 +88,6 @@ namespace SMIS.Test.Controllers
             { 
                 Name = "button_save", 
                 MessageCode = "BTN001", 
-                ShopId = "1",
                 IsActive = true,
                 Translations = new List<TranslationEntityCreateDto>
                 {
@@ -133,7 +129,6 @@ namespace SMIS.Test.Controllers
             { 
                 Name = "menu_home", 
                 MessageCode = "MNU001", 
-                ShopId = "1",
                 IsActive = true,
                 Translations = new List<TranslationEntityCreateDto>
                 {
@@ -162,7 +157,6 @@ namespace SMIS.Test.Controllers
             { 
                 Name = "validation_required", 
                 MessageCode = "VAL001", 
-                ShopId = "1",
                 IsActive = true 
             };
             
@@ -209,7 +203,6 @@ namespace SMIS.Test.Controllers
             { 
                 Name = "status_active", 
                 MessageCode = "STA001", 
-                ShopId = "1",
                 IsActive = true 
             };
             
@@ -228,7 +221,6 @@ namespace SMIS.Test.Controllers
             { 
                 Name = "status_active_updated", 
                 MessageCode = "STA001-UPD", 
-                ShopId = "1",
                 IsActive = false 
             };
             
@@ -251,7 +243,6 @@ namespace SMIS.Test.Controllers
             { 
                 Name = "fake_key", 
                 MessageCode = "FAKE001", 
-                ShopId = "1",
                 IsActive = true 
             };
             
@@ -269,7 +260,6 @@ namespace SMIS.Test.Controllers
             { 
                 Name = "temp_key", 
                 MessageCode = "TMP001", 
-                ShopId = "1",
                 IsActive = true 
             };
             
@@ -309,11 +299,11 @@ namespace SMIS.Test.Controllers
             // Create multiple translation keys to test pagination
             var translationKeys = new[]
             {
-                new TranslationKeyCreateDto { Name = "test_key_1", MessageCode = "TK001", ShopId = "1", IsActive = true },
-                new TranslationKeyCreateDto { Name = "test_key_2", MessageCode = "TK002", ShopId = "1", IsActive = true },
-                new TranslationKeyCreateDto { Name = "test_key_3", MessageCode = "TK003", ShopId = "2", IsActive = true },
-                new TranslationKeyCreateDto { Name = "test_key_4", MessageCode = "TK004", ShopId = "2", IsActive = true },
-                new TranslationKeyCreateDto { Name = "test_key_5", MessageCode = "TK005", ShopId = "1", IsActive = true }
+                new TranslationKeyCreateDto { Name = "test_key_1", MessageCode = "TK001", IsActive = true },
+                new TranslationKeyCreateDto { Name = "test_key_2", MessageCode = "TK002", IsActive = true },
+                new TranslationKeyCreateDto { Name = "test_key_3", MessageCode = "TK003", IsActive = true },
+                new TranslationKeyCreateDto { Name = "test_key_4", MessageCode = "TK004", IsActive = true },
+                new TranslationKeyCreateDto { Name = "test_key_5", MessageCode = "TK005", IsActive = true }
             };
 
             foreach (var key in translationKeys)
@@ -343,7 +333,6 @@ namespace SMIS.Test.Controllers
             { 
                 Name = "list_verification_key", 
                 MessageCode = "LVK001", 
-                ShopId = "1",
                 IsActive = true 
             };
             
@@ -372,7 +361,6 @@ namespace SMIS.Test.Controllers
             { 
                 Name = "update_verification_key", 
                 MessageCode = "UVK001", 
-                ShopId = "1",
                 IsActive = true 
             };
             
@@ -391,7 +379,6 @@ namespace SMIS.Test.Controllers
             { 
                 Name = "update_verification_key_updated", 
                 MessageCode = "UVK001-UPD", 
-                ShopId = "1",
                 IsActive = false 
             };
             
@@ -415,8 +402,8 @@ namespace SMIS.Test.Controllers
         public async Task MultipleOperations_Sequence_Test()
         {
             // Test a sequence of operations to ensure data consistency
-            var key1 = new TranslationKeyCreateDto { Name = "sequence_test_1", MessageCode = "ST001", ShopId = "1", IsActive = true };
-            var key2 = new TranslationKeyCreateDto { Name = "sequence_test_2", MessageCode = "ST002", ShopId = "2", IsActive = false };
+            var key1 = new TranslationKeyCreateDto { Name = "sequence_test_1", MessageCode = "ST001", IsActive = true };
+            var key2 = new TranslationKeyCreateDto { Name = "sequence_test_2", MessageCode = "ST002", IsActive = false };
 
             // Create first translation key
             var create1Response = await _client.PostAsJsonAsync("/api/translationkey", key1);
@@ -442,7 +429,7 @@ namespace SMIS.Test.Controllers
             var created2 = listItems.First(tk => tk.Name == key2.Name);
 
             // Update first translation key
-            var updateDto = new TranslationKeyCreateDto { Name = "updated_sequence_test_1", MessageCode = "UST001", ShopId = "1", IsActive = false };
+            var updateDto = new TranslationKeyCreateDto { Name = "updated_sequence_test_1", MessageCode = "UST001", IsActive = false };
             var updateResponse = await _client.PutAsJsonAsync($"/api/translationkey/{created1.Id}", updateDto);
             await LogIfError(updateResponse, "MultipleOperations_Sequence_Update");
             updateResponse.EnsureSuccessStatusCode();
@@ -483,7 +470,6 @@ namespace SMIS.Test.Controllers
             { 
                 Name = specialName, 
                 MessageCode = "SCS001", 
-                ShopId = "1",
                 IsActive = true 
             };
             
@@ -557,7 +543,6 @@ namespace SMIS.Test.Controllers
             { 
                 Name = "inactive_key", 
                 MessageCode = "IK001", 
-                ShopId = "1",
                 IsActive = false 
             };
             
@@ -578,7 +563,6 @@ namespace SMIS.Test.Controllers
             { 
                 Name = "with_translations_key", 
                 MessageCode = "WTK001", 
-                ShopId = "1",
                 IsActive = true,
                 Translations = new List<TranslationEntityCreateDto>
                 {
@@ -606,23 +590,6 @@ namespace SMIS.Test.Controllers
             retrieved.Should().NotBeNull();
             retrieved!.Name.Should().Be(createDto.Name);
             retrieved.Translations.Should().NotBeNull();
-        }
-
-        [Fact]
-        public async Task Post_CreateTranslationKeyWithoutShopId_ReturnsBadRequest()
-        {
-            var dto = new TranslationKeyCreateDto 
-            { 
-                Name = "invalid_key", 
-                MessageCode = "INV001", 
-                // ShopId is intentionally missing
-                IsActive = true 
-            };
-            
-            var response = await _client.PostAsJsonAsync("/api/translationkey", dto);
-            await LogIfError(response, "Post_CreateTranslationKeyWithoutShopId");
-            
-            response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         }
     }
 }
