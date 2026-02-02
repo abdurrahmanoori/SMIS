@@ -12,7 +12,7 @@ using Xunit.Abstractions;
 
 namespace SMIS.Test.Controllers;
 /*
- dsfsdffwewe
+ dsfsdffwewesdfsdf
  sdfsd*/
 public class StockTransactionIntegrationTests : BaseIntegrationTest
 {
