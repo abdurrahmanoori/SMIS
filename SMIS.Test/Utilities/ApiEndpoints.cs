@@ -14,5 +14,5 @@ public static class ApiEndpoints
     public const string Language = "/api/language";
     public const string TranslationKey = "/api/translationkey";
     public const string ProvinceTranslation = "/api/provincetranslation";
-    public const string Users = "/api/users";
+    public const string Account = "/api/account";
 }
