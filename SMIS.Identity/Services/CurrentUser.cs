@@ -1,49 +1,32 @@
-﻿using SMIS.Application.Identity.IServices;
+﻿using Microsoft.AspNetCore.Http;
+using SMIS.Application.Identity.IServices;
+using System.Security.Claims;
 
 namespace SMIS.Identity.Services;
 
 public class CurrentUser : ICurrentUser
 {
-    //private readonly IHttpContextAccessor _httpContextAccessor;
+    private readonly IHttpContextAccessor _httpContextAccessor;
 
-    public CurrentUser(/*IHttpContextAccessor httpContextAccessor*/)
+    public CurrentUser(IHttpContextAccessor httpContextAccessor)
     {
-        //_httpContextAccessor = httpContextAccessor;
+        _httpContextAccessor = httpContextAccessor;
     }
 
-    public int PageNumber { get; set; } = 1;
-    public int PageSize { get; set; } = 25;
-
-    public Guid GetGuid( )
+    public string GetId()
     {
-        return Guid.Empty;
+        var user = _httpContextAccessor.HttpContext?.User;
+        return user?.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? string.Empty;
     }
 
-    public string GetId( )
+    public string GetLangId()
     {
-        //var user = _httpContextAccessor.HttpContext?.User;
-        //if (user?.Identity?.IsAuthenticated ?? false)
-        //{
-        //    // Extract user ID from claims
-        //    var IrdLoginID = user.FindFirst("IRD_LOGIN_ID")?.Value;
-        //    return Task.FromResult<string>(IrdLoginID);
-        //}
-
-        //return Task.FromResult("NRZ01015");
-        return "1"; // Return string ID since IdentityUser now uses string IDs
-
-
-        //int? currentUserId = Convert.ToInt32(user?.FindFirst(ClaimTypes.NameIdentifier)?.Value);
-        //var userIdClaim = user.FindFirst(ClaimTypes.NameIdentifier);
-        //if (currentUserId is not null)
-        //{
-        //    return Task.FromResult(currentUserId);
-        //}
-        //return null!; // Or handle appropriately when user ID is missing
+        return "1"; // Default language ID
     }
 
-    public string GetLangId( )
+    public string GetShopId()
     {
-        return "1";
+        var user = _httpContextAccessor.HttpContext?.User;
+        return user?.FindFirst("ShopId")?.Value ?? string.Empty;
     }
 }
