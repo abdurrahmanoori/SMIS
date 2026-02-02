@@ -8,6 +8,7 @@ public partial class AppDbContext
     partial void OnModelCreatingPartial(ModelBuilder modelBuilder)
     {
         // Register additional seeds without modifying the main AppDbContext file
+        RoleSeeder.DataSeed(modelBuilder);
         LanguageSeed.DataSeed(modelBuilder);
         TranslationKeySeed.DataSeed(modelBuilder);
         TranslationSeed.DataSeed(modelBuilder);
