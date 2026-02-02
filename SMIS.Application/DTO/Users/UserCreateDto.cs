@@ -16,6 +16,7 @@ namespace SMIS.Application.DTO.Users
         public string? LastName { get; set; }
         
         public string ShopId { get; set; } = default!;
+        public string? LanguageId { get; set; }
         public IEnumerable<string>? Roles { get; set; }
     }
 }

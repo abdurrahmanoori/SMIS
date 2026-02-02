@@ -34,8 +34,8 @@ public class MappingProfile : Profile
                 src.ShopId,
                 src.FirstName,
                 src.LastName,
-                src.PhoneNumber
-                
+                src.PhoneNumber,
+                src.LanguageId
             ));
 
         // Language mappings

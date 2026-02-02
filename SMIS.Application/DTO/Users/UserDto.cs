@@ -17,6 +17,7 @@ namespace SMIS.Application.DTO.Users
         public string? LastName { get; set; }
         
         public string ShopId { get; set; } = string.Empty;
+        public string LanguageId { get; set; } = "1";
         public bool EmailConfirmed { get; set; }
         public bool PhoneNumberConfirmed { get; set; }
         public ShopDto? Shop { get; set; }

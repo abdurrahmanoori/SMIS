@@ -17,6 +17,7 @@ public class ApplicationUserFixtureBuilder
             .RuleFor(u => u.Password, f => f.Internet.Password(8, false, "", "Aa1!"))
             .RuleFor(u => u.FirstName, f => f.Name.FirstName())
             .RuleFor(u => u.LastName, f => f.Name.LastName())
+            .RuleFor(u => u.LanguageId, "1")
             .RuleFor(u => u.Roles, f => new[] { "User" });
     }
 
@@ -71,6 +72,12 @@ public class ApplicationUserFixtureBuilder
     public ApplicationUserFixtureBuilder WithRoles(IEnumerable<string>? roles)
     {
         _faker.RuleFor(u => u.Roles, roles);
+        return this;
+    }
+
+    public ApplicationUserFixtureBuilder WithLanguageId(string? languageId)
+    {
+        _faker.RuleFor(u => u.LanguageId, languageId);
         return this;
     }
 
