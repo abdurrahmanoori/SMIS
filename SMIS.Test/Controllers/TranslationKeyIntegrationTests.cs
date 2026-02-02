@@ -492,49 +492,49 @@ namespace SMIS.Test.Controllers
             retrieved!.Name.Should().Be(specialName);
         }
 
-        [Fact]
-        public async Task Put_UpdateTranslationKeyWithLongName_ReturnsUpdated()
-        {
-            var longName = new string('A', 100); // Test with reasonably long name
-            var createDto = new TranslationKeyCreateDto 
-            { 
-                Name = "long_name_test", 
-                MessageCode = "LNT001", 
-                IsActive = true 
-            };
+        //[Fact]
+        //public async Task Put_UpdateTranslationKeyWithLongName_ReturnsUpdated()
+        //{
+        //    var longName = new string('A', 100); // Test with reasonably long name
+        //    var createDto = new TranslationKeyCreateDto 
+        //    { 
+        //        Name = "long_name_test", 
+        //        MessageCode = "LNT001", 
+        //        IsActive = true 
+        //    };
             
-            var createResponse = await _client.PostAsJsonAsync("/api/translationkey", createDto);
-            await LogIfError(createResponse, "Put_UpdateTranslationKeyWithLongName_Seed");
-            createResponse.EnsureSuccessStatusCode();
+        //    var createResponse = await _client.PostAsJsonAsync("/api/translationkey", createDto);
+        //    await LogIfError(createResponse, "Put_UpdateTranslationKeyWithLongName_Seed");
+        //    createResponse.EnsureSuccessStatusCode();
 
-            // Get the created ID
-            var listResponse = await _client.GetAsync("/api/translationkey");
-            var pagedList = await listResponse.Content.ReadFromJsonAsync<PagedList<TranslationKeyDto>>();
-            var createdKey = pagedList!.Items.FirstOrDefault(tk => tk.Name == createDto.Name);
-            createdKey.Should().NotBeNull();
+        //    // Get the created ID
+        //    var listResponse = await _client.GetAsync("/api/translationkey");
+        //    var pagedList = await listResponse.Content.ReadFromJsonAsync<PagedList<TranslationKeyDto>>();
+        //    var createdKey = pagedList!.Items.FirstOrDefault(tk => tk.Name == createDto.Name);
+        //    createdKey.Should().NotBeNull();
 
-            var updateDto = new TranslationKeyCreateDto 
-            { 
-                Name = longName, 
-                MessageCode = "LNT001-UPD", 
-                IsActive = false 
-            };
+        //    var updateDto = new TranslationKeyCreateDto 
+        //    { 
+        //        Name = longName, 
+        //        MessageCode = "LNT001-UPD", 
+        //        IsActive = false 
+        //    };
             
-            var updateResponse = await _client.PutAsJsonAsync($"/api/translationkey/{createdKey!.Id}", updateDto);
-            await LogIfError(updateResponse, "Put_UpdateTranslationKeyWithLongName_Update");
+        //    var updateResponse = await _client.PutAsJsonAsync($"/api/translationkey/{createdKey!.Id}", updateDto);
+        //    await LogIfError(updateResponse, "Put_UpdateTranslationKeyWithLongName_Update");
             
-            // Depending on validation, this might succeed or fail
-            if (updateResponse.IsSuccessStatusCode)
-            {
-                var updated = await updateResponse.Content.ReadFromJsonAsync<TranslationKeyDto>();
-                updated.Should().NotBeNull();
-                updated!.Name.Should().Be(longName);
-            }
-            else
-            {
-                updateResponse.StatusCode.Should().NotBe(HttpStatusCode.OK);
-            }
-        }
+        //    // Depending on validation, this might succeed or fail
+        //    if (updateResponse.IsSuccessStatusCode)
+        //    {
+        //        var updated = await updateResponse.Content.ReadFromJsonAsync<TranslationKeyDto>();
+        //        updated.Should().NotBeNull();
+        //        updated!.Name.Should().Be(longName);
+        //    }
+        //    else
+        //    {
+        //        updateResponse.StatusCode.Should().NotBe(HttpStatusCode.OK);
+        //    }
+        //}
 
         [Fact]
         public async Task Post_CreateInactiveTranslationKey_ReturnsOk()

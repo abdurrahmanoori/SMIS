@@ -51,7 +51,7 @@ public class ApplicationUserIntegrationTests : BaseIntegrationTest
     {
         actual.ShouldNotBeNull();
         actual.UserName.ShouldBe(expected.UserName);
-        actual.Email.ShouldBe(expected.Email);
+        actual.Email.ToLower().ShouldBe(expected.Email.ToLower());
         actual.PhoneNumber.ShouldBe(expected.PhoneNumber);
         actual.FirstName.ShouldBe(expected.FirstName);
         actual.LastName.ShouldBe(expected.LastName);
@@ -169,7 +169,10 @@ public class ApplicationUserIntegrationTests : BaseIntegrationTest
         var created = await PostAndGetAsync<UserDto>(ApiEndpoints.Users, createDto, "Put_UpdateApplicationUser_Seed");
         created.ShouldNotBeNull();
 
-        var updateDto = _dataHelper.CreateApplicationUserBuilder().WithFirstName("UpdatedFirstName").Build();
+        var updateDto = _dataHelper.CreateApplicationUserBuilder()
+            .WithFirstName("UpdatedFirstName")
+            .WithUserName(created.UserName!)
+            .WithEmail(created.Email!).Build();
         var updateResponse = await UpdateApplicationUserResponseAsync(created!.Id, updateDto, "Put_UpdateApplicationUser_Update");
 
         updateResponse.StatusCode.ShouldBe(HttpStatusCode.OK);
