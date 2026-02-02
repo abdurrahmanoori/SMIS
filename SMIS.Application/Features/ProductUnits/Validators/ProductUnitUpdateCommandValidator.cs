@@ -10,6 +10,9 @@ namespace SMIS.Application.Features.ProductUnits.Validators
             RuleFor(x => x.Id)
                 .NotEmpty().WithMessage("Id is required");
 
+            RuleFor(x => x.ProductUnitCreateDto.ShopId)
+                .NotEmpty().WithMessage("ShopId is required");
+
             RuleFor(x => x.ProductUnitCreateDto.ProductId)
                 .NotEmpty().WithMessage("ProductId is required");
 

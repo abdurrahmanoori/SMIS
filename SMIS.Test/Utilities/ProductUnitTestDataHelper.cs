@@ -10,6 +10,7 @@ namespace SMIS.Test.Utilities;
 public class ProductUnitTestDataHelper
 {
     private readonly HttpClient _client;
+    private string? _cachedShopId;
     private string? _cachedProductId;
     private string? _cachedUnitId;
 
@@ -18,15 +19,16 @@ public class ProductUnitTestDataHelper
         _client = client;
     }
 
-    public async Task<(string productId, string unitId)> GetOrCreateDependencies()
+    public async Task<(string shopId, string productId, string unitId)> GetOrCreateDependencies()
     {
         if (HasCachedDependencies())
-            return (_cachedProductId!, _cachedUnitId!);
+            return (_cachedShopId!, _cachedProductId!, _cachedUnitId!);
 
+        _cachedShopId = await CreateShopAsync();
         _cachedUnitId = await CreateUnitAsync();
         _cachedProductId = await CreateProductAsync();
 
-        return (_cachedProductId, _cachedUnitId);
+        return (_cachedShopId, _cachedProductId, _cachedUnitId);
     }
 
     public ProductUnitFixtureBuilder CreateProductUnitBuilder()
@@ -35,11 +37,11 @@ public class ProductUnitTestDataHelper
             throw new InvalidOperationException("Dependencies must be created first. Call GetOrCreateDependencies().");
             
         return new ProductUnitFixtureBuilder()
-            .WithDependencies(_cachedProductId!, _cachedUnitId!);
+            .WithDependencies(_cachedShopId!, _cachedProductId!, _cachedUnitId!);
     }
 
     private bool HasCachedDependencies() => 
-        _cachedProductId != null && _cachedUnitId != null;
+        _cachedShopId != null && _cachedProductId != null && _cachedUnitId != null;
 
     private async Task<string> CreateUnitAsync()
     {
@@ -48,7 +50,7 @@ public class ProductUnitTestDataHelper
             Name = "Box",
             Symbol = "box",
             Description = "Box unit for product unit tests",
-            ShopId = await CreateShopAsync()
+            ShopId = _cachedShopId!
         };
         
         var response = await _client.PostAsJsonAsync(ApiEndpoints.UnitOfMeasure, unitDto);
@@ -62,12 +64,11 @@ public class ProductUnitTestDataHelper
     {
         var categoryId = await CreateCategoryAsync();
         var baseUnitId = await CreateBaseUnitAsync();
-        var shopId = await CreateShopAsync();
 
         var productDto = new ProductCreateDto
         {
             Name = "Test Product for ProductUnit",
-            ShopId = shopId,
+            ShopId = _cachedShopId!,
             BaseUnitId = baseUnitId,
             CategoryId = categoryId,
             SalePricePerBaseUnit = 1000,
@@ -90,7 +91,7 @@ public class ProductUnitTestDataHelper
             Code = "TCPU",
             Description = "Test category for product unit tests",
             IsActive = true,
-            ShopId = await CreateShopAsync()
+            ShopId = _cachedShopId!
         };
         
         var response = await _client.PostAsJsonAsync(ApiEndpoints.Category, categoryDto);
@@ -107,7 +108,7 @@ public class ProductUnitTestDataHelper
             Name = "Piece",
             Symbol = "pcs",
             Description = "Base unit for product",
-            ShopId = await CreateShopAsync()
+            ShopId = _cachedShopId!
         };
         
         var response = await _client.PostAsJsonAsync(ApiEndpoints.UnitOfMeasure, unitDto);
