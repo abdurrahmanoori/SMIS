@@ -12,7 +12,7 @@ namespace SMIS.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class UsersController : BaseApiController
+    public class AccountController : BaseApiController
     {
         [HttpPost]
         [AllowAnonymous]
@@ -42,5 +42,13 @@ namespace SMIS.Api.Controllers
         [HttpPost("{id}/roles")]
         public async Task<ActionResult<Unit>> AssignRoles(string id, [FromBody] IEnumerable<string> roles) =>
             HandleResultResponse(await Mediator.Send(new UserAssignRolesCommand(id, roles)));
+
+        [HttpGet("{id}/roles")]
+        public async Task<ActionResult<IList<string>>> GetUserRoles(string id) =>
+            HandleResultResponse(await Mediator.Send(new UserGetRolesQuery(id)));
+
+        [HttpDelete("{id}/roles/{role}")]
+        public async Task<ActionResult<Unit>> RemoveRole(string id, string role) =>
+            HandleResultResponse(await Mediator.Send(new UserRemoveRoleCommand(id, role)));
     }
 }
