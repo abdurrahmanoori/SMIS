@@ -1,32 +1,34 @@
 name: CI/CD Pipeline
-"on":
+
+on:
   push:
-    branches:
-      - master
+    branches: [ main ]
+
 jobs:
   build-test-publish-api:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: 9.0.x
+          dotnet-version: '9.0.x'
+
       - name: Restore API dependencies
         run: dotnet restore SMIS.Api/SMIS.Api.csproj
+
       - name: Build API
-        run: >-
-          dotnet build SMIS.Api/SMIS.Api.csproj --no-restore --configuration
-          Release
+        run: dotnet build SMIS.Api/SMIS.Api.csproj --no-restore --configuration Release
+
       - name: Test API
-        run: >-
-          dotnet test SMIS.Api.Tests/SMIS.Api.Tests.csproj --configuration
-          Release
+        run: dotnet test SMIS.Api.Tests/SMIS.Api.Tests.csproj --configuration Release
+
       - name: Publish API
-        run: >-
-          dotnet publish SMIS.Api/SMIS.Api.csproj --configuration Release
-          --output ./publish
+        run: dotnet publish SMIS.Api/SMIS.Api.csproj --configuration Release --output ./publish
+
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
