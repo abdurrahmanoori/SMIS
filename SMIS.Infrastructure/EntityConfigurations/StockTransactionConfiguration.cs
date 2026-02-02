@@ -12,6 +12,12 @@ namespace SMIS.Infrastructure.EntityConfigurations
 
             builder.HasKey(st => st.Id);
 
+            builder.Property(st => st.ShopId)
+                .IsRequired();
+
+            builder.Property(st => st.ShopName)
+                .HasMaxLength(200);
+
             builder.Property(st => st.ProductId)
                 .IsRequired();
 
@@ -42,6 +48,11 @@ namespace SMIS.Infrastructure.EntityConfigurations
                 .HasMaxLength(200);
 
             // Foreign keys
+            builder.HasOne(st => st.Shop)
+                .WithMany()
+                .HasForeignKey(st => st.ShopId)
+                .OnDelete(DeleteBehavior.Restrict);
+
             builder.HasOne(st => st.Product)
                 .WithMany()
                 .HasForeignKey(st => st.ProductId)
@@ -58,6 +69,7 @@ namespace SMIS.Infrastructure.EntityConfigurations
                 .OnDelete(DeleteBehavior.Restrict);
 
             // Indexes
+            builder.HasIndex(st => st.ShopId);
             builder.HasIndex(st => st.ProductId);
             builder.HasIndex(st => st.StockBatchId);
             builder.HasIndex(st => st.TransactionDate);

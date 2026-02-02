@@ -7,6 +7,8 @@ namespace SMIS.Domain.Entities;
 
 public class StockTransaction : BaseAuditableEntityWithoutName
 {
+    public string ShopId { get; private set; } = string.Empty;
+    public string? ShopName { get; set; }
     public string ProductId { get; private set; } = string.Empty;
     public string? ProductName { get; set; }
     public string StockBatchId { get; private set; } = string.Empty;
@@ -18,15 +20,17 @@ public class StockTransaction : BaseAuditableEntityWithoutName
     public string? Reference { get; private set; }
 
     // Navigation Properties
+    public virtual Shop Shop { get; set; } = null!;
     public virtual Product Product { get; set; } = null!;
     public virtual StockBatch StockBatch { get; set; } = null!;
     public virtual UnitOfMeasure UnitOfMeasure { get; set; } = null!;
 
     internal StockTransaction() { } // EF Core & Seeding
 
-    public static StockTransaction Create(string productId, string stockBatchId, decimal quantity, string unitId, TransactionType type, DateTime transactionDate, string? reference = null)
+    public static StockTransaction Create(string shopId, string productId, string stockBatchId, decimal quantity, string unitId, TransactionType type, DateTime transactionDate, string? reference = null)
     {
         var transaction = new StockTransaction();
+        transaction.SetShopId(shopId);
         transaction.SetProductId(productId);
         transaction.SetStockBatchId(stockBatchId);
         transaction.SetQuantity(quantity);
@@ -35,6 +39,14 @@ public class StockTransaction : BaseAuditableEntityWithoutName
         transaction.SetTransactionDate(transactionDate);
         transaction.SetReference(reference);
         return transaction;
+    }
+
+    public void SetShopId(string shopId)
+    {
+        if (string.IsNullOrWhiteSpace(shopId))
+            throw new DomainValidationException("Shop ID cannot be empty");
+
+        ShopId = shopId;
     }
 
     public void SetProductId(string productId)

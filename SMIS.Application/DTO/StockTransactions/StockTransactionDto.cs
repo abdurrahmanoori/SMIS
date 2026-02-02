@@ -8,6 +8,7 @@ namespace SMIS.Application.DTO.StockTransactions
     public class StockTransactionDto
     {
         public string Id { get; set; } = string.Empty;
+        public string ShopId { get; set; } = string.Empty;
         public string ProductId { get; set; } = string.Empty;
         public string StockBatchId { get; set; } = string.Empty;
         public decimal Quantity { get; set; }

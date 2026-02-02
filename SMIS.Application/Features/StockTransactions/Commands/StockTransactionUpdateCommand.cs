@@ -4,6 +4,7 @@ using SMIS.Application.Common.Response;
 using SMIS.Application.DTO.StockTransactions;
 using SMIS.Application.Repositories.Base;
 using SMIS.Application.Repositories.Products;
+using SMIS.Application.Repositories.Shops;
 using SMIS.Application.Repositories.StockTransactions;
 using SMIS.Application.Repositories.UnitOfMeasures;
 
@@ -16,16 +17,18 @@ internal sealed class StockTransactionUpdateCommandHandler : IRequestHandler<Sto
     private readonly IStockTransactionRepository _stockTransactionRepository;
     private readonly IProductRepository _productRepository;
     private readonly IUnitOfMeasureRepository _unitOfMeasureRepository;
+    private readonly IShopRepository _shopRepository;
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
 
-    public StockTransactionUpdateCommandHandler(IUnitOfWork unitOfWork, IMapper mapper, IStockTransactionRepository stockTransactionRepository, IProductRepository productRepository, IUnitOfMeasureRepository unitOfMeasureRepository)
+    public StockTransactionUpdateCommandHandler(IUnitOfWork unitOfWork, IMapper mapper, IStockTransactionRepository stockTransactionRepository, IProductRepository productRepository, IUnitOfMeasureRepository unitOfMeasureRepository, IShopRepository shopRepository)
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
         _stockTransactionRepository = stockTransactionRepository;
         _productRepository = productRepository;
         _unitOfMeasureRepository = unitOfMeasureRepository;
+        _shopRepository = shopRepository;
     }
 
     public async Task<Result<StockTransactionDto>> Handle(StockTransactionUpdateCommand request, CancellationToken cancellationToken)
@@ -36,6 +39,7 @@ internal sealed class StockTransactionUpdateCommandHandler : IRequestHandler<Sto
 
         var dto = request.StockTransactionCreateDto;
         
+        entity.SetShopId(dto.ShopId);
         entity.SetProductId(dto.ProductId);
         entity.SetStockBatchId(dto.StockBatchId);
         entity.SetQuantity(dto.Quantity);
@@ -45,6 +49,9 @@ internal sealed class StockTransactionUpdateCommandHandler : IRequestHandler<Sto
         entity.SetReference(dto.Reference);
 
         // Update name fields
+        var shop = await _shopRepository.GetByIdAsync(dto.ShopId);
+        entity.ShopName = shop?.Name;
+        
         var product = await _productRepository.GetByIdAsync(dto.ProductId);
         entity.ProductName = product?.Name;
         
