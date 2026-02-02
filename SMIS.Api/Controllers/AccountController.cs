@@ -4,8 +4,10 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SMIS.Application.Common;
 using SMIS.Application.DTO.Users;
+using SMIS.Application.DTO.Auth;
 using SMIS.Application.Features.Identity.Users.Commands;
 using SMIS.Application.Features.Identity.Users.Queries;
+using SMIS.Application.Features.Auth.Commands;
 using SMIS.Api.Controllers.Base;
 
 namespace SMIS.Api.Controllers
@@ -14,7 +16,11 @@ namespace SMIS.Api.Controllers
     [ApiController]
     public class AccountController : BaseApiController
     {
-        [HttpPost]
+        [HttpPost("login")]
+        [AllowAnonymous]
+        public async Task<ActionResult<LoginResponseDto>> Login(LoginDto dto) =>
+            HandleResultResponse(await Mediator.Send(new LoginCommand(dto)));
+        [HttpPost("register")]
         [AllowAnonymous]
         public async Task<ActionResult<UserDto>> Create(UserCreateDto dto) =>
             HandleResultResponse(await Mediator.Send(new UserCreateCommand(dto)));

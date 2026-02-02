@@ -20,7 +20,7 @@ namespace SMIS.Api.Extensions
         {
             services.AddSwaggerGen(options =>
             {
-                options.SwaggerDoc("v1", new OpenApiInfo { Title = "Khayati API", Version = "v1" });
+                options.SwaggerDoc("v1", new OpenApiInfo { Title = "SMIS API", Version = "v1" });
 
                 options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
                 {
