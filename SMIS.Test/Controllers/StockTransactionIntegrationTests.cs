@@ -11,7 +11,9 @@ using Xunit;
 using Xunit.Abstractions;
 
 namespace SMIS.Test.Controllers;
-
+/*
+ 
+ sdfsd*/
 public class StockTransactionIntegrationTests : BaseIntegrationTest
 {
     private readonly StockTransactionTestDataHelper _dataHelper;
