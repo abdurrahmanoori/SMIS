@@ -40,7 +40,10 @@ namespace SMIS.Api.Middleware
             context.Response.StatusCode = exception switch
             {
                 UnauthorizedAccessException => StatusCodes.Status401Unauthorized,
-                DbUpdateException dbEx when dbEx.InnerException?.Message.Contains("FOREIGN KEY constraint failed") == true => StatusCodes.Status409Conflict,
+                DbUpdateException dbEx
+                    when dbEx.InnerException?.Message.Contains("FOREIGN KEY constraint failed") == true
+                      || dbEx.InnerException?.Message.Contains("UNIQUE constraint failed") == true
+                    => StatusCodes.Status409Conflict,
                 _ => StatusCodes.Status500InternalServerError
             };
             context.Response.ContentType = "application/json";
