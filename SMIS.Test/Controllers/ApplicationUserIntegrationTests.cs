@@ -27,7 +27,7 @@ public class ApplicationUserIntegrationTests : BaseIntegrationTest
 
     private async Task<UserDto> CreateApplicationUserAsync(UserCreateDto dto, string testName)
     {
-        var response = await Client.PostAsJsonAsync(ApiEndpoints.Users, dto);
+        var response = await Client.PostAsJsonAsync(ApiEndpoints.Account, dto);
         await LogIfError(response, testName);
         response.EnsureSuccessStatusCode();
         return (await response.Content.ReadFromJsonAsync<UserDto>())!;
@@ -35,14 +35,14 @@ public class ApplicationUserIntegrationTests : BaseIntegrationTest
 
     private async Task<HttpResponseMessage> CreateApplicationUserResponseAsync(UserCreateDto dto, string testName)
     {
-        var response = await Client.PostAsJsonAsync(ApiEndpoints.Users, dto);
+        var response = await Client.PostAsJsonAsync(ApiEndpoints.Account, dto);
         await LogIfError(response, testName);
         return response;
     }
 
     private async Task<HttpResponseMessage> UpdateApplicationUserResponseAsync(string userId, UserCreateDto dto, string testName)
     {
-        var response = await Client.PutAsJsonAsync($"{ApiEndpoints.Users}/{userId}", dto);
+        var response = await Client.PutAsJsonAsync($"{ApiEndpoints.Account}/{userId}", dto);
         await LogIfError(response, testName);
         return response;
     }
@@ -100,7 +100,7 @@ public class ApplicationUserIntegrationTests : BaseIntegrationTest
     [Fact]
     public async Task Get_ListApplicationUsers_ReturnsPagedList()
     {
-        var response = await Client.GetAsync($"{ApiEndpoints.Users}?pageNumber=1&pageSize=10");
+        var response = await Client.GetAsync($"{ApiEndpoints.Account}?pageNumber=1&pageSize=10");
         await LogIfError(response, "Get_ListApplicationUsers");
 
         response.StatusCode.ShouldBe(HttpStatusCode.OK);
@@ -124,7 +124,7 @@ public class ApplicationUserIntegrationTests : BaseIntegrationTest
             await CreateApplicationUserAsync(user, $"CreateTestApplicationUser_{user.UserName}");
         }
 
-        var paginatedResponse = await Client.GetAsync($"{ApiEndpoints.Users}?pageNumber=1&pageSize=2");
+        var paginatedResponse = await Client.GetAsync($"{ApiEndpoints.Account}?pageNumber=1&pageSize=2");
         await LogIfError(paginatedResponse, "Get_ListApplicationUsers_Pagination");
 
         paginatedResponse.StatusCode.ShouldBe(HttpStatusCode.OK);
@@ -140,10 +140,10 @@ public class ApplicationUserIntegrationTests : BaseIntegrationTest
     public async Task Get_ApplicationUserById_Existing_ReturnsApplicationUser()
     {
         var createDto = _dataHelper.CreateApplicationUserBuilder().Build();
-        var created = await PostAndGetAsync<UserDto>(ApiEndpoints.Users, createDto, "Get_ApplicationUserById_Seed");
+        var created = await PostAndGetAsync<UserDto>(ApiEndpoints.Account, createDto, "Get_ApplicationUserById_Seed");
         created.ShouldNotBeNull();
 
-        var getResponse = await Client.GetAsync($"{ApiEndpoints.Users}/{created!.Id}");
+        var getResponse = await Client.GetAsync($"{ApiEndpoints.Account}/{created!.Id}");
         await LogIfError(getResponse, "Get_ApplicationUserById_Get");
 
         getResponse.StatusCode.ShouldBe(HttpStatusCode.OK);
@@ -156,7 +156,7 @@ public class ApplicationUserIntegrationTests : BaseIntegrationTest
     [Fact]
     public async Task Get_ApplicationUserById_NonExisting_ReturnsNotFound()
     {
-        var response = await Client.GetAsync($"{ApiEndpoints.Users}/non-existing-id");
+        var response = await Client.GetAsync($"{ApiEndpoints.Account}/non-existing-id");
         await LogIfError(response, "Get_ApplicationUserById_NonExisting");
 
         response.StatusCode.ShouldBe(HttpStatusCode.NotFound);
@@ -166,7 +166,7 @@ public class ApplicationUserIntegrationTests : BaseIntegrationTest
     public async Task Put_UpdateExistingApplicationUser_ReturnsUpdatedApplicationUser()
     {
         var createDto = _dataHelper.CreateApplicationUserBuilder().Build();
-        var created = await PostAndGetAsync<UserDto>(ApiEndpoints.Users, createDto, "Put_UpdateApplicationUser_Seed");
+        var created = await PostAndGetAsync<UserDto>(ApiEndpoints.Account, createDto, "Put_UpdateApplicationUser_Seed");
         created.ShouldNotBeNull();
 
         var updateDto = _dataHelper.CreateApplicationUserBuilder()
@@ -195,22 +195,22 @@ public class ApplicationUserIntegrationTests : BaseIntegrationTest
     public async Task Delete_ExistingApplicationUser_ReturnsOk()
     {
         var createDto = _dataHelper.CreateApplicationUserBuilder().Build();
-        var created = await PostAndGetAsync<UserDto>(ApiEndpoints.Users, createDto, "Delete_ExistingApplicationUser_Seed");
+        var created = await PostAndGetAsync<UserDto>(ApiEndpoints.Account, createDto, "Delete_ExistingApplicationUser_Seed");
         created.ShouldNotBeNull();
 
-        var deleteResponse = await Client.DeleteAsync($"{ApiEndpoints.Users}/{created!.Id}");
+        var deleteResponse = await Client.DeleteAsync($"{ApiEndpoints.Account}/{created!.Id}");
         await LogIfError(deleteResponse, "Delete_ExistingApplicationUser_Delete");
 
         deleteResponse.StatusCode.ShouldBe(HttpStatusCode.OK);
 
-        var getResponse = await Client.GetAsync($"{ApiEndpoints.Users}/{created.Id}");
+        var getResponse = await Client.GetAsync($"{ApiEndpoints.Account}/{created.Id}");
         getResponse.StatusCode.ShouldBe(HttpStatusCode.NotFound);
     }
 
     [Fact]
     public async Task Delete_NonExistingApplicationUser_ReturnsNotFound()
     {
-        var response = await Client.DeleteAsync($"{ApiEndpoints.Users}/non-existing-id");
+        var response = await Client.DeleteAsync($"{ApiEndpoints.Account}/non-existing-id");
         await LogIfError(response, "Delete_NonExistingApplicationUser");
 
         response.StatusCode.ShouldBe(HttpStatusCode.NotFound);
@@ -274,7 +274,7 @@ public class ApplicationUserIntegrationTests : BaseIntegrationTest
             createdSecond.ShouldNotBeNull();
             createdSecond!.UserName.ShouldBe(userName);
 
-            var deleteResponse = await Client.DeleteAsync($"{ApiEndpoints.Users}/{createdSecond.Id}");
+            var deleteResponse = await Client.DeleteAsync($"{ApiEndpoints.Account}/{createdSecond.Id}");
             deleteResponse.EnsureSuccessStatusCode();
         }
     }
@@ -300,7 +300,7 @@ public class ApplicationUserIntegrationTests : BaseIntegrationTest
             createdSecond.ShouldNotBeNull();
             createdSecond!.Email.ShouldBe(email);
 
-            var deleteResponse = await Client.DeleteAsync($"{ApiEndpoints.Users}/{createdSecond.Id}");
+            var deleteResponse = await Client.DeleteAsync($"{ApiEndpoints.Account}/{createdSecond.Id}");
             deleteResponse.EnsureSuccessStatusCode();
         }
     }
@@ -333,7 +333,7 @@ public class ApplicationUserIntegrationTests : BaseIntegrationTest
     public async Task Put_UpdateApplicationUserEmail_ReturnsUpdatedEmail()
     {
         var createDto = _dataHelper.CreateApplicationUserBuilder().WithEmail("original@test.com").Build();
-        var created = await PostAndGetAsync<UserDto>(ApiEndpoints.Users, createDto, "Put_UpdateApplicationUserEmail_Seed");
+        var created = await PostAndGetAsync<UserDto>(ApiEndpoints.Account, createDto, "Put_UpdateApplicationUserEmail_Seed");
         created.ShouldNotBeNull();
 
         var updateDto = _dataHelper.CreateApplicationUserBuilder().WithEmail("updated@test.com").Build();
@@ -348,7 +348,7 @@ public class ApplicationUserIntegrationTests : BaseIntegrationTest
     [Fact]
     public async Task Get_ListApplicationUsers_WithInvalidPageSize_ReturnsBadRequest()
     {
-        var response = await Client.GetAsync($"{ApiEndpoints.Users}?pageNumber=1&pageSize=0");
+        var response = await Client.GetAsync($"{ApiEndpoints.Account}?pageNumber=1&pageSize=0");
         await LogIfError(response, "Get_ListApplicationUsers_InvalidPageSize");
 
         response.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
@@ -372,7 +372,7 @@ public class ApplicationUserIntegrationTests : BaseIntegrationTest
     public async Task Put_UpdateApplicationUserPhoneNumber_ReturnsUpdatedPhoneNumber()
     {
         var createDto = _dataHelper.CreateApplicationUserBuilder().WithPhoneNumber("+1234567890").Build();
-        var created = await PostAndGetAsync<UserDto>(ApiEndpoints.Users, createDto, "Put_UpdateApplicationUserPhoneNumber_Seed");
+        var created = await PostAndGetAsync<UserDto>(ApiEndpoints.Account, createDto, "Put_UpdateApplicationUserPhoneNumber_Seed");
         created.ShouldNotBeNull();
 
         var updateDto = _dataHelper.CreateApplicationUserBuilder().WithPhoneNumber("+0987654321").Build();
