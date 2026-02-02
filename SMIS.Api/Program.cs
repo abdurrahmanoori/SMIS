@@ -32,7 +32,7 @@ builder.Services.AddHttpClient("ApiClient", client =>
 });
 
 builder.Services.AddReactAppCors();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerWithJwt();
 builder.Services.AddHttpContextAccessor();
 
 // Configure services
