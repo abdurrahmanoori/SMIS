@@ -17,9 +17,6 @@ namespace SMIS.Infrastructure.EntityConfigurations
             builder.Property(x => x.MessageCode)
                 .HasMaxLength(100);
 
-            builder.Property(x => x.ShopId)
-                .IsRequired();
-
             builder.HasIndex(x => x.MessageCode);
 
             builder.HasMany(tk => tk.Translations)
@@ -27,11 +24,6 @@ namespace SMIS.Infrastructure.EntityConfigurations
                 .HasForeignKey(t => t.TranslationKeyId)
                 .HasPrincipalKey(tk => tk.Id)
                 .OnDelete(DeleteBehavior.Cascade);
-
-            builder.HasOne(tk => tk.Shop)
-                .WithMany()
-                .HasForeignKey(tk => tk.ShopId)
-                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

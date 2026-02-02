@@ -12,9 +12,6 @@ namespace SMIS.Application.Features.TranslationKeys.Validators
                 .NotEmpty().WithMessage("Name is required")
                 .MaximumLength(200).WithMessage("Name must not exceed 200 characters");
 
-            RuleFor(x => x.TranslationKeyCreateDto.ShopId)
-                .NotEmpty().WithMessage("ShopId is required");
-
             RuleFor(x => x.TranslationKeyCreateDto.MessageCode)
                 .MaximumLength(100).WithMessage("MessageCode must not exceed 100 characters")
                 .When(x => !string.IsNullOrEmpty(x.TranslationKeyCreateDto.MessageCode));
