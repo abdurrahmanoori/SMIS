@@ -1,8 +1,7 @@
-namespace SMIS.Domain.Enums
+namespace SMIS.Domain.Enums;
+
+public enum ShopType
 {
-    public enum ShopType
-    {
-        RetailShop = 1,
-        WholesaleShop = 2
-    }
+    RetailShop = 1,
+    WholesaleShop = 2
 }

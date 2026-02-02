@@ -1,20 +1,38 @@
 using Microsoft.EntityFrameworkCore;
 using SMIS.Domain.Entities;
 
-namespace SMIS.Infrastructure.DatabaseSeeders
+namespace SMIS.Infrastructure.DatabaseSeeders;
+
+public static class CategorySeed
 {
-    public static class CategorySeed
+    public static void DataSeed(ModelBuilder modelBuilder)
     {
-        public static void DataSeed(ModelBuilder modelBuilder)
+        modelBuilder.Entity<Category>().HasData(
+            CreateCategory("1", "Beverages", "1", "BEV", "Drinks and beverages"),
+            CreateCategory("2", "Food Items", "1", "FOOD", "Edible products and snacks"),
+            CreateCategory("3", "Stationery", "2", "STAT", "Office and school supplies"),
+            CreateCategory("4", "Grocery", "2", "GROC", "Daily household items"),
+            CreateCategory("5", "Personal Care", "3", "CARE", "Health and hygiene products"),
+            CreateCategory("6", "Electronics", "3", "ELEC", "Electronic devices and accessories")
+        );
+    }
+
+    private static object CreateCategory(string id, string name, string shopId, string? code = null, string? description = null)
+    {
+        return new
         {
-            modelBuilder.Entity<Category>().HasData(
-                new Category { Id = "1", Name = "Beverages", Code = "BEV", Description = "Drinks and beverages", IsActive = true },
-                new Category { Id = "2", Name = "Food Items", Code = "FOOD", Description = "Edible products and snacks", IsActive = true },
-                new Category { Id = "3", Name = "Stationery", Code = "STAT", Description = "Office and school supplies", IsActive = true },
-                new Category { Id = "4", Name = "Grocery", Code = "GROC", Description = "Daily household items", IsActive = true },
-                new Category { Id = "5", Name = "Personal Care", Code = "CARE", Description = "Health and hygiene products", IsActive = true },
-                new Category { Id = "6", Name = "Electronics", Code = "ELEC", Description = "Electronic devices and accessories", IsActive = true }
-            );
-        }
+            Id = id,
+            Name = name,
+            ShopId = shopId,
+            Code = code,
+            Description = description,
+            IsActive = true,
+            CreatedDate = DateTime.Now,
+            UpdatedDate = DateTime.Now,
+            LastModifiedUtc = DateTimeOffset.Now,
+            EntityState = SMIS.Domain.Enums.EntityStateEnum.Unchanged,
+            IsPublic = false,
+            Version = 0
+        };
     }
 }

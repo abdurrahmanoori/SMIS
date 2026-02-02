@@ -1,0 +1,7 @@
+Add ShopId to Category entities and establish relationships
+
+- Add ShopId property to Category entity and DTOs
+- Update Category validator to require ShopId
+- Establish relationship between Category and Shop entities
+- Seed category data with shop associations
+- Generate database migration for schema changes

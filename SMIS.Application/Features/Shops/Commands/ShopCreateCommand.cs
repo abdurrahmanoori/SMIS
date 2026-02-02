@@ -32,7 +32,6 @@ namespace SMIS.Application.Features.Shops.Commands
             await _translationKeyRepository.AddTranslationKeysForEntity(request.ShopCreateDto, _unitOfWork);
 
             var entity = _mapper.Map<Shop>(request.ShopCreateDto);
-            if (!request.ShopCreateDto.IsActive) entity.Deactivate();
             
             await _shopRepository.AddAsync(entity);
             await _unitOfWork.SaveChanges(cancellationToken);

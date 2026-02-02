@@ -1,76 +1,125 @@
 using Microsoft.EntityFrameworkCore;
 using SMIS.Domain.Entities;
 
-namespace SMIS.Infrastructure.DatabaseSeeders
+namespace SMIS.Infrastructure.DatabaseSeeders;
+
+public static class ProductUnitSeed
 {
-    public static class ProductUnitSeed
+    public static void DataSeed(ModelBuilder modelBuilder)
     {
-        public static void DataSeed(ModelBuilder modelBuilder)
-        {
-            modelBuilder.Entity<ProductUnit>().HasData(
-                // Coca Cola - Bottle base unit (ID: 1)
-                new ProductUnit { Id = "1", ProductId = "1", UnitOfMeasureId = "4", ConversionFactor = 12 }, // 1 Box = 12 Bottles
-                new ProductUnit { Id = "2", ProductId = "1", UnitOfMeasureId = "5", ConversionFactor = 24 }, // 1 Carton = 24 Bottles
-                
-                // Pepsi - Bottle base unit (ID: 2)
-                new ProductUnit { Id = "3", ProductId = "2", UnitOfMeasureId = "4", ConversionFactor = 12 }, // 1 Box = 12 Bottles
-                new ProductUnit { Id = "4", ProductId = "2", UnitOfMeasureId = "5", ConversionFactor = 24 }, // 1 Carton = 24 Bottles
-                
-                // Mineral Water - Bottle base unit (ID: 3)
-                new ProductUnit { Id = "5", ProductId = "3", UnitOfMeasureId = "4", ConversionFactor = 6 },  // 1 Box = 6 Bottles (1L bottles)
-                new ProductUnit { Id = "6", ProductId = "3", UnitOfMeasureId = "5", ConversionFactor = 12 }, // 1 Carton = 12 Bottles
-                
-                // Oreo Biscuits - Pack base unit (ID: 4)
-                new ProductUnit { Id = "7", ProductId = "4", UnitOfMeasureId = "4", ConversionFactor = 12 }, // 1 Box = 12 Packs
-                new ProductUnit { Id = "8", ProductId = "4", UnitOfMeasureId = "5", ConversionFactor = 48 }, // 1 Carton = 48 Packs
-                
-                // Lay's Chips - Pack base unit (ID: 5)
-                new ProductUnit { Id = "9", ProductId = "5", UnitOfMeasureId = "4", ConversionFactor = 20 }, // 1 Box = 20 Packs
-                new ProductUnit { Id = "10", ProductId = "5", UnitOfMeasureId = "5", ConversionFactor = 60 }, // 1 Carton = 60 Packs
-                
-                // Instant Noodles - Pack base unit (ID: 6)
-                new ProductUnit { Id = "11", ProductId = "6", UnitOfMeasureId = "4", ConversionFactor = 24 }, // 1 Box = 24 Packs
-                new ProductUnit { Id = "12", ProductId = "6", UnitOfMeasureId = "5", ConversionFactor = 72 }, // 1 Carton = 72 Packs
-                
-                // A4 Notebook - Piece base unit (ID: 7)
-                new ProductUnit { Id = "13", ProductId = "7", UnitOfMeasureId = "10", ConversionFactor = 12 }, // 1 Dozen = 12 Pieces
-                new ProductUnit { Id = "14", ProductId = "7", UnitOfMeasureId = "4", ConversionFactor = 50 }, // 1 Box = 50 Pieces
-                
-                // Blue Pen - Piece base unit (ID: 8)
-                new ProductUnit { Id = "15", ProductId = "8", UnitOfMeasureId = "10", ConversionFactor = 12 }, // 1 Dozen = 12 Pieces
-                new ProductUnit { Id = "16", ProductId = "8", UnitOfMeasureId = "4", ConversionFactor = 144 }, // 1 Box = 144 Pieces (12 dozen)
-                
-                // Pencil Set - Box base unit (ID: 9) - already in boxes
-                new ProductUnit { Id = "17", ProductId = "9", UnitOfMeasureId = "5", ConversionFactor = 20 }, // 1 Carton = 20 Boxes
-                
-                // Cooking Oil - Bottle base unit (ID: 10)
-                new ProductUnit { Id = "18", ProductId = "10", UnitOfMeasureId = "4", ConversionFactor = 12 }, // 1 Box = 12 Bottles
-                new ProductUnit { Id = "19", ProductId = "10", UnitOfMeasureId = "5", ConversionFactor = 24 }, // 1 Carton = 24 Bottles
-                
-                // Rice - Kg base unit (ID: 11)
-                new ProductUnit { Id = "20", ProductId = "11", UnitOfMeasureId = "4", ConversionFactor = 10 }, // 1 Box = 10 Kg bags
-                new ProductUnit { Id = "21", ProductId = "11", UnitOfMeasureId = "5", ConversionFactor = 25 }, // 1 Carton = 25 Kg bags
-                
-                // Sugar - Kg base unit (ID: 12)
-                new ProductUnit { Id = "22", ProductId = "12", UnitOfMeasureId = "4", ConversionFactor = 20 }, // 1 Box = 20 Kg bags
-                new ProductUnit { Id = "23", ProductId = "12", UnitOfMeasureId = "5", ConversionFactor = 50 }, // 1 Carton = 50 Kg bags
-                
-                // Shampoo - Bottle base unit (ID: 13)
-                new ProductUnit { Id = "24", ProductId = "13", UnitOfMeasureId = "4", ConversionFactor = 12 }, // 1 Box = 12 Bottles
-                new ProductUnit { Id = "25", ProductId = "13", UnitOfMeasureId = "5", ConversionFactor = 24 }, // 1 Carton = 24 Bottles
-                
-                // Toothpaste - Piece base unit (ID: 14)
-                new ProductUnit { Id = "26", ProductId = "14", UnitOfMeasureId = "4", ConversionFactor = 24 }, // 1 Box = 24 Pieces
-                new ProductUnit { Id = "27", ProductId = "14", UnitOfMeasureId = "5", ConversionFactor = 72 }, // 1 Carton = 72 Pieces
-                
-                // USB Cable - Piece base unit (ID: 15)
-                new ProductUnit { Id = "28", ProductId = "15", UnitOfMeasureId = "4", ConversionFactor = 50 }, // 1 Box = 50 Pieces
-                new ProductUnit { Id = "29", ProductId = "15", UnitOfMeasureId = "5", ConversionFactor = 200 }, // 1 Carton = 200 Pieces
-                
-                // Phone Charger - Piece base unit (ID: 16)
-                new ProductUnit { Id = "30", ProductId = "16", UnitOfMeasureId = "4", ConversionFactor = 20 }, // 1 Box = 20 Pieces
-                new ProductUnit { Id = "31", ProductId = "16", UnitOfMeasureId = "5", ConversionFactor = 100 }  // 1 Carton = 100 Pieces
-            );
-        }
+        modelBuilder.Entity<ProductUnit>().HasData(
+            // Coca Cola - Bottle base unit (ID: 1)
+            CreateProductUnit("1", "1", "4", 12), // 1 Box = 12 Bottles
+            CreateProductUnit("2", "1", "5", 24), // 1 Carton = 24 Bottles
+            
+            // Pepsi - Bottle base unit (ID: 2)
+            CreateProductUnit("3", "2", "4", 12), // 1 Box = 12 Bottles
+            CreateProductUnit("4", "2", "5", 24), // 1 Carton = 24 Bottles
+            
+            // Mineral Water - Bottle base unit (ID: 3)
+            CreateProductUnit("5", "3", "4", 6),  // 1 Box = 6 Bottles (1L bottles)
+            CreateProductUnit("6", "3", "5", 12), // 1 Carton = 12 Bottles
+            
+            // Oreo Biscuits - Pack base unit (ID: 4)
+            CreateProductUnit("7", "4", "4", 12), // 1 Box = 12 Packs
+            CreateProductUnit("8", "4", "5", 48), // 1 Carton = 48 Packs
+            
+            // Lay's Chips - Pack base unit (ID: 5)
+            CreateProductUnit("9", "5", "4", 20), // 1 Box = 20 Packs
+            CreateProductUnit("10", "5", "5", 60), // 1 Carton = 60 Packs
+            
+            // Instant Noodles - Pack base unit (ID: 6)
+            CreateProductUnit("11", "6", "4", 24), // 1 Box = 24 Packs
+            CreateProductUnit("12", "6", "5", 72), // 1 Carton = 72 Packs
+            
+            // A4 Notebook - Piece base unit (ID: 7)
+            CreateProductUnit("13", "7", "10", 12), // 1 Dozen = 12 Pieces
+            CreateProductUnit("14", "7", "4", 50), // 1 Box = 50 Pieces
+            
+            // Blue Pen - Piece base unit (ID: 8)
+            CreateProductUnit("15", "8", "10", 12), // 1 Dozen = 12 Pieces
+            CreateProductUnit("16", "8", "4", 144), // 1 Box = 144 Pieces (12 dozen)
+            
+            // Pencil Set - Box base unit (ID: 9) - already in boxes
+            CreateProductUnit("17", "9", "5", 20), // 1 Carton = 20 Boxes
+            
+            // Cooking Oil - Bottle base unit (ID: 10)
+            CreateProductUnit("18", "10", "4", 12), // 1 Box = 12 Bottles
+            CreateProductUnit("19", "10", "5", 24), // 1 Carton = 24 Bottles
+            
+            // Rice - Kg base unit (ID: 11)
+            CreateProductUnit("20", "11", "4", 10), // 1 Box = 10 Kg bags
+            CreateProductUnit("21", "11", "5", 25), // 1 Carton = 25 Kg bags
+            
+            // Sugar - Kg base unit (ID: 12)
+            CreateProductUnit("22", "12", "4", 20), // 1 Box = 20 Kg bags
+            CreateProductUnit("23", "12", "5", 50), // 1 Carton = 50 Kg bags
+            
+            // Shampoo - Bottle base unit (ID: 13)
+            CreateProductUnit("24", "13", "4", 12), // 1 Box = 12 Bottles
+            CreateProductUnit("25", "13", "5", 24), // 1 Carton = 24 Bottles
+            
+            // Toothpaste - Piece base unit (ID: 14)
+            CreateProductUnit("26", "14", "4", 24), // 1 Box = 24 Pieces
+            CreateProductUnit("27", "14", "5", 72), // 1 Carton = 72 Pieces
+            
+            // USB Cable - Piece base unit (ID: 15)
+            CreateProductUnit("28", "15", "4", 50), // 1 Box = 50 Pieces
+            CreateProductUnit("29", "15", "5", 200), // 1 Carton = 200 Pieces
+            
+            // Phone Charger - Piece base unit (ID: 16)
+            CreateProductUnit("30", "16", "4", 20), // 1 Box = 20 Pieces
+            CreateProductUnit("31", "16", "5", 100)  // 1 Carton = 100 Pieces
+        );
     }
+
+    private static ProductUnit CreateProductUnit(string id, string productId, string unitOfMeasureId, decimal conversionFactor)
+    {
+        var productUnit = new ProductUnit
+        {
+            Id = id,
+            ProductId = productId,
+            UnitOfMeasureId = unitOfMeasureId,
+            ConversionFactor = conversionFactor,
+            ProductName = GetProductName(productId),
+            UnitName = GetUnitName(unitOfMeasureId)
+        };
+        return productUnit;
+    }
+
+    private static string? GetProductName(string productId) => productId switch
+    {
+        "1" => "Coca Cola 500ml",
+        "2" => "Pepsi 500ml",
+        "3" => "Mineral Water 1L",
+        "4" => "Oreo Biscuits",
+        "5" => "Lay's Chips",
+        "6" => "Instant Noodles",
+        "7" => "A4 Notebook",
+        "8" => "Blue Pen",
+        "9" => "Pencil Set",
+        "10" => "Cooking Oil 1L",
+        "11" => "Rice 1kg",
+        "12" => "Sugar 1kg",
+        "13" => "Shampoo 400ml",
+        "14" => "Toothpaste",
+        "15" => "USB Cable",
+        "16" => "Phone Charger",
+        _ => null
+    };
+
+    private static string? GetUnitName(string unitId) => unitId switch
+    {
+        "1" => "Piece",
+        "2" => "Bottle",
+        "3" => "Pack",
+        "4" => "Box",
+        "5" => "Carton",
+        "6" => "Liter",
+        "7" => "Kilogram",
+        "8" => "Gram",
+        "9" => "Milliliter",
+        "10" => "Dozen",
+        _ => null
+    };
 }

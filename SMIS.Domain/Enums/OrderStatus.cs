@@ -1,10 +1,9 @@
-﻿namespace SMIS.Domain.Enums
+﻿namespace SMIS.Domain.Enums;
+
+public enum OrderStatus
 {
-    public enum OrderStatus
-    {
-        Pending = 1,
-        InProgress = 2,
-        Completed = 3,
-        Cancelled = 4,
-    }
+    Pending = 1,
+    InProgress = 2,
+    Completed = 3,
+    Cancelled = 4,
 }

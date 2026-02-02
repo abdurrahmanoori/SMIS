@@ -1,13 +1,15 @@
 ﻿using AutoMapper;
 using AutoMapper.EquivalencyExpression;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Scrutor;
 using SMIS.Application.Mappings;
 using SMIS.Application.Services;
-using SMIS.Domain.Common.BaseAbstract;
-using SMIS.Domain.Common.Interfaces;
+using SMIS.Domain.Contracts;
 using SMIS.Infrastructure.Context;
+using SMIS.Infrastructure.ContractsImplementation;
 using SMIS.Infrastructure.Interceptors;
 using SMIS.Infrastructure.Services;
 
@@ -31,11 +33,20 @@ namespace SMIS.Infrastructure.Extensions
 {
     public static class InfrastructureServicesRegistration
     {
-        public static IServiceCollection ConfigurePersistenceServices(this IServiceCollection services, IConfiguration configuration)
+        public static IServiceCollection ConfigurePersistenceServices(this IServiceCollection services, IConfiguration configuration, IWebHostEnvironment environment)
         {
             services.AddApplicationDbContext(configuration);
             services.AddScoped<AuditInterceptor>();
             services.AddScoped<EntityPKInterceptor>();
+            if (environment.IsProduction())
+            {
+                services.AddScoped<IPKGenerator, ProdPKGenerator>();
+            }
+            else
+            {
+                services.AddScoped<IPKGenerator, DevPKGenerator>();
+            }
+
 
             // Automatically register repositories with Scrutor (no magic strings)
             services.Scan(scan => scan

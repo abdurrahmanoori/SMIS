@@ -1,7 +1,6 @@
-﻿namespace SMIS.Domain.Enums
+﻿namespace SMIS.Domain.Enums;
+
+public enum RelationshipType
 {
-    public enum RelationshipType
-    {
-        Child = 1,Father,Brother,Friend
-    }
+    Child = 1,Father,Brother,Friend
 }

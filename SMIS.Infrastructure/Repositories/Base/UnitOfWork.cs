@@ -390,14 +390,14 @@ namespace SMIS.Infrastructure.Repositories.Base
 
             // var entries = this._context.ChangeTracker.Entries();
 
-            // var enitt = entries.Where(e => e.State == EntityState.Modified).ToList();
+            // var enitt = entries.Where(e => e.State == EntityStateEnum.Modified).ToList();
 
             // var entityList = this._context.ChangeTracker.Entries()
-            //       .Where(e => e.State == EntityState.Added ||
-            //                   e.State == EntityState.Modified ||
-            //                   e.State == EntityState.Deleted ||
-            //                   e.State == EntityState.Unchanged ||
-            //                   e.State == EntityState.Detached).FirstOrDefault();
+            //       .Where(e => e.State == EntityStateEnum.Added ||
+            //                   e.State == EntityStateEnum.Modified ||
+            //                   e.State == EntityStateEnum.Deleted ||
+            //                   e.State == EntityStateEnum.Unchanged ||
+            //                   e.State == EntityStateEnum.Detached).FirstOrDefault();
             // .ToList();
 
             //_context.ChangeTracker.AcceptAllChanges();

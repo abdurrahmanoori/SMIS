@@ -11,7 +11,7 @@ namespace SMIS.Test.TestDataBuilders
         {
             _faker = new Faker<LanguageCreateDto>()
                 .RuleFor(l => l.Name, f => f.Address.Country())
-                .RuleFor(l => l.Code, f => f.Address.CountryCode())
+                .RuleFor(l => l.Code, f => f.Address.CountryCode() + Guid.NewGuid().ToString())
                 .RuleFor(l => l.IsActive, true);
         }
 

@@ -1,10 +1,10 @@
 using SMIS.Domain.Common.BaseAbstract;
 using SMIS.Domain.Common.Interfaces;
 
-namespace SMIS.Domain.Entities.LocationEntities
+namespace SMIS.Domain.Entities.LocationEntities;
+
+public class Province : BaseAuditableEntity, IHasTranslations<ProvinceTranslation>, IEntity
 {
-    public class Province : BaseAuditableEntity, IHasTranslations<ProvinceTranslation>
-    {
-        public virtual ICollection<ProvinceTranslation> Translations { get; set; } = new List<ProvinceTranslation>();
-    }
+    public string Name { get; set; } = string.Empty;
+    public virtual ICollection<ProvinceTranslation> Translations { get; set; } = new List<ProvinceTranslation>();
 }

@@ -1,5 +1,5 @@
-using Microsoft.EntityFrameworkCore;
 using SMIS.Domain.Common.Interfaces;
+using SMIS.Domain.Enums;
 namespace SMIS.Domain.Common.BaseAbstract
 {
     public abstract class BaseAuditableEntityWithoutName : IAuditableEntity,IEntityPK
@@ -14,7 +14,7 @@ namespace SMIS.Domain.Common.BaseAbstract
         public string? UpdatedBy { get; set; }
         public DateTime? UpdatedDate { get; set; } = DateTime.Now;
         public int Version { get ; set ; }
-        public EntityState State { get ; set ; }
+        public EntityStateEnum EntityState { get ; set ; }
         public DateTimeOffset LastModifiedUtc { get;  set; }
     }
 }

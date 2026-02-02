@@ -1,18 +1,23 @@
-﻿using AutoMapper;
+using AutoMapper;
 using SMIS.Application.DTO.Localization;
 using SMIS.Application.DTO.Provinces;
 using SMIS.Application.DTO.Districts;
 using SMIS.Application.DTO.Shops;
 using SMIS.Application.DTO.UnitOfMeasures;
 using SMIS.Application.DTO.Products;
-using SMIS.Domain.Entities;
-using SMIS.Domain.Entities.Localization;
+using SMIS.Application.DTO.Users;
 using System.Globalization;
 using SMIS.Application.DTO.Categories;
-using SMIS.Domain.Entities.LocationEntities;
 using SMIS.Application.DTO.ProductUnits;
+using SMIS.Application.DTO.StockBatches;
 using SMIS.Application.DTO.TranslationKeys;
 using SMIS.Application.DTO.Translations;
+using SMIS.Application.DTO.StockTransactions;
+using SMIS.Domain.Entities;
+using SMIS.Domain.Entities.Localization;
+using SMIS.Domain.Entities.LocationEntities;
+using SMIS.Domain.Entities.Identity.Entity;
+using SMIS.Domain.Enums;
 
 namespace SMIS.Application.Mappings;
 
@@ -20,6 +25,18 @@ public class MappingProfile : Profile
 {
     public MappingProfile()
     {
+        // User mappings
+        CreateMap<ApplicationUser, UserDto>().ReverseMap();
+        CreateMap<UserCreateDto, ApplicationUser>()
+            .ConstructUsing(src => ApplicationUser.Create(
+                src.UserName,
+                src.Email,
+                src.ShopId,
+                src.FirstName,
+                src.LastName,
+                src.PhoneNumber
+                
+            ));
 
         // Language mappings
         CreateMap<Language, LanguageDto>().ReverseMap();
@@ -88,20 +105,46 @@ public class MappingProfile : Profile
                 src.Address,
                 src.PhoneNumber,
                 src.Email,
-                src.TaxNumber
+                src.TaxNumber,
+                src.IsActive
             ));
 
         // Product mapping
         CreateMap<Product, ProductDto>().ReverseMap();
-        CreateMap<Product, ProductCreateDto>().ReverseMap();
+        CreateMap<ProductCreateDto, Product>()
+            .ConstructUsing(src => Product.Create(
+                src.Name,
+                src.ShopId,
+                src.BaseUnitId,
+                src.SKU,
+                src.SalePricePerBaseUnit,
+                src.IsActive,
+                src.Description,
+                src.Barcode,
+                src.ImageUrl,
+                src.CategoryId
+            ));
 
         // UnitOfMeasure mapping
         CreateMap<UnitOfMeasure, UnitOfMeasureDto>().ReverseMap();
-        CreateMap<UnitOfMeasure, UnitOfMeasureCreateDto>().ReverseMap();
+        CreateMap<UnitOfMeasureCreateDto, UnitOfMeasure>()
+            .ConstructUsing(src => UnitOfMeasure.Create(
+                src.Name,
+                src.Symbol,
+                src.ShopId,
+                src.Description
+            ));
 
         // Category mapping
         CreateMap<Category, CategoryDto>().ReverseMap();
-        CreateMap<Category, CategoryCreateDto>().ReverseMap();
+        CreateMap<CategoryCreateDto, Category>()
+            .ConstructUsing(src => Category.Create(
+                src.Name,
+                src.ShopId,
+                src.Code,
+                src.Description,
+                src.IsActive
+            ));
 
         // ProductUnit mapping
         CreateMap<ProductUnit, ProductUnitDto>().ReverseMap();
@@ -114,6 +157,33 @@ public class MappingProfile : Profile
         // Translation mapping
         CreateMap<Translation, TranslationEntityDto>().ReverseMap();
         CreateMap<Translation, TranslationEntityCreateDto>().ReverseMap();
+
+        // StockBatch mapping
+        CreateMap<StockBatch, StockBatchDto>().ReverseMap();
+        CreateMap<StockBatchCreateDto, StockBatch>()
+            .ConstructUsing(src => StockBatch.Create(
+                src.ProductId,
+                src.UnitId,
+                src.Quantity,
+                src.PurchasePrice,
+                src.ReceivedDate,
+                src.BatchNumber,
+                src.ExpirationDate
+            ));
+
+        // StockTransaction mapping
+        CreateMap<StockTransaction, StockTransactionDto>()
+            .ForMember(dest => dest.Type, opt => opt.MapFrom(src => Enum.Parse<TransactionType>(src.Type)));
+        CreateMap<StockTransactionCreateDto, StockTransaction>()
+            .ConstructUsing(src => StockTransaction.Create(
+                src.ProductId,
+                src.StockBatchId,
+                src.Quantity,
+                src.UnitId,
+                src.Type,
+                src.TransactionDate,
+                src.Reference
+            ));
     }
 
     private static string ResolveProvinceName(Province src)

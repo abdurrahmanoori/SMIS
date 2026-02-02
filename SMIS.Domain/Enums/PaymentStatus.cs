@@ -1,9 +1,8 @@
-﻿namespace SMIS.Domain.Enums
+﻿namespace SMIS.Domain.Enums;
+
+public enum PaymentStatus
 {
-    public enum PaymentStatus
-    {
-        Paid=1,
-        Partial=2,
-        Unpaid=3,
-    }
+    Paid=1,
+    Partial=2,
+    Unpaid=3,
 }

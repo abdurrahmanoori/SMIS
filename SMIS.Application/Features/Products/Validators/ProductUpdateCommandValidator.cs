@@ -24,20 +24,21 @@ namespace SMIS.Application.Features.Products.Validators
                 .GreaterThanOrEqualTo(0).WithMessage("SalePricePerBaseUnit must be non-negative");
 
             RuleFor(x => x.ProductCreateDto.Description)
-                .MaximumLength(500).WithMessage("Description must not exceed 500 characters")
+                .MaximumLength(1000).WithMessage("Description must not exceed 1000 characters")
                 .When(x => !string.IsNullOrEmpty(x.ProductCreateDto.Description));
 
             RuleFor(x => x.ProductCreateDto.SKU)
                 .NotEmpty().WithMessage("SKU is required")
-                .MaximumLength(100).WithMessage("SKU must not exceed 100 characters");
+                .MaximumLength(50).WithMessage("SKU must not exceed 50 characters");
 
             RuleFor(x => x.ProductCreateDto.Barcode)
-                .MaximumLength(100).WithMessage("Barcode must not exceed 100 characters")
+                .MinimumLength(8).WithMessage("Barcode must be at least 8 characters")
+                .MaximumLength(50).WithMessage("Barcode must not exceed 50 characters")
+                .Matches(@"^[\d\-]+$").WithMessage("Barcode can only contain digits and hyphens")
                 .When(x => !string.IsNullOrEmpty(x.ProductCreateDto.Barcode));
 
             RuleFor(x => x.ProductCreateDto.ImageUrl)
                 .MaximumLength(500).WithMessage("ImageUrl must not exceed 500 characters")
-                .Matches(@"^https?:\/\/.+\..+$").WithMessage("ImageUrl must be a valid URL")
                 .When(x => !string.IsNullOrEmpty(x.ProductCreateDto.ImageUrl));
 
             RuleFor(x => x.ProductCreateDto.CategoryId)

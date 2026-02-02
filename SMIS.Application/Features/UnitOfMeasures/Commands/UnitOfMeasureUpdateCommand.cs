@@ -30,7 +30,12 @@ namespace SMIS.Application.Features.UnitOfMeasures.Commands
                 return Result<UnitOfMeasureDto>.NotFoundResult(nameof(UnitOfMeasureDto.Id));
             }
 
-            _mapper.Map(request.UnitOfMeasureCreateDto, entity);
+            // Update existing entity using domain methods
+            entity.SetName(request.UnitOfMeasureCreateDto.Name);
+            entity.SetSymbol(request.UnitOfMeasureCreateDto.Symbol);
+            entity.SetDescription(request.UnitOfMeasureCreateDto.Description);
+            entity.SetShopId(request.UnitOfMeasureCreateDto.ShopId);
+            
             await _unitOfWork.SaveChanges(cancellationToken);
 
             var dto = _mapper.Map<UnitOfMeasureDto>(entity);
