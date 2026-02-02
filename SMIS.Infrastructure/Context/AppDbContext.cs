@@ -37,7 +37,6 @@ public partial class AppDbContext : IdentityDbContext<ApplicationUser, Applicati
         }
 
         #region Seed Database
-        UserSeed.DataSeed(modelBuilder);
         ProductUnitSeed.DataSeed(modelBuilder);
         StockBatchSeed.DataSeed(modelBuilder);
         StockTransactionSeed.DataSeed(modelBuilder);
