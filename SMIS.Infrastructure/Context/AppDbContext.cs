@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using SMIS.Domain.Common.BaseAbstract;
@@ -11,7 +12,7 @@ using System.Reflection;
 
 namespace SMIS.Infrastructure.Context;
 
-public partial class AppDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, string>
+public partial class AppDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, string, IdentityUserClaim<string>, ApplicationUserRole, IdentityUserLogin<string>, IdentityRoleClaim<string>, IdentityUserToken<string>>
 {
     public AppDbContext(DbContextOptions options) : base(options)
     {
@@ -70,4 +71,5 @@ public partial class AppDbContext : IdentityDbContext<ApplicationUser, Applicati
     public DbSet<ProductUnit> ProductUnits { get; set; }
     public DbSet<StockBatch> StockBatches { get; set; }
     public DbSet<StockTransaction> StockTransactions { get; set; }
+    public DbSet<ApplicationUserRole> UserRoles { get; set; }
 }
