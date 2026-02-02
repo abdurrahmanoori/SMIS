@@ -12,7 +12,7 @@
 - [x] ShopDto created for read operations
 - [x] ShopCreateDto created for create/update operations
 - [x] All properties properly typed
-- [x] Default values set where appropriate
+- [x] Default values set where appropriate   
 
 ## ✅ Application Layer - Repositories
 
