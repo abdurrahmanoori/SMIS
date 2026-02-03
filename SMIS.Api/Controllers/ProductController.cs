@@ -6,6 +6,7 @@ using SMIS.Application.Features.Products.Commands;
 using SMIS.Application.Features.Products.Queries;
 using SMIS.Api.Controllers.Base;
 using SMIS.Application.Features.Produmscts.Commands;
+using Microsoft.AspNetCore.Authorization;
 
 namespace SMIS.Api.Controllers
 {
@@ -18,6 +19,7 @@ namespace SMIS.Api.Controllers
             HandleResultResponse(await Mediator.Send(new ProductCreateCommand(dto)));
 
         [HttpGet]
+        [Authorize]
         public async Task<ActionResult<PagedList<ProductDto>>> GetAll([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 25, [FromQuery] bool includeCategory = false)
         {
             return HandleResultResponse(await Mediator.Send(new ProductGetListQuery(pageNumber, pageSize, includeCategory)));

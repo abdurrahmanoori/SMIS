@@ -56,6 +56,7 @@ app.UseMiniProfiler();
 app.UseCors("AllowReactApp");
 app.UseHttpsRedirection();
 app.UseAuthentication();
+app.UseMiddleware<UnauthorizedMiddleware>();
 app.UseAuthorization();
 app.MapControllers();
 
