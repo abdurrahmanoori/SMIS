@@ -1,6 +1,5 @@
 using FluentValidation.AspNetCore;
 using SMIS.Api.Converters;
-using SMIS.Api.Extensions;
 using SMIS.Application.Extensions;
 using SMIS.Domain.Enums;
 using SMIS.Infrastructure.Extensions;
@@ -15,6 +14,7 @@ using System.Text;
 using SMIS.Application.Identity.IServices;
 using SMIS.Application.Services;
 using SMIS.Api.Middleware;
+using SMIS.Api.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -60,17 +60,32 @@ builder.Services.AddMiniProfilerServices();
 var app = builder.Build();
 
 // Configure middleware pipeline
+// Exception handling should be first
 app.UseMiddleware<ExceptionMiddleware>();
+
+// Development tools
 app.UseSwaggerWithUI(app.Environment);
 app.UseMiniProfiler();
+
+// CORS before authentication
 app.UseCors("AllowReactApp");
+
+// HTTPS redirection
 app.UseHttpsRedirection();
+
+// Routing
 app.UseRouting();
-app.UseMiddleware<RequestResponseLoggingMiddleware>();
+
+// Logging middleware after routing but before authentication
 app.UseMiddleware<LogEnrichmentMiddleware>();
+app.UseMiddleware<RequestResponseLoggingMiddleware>();
+
+// Authentication and authorization
 app.UseAuthentication();
 app.UseMiddleware<UnauthorizedMiddleware>();
 app.UseAuthorization();
+
+// Controllers mapping
 app.MapControllers();
 
 app.Run();
