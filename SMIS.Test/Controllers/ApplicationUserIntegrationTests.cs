@@ -27,7 +27,7 @@ public class ApplicationUserIntegrationTests : BaseIntegrationTest
 
     private async Task<UserDto> CreateApplicationUserAsync(UserCreateDto dto, string testName)
     {
-        var response = await Client.PostAsJsonAsync(ApiEndpoints.Account, dto);
+        var response = await Client.PostAsJsonAsync($"{ApiEndpoints.Account}/register", dto);
         await LogIfError(response, testName);
         response.EnsureSuccessStatusCode();
         return (await response.Content.ReadFromJsonAsync<UserDto>())!;
@@ -35,7 +35,7 @@ public class ApplicationUserIntegrationTests : BaseIntegrationTest
 
     private async Task<HttpResponseMessage> CreateApplicationUserResponseAsync(UserCreateDto dto, string testName)
     {
-        var response = await Client.PostAsJsonAsync(ApiEndpoints.Account, dto);
+        var response = await Client.PostAsJsonAsync($"{ApiEndpoints.Account}/register", dto);
         await LogIfError(response, testName);
         return response;
     }
@@ -140,7 +140,7 @@ public class ApplicationUserIntegrationTests : BaseIntegrationTest
     public async Task Get_ApplicationUserById_Existing_ReturnsApplicationUser()
     {
         var createDto = _dataHelper.CreateApplicationUserBuilder().Build();
-        var created = await PostAndGetAsync<UserDto>(ApiEndpoints.Account, createDto, "Get_ApplicationUserById_Seed");
+        var created = await PostAndGetAsync<UserDto>($"{ApiEndpoints.Account}/register", createDto, "Get_ApplicationUserById_Seed");
         created.ShouldNotBeNull();
 
         var getResponse = await Client.GetAsync($"{ApiEndpoints.Account}/{created!.Id}");
@@ -166,7 +166,7 @@ public class ApplicationUserIntegrationTests : BaseIntegrationTest
     public async Task Put_UpdateExistingApplicationUser_ReturnsUpdatedApplicationUser()
     {
         var createDto = _dataHelper.CreateApplicationUserBuilder().Build();
-        var created = await PostAndGetAsync<UserDto>(ApiEndpoints.Account, createDto, "Put_UpdateApplicationUser_Seed");
+        var created = await PostAndGetAsync<UserDto>($"{ApiEndpoints.Account}/register", createDto, "Put_UpdateApplicationUser_Seed");
         created.ShouldNotBeNull();
 
         var updateDto = _dataHelper.CreateApplicationUserBuilder()
@@ -195,7 +195,7 @@ public class ApplicationUserIntegrationTests : BaseIntegrationTest
     public async Task Delete_ExistingApplicationUser_ReturnsOk()
     {
         var createDto = _dataHelper.CreateApplicationUserBuilder().Build();
-        var created = await PostAndGetAsync<UserDto>(ApiEndpoints.Account, createDto, "Delete_ExistingApplicationUser_Seed");
+        var created = await PostAndGetAsync<UserDto>($"{ApiEndpoints.Account}/register", createDto, "Delete_ExistingApplicationUser_Seed");
         created.ShouldNotBeNull();
 
         var deleteResponse = await Client.DeleteAsync($"{ApiEndpoints.Account}/{created!.Id}");
@@ -333,7 +333,7 @@ public class ApplicationUserIntegrationTests : BaseIntegrationTest
     public async Task Put_UpdateApplicationUserEmail_ReturnsUpdatedEmail()
     {
         var createDto = _dataHelper.CreateApplicationUserBuilder().WithEmail("original@test.com").Build();
-        var created = await PostAndGetAsync<UserDto>(ApiEndpoints.Account, createDto, "Put_UpdateApplicationUserEmail_Seed");
+        var created = await PostAndGetAsync<UserDto>($"{ApiEndpoints.Account}/register", createDto, "Put_UpdateApplicationUserEmail_Seed");
         created.ShouldNotBeNull();
 
         var updateDto = _dataHelper.CreateApplicationUserBuilder().WithEmail("updated@test.com").Build();
@@ -372,7 +372,7 @@ public class ApplicationUserIntegrationTests : BaseIntegrationTest
     public async Task Put_UpdateApplicationUserPhoneNumber_ReturnsUpdatedPhoneNumber()
     {
         var createDto = _dataHelper.CreateApplicationUserBuilder().WithPhoneNumber("+1234567890").Build();
-        var created = await PostAndGetAsync<UserDto>(ApiEndpoints.Account, createDto, "Put_UpdateApplicationUserPhoneNumber_Seed");
+        var created = await PostAndGetAsync<UserDto>($"{ApiEndpoints.Account}/register", createDto, "Put_UpdateApplicationUserPhoneNumber_Seed");
         created.ShouldNotBeNull();
 
         var updateDto = _dataHelper.CreateApplicationUserBuilder().WithPhoneNumber("+0987654321").Build();
