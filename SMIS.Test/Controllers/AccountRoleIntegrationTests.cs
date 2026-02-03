@@ -28,7 +28,7 @@ public class AccountRoleIntegrationTests : BaseIntegrationTest
     public async Task Post_AssignRolesToUser_ReturnsOk()
     {
         var createDto = _dataHelper.CreateApplicationUserBuilder().Build();
-        var user = await PostAndGetAsync<UserDto>(ApiEndpoints.Account, createDto, "Post_AssignRolesToUser_CreateUser");
+        var user = await PostAndGetAsync<UserDto>($"{ApiEndpoints.Account}/register", createDto, "Post_AssignRolesToUser_CreateUser");
         user.ShouldNotBeNull();
 
         var roles = new[] { "Admin", "Manager" };
@@ -42,7 +42,7 @@ public class AccountRoleIntegrationTests : BaseIntegrationTest
     public async Task Get_UserRoles_ReturnsRolesList()
     {
         var createDto = _dataHelper.CreateApplicationUserBuilder().Build();
-        var user = await PostAndGetAsync<UserDto>(ApiEndpoints.Account, createDto, "Get_UserRoles_CreateUser");
+        var user = await PostAndGetAsync<UserDto>($"{ApiEndpoints.Account}/register", createDto, "Get_UserRoles_CreateUser");
         user.ShouldNotBeNull();
 
         var roles = new[] { "Admin", "User" };
@@ -61,7 +61,7 @@ public class AccountRoleIntegrationTests : BaseIntegrationTest
     public async Task Delete_RemoveRoleFromUser_ReturnsOk()
     {
         var createDto = _dataHelper.CreateApplicationUserBuilder().Build();
-        var user = await PostAndGetAsync<UserDto>(ApiEndpoints.Account, createDto, "Delete_RemoveRoleFromUser_CreateUser");
+        var user = await PostAndGetAsync<UserDto>($"{ApiEndpoints.Account}/register", createDto, "Delete_RemoveRoleFromUser_CreateUser");
         user.ShouldNotBeNull();
 
         var roles = new[] { "Admin", "Manager" };
