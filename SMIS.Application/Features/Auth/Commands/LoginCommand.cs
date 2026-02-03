@@ -55,7 +55,10 @@ namespace SMIS.Application.Features.Auth.Commands
             };
 
             if (!string.IsNullOrEmpty(user.ShopId))
-                claims.Add(new Claim("ShopId", user.ShopId));
+                claims.Add(new Claim(nameof(ApplicationUser.ShopId), user.ShopId));
+
+            if (!string.IsNullOrEmpty(user.LanguageId))
+                claims.Add(new Claim(nameof(ApplicationUser.LanguageId), user.LanguageId));
 
             claims.AddRange(roles.Select(role => new Claim(ClaimTypes.Role, role)));
 

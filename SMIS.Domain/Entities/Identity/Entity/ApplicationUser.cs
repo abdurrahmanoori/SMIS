@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Identity;
 using SMIS.Domain.Common.Interfaces;
+using SMIS.Domain.Entities.Localization;
 using SMIS.Domain.Enums;
 using SMIS.Domain.Exceptions;
 
@@ -11,6 +12,7 @@ public class ApplicationUser : IdentityUser<string>, IEntityPK
     public string? FirstName { get; private set; }
     public string? LastName { get; private set; }
     public string ShopId { get; private set; } = string.Empty;
+    public string LanguageId { get; private set; } = "1";
     public string? ShopName { get; set; }
     public int Version { get; set; }
     public EntityStateEnum EntityState { get; set; }
@@ -18,15 +20,17 @@ public class ApplicationUser : IdentityUser<string>, IEntityPK
 
     // Navigation Properties
     public virtual Shop Shop { get; set; } = null!;
+    public virtual Language Language { get; set; } = null!;
 
     internal ApplicationUser() { } // EF Core & Seeding
 
-    public static ApplicationUser Create(string userName, string email, string shopId, string? firstName = null, string? lastName = null, string? phoneNumber = null)
+    public static ApplicationUser Create(string userName, string email, string shopId, string? firstName = null, string? lastName = null, string? phoneNumber = null, string? languageId = null)
     {
         var user = new ApplicationUser();
         user.SetUserName(userName);
         user.SetEmail(email);
         user.SetShopId(shopId);
+        user.SetLanguageId(languageId ?? "1");
         user.SetFirstName(firstName);
         user.SetLastName(lastName);
         user.SetPhoneNumber(phoneNumber);
@@ -88,6 +92,14 @@ public class ApplicationUser : IdentityUser<string>, IEntityPK
         {
             PhoneNumber = null;
         }
+    }
+
+    public void SetLanguageId(string languageId)
+    {
+        if (string.IsNullOrWhiteSpace(languageId))
+            throw new DomainValidationException("Language ID cannot be empty");
+
+        LanguageId = languageId;
     }
 
     public void ConfirmEmail() => EmailConfirmed = true;
