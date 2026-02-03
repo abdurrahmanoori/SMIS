@@ -22,6 +22,8 @@ namespace SMIS.Api.Controllers
         [Authorize]
         public async Task<ActionResult<PagedList<ProductDto>>> GetAll([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 25, [FromQuery] bool includeCategory = false)
         {
+            var userAgent = HttpContext.Request.Headers["User-Agent"].ToString();
+            var resu = HttpContext;
             return HandleResultResponse(await Mediator.Send(new ProductGetListQuery(pageNumber, pageSize, includeCategory)));
         }
 

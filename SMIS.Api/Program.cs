@@ -7,6 +7,14 @@ using SMIS.Infrastructure.Extensions;
 using SMIS.Infrastructure.Context;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Microsoft.AspNetCore.Identity;
+using SMIS.Domain.Entities.Identity.Entity;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using SMIS.Application.Identity.IServices;
+using SMIS.Application.Services;
+using SMIS.Api.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -39,6 +47,9 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.ConfigurePersistenceServices(builder.Configuration,builder.Environment);
 builder.Services.ConfigureApplicationServices();
 builder.Services.ConfigureIdentityServices<AppDbContext>(builder.Configuration);
+
+builder.Services.AddScoped<ICurrentUser, CurrentUser>();
+
 var enf = builder.Environment.EnvironmentName;
 // Add database logging
 builder.Services.AddDatabaseLogging();
@@ -49,12 +60,14 @@ builder.Services.AddMiniProfilerServices();
 var app = builder.Build();
 
 // Configure middleware pipeline
-app.UseExceptionLogging();
-
+app.UseMiddleware<ExceptionMiddleware>();
 app.UseSwaggerWithUI(app.Environment);
 app.UseMiniProfiler();
 app.UseCors("AllowReactApp");
 app.UseHttpsRedirection();
+app.UseRouting();
+app.UseMiddleware<RequestResponseLoggingMiddleware>();
+app.UseMiddleware<LogEnrichmentMiddleware>();
 app.UseAuthentication();
 app.UseMiddleware<UnauthorizedMiddleware>();
 app.UseAuthorization();
