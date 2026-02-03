@@ -16,7 +16,7 @@ public static class IdentityServicesRegistration
     public static IServiceCollection ConfigureIdentityServices<TContext>(this IServiceCollection services, IConfiguration configuration)
         where TContext : DbContext
     {
-        services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
+        services.AddIdentityCore<ApplicationUser>(options =>
         {
             options.Password.RequireDigit = false;
             options.Password.RequireLowercase = false;
@@ -24,6 +24,7 @@ public static class IdentityServicesRegistration
             options.Password.RequireUppercase = false;
             options.Password.RequiredLength = 6;
         })
+        .AddRoles<ApplicationRole>()
         .AddEntityFrameworkStores<TContext>()
         .AddDefaultTokenProviders();
 
@@ -31,6 +32,7 @@ public static class IdentityServicesRegistration
         {
             options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
             options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
         })
         .AddJwtBearer(options =>
         {
