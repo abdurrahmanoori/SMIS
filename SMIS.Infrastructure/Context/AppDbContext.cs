@@ -39,6 +39,7 @@ public partial class AppDbContext : IdentityDbContext<ApplicationUser, Applicati
 
         #region Seed Database
         ProductUnitSeed.DataSeed(modelBuilder);
+        ProductPriceSeed.DataSeed(modelBuilder);
         StockBatchSeed.DataSeed(modelBuilder);
         StockTransactionSeed.DataSeed(modelBuilder);
         #endregion
@@ -69,6 +70,7 @@ public partial class AppDbContext : IdentityDbContext<ApplicationUser, Applicati
     public DbSet<Product> Products { get; set; }
     public DbSet<Category> Categories { get; set; }
     public DbSet<ProductUnit> ProductUnits { get; set; }
+    public DbSet<ProductPrice> ProductPrices { get; set; }
     public DbSet<StockBatch> StockBatches { get; set; }
     public DbSet<StockTransaction> StockTransactions { get; set; }
     public DbSet<ApplicationUserRole> UserRoles { get; set; }

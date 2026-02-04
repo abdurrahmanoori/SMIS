@@ -25,6 +25,7 @@ public class Product : BaseAuditableEntity, IEntity
     public UnitOfMeasure UnitOfMeasure { get; set; } = null!;
     public virtual Category? Category { get; set; }
     public virtual ICollection<ProductUnit> ProductUnits { get; set; } = new List<ProductUnit>();
+    public virtual ICollection<ProductPrice> ProductPrices { get; set; } = new List<ProductPrice>();
 
     internal Product() { } // EF Core & Seeding
 

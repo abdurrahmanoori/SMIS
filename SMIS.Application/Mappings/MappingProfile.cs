@@ -18,6 +18,7 @@ using SMIS.Domain.Entities.Localization;
 using SMIS.Domain.Entities.LocationEntities;
 using SMIS.Domain.Entities.Identity.Entity;
 using SMIS.Domain.Enums;
+using SMIS.Application.DTO.ProductPrices;
 
 namespace SMIS.Application.Mappings;
 
@@ -155,6 +156,20 @@ public class MappingProfile : Profile
                 src.UnitOfMeasureId,
                 src.ConversionFactor
             ));
+
+        // ProductPrice mapping
+        CreateMap<ProductPrice, ProductPriceDto>().ReverseMap();
+        CreateMap<ProductPriceCreateDto, ProductPrice>()
+            .ConstructUsing(src => ProductPrice.Create(
+                src.ProductId,
+                src.Price,
+                src.EffectiveDate
+            ))
+            .AfterMap((src, dest) =>
+            {
+                dest.SetEndDate(src.EndDate);
+                if (src.IsActive) dest.Activate(); else dest.Deactivate();
+            });
 
         // TranslationKey mapping
         CreateMap<TranslationKey, TranslationKeyDto>().ReverseMap();
