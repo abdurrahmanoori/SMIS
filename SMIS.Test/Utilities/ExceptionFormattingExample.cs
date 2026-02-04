@@ -16,6 +16,7 @@ namespace SMIS.Test.Utilities
 
         public ExceptionFormattingExample(CustomWebApplicationFactory factory, ITestOutputHelper output)
         {
+
             _factory = factory;
             _client = factory.CreateClient();
             _output = output;

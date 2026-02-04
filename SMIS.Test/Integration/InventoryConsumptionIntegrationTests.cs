@@ -29,6 +29,8 @@ public class InventoryConsumptionIntegrationTests : BaseIntegrationTest
 
     public override async Task InitializeAsync()
     {
+        await TokenHelper.SetAuthorizationHeaderAsync();
+
         await _productHelper.GetOrCreateDependencies();
         await _stockBatchHelper.GetOrCreateDependencies();
         await _stockTransactionHelper.GetOrCreateDependencies();
