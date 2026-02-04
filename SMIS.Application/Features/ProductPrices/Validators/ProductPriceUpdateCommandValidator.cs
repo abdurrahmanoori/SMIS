@@ -1,0 +1,27 @@
+using FluentValidation;
+using SMIS.Application.Features.ProductPrices.Commands;
+
+namespace SMIS.Application.Features.ProductPrices.Validators;
+
+public class ProductPriceUpdateCommandValidator : AbstractValidator<ProductPriceUpdateCommand>
+{
+    public ProductPriceUpdateCommandValidator()
+    {
+        RuleFor(x => x.Id)
+            .NotEmpty().WithMessage("Id is required");
+
+        RuleFor(x => x.ProductPriceCreateDto.ProductId)
+            .NotEmpty().WithMessage("ProductId is required");
+
+        RuleFor(x => x.ProductPriceCreateDto.Price)
+            .GreaterThanOrEqualTo(0).WithMessage("Price must be non-negative");
+
+        RuleFor(x => x.ProductPriceCreateDto.EffectiveDate)
+            .NotEmpty().WithMessage("EffectiveDate is required");
+
+        RuleFor(x => x.ProductPriceCreateDto.EndDate)
+            .GreaterThanOrEqualTo(x => x.ProductPriceCreateDto.EffectiveDate)
+            .WithMessage("EndDate must be greater than or equal to EffectiveDate")
+            .When(x => x.ProductPriceCreateDto.EndDate.HasValue);
+    }
+}

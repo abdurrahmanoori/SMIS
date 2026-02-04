@@ -67,6 +67,9 @@ app.UseMiddleware<ExceptionMiddleware>();
 app.UseSwaggerWithUI(app.Environment);
 app.UseMiniProfiler();
 
+// Serve static files for theme assets
+app.UseStaticFiles();
+
 // CORS before authentication
 app.UseCors("AllowReactApp");
 

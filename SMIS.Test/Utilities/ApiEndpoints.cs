@@ -3,6 +3,7 @@ namespace SMIS.Test.Utilities;
 public static class ApiEndpoints
 {
     public const string Product = "/api/product";
+    public const string ProductPrice = "/api/productprice";
     public const string Category = "/api/category";
     public const string UnitOfMeasure = "/api/unitofmeasure";
     public const string ProductUnit = "/api/productunit";
