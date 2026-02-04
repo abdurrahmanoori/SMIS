@@ -18,7 +18,6 @@ namespace SMIS.Api.Controllers
             HandleResultResponse(await Mediator.Send(new CustomerCreateCommand(dto)));
 
         [HttpGet]
-        [Authorize]
         public async Task<ActionResult<PagedList<CustomerDto>>> GetAll([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 25, [FromQuery] bool includeShop = false)
         {
             return HandleResultResponse(await Mediator.Send(new CustomerGetListQuery(pageNumber, pageSize, includeShop)));

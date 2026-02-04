@@ -27,11 +27,11 @@ namespace SMIS.Application.Features.Customers.Validators
                 .MaximumLength(100).WithMessage("Email must not exceed 100 characters")
                 .When(x => !string.IsNullOrEmpty(x.CustomerCreateDto.Email));
 
-            RuleFor(x => x.CustomerCreateDto.PhoneNumber)
-                .MinimumLength(8).WithMessage("Phone number must be at least 8 characters")
-                .MaximumLength(20).WithMessage("Phone number must not exceed 20 characters")
-                .Matches(@"^\\+?[\\d\\s\\-()]+$").WithMessage("Invalid phone number format")
-                .When(x => !string.IsNullOrEmpty(x.CustomerCreateDto.PhoneNumber));
+            //RuleFor(x => x.CustomerCreateDto.PhoneNumber)
+            //    .MinimumLength(8).WithMessage("Phone number must be at least 8 characters")
+            //    .MaximumLength(20).WithMessage("Phone number must not exceed 20 characters")
+            //    .Matches(@"^\\+?[\\d\\s\\-()]+$").WithMessage("Invalid phone number format")
+            //    .When(x => !string.IsNullOrEmpty(x.CustomerCreateDto.PhoneNumber));
 
             RuleFor(x => x.CustomerCreateDto.Address)
                 .MaximumLength(500).WithMessage("Address must not exceed 500 characters")
@@ -43,13 +43,6 @@ namespace SMIS.Application.Features.Customers.Validators
                 .Matches(@"^[A-Z0-9\\-]+$").WithMessage("Tax number can only contain letters, numbers, and hyphens")
                 .When(x => !string.IsNullOrEmpty(x.CustomerCreateDto.TaxNumber));
 
-            RuleFor(x => x.CustomerCreateDto.ProvinceId)
-                .MaximumLength(50).WithMessage("ProvinceId must not exceed 50 characters")
-                .When(x => !string.IsNullOrEmpty(x.CustomerCreateDto.ProvinceId));
-
-            RuleFor(x => x.CustomerCreateDto.DistrictId)
-                .MaximumLength(50).WithMessage("DistrictId must not exceed 50 characters")
-                .When(x => !string.IsNullOrEmpty(x.CustomerCreateDto.DistrictId));
         }
     }
 }
