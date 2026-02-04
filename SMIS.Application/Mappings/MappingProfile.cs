@@ -19,6 +19,7 @@ using SMIS.Domain.Entities.LocationEntities;
 using SMIS.Domain.Entities.Identity.Entity;
 using SMIS.Domain.Enums;
 using SMIS.Application.DTO.ProductPrices;
+using SMIS.Application.DTO.Customers;
 
 namespace SMIS.Application.Mappings;
 
@@ -205,6 +206,23 @@ public class MappingProfile : Profile
                 src.Type,
                 src.TransactionDate,
                 src.Reference
+            ));
+
+        // Customer mapping
+        CreateMap<Customer, CustomerDto>().ReverseMap();
+        CreateMap<CustomerCreateDto, Customer>()
+            .ConstructUsing(src => Customer.Create(
+                src.FirstName,
+                src.ShopId,
+                src.LastName,
+                src.FatherName,
+                src.Email,
+                src.PhoneNumber,
+                src.Address,
+                src.TaxNumber,
+                src.ProvinceId,
+                src.DistrictId,
+                src.IsActive
             ));
     }
 

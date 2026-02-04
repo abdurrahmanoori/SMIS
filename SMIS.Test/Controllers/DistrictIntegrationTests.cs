@@ -15,12 +15,14 @@ namespace SMIS.Test.Controllers
         private readonly CustomWebApplicationFactory _factory;
         private readonly HttpClient _client;
         private readonly ITestOutputHelper _output;
+        private readonly JwtTokenHelper _tokenHelper;
 
         public DistrictIntegrationTests(CustomWebApplicationFactory factory, ITestOutputHelper output)
         {
             _factory = factory;
             _client = factory.CreateClient();
             _output = output;
+            _tokenHelper = new JwtTokenHelper(_client);
         }
 
         private async Task LogIfError(HttpResponseMessage response, string context = "")
@@ -36,7 +38,10 @@ namespace SMIS.Test.Controllers
             }
         }
 
-        public Task InitializeAsync() => Task.CompletedTask;
+        public async Task InitializeAsync()
+        {
+            await _tokenHelper.SetAuthorizationHeaderAsync();
+        }
         public Task DisposeAsync() => Task.CompletedTask;
 
         [Fact]

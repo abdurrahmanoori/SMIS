@@ -11,12 +11,14 @@ public abstract class BaseIntegrationTest : IClassFixture<CustomWebApplicationFa
     protected readonly CustomWebApplicationFactory Factory;
     protected readonly HttpClient Client;
     protected readonly ITestOutputHelper Output;
+    protected readonly JwtTokenHelper TokenHelper;
 
     protected BaseIntegrationTest(CustomWebApplicationFactory factory, ITestOutputHelper output)
     {
         Factory = factory;
         Client = factory.CreateClient();
         Output = output;
+        TokenHelper = new JwtTokenHelper(Client);
     }
 
     protected async Task LogIfError(HttpResponseMessage response, string context = "")

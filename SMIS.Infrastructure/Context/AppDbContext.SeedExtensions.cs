@@ -20,5 +20,6 @@ public partial class AppDbContext
         ShopSeed.DataSeed(modelBuilder);
         ProductSeed.DataSeed(modelBuilder);
         CategorySeed.DataSeed(modelBuilder);
+        CustomerSeed.DataSeed(modelBuilder);
     }
 }

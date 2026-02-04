@@ -11,8 +11,8 @@ using SMIS.Infrastructure.Context;
 namespace SMIS.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260204124415_sdfsdsfsd")]
-    partial class sdfsdsfsd
+    [Migration("20260204164546_sdfmnb")]
+    partial class sdfmnb
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -222,90 +222,428 @@ namespace SMIS.Infrastructure.Migrations
                         {
                             Id = "1",
                             Code = "BEV",
-                            CreatedDate = new DateTime(2026, 2, 4, 17, 14, 15, 364, DateTimeKind.Local).AddTicks(464),
+                            CreatedDate = new DateTime(2026, 2, 4, 21, 15, 45, 91, DateTimeKind.Local).AddTicks(27),
                             Description = "Drinks and beverages",
                             EntityState = "Unchanged",
                             IsActive = true,
                             IsPublic = false,
-                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 17, 14, 15, 364, DateTimeKind.Unspecified).AddTicks(499), new TimeSpan(0, 4, 30, 0, 0)),
+                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 21, 15, 45, 91, DateTimeKind.Unspecified).AddTicks(58), new TimeSpan(0, 4, 30, 0, 0)),
                             Name = "Beverages",
                             ShopId = "1",
-                            UpdatedDate = new DateTime(2026, 2, 4, 17, 14, 15, 364, DateTimeKind.Local).AddTicks(465),
+                            UpdatedDate = new DateTime(2026, 2, 4, 21, 15, 45, 91, DateTimeKind.Local).AddTicks(31),
                             Version = 0
                         },
                         new
                         {
                             Id = "2",
                             Code = "FOOD",
-                            CreatedDate = new DateTime(2026, 2, 4, 17, 14, 15, 365, DateTimeKind.Local).AddTicks(1586),
+                            CreatedDate = new DateTime(2026, 2, 4, 21, 15, 45, 93, DateTimeKind.Local).AddTicks(6776),
                             Description = "Edible products and snacks",
                             EntityState = "Unchanged",
                             IsActive = true,
                             IsPublic = false,
-                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 17, 14, 15, 365, DateTimeKind.Unspecified).AddTicks(1590), new TimeSpan(0, 4, 30, 0, 0)),
+                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 21, 15, 45, 93, DateTimeKind.Unspecified).AddTicks(6786), new TimeSpan(0, 4, 30, 0, 0)),
                             Name = "Food Items",
                             ShopId = "1",
-                            UpdatedDate = new DateTime(2026, 2, 4, 17, 14, 15, 365, DateTimeKind.Local).AddTicks(1589),
+                            UpdatedDate = new DateTime(2026, 2, 4, 21, 15, 45, 93, DateTimeKind.Local).AddTicks(6785),
                             Version = 0
                         },
                         new
                         {
                             Id = "3",
                             Code = "STAT",
-                            CreatedDate = new DateTime(2026, 2, 4, 17, 14, 15, 365, DateTimeKind.Local).AddTicks(1600),
+                            CreatedDate = new DateTime(2026, 2, 4, 21, 15, 45, 93, DateTimeKind.Local).AddTicks(6836),
                             Description = "Office and school supplies",
                             EntityState = "Unchanged",
                             IsActive = true,
                             IsPublic = false,
-                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 17, 14, 15, 365, DateTimeKind.Unspecified).AddTicks(1601), new TimeSpan(0, 4, 30, 0, 0)),
+                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 21, 15, 45, 93, DateTimeKind.Unspecified).AddTicks(6837), new TimeSpan(0, 4, 30, 0, 0)),
                             Name = "Stationery",
                             ShopId = "2",
-                            UpdatedDate = new DateTime(2026, 2, 4, 17, 14, 15, 365, DateTimeKind.Local).AddTicks(1601),
+                            UpdatedDate = new DateTime(2026, 2, 4, 21, 15, 45, 93, DateTimeKind.Local).AddTicks(6837),
                             Version = 0
                         },
                         new
                         {
                             Id = "4",
                             Code = "GROC",
-                            CreatedDate = new DateTime(2026, 2, 4, 17, 14, 15, 365, DateTimeKind.Local).AddTicks(1603),
+                            CreatedDate = new DateTime(2026, 2, 4, 21, 15, 45, 93, DateTimeKind.Local).AddTicks(6840),
                             Description = "Daily household items",
                             EntityState = "Unchanged",
                             IsActive = true,
                             IsPublic = false,
-                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 17, 14, 15, 365, DateTimeKind.Unspecified).AddTicks(1603), new TimeSpan(0, 4, 30, 0, 0)),
+                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 21, 15, 45, 93, DateTimeKind.Unspecified).AddTicks(6841), new TimeSpan(0, 4, 30, 0, 0)),
                             Name = "Grocery",
                             ShopId = "2",
-                            UpdatedDate = new DateTime(2026, 2, 4, 17, 14, 15, 365, DateTimeKind.Local).AddTicks(1603),
+                            UpdatedDate = new DateTime(2026, 2, 4, 21, 15, 45, 93, DateTimeKind.Local).AddTicks(6841),
                             Version = 0
                         },
                         new
                         {
                             Id = "5",
                             Code = "CARE",
-                            CreatedDate = new DateTime(2026, 2, 4, 17, 14, 15, 365, DateTimeKind.Local).AddTicks(1604),
+                            CreatedDate = new DateTime(2026, 2, 4, 21, 15, 45, 93, DateTimeKind.Local).AddTicks(6843),
                             Description = "Health and hygiene products",
                             EntityState = "Unchanged",
                             IsActive = true,
                             IsPublic = false,
-                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 17, 14, 15, 365, DateTimeKind.Unspecified).AddTicks(1605), new TimeSpan(0, 4, 30, 0, 0)),
+                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 21, 15, 45, 93, DateTimeKind.Unspecified).AddTicks(6844), new TimeSpan(0, 4, 30, 0, 0)),
                             Name = "Personal Care",
                             ShopId = "3",
-                            UpdatedDate = new DateTime(2026, 2, 4, 17, 14, 15, 365, DateTimeKind.Local).AddTicks(1605),
+                            UpdatedDate = new DateTime(2026, 2, 4, 21, 15, 45, 93, DateTimeKind.Local).AddTicks(6844),
                             Version = 0
                         },
                         new
                         {
                             Id = "6",
                             Code = "ELEC",
-                            CreatedDate = new DateTime(2026, 2, 4, 17, 14, 15, 365, DateTimeKind.Local).AddTicks(1606),
+                            CreatedDate = new DateTime(2026, 2, 4, 21, 15, 45, 93, DateTimeKind.Local).AddTicks(6846),
                             Description = "Electronic devices and accessories",
                             EntityState = "Unchanged",
                             IsActive = true,
                             IsPublic = false,
-                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 17, 14, 15, 365, DateTimeKind.Unspecified).AddTicks(1606), new TimeSpan(0, 4, 30, 0, 0)),
+                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 21, 15, 45, 93, DateTimeKind.Unspecified).AddTicks(6847), new TimeSpan(0, 4, 30, 0, 0)),
                             Name = "Electronics",
                             ShopId = "3",
-                            UpdatedDate = new DateTime(2026, 2, 4, 17, 14, 15, 365, DateTimeKind.Local).AddTicks(1606),
+                            UpdatedDate = new DateTime(2026, 2, 4, 21, 15, 45, 93, DateTimeKind.Local).AddTicks(6847),
+                            Version = 0
+                        });
+                });
+
+            modelBuilder.Entity("SMIS.Domain.Entities.Customer", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasMaxLength(50)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Address")
+                        .HasMaxLength(500)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("CreatedDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("DeletedBy")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("DistrictId")
+                        .HasMaxLength(50)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Email")
+                        .HasMaxLength(100)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("EntityState")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("FatherName")
+                        .HasMaxLength(100)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("IsPublic")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTimeOffset>("LastModifiedUtc")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("LastName")
+                        .HasMaxLength(100)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("PhoneNumber")
+                        .HasMaxLength(20)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ProvinceId")
+                        .HasMaxLength(50)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ShopId")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ShopName")
+                        .HasMaxLength(200)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("TaxNumber")
+                        .HasMaxLength(20)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("UpdatedDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("Version")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DistrictId");
+
+                    b.HasIndex("Email");
+
+                    b.HasIndex("IsActive");
+
+                    b.HasIndex("IsDeleted");
+
+                    b.HasIndex("PhoneNumber");
+
+                    b.HasIndex("ProvinceId");
+
+                    b.HasIndex("ShopId");
+
+                    b.HasIndex("TaxNumber");
+
+                    b.ToTable("Customers");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "1",
+                            Address = "123 Main St, Phnom Penh",
+                            CreatedDate = new DateTime(2026, 2, 4, 21, 15, 45, 94, DateTimeKind.Local).AddTicks(6136),
+                            DistrictId = "1",
+                            Email = "john.doe@email.com",
+                            EntityState = "Unchanged",
+                            FatherName = "Smith",
+                            FirstName = "John",
+                            IsActive = true,
+                            IsDeleted = false,
+                            IsPublic = false,
+                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 16, 45, 45, 94, DateTimeKind.Unspecified).AddTicks(6182), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastName = "Doe",
+                            PhoneNumber = "+855123456789",
+                            ProvinceId = "1",
+                            ShopId = "1",
+                            ShopName = "Main Store",
+                            TaxNumber = "TAX001",
+                            UpdatedDate = new DateTime(2026, 2, 4, 21, 15, 45, 94, DateTimeKind.Local).AddTicks(6149),
+                            Version = 0
+                        },
+                        new
+                        {
+                            Id = "2",
+                            Address = "456 Oak Ave, Phnom Penh",
+                            CreatedDate = new DateTime(2026, 2, 4, 21, 15, 45, 95, DateTimeKind.Local).AddTicks(9393),
+                            DistrictId = "2",
+                            Email = "jane.smith@email.com",
+                            EntityState = "Unchanged",
+                            FatherName = "Johnson",
+                            FirstName = "Jane",
+                            IsActive = true,
+                            IsDeleted = false,
+                            IsPublic = false,
+                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 16, 45, 45, 95, DateTimeKind.Unspecified).AddTicks(9412), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastName = "Smith",
+                            PhoneNumber = "+855987654321",
+                            ProvinceId = "1",
+                            ShopId = "1",
+                            ShopName = "Main Store",
+                            TaxNumber = "TAX002",
+                            UpdatedDate = new DateTime(2026, 2, 4, 21, 15, 45, 95, DateTimeKind.Local).AddTicks(9400),
+                            Version = 0
+                        },
+                        new
+                        {
+                            Id = "3",
+                            Address = "789 Pine Rd, Phnom Penh",
+                            CreatedDate = new DateTime(2026, 2, 4, 21, 15, 45, 96, DateTimeKind.Local).AddTicks(1892),
+                            DistrictId = "3",
+                            Email = "michael.brown@email.com",
+                            EntityState = "Unchanged",
+                            FatherName = "Davis",
+                            FirstName = "Michael",
+                            IsActive = true,
+                            IsDeleted = false,
+                            IsPublic = false,
+                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 16, 45, 45, 96, DateTimeKind.Unspecified).AddTicks(1906), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastName = "Brown",
+                            PhoneNumber = "+855555123456",
+                            ProvinceId = "2",
+                            ShopId = "1",
+                            ShopName = "Main Store",
+                            UpdatedDate = new DateTime(2026, 2, 4, 21, 15, 45, 96, DateTimeKind.Local).AddTicks(1896),
+                            Version = 0
+                        },
+                        new
+                        {
+                            Id = "4",
+                            Address = "321 Elm St, Siem Reap",
+                            CreatedDate = new DateTime(2026, 2, 4, 21, 15, 45, 96, DateTimeKind.Local).AddTicks(3441),
+                            DistrictId = "1",
+                            Email = "sarah.wilson@email.com",
+                            EntityState = "Unchanged",
+                            FatherName = "Miller",
+                            FirstName = "Sarah",
+                            IsActive = true,
+                            IsDeleted = false,
+                            IsPublic = false,
+                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 16, 45, 45, 96, DateTimeKind.Unspecified).AddTicks(3453), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastName = "Wilson",
+                            PhoneNumber = "+855444987654",
+                            ProvinceId = "3",
+                            ShopId = "2",
+                            ShopName = "Branch Store",
+                            TaxNumber = "TAX003",
+                            UpdatedDate = new DateTime(2026, 2, 4, 21, 15, 45, 96, DateTimeKind.Local).AddTicks(3445),
+                            Version = 0
+                        },
+                        new
+                        {
+                            Id = "5",
+                            Address = "654 Maple Dr, Siem Reap",
+                            CreatedDate = new DateTime(2026, 2, 4, 21, 15, 45, 96, DateTimeKind.Local).AddTicks(3516),
+                            DistrictId = "2",
+                            Email = "david.taylor@email.com",
+                            EntityState = "Unchanged",
+                            FatherName = "Anderson",
+                            FirstName = "David",
+                            IsActive = true,
+                            IsDeleted = false,
+                            IsPublic = false,
+                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 16, 45, 45, 96, DateTimeKind.Unspecified).AddTicks(3519), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastName = "Taylor",
+                            PhoneNumber = "+855333456789",
+                            ProvinceId = "3",
+                            ShopId = "2",
+                            ShopName = "Branch Store",
+                            UpdatedDate = new DateTime(2026, 2, 4, 21, 15, 45, 96, DateTimeKind.Local).AddTicks(3517),
+                            Version = 0
+                        },
+                        new
+                        {
+                            Id = "6",
+                            Address = "987 Cedar Ln, Siem Reap",
+                            CreatedDate = new DateTime(2026, 2, 4, 21, 15, 45, 96, DateTimeKind.Local).AddTicks(3531),
+                            DistrictId = "3",
+                            Email = "lisa.garcia@email.com",
+                            EntityState = "Unchanged",
+                            FatherName = "Martinez",
+                            FirstName = "Lisa",
+                            IsActive = true,
+                            IsDeleted = false,
+                            IsPublic = false,
+                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 16, 45, 45, 96, DateTimeKind.Unspecified).AddTicks(3533), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastName = "Garcia",
+                            PhoneNumber = "+855222123456",
+                            ProvinceId = "4",
+                            ShopId = "2",
+                            ShopName = "Branch Store",
+                            TaxNumber = "TAX004",
+                            UpdatedDate = new DateTime(2026, 2, 4, 21, 15, 45, 96, DateTimeKind.Local).AddTicks(3532),
+                            Version = 0
+                        },
+                        new
+                        {
+                            Id = "7",
+                            Address = "147 Birch St, Battambang",
+                            CreatedDate = new DateTime(2026, 2, 4, 21, 15, 45, 96, DateTimeKind.Local).AddTicks(3547),
+                            DistrictId = "1",
+                            Email = "robert.martinez@email.com",
+                            EntityState = "Unchanged",
+                            FatherName = "Rodriguez",
+                            FirstName = "Robert",
+                            IsActive = true,
+                            IsDeleted = false,
+                            IsPublic = false,
+                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 16, 45, 45, 96, DateTimeKind.Unspecified).AddTicks(3561), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastName = "Martinez",
+                            PhoneNumber = "+855111987654",
+                            ProvinceId = "1",
+                            ShopId = "3",
+                            ShopName = "Warehouse",
+                            UpdatedDate = new DateTime(2026, 2, 4, 21, 15, 45, 96, DateTimeKind.Local).AddTicks(3547),
+                            Version = 0
+                        },
+                        new
+                        {
+                            Id = "8",
+                            Address = "258 Spruce Ave, Battambang",
+                            CreatedDate = new DateTime(2026, 2, 4, 21, 15, 45, 96, DateTimeKind.Local).AddTicks(3572),
+                            DistrictId = "2",
+                            Email = "emily.lopez@email.com",
+                            EntityState = "Unchanged",
+                            FatherName = "Hernandez",
+                            FirstName = "Emily",
+                            IsActive = true,
+                            IsDeleted = false,
+                            IsPublic = false,
+                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 16, 45, 45, 96, DateTimeKind.Unspecified).AddTicks(3575), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastName = "Lopez",
+                            PhoneNumber = "+855666456789",
+                            ProvinceId = "2",
+                            ShopId = "3",
+                            ShopName = "Warehouse",
+                            TaxNumber = "TAX005",
+                            UpdatedDate = new DateTime(2026, 2, 4, 21, 15, 45, 96, DateTimeKind.Local).AddTicks(3573),
+                            Version = 0
+                        },
+                        new
+                        {
+                            Id = "9",
+                            Address = "369 Fir Rd, Battambang",
+                            CreatedDate = new DateTime(2026, 2, 4, 21, 15, 45, 96, DateTimeKind.Local).AddTicks(3587),
+                            DistrictId = "3",
+                            Email = "james.gonzalez@email.com",
+                            EntityState = "Unchanged",
+                            FatherName = "Perez",
+                            FirstName = "James",
+                            IsActive = true,
+                            IsDeleted = false,
+                            IsPublic = false,
+                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 16, 45, 45, 96, DateTimeKind.Unspecified).AddTicks(3589), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastName = "Gonzalez",
+                            PhoneNumber = "+855777123456",
+                            ProvinceId = "3",
+                            ShopId = "3",
+                            ShopName = "Warehouse",
+                            UpdatedDate = new DateTime(2026, 2, 4, 21, 15, 45, 96, DateTimeKind.Local).AddTicks(3588),
+                            Version = 0
+                        },
+                        new
+                        {
+                            Id = "10",
+                            Address = "741 Ash Dr, Battambang",
+                            CreatedDate = new DateTime(2026, 2, 4, 21, 15, 45, 96, DateTimeKind.Local).AddTicks(3599),
+                            DistrictId = "1",
+                            Email = "maria.rodriguez@email.com",
+                            EntityState = "Unchanged",
+                            FatherName = "Sanchez",
+                            FirstName = "Maria",
+                            IsActive = true,
+                            IsDeleted = false,
+                            IsPublic = false,
+                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 16, 45, 45, 96, DateTimeKind.Unspecified).AddTicks(3601), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastName = "Rodriguez",
+                            PhoneNumber = "+855888987654",
+                            ProvinceId = "4",
+                            ShopId = "3",
+                            ShopName = "Warehouse",
+                            TaxNumber = "TAX006",
+                            UpdatedDate = new DateTime(2026, 2, 4, 21, 15, 45, 96, DateTimeKind.Local).AddTicks(3599),
                             Version = 0
                         });
                 });
@@ -595,7 +933,7 @@ namespace SMIS.Infrastructure.Migrations
                         {
                             Id = "1",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "ee84b74d-116f-4066-b0e6-844326380262",
+                            ConcurrencyStamp = "db65493c-3e6f-4de5-b194-37f0e9629c01",
                             Email = "superadmin@smis.com",
                             EmailConfirmed = true,
                             EntityState = "Unchanged",
@@ -606,10 +944,10 @@ namespace SMIS.Infrastructure.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "SUPERADMIN@SMIS.COM",
                             NormalizedUserName = "SUPERADMIN",
-                            PasswordHash = "AQAAAAIAAYagAAAAEPTSmfpos9zFM583iwlfgjUuNW6qhEf7emjakrH3glYvubwkgWvEIaXgWuX3lEbZsQ==",
+                            PasswordHash = "AQAAAAIAAYagAAAAELctAkhMkxxkHr3g1xp8ULSwhlxhY/QE9c1vsfpIsAC0nBe3e9oWSb0gdiRflUiOrQ==",
                             PhoneNumber = "+855123456789",
                             PhoneNumberConfirmed = true,
-                            SecurityStamp = "5e584b68-2df5-48f0-a637-e27523246111",
+                            SecurityStamp = "6a09d362-879d-4c92-8449-02e23d6c57d1",
                             ShopId = "1",
                             ShopName = "Wholesale Shop",
                             TwoFactorEnabled = false,
@@ -620,7 +958,7 @@ namespace SMIS.Infrastructure.Migrations
                         {
                             Id = "2",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "df02ecbb-40b6-42e5-b1a1-b4a2477ae874",
+                            ConcurrencyStamp = "940c030a-a267-42aa-bc5a-8a2c5b06f84a",
                             Email = "wadmin@smis.com",
                             EmailConfirmed = true,
                             EntityState = "Unchanged",
@@ -631,10 +969,10 @@ namespace SMIS.Infrastructure.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "WADMIN@SMIS.COM",
                             NormalizedUserName = "WADMIN",
-                            PasswordHash = "AQAAAAIAAYagAAAAEBtyt6sETDifp6g/0yEsWc1FM7nVS0qrMrR2KzDexNfAKZA9U7LDD5f9nTkutckfjg==",
+                            PasswordHash = "AQAAAAIAAYagAAAAED/mK4Z0nZAcSWBiBbAqqwYcuR9EvQ+h6O5TX1bVo7saHWxjBqp6Efr066VrLoLITw==",
                             PhoneNumber = "+855123456790",
                             PhoneNumberConfirmed = true,
-                            SecurityStamp = "92dd6f67-c246-4aaf-9787-1546bc406734",
+                            SecurityStamp = "992af901-356d-4317-b738-4253b64e0283",
                             ShopId = "1",
                             ShopName = "Wholesale Shop",
                             TwoFactorEnabled = false,
@@ -645,7 +983,7 @@ namespace SMIS.Infrastructure.Migrations
                         {
                             Id = "3",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "facbb78c-690b-4782-b277-ef1bc6ffb67f",
+                            ConcurrencyStamp = "552cf464-11a2-4794-85a4-fae151633926",
                             Email = "wadministration@smis.com",
                             EmailConfirmed = true,
                             EntityState = "Unchanged",
@@ -656,10 +994,10 @@ namespace SMIS.Infrastructure.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "WADMINISTRATION@SMIS.COM",
                             NormalizedUserName = "WADMINISTRATION",
-                            PasswordHash = "AQAAAAIAAYagAAAAEBC8HSjZCfGYiQ7ad50nDndlTLwa0fDm8SRTKKqA4e7MHvsq/4DMTCW5N/IEGX7KIA==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEB4c6E8rkfvBF++wsXmycbr5Oqd8uFEORoDpKlVQxxL8mXzFgcB6VjecTOyJT+d12g==",
                             PhoneNumber = "+855123456791",
                             PhoneNumberConfirmed = true,
-                            SecurityStamp = "4696ae2c-eb12-456c-90f6-881b9eecbd24",
+                            SecurityStamp = "1fef9497-83e0-43c1-b090-9a9a1f01f31a",
                             ShopId = "1",
                             ShopName = "Wholesale Shop",
                             TwoFactorEnabled = false,
@@ -670,7 +1008,7 @@ namespace SMIS.Infrastructure.Migrations
                         {
                             Id = "4",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "fc31b357-9d8a-43bd-b7ca-cf2fcd566616",
+                            ConcurrencyStamp = "73cd26de-f764-4f7c-980b-285f22d21f9c",
                             Email = "wmanager@smis.com",
                             EmailConfirmed = true,
                             EntityState = "Unchanged",
@@ -681,10 +1019,10 @@ namespace SMIS.Infrastructure.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "WMANAGER@SMIS.COM",
                             NormalizedUserName = "WMANAGER",
-                            PasswordHash = "AQAAAAIAAYagAAAAEIVTBYWeiDzwdpn8DrF1fBmZtFGEiZZt+C1KrturElUTbySzF+45FsFOJ+9JCHf+7A==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEHBnUK/ob1hwLPDeSITJGIhv2v0qh6gcoYq9tz/kez18gj3UGZrKpHRBXXag82Rp4g==",
                             PhoneNumber = "+855123456792",
                             PhoneNumberConfirmed = true,
-                            SecurityStamp = "f90dc26e-121b-42d7-9864-b46263aae289",
+                            SecurityStamp = "ef3a3451-eb2d-472a-9669-8a7cf85b2785",
                             ShopId = "1",
                             ShopName = "Wholesale Shop",
                             TwoFactorEnabled = false,
@@ -695,7 +1033,7 @@ namespace SMIS.Infrastructure.Migrations
                         {
                             Id = "5",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "4fbc0175-b424-49b7-846e-74236365e63c",
+                            ConcurrencyStamp = "8688b458-2148-4d64-9a17-6bb4c05b84df",
                             Email = "wstaff@smis.com",
                             EmailConfirmed = true,
                             EntityState = "Unchanged",
@@ -706,10 +1044,10 @@ namespace SMIS.Infrastructure.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "WSTAFF@SMIS.COM",
                             NormalizedUserName = "WSTAFF",
-                            PasswordHash = "AQAAAAIAAYagAAAAECbl4XeAxwT6dd/+Jrm6B6Xcp4cuUaCnL1mjLIgM+oDCDWpGxuzUg+IHrObNzJGgBQ==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEP2T8JqXZFxfg4GRB23IQG2tfzbRk1RJkOUoUb3L7422ojgrULCSWtXxKrDHCQTiGQ==",
                             PhoneNumber = "+855123456793",
                             PhoneNumberConfirmed = true,
-                            SecurityStamp = "7d087796-5781-4ab9-bad7-607702be494a",
+                            SecurityStamp = "7f41ce44-38cd-47b1-b776-6e1a5308ef92",
                             ShopId = "1",
                             ShopName = "Wholesale Shop",
                             TwoFactorEnabled = false,
@@ -720,7 +1058,7 @@ namespace SMIS.Infrastructure.Migrations
                         {
                             Id = "6",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "a0947a9e-b670-4012-a65f-68f6fd381523",
+                            ConcurrencyStamp = "18b76051-8172-4caf-8d98-8d831f8d2bfa",
                             Email = "wviewer@smis.com",
                             EmailConfirmed = true,
                             EntityState = "Unchanged",
@@ -731,10 +1069,10 @@ namespace SMIS.Infrastructure.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "WVIEWER@SMIS.COM",
                             NormalizedUserName = "WVIEWER",
-                            PasswordHash = "AQAAAAIAAYagAAAAEH5WIc7c/DEAUbNyY7bCi+okS/1HiDI2bEp7N4lgR6DSluMCkh5oxoOTCsFd/JiwYg==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEAajJ7SdZ9PPV840TmC2ZcYwQBe3L/hA523DQskSHzRDNvTOFPjlP5Rr3saDXwPf/g==",
                             PhoneNumber = "+855123456794",
                             PhoneNumberConfirmed = true,
-                            SecurityStamp = "a1e1e3a4-4f56-4243-a54d-83da2e96464a",
+                            SecurityStamp = "e7fd76f5-663e-425a-a848-523ff1dfb044",
                             ShopId = "1",
                             ShopName = "Wholesale Shop",
                             TwoFactorEnabled = false,
@@ -745,7 +1083,7 @@ namespace SMIS.Infrastructure.Migrations
                         {
                             Id = "7",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "08bf247e-575e-4da5-9d85-5e2ec333a42c",
+                            ConcurrencyStamp = "e25471e7-40ca-454f-8ee6-49eaac911d42",
                             Email = "weditor@smis.com",
                             EmailConfirmed = true,
                             EntityState = "Unchanged",
@@ -756,10 +1094,10 @@ namespace SMIS.Infrastructure.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "WEDITOR@SMIS.COM",
                             NormalizedUserName = "WEDITOR",
-                            PasswordHash = "AQAAAAIAAYagAAAAEJYqvO03y0vfcOvxoekXSvuvXzhj2to5/fj6fw07l156MXe5YXk1glOuY9o3/q/1bw==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEGqKzmGzKEcTOmB+9qyS8M4jhVGqiGImCh789WE6FWRe8b6tUOqfHHMujpuE5Fe3gw==",
                             PhoneNumber = "+855123456795",
                             PhoneNumberConfirmed = true,
-                            SecurityStamp = "1b30825b-a029-4cee-a2b6-b545fe86d8b5",
+                            SecurityStamp = "0a15a7cd-aed8-4668-9814-9d1355ef9482",
                             ShopId = "1",
                             ShopName = "Wholesale Shop",
                             TwoFactorEnabled = false,
@@ -770,7 +1108,7 @@ namespace SMIS.Infrastructure.Migrations
                         {
                             Id = "8",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "37d211c0-6f1a-479c-a58d-613780d36b4c",
+                            ConcurrencyStamp = "344d2bee-0bf2-4f28-b711-5e86c7c6ab1c",
                             Email = "wuser@smis.com",
                             EmailConfirmed = true,
                             EntityState = "Unchanged",
@@ -781,10 +1119,10 @@ namespace SMIS.Infrastructure.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "WUSER@SMIS.COM",
                             NormalizedUserName = "WUSER",
-                            PasswordHash = "AQAAAAIAAYagAAAAEJt+DCTcE9D7+PDC/itCAqjoJ6D2wlIQ+dq94vnAbo5eQ0RrbN2vgIMwamRht3QMow==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEFviaf3wSxKe8lPtnpEdhzy0nNj0Lx4fDr4jdjoxTjQA0eQjw4KslBAVhY6CiC0HSA==",
                             PhoneNumber = "+855123456796",
                             PhoneNumberConfirmed = true,
-                            SecurityStamp = "9ffad450-a5c0-4fe5-acc6-904aa29b6d7c",
+                            SecurityStamp = "6fc14050-5481-475d-9b10-92f7dc65d1a0",
                             ShopId = "1",
                             ShopName = "Wholesale Shop",
                             TwoFactorEnabled = false,
@@ -795,7 +1133,7 @@ namespace SMIS.Infrastructure.Migrations
                         {
                             Id = "9",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "8fbbb7a4-36ba-4293-8cc8-80b5276944dd",
+                            ConcurrencyStamp = "6c6e77c6-48a5-49c8-8de8-c9b49fef17ba",
                             Email = "radmin@smis.com",
                             EmailConfirmed = true,
                             EntityState = "Unchanged",
@@ -806,10 +1144,10 @@ namespace SMIS.Infrastructure.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "RADMIN@SMIS.COM",
                             NormalizedUserName = "RADMIN",
-                            PasswordHash = "AQAAAAIAAYagAAAAEKQEmBklNXxbGFtaCrYznMLx0gkS2wVsu3nrFDKFFu1uWA21KuIVVNF7iK2SFcMViA==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEHl8otY3ciyG1xXvSkyzqZKZUxVizOCXtq0RZWOmTGP76V+8XYy4t4D/aXfj02mmUg==",
                             PhoneNumber = "+855123456797",
                             PhoneNumberConfirmed = true,
-                            SecurityStamp = "2f10be77-2043-4724-a73a-7c6b7dc964d7",
+                            SecurityStamp = "bbc85a6e-6e14-49bb-8251-8588e6e7bfc5",
                             ShopId = "2",
                             ShopName = "Retail Shop",
                             TwoFactorEnabled = false,
@@ -820,7 +1158,7 @@ namespace SMIS.Infrastructure.Migrations
                         {
                             Id = "10",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "0b19518e-3037-4308-b83d-91bc5f08fa4e",
+                            ConcurrencyStamp = "a62f496f-a631-4dcf-aa10-ca93b9d4c628",
                             Email = "radministration@smis.com",
                             EmailConfirmed = true,
                             EntityState = "Unchanged",
@@ -831,10 +1169,10 @@ namespace SMIS.Infrastructure.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "RADMINISTRATION@SMIS.COM",
                             NormalizedUserName = "RADMINISTRATION",
-                            PasswordHash = "AQAAAAIAAYagAAAAEJf7D3u3/U3hyBY7HWR1m5R/SAk1Xoc7R/ag9oADhcciopDMbg51E/pQzr3pXLh7EA==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEC7kE5VASdIGtgy+IksJfgW4RUYT0B+LfNj6KWF2td1KOSd331sc6Nw2pivGpELh+Q==",
                             PhoneNumber = "+855123456798",
                             PhoneNumberConfirmed = true,
-                            SecurityStamp = "f6afc54f-fb01-444d-8d4b-11f234d7c5de",
+                            SecurityStamp = "b315b88e-de29-4747-ba8a-47d4d5c07044",
                             ShopId = "2",
                             ShopName = "Retail Shop",
                             TwoFactorEnabled = false,
@@ -845,7 +1183,7 @@ namespace SMIS.Infrastructure.Migrations
                         {
                             Id = "11",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "cf01bc16-45bc-4f18-8839-468c4f375b3c",
+                            ConcurrencyStamp = "9b4be7ec-df3d-4daa-83f2-71a324325684",
                             Email = "rmanager@smis.com",
                             EmailConfirmed = true,
                             EntityState = "Unchanged",
@@ -856,10 +1194,10 @@ namespace SMIS.Infrastructure.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "RMANAGER@SMIS.COM",
                             NormalizedUserName = "RMANAGER",
-                            PasswordHash = "AQAAAAIAAYagAAAAEGLyjLn7HiK93DAN7VYIT4eKujkJlb0uGndF00TvBAb06VhPUrDljnGv///NALowBw==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEIALuX6bkkIp4JChCRmKcYBC0jVjcpwl7n26jRPz6NlOMCKtTU8ktC2wk74OdfCgrw==",
                             PhoneNumber = "+855123456799",
                             PhoneNumberConfirmed = true,
-                            SecurityStamp = "1071fd06-8a3e-4838-8a68-df4fd48c1bc3",
+                            SecurityStamp = "a9de5cf5-d22a-4bbd-8711-c142889c6137",
                             ShopId = "2",
                             ShopName = "Retail Shop",
                             TwoFactorEnabled = false,
@@ -870,7 +1208,7 @@ namespace SMIS.Infrastructure.Migrations
                         {
                             Id = "12",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "ff50ac82-f938-4eb6-befd-51e0214a8bad",
+                            ConcurrencyStamp = "be72a797-c37a-493a-86c2-a13af2363653",
                             Email = "rstaff@smis.com",
                             EmailConfirmed = true,
                             EntityState = "Unchanged",
@@ -881,10 +1219,10 @@ namespace SMIS.Infrastructure.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "RSTAFF@SMIS.COM",
                             NormalizedUserName = "RSTAFF",
-                            PasswordHash = "AQAAAAIAAYagAAAAEJJCW/Dm0/HjZM4xEakPfVQkKcURQ4ENOwK7mNoWoeVeY3EAxFvGZfjEW6yIlCF+Xw==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEG5tvgJpIiPgmyYVpGB3Ra9fjNInh7joUzF1PX3Bp6JaQExtwiPxor7lX4L9PJkRVw==",
                             PhoneNumber = "+855123456800",
                             PhoneNumberConfirmed = true,
-                            SecurityStamp = "73d8ca49-eeb9-4d24-9651-ad8e7c538d62",
+                            SecurityStamp = "1bd00f76-19fd-406b-8bae-0d746cc61aa0",
                             ShopId = "2",
                             ShopName = "Retail Shop",
                             TwoFactorEnabled = false,
@@ -895,7 +1233,7 @@ namespace SMIS.Infrastructure.Migrations
                         {
                             Id = "13",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "3d3dc989-e799-4e65-a6d2-814017b0781f",
+                            ConcurrencyStamp = "93d3f83b-ff48-4778-8570-30eddfa8d9cf",
                             Email = "rviewer@smis.com",
                             EmailConfirmed = true,
                             EntityState = "Unchanged",
@@ -906,10 +1244,10 @@ namespace SMIS.Infrastructure.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "RVIEWER@SMIS.COM",
                             NormalizedUserName = "RVIEWER",
-                            PasswordHash = "AQAAAAIAAYagAAAAEJnolqtkmi2Kg5q6IqmpWOnlU7SZBhzSf5Mynlp39MDGW8q4/fkteh7ymUNVgCYRtw==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEPPB/B0gEYB31uQ9uLV5eDUNpBZSBWpPv4BUkuOIF3YAyKfAgxTMZPqAuix2IFb6LA==",
                             PhoneNumber = "+855123456801",
                             PhoneNumberConfirmed = true,
-                            SecurityStamp = "338a12ee-436c-4062-a4d8-0ec0d4263ecf",
+                            SecurityStamp = "e71d61e7-ebf5-4f89-96b9-7a07e0af0c7e",
                             ShopId = "2",
                             ShopName = "Retail Shop",
                             TwoFactorEnabled = false,
@@ -920,7 +1258,7 @@ namespace SMIS.Infrastructure.Migrations
                         {
                             Id = "14",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "7114f0d4-715c-4314-9978-fb491c139278",
+                            ConcurrencyStamp = "c292f40a-d277-4f21-ba4f-cc336653e9ac",
                             Email = "reditor@smis.com",
                             EmailConfirmed = true,
                             EntityState = "Unchanged",
@@ -931,10 +1269,10 @@ namespace SMIS.Infrastructure.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "REDITOR@SMIS.COM",
                             NormalizedUserName = "REDITOR",
-                            PasswordHash = "AQAAAAIAAYagAAAAEL4S8VH3lC6ORmcdCere4TIbMasOJ9hNr7hs/M/TBP0zMMJTUyIpsbfhlyUhJWnFJg==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEOH1DNQK62s439ZciuyZdJNRvt00rheyeX2OpWAYrM0HtN//DpJTPYDd+JC/SRkeOA==",
                             PhoneNumber = "+855123456802",
                             PhoneNumberConfirmed = true,
-                            SecurityStamp = "2440fe5c-032a-4fac-ab6f-45853d45ceb1",
+                            SecurityStamp = "2a55c55e-6df6-44c8-bea3-a964dd28be96",
                             ShopId = "2",
                             ShopName = "Retail Shop",
                             TwoFactorEnabled = false,
@@ -945,7 +1283,7 @@ namespace SMIS.Infrastructure.Migrations
                         {
                             Id = "15",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "f9e9a8bf-911d-4e2b-bf85-cae1cc641ae2",
+                            ConcurrencyStamp = "3d43f3f9-6c2e-4d7a-97e6-65f988737315",
                             Email = "ruser@smis.com",
                             EmailConfirmed = true,
                             EntityState = "Unchanged",
@@ -956,10 +1294,10 @@ namespace SMIS.Infrastructure.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "RUSER@SMIS.COM",
                             NormalizedUserName = "RUSER",
-                            PasswordHash = "AQAAAAIAAYagAAAAEO8oiCS02nsWACy1L6tMNCHzAQ2SHE1Bj+iQDhNDMmCnqnJBqsNrdtwQrFLuPwtylQ==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEBu4qr3AXSbsMpSli8kp2B3yM973WEsrmcFrzAjYeTd1znDvgi4IvfXE6CKvIeOPaA==",
                             PhoneNumber = "+855123456803",
                             PhoneNumberConfirmed = true,
-                            SecurityStamp = "0daee5a7-bc03-4fe8-b51c-e409e9166d1e",
+                            SecurityStamp = "163010e4-7301-4172-a743-77c537ad193b",
                             ShopId = "2",
                             ShopName = "Retail Shop",
                             TwoFactorEnabled = false,
@@ -1139,7 +1477,7 @@ namespace SMIS.Infrastructure.Migrations
                             Code = "en",
                             EntityState = "Added",
                             IsActive = true,
-                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 12, 44, 15, 357, DateTimeKind.Unspecified).AddTicks(5019), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 16, 45, 45, 79, DateTimeKind.Unspecified).AddTicks(6124), new TimeSpan(0, 0, 0, 0, 0)),
                             Name = "English",
                             Version = 0
                         },
@@ -1149,7 +1487,7 @@ namespace SMIS.Infrastructure.Migrations
                             Code = "ps",
                             EntityState = "Added",
                             IsActive = true,
-                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 12, 44, 15, 357, DateTimeKind.Unspecified).AddTicks(5322), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 16, 45, 45, 79, DateTimeKind.Unspecified).AddTicks(6965), new TimeSpan(0, 0, 0, 0, 0)),
                             Name = "Pashto",
                             Version = 0
                         },
@@ -1159,7 +1497,7 @@ namespace SMIS.Infrastructure.Migrations
                             Code = "fa",
                             EntityState = "Added",
                             IsActive = true,
-                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 12, 44, 15, 357, DateTimeKind.Unspecified).AddTicks(5349), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 16, 45, 45, 79, DateTimeKind.Unspecified).AddTicks(6970), new TimeSpan(0, 0, 0, 0, 0)),
                             Name = "Farsi",
                             Version = 0
                         });
@@ -1221,157 +1559,157 @@ namespace SMIS.Infrastructure.Migrations
                         new
                         {
                             Id = "1",
-                            CreatedDate = new DateTime(2026, 2, 4, 17, 14, 15, 358, DateTimeKind.Local).AddTicks(751),
+                            CreatedDate = new DateTime(2026, 2, 4, 21, 15, 45, 80, DateTimeKind.Local).AddTicks(6215),
                             EntityState = "Unchanged",
                             IsPublic = false,
                             LanguageNo = "1",
-                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 12, 44, 15, 358, DateTimeKind.Unspecified).AddTicks(764), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 16, 45, 45, 80, DateTimeKind.Unspecified).AddTicks(6234), new TimeSpan(0, 0, 0, 0, 0)),
                             Name = "Kabul Center District",
                             TranslationKeyId = "1",
-                            UpdatedDate = new DateTime(2026, 2, 4, 17, 14, 15, 358, DateTimeKind.Local).AddTicks(752),
+                            UpdatedDate = new DateTime(2026, 2, 4, 21, 15, 45, 80, DateTimeKind.Local).AddTicks(6219),
                             Version = 0
                         },
                         new
                         {
                             Id = "2",
-                            CreatedDate = new DateTime(2026, 2, 4, 17, 14, 15, 358, DateTimeKind.Local).AddTicks(1032),
+                            CreatedDate = new DateTime(2026, 2, 4, 21, 15, 45, 80, DateTimeKind.Local).AddTicks(7067),
                             EntityState = "Unchanged",
                             IsPublic = false,
                             LanguageNo = "2",
-                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 12, 44, 15, 358, DateTimeKind.Unspecified).AddTicks(1040), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 16, 45, 45, 80, DateTimeKind.Unspecified).AddTicks(7077), new TimeSpan(0, 0, 0, 0, 0)),
                             Name = "منطقه مرکز کابل",
                             TranslationKeyId = "1",
-                            UpdatedDate = new DateTime(2026, 2, 4, 17, 14, 15, 358, DateTimeKind.Local).AddTicks(1033),
+                            UpdatedDate = new DateTime(2026, 2, 4, 21, 15, 45, 80, DateTimeKind.Local).AddTicks(7070),
                             Version = 0
                         },
                         new
                         {
                             Id = "3",
-                            CreatedDate = new DateTime(2026, 2, 4, 17, 14, 15, 358, DateTimeKind.Local).AddTicks(1042),
+                            CreatedDate = new DateTime(2026, 2, 4, 21, 15, 45, 80, DateTimeKind.Local).AddTicks(7080),
                             EntityState = "Unchanged",
                             IsPublic = false,
                             LanguageNo = "1",
-                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 12, 44, 15, 358, DateTimeKind.Unspecified).AddTicks(1045), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 16, 45, 45, 80, DateTimeKind.Unspecified).AddTicks(7087), new TimeSpan(0, 0, 0, 0, 0)),
                             Name = "Kabul North District",
                             TranslationKeyId = "2",
-                            UpdatedDate = new DateTime(2026, 2, 4, 17, 14, 15, 358, DateTimeKind.Local).AddTicks(1042),
+                            UpdatedDate = new DateTime(2026, 2, 4, 21, 15, 45, 80, DateTimeKind.Local).AddTicks(7080),
                             Version = 0
                         },
                         new
                         {
                             Id = "4",
-                            CreatedDate = new DateTime(2026, 2, 4, 17, 14, 15, 358, DateTimeKind.Local).AddTicks(1046),
+                            CreatedDate = new DateTime(2026, 2, 4, 21, 15, 45, 80, DateTimeKind.Local).AddTicks(7089),
                             EntityState = "Unchanged",
                             IsPublic = false,
                             LanguageNo = "2",
-                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 12, 44, 15, 358, DateTimeKind.Unspecified).AddTicks(1049), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 16, 45, 45, 80, DateTimeKind.Unspecified).AddTicks(7091), new TimeSpan(0, 0, 0, 0, 0)),
                             Name = "منطقه شمال کابل",
                             TranslationKeyId = "2",
-                            UpdatedDate = new DateTime(2026, 2, 4, 17, 14, 15, 358, DateTimeKind.Local).AddTicks(1046),
+                            UpdatedDate = new DateTime(2026, 2, 4, 21, 15, 45, 80, DateTimeKind.Local).AddTicks(7089),
                             Version = 0
                         },
                         new
                         {
                             Id = "5",
-                            CreatedDate = new DateTime(2026, 2, 4, 17, 14, 15, 358, DateTimeKind.Local).AddTicks(1050),
+                            CreatedDate = new DateTime(2026, 2, 4, 21, 15, 45, 80, DateTimeKind.Local).AddTicks(7092),
                             EntityState = "Unchanged",
                             IsPublic = false,
                             LanguageNo = "1",
-                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 12, 44, 15, 358, DateTimeKind.Unspecified).AddTicks(1053), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 16, 45, 45, 80, DateTimeKind.Unspecified).AddTicks(7095), new TimeSpan(0, 0, 0, 0, 0)),
                             Name = "Herat Center District",
                             TranslationKeyId = "3",
-                            UpdatedDate = new DateTime(2026, 2, 4, 17, 14, 15, 358, DateTimeKind.Local).AddTicks(1050),
+                            UpdatedDate = new DateTime(2026, 2, 4, 21, 15, 45, 80, DateTimeKind.Local).AddTicks(7093),
                             Version = 0
                         },
                         new
                         {
                             Id = "6",
-                            CreatedDate = new DateTime(2026, 2, 4, 17, 14, 15, 358, DateTimeKind.Local).AddTicks(1053),
+                            CreatedDate = new DateTime(2026, 2, 4, 21, 15, 45, 80, DateTimeKind.Local).AddTicks(7096),
                             EntityState = "Unchanged",
                             IsPublic = false,
                             LanguageNo = "2",
-                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 12, 44, 15, 358, DateTimeKind.Unspecified).AddTicks(1056), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 16, 45, 45, 80, DateTimeKind.Unspecified).AddTicks(7098), new TimeSpan(0, 0, 0, 0, 0)),
                             Name = "منطقه مرکز هرات",
                             TranslationKeyId = "3",
-                            UpdatedDate = new DateTime(2026, 2, 4, 17, 14, 15, 358, DateTimeKind.Local).AddTicks(1054),
+                            UpdatedDate = new DateTime(2026, 2, 4, 21, 15, 45, 80, DateTimeKind.Local).AddTicks(7096),
                             Version = 0
                         },
                         new
                         {
                             Id = "7",
-                            CreatedDate = new DateTime(2026, 2, 4, 17, 14, 15, 358, DateTimeKind.Local).AddTicks(1057),
+                            CreatedDate = new DateTime(2026, 2, 4, 21, 15, 45, 80, DateTimeKind.Local).AddTicks(7099),
                             EntityState = "Unchanged",
                             IsPublic = false,
                             LanguageNo = "1",
-                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 12, 44, 15, 358, DateTimeKind.Unspecified).AddTicks(1085), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 16, 45, 45, 80, DateTimeKind.Unspecified).AddTicks(7146), new TimeSpan(0, 0, 0, 0, 0)),
                             Name = "Kabul Province",
                             TranslationKeyId = "4",
-                            UpdatedDate = new DateTime(2026, 2, 4, 17, 14, 15, 358, DateTimeKind.Local).AddTicks(1066),
+                            UpdatedDate = new DateTime(2026, 2, 4, 21, 15, 45, 80, DateTimeKind.Local).AddTicks(7104),
                             Version = 0
                         },
                         new
                         {
                             Id = "8",
-                            CreatedDate = new DateTime(2026, 2, 4, 17, 14, 15, 358, DateTimeKind.Local).AddTicks(1086),
+                            CreatedDate = new DateTime(2026, 2, 4, 21, 15, 45, 80, DateTimeKind.Local).AddTicks(7147),
                             EntityState = "Unchanged",
                             IsPublic = false,
                             LanguageNo = "2",
-                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 12, 44, 15, 358, DateTimeKind.Unspecified).AddTicks(1089), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 16, 45, 45, 80, DateTimeKind.Unspecified).AddTicks(7149), new TimeSpan(0, 0, 0, 0, 0)),
                             Name = "ولایت کابل",
                             TranslationKeyId = "4",
-                            UpdatedDate = new DateTime(2026, 2, 4, 17, 14, 15, 358, DateTimeKind.Local).AddTicks(1086),
+                            UpdatedDate = new DateTime(2026, 2, 4, 21, 15, 45, 80, DateTimeKind.Local).AddTicks(7148),
                             Version = 0
                         },
                         new
                         {
                             Id = "9",
-                            CreatedDate = new DateTime(2026, 2, 4, 17, 14, 15, 358, DateTimeKind.Local).AddTicks(1090),
+                            CreatedDate = new DateTime(2026, 2, 4, 21, 15, 45, 80, DateTimeKind.Local).AddTicks(7151),
                             EntityState = "Unchanged",
                             IsPublic = false,
                             LanguageNo = "1",
-                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 12, 44, 15, 358, DateTimeKind.Unspecified).AddTicks(1094), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 16, 45, 45, 80, DateTimeKind.Unspecified).AddTicks(7153), new TimeSpan(0, 0, 0, 0, 0)),
                             Name = "Herat Province",
                             TranslationKeyId = "5",
-                            UpdatedDate = new DateTime(2026, 2, 4, 17, 14, 15, 358, DateTimeKind.Local).AddTicks(1091),
+                            UpdatedDate = new DateTime(2026, 2, 4, 21, 15, 45, 80, DateTimeKind.Local).AddTicks(7151),
                             Version = 0
                         },
                         new
                         {
                             Id = "10",
-                            CreatedDate = new DateTime(2026, 2, 4, 17, 14, 15, 358, DateTimeKind.Local).AddTicks(1094),
+                            CreatedDate = new DateTime(2026, 2, 4, 21, 15, 45, 80, DateTimeKind.Local).AddTicks(7154),
                             EntityState = "Unchanged",
                             IsPublic = false,
                             LanguageNo = "2",
-                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 12, 44, 15, 358, DateTimeKind.Unspecified).AddTicks(1099), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 16, 45, 45, 80, DateTimeKind.Unspecified).AddTicks(7156), new TimeSpan(0, 0, 0, 0, 0)),
                             Name = "ولایت هرات",
                             TranslationKeyId = "5",
-                            UpdatedDate = new DateTime(2026, 2, 4, 17, 14, 15, 358, DateTimeKind.Local).AddTicks(1095),
+                            UpdatedDate = new DateTime(2026, 2, 4, 21, 15, 45, 80, DateTimeKind.Local).AddTicks(7154),
                             Version = 0
                         },
                         new
                         {
                             Id = "11",
-                            CreatedDate = new DateTime(2026, 2, 4, 17, 14, 15, 358, DateTimeKind.Local).AddTicks(1100),
+                            CreatedDate = new DateTime(2026, 2, 4, 21, 15, 45, 80, DateTimeKind.Local).AddTicks(7157),
                             EntityState = "Unchanged",
                             IsPublic = false,
                             LanguageNo = "1",
-                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 12, 44, 15, 358, DateTimeKind.Unspecified).AddTicks(1104), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 16, 45, 45, 80, DateTimeKind.Unspecified).AddTicks(7161), new TimeSpan(0, 0, 0, 0, 0)),
                             Name = "Welcome Message",
                             TranslationKeyId = "6",
-                            UpdatedDate = new DateTime(2026, 2, 4, 17, 14, 15, 358, DateTimeKind.Local).AddTicks(1100),
+                            UpdatedDate = new DateTime(2026, 2, 4, 21, 15, 45, 80, DateTimeKind.Local).AddTicks(7158),
                             Version = 0
                         },
                         new
                         {
                             Id = "12",
-                            CreatedDate = new DateTime(2026, 2, 4, 17, 14, 15, 358, DateTimeKind.Local).AddTicks(1104),
+                            CreatedDate = new DateTime(2026, 2, 4, 21, 15, 45, 80, DateTimeKind.Local).AddTicks(7163),
                             EntityState = "Unchanged",
                             IsPublic = false,
                             LanguageNo = "2",
-                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 12, 44, 15, 358, DateTimeKind.Unspecified).AddTicks(1108), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 16, 45, 45, 80, DateTimeKind.Unspecified).AddTicks(7165), new TimeSpan(0, 0, 0, 0, 0)),
                             Name = "پیام خوش آمدید",
                             TranslationKeyId = "6",
-                            UpdatedDate = new DateTime(2026, 2, 4, 17, 14, 15, 358, DateTimeKind.Local).AddTicks(1105),
+                            UpdatedDate = new DateTime(2026, 2, 4, 21, 15, 45, 80, DateTimeKind.Local).AddTicks(7163),
                             Version = 0
                         });
                 });
@@ -1428,105 +1766,105 @@ namespace SMIS.Infrastructure.Migrations
                         new
                         {
                             Id = "1",
-                            CreatedDate = new DateTime(2026, 2, 4, 17, 14, 15, 357, DateTimeKind.Local).AddTicks(8258),
+                            CreatedDate = new DateTime(2026, 2, 4, 21, 15, 45, 80, DateTimeKind.Local).AddTicks(1296),
                             EntityState = "Unchanged",
                             IsActive = true,
                             IsPublic = false,
-                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 12, 44, 15, 357, DateTimeKind.Unspecified).AddTicks(8296), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 16, 45, 45, 80, DateTimeKind.Unspecified).AddTicks(1318), new TimeSpan(0, 0, 0, 0, 0)),
                             MessageCode = "1001",
                             Name = "Kabul Center District",
-                            UpdatedDate = new DateTime(2026, 2, 4, 17, 14, 15, 357, DateTimeKind.Local).AddTicks(8273),
+                            UpdatedDate = new DateTime(2026, 2, 4, 21, 15, 45, 80, DateTimeKind.Local).AddTicks(1308),
                             Version = 0
                         },
                         new
                         {
                             Id = "2",
-                            CreatedDate = new DateTime(2026, 2, 4, 17, 14, 15, 357, DateTimeKind.Local).AddTicks(8633),
+                            CreatedDate = new DateTime(2026, 2, 4, 21, 15, 45, 80, DateTimeKind.Local).AddTicks(2207),
                             EntityState = "Unchanged",
                             IsActive = true,
                             IsPublic = false,
-                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 12, 44, 15, 357, DateTimeKind.Unspecified).AddTicks(8645), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 16, 45, 45, 80, DateTimeKind.Unspecified).AddTicks(2217), new TimeSpan(0, 0, 0, 0, 0)),
                             MessageCode = "1002",
                             Name = "Kabul North District",
-                            UpdatedDate = new DateTime(2026, 2, 4, 17, 14, 15, 357, DateTimeKind.Local).AddTicks(8633),
+                            UpdatedDate = new DateTime(2026, 2, 4, 21, 15, 45, 80, DateTimeKind.Local).AddTicks(2210),
                             Version = 0
                         },
                         new
                         {
                             Id = "3",
-                            CreatedDate = new DateTime(2026, 2, 4, 17, 14, 15, 357, DateTimeKind.Local).AddTicks(8646),
+                            CreatedDate = new DateTime(2026, 2, 4, 21, 15, 45, 80, DateTimeKind.Local).AddTicks(2242),
                             EntityState = "Unchanged",
                             IsActive = true,
                             IsPublic = false,
-                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 12, 44, 15, 357, DateTimeKind.Unspecified).AddTicks(8703), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 16, 45, 45, 80, DateTimeKind.Unspecified).AddTicks(2257), new TimeSpan(0, 0, 0, 0, 0)),
                             MessageCode = "1003",
                             Name = "Herat Center District",
-                            UpdatedDate = new DateTime(2026, 2, 4, 17, 14, 15, 357, DateTimeKind.Local).AddTicks(8646),
+                            UpdatedDate = new DateTime(2026, 2, 4, 21, 15, 45, 80, DateTimeKind.Local).AddTicks(2243),
                             Version = 0
                         },
                         new
                         {
                             Id = "4",
-                            CreatedDate = new DateTime(2026, 2, 4, 17, 14, 15, 357, DateTimeKind.Local).AddTicks(8704),
+                            CreatedDate = new DateTime(2026, 2, 4, 21, 15, 45, 80, DateTimeKind.Local).AddTicks(2258),
                             EntityState = "Unchanged",
                             IsActive = true,
                             IsPublic = false,
-                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 12, 44, 15, 357, DateTimeKind.Unspecified).AddTicks(8708), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 16, 45, 45, 80, DateTimeKind.Unspecified).AddTicks(2260), new TimeSpan(0, 0, 0, 0, 0)),
                             MessageCode = "2001",
                             Name = "Kabul Province",
-                            UpdatedDate = new DateTime(2026, 2, 4, 17, 14, 15, 357, DateTimeKind.Local).AddTicks(8705),
+                            UpdatedDate = new DateTime(2026, 2, 4, 21, 15, 45, 80, DateTimeKind.Local).AddTicks(2259),
                             Version = 0
                         },
                         new
                         {
                             Id = "5",
-                            CreatedDate = new DateTime(2026, 2, 4, 17, 14, 15, 357, DateTimeKind.Local).AddTicks(8709),
+                            CreatedDate = new DateTime(2026, 2, 4, 21, 15, 45, 80, DateTimeKind.Local).AddTicks(2262),
                             EntityState = "Unchanged",
                             IsActive = true,
                             IsPublic = false,
-                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 12, 44, 15, 357, DateTimeKind.Unspecified).AddTicks(8712), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 16, 45, 45, 80, DateTimeKind.Unspecified).AddTicks(2264), new TimeSpan(0, 0, 0, 0, 0)),
                             MessageCode = "2002",
                             Name = "Herat Province",
-                            UpdatedDate = new DateTime(2026, 2, 4, 17, 14, 15, 357, DateTimeKind.Local).AddTicks(8709),
+                            UpdatedDate = new DateTime(2026, 2, 4, 21, 15, 45, 80, DateTimeKind.Local).AddTicks(2262),
                             Version = 0
                         },
                         new
                         {
                             Id = "6",
-                            CreatedDate = new DateTime(2026, 2, 4, 17, 14, 15, 357, DateTimeKind.Local).AddTicks(8713),
+                            CreatedDate = new DateTime(2026, 2, 4, 21, 15, 45, 80, DateTimeKind.Local).AddTicks(2265),
                             EntityState = "Unchanged",
                             IsActive = true,
                             IsPublic = false,
-                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 12, 44, 15, 357, DateTimeKind.Unspecified).AddTicks(8716), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 16, 45, 45, 80, DateTimeKind.Unspecified).AddTicks(2267), new TimeSpan(0, 0, 0, 0, 0)),
                             MessageCode = "3001",
                             Name = "Welcome Message",
-                            UpdatedDate = new DateTime(2026, 2, 4, 17, 14, 15, 357, DateTimeKind.Local).AddTicks(8713),
+                            UpdatedDate = new DateTime(2026, 2, 4, 21, 15, 45, 80, DateTimeKind.Local).AddTicks(2266),
                             Version = 0
                         },
                         new
                         {
                             Id = "7",
-                            CreatedDate = new DateTime(2026, 2, 4, 17, 14, 15, 357, DateTimeKind.Local).AddTicks(8717),
+                            CreatedDate = new DateTime(2026, 2, 4, 21, 15, 45, 80, DateTimeKind.Local).AddTicks(2268),
                             EntityState = "Unchanged",
                             IsActive = true,
                             IsPublic = false,
-                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 12, 44, 15, 357, DateTimeKind.Unspecified).AddTicks(8719), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 16, 45, 45, 80, DateTimeKind.Unspecified).AddTicks(2271), new TimeSpan(0, 0, 0, 0, 0)),
                             MessageCode = "3002",
                             Name = "Error Message",
-                            UpdatedDate = new DateTime(2026, 2, 4, 17, 14, 15, 357, DateTimeKind.Local).AddTicks(8717),
+                            UpdatedDate = new DateTime(2026, 2, 4, 21, 15, 45, 80, DateTimeKind.Local).AddTicks(2269),
                             Version = 0
                         },
                         new
                         {
                             Id = "8",
-                            CreatedDate = new DateTime(2026, 2, 4, 17, 14, 15, 357, DateTimeKind.Local).AddTicks(8720),
+                            CreatedDate = new DateTime(2026, 2, 4, 21, 15, 45, 80, DateTimeKind.Local).AddTicks(2272),
                             EntityState = "Unchanged",
                             IsActive = true,
                             IsPublic = false,
-                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 12, 44, 15, 357, DateTimeKind.Unspecified).AddTicks(8723), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 16, 45, 45, 80, DateTimeKind.Unspecified).AddTicks(2274), new TimeSpan(0, 0, 0, 0, 0)),
                             MessageCode = "3003",
                             Name = "Success Message",
-                            UpdatedDate = new DateTime(2026, 2, 4, 17, 14, 15, 357, DateTimeKind.Local).AddTicks(8721),
+                            UpdatedDate = new DateTime(2026, 2, 4, 21, 15, 45, 80, DateTimeKind.Local).AddTicks(2272),
                             Version = 0
                         });
                 });
@@ -1580,37 +1918,37 @@ namespace SMIS.Infrastructure.Migrations
                         new
                         {
                             Id = "1",
-                            CreatedDate = new DateTime(2026, 2, 4, 17, 14, 15, 358, DateTimeKind.Local).AddTicks(6495),
+                            CreatedDate = new DateTime(2026, 2, 4, 21, 15, 45, 81, DateTimeKind.Local).AddTicks(9064),
                             EntityState = "Unchanged",
                             IsPublic = false,
-                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 12, 44, 15, 358, DateTimeKind.Unspecified).AddTicks(6503), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 16, 45, 45, 81, DateTimeKind.Unspecified).AddTicks(9076), new TimeSpan(0, 0, 0, 0, 0)),
                             Name = "Kabul Center",
                             TranslationKeyId = "1",
-                            UpdatedDate = new DateTime(2026, 2, 4, 17, 14, 15, 358, DateTimeKind.Local).AddTicks(6497),
+                            UpdatedDate = new DateTime(2026, 2, 4, 21, 15, 45, 81, DateTimeKind.Local).AddTicks(9068),
                             Version = 0
                         },
                         new
                         {
                             Id = "2",
-                            CreatedDate = new DateTime(2026, 2, 4, 17, 14, 15, 358, DateTimeKind.Local).AddTicks(6741),
+                            CreatedDate = new DateTime(2026, 2, 4, 21, 15, 45, 81, DateTimeKind.Local).AddTicks(9674),
                             EntityState = "Unchanged",
                             IsPublic = false,
-                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 12, 44, 15, 358, DateTimeKind.Unspecified).AddTicks(6750), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 16, 45, 45, 81, DateTimeKind.Unspecified).AddTicks(9682), new TimeSpan(0, 0, 0, 0, 0)),
                             Name = "Kabul North",
                             TranslationKeyId = "2",
-                            UpdatedDate = new DateTime(2026, 2, 4, 17, 14, 15, 358, DateTimeKind.Local).AddTicks(6742),
+                            UpdatedDate = new DateTime(2026, 2, 4, 21, 15, 45, 81, DateTimeKind.Local).AddTicks(9676),
                             Version = 0
                         },
                         new
                         {
                             Id = "3",
-                            CreatedDate = new DateTime(2026, 2, 4, 17, 14, 15, 358, DateTimeKind.Local).AddTicks(6751),
+                            CreatedDate = new DateTime(2026, 2, 4, 21, 15, 45, 81, DateTimeKind.Local).AddTicks(9685),
                             EntityState = "Unchanged",
                             IsPublic = false,
-                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 12, 44, 15, 358, DateTimeKind.Unspecified).AddTicks(6754), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 16, 45, 45, 81, DateTimeKind.Unspecified).AddTicks(9687), new TimeSpan(0, 0, 0, 0, 0)),
                             Name = "Herat Center",
                             TranslationKeyId = "3",
-                            UpdatedDate = new DateTime(2026, 2, 4, 17, 14, 15, 358, DateTimeKind.Local).AddTicks(6751),
+                            UpdatedDate = new DateTime(2026, 2, 4, 21, 15, 45, 81, DateTimeKind.Local).AddTicks(9685),
                             Version = 0
                         });
                 });
@@ -1658,45 +1996,45 @@ namespace SMIS.Infrastructure.Migrations
                         new
                         {
                             Id = "1",
-                            CreatedDate = new DateTime(2026, 2, 4, 17, 14, 15, 358, DateTimeKind.Local).AddTicks(4417),
+                            CreatedDate = new DateTime(2026, 2, 4, 21, 15, 45, 81, DateTimeKind.Local).AddTicks(4062),
                             EntityState = "Unchanged",
                             IsPublic = false,
-                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 12, 44, 15, 358, DateTimeKind.Unspecified).AddTicks(4425), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 16, 45, 45, 81, DateTimeKind.Unspecified).AddTicks(4076), new TimeSpan(0, 0, 0, 0, 0)),
                             Name = "Kabul",
-                            UpdatedDate = new DateTime(2026, 2, 4, 17, 14, 15, 358, DateTimeKind.Local).AddTicks(4418),
+                            UpdatedDate = new DateTime(2026, 2, 4, 21, 15, 45, 81, DateTimeKind.Local).AddTicks(4066),
                             Version = 0
                         },
                         new
                         {
                             Id = "2",
-                            CreatedDate = new DateTime(2026, 2, 4, 17, 14, 15, 358, DateTimeKind.Local).AddTicks(4568),
+                            CreatedDate = new DateTime(2026, 2, 4, 21, 15, 45, 81, DateTimeKind.Local).AddTicks(4454),
                             EntityState = "Unchanged",
                             IsPublic = false,
-                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 12, 44, 15, 358, DateTimeKind.Unspecified).AddTicks(4573), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 16, 45, 45, 81, DateTimeKind.Unspecified).AddTicks(4462), new TimeSpan(0, 0, 0, 0, 0)),
                             Name = "Herat",
-                            UpdatedDate = new DateTime(2026, 2, 4, 17, 14, 15, 358, DateTimeKind.Local).AddTicks(4569),
+                            UpdatedDate = new DateTime(2026, 2, 4, 21, 15, 45, 81, DateTimeKind.Local).AddTicks(4456),
                             Version = 0
                         },
                         new
                         {
                             Id = "3",
-                            CreatedDate = new DateTime(2026, 2, 4, 17, 14, 15, 358, DateTimeKind.Local).AddTicks(4574),
+                            CreatedDate = new DateTime(2026, 2, 4, 21, 15, 45, 81, DateTimeKind.Local).AddTicks(4464),
                             EntityState = "Unchanged",
                             IsPublic = false,
-                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 12, 44, 15, 358, DateTimeKind.Unspecified).AddTicks(4577), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 16, 45, 45, 81, DateTimeKind.Unspecified).AddTicks(4466), new TimeSpan(0, 0, 0, 0, 0)),
                             Name = "Kandahar",
-                            UpdatedDate = new DateTime(2026, 2, 4, 17, 14, 15, 358, DateTimeKind.Local).AddTicks(4574),
+                            UpdatedDate = new DateTime(2026, 2, 4, 21, 15, 45, 81, DateTimeKind.Local).AddTicks(4465),
                             Version = 0
                         },
                         new
                         {
                             Id = "4",
-                            CreatedDate = new DateTime(2026, 2, 4, 17, 14, 15, 358, DateTimeKind.Local).AddTicks(4578),
+                            CreatedDate = new DateTime(2026, 2, 4, 21, 15, 45, 81, DateTimeKind.Local).AddTicks(4467),
                             EntityState = "Unchanged",
                             IsPublic = false,
-                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 12, 44, 15, 358, DateTimeKind.Unspecified).AddTicks(4582), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 16, 45, 45, 81, DateTimeKind.Unspecified).AddTicks(4470), new TimeSpan(0, 0, 0, 0, 0)),
                             Name = "Balkh",
-                            UpdatedDate = new DateTime(2026, 2, 4, 17, 14, 15, 358, DateTimeKind.Local).AddTicks(4578),
+                            UpdatedDate = new DateTime(2026, 2, 4, 21, 15, 45, 81, DateTimeKind.Local).AddTicks(4468),
                             Version = 0
                         });
                 });
@@ -1754,7 +2092,7 @@ namespace SMIS.Infrastructure.Migrations
                             IsDefault = true,
                             LanguageCode = "en",
                             LanguageId = "1",
-                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 12, 44, 15, 358, DateTimeKind.Unspecified).AddTicks(5044), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 16, 45, 45, 81, DateTimeKind.Unspecified).AddTicks(5507), new TimeSpan(0, 0, 0, 0, 0)),
                             Name = "Kabul",
                             ProvinceId = "1",
                             Version = 0
@@ -1766,7 +2104,7 @@ namespace SMIS.Infrastructure.Migrations
                             IsDefault = false,
                             LanguageCode = "ps",
                             LanguageId = "2",
-                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 12, 44, 15, 358, DateTimeKind.Unspecified).AddTicks(5450), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 16, 45, 45, 81, DateTimeKind.Unspecified).AddTicks(6719), new TimeSpan(0, 0, 0, 0, 0)),
                             Name = "کابل",
                             ProvinceId = "1",
                             Version = 0
@@ -1778,7 +2116,7 @@ namespace SMIS.Infrastructure.Migrations
                             IsDefault = false,
                             LanguageCode = "fa",
                             LanguageId = "3",
-                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 12, 44, 15, 358, DateTimeKind.Unspecified).AddTicks(5460), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 16, 45, 45, 81, DateTimeKind.Unspecified).AddTicks(6734), new TimeSpan(0, 0, 0, 0, 0)),
                             Name = "کابل",
                             ProvinceId = "1",
                             Version = 0
@@ -1790,7 +2128,7 @@ namespace SMIS.Infrastructure.Migrations
                             IsDefault = true,
                             LanguageCode = "en",
                             LanguageId = "1",
-                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 12, 44, 15, 358, DateTimeKind.Unspecified).AddTicks(5464), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 16, 45, 45, 81, DateTimeKind.Unspecified).AddTicks(6737), new TimeSpan(0, 0, 0, 0, 0)),
                             Name = "Herat",
                             ProvinceId = "2",
                             Version = 0
@@ -1802,7 +2140,7 @@ namespace SMIS.Infrastructure.Migrations
                             IsDefault = false,
                             LanguageCode = "ps",
                             LanguageId = "2",
-                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 12, 44, 15, 358, DateTimeKind.Unspecified).AddTicks(5468), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 16, 45, 45, 81, DateTimeKind.Unspecified).AddTicks(6740), new TimeSpan(0, 0, 0, 0, 0)),
                             Name = "هرات",
                             ProvinceId = "2",
                             Version = 0
@@ -1814,7 +2152,7 @@ namespace SMIS.Infrastructure.Migrations
                             IsDefault = false,
                             LanguageCode = "fa",
                             LanguageId = "3",
-                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 12, 44, 15, 358, DateTimeKind.Unspecified).AddTicks(5471), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 16, 45, 45, 81, DateTimeKind.Unspecified).AddTicks(6742), new TimeSpan(0, 0, 0, 0, 0)),
                             Name = "هرات",
                             ProvinceId = "2",
                             Version = 0
@@ -1826,7 +2164,7 @@ namespace SMIS.Infrastructure.Migrations
                             IsDefault = true,
                             LanguageCode = "en",
                             LanguageId = "1",
-                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 12, 44, 15, 358, DateTimeKind.Unspecified).AddTicks(5475), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 16, 45, 45, 81, DateTimeKind.Unspecified).AddTicks(6758), new TimeSpan(0, 0, 0, 0, 0)),
                             Name = "Kandahar",
                             ProvinceId = "3",
                             Version = 0
@@ -1838,7 +2176,7 @@ namespace SMIS.Infrastructure.Migrations
                             IsDefault = false,
                             LanguageCode = "ps",
                             LanguageId = "2",
-                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 12, 44, 15, 358, DateTimeKind.Unspecified).AddTicks(5478), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 16, 45, 45, 81, DateTimeKind.Unspecified).AddTicks(6761), new TimeSpan(0, 0, 0, 0, 0)),
                             Name = "کندهار",
                             ProvinceId = "3",
                             Version = 0
@@ -1850,7 +2188,7 @@ namespace SMIS.Infrastructure.Migrations
                             IsDefault = false,
                             LanguageCode = "fa",
                             LanguageId = "3",
-                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 12, 44, 15, 358, DateTimeKind.Unspecified).AddTicks(5482), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 16, 45, 45, 81, DateTimeKind.Unspecified).AddTicks(6763), new TimeSpan(0, 0, 0, 0, 0)),
                             Name = "قندهار",
                             ProvinceId = "3",
                             Version = 0
@@ -1862,7 +2200,7 @@ namespace SMIS.Infrastructure.Migrations
                             IsDefault = true,
                             LanguageCode = "en",
                             LanguageId = "1",
-                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 12, 44, 15, 358, DateTimeKind.Unspecified).AddTicks(5487), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 16, 45, 45, 81, DateTimeKind.Unspecified).AddTicks(6766), new TimeSpan(0, 0, 0, 0, 0)),
                             Name = "Balkh",
                             ProvinceId = "4",
                             Version = 0
@@ -1874,7 +2212,7 @@ namespace SMIS.Infrastructure.Migrations
                             IsDefault = false,
                             LanguageCode = "ps",
                             LanguageId = "2",
-                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 12, 44, 15, 358, DateTimeKind.Unspecified).AddTicks(5490), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 16, 45, 45, 81, DateTimeKind.Unspecified).AddTicks(6771), new TimeSpan(0, 0, 0, 0, 0)),
                             Name = "بلخ",
                             ProvinceId = "4",
                             Version = 0
@@ -1886,7 +2224,7 @@ namespace SMIS.Infrastructure.Migrations
                             IsDefault = false,
                             LanguageCode = "fa",
                             LanguageId = "3",
-                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 12, 44, 15, 358, DateTimeKind.Unspecified).AddTicks(5494), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 16, 45, 45, 81, DateTimeKind.Unspecified).AddTicks(6774), new TimeSpan(0, 0, 0, 0, 0)),
                             Name = "بلخ",
                             ProvinceId = "4",
                             Version = 0
@@ -1994,18 +2332,18 @@ namespace SMIS.Infrastructure.Migrations
                             BaseUnitName = "Bottle",
                             CategoryId = "1",
                             CategoryName = "Beverages",
-                            CreatedDate = new DateTime(2026, 2, 4, 17, 14, 15, 361, DateTimeKind.Local).AddTicks(4933),
+                            CreatedDate = new DateTime(2026, 2, 4, 21, 15, 45, 87, DateTimeKind.Local).AddTicks(1059),
                             Description = "Classic cola drink",
                             EntityState = "Unchanged",
                             IsActive = true,
                             IsPublic = false,
-                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 12, 44, 15, 361, DateTimeKind.Unspecified).AddTicks(4953), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 16, 45, 45, 87, DateTimeKind.Unspecified).AddTicks(1074), new TimeSpan(0, 0, 0, 0, 0)),
                             Name = "Coca Cola 500ml",
                             SKU = "COKE-500ML-001",
                             SalePricePerBaseUnit = 150,
                             ShopId = "1",
                             ShopName = "Main Store",
-                            UpdatedDate = new DateTime(2026, 2, 4, 17, 14, 15, 361, DateTimeKind.Local).AddTicks(4938),
+                            UpdatedDate = new DateTime(2026, 2, 4, 21, 15, 45, 87, DateTimeKind.Local).AddTicks(1063),
                             Version = 0
                         },
                         new
@@ -2016,18 +2354,18 @@ namespace SMIS.Infrastructure.Migrations
                             BaseUnitName = "Bottle",
                             CategoryId = "1",
                             CategoryName = "Beverages",
-                            CreatedDate = new DateTime(2026, 2, 4, 17, 14, 15, 363, DateTimeKind.Local).AddTicks(3160),
+                            CreatedDate = new DateTime(2026, 2, 4, 21, 15, 45, 90, DateTimeKind.Local).AddTicks(570),
                             Description = "Cola soft drink",
                             EntityState = "Unchanged",
                             IsActive = true,
                             IsPublic = false,
-                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 12, 44, 15, 363, DateTimeKind.Unspecified).AddTicks(3200), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 16, 45, 45, 90, DateTimeKind.Unspecified).AddTicks(599), new TimeSpan(0, 0, 0, 0, 0)),
                             Name = "Pepsi 500ml",
                             SKU = "PEPSI-500ML-002",
                             SalePricePerBaseUnit = 140,
                             ShopId = "1",
                             ShopName = "Main Store",
-                            UpdatedDate = new DateTime(2026, 2, 4, 17, 14, 15, 363, DateTimeKind.Local).AddTicks(3170),
+                            UpdatedDate = new DateTime(2026, 2, 4, 21, 15, 45, 90, DateTimeKind.Local).AddTicks(578),
                             Version = 0
                         },
                         new
@@ -2038,18 +2376,18 @@ namespace SMIS.Infrastructure.Migrations
                             BaseUnitName = "Bottle",
                             CategoryId = "1",
                             CategoryName = "Beverages",
-                            CreatedDate = new DateTime(2026, 2, 4, 17, 14, 15, 363, DateTimeKind.Local).AddTicks(5786),
+                            CreatedDate = new DateTime(2026, 2, 4, 21, 15, 45, 90, DateTimeKind.Local).AddTicks(3584),
                             Description = "Pure drinking water",
                             EntityState = "Unchanged",
                             IsActive = true,
                             IsPublic = false,
-                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 12, 44, 15, 363, DateTimeKind.Unspecified).AddTicks(5803), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 16, 45, 45, 90, DateTimeKind.Unspecified).AddTicks(3597), new TimeSpan(0, 0, 0, 0, 0)),
                             Name = "Mineral Water 1L",
                             SKU = "WATER-1L-003",
                             SalePricePerBaseUnit = 80,
                             ShopId = "2",
                             ShopName = "Branch Store",
-                            UpdatedDate = new DateTime(2026, 2, 4, 17, 14, 15, 363, DateTimeKind.Local).AddTicks(5789),
+                            UpdatedDate = new DateTime(2026, 2, 4, 21, 15, 45, 90, DateTimeKind.Local).AddTicks(3588),
                             Version = 0
                         },
                         new
@@ -2060,18 +2398,18 @@ namespace SMIS.Infrastructure.Migrations
                             BaseUnitName = "Pack",
                             CategoryId = "2",
                             CategoryName = "Food",
-                            CreatedDate = new DateTime(2026, 2, 4, 17, 14, 15, 363, DateTimeKind.Local).AddTicks(7029),
+                            CreatedDate = new DateTime(2026, 2, 4, 21, 15, 45, 90, DateTimeKind.Local).AddTicks(6045),
                             Description = "Chocolate sandwich cookies",
                             EntityState = "Unchanged",
                             IsActive = true,
                             IsPublic = false,
-                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 12, 44, 15, 363, DateTimeKind.Unspecified).AddTicks(7038), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 16, 45, 45, 90, DateTimeKind.Unspecified).AddTicks(6056), new TimeSpan(0, 0, 0, 0, 0)),
                             Name = "Oreo Biscuits",
                             SKU = "OREO-PACK-004",
                             SalePricePerBaseUnit = 250,
                             ShopId = "1",
                             ShopName = "Main Store",
-                            UpdatedDate = new DateTime(2026, 2, 4, 17, 14, 15, 363, DateTimeKind.Local).AddTicks(7031),
+                            UpdatedDate = new DateTime(2026, 2, 4, 21, 15, 45, 90, DateTimeKind.Local).AddTicks(6048),
                             Version = 0
                         },
                         new
@@ -2082,18 +2420,18 @@ namespace SMIS.Infrastructure.Migrations
                             BaseUnitName = "Pack",
                             CategoryId = "2",
                             CategoryName = "Food",
-                            CreatedDate = new DateTime(2026, 2, 4, 17, 14, 15, 363, DateTimeKind.Local).AddTicks(7065),
+                            CreatedDate = new DateTime(2026, 2, 4, 21, 15, 45, 90, DateTimeKind.Local).AddTicks(6098),
                             Description = "Potato chips",
                             EntityState = "Unchanged",
                             IsActive = true,
                             IsPublic = false,
-                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 12, 44, 15, 363, DateTimeKind.Unspecified).AddTicks(7070), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 16, 45, 45, 90, DateTimeKind.Unspecified).AddTicks(6100), new TimeSpan(0, 0, 0, 0, 0)),
                             Name = "Lay's Chips",
                             SKU = "LAYS-PACK-005",
                             SalePricePerBaseUnit = 180,
                             ShopId = "2",
                             ShopName = "Branch Store",
-                            UpdatedDate = new DateTime(2026, 2, 4, 17, 14, 15, 363, DateTimeKind.Local).AddTicks(7066),
+                            UpdatedDate = new DateTime(2026, 2, 4, 21, 15, 45, 90, DateTimeKind.Local).AddTicks(6099),
                             Version = 0
                         },
                         new
@@ -2104,18 +2442,18 @@ namespace SMIS.Infrastructure.Migrations
                             BaseUnitName = "Pack",
                             CategoryId = "2",
                             CategoryName = "Food",
-                            CreatedDate = new DateTime(2026, 2, 4, 17, 14, 15, 363, DateTimeKind.Local).AddTicks(7079),
+                            CreatedDate = new DateTime(2026, 2, 4, 21, 15, 45, 90, DateTimeKind.Local).AddTicks(6112),
                             Description = "Quick meal noodles",
                             EntityState = "Unchanged",
                             IsActive = true,
                             IsPublic = false,
-                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 12, 44, 15, 363, DateTimeKind.Unspecified).AddTicks(7089), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 16, 45, 45, 90, DateTimeKind.Unspecified).AddTicks(6115), new TimeSpan(0, 0, 0, 0, 0)),
                             Name = "Instant Noodles",
                             SKU = "NOODLE-PACK-006",
                             SalePricePerBaseUnit = 120,
                             ShopId = "3",
                             ShopName = "Warehouse",
-                            UpdatedDate = new DateTime(2026, 2, 4, 17, 14, 15, 363, DateTimeKind.Local).AddTicks(7080),
+                            UpdatedDate = new DateTime(2026, 2, 4, 21, 15, 45, 90, DateTimeKind.Local).AddTicks(6113),
                             Version = 0
                         },
                         new
@@ -2126,18 +2464,18 @@ namespace SMIS.Infrastructure.Migrations
                             BaseUnitName = "Piece",
                             CategoryId = "3",
                             CategoryName = "Stationery",
-                            CreatedDate = new DateTime(2026, 2, 4, 17, 14, 15, 363, DateTimeKind.Local).AddTicks(7097),
+                            CreatedDate = new DateTime(2026, 2, 4, 21, 15, 45, 90, DateTimeKind.Local).AddTicks(6124),
                             Description = "200 pages ruled notebook",
                             EntityState = "Unchanged",
                             IsActive = true,
                             IsPublic = false,
-                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 12, 44, 15, 363, DateTimeKind.Unspecified).AddTicks(7102), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 16, 45, 45, 90, DateTimeKind.Unspecified).AddTicks(6137), new TimeSpan(0, 0, 0, 0, 0)),
                             Name = "A4 Notebook",
                             SKU = "NOTE-A4-007",
                             SalePricePerBaseUnit = 300,
                             ShopId = "1",
                             ShopName = "Main Store",
-                            UpdatedDate = new DateTime(2026, 2, 4, 17, 14, 15, 363, DateTimeKind.Local).AddTicks(7098),
+                            UpdatedDate = new DateTime(2026, 2, 4, 21, 15, 45, 90, DateTimeKind.Local).AddTicks(6125),
                             Version = 0
                         },
                         new
@@ -2148,18 +2486,18 @@ namespace SMIS.Infrastructure.Migrations
                             BaseUnitName = "Piece",
                             CategoryId = "3",
                             CategoryName = "Stationery",
-                            CreatedDate = new DateTime(2026, 2, 4, 17, 14, 15, 363, DateTimeKind.Local).AddTicks(7119),
+                            CreatedDate = new DateTime(2026, 2, 4, 21, 15, 45, 90, DateTimeKind.Local).AddTicks(6148),
                             Description = "Ballpoint pen",
                             EntityState = "Unchanged",
                             IsActive = true,
                             IsPublic = false,
-                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 12, 44, 15, 363, DateTimeKind.Unspecified).AddTicks(7123), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 16, 45, 45, 90, DateTimeKind.Unspecified).AddTicks(6150), new TimeSpan(0, 0, 0, 0, 0)),
                             Name = "Blue Pen",
                             SKU = "PEN-BLUE-008",
                             SalePricePerBaseUnit = 50,
                             ShopId = "2",
                             ShopName = "Branch Store",
-                            UpdatedDate = new DateTime(2026, 2, 4, 17, 14, 15, 363, DateTimeKind.Local).AddTicks(7120),
+                            UpdatedDate = new DateTime(2026, 2, 4, 21, 15, 45, 90, DateTimeKind.Local).AddTicks(6148),
                             Version = 0
                         },
                         new
@@ -2170,18 +2508,18 @@ namespace SMIS.Infrastructure.Migrations
                             BaseUnitName = "Box",
                             CategoryId = "3",
                             CategoryName = "Stationery",
-                            CreatedDate = new DateTime(2026, 2, 4, 17, 14, 15, 363, DateTimeKind.Local).AddTicks(7131),
+                            CreatedDate = new DateTime(2026, 2, 4, 21, 15, 45, 90, DateTimeKind.Local).AddTicks(6164),
                             Description = "12 pencils per box",
                             EntityState = "Unchanged",
                             IsActive = true,
                             IsPublic = false,
-                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 12, 44, 15, 363, DateTimeKind.Unspecified).AddTicks(7135), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 16, 45, 45, 90, DateTimeKind.Unspecified).AddTicks(6166), new TimeSpan(0, 0, 0, 0, 0)),
                             Name = "Pencil Set",
                             SKU = "PENCIL-BOX-009",
                             SalePricePerBaseUnit = 400,
                             ShopId = "3",
                             ShopName = "Warehouse",
-                            UpdatedDate = new DateTime(2026, 2, 4, 17, 14, 15, 363, DateTimeKind.Local).AddTicks(7131),
+                            UpdatedDate = new DateTime(2026, 2, 4, 21, 15, 45, 90, DateTimeKind.Local).AddTicks(6165),
                             Version = 0
                         },
                         new
@@ -2192,18 +2530,18 @@ namespace SMIS.Infrastructure.Migrations
                             BaseUnitName = "Bottle",
                             CategoryId = "4",
                             CategoryName = "Grocery",
-                            CreatedDate = new DateTime(2026, 2, 4, 17, 14, 15, 363, DateTimeKind.Local).AddTicks(7177),
+                            CreatedDate = new DateTime(2026, 2, 4, 21, 15, 45, 90, DateTimeKind.Local).AddTicks(6176),
                             Description = "Sunflower cooking oil",
                             EntityState = "Unchanged",
                             IsActive = true,
                             IsPublic = false,
-                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 12, 44, 15, 363, DateTimeKind.Unspecified).AddTicks(7181), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 16, 45, 45, 90, DateTimeKind.Unspecified).AddTicks(6178), new TimeSpan(0, 0, 0, 0, 0)),
                             Name = "Cooking Oil 1L",
                             SKU = "OIL-1L-010",
                             SalePricePerBaseUnit = 450,
                             ShopId = "1",
                             ShopName = "Main Store",
-                            UpdatedDate = new DateTime(2026, 2, 4, 17, 14, 15, 363, DateTimeKind.Local).AddTicks(7178),
+                            UpdatedDate = new DateTime(2026, 2, 4, 21, 15, 45, 90, DateTimeKind.Local).AddTicks(6177),
                             Version = 0
                         },
                         new
@@ -2214,18 +2552,18 @@ namespace SMIS.Infrastructure.Migrations
                             BaseUnitName = "Kilogram",
                             CategoryId = "4",
                             CategoryName = "Grocery",
-                            CreatedDate = new DateTime(2026, 2, 4, 17, 14, 15, 363, DateTimeKind.Local).AddTicks(7190),
+                            CreatedDate = new DateTime(2026, 2, 4, 21, 15, 45, 90, DateTimeKind.Local).AddTicks(6188),
                             Description = "Basmati rice",
                             EntityState = "Unchanged",
                             IsActive = true,
                             IsPublic = false,
-                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 12, 44, 15, 363, DateTimeKind.Unspecified).AddTicks(7194), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 16, 45, 45, 90, DateTimeKind.Unspecified).AddTicks(6191), new TimeSpan(0, 0, 0, 0, 0)),
                             Name = "Rice 1kg",
                             SKU = "RICE-1KG-011",
                             SalePricePerBaseUnit = 280,
                             ShopId = "2",
                             ShopName = "Branch Store",
-                            UpdatedDate = new DateTime(2026, 2, 4, 17, 14, 15, 363, DateTimeKind.Local).AddTicks(7190),
+                            UpdatedDate = new DateTime(2026, 2, 4, 21, 15, 45, 90, DateTimeKind.Local).AddTicks(6189),
                             Version = 0
                         },
                         new
@@ -2236,18 +2574,18 @@ namespace SMIS.Infrastructure.Migrations
                             BaseUnitName = "Kilogram",
                             CategoryId = "4",
                             CategoryName = "Grocery",
-                            CreatedDate = new DateTime(2026, 2, 4, 17, 14, 15, 363, DateTimeKind.Local).AddTicks(7248),
+                            CreatedDate = new DateTime(2026, 2, 4, 21, 15, 45, 90, DateTimeKind.Local).AddTicks(6200),
                             Description = "White granulated sugar",
                             EntityState = "Unchanged",
                             IsActive = true,
                             IsPublic = false,
-                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 12, 44, 15, 363, DateTimeKind.Unspecified).AddTicks(7252), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 16, 45, 45, 90, DateTimeKind.Unspecified).AddTicks(6202), new TimeSpan(0, 0, 0, 0, 0)),
                             Name = "Sugar 1kg",
                             SKU = "SUGAR-1KG-012",
                             SalePricePerBaseUnit = 200,
                             ShopId = "3",
                             ShopName = "Warehouse",
-                            UpdatedDate = new DateTime(2026, 2, 4, 17, 14, 15, 363, DateTimeKind.Local).AddTicks(7249),
+                            UpdatedDate = new DateTime(2026, 2, 4, 21, 15, 45, 90, DateTimeKind.Local).AddTicks(6201),
                             Version = 0
                         },
                         new
@@ -2258,18 +2596,18 @@ namespace SMIS.Infrastructure.Migrations
                             BaseUnitName = "Bottle",
                             CategoryId = "5",
                             CategoryName = "Personal Care",
-                            CreatedDate = new DateTime(2026, 2, 4, 17, 14, 15, 363, DateTimeKind.Local).AddTicks(7259),
+                            CreatedDate = new DateTime(2026, 2, 4, 21, 15, 45, 90, DateTimeKind.Local).AddTicks(6212),
                             Description = "Hair care shampoo",
                             EntityState = "Unchanged",
                             IsActive = true,
                             IsPublic = false,
-                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 12, 44, 15, 363, DateTimeKind.Unspecified).AddTicks(7263), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 16, 45, 45, 90, DateTimeKind.Unspecified).AddTicks(6214), new TimeSpan(0, 0, 0, 0, 0)),
                             Name = "Shampoo 400ml",
                             SKU = "SHAMP-400ML-013",
                             SalePricePerBaseUnit = 350,
                             ShopId = "1",
                             ShopName = "Main Store",
-                            UpdatedDate = new DateTime(2026, 2, 4, 17, 14, 15, 363, DateTimeKind.Local).AddTicks(7259),
+                            UpdatedDate = new DateTime(2026, 2, 4, 21, 15, 45, 90, DateTimeKind.Local).AddTicks(6212),
                             Version = 0
                         },
                         new
@@ -2280,18 +2618,18 @@ namespace SMIS.Infrastructure.Migrations
                             BaseUnitName = "Piece",
                             CategoryId = "5",
                             CategoryName = "Personal Care",
-                            CreatedDate = new DateTime(2026, 2, 4, 17, 14, 15, 363, DateTimeKind.Local).AddTicks(7270),
+                            CreatedDate = new DateTime(2026, 2, 4, 21, 15, 45, 90, DateTimeKind.Local).AddTicks(6224),
                             Description = "Dental care paste",
                             EntityState = "Unchanged",
                             IsActive = true,
                             IsPublic = false,
-                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 12, 44, 15, 363, DateTimeKind.Unspecified).AddTicks(7276), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 16, 45, 45, 90, DateTimeKind.Unspecified).AddTicks(6226), new TimeSpan(0, 0, 0, 0, 0)),
                             Name = "Toothpaste",
                             SKU = "TOOTH-PASTE-014",
                             SalePricePerBaseUnit = 180,
                             ShopId = "2",
                             ShopName = "Branch Store",
-                            UpdatedDate = new DateTime(2026, 2, 4, 17, 14, 15, 363, DateTimeKind.Local).AddTicks(7271),
+                            UpdatedDate = new DateTime(2026, 2, 4, 21, 15, 45, 90, DateTimeKind.Local).AddTicks(6224),
                             Version = 0
                         },
                         new
@@ -2302,18 +2640,18 @@ namespace SMIS.Infrastructure.Migrations
                             BaseUnitName = "Piece",
                             CategoryId = "6",
                             CategoryName = "Electronics",
-                            CreatedDate = new DateTime(2026, 2, 4, 17, 14, 15, 363, DateTimeKind.Local).AddTicks(7283),
+                            CreatedDate = new DateTime(2026, 2, 4, 21, 15, 45, 90, DateTimeKind.Local).AddTicks(6235),
                             Description = "Type-C charging cable",
                             EntityState = "Unchanged",
                             IsActive = true,
                             IsPublic = false,
-                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 12, 44, 15, 363, DateTimeKind.Unspecified).AddTicks(7286), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 16, 45, 45, 90, DateTimeKind.Unspecified).AddTicks(6240), new TimeSpan(0, 0, 0, 0, 0)),
                             Name = "USB Cable",
                             SKU = "USB-CABLE-015",
                             SalePricePerBaseUnit = 250,
                             ShopId = "1",
                             ShopName = "Main Store",
-                            UpdatedDate = new DateTime(2026, 2, 4, 17, 14, 15, 363, DateTimeKind.Local).AddTicks(7283),
+                            UpdatedDate = new DateTime(2026, 2, 4, 21, 15, 45, 90, DateTimeKind.Local).AddTicks(6235),
                             Version = 0
                         },
                         new
@@ -2324,18 +2662,18 @@ namespace SMIS.Infrastructure.Migrations
                             BaseUnitName = "Piece",
                             CategoryId = "6",
                             CategoryName = "Electronics",
-                            CreatedDate = new DateTime(2026, 2, 4, 17, 14, 15, 363, DateTimeKind.Local).AddTicks(7317),
+                            CreatedDate = new DateTime(2026, 2, 4, 21, 15, 45, 90, DateTimeKind.Local).AddTicks(6250),
                             Description = "Fast charging adapter",
                             EntityState = "Unchanged",
                             IsActive = true,
                             IsPublic = false,
-                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 12, 44, 15, 363, DateTimeKind.Unspecified).AddTicks(7320), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 16, 45, 45, 90, DateTimeKind.Unspecified).AddTicks(6252), new TimeSpan(0, 0, 0, 0, 0)),
                             Name = "Phone Charger",
                             SKU = "CHARGER-016",
                             SalePricePerBaseUnit = 800,
                             ShopId = "3",
                             ShopName = "Warehouse",
-                            UpdatedDate = new DateTime(2026, 2, 4, 17, 14, 15, 363, DateTimeKind.Local).AddTicks(7317),
+                            UpdatedDate = new DateTime(2026, 2, 4, 21, 15, 45, 90, DateTimeKind.Local).AddTicks(6250),
                             Version = 0
                         });
                 });
@@ -2398,315 +2736,315 @@ namespace SMIS.Infrastructure.Migrations
                         new
                         {
                             Id = "1",
-                            CreatedDate = new DateTime(2026, 2, 4, 17, 14, 14, 750, DateTimeKind.Local).AddTicks(8436),
+                            CreatedDate = new DateTime(2026, 2, 4, 21, 15, 43, 587, DateTimeKind.Local).AddTicks(636),
                             EffectiveDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             EndDate = new DateTime(2024, 6, 30, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             EntityState = "Unchanged",
                             IsActive = false,
                             IsPublic = false,
-                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 12, 44, 14, 751, DateTimeKind.Unspecified).AddTicks(5913), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 16, 45, 43, 588, DateTimeKind.Unspecified).AddTicks(4916), new TimeSpan(0, 0, 0, 0, 0)),
                             Price = 150,
                             ProductId = "1",
-                            UpdatedDate = new DateTime(2026, 2, 4, 17, 14, 14, 751, DateTimeKind.Local).AddTicks(5303),
+                            UpdatedDate = new DateTime(2026, 2, 4, 21, 15, 43, 588, DateTimeKind.Local).AddTicks(3869),
                             Version = 0
                         },
                         new
                         {
                             Id = "2",
-                            CreatedDate = new DateTime(2026, 2, 4, 17, 14, 14, 751, DateTimeKind.Local).AddTicks(8325),
+                            CreatedDate = new DateTime(2026, 2, 4, 21, 15, 43, 589, DateTimeKind.Local).AddTicks(1027),
                             EffectiveDate = new DateTime(2024, 7, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             EntityState = "Unchanged",
                             IsActive = true,
                             IsPublic = false,
-                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 12, 44, 14, 751, DateTimeKind.Unspecified).AddTicks(8335), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 16, 45, 43, 589, DateTimeKind.Unspecified).AddTicks(1043), new TimeSpan(0, 0, 0, 0, 0)),
                             Price = 160,
                             ProductId = "1",
-                            UpdatedDate = new DateTime(2026, 2, 4, 17, 14, 14, 751, DateTimeKind.Local).AddTicks(8327),
+                            UpdatedDate = new DateTime(2026, 2, 4, 21, 15, 43, 589, DateTimeKind.Local).AddTicks(1030),
                             Version = 0
                         },
                         new
                         {
                             Id = "3",
-                            CreatedDate = new DateTime(2026, 2, 4, 17, 14, 14, 751, DateTimeKind.Local).AddTicks(9164),
+                            CreatedDate = new DateTime(2026, 2, 4, 21, 15, 43, 589, DateTimeKind.Local).AddTicks(2727),
                             EffectiveDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             EndDate = new DateTime(2024, 5, 31, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             EntityState = "Unchanged",
                             IsActive = false,
                             IsPublic = false,
-                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 12, 44, 14, 751, DateTimeKind.Unspecified).AddTicks(9177), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 16, 45, 43, 589, DateTimeKind.Unspecified).AddTicks(2745), new TimeSpan(0, 0, 0, 0, 0)),
                             Price = 140,
                             ProductId = "2",
-                            UpdatedDate = new DateTime(2026, 2, 4, 17, 14, 14, 751, DateTimeKind.Local).AddTicks(9165),
+                            UpdatedDate = new DateTime(2026, 2, 4, 21, 15, 43, 589, DateTimeKind.Local).AddTicks(2730),
                             Version = 0
                         },
                         new
                         {
                             Id = "4",
-                            CreatedDate = new DateTime(2026, 2, 4, 17, 14, 14, 751, DateTimeKind.Local).AddTicks(9663),
+                            CreatedDate = new DateTime(2026, 2, 4, 21, 15, 43, 589, DateTimeKind.Local).AddTicks(3556),
                             EffectiveDate = new DateTime(2024, 6, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             EntityState = "Unchanged",
                             IsActive = true,
                             IsPublic = false,
-                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 12, 44, 14, 751, DateTimeKind.Unspecified).AddTicks(9673), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 16, 45, 43, 589, DateTimeKind.Unspecified).AddTicks(3569), new TimeSpan(0, 0, 0, 0, 0)),
                             Price = 145,
                             ProductId = "2",
-                            UpdatedDate = new DateTime(2026, 2, 4, 17, 14, 14, 751, DateTimeKind.Local).AddTicks(9665),
+                            UpdatedDate = new DateTime(2026, 2, 4, 21, 15, 43, 589, DateTimeKind.Local).AddTicks(3559),
                             Version = 0
                         },
                         new
                         {
                             Id = "5",
-                            CreatedDate = new DateTime(2026, 2, 4, 17, 14, 14, 751, DateTimeKind.Local).AddTicks(9685),
+                            CreatedDate = new DateTime(2026, 2, 4, 21, 15, 43, 589, DateTimeKind.Local).AddTicks(3590),
                             EffectiveDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             EntityState = "Unchanged",
                             IsActive = true,
                             IsPublic = false,
-                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 12, 44, 14, 751, DateTimeKind.Unspecified).AddTicks(9688), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 16, 45, 43, 589, DateTimeKind.Unspecified).AddTicks(3593), new TimeSpan(0, 0, 0, 0, 0)),
                             Price = 80,
                             ProductId = "3",
-                            UpdatedDate = new DateTime(2026, 2, 4, 17, 14, 14, 751, DateTimeKind.Local).AddTicks(9685),
+                            UpdatedDate = new DateTime(2026, 2, 4, 21, 15, 43, 589, DateTimeKind.Local).AddTicks(3591),
                             Version = 0
                         },
                         new
                         {
                             Id = "6",
-                            CreatedDate = new DateTime(2026, 2, 4, 17, 14, 14, 751, DateTimeKind.Local).AddTicks(9690),
+                            CreatedDate = new DateTime(2026, 2, 4, 21, 15, 43, 589, DateTimeKind.Local).AddTicks(3597),
                             EffectiveDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             EndDate = new DateTime(2024, 8, 31, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             EntityState = "Unchanged",
                             IsActive = false,
                             IsPublic = false,
-                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 12, 44, 14, 751, DateTimeKind.Unspecified).AddTicks(9693), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 16, 45, 43, 589, DateTimeKind.Unspecified).AddTicks(3611), new TimeSpan(0, 0, 0, 0, 0)),
                             Price = 250,
                             ProductId = "4",
-                            UpdatedDate = new DateTime(2026, 2, 4, 17, 14, 14, 751, DateTimeKind.Local).AddTicks(9690),
+                            UpdatedDate = new DateTime(2026, 2, 4, 21, 15, 43, 589, DateTimeKind.Local).AddTicks(3597),
                             Version = 0
                         },
                         new
                         {
                             Id = "7",
-                            CreatedDate = new DateTime(2026, 2, 4, 17, 14, 14, 751, DateTimeKind.Local).AddTicks(9695),
+                            CreatedDate = new DateTime(2026, 2, 4, 21, 15, 43, 589, DateTimeKind.Local).AddTicks(3615),
                             EffectiveDate = new DateTime(2024, 9, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             EntityState = "Unchanged",
                             IsActive = true,
                             IsPublic = false,
-                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 12, 44, 14, 751, DateTimeKind.Unspecified).AddTicks(9698), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 16, 45, 43, 589, DateTimeKind.Unspecified).AddTicks(3617), new TimeSpan(0, 0, 0, 0, 0)),
                             Price = 270,
                             ProductId = "4",
-                            UpdatedDate = new DateTime(2026, 2, 4, 17, 14, 14, 751, DateTimeKind.Local).AddTicks(9695),
+                            UpdatedDate = new DateTime(2026, 2, 4, 21, 15, 43, 589, DateTimeKind.Local).AddTicks(3616),
                             Version = 0
                         },
                         new
                         {
                             Id = "8",
-                            CreatedDate = new DateTime(2026, 2, 4, 17, 14, 14, 751, DateTimeKind.Local).AddTicks(9739),
+                            CreatedDate = new DateTime(2026, 2, 4, 21, 15, 43, 589, DateTimeKind.Local).AddTicks(3620),
                             EffectiveDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             EntityState = "Unchanged",
                             IsActive = true,
                             IsPublic = false,
-                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 12, 44, 14, 751, DateTimeKind.Unspecified).AddTicks(9743), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 16, 45, 43, 589, DateTimeKind.Unspecified).AddTicks(3623), new TimeSpan(0, 0, 0, 0, 0)),
                             Price = 180,
                             ProductId = "5",
-                            UpdatedDate = new DateTime(2026, 2, 4, 17, 14, 14, 751, DateTimeKind.Local).AddTicks(9740),
+                            UpdatedDate = new DateTime(2026, 2, 4, 21, 15, 43, 589, DateTimeKind.Local).AddTicks(3621),
                             Version = 0
                         },
                         new
                         {
                             Id = "9",
-                            CreatedDate = new DateTime(2026, 2, 4, 17, 14, 14, 751, DateTimeKind.Local).AddTicks(9745),
+                            CreatedDate = new DateTime(2026, 2, 4, 21, 15, 43, 589, DateTimeKind.Local).AddTicks(3626),
                             EffectiveDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             EndDate = new DateTime(2024, 4, 30, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             EntityState = "Unchanged",
                             IsActive = false,
                             IsPublic = false,
-                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 12, 44, 14, 751, DateTimeKind.Unspecified).AddTicks(9748), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 16, 45, 43, 589, DateTimeKind.Unspecified).AddTicks(3628), new TimeSpan(0, 0, 0, 0, 0)),
                             Price = 120,
                             ProductId = "6",
-                            UpdatedDate = new DateTime(2026, 2, 4, 17, 14, 14, 751, DateTimeKind.Local).AddTicks(9745),
+                            UpdatedDate = new DateTime(2026, 2, 4, 21, 15, 43, 589, DateTimeKind.Local).AddTicks(3626),
                             Version = 0
                         },
                         new
                         {
                             Id = "10",
-                            CreatedDate = new DateTime(2026, 2, 4, 17, 14, 14, 751, DateTimeKind.Local).AddTicks(9749),
+                            CreatedDate = new DateTime(2026, 2, 4, 21, 15, 43, 589, DateTimeKind.Local).AddTicks(3631),
                             EffectiveDate = new DateTime(2024, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             EntityState = "Unchanged",
                             IsActive = true,
                             IsPublic = false,
-                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 12, 44, 14, 751, DateTimeKind.Unspecified).AddTicks(9752), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 16, 45, 43, 589, DateTimeKind.Unspecified).AddTicks(3634), new TimeSpan(0, 0, 0, 0, 0)),
                             Price = 125,
                             ProductId = "6",
-                            UpdatedDate = new DateTime(2026, 2, 4, 17, 14, 14, 751, DateTimeKind.Local).AddTicks(9750),
+                            UpdatedDate = new DateTime(2026, 2, 4, 21, 15, 43, 589, DateTimeKind.Local).AddTicks(3632),
                             Version = 0
                         },
                         new
                         {
                             Id = "11",
-                            CreatedDate = new DateTime(2026, 2, 4, 17, 14, 14, 751, DateTimeKind.Local).AddTicks(9754),
+                            CreatedDate = new DateTime(2026, 2, 4, 21, 15, 43, 589, DateTimeKind.Local).AddTicks(3637),
                             EffectiveDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             EntityState = "Unchanged",
                             IsActive = true,
                             IsPublic = false,
-                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 12, 44, 14, 751, DateTimeKind.Unspecified).AddTicks(9760), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 16, 45, 43, 589, DateTimeKind.Unspecified).AddTicks(3639), new TimeSpan(0, 0, 0, 0, 0)),
                             Price = 300,
                             ProductId = "7",
-                            UpdatedDate = new DateTime(2026, 2, 4, 17, 14, 14, 751, DateTimeKind.Local).AddTicks(9754),
+                            UpdatedDate = new DateTime(2026, 2, 4, 21, 15, 43, 589, DateTimeKind.Local).AddTicks(3638),
                             Version = 0
                         },
                         new
                         {
                             Id = "12",
-                            CreatedDate = new DateTime(2026, 2, 4, 17, 14, 14, 751, DateTimeKind.Local).AddTicks(9761),
+                            CreatedDate = new DateTime(2026, 2, 4, 21, 15, 43, 589, DateTimeKind.Local).AddTicks(3642),
                             EffectiveDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             EntityState = "Unchanged",
                             IsActive = true,
                             IsPublic = false,
-                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 12, 44, 14, 751, DateTimeKind.Unspecified).AddTicks(9764), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 16, 45, 43, 589, DateTimeKind.Unspecified).AddTicks(3645), new TimeSpan(0, 0, 0, 0, 0)),
                             Price = 50,
                             ProductId = "8",
-                            UpdatedDate = new DateTime(2026, 2, 4, 17, 14, 14, 751, DateTimeKind.Local).AddTicks(9761),
+                            UpdatedDate = new DateTime(2026, 2, 4, 21, 15, 43, 589, DateTimeKind.Local).AddTicks(3643),
                             Version = 0
                         },
                         new
                         {
                             Id = "13",
-                            CreatedDate = new DateTime(2026, 2, 4, 17, 14, 14, 751, DateTimeKind.Local).AddTicks(9765),
+                            CreatedDate = new DateTime(2026, 2, 4, 21, 15, 43, 589, DateTimeKind.Local).AddTicks(3648),
                             EffectiveDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             EntityState = "Unchanged",
                             IsActive = true,
                             IsPublic = false,
-                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 12, 44, 14, 751, DateTimeKind.Unspecified).AddTicks(9768), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 16, 45, 43, 589, DateTimeKind.Unspecified).AddTicks(3650), new TimeSpan(0, 0, 0, 0, 0)),
                             Price = 400,
                             ProductId = "9",
-                            UpdatedDate = new DateTime(2026, 2, 4, 17, 14, 14, 751, DateTimeKind.Local).AddTicks(9766),
+                            UpdatedDate = new DateTime(2026, 2, 4, 21, 15, 43, 589, DateTimeKind.Local).AddTicks(3648),
                             Version = 0
                         },
                         new
                         {
                             Id = "14",
-                            CreatedDate = new DateTime(2026, 2, 4, 17, 14, 14, 751, DateTimeKind.Local).AddTicks(9769),
+                            CreatedDate = new DateTime(2026, 2, 4, 21, 15, 43, 589, DateTimeKind.Local).AddTicks(3653),
                             EffectiveDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             EndDate = new DateTime(2024, 3, 31, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             EntityState = "Unchanged",
                             IsActive = false,
                             IsPublic = false,
-                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 12, 44, 14, 751, DateTimeKind.Unspecified).AddTicks(9772), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 16, 45, 43, 589, DateTimeKind.Unspecified).AddTicks(3658), new TimeSpan(0, 0, 0, 0, 0)),
                             Price = 450,
                             ProductId = "10",
-                            UpdatedDate = new DateTime(2026, 2, 4, 17, 14, 14, 751, DateTimeKind.Local).AddTicks(9770),
+                            UpdatedDate = new DateTime(2026, 2, 4, 21, 15, 43, 589, DateTimeKind.Local).AddTicks(3654),
                             Version = 0
                         },
                         new
                         {
                             Id = "15",
-                            CreatedDate = new DateTime(2026, 2, 4, 17, 14, 14, 751, DateTimeKind.Local).AddTicks(9774),
+                            CreatedDate = new DateTime(2026, 2, 4, 21, 15, 43, 589, DateTimeKind.Local).AddTicks(3661),
                             EffectiveDate = new DateTime(2024, 4, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             EntityState = "Unchanged",
                             IsActive = true,
                             IsPublic = false,
-                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 12, 44, 14, 751, DateTimeKind.Unspecified).AddTicks(9777), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 16, 45, 43, 589, DateTimeKind.Unspecified).AddTicks(3664), new TimeSpan(0, 0, 0, 0, 0)),
                             Price = 480,
                             ProductId = "10",
-                            UpdatedDate = new DateTime(2026, 2, 4, 17, 14, 14, 751, DateTimeKind.Local).AddTicks(9774),
+                            UpdatedDate = new DateTime(2026, 2, 4, 21, 15, 43, 589, DateTimeKind.Local).AddTicks(3662),
                             Version = 0
                         },
                         new
                         {
                             Id = "16",
-                            CreatedDate = new DateTime(2026, 2, 4, 17, 14, 14, 751, DateTimeKind.Local).AddTicks(9778),
+                            CreatedDate = new DateTime(2026, 2, 4, 21, 15, 43, 589, DateTimeKind.Local).AddTicks(3666),
                             EffectiveDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             EntityState = "Unchanged",
                             IsActive = true,
                             IsPublic = false,
-                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 12, 44, 14, 751, DateTimeKind.Unspecified).AddTicks(9781), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 16, 45, 43, 589, DateTimeKind.Unspecified).AddTicks(3669), new TimeSpan(0, 0, 0, 0, 0)),
                             Price = 280,
                             ProductId = "11",
-                            UpdatedDate = new DateTime(2026, 2, 4, 17, 14, 14, 751, DateTimeKind.Local).AddTicks(9778),
+                            UpdatedDate = new DateTime(2026, 2, 4, 21, 15, 43, 589, DateTimeKind.Local).AddTicks(3667),
                             Version = 0
                         },
                         new
                         {
                             Id = "17",
-                            CreatedDate = new DateTime(2026, 2, 4, 17, 14, 14, 751, DateTimeKind.Local).AddTicks(9782),
+                            CreatedDate = new DateTime(2026, 2, 4, 21, 15, 43, 589, DateTimeKind.Local).AddTicks(3672),
                             EffectiveDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             EntityState = "Unchanged",
                             IsActive = true,
                             IsPublic = false,
-                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 12, 44, 14, 751, DateTimeKind.Unspecified).AddTicks(9785), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 16, 45, 43, 589, DateTimeKind.Unspecified).AddTicks(3674), new TimeSpan(0, 0, 0, 0, 0)),
                             Price = 200,
                             ProductId = "12",
-                            UpdatedDate = new DateTime(2026, 2, 4, 17, 14, 14, 751, DateTimeKind.Local).AddTicks(9783),
+                            UpdatedDate = new DateTime(2026, 2, 4, 21, 15, 43, 589, DateTimeKind.Local).AddTicks(3672),
                             Version = 0
                         },
                         new
                         {
                             Id = "18",
-                            CreatedDate = new DateTime(2026, 2, 4, 17, 14, 14, 751, DateTimeKind.Local).AddTicks(9786),
+                            CreatedDate = new DateTime(2026, 2, 4, 21, 15, 43, 589, DateTimeKind.Local).AddTicks(3677),
                             EffectiveDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             EntityState = "Unchanged",
                             IsActive = true,
                             IsPublic = false,
-                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 12, 44, 14, 751, DateTimeKind.Unspecified).AddTicks(9789), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 16, 45, 43, 589, DateTimeKind.Unspecified).AddTicks(3679), new TimeSpan(0, 0, 0, 0, 0)),
                             Price = 350,
                             ProductId = "13",
-                            UpdatedDate = new DateTime(2026, 2, 4, 17, 14, 14, 751, DateTimeKind.Local).AddTicks(9787),
+                            UpdatedDate = new DateTime(2026, 2, 4, 21, 15, 43, 589, DateTimeKind.Local).AddTicks(3677),
                             Version = 0
                         },
                         new
                         {
                             Id = "19",
-                            CreatedDate = new DateTime(2026, 2, 4, 17, 14, 14, 751, DateTimeKind.Local).AddTicks(9790),
+                            CreatedDate = new DateTime(2026, 2, 4, 21, 15, 43, 589, DateTimeKind.Local).AddTicks(3682),
                             EffectiveDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             EntityState = "Unchanged",
                             IsActive = true,
                             IsPublic = false,
-                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 12, 44, 14, 751, DateTimeKind.Unspecified).AddTicks(9795), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 16, 45, 43, 589, DateTimeKind.Unspecified).AddTicks(3684), new TimeSpan(0, 0, 0, 0, 0)),
                             Price = 180,
                             ProductId = "14",
-                            UpdatedDate = new DateTime(2026, 2, 4, 17, 14, 14, 751, DateTimeKind.Local).AddTicks(9791),
+                            UpdatedDate = new DateTime(2026, 2, 4, 21, 15, 43, 589, DateTimeKind.Local).AddTicks(3682),
                             Version = 0
                         },
                         new
                         {
                             Id = "20",
-                            CreatedDate = new DateTime(2026, 2, 4, 17, 14, 14, 751, DateTimeKind.Local).AddTicks(9797),
+                            CreatedDate = new DateTime(2026, 2, 4, 21, 15, 43, 589, DateTimeKind.Local).AddTicks(3687),
                             EffectiveDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             EntityState = "Unchanged",
                             IsActive = true,
                             IsPublic = false,
-                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 12, 44, 14, 751, DateTimeKind.Unspecified).AddTicks(9799), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 16, 45, 43, 589, DateTimeKind.Unspecified).AddTicks(3689), new TimeSpan(0, 0, 0, 0, 0)),
                             Price = 250,
                             ProductId = "15",
-                            UpdatedDate = new DateTime(2026, 2, 4, 17, 14, 14, 751, DateTimeKind.Local).AddTicks(9797),
+                            UpdatedDate = new DateTime(2026, 2, 4, 21, 15, 43, 589, DateTimeKind.Local).AddTicks(3687),
                             Version = 0
                         },
                         new
                         {
                             Id = "21",
-                            CreatedDate = new DateTime(2026, 2, 4, 17, 14, 14, 751, DateTimeKind.Local).AddTicks(9801),
+                            CreatedDate = new DateTime(2026, 2, 4, 21, 15, 43, 589, DateTimeKind.Local).AddTicks(3692),
                             EffectiveDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             EndDate = new DateTime(2024, 6, 30, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             EntityState = "Unchanged",
                             IsActive = false,
                             IsPublic = false,
-                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 12, 44, 14, 751, DateTimeKind.Unspecified).AddTicks(9804), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 16, 45, 43, 589, DateTimeKind.Unspecified).AddTicks(3694), new TimeSpan(0, 0, 0, 0, 0)),
                             Price = 800,
                             ProductId = "16",
-                            UpdatedDate = new DateTime(2026, 2, 4, 17, 14, 14, 751, DateTimeKind.Local).AddTicks(9801),
+                            UpdatedDate = new DateTime(2026, 2, 4, 21, 15, 43, 589, DateTimeKind.Local).AddTicks(3693),
                             Version = 0
                         },
                         new
                         {
                             Id = "22",
-                            CreatedDate = new DateTime(2026, 2, 4, 17, 14, 14, 751, DateTimeKind.Local).AddTicks(9805),
+                            CreatedDate = new DateTime(2026, 2, 4, 21, 15, 43, 589, DateTimeKind.Local).AddTicks(3697),
                             EffectiveDate = new DateTime(2024, 7, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             EntityState = "Unchanged",
                             IsActive = true,
                             IsPublic = false,
-                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 12, 44, 14, 751, DateTimeKind.Unspecified).AddTicks(9808), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 16, 45, 43, 589, DateTimeKind.Unspecified).AddTicks(3702), new TimeSpan(0, 0, 0, 0, 0)),
                             Price = 750,
                             ProductId = "16",
-                            UpdatedDate = new DateTime(2026, 2, 4, 17, 14, 14, 751, DateTimeKind.Local).AddTicks(9805),
+                            UpdatedDate = new DateTime(2026, 2, 4, 21, 15, 43, 589, DateTimeKind.Local).AddTicks(3698),
                             Version = 0
                         });
                 });
@@ -2770,7 +3108,7 @@ namespace SMIS.Infrastructure.Migrations
                             Id = "1",
                             ConversionFactor = 12m,
                             EntityState = "Added",
-                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 12, 44, 14, 748, DateTimeKind.Unspecified).AddTicks(8233), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 16, 45, 43, 583, DateTimeKind.Unspecified).AddTicks(1773), new TimeSpan(0, 0, 0, 0, 0)),
                             ProductId = "1",
                             ProductName = "Coca Cola 500ml",
                             ShopId = "1",
@@ -2784,7 +3122,7 @@ namespace SMIS.Infrastructure.Migrations
                             Id = "2",
                             ConversionFactor = 24m,
                             EntityState = "Added",
-                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 12, 44, 14, 749, DateTimeKind.Unspecified).AddTicks(6595), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 16, 45, 43, 585, DateTimeKind.Unspecified).AddTicks(191), new TimeSpan(0, 0, 0, 0, 0)),
                             ProductId = "1",
                             ProductName = "Coca Cola 500ml",
                             ShopId = "1",
@@ -2798,7 +3136,7 @@ namespace SMIS.Infrastructure.Migrations
                             Id = "3",
                             ConversionFactor = 12m,
                             EntityState = "Added",
-                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 12, 44, 14, 749, DateTimeKind.Unspecified).AddTicks(7666), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 16, 45, 43, 585, DateTimeKind.Unspecified).AddTicks(1600), new TimeSpan(0, 0, 0, 0, 0)),
                             ProductId = "2",
                             ProductName = "Pepsi 500ml",
                             ShopId = "1",
@@ -2812,7 +3150,7 @@ namespace SMIS.Infrastructure.Migrations
                             Id = "4",
                             ConversionFactor = 24m,
                             EntityState = "Added",
-                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 12, 44, 14, 749, DateTimeKind.Unspecified).AddTicks(8136), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 16, 45, 43, 585, DateTimeKind.Unspecified).AddTicks(2444), new TimeSpan(0, 0, 0, 0, 0)),
                             ProductId = "2",
                             ProductName = "Pepsi 500ml",
                             ShopId = "1",
@@ -2826,7 +3164,7 @@ namespace SMIS.Infrastructure.Migrations
                             Id = "5",
                             ConversionFactor = 6m,
                             EntityState = "Added",
-                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 12, 44, 14, 749, DateTimeKind.Unspecified).AddTicks(8145), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 16, 45, 43, 585, DateTimeKind.Unspecified).AddTicks(2487), new TimeSpan(0, 0, 0, 0, 0)),
                             ProductId = "3",
                             ProductName = "Mineral Water 1L",
                             ShopId = "2",
@@ -2840,7 +3178,7 @@ namespace SMIS.Infrastructure.Migrations
                             Id = "6",
                             ConversionFactor = 12m,
                             EntityState = "Added",
-                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 12, 44, 14, 749, DateTimeKind.Unspecified).AddTicks(8160), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 16, 45, 43, 585, DateTimeKind.Unspecified).AddTicks(2496), new TimeSpan(0, 0, 0, 0, 0)),
                             ProductId = "3",
                             ProductName = "Mineral Water 1L",
                             ShopId = "2",
@@ -2854,7 +3192,7 @@ namespace SMIS.Infrastructure.Migrations
                             Id = "7",
                             ConversionFactor = 12m,
                             EntityState = "Added",
-                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 12, 44, 14, 749, DateTimeKind.Unspecified).AddTicks(8165), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 16, 45, 43, 585, DateTimeKind.Unspecified).AddTicks(2503), new TimeSpan(0, 0, 0, 0, 0)),
                             ProductId = "4",
                             ProductName = "Oreo Biscuits",
                             ShopId = "1",
@@ -2868,7 +3206,7 @@ namespace SMIS.Infrastructure.Migrations
                             Id = "8",
                             ConversionFactor = 48m,
                             EntityState = "Added",
-                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 12, 44, 14, 749, DateTimeKind.Unspecified).AddTicks(8170), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 16, 45, 43, 585, DateTimeKind.Unspecified).AddTicks(2510), new TimeSpan(0, 0, 0, 0, 0)),
                             ProductId = "4",
                             ProductName = "Oreo Biscuits",
                             ShopId = "1",
@@ -2882,7 +3220,7 @@ namespace SMIS.Infrastructure.Migrations
                             Id = "9",
                             ConversionFactor = 20m,
                             EntityState = "Added",
-                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 12, 44, 14, 749, DateTimeKind.Unspecified).AddTicks(8175), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 16, 45, 43, 585, DateTimeKind.Unspecified).AddTicks(2515), new TimeSpan(0, 0, 0, 0, 0)),
                             ProductId = "5",
                             ProductName = "Lay's Chips",
                             ShopId = "2",
@@ -2896,7 +3234,7 @@ namespace SMIS.Infrastructure.Migrations
                             Id = "10",
                             ConversionFactor = 60m,
                             EntityState = "Added",
-                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 12, 44, 14, 749, DateTimeKind.Unspecified).AddTicks(8180), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 16, 45, 43, 585, DateTimeKind.Unspecified).AddTicks(2522), new TimeSpan(0, 0, 0, 0, 0)),
                             ProductId = "5",
                             ProductName = "Lay's Chips",
                             ShopId = "2",
@@ -2910,7 +3248,7 @@ namespace SMIS.Infrastructure.Migrations
                             Id = "11",
                             ConversionFactor = 24m,
                             EntityState = "Added",
-                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 12, 44, 14, 749, DateTimeKind.Unspecified).AddTicks(8185), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 16, 45, 43, 585, DateTimeKind.Unspecified).AddTicks(2550), new TimeSpan(0, 0, 0, 0, 0)),
                             ProductId = "6",
                             ProductName = "Instant Noodles",
                             ShopId = "3",
@@ -2924,7 +3262,7 @@ namespace SMIS.Infrastructure.Migrations
                             Id = "12",
                             ConversionFactor = 72m,
                             EntityState = "Added",
-                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 12, 44, 14, 749, DateTimeKind.Unspecified).AddTicks(8191), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 16, 45, 43, 585, DateTimeKind.Unspecified).AddTicks(2557), new TimeSpan(0, 0, 0, 0, 0)),
                             ProductId = "6",
                             ProductName = "Instant Noodles",
                             ShopId = "3",
@@ -2938,7 +3276,7 @@ namespace SMIS.Infrastructure.Migrations
                             Id = "13",
                             ConversionFactor = 12m,
                             EntityState = "Added",
-                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 12, 44, 14, 749, DateTimeKind.Unspecified).AddTicks(8195), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 16, 45, 43, 585, DateTimeKind.Unspecified).AddTicks(2566), new TimeSpan(0, 0, 0, 0, 0)),
                             ProductId = "7",
                             ProductName = "A4 Notebook",
                             ShopId = "1",
@@ -2952,7 +3290,7 @@ namespace SMIS.Infrastructure.Migrations
                             Id = "14",
                             ConversionFactor = 50m,
                             EntityState = "Added",
-                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 12, 44, 14, 749, DateTimeKind.Unspecified).AddTicks(8202), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 16, 45, 43, 585, DateTimeKind.Unspecified).AddTicks(2573), new TimeSpan(0, 0, 0, 0, 0)),
                             ProductId = "7",
                             ProductName = "A4 Notebook",
                             ShopId = "1",
@@ -2966,7 +3304,7 @@ namespace SMIS.Infrastructure.Migrations
                             Id = "15",
                             ConversionFactor = 12m,
                             EntityState = "Added",
-                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 12, 44, 14, 749, DateTimeKind.Unspecified).AddTicks(8207), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 16, 45, 43, 585, DateTimeKind.Unspecified).AddTicks(2579), new TimeSpan(0, 0, 0, 0, 0)),
                             ProductId = "8",
                             ProductName = "Blue Pen",
                             ShopId = "2",
@@ -2980,7 +3318,7 @@ namespace SMIS.Infrastructure.Migrations
                             Id = "16",
                             ConversionFactor = 144m,
                             EntityState = "Added",
-                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 12, 44, 14, 749, DateTimeKind.Unspecified).AddTicks(8212), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 16, 45, 43, 585, DateTimeKind.Unspecified).AddTicks(2585), new TimeSpan(0, 0, 0, 0, 0)),
                             ProductId = "8",
                             ProductName = "Blue Pen",
                             ShopId = "2",
@@ -2994,7 +3332,7 @@ namespace SMIS.Infrastructure.Migrations
                             Id = "17",
                             ConversionFactor = 20m,
                             EntityState = "Added",
-                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 12, 44, 14, 749, DateTimeKind.Unspecified).AddTicks(8217), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 16, 45, 43, 585, DateTimeKind.Unspecified).AddTicks(2591), new TimeSpan(0, 0, 0, 0, 0)),
                             ProductId = "9",
                             ProductName = "Pencil Set",
                             ShopId = "3",
@@ -3008,7 +3346,7 @@ namespace SMIS.Infrastructure.Migrations
                             Id = "18",
                             ConversionFactor = 12m,
                             EntityState = "Added",
-                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 12, 44, 14, 749, DateTimeKind.Unspecified).AddTicks(8221), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 16, 45, 43, 585, DateTimeKind.Unspecified).AddTicks(2598), new TimeSpan(0, 0, 0, 0, 0)),
                             ProductId = "10",
                             ProductName = "Cooking Oil 1L",
                             ShopId = "1",
@@ -3022,7 +3360,7 @@ namespace SMIS.Infrastructure.Migrations
                             Id = "19",
                             ConversionFactor = 24m,
                             EntityState = "Added",
-                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 12, 44, 14, 749, DateTimeKind.Unspecified).AddTicks(8226), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 16, 45, 43, 585, DateTimeKind.Unspecified).AddTicks(2604), new TimeSpan(0, 0, 0, 0, 0)),
                             ProductId = "10",
                             ProductName = "Cooking Oil 1L",
                             ShopId = "1",
@@ -3036,7 +3374,7 @@ namespace SMIS.Infrastructure.Migrations
                             Id = "20",
                             ConversionFactor = 10m,
                             EntityState = "Added",
-                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 12, 44, 14, 749, DateTimeKind.Unspecified).AddTicks(8231), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 16, 45, 43, 585, DateTimeKind.Unspecified).AddTicks(2610), new TimeSpan(0, 0, 0, 0, 0)),
                             ProductId = "11",
                             ProductName = "Rice 1kg",
                             ShopId = "2",
@@ -3050,7 +3388,7 @@ namespace SMIS.Infrastructure.Migrations
                             Id = "21",
                             ConversionFactor = 25m,
                             EntityState = "Added",
-                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 12, 44, 14, 749, DateTimeKind.Unspecified).AddTicks(8235), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 16, 45, 43, 585, DateTimeKind.Unspecified).AddTicks(2625), new TimeSpan(0, 0, 0, 0, 0)),
                             ProductId = "11",
                             ProductName = "Rice 1kg",
                             ShopId = "2",
@@ -3064,7 +3402,7 @@ namespace SMIS.Infrastructure.Migrations
                             Id = "22",
                             ConversionFactor = 20m,
                             EntityState = "Added",
-                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 12, 44, 14, 749, DateTimeKind.Unspecified).AddTicks(8241), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 16, 45, 43, 585, DateTimeKind.Unspecified).AddTicks(2631), new TimeSpan(0, 0, 0, 0, 0)),
                             ProductId = "12",
                             ProductName = "Sugar 1kg",
                             ShopId = "3",
@@ -3078,7 +3416,7 @@ namespace SMIS.Infrastructure.Migrations
                             Id = "23",
                             ConversionFactor = 50m,
                             EntityState = "Added",
-                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 12, 44, 14, 749, DateTimeKind.Unspecified).AddTicks(8246), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 16, 45, 43, 585, DateTimeKind.Unspecified).AddTicks(2637), new TimeSpan(0, 0, 0, 0, 0)),
                             ProductId = "12",
                             ProductName = "Sugar 1kg",
                             ShopId = "3",
@@ -3092,7 +3430,7 @@ namespace SMIS.Infrastructure.Migrations
                             Id = "24",
                             ConversionFactor = 12m,
                             EntityState = "Added",
-                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 12, 44, 14, 749, DateTimeKind.Unspecified).AddTicks(8250), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 16, 45, 43, 585, DateTimeKind.Unspecified).AddTicks(2643), new TimeSpan(0, 0, 0, 0, 0)),
                             ProductId = "13",
                             ProductName = "Shampoo 400ml",
                             ShopId = "1",
@@ -3106,7 +3444,7 @@ namespace SMIS.Infrastructure.Migrations
                             Id = "25",
                             ConversionFactor = 24m,
                             EntityState = "Added",
-                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 12, 44, 14, 749, DateTimeKind.Unspecified).AddTicks(8255), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 16, 45, 43, 585, DateTimeKind.Unspecified).AddTicks(2652), new TimeSpan(0, 0, 0, 0, 0)),
                             ProductId = "13",
                             ProductName = "Shampoo 400ml",
                             ShopId = "1",
@@ -3120,7 +3458,7 @@ namespace SMIS.Infrastructure.Migrations
                             Id = "26",
                             ConversionFactor = 24m,
                             EntityState = "Added",
-                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 12, 44, 14, 749, DateTimeKind.Unspecified).AddTicks(8259), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 16, 45, 43, 585, DateTimeKind.Unspecified).AddTicks(2658), new TimeSpan(0, 0, 0, 0, 0)),
                             ProductId = "14",
                             ProductName = "Toothpaste",
                             ShopId = "2",
@@ -3134,7 +3472,7 @@ namespace SMIS.Infrastructure.Migrations
                             Id = "27",
                             ConversionFactor = 72m,
                             EntityState = "Added",
-                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 12, 44, 14, 749, DateTimeKind.Unspecified).AddTicks(8291), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 16, 45, 43, 585, DateTimeKind.Unspecified).AddTicks(2665), new TimeSpan(0, 0, 0, 0, 0)),
                             ProductId = "14",
                             ProductName = "Toothpaste",
                             ShopId = "2",
@@ -3148,7 +3486,7 @@ namespace SMIS.Infrastructure.Migrations
                             Id = "28",
                             ConversionFactor = 50m,
                             EntityState = "Added",
-                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 12, 44, 14, 749, DateTimeKind.Unspecified).AddTicks(8297), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 16, 45, 43, 585, DateTimeKind.Unspecified).AddTicks(2670), new TimeSpan(0, 0, 0, 0, 0)),
                             ProductId = "15",
                             ProductName = "USB Cable",
                             ShopId = "1",
@@ -3162,7 +3500,7 @@ namespace SMIS.Infrastructure.Migrations
                             Id = "29",
                             ConversionFactor = 200m,
                             EntityState = "Added",
-                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 12, 44, 14, 749, DateTimeKind.Unspecified).AddTicks(8302), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 16, 45, 43, 585, DateTimeKind.Unspecified).AddTicks(2678), new TimeSpan(0, 0, 0, 0, 0)),
                             ProductId = "15",
                             ProductName = "USB Cable",
                             ShopId = "1",
@@ -3176,7 +3514,7 @@ namespace SMIS.Infrastructure.Migrations
                             Id = "30",
                             ConversionFactor = 20m,
                             EntityState = "Added",
-                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 12, 44, 14, 749, DateTimeKind.Unspecified).AddTicks(8308), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 16, 45, 43, 585, DateTimeKind.Unspecified).AddTicks(2684), new TimeSpan(0, 0, 0, 0, 0)),
                             ProductId = "16",
                             ProductName = "Phone Charger",
                             ShopId = "3",
@@ -3190,7 +3528,7 @@ namespace SMIS.Infrastructure.Migrations
                             Id = "31",
                             ConversionFactor = 100m,
                             EntityState = "Added",
-                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 12, 44, 14, 749, DateTimeKind.Unspecified).AddTicks(8313), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 16, 45, 43, 585, DateTimeKind.Unspecified).AddTicks(2690), new TimeSpan(0, 0, 0, 0, 0)),
                             ProductId = "16",
                             ProductName = "Phone Charger",
                             ShopId = "3",
@@ -3268,51 +3606,51 @@ namespace SMIS.Infrastructure.Migrations
                         {
                             Id = "1",
                             Address = "Kabul Center",
-                            CreatedDate = new DateTime(2026, 2, 4, 17, 14, 15, 359, DateTimeKind.Local).AddTicks(7172),
+                            CreatedDate = new DateTime(2026, 2, 4, 21, 15, 45, 83, DateTimeKind.Local).AddTicks(8519),
                             Email = "main@pharmacy.local",
                             EntityState = "Unchanged",
                             IsActive = true,
                             IsPublic = false,
-                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 12, 44, 15, 359, DateTimeKind.Unspecified).AddTicks(7202), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 16, 45, 45, 83, DateTimeKind.Unspecified).AddTicks(8539), new TimeSpan(0, 0, 0, 0, 0)),
                             Name = "Main Pharmacy",
                             PhoneNumber = "0700000001",
                             ShopType = "RetailShop",
                             TaxNumber = "TAX001",
-                            UpdatedDate = new DateTime(2026, 2, 4, 17, 14, 15, 359, DateTimeKind.Local).AddTicks(7181),
+                            UpdatedDate = new DateTime(2026, 2, 4, 21, 15, 45, 83, DateTimeKind.Local).AddTicks(8525),
                             Version = 0
                         },
                         new
                         {
                             Id = "2",
                             Address = "Herat Center",
-                            CreatedDate = new DateTime(2026, 2, 4, 17, 14, 15, 360, DateTimeKind.Local).AddTicks(8925),
+                            CreatedDate = new DateTime(2026, 2, 4, 21, 15, 45, 86, DateTimeKind.Local).AddTicks(86),
                             Email = "city@pharmacy.local",
                             EntityState = "Unchanged",
                             IsActive = true,
                             IsPublic = false,
-                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 12, 44, 15, 360, DateTimeKind.Unspecified).AddTicks(8954), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 16, 45, 45, 86, DateTimeKind.Unspecified).AddTicks(121), new TimeSpan(0, 0, 0, 0, 0)),
                             Name = "City Pharmacy",
                             PhoneNumber = "0700000002",
                             ShopType = "WholesaleShop",
                             TaxNumber = "TAX002",
-                            UpdatedDate = new DateTime(2026, 2, 4, 17, 14, 15, 360, DateTimeKind.Local).AddTicks(8930),
+                            UpdatedDate = new DateTime(2026, 2, 4, 21, 15, 45, 86, DateTimeKind.Local).AddTicks(93),
                             Version = 0
                         },
                         new
                         {
                             Id = "3",
                             Address = "Kandahar Center",
-                            CreatedDate = new DateTime(2026, 2, 4, 17, 14, 15, 360, DateTimeKind.Local).AddTicks(9647),
+                            CreatedDate = new DateTime(2026, 2, 4, 21, 15, 45, 86, DateTimeKind.Local).AddTicks(1167),
                             Email = "health@store.local",
                             EntityState = "Unchanged",
                             IsActive = true,
                             IsPublic = false,
-                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 12, 44, 15, 360, DateTimeKind.Unspecified).AddTicks(9656), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 16, 45, 45, 86, DateTimeKind.Unspecified).AddTicks(1179), new TimeSpan(0, 0, 0, 0, 0)),
                             Name = "Health Store",
                             PhoneNumber = "0700000003",
                             ShopType = "RetailShop",
                             TaxNumber = "TAX003",
-                            UpdatedDate = new DateTime(2026, 2, 4, 17, 14, 15, 360, DateTimeKind.Local).AddTicks(9647),
+                            UpdatedDate = new DateTime(2026, 2, 4, 21, 15, 45, 86, DateTimeKind.Local).AddTicks(1171),
                             Version = 0
                         });
                 });
@@ -3405,67 +3743,67 @@ namespace SMIS.Infrastructure.Migrations
                         {
                             Id = "1",
                             BatchNumber = "CC-001",
-                            CreatedDate = new DateTime(2026, 2, 4, 17, 14, 14, 752, DateTimeKind.Local).AddTicks(3861),
+                            CreatedDate = new DateTime(2026, 2, 4, 21, 15, 43, 591, DateTimeKind.Local).AddTicks(420),
                             EntityState = "Unchanged",
-                            ExpirationDate = new DateTime(2026, 8, 4, 12, 44, 14, 752, DateTimeKind.Utc).AddTicks(1859),
+                            ExpirationDate = new DateTime(2026, 8, 4, 16, 45, 43, 589, DateTimeKind.Utc).AddTicks(9559),
                             IsPublic = false,
                             LastModifiedUtc = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
                             ProductId = "1",
                             ProductName = "Coca Cola 500ml",
                             PurchasePrice = 40000L,
                             Quantity = 100m,
-                            ReceivedDate = new DateTime(2026, 1, 25, 12, 44, 14, 752, DateTimeKind.Utc).AddTicks(1810),
+                            ReceivedDate = new DateTime(2026, 1, 25, 16, 45, 43, 589, DateTimeKind.Utc).AddTicks(9414),
                             Status = "Active",
                             UnitId = "1",
                             UnitName = "Bottle",
-                            UpdatedDate = new DateTime(2026, 2, 4, 17, 14, 14, 752, DateTimeKind.Local).AddTicks(3862),
+                            UpdatedDate = new DateTime(2026, 2, 4, 21, 15, 43, 591, DateTimeKind.Local).AddTicks(436),
                             Version = 0
                         },
                         new
                         {
                             Id = "2",
                             BatchNumber = "CC-002",
-                            CreatedDate = new DateTime(2026, 2, 4, 17, 14, 14, 752, DateTimeKind.Local).AddTicks(8099),
+                            CreatedDate = new DateTime(2026, 2, 4, 21, 15, 43, 592, DateTimeKind.Local).AddTicks(9608),
                             EntityState = "Unchanged",
-                            ExpirationDate = new DateTime(2026, 9, 4, 12, 44, 14, 752, DateTimeKind.Utc).AddTicks(8088),
+                            ExpirationDate = new DateTime(2026, 9, 4, 16, 45, 43, 592, DateTimeKind.Utc).AddTicks(9516),
                             IsPublic = false,
                             LastModifiedUtc = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
                             ProductId = "1",
                             ProductName = "Coca Cola 500ml",
                             PurchasePrice = 42000L,
                             Quantity = 80m,
-                            ReceivedDate = new DateTime(2026, 1, 30, 12, 44, 14, 752, DateTimeKind.Utc).AddTicks(8087),
+                            ReceivedDate = new DateTime(2026, 1, 30, 16, 45, 43, 592, DateTimeKind.Utc).AddTicks(9512),
                             Status = "Active",
                             UnitId = "1",
                             UnitName = "Bottle",
-                            UpdatedDate = new DateTime(2026, 2, 4, 17, 14, 14, 752, DateTimeKind.Local).AddTicks(8101),
+                            UpdatedDate = new DateTime(2026, 2, 4, 21, 15, 43, 592, DateTimeKind.Local).AddTicks(9621),
                             Version = 0
                         },
                         new
                         {
                             Id = "3",
                             BatchNumber = "BS-101",
-                            CreatedDate = new DateTime(2026, 2, 4, 17, 14, 14, 752, DateTimeKind.Local).AddTicks(9111),
+                            CreatedDate = new DateTime(2026, 2, 4, 21, 15, 43, 593, DateTimeKind.Local).AddTicks(3256),
                             EntityState = "Unchanged",
-                            ExpirationDate = new DateTime(2026, 5, 4, 12, 44, 14, 752, DateTimeKind.Utc).AddTicks(9105),
+                            ExpirationDate = new DateTime(2026, 5, 4, 16, 45, 43, 593, DateTimeKind.Utc).AddTicks(3224),
                             IsPublic = false,
                             LastModifiedUtc = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
                             ProductId = "2",
                             ProductName = "Oreo Biscuits",
                             PurchasePrice = 25000L,
                             Quantity = 50m,
-                            ReceivedDate = new DateTime(2026, 1, 20, 12, 44, 14, 752, DateTimeKind.Utc).AddTicks(9104),
+                            ReceivedDate = new DateTime(2026, 1, 20, 16, 45, 43, 593, DateTimeKind.Utc).AddTicks(3220),
                             Status = "Active",
                             UnitId = "2",
                             UnitName = "Pack",
-                            UpdatedDate = new DateTime(2026, 2, 4, 17, 14, 14, 752, DateTimeKind.Local).AddTicks(9112),
+                            UpdatedDate = new DateTime(2026, 2, 4, 21, 15, 43, 593, DateTimeKind.Local).AddTicks(3261),
                             Version = 0
                         },
                         new
                         {
                             Id = "4",
                             BatchNumber = "NB-009",
-                            CreatedDate = new DateTime(2026, 2, 4, 17, 14, 14, 752, DateTimeKind.Local).AddTicks(9963),
+                            CreatedDate = new DateTime(2026, 2, 4, 21, 15, 43, 593, DateTimeKind.Local).AddTicks(6143),
                             EntityState = "Unchanged",
                             IsPublic = false,
                             LastModifiedUtc = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
@@ -3473,11 +3811,11 @@ namespace SMIS.Infrastructure.Migrations
                             ProductName = "A4 Notebook",
                             PurchasePrice = 120000L,
                             Quantity = 200m,
-                            ReceivedDate = new DateTime(2026, 1, 15, 12, 44, 14, 752, DateTimeKind.Utc).AddTicks(9953),
+                            ReceivedDate = new DateTime(2026, 1, 15, 16, 45, 43, 593, DateTimeKind.Utc).AddTicks(6125),
                             Status = "Active",
                             UnitId = "3",
                             UnitName = "Piece",
-                            UpdatedDate = new DateTime(2026, 2, 4, 17, 14, 14, 752, DateTimeKind.Local).AddTicks(9965),
+                            UpdatedDate = new DateTime(2026, 2, 4, 21, 15, 43, 593, DateTimeKind.Local).AddTicks(6146),
                             Version = 0
                         });
                 });
@@ -3576,7 +3914,7 @@ namespace SMIS.Infrastructure.Migrations
                         new
                         {
                             Id = "1",
-                            CreatedDate = new DateTime(2026, 2, 4, 17, 14, 14, 753, DateTimeKind.Local).AddTicks(3659),
+                            CreatedDate = new DateTime(2026, 2, 4, 21, 15, 43, 594, DateTimeKind.Local).AddTicks(8576),
                             EntityState = "Unchanged",
                             IsPublic = false,
                             LastModifiedUtc = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
@@ -3591,13 +3929,13 @@ namespace SMIS.Infrastructure.Migrations
                             Type = "In",
                             UnitId = "2",
                             UnitName = "Bottle",
-                            UpdatedDate = new DateTime(2026, 2, 4, 17, 14, 14, 753, DateTimeKind.Local).AddTicks(3660),
+                            UpdatedDate = new DateTime(2026, 2, 4, 21, 15, 43, 594, DateTimeKind.Local).AddTicks(8581),
                             Version = 0
                         },
                         new
                         {
                             Id = "2",
-                            CreatedDate = new DateTime(2026, 2, 4, 17, 14, 14, 753, DateTimeKind.Local).AddTicks(9112),
+                            CreatedDate = new DateTime(2026, 2, 4, 21, 15, 43, 597, DateTimeKind.Local).AddTicks(291),
                             EntityState = "Unchanged",
                             IsPublic = false,
                             LastModifiedUtc = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
@@ -3612,13 +3950,13 @@ namespace SMIS.Infrastructure.Migrations
                             Type = "Out",
                             UnitId = "2",
                             UnitName = "Bottle",
-                            UpdatedDate = new DateTime(2026, 2, 4, 17, 14, 14, 753, DateTimeKind.Local).AddTicks(9114),
+                            UpdatedDate = new DateTime(2026, 2, 4, 21, 15, 43, 597, DateTimeKind.Local).AddTicks(296),
                             Version = 0
                         },
                         new
                         {
                             Id = "3",
-                            CreatedDate = new DateTime(2026, 2, 4, 17, 14, 14, 754, DateTimeKind.Local).AddTicks(407),
+                            CreatedDate = new DateTime(2026, 2, 4, 21, 15, 43, 597, DateTimeKind.Local).AddTicks(4224),
                             EntityState = "Unchanged",
                             IsPublic = false,
                             LastModifiedUtc = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
@@ -3633,13 +3971,13 @@ namespace SMIS.Infrastructure.Migrations
                             Type = "In",
                             UnitId = "2",
                             UnitName = "Bottle",
-                            UpdatedDate = new DateTime(2026, 2, 4, 17, 14, 14, 754, DateTimeKind.Local).AddTicks(409),
+                            UpdatedDate = new DateTime(2026, 2, 4, 21, 15, 43, 597, DateTimeKind.Local).AddTicks(4228),
                             Version = 0
                         },
                         new
                         {
                             Id = "4",
-                            CreatedDate = new DateTime(2026, 2, 4, 17, 14, 14, 754, DateTimeKind.Local).AddTicks(1327),
+                            CreatedDate = new DateTime(2026, 2, 4, 21, 15, 43, 597, DateTimeKind.Local).AddTicks(8248),
                             EntityState = "Unchanged",
                             IsPublic = false,
                             LastModifiedUtc = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
@@ -3654,13 +3992,13 @@ namespace SMIS.Infrastructure.Migrations
                             Type = "Out",
                             UnitId = "2",
                             UnitName = "Bottle",
-                            UpdatedDate = new DateTime(2026, 2, 4, 17, 14, 14, 754, DateTimeKind.Local).AddTicks(1328),
+                            UpdatedDate = new DateTime(2026, 2, 4, 21, 15, 43, 597, DateTimeKind.Local).AddTicks(8252),
                             Version = 0
                         },
                         new
                         {
                             Id = "5",
-                            CreatedDate = new DateTime(2026, 2, 4, 17, 14, 14, 754, DateTimeKind.Local).AddTicks(1341),
+                            CreatedDate = new DateTime(2026, 2, 4, 21, 15, 43, 597, DateTimeKind.Local).AddTicks(8313),
                             EntityState = "Unchanged",
                             IsPublic = false,
                             LastModifiedUtc = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
@@ -3675,13 +4013,13 @@ namespace SMIS.Infrastructure.Migrations
                             Type = "In",
                             UnitId = "2",
                             UnitName = "Bottle",
-                            UpdatedDate = new DateTime(2026, 2, 4, 17, 14, 14, 754, DateTimeKind.Local).AddTicks(1342),
+                            UpdatedDate = new DateTime(2026, 2, 4, 21, 15, 43, 597, DateTimeKind.Local).AddTicks(8314),
                             Version = 0
                         },
                         new
                         {
                             Id = "6",
-                            CreatedDate = new DateTime(2026, 2, 4, 17, 14, 14, 754, DateTimeKind.Local).AddTicks(1349),
+                            CreatedDate = new DateTime(2026, 2, 4, 21, 15, 43, 597, DateTimeKind.Local).AddTicks(8347),
                             EntityState = "Unchanged",
                             IsPublic = false,
                             LastModifiedUtc = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
@@ -3696,13 +4034,13 @@ namespace SMIS.Infrastructure.Migrations
                             Type = "Out",
                             UnitId = "2",
                             UnitName = "Bottle",
-                            UpdatedDate = new DateTime(2026, 2, 4, 17, 14, 14, 754, DateTimeKind.Local).AddTicks(1349),
+                            UpdatedDate = new DateTime(2026, 2, 4, 21, 15, 43, 597, DateTimeKind.Local).AddTicks(8348),
                             Version = 0
                         },
                         new
                         {
                             Id = "7",
-                            CreatedDate = new DateTime(2026, 2, 4, 17, 14, 14, 754, DateTimeKind.Local).AddTicks(1355),
+                            CreatedDate = new DateTime(2026, 2, 4, 21, 15, 43, 597, DateTimeKind.Local).AddTicks(8368),
                             EntityState = "Unchanged",
                             IsPublic = false,
                             LastModifiedUtc = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
@@ -3717,13 +4055,13 @@ namespace SMIS.Infrastructure.Migrations
                             Type = "Adujstment",
                             UnitId = "2",
                             UnitName = "Bottle",
-                            UpdatedDate = new DateTime(2026, 2, 4, 17, 14, 14, 754, DateTimeKind.Local).AddTicks(1356),
+                            UpdatedDate = new DateTime(2026, 2, 4, 21, 15, 43, 597, DateTimeKind.Local).AddTicks(8369),
                             Version = 0
                         },
                         new
                         {
                             Id = "8",
-                            CreatedDate = new DateTime(2026, 2, 4, 17, 14, 14, 754, DateTimeKind.Local).AddTicks(1361),
+                            CreatedDate = new DateTime(2026, 2, 4, 21, 15, 43, 597, DateTimeKind.Local).AddTicks(8385),
                             EntityState = "Unchanged",
                             IsPublic = false,
                             LastModifiedUtc = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
@@ -3738,13 +4076,13 @@ namespace SMIS.Infrastructure.Migrations
                             Type = "In",
                             UnitId = "3",
                             UnitName = "Pack",
-                            UpdatedDate = new DateTime(2026, 2, 4, 17, 14, 14, 754, DateTimeKind.Local).AddTicks(1362),
+                            UpdatedDate = new DateTime(2026, 2, 4, 21, 15, 43, 597, DateTimeKind.Local).AddTicks(8386),
                             Version = 0
                         },
                         new
                         {
                             Id = "9",
-                            CreatedDate = new DateTime(2026, 2, 4, 17, 14, 14, 754, DateTimeKind.Local).AddTicks(1373),
+                            CreatedDate = new DateTime(2026, 2, 4, 21, 15, 43, 597, DateTimeKind.Local).AddTicks(8404),
                             EntityState = "Unchanged",
                             IsPublic = false,
                             LastModifiedUtc = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
@@ -3759,13 +4097,13 @@ namespace SMIS.Infrastructure.Migrations
                             Type = "Out",
                             UnitId = "3",
                             UnitName = "Pack",
-                            UpdatedDate = new DateTime(2026, 2, 4, 17, 14, 14, 754, DateTimeKind.Local).AddTicks(1373),
+                            UpdatedDate = new DateTime(2026, 2, 4, 21, 15, 43, 597, DateTimeKind.Local).AddTicks(8405),
                             Version = 0
                         },
                         new
                         {
                             Id = "10",
-                            CreatedDate = new DateTime(2026, 2, 4, 17, 14, 14, 754, DateTimeKind.Local).AddTicks(1379),
+                            CreatedDate = new DateTime(2026, 2, 4, 21, 15, 43, 597, DateTimeKind.Local).AddTicks(8421),
                             EntityState = "Unchanged",
                             IsPublic = false,
                             LastModifiedUtc = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
@@ -3780,7 +4118,7 @@ namespace SMIS.Infrastructure.Migrations
                             Type = "Out",
                             UnitId = "3",
                             UnitName = "Pack",
-                            UpdatedDate = new DateTime(2026, 2, 4, 17, 14, 14, 754, DateTimeKind.Local).AddTicks(1380),
+                            UpdatedDate = new DateTime(2026, 2, 4, 21, 15, 43, 597, DateTimeKind.Local).AddTicks(8421),
                             Version = 0
                         });
                 });
@@ -3830,7 +4168,7 @@ namespace SMIS.Infrastructure.Migrations
                             Id = "1",
                             Description = "Individual items",
                             EntityState = "Added",
-                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 12, 44, 15, 358, DateTimeKind.Unspecified).AddTicks(9100), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 16, 45, 45, 82, DateTimeKind.Unspecified).AddTicks(4513), new TimeSpan(0, 0, 0, 0, 0)),
                             Name = "Piece",
                             ShopId = "1",
                             Symbol = "pcs",
@@ -3841,7 +4179,7 @@ namespace SMIS.Infrastructure.Migrations
                             Id = "2",
                             Description = "Liquid containers",
                             EntityState = "Added",
-                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 12, 44, 15, 359, DateTimeKind.Unspecified).AddTicks(2551), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 16, 45, 45, 83, DateTimeKind.Unspecified).AddTicks(2067), new TimeSpan(0, 0, 0, 0, 0)),
                             Name = "Bottle",
                             ShopId = "1",
                             Symbol = "btl",
@@ -3852,7 +4190,7 @@ namespace SMIS.Infrastructure.Migrations
                             Id = "3",
                             Description = "Small packages",
                             EntityState = "Added",
-                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 12, 44, 15, 359, DateTimeKind.Unspecified).AddTicks(4076), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 16, 45, 45, 83, DateTimeKind.Unspecified).AddTicks(3186), new TimeSpan(0, 0, 0, 0, 0)),
                             Name = "Pack",
                             ShopId = "1",
                             Symbol = "pk",
@@ -3863,7 +4201,7 @@ namespace SMIS.Infrastructure.Migrations
                             Id = "4",
                             Description = "Medium containers",
                             EntityState = "Added",
-                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 12, 44, 15, 359, DateTimeKind.Unspecified).AddTicks(4536), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 16, 45, 45, 83, DateTimeKind.Unspecified).AddTicks(3975), new TimeSpan(0, 0, 0, 0, 0)),
                             Name = "Box",
                             ShopId = "2",
                             Symbol = "box",
@@ -3874,7 +4212,7 @@ namespace SMIS.Infrastructure.Migrations
                             Id = "5",
                             Description = "Large containers",
                             EntityState = "Added",
-                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 12, 44, 15, 359, DateTimeKind.Unspecified).AddTicks(4544), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 16, 45, 45, 83, DateTimeKind.Unspecified).AddTicks(4005), new TimeSpan(0, 0, 0, 0, 0)),
                             Name = "Carton",
                             ShopId = "2",
                             Symbol = "ctn",
@@ -3885,7 +4223,7 @@ namespace SMIS.Infrastructure.Migrations
                             Id = "6",
                             Description = "Volume measurement",
                             EntityState = "Added",
-                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 12, 44, 15, 359, DateTimeKind.Unspecified).AddTicks(4548), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 16, 45, 45, 83, DateTimeKind.Unspecified).AddTicks(4009), new TimeSpan(0, 0, 0, 0, 0)),
                             Name = "Liter",
                             ShopId = "2",
                             Symbol = "L",
@@ -3896,7 +4234,7 @@ namespace SMIS.Infrastructure.Migrations
                             Id = "7",
                             Description = "Weight measurement",
                             EntityState = "Added",
-                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 12, 44, 15, 359, DateTimeKind.Unspecified).AddTicks(4553), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 16, 45, 45, 83, DateTimeKind.Unspecified).AddTicks(4014), new TimeSpan(0, 0, 0, 0, 0)),
                             Name = "Kilogram",
                             ShopId = "3",
                             Symbol = "kg",
@@ -3907,7 +4245,7 @@ namespace SMIS.Infrastructure.Migrations
                             Id = "8",
                             Description = "Small weight measurement",
                             EntityState = "Added",
-                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 12, 44, 15, 359, DateTimeKind.Unspecified).AddTicks(4557), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 16, 45, 45, 83, DateTimeKind.Unspecified).AddTicks(4031), new TimeSpan(0, 0, 0, 0, 0)),
                             Name = "Gram",
                             ShopId = "3",
                             Symbol = "g",
@@ -3918,7 +4256,7 @@ namespace SMIS.Infrastructure.Migrations
                             Id = "9",
                             Description = "Small volume measurement",
                             EntityState = "Added",
-                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 12, 44, 15, 359, DateTimeKind.Unspecified).AddTicks(4570), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 16, 45, 45, 83, DateTimeKind.Unspecified).AddTicks(4037), new TimeSpan(0, 0, 0, 0, 0)),
                             Name = "Milliliter",
                             ShopId = "3",
                             Symbol = "ml",
@@ -3929,7 +4267,7 @@ namespace SMIS.Infrastructure.Migrations
                             Id = "10",
                             Description = "12 pieces",
                             EntityState = "Added",
-                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 12, 44, 15, 359, DateTimeKind.Unspecified).AddTicks(4577), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 4, 16, 45, 45, 83, DateTimeKind.Unspecified).AddTicks(4052), new TimeSpan(0, 0, 0, 0, 0)),
                             Name = "Dozen",
                             ShopId = "1",
                             Symbol = "dz",
@@ -3980,6 +4318,31 @@ namespace SMIS.Infrastructure.Migrations
                         .HasForeignKey("ShopId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.Navigation("Shop");
+                });
+
+            modelBuilder.Entity("SMIS.Domain.Entities.Customer", b =>
+                {
+                    b.HasOne("SMIS.Domain.Entities.LocationEntities.District", "District")
+                        .WithMany()
+                        .HasForeignKey("DistrictId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.HasOne("SMIS.Domain.Entities.LocationEntities.Province", "Province")
+                        .WithMany()
+                        .HasForeignKey("ProvinceId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.HasOne("SMIS.Domain.Entities.Shop", "Shop")
+                        .WithMany()
+                        .HasForeignKey("ShopId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("District");
+
+                    b.Navigation("Province");
 
                     b.Navigation("Shop");
                 });
