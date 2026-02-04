@@ -7,12 +7,20 @@
             if (env.IsDevelopment())
             {
                 app.UseSwagger();
-                app.UseSwaggerUI();
+                app.UseSwaggerUI(c =>
+                {
+                    c.SwaggerEndpoint("/swagger/v1/swagger.json", "MyAPI");
+                    c.InjectStylesheet("/swagger-ui/SwaggerDark.css");
+                });
             }
             else
             {
                 app.UseSwagger();
-                app.UseSwaggerUI();
+                app.UseSwaggerUI(c =>
+                {
+                    c.SwaggerEndpoint("/swagger/v1/swagger.json", "MyAPI");
+                    c.InjectStylesheet("/swagger-ui/SwaggerDark.css");
+                });
 
                 // Uncomment if you have custom exception handling
                 //app.UseMiddleware<ExceptionMiddleware>();
