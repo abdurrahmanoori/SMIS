@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SMIS.Application.Common.Response;
 
@@ -6,6 +7,8 @@ namespace SMIS.Api.Controllers.Base
 {
     //[Route("api/[controller]")]
     [ApiController]
+    [Authorize]
+
     public class BaseApiController : ControllerBase
     {
         private IMediator? _mediator;
