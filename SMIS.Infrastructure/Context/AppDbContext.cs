@@ -73,5 +73,6 @@ public partial class AppDbContext : IdentityDbContext<ApplicationUser, Applicati
     public DbSet<ProductPrice> ProductPrices { get; set; }
     public DbSet<StockBatch> StockBatches { get; set; }
     public DbSet<StockTransaction> StockTransactions { get; set; }
+    public DbSet<Customer> Customers { get; set; }
     public DbSet<ApplicationUserRole> UserRoles { get; set; }
 }
