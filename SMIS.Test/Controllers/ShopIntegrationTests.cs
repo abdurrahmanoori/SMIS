@@ -23,6 +23,7 @@ public class ShopIntegrationTests : BaseIntegrationTest
 
     public override async Task InitializeAsync()
     {
+        await TokenHelper.SetAuthorizationHeaderAsync();
         await _dataHelper.GetOrCreateDependencies();
     }
 

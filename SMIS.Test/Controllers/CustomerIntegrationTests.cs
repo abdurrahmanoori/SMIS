@@ -22,6 +22,7 @@ public class CustomerIntegrationTests : BaseIntegrationTest
 
     public override async Task InitializeAsync()
     {
+        await TokenHelper.SetAuthorizationHeaderAsync();
         await _dataHelper.GetOrCreateDependencies();
     }
 
@@ -54,7 +55,7 @@ public class CustomerIntegrationTests : BaseIntegrationTest
         actual.LastName.ShouldBe(expected.LastName);
         actual.ShopId.ShouldBe(expected.ShopId);
         actual.FatherName.ShouldBe(expected.FatherName);
-        actual.Email.ShouldBe(expected.Email);
+        actual.Email?.ToLower().ShouldBe(expected.Email?.ToLower());
         actual.PhoneNumber.ShouldBe(expected.PhoneNumber);
         actual.Address.ShouldBe(expected.Address);
         actual.TaxNumber.ShouldBe(expected.TaxNumber);

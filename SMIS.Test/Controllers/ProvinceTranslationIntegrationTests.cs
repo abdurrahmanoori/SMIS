@@ -14,12 +14,14 @@ namespace SMIS.Test.Controllers
         private readonly CustomWebApplicationFactory _factory;
         private readonly HttpClient _client;
         private readonly ITestOutputHelper _output;
+        private readonly JwtTokenHelper _tokenHelper;
 
         public ProvinceTranslationIntegrationTests(CustomWebApplicationFactory factory, ITestOutputHelper output)
         {
             _factory = factory;
             _client = factory.CreateClient();
             _output = output;
+            _tokenHelper = new JwtTokenHelper(_client);
         }
 
         private async Task LogIfError(HttpResponseMessage response, string context = "")
@@ -35,6 +37,8 @@ namespace SMIS.Test.Controllers
         [Fact]
         public async Task Create_Update_Delete_ProvinceTranslation_Workflow()
         {
+            await _tokenHelper.SetAuthorizationHeaderAsync();
+            
             // Create province first
             var provinceCreate = new ProvinceCreateDto { Name = "Test Province" };
             var postProvince = await _client.PostAsJsonAsync("/api/province", provinceCreate);
