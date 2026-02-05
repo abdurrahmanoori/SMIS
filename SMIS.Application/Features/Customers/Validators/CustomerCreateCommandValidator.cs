@@ -14,6 +14,9 @@ namespace SMIS.Application.Features.Customers.Validators
             RuleFor(x => x.CustomerCreateDto.ShopId)
                 .NotEmpty().WithMessage("ShopId is required");
 
+            RuleFor(x => x.CustomerCreateDto.CustomerType)
+                .IsInEnum().WithMessage("Invalid customer type");
+
             RuleFor(x => x.CustomerCreateDto.LastName)
                 .MaximumLength(100).WithMessage("Last name must not exceed 100 characters")
                 .When(x => !string.IsNullOrEmpty(x.CustomerCreateDto.LastName));

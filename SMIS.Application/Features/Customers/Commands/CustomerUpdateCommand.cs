@@ -39,6 +39,7 @@ namespace SMIS.Application.Features.Customers.Commands
             // Update using domain methods
             entity.SetFirstName(request.CustomerCreateDto.FirstName);
             entity.SetShopId(request.CustomerCreateDto.ShopId);
+            entity.SetCustomerType(request.CustomerCreateDto.CustomerType);
             entity.SetLastName(request.CustomerCreateDto.LastName);
             entity.SetFatherName(request.CustomerCreateDto.FatherName);
             entity.SetEmail(request.CustomerCreateDto.Email);

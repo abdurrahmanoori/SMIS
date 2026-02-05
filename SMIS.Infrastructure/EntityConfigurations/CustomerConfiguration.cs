@@ -16,6 +16,7 @@ namespace SMIS.Infrastructure.EntityConfigurations
             builder.Property(e => e.FatherName).HasMaxLength(100);
             builder.Property(e => e.ShopId).IsRequired().HasMaxLength(50);
             builder.Property(e => e.ShopName).HasMaxLength(200);
+            builder.Property(e => e.CustomerType).IsRequired().HasConversion<string>();
             builder.Property(e => e.Email).HasMaxLength(100);
             builder.Property(e => e.PhoneNumber).HasMaxLength(20);
             builder.Property(e => e.Address).HasMaxLength(500);

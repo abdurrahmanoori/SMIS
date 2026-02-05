@@ -214,6 +214,7 @@ public class MappingProfile : Profile
             .ConstructUsing(src => Customer.Create(
                 src.FirstName,
                 src.ShopId,
+                src.CustomerType,
                 src.LastName,
                 src.FatherName,
                 src.Email,
