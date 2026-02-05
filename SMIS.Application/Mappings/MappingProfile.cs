@@ -20,6 +20,7 @@ using SMIS.Domain.Entities.Identity.Entity;
 using SMIS.Domain.Enums;
 using SMIS.Application.DTO.ProductPrices;
 using SMIS.Application.DTO.Customers;
+using SMIS.Application.DTO.ShopOwners;
 
 namespace SMIS.Application.Mappings;
 
@@ -225,6 +226,25 @@ public class MappingProfile : Profile
                 src.DistrictId,
                 src.IsActive
             ));
+
+        // ShopOwner mapping
+        CreateMap<ShopOwner, ShopOwnerDto>().ReverseMap();
+        CreateMap<ShopOwnerCreateDto, ShopOwner>()
+            .ConstructUsing(src => ShopOwner.Create(
+                src.ApplicationUserId,
+                src.ShopId,
+                src.FirstName,
+                src.LastName,
+                src.PhoneNumber,
+                src.Email,
+                src.Address,
+                src.OwnershipPercentage
+            ))
+            .AfterMap((src, dest) =>
+            {
+                dest.SetNationalIdCardNumber(src.NationalIdCardNumber);
+                if (src.IsActive) dest.Activate(); else dest.Deactivate();
+            });
     }
 
     private static string ResolveProvinceName(Province src)
