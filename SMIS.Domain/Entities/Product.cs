@@ -7,8 +7,7 @@ namespace SMIS.Domain.Entities;
 public class Product : BaseAuditableEntity, IEntity
 {
     public string Name { get; set; } = string.Empty;
-    public string ShopId { get; private set; } = string.Empty;
-    public string? ShopName { get; set; }
+ 
     public string BaseUnitId { get; private set; } = string.Empty;
     public string? BaseUnitName { get; set; }
     public int SalePricePerBaseUnit { get; private set; }
@@ -19,7 +18,8 @@ public class Product : BaseAuditableEntity, IEntity
     public string? ImageUrl { get; private set; }
     public string? CategoryId { get; private set; }
     public string? CategoryName { get; set; }
-
+    public string ShopId { get; private set; } = string.Empty;
+    public string? ShopName { get; set; }
     // Navigation Properties
     public virtual Shop Shop { get; set; } = null!;
     public UnitOfMeasure UnitOfMeasure { get; set; } = null!;

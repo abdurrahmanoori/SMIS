@@ -2,19 +2,19 @@ using SMIS.Domain.Common.BaseAbstract;
 using SMIS.Domain.Exceptions;
 
 namespace SMIS.Domain.Entities;
+// price of current product must be fetched from productPrice
 
 public class CustomerLoan : BaseAuditableEntity
 {
     public string CustomerId { get; private set; } = string.Empty;
     public string ShopId { get; private set; } = string.Empty;
     public string ProductId { get; private set; } = string.Empty;
+
     public decimal Quantity { get; private set; }
     public string UnitId { get; private set; } = string.Empty;
     public long TotalAmount { get; private set; }
-    public long PaidAmount { get; private set; }
-    public long RemainingAmount { get; private set; }
     public DateTime LoanDate { get; private set; }
-    public DateTime? DueDate { get; private set; }
+    public DateTime? DueDate { get; private set; } = null;
     public string Status { get; private set; } = "Active";
     public string? Notes { get; private set; }
     public bool IsActive { get; private set; } = true;
@@ -25,7 +25,10 @@ public class CustomerLoan : BaseAuditableEntity
     public UnitOfMeasure? UnitOfMeasure { get; set; }
     public ICollection<CustomerLoanPayment> Payments { get; set; } = new List<CustomerLoanPayment>();
 
-    internal CustomerLoan() { }
+    public long PaidAmount => Payments?.Sum(p => p.Amount) ?? 0;
+    public long RemainingAmount => TotalAmount - PaidAmount;
+
+    internal CustomerLoan( ) { }
 
     public static CustomerLoan Create(string customerId, string shopId, string productId, decimal quantity, string unitId, long totalAmount, DateTime? dueDate = null, string? notes = null)
     {
@@ -39,7 +42,6 @@ public class CustomerLoan : BaseAuditableEntity
         loan.SetLoanDate(DateTime.UtcNow);
         loan.SetDueDate(dueDate);
         loan.SetNotes(notes);
-        loan.CalculateRemainingAmount();
         return loan;
     }
 
@@ -108,27 +110,22 @@ public class CustomerLoan : BaseAuditableEntity
     {
         if (amount <= 0)
             throw new DomainValidationException("Payment amount must be greater than zero");
-        if (amount > RemainingAmount)
+
+        var currentRemainingAmount = TotalAmount - PaidAmount;
+        if (amount > currentRemainingAmount)
             throw new DomainValidationException("Payment amount cannot exceed remaining amount");
 
-        PaidAmount += amount;
-        CalculateRemainingAmount();
-        
-        if (RemainingAmount == 0)
+        if (currentRemainingAmount - amount == 0)
             Status = "Paid";
     }
 
-    private void CalculateRemainingAmount()
-    {
-        RemainingAmount = TotalAmount - PaidAmount;
-    }
 
-    public void MarkAsOverdue()
+    public void MarkAsOverdue( )
     {
         if (DueDate.HasValue && DateTime.UtcNow > DueDate.Value && RemainingAmount > 0)
             Status = "Overdue";
     }
 
-    public void Activate() => IsActive = true;
-    public void Deactivate() => IsActive = false;
+    public void Activate( ) => IsActive = true;
+    public void Deactivate( ) => IsActive = false;
 }
