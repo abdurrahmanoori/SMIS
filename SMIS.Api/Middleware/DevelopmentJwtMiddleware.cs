@@ -36,10 +36,10 @@ public class DevelopmentJwtMiddleware
 
         var claims = new[]
         {
-            new Claim(ClaimTypes.NameIdentifier, "dev-user-id"),
-            new Claim(ClaimTypes.Name, "Developer"),
-            new Claim(ClaimTypes.Email, "dev@smis.local"),
-            new Claim(ClaimTypes.Role, "Admin")
+            new Claim(ClaimTypes.NameIdentifier, "1"),
+            new Claim(ClaimTypes.Name, "superadmin"),
+            new Claim(ClaimTypes.Email, "superadmin@smis.com"),
+            new Claim(ClaimTypes.Role, "SuperAdmin")
         };
 
         var token = new JwtSecurityToken(
