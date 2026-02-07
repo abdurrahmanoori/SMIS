@@ -15,7 +15,13 @@ public class ProductPriceConfiguration : IEntityTypeConfiguration<ProductPrice>
         builder.Property(p => p.ProductId)
             .IsRequired();
 
-        builder.Property(p => p.Price)
+        builder.Property(p => p.ProductUnitId)
+            .IsRequired();
+
+        builder.Property(p => p.BuyPrice)
+            .IsRequired();
+
+        builder.Property(p => p.SellPrice)
             .IsRequired();
 
         builder.Property(p => p.EffectiveDate)
@@ -31,7 +37,12 @@ public class ProductPriceConfiguration : IEntityTypeConfiguration<ProductPrice>
             .HasForeignKey(p => p.ProductId)
             .OnDelete(DeleteBehavior.Cascade);
 
-        builder.HasIndex(p => new { p.ProductId, p.EffectiveDate });
+        builder.HasOne(p => p.ProductUnit)
+            .WithMany()
+            .HasForeignKey(p => p.ProductUnitId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        builder.HasIndex(p => new { p.ProductId, p.ProductUnitId, p.EffectiveDate });
         builder.HasIndex(p => p.IsActive);
     }
 }

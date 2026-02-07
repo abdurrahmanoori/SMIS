@@ -7,32 +7,36 @@ public class ProductPriceTestDataHelper
 {
     private readonly HttpClient _client;
     private string? _cachedProductId;
+    private string? _cachedProductUnitId;
     private readonly ProductTestDataHelper _productHelper;
+    private readonly ProductUnitTestDataHelper _productUnitHelper;
 
     public ProductPriceTestDataHelper(HttpClient client)
     {
         _client = client;
         _productHelper = new ProductTestDataHelper(client);
+        _productUnitHelper = new ProductUnitTestDataHelper(client);
     }
 
-    public async Task<string> GetOrCreateDependencies()
+    public async Task<(string ProductId, string ProductUnitId)> GetOrCreateDependencies()
     {
-        if (_cachedProductId != null)
-            return _cachedProductId;
+        if (_cachedProductId != null && _cachedProductUnitId != null)
+            return (_cachedProductId, _cachedProductUnitId);
 
         await _productHelper.GetOrCreateDependencies();
         _cachedProductId = await CreateProductAsync();
+        _cachedProductUnitId = await _productUnitHelper.CreateProductUnitForProductAsync(_cachedProductId);
 
-        return _cachedProductId;
+        return (_cachedProductId, _cachedProductUnitId);
     }
 
     public ProductPriceFixtureBuilder CreateProductPriceBuilder()
     {
-        if (_cachedProductId == null)
+        if (_cachedProductId == null || _cachedProductUnitId == null)
             throw new InvalidOperationException("Dependencies must be created first. Call GetOrCreateDependencies().");
             
         return new ProductPriceFixtureBuilder()
-            .WithDependencies(_cachedProductId);
+            .WithDependencies(_cachedProductId, _cachedProductUnitId);
     }
 
     private async Task<string> CreateProductAsync()

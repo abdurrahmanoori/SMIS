@@ -163,7 +163,9 @@ public class MappingProfile : Profile
         CreateMap<ProductPriceCreateDto, ProductPrice>()
             .ConstructUsing(src => ProductPrice.Create(
                 src.ProductId,
-                src.Price,
+                src.ProductUnitId,
+                src.BuyPrice,
+                src.SellPrice,
                 src.EffectiveDate
             ))
             .AfterMap((src, dest) =>

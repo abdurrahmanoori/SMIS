@@ -7,11 +7,13 @@ public class ProductPriceFixtureBuilder
 {
     private readonly Faker<ProductPriceCreateDto> _faker;
     private string? _productId;
+    private string? _productUnitId;
 
     public ProductPriceFixtureBuilder()
     {
         _faker = new Faker<ProductPriceCreateDto>()
-            .RuleFor(p => p.Price, f => f.Random.Int(100, 50000))
+            .RuleFor(p => p.BuyPrice, f => f.Random.Long(100, 40000))
+            .RuleFor(p => p.SellPrice, f => f.Random.Long(150, 50000))
             .RuleFor(p => p.EffectiveDate, f => f.Date.Past(1))
             .RuleFor(p => p.EndDate, f => f.Random.Bool() ? f.Date.Future(1) : null)
             .RuleFor(p => p.IsActive, true);
@@ -23,15 +25,28 @@ public class ProductPriceFixtureBuilder
         return this;
     }
 
-    public ProductPriceFixtureBuilder WithDependencies(string productId)
+    public ProductPriceFixtureBuilder WithProductUnitId(string productUnitId)
     {
-        _productId = productId;
+        _productUnitId = productUnitId;
         return this;
     }
 
-    public ProductPriceFixtureBuilder WithPrice(int price)
+    public ProductPriceFixtureBuilder WithDependencies(string productId, string productUnitId)
     {
-        _faker.RuleFor(p => p.Price, price);
+        _productId = productId;
+        _productUnitId = productUnitId;
+        return this;
+    }
+
+    public ProductPriceFixtureBuilder WithBuyPrice(long buyPrice)
+    {
+        _faker.RuleFor(p => p.BuyPrice, buyPrice);
+        return this;
+    }
+
+    public ProductPriceFixtureBuilder WithSellPrice(long sellPrice)
+    {
+        _faker.RuleFor(p => p.SellPrice, sellPrice);
         return this;
     }
 
@@ -57,6 +72,7 @@ public class ProductPriceFixtureBuilder
     {
         var productPrice = _faker.Generate();
         productPrice.ProductId = _productId ?? throw new InvalidOperationException("ProductId is required");
+        productPrice.ProductUnitId = _productUnitId ?? throw new InvalidOperationException("ProductUnitId is required");
         return productPrice;
     }
 }

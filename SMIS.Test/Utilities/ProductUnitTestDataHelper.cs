@@ -1,5 +1,6 @@
 using SMIS.Application.Common;
 using SMIS.Application.DTO.Categories;
+using SMIS.Application.DTO.ProductUnits;
 using SMIS.Application.DTO.Products;
 using SMIS.Application.DTO.Shops;
 using SMIS.Application.DTO.UnitOfMeasures;
@@ -38,6 +39,21 @@ public class ProductUnitTestDataHelper
             
         return new ProductUnitFixtureBuilder()
             .WithDependencies(_cachedShopId!, _cachedProductId!, _cachedUnitId!);
+    }
+
+    public async Task<string> CreateProductUnitForProductAsync(string productId)
+    {
+        await GetOrCreateDependencies();
+        
+        var productUnitDto = new ProductUnitFixtureBuilder()
+            .WithDependencies(_cachedShopId!, productId, _cachedUnitId!)
+            .Build();
+        
+        var response = await _client.PostAsJsonAsync(ApiEndpoints.ProductUnit, productUnitDto);
+        response.EnsureSuccessStatusCode();
+        
+        var createdProductUnit = await response.Content.ReadFromJsonAsync<ProductUnitDto>();
+        return createdProductUnit!.Id;
     }
 
     private bool HasCachedDependencies() => 

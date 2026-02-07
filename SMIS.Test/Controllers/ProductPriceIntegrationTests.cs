@@ -52,7 +52,9 @@ public class ProductPriceIntegrationTests : BaseIntegrationTest
     {
         actual.ShouldNotBeNull();
         actual.ProductId.ShouldBe(expected.ProductId);
-        actual.Price.ShouldBe(expected.Price);
+        actual.ProductUnitId.ShouldBe(expected.ProductUnitId);
+        actual.BuyPrice.ShouldBe(expected.BuyPrice);
+        actual.SellPrice.ShouldBe(expected.SellPrice);
         actual.EffectiveDate.Date.ShouldBe(expected.EffectiveDate.Date);
         if (expected.EndDate.HasValue)
         {
@@ -132,7 +134,7 @@ public class ProductPriceIntegrationTests : BaseIntegrationTest
 
         foreach (var price in productPrices)
         {
-            await CreateProductPriceAsync(price, $"CreateTestProductPrice_{price.Price}");
+            await CreateProductPriceAsync(price, $"CreateTestProductPrice_{price.BuyPrice}");
         }
 
         var paginatedResponse = await Client.GetAsync($"{ApiEndpoints.ProductPrice}?pageNumber=1&pageSize=2");
@@ -235,25 +237,25 @@ public class ProductPriceIntegrationTests : BaseIntegrationTest
     }
 
     [Fact]
-    public async Task Post_CreateProductPriceWithNegativePrice_ReturnsBadRequest()
+    public async Task Post_CreateProductPriceWithNegativeBuyPrice_ReturnsBadRequest()
     {
-        var dto = _dataHelper.CreateProductPriceBuilder().WithPrice(-100).Build();
+        var dto = _dataHelper.CreateProductPriceBuilder().WithBuyPrice(-100).Build();
 
-        var response = await CreateProductPriceResponseAsync(dto, "Post_CreateProductPriceWithNegativePrice");
+        var response = await CreateProductPriceResponseAsync(dto, "Post_CreateProductPriceWithNegativeBuyPrice");
         response.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
     }
 
     [Fact]
-    public async Task Post_CreateProductPriceWithZeroPrice_ReturnsOk()
+    public async Task Post_CreateProductPriceWithZeroBuyPrice_ReturnsOk()
     {
-        var dto = _dataHelper.CreateProductPriceBuilder().WithPrice(0).Build();
+        var dto = _dataHelper.CreateProductPriceBuilder().WithBuyPrice(0).Build();
 
-        var response = await CreateProductPriceResponseAsync(dto, "Post_CreateProductPriceWithZeroPrice");
+        var response = await CreateProductPriceResponseAsync(dto, "Post_CreateProductPriceWithZeroBuyPrice");
         
         response.StatusCode.ShouldBe(HttpStatusCode.OK);
         var created = await response.Content.ReadFromJsonAsync<ProductPriceDto>();
         created.ShouldNotBeNull();
-        created!.Price.ShouldBe(0);
+        created!.BuyPrice.ShouldBe(0);
     }
 
     [Fact]
@@ -271,31 +273,31 @@ public class ProductPriceIntegrationTests : BaseIntegrationTest
     }
 
     [Fact]
-    public async Task Post_CreateProductPriceWithMaxPrice_ReturnsOk()
+    public async Task Post_CreateProductPriceWithMaxBuyPrice_ReturnsOk()
     {
-        var dto = _dataHelper.CreateProductPriceBuilder().WithPrice(int.MaxValue).Build();
-        var response = await CreateProductPriceResponseAsync(dto, "Post_CreateProductPriceWithMaxPrice");
+        var dto = _dataHelper.CreateProductPriceBuilder().WithBuyPrice(long.MaxValue).Build();
+        var response = await CreateProductPriceResponseAsync(dto, "Post_CreateProductPriceWithMaxBuyPrice");
 
         response.StatusCode.ShouldBe(HttpStatusCode.OK);
         var created = await response.Content.ReadFromJsonAsync<ProductPriceDto>();
         created.ShouldNotBeNull();
-        created!.Price.ShouldBe(int.MaxValue);
+        created!.BuyPrice.ShouldBe(long.MaxValue);
     }
 
     [Fact]
-    public async Task Put_UpdateProductPricePrice_ReturnsUpdatedPrice()
+    public async Task Put_UpdateProductPriceBuyPrice_ReturnsUpdatedBuyPrice()
     {
-        var createDto = _dataHelper.CreateProductPriceBuilder().WithPrice(1000).Build();
-        var created = await PostAndGetAsync<ProductPriceDto>(ApiEndpoints.ProductPrice, createDto, "Put_UpdateProductPricePrice_Seed");
+        var createDto = _dataHelper.CreateProductPriceBuilder().WithBuyPrice(1000).Build();
+        var created = await PostAndGetAsync<ProductPriceDto>(ApiEndpoints.ProductPrice, createDto, "Put_UpdateProductPriceBuyPrice_Seed");
         created.ShouldNotBeNull();
 
-        var updateDto = _dataHelper.CreateProductPriceBuilder().WithPrice(2000).Build();
-        var updateResponse = await UpdateProductPriceResponseAsync(created!.Id, updateDto, "Put_UpdateProductPricePrice_Update");
+        var updateDto = _dataHelper.CreateProductPriceBuilder().WithBuyPrice(2000).Build();
+        var updateResponse = await UpdateProductPriceResponseAsync(created!.Id, updateDto, "Put_UpdateProductPriceBuyPrice_Update");
 
         updateResponse.StatusCode.ShouldBe(HttpStatusCode.OK);
         var updated = await updateResponse.Content.ReadFromJsonAsync<ProductPriceDto>();
         updated.ShouldNotBeNull();
-        updated!.Price.ShouldBe(2000);
+        updated!.BuyPrice.ShouldBe(2000);
     }
 
     [Fact]
@@ -333,7 +335,7 @@ public class ProductPriceIntegrationTests : BaseIntegrationTest
 
         foreach (var productPrice in productPrices)
         {
-            var response = await CreateProductPriceResponseAsync(productPrice, $"Post_CreateMultipleProductPrices_{productPrice.Price}");
+            var response = await CreateProductPriceResponseAsync(productPrice, $"Post_CreateMultipleProductPrices_{productPrice.BuyPrice}");
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
         }
     }
