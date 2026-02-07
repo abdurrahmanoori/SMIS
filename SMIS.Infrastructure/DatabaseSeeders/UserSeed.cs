@@ -55,8 +55,8 @@ public static class UserSeed
 
     private static string? GetShopName(string shopId) => shopId switch
     {
-        "1" => "Wholesale Shop",
-        "2" => "Retail Shop",
+        "1" => "Main Store",
+        "2" => "Branch Store",
         "3" => "Warehouse",
         _ => null
     };

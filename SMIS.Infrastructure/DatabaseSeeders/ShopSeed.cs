@@ -11,9 +11,9 @@ public static class ShopSeed
     {
         var shops = new[]
         {
-            CreateShop("1", "Main Pharmacy", ShopType.RetailShop, "Kabul Center", "0700000001", "main@pharmacy.local", "TAX001", true),
-            CreateShop("2", "City Pharmacy", ShopType.WholesaleShop, "Herat Center", "0700000002", "city@pharmacy.local", "TAX002", true),
-            CreateShop("3", "Health Store", ShopType.RetailShop, "Kandahar Center", "0700000003", "health@store.local", "TAX003", true)
+            CreateShop("1", "Main Store", ShopType.RetailShop, "Kabul Center", "0700000001", "main@store.local", "TAX001", true),
+            CreateShop("2", "Branch Store", ShopType.WholesaleShop, "Herat Center", "0700000002", "branch@store.local", "TAX002", true),
+            CreateShop("3", "Warehouse", ShopType.RetailShop, "Kandahar Center", "0700000003", "warehouse@store.local", "TAX003", true)
         };
 
         modelBuilder.Entity<Shop>().HasData(shops);

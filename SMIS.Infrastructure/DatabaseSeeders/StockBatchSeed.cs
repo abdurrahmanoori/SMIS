@@ -11,10 +11,10 @@ public static class StockBatchSeed
     {
         var stockBatches = new[]
         {
-            CreateStockBatch("1", "1", "1", 100m, 40000, DateTime.UtcNow.AddDays(-10), "CC-001", DateTime.UtcNow.AddMonths(6)),
-            CreateStockBatch("2", "1", "1", 80m, 42000, DateTime.UtcNow.AddDays(-5), "CC-002", DateTime.UtcNow.AddMonths(7)),
-            CreateStockBatch("3", "2", "2", 50m, 25000, DateTime.UtcNow.AddDays(-15), "BS-101", DateTime.UtcNow.AddMonths(3)),
-            CreateStockBatch("4", "3", "3", 200m, 120000, DateTime.UtcNow.AddDays(-20), "NB-009", null)
+            CreateStockBatch("1", "1", "2", 100m, 40000, DateTime.UtcNow.AddDays(-10), "CC-001", DateTime.UtcNow.AddMonths(6)),
+            CreateStockBatch("2", "1", "2", 80m, 42000, DateTime.UtcNow.AddDays(-5), "CC-002", DateTime.UtcNow.AddMonths(7)),
+            CreateStockBatch("3", "4", "3", 50m, 25000, DateTime.UtcNow.AddDays(-15), "OREO-101", DateTime.UtcNow.AddMonths(3)),
+            CreateStockBatch("4", "7", "1", 200m, 120000, DateTime.UtcNow.AddDays(-20), "NB-009", null)
         };
 
         modelBuilder.Entity<StockBatch>().HasData(stockBatches);
@@ -35,16 +35,16 @@ public static class StockBatchSeed
     private static string? GetProductName(string productId) => productId switch
     {
         "1" => "Coca Cola 500ml",
-        "2" => "Oreo Biscuits",
-        "3" => "A4 Notebook",
+        "4" => "Oreo Biscuits",
+        "7" => "A4 Notebook",
         _ => null
     };
 
     private static string? GetUnitName(string unitId) => unitId switch
     {
-        "1" => "Bottle",
-        "2" => "Pack",
-        "3" => "Piece",
+        "1" => "Piece",
+        "2" => "Bottle",
+        "3" => "Pack",
         _ => null
     };
 }
