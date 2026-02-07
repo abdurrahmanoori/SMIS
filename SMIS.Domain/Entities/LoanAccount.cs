@@ -10,10 +10,6 @@ public class LoanAccount : BaseAuditableEntity
     public string ShopId { get; private set; } = string.Empty;
     public string ProductId { get; private set; } = string.Empty;
 
-
-    // create an endpoint for LoanAccount it should return the product current price (from ProductPrice) at the time of loan creation
-    // 
-
     public decimal Quantity { get; private set; }
     public string UnitId { get; private set; } = string.Empty;
     public long TotalAmount { get; private set; }
@@ -32,7 +28,7 @@ public class LoanAccount : BaseAuditableEntity
     public long PaidAmount => Payments?.Sum(p => p.Amount) ?? 0;
     public long RemainingAmount => TotalAmount - PaidAmount;
 
-    internal LoanAccount( ) { }
+    internal LoanAccount() { }
 
     public static LoanAccount Create(string customerId, string shopId, string productId, decimal quantity, string unitId, long totalAmount, DateTime? dueDate = null, string? notes = null)
     {
@@ -124,12 +120,12 @@ public class LoanAccount : BaseAuditableEntity
     }
 
 
-    public void MarkAsOverdue( )
+    public void MarkAsOverdue()
     {
         if (DueDate.HasValue && DateTime.UtcNow > DueDate.Value && RemainingAmount > 0)
             Status = "Overdue";
     }
 
-    public void Activate( ) => IsActive = true;
-    public void Deactivate( ) => IsActive = false;
+    public void Activate() => IsActive = true;
+    public void Deactivate() => IsActive = false;
 }
