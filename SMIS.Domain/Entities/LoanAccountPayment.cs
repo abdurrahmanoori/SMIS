@@ -3,23 +3,23 @@ using SMIS.Domain.Exceptions;
 
 namespace SMIS.Domain.Entities;
 
-public class CustomerLoanPayment : BaseAuditableEntity
+public class LoanAccountPayment : BaseAuditableEntity
 {
-    public string CustomerLoanId { get; private set; } = string.Empty;
+    public string LoanAccountId { get; private set; } = string.Empty;
     public long Amount { get; private set; }
     public DateTime PaymentDate { get; private set; }
     public string PaymentMethod { get; private set; } = "Cash";
     public string? Notes { get; private set; }
     public bool IsActive { get; private set; } = true;
 
-    public CustomerLoan? CustomerLoan { get; set; }
+    public LoanAccount? LoanAccount { get; set; }
 
-    internal CustomerLoanPayment() { }
+    internal LoanAccountPayment() { }
 
-    public static CustomerLoanPayment Create(string customerLoanId, long amount, DateTime paymentDate, string paymentMethod = "Cash", string? notes = null)
+    public static LoanAccountPayment Create(string loanAccountId, long amount, DateTime paymentDate, string paymentMethod = "Cash", string? notes = null)
     {
-        var payment = new CustomerLoanPayment();
-        payment.SetCustomerLoanId(customerLoanId);
+        var payment = new LoanAccountPayment();
+        payment.SetLoanAccountId(loanAccountId);
         payment.SetAmount(amount);
         payment.SetPaymentDate(paymentDate);
         payment.SetPaymentMethod(paymentMethod);
@@ -27,11 +27,11 @@ public class CustomerLoanPayment : BaseAuditableEntity
         return payment;
     }
 
-    public void SetCustomerLoanId(string customerLoanId)
+    public void SetLoanAccountId(string loanAccountId)
     {
-        if (string.IsNullOrWhiteSpace(customerLoanId))
-            throw new DomainValidationException("Customer loan ID cannot be empty");
-        CustomerLoanId = customerLoanId.Trim();
+        if (string.IsNullOrWhiteSpace(loanAccountId))
+            throw new DomainValidationException("Loan account ID cannot be empty");
+        LoanAccountId = loanAccountId.Trim();
     }
 
     public void SetAmount(long amount)

@@ -4,11 +4,14 @@ using SMIS.Domain.Exceptions;
 namespace SMIS.Domain.Entities;
 // price of current product must be fetched from productPrice
 
-public class CustomerLoan : BaseAuditableEntity
+public class LoanAccount : BaseAuditableEntity
 {
     public string CustomerId { get; private set; } = string.Empty;
     public string ShopId { get; private set; } = string.Empty;
     public string ProductId { get; private set; } = string.Empty;
+
+
+
 
     public decimal Quantity { get; private set; }
     public string UnitId { get; private set; } = string.Empty;
@@ -23,16 +26,16 @@ public class CustomerLoan : BaseAuditableEntity
     public Shop? Shop { get; set; }
     public Product? Product { get; set; }
     public UnitOfMeasure? UnitOfMeasure { get; set; }
-    public ICollection<CustomerLoanPayment> Payments { get; set; } = new List<CustomerLoanPayment>();
+    public ICollection<LoanAccountPayment> Payments { get; set; } = new List<LoanAccountPayment>();
 
     public long PaidAmount => Payments?.Sum(p => p.Amount) ?? 0;
     public long RemainingAmount => TotalAmount - PaidAmount;
 
-    internal CustomerLoan( ) { }
+    internal LoanAccount( ) { }
 
-    public static CustomerLoan Create(string customerId, string shopId, string productId, decimal quantity, string unitId, long totalAmount, DateTime? dueDate = null, string? notes = null)
+    public static LoanAccount Create(string customerId, string shopId, string productId, decimal quantity, string unitId, long totalAmount, DateTime? dueDate = null, string? notes = null)
     {
-        var loan = new CustomerLoan();
+        var loan = new LoanAccount();
         loan.SetCustomerId(customerId);
         loan.SetShopId(shopId);
         loan.SetProductId(productId);
