@@ -83,6 +83,9 @@ app.UseRouting();
 app.UseMiddleware<LogEnrichmentMiddleware>();
 app.UseMiddleware<RequestResponseLoggingMiddleware>();
 
+// Auto-inject JWT token in development
+app.UseMiddleware<DevelopmentJwtMiddleware>();
+
 // Authentication and authorization
 app.UseAuthentication();
 app.UseMiddleware<UnauthorizedMiddleware>();
