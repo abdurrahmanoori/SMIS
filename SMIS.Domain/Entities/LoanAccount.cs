@@ -9,7 +9,7 @@ public class LoanAccount : BaseAuditableEntity
     public string CustomerId { get; private set; } = string.Empty;
     public string ShopId { get; private set; } = string.Empty;
     public string ProductId { get; private set; } = string.Empty;
-
+   
     public decimal Quantity { get; private set; }
     public string UnitId { get; private set; } = string.Empty;
     public long TotalAmount { get; private set; }
