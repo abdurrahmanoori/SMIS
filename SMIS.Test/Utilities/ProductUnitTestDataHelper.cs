@@ -71,7 +71,6 @@ public class ProductUnitTestDataHelper
             ShopId = _cachedShopId!,
             BaseUnitId = baseUnitId,
             CategoryId = categoryId,
-            SalePricePerBaseUnit = 1000,
             SKU = $"SKU-PU-{Guid.NewGuid()}",
             IsActive = true
         };

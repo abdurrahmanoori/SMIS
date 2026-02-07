@@ -11,7 +11,8 @@ public class LoanAccount : BaseAuditableEntity
     public string ProductId { get; private set; } = string.Empty;
 
 
-
+    // create an endpoint for LoanAccount it should return the product current price (from ProductPrice) at the time of loan creation
+    // 
 
     public decimal Quantity { get; private set; }
     public string UnitId { get; private set; } = string.Empty;

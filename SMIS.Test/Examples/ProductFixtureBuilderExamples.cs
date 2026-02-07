@@ -21,7 +21,6 @@ public class ProductFixtureBuilderExamples
         var product = new ProductFixtureBuilder()
             .WithDependencies("shop-id", "unit-id", "category-id")
             .WithName("Custom Product Name")
-            .WithPrice(5000)
             .Build();
     }
 
@@ -33,7 +32,6 @@ public class ProductFixtureBuilderExamples
             .WithName("Premium Laptop")
             .WithDescription("High-end gaming laptop")
             .WithSKU("LAPTOP-PREMIUM-001")
-            .WithPrice(150000)
             .WithBarcode("9876543210123")
             .WithImageUrl("https://example.com/laptop.jpg")
             .WithIsActive(true)

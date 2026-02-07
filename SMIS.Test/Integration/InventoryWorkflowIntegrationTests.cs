@@ -51,7 +51,6 @@ public class InventoryWorkflowIntegrationTests : BaseIntegrationTest
         var productDto = _productHelper.CreateProductBuilder()
             .WithName("Energy Drink 250ml")
             .WithSKU("ED-250ML-001")
-            .WithSalePricePerBaseUnit(250)
             .Build();
         var product = await PostAndGetAsync<ProductDto>(ApiEndpoints.Product, productDto, "CreateEnergyDrink");
         product.ShouldNotBeNull();

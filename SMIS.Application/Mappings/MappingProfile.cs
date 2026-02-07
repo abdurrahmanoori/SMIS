@@ -120,7 +120,6 @@ public class MappingProfile : Profile
                 src.ShopId,
                 src.BaseUnitId,
                 src.SKU,
-                src.SalePricePerBaseUnit,
                 src.IsActive,
                 src.Description,
                 src.Barcode,

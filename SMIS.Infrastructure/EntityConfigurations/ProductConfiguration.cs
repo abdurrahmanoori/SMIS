@@ -28,9 +28,6 @@ namespace SMIS.Infrastructure.EntityConfigurations
             builder.Property(p => p.BaseUnitName)
                 .HasMaxLength(100);
 
-            builder.Property(p => p.SalePricePerBaseUnit)
-                .IsRequired();
-
             builder.Property(p => p.Description)
                 .HasMaxLength(500);
 

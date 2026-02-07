@@ -10,7 +10,6 @@ public class Product : BaseAuditableEntity, IEntity
  
     public string BaseUnitId { get; private set; } = string.Empty;
     public string? BaseUnitName { get; set; }
-    public int SalePricePerBaseUnit { get; private set; }
     public string? Description { get; private set; }
     public bool IsActive { get; private set; } = true;
     public string? SKU { get; private set; } = string.Empty;
@@ -29,14 +28,13 @@ public class Product : BaseAuditableEntity, IEntity
 
     internal Product() { } // EF Core & Seeding
 
-    public static Product Create(string name, string shopId, string baseUnitId, string sku, int salePricePerBaseUnit, bool isActive = true, string? description = null, string? barcode = null, string? imageUrl = null, string? categoryId = null)
+    public static Product Create(string name, string shopId, string baseUnitId, string sku, bool isActive = true, string? description = null, string? barcode = null, string? imageUrl = null, string? categoryId = null)
     {
         var product = new Product();
         product.SetName(name);
         product.SetShopId(shopId);
         product.SetBaseUnitId(baseUnitId);
         product.SetSKU(sku);
-        product.SetSalePricePerBaseUnit(salePricePerBaseUnit);
         product.SetDescription(description);
         if (!string.IsNullOrWhiteSpace(barcode)) product.SetBarcode(barcode);
         product.SetImageUrl(imageUrl);
@@ -76,14 +74,6 @@ public class Product : BaseAuditableEntity, IEntity
     {
         var skuVO = ValueObjects.SKU.Create(sku);
         SKU = skuVO;
-    }
-
-    public void SetSalePricePerBaseUnit(int price)
-    {
-        if (price < 0)
-            throw new DomainValidationException("Sale price cannot be negative");
-
-        SalePricePerBaseUnit = price;
     }
 
     public void SetDescription(string? description)

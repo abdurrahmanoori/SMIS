@@ -43,7 +43,6 @@ public class InventoryConsumptionIntegrationTests : BaseIntegrationTest
         var productDto = _productHelper.CreateProductBuilder()
             .WithName("Coca Cola 500ml")
             .WithSKU("COKE-500ML-001")
-            .WithSalePricePerBaseUnit(150) // $1.50 per bottle
             .WithDescription("Classic Coca Cola 500ml bottle")
             .WithBarcode("1234567890123")
             .Build();
@@ -160,7 +159,6 @@ public class InventoryConsumptionIntegrationTests : BaseIntegrationTest
         productWithRelations!.Id.ShouldBe(product.Id);
         productWithRelations.Name.ShouldBe("Coca Cola 500ml");
         productWithRelations.SKU.ShouldBe("COKE-500ML-001");
-        productWithRelations.SalePricePerBaseUnit.ShouldBe(150);
 
         // 10. Verify batch expiry and purchase price are preserved
         updatedBatch.ExpirationDate.ShouldNotBeNull();

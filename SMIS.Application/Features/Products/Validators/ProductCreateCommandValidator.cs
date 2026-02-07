@@ -18,9 +18,6 @@ namespace SMIS.Application.Features.Products.Validators
             RuleFor(x => x.ProductCreateDto.BaseUnitId)
                 .NotEmpty().WithMessage("BaseUnitId is required");
 
-            RuleFor(x => x.ProductCreateDto.SalePricePerBaseUnit)
-                .GreaterThanOrEqualTo(0).WithMessage("SalePricePerBaseUnit must be non-negative");
-
             RuleFor(x => x.ProductCreateDto.Description)
                 .MaximumLength(1000).WithMessage("Description must not exceed 1000 characters")
                 .When(x => !string.IsNullOrEmpty(x.ProductCreateDto.Description));
