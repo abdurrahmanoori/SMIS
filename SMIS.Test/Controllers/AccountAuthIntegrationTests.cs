@@ -88,4 +88,38 @@ public class AccountAuthIntegrationTests : BaseIntegrationTest
 
         (response.StatusCode == HttpStatusCode.BadRequest || response.StatusCode == HttpStatusCode.Conflict).ShouldBeTrue();
     }
+
+    [Fact]
+    public async Task Get_CurrentUser_ReturnsLoggedInUser()
+    {
+        //var registerDto = _dataHelper.CreateApplicationUserBuilder()
+        //    .WithEmail("superadmin@smis.com").Build();
+        //var registerResponse = await Client.PostAsJsonAsync($"{ApiEndpoints.Account}/register", registerDto);
+        //await LogIfError(registerResponse, "Get_CurrentUser_ReturnsLoggedInUser");
+
+        //var createdUser = await registerResponse.Content.ReadFromJsonAsync<UserDto>();
+
+        var response = await Client.GetAsync($"{ApiEndpoints.Account}/me");
+        await LogIfError(response, "Get_CurrentUser");
+
+        response.StatusCode.ShouldBe(HttpStatusCode.OK);
+        var currentUser = await response.Content.ReadFromJsonAsync<UserDto>();
+        currentUser.ShouldNotBeNull();
+        currentUser!.Email?.ToLower().ShouldBe("superadmin@smis.com");
+        currentUser.Roles.ShouldNotBeNull();
+    }
+
+    [Fact]
+    public async Task Get_CurrentUser_WithShop_ReturnsUserWithShop()
+    {
+        var registerDto = _dataHelper.CreateApplicationUserBuilder().Build();
+        await Client.PostAsJsonAsync($"{ApiEndpoints.Account}/register", registerDto);
+
+        var response = await Client.GetAsync($"{ApiEndpoints.Account}/me?includeShop=true");
+        await LogIfError(response, "Get_CurrentUser_WithShop");
+
+        response.StatusCode.ShouldBe(HttpStatusCode.OK);
+        var currentUser = await response.Content.ReadFromJsonAsync<UserDto>();
+        currentUser.ShouldNotBeNull();
+    }
 }

@@ -21,5 +21,6 @@ namespace SMIS.Application.DTO.Users
         public bool EmailConfirmed { get; set; }
         public bool PhoneNumberConfirmed { get; set; }
         public ShopDto? Shop { get; set; }
+        public List<string>? Roles { get; set; }
     }
 }
