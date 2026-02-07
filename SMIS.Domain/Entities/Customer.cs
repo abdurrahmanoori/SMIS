@@ -1,8 +1,7 @@
 using SMIS.Domain.Common.BaseAbstract;
-using SMIS.Domain.Common.Interfaces;
 using SMIS.Domain.Entities.LocationEntities;
+using SMIS.Domain.Enums;
 using SMIS.Domain.Exceptions;
-using SMIS.Domain.ValueObjects;
 
 namespace SMIS.Domain.Entities;
 
@@ -12,6 +11,7 @@ public class Customer : BaseAuditableEntity
     public string? LastName { get; private set; }
     public string ShopId { get; private set; } = string.Empty;
     public string? ShopName { get; private set; }
+    public CustomerType CustomerType { get; private set; } 
     public string? FatherName { get; private set; }
     public string? Email { get; private set; }
     public string? PhoneNumber { get; private set; }
@@ -30,13 +30,14 @@ public class Customer : BaseAuditableEntity
 
     internal Customer() { } // EF Core & Seeding
 
-    public static Customer Create(string firstName, string shopId, string? lastName = null, string? fatherName = null, 
+    public static Customer Create(string firstName, string shopId, CustomerType customerType = CustomerType.Individual, string? lastName = null, string? fatherName = null, 
         string? email = null, string? phoneNumber = null, string? address = null, string? taxNumber = null, 
         string? provinceId = null, string? districtId = null, bool isActive = true)
     {
         var customer = new Customer();
         customer.SetFirstName(firstName);
         customer.SetShopId(shopId);
+        customer.SetCustomerType(customerType);
         customer.SetLastName(lastName);
         customer.SetFatherName(fatherName);
         customer.SetEmail(email);
@@ -66,6 +67,11 @@ public class Customer : BaseAuditableEntity
             throw new DomainValidationException("Shop ID cannot be empty");
 
         ShopId = shopId.Trim();
+    }
+
+    public void SetCustomerType(CustomerType customerType)
+    {
+        CustomerType = customerType;
     }
 
     public void SetLastName(string? lastName)

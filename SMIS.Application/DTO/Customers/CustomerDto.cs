@@ -1,4 +1,5 @@
 using SMIS.Application.Attributes;
+using SMIS.Domain.Enums;
 
 namespace SMIS.Application.DTO.Customers
 {
@@ -11,6 +12,7 @@ namespace SMIS.Application.DTO.Customers
         public string? LastName { get; set; }
         public string ShopId { get; set; } = string.Empty;
         public string? ShopName { get; set; }
+        public CustomerType CustomerType { get; set; }
         [Translatable]
         public string? FatherName { get; set; }
         public string? Email { get; set; }

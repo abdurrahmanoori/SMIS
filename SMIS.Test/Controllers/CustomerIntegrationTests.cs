@@ -54,6 +54,7 @@ public class CustomerIntegrationTests : BaseIntegrationTest
         actual.FirstName.ShouldBe(expected.FirstName);
         actual.LastName.ShouldBe(expected.LastName);
         actual.ShopId.ShouldBe(expected.ShopId);
+        actual.CustomerType.ShouldBe(expected.CustomerType);
         actual.FatherName.ShouldBe(expected.FatherName);
         actual.Email?.ToLower().ShouldBe(expected.Email?.ToLower());
         actual.PhoneNumber.ShouldBe(expected.PhoneNumber);
@@ -372,5 +373,46 @@ public class CustomerIntegrationTests : BaseIntegrationTest
         var created = await response.Content.ReadFromJsonAsync<CustomerDto>();
         created.ShouldNotBeNull();
         created!.Address.ShouldBeNull();
+    }
+
+    [Fact]
+    public async Task Post_CreateCustomerWithIndividualType_ReturnsOk()
+    {
+        var dto = _dataHelper.CreateCustomerBuilder().WithCustomerType(Domain.Enums.CustomerType.Individual).Build();
+        var response = await CreateCustomerResponseAsync(dto, "Post_CreateCustomerWithIndividualType");
+        
+        response.StatusCode.ShouldBe(HttpStatusCode.OK);
+        var created = await response.Content.ReadFromJsonAsync<CustomerDto>();
+        created.ShouldNotBeNull();
+        created!.CustomerType.ShouldBe(Domain.Enums.CustomerType.Individual);
+    }
+
+    [Fact]
+    public async Task Post_CreateCustomerWithEnterpriseType_ReturnsOk()
+    {
+        var dto = _dataHelper.CreateCustomerBuilder().WithCustomerType(Domain.Enums.CustomerType.Enterprise).Build();
+        var response = await CreateCustomerResponseAsync(dto, "Post_CreateCustomerWithEnterpriseType");
+        
+        response.StatusCode.ShouldBe(HttpStatusCode.OK);
+        var created = await response.Content.ReadFromJsonAsync<CustomerDto>();
+        created.ShouldNotBeNull();
+        created!.CustomerType.ShouldBe(Domain.Enums.CustomerType.Enterprise);
+    }
+
+    [Fact]
+    public async Task Put_UpdateCustomerType_ReturnsUpdatedType()
+    {
+        var createDto = _dataHelper.CreateCustomerBuilder().WithCustomerType(Domain.Enums.CustomerType.Individual).Build();
+        var created = await PostAndGetAsync<CustomerDto>(ApiEndpoints.Customer, createDto, "Put_UpdateCustomerType_Seed");
+        created.ShouldNotBeNull();
+        created!.CustomerType.ShouldBe(Domain.Enums.CustomerType.Individual);
+
+        var updateDto = _dataHelper.CreateCustomerBuilder().WithCustomerType(Domain.Enums.CustomerType.Enterprise).Build();
+        var updateResponse = await UpdateCustomerResponseAsync(created.Id, updateDto, "Put_UpdateCustomerType_Update");
+
+        updateResponse.StatusCode.ShouldBe(HttpStatusCode.OK);
+        var updated = await updateResponse.Content.ReadFromJsonAsync<CustomerDto>();
+        updated.ShouldNotBeNull();
+        updated!.CustomerType.ShouldBe(Domain.Enums.CustomerType.Enterprise);
     }
 }

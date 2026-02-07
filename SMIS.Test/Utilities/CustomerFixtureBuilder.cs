@@ -1,5 +1,6 @@
 using Bogus;
 using SMIS.Application.DTO.Customers;
+using SMIS.Domain.Enums;
 
 namespace SMIS.Test.Utilities;
 
@@ -15,6 +16,7 @@ public class CustomerFixtureBuilder
         _faker = new Faker<CustomerCreateDto>()
             .RuleFor(c => c.FirstName, f => f.Name.FirstName())
             .RuleFor(c => c.LastName, f => f.Name.LastName())
+            .RuleFor(c => c.CustomerType, f => f.PickRandom<CustomerType>())
             .RuleFor(c => c.FatherName, f => f.Random.Bool() ? f.Name.FirstName() : null)
             .RuleFor(c => c.Email, f => f.Random.Bool() ? f.Internet.Email() : null)
             .RuleFor(c => c.PhoneNumber, f => f.Random.Bool() ? f.Phone.PhoneNumber("+855########") : null)
@@ -58,6 +60,12 @@ public class CustomerFixtureBuilder
     public CustomerFixtureBuilder WithLastName(string? lastName)
     {
         _faker.RuleFor(c => c.LastName, lastName);
+        return this;
+    }
+
+    public CustomerFixtureBuilder WithCustomerType(CustomerType customerType)
+    {
+        _faker.RuleFor(c => c.CustomerType, customerType);
         return this;
     }
 

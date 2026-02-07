@@ -17,4 +17,5 @@ public static class ApiEndpoints
     public const string ProvinceTranslation = "/api/provincetranslation";
     public const string Account = "/api/account";
     public const string Customer = "/api/customer";
+    public const string ShopOwner = "/api/shopowner";
 }
