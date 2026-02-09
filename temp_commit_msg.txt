@@ -1,7 +1,0 @@
-Add Afghanistan phone number validation to shop owner forms
-
-• Created AfghanistanPhoneNumberValidator for validating Afghan phone numbers
-• Updated ShopOwnerCreateCommandValidator to use Afghanistan phone validation
-• Updated ShopOwnerUpdateCommandValidator to use Afghanistan phone validation
-• Implemented phone validation supporting both +93 and 0 prefixes for Afghan numbers
-• Added proper error messaging for invalid Afghanistan phone numbers

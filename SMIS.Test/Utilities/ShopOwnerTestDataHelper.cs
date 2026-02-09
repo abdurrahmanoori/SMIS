@@ -1,4 +1,6 @@
 using SMIS.Application.Common;
+using SMIS.Application.DTO.Districts;
+using SMIS.Application.DTO.Provinces;
 using SMIS.Application.DTO.Shops;
 using SMIS.Test.Extensions;
 
@@ -9,6 +11,8 @@ public class ShopOwnerTestDataHelper
     private readonly HttpClient _client;
     private string? _cachedShopId;
     private string? _cachedUserId;
+    private string? _cachedProvinceId;
+    private string? _cachedDistrictId;
 
     public ShopOwnerTestDataHelper(HttpClient client)
     {
@@ -22,6 +26,7 @@ public class ShopOwnerTestDataHelper
 
         _cachedShopId = await CreateShopAsync();
         _cachedUserId = await CreateUserAsync();
+        await GetOrCreateLocationAsync();
 
         return (_cachedShopId, _cachedUserId);
     }
@@ -32,7 +37,9 @@ public class ShopOwnerTestDataHelper
             throw new InvalidOperationException("Dependencies must be created first. Call GetOrCreateDependencies().");
             
         return new ShopOwnerFixtureBuilder()
-            .WithDependencies(_cachedShopId!, _cachedUserId!);
+            .WithDependencies(_cachedShopId!, _cachedUserId!)
+            .WithProvinceId(_cachedProvinceId)
+            .WithDistrictId(_cachedDistrictId);
     }
 
     private bool HasCachedDependencies() => 
@@ -61,10 +68,40 @@ public class ShopOwnerTestDataHelper
         return shopsList!.Items.Last().Id;
     }
 
+    private async Task GetOrCreateLocationAsync()
+    {
+        var provinceResponse = await _client.GetAsync($"{ApiEndpoints.Province}?pageNumber=1&pageSize=1");
+        if (provinceResponse.IsSuccessStatusCode)
+        {
+            var provinces = await provinceResponse.Content.ReadFromJsonAsync<PagedList<ProvinceDto>>();
+            if (provinces?.Items?.Count > 0)
+            {
+                _cachedProvinceId = provinces.Items[0].Id;
+                
+                var districtResponse = await _client.GetAsync($"{ApiEndpoints.District}?pageNumber=1&pageSize=1");
+                if (districtResponse.IsSuccessStatusCode)
+                {
+                    var districts = await districtResponse.Content.ReadFromJsonAsync<PagedList<DistrictDto>>();
+                    if (districts?.Items?.Count > 0)
+                    {
+                        _cachedDistrictId = districts.Items[0].Id;
+                    }
+                }
+            }
+        }
+    }
+
     private async Task<string> CreateUserAsync()
     {
-        // For now, return a default user ID - in real implementation, 
-        // this would create a test user via the Account API
-        return "test-user-id-" + Guid.NewGuid().ToString("N")[..8];
+        var userResponse = await _client.GetAsync($"{ApiEndpoints.Account}?pageNumber=1&pageSize=1");
+        if (userResponse.IsSuccessStatusCode)
+        {
+            var users = await userResponse.Content.ReadFromJsonAsync<PagedList<dynamic>>();
+            if (users?.Items?.Count > 0)
+            {
+                return users.Items[0].GetProperty("id").GetString() ?? "1";
+            }
+        }
+        return "1"; // Fallback to seeded superadmin user
     }
 }

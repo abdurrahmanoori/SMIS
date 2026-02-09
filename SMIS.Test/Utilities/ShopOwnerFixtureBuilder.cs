@@ -20,8 +20,8 @@ public class ShopOwnerFixtureBuilder
             .RuleFor(so => so.Address, f => f.Address.FullAddress())
             .RuleFor(so => so.OwnershipPercentage, f => f.Random.Decimal(1, 100))
             .RuleFor(so => so.IsActive, true)
-            .RuleFor(so => so.ProvinceId, f => f.Random.Bool() ? f.Random.Guid().ToString() : null)
-            .RuleFor(so => so.DistrictId, f => f.Random.Bool() ? f.Random.Guid().ToString() : null);
+            .RuleFor(so => so.ProvinceId, (string?)null)
+            .RuleFor(so => so.DistrictId, (string?)null);
     }
 
     public ShopOwnerFixtureBuilder WithShopId(string shopId)
