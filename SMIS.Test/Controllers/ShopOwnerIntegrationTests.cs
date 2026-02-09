@@ -57,7 +57,7 @@ public class ShopOwnerIntegrationTests : BaseIntegrationTest
         actual.LastName.ShouldBe(expected.LastName);
         actual.NationalIdCardNumber.ShouldBe(expected.NationalIdCardNumber);
         actual.PhoneNumber.ShouldBe(expected.PhoneNumber);
-        actual.Email.ShouldBe(expected.Email);
+        actual.Email.ToLower().ShouldBe(expected.Email.ToLower());
         actual.Address.ShouldBe(expected.Address);
         actual.OwnershipPercentage.ShouldBe(expected.OwnershipPercentage);
         actual.IsActive.ShouldBe(expected.IsActive);

@@ -10,7 +10,7 @@ public class ShopOwner : BaseAuditableEntity
     public string ApplicationUserId { get; private set; } = string.Empty;
     public string ShopId { get; private set; } = string.Empty;
     public string ShopName { get; set; } = string.Empty;
-    public string? FirstName { get; private set; }
+    public string FirstName { get; private set; }
     public string? LastName { get; private set; }
     public string? NationalIdCardNumber { get; private set; }
     public string? PhoneNumber { get; private set; }
@@ -65,6 +65,10 @@ public class ShopOwner : BaseAuditableEntity
 
     public void SetFirstName(string? firstName)
     {
+        if (string.IsNullOrEmpty(firstName))
+        {
+            throw new DomainValidationException("First name cannot be empty");
+        }
         if (firstName?.Length > 100)
             throw new DomainValidationException("First name cannot exceed 100 characters");
 

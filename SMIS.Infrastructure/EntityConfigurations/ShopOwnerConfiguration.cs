@@ -22,6 +22,7 @@ namespace SMIS.Infrastructure.EntityConfigurations
                 .HasMaxLength(200);
 
             builder.Property(so => so.FirstName)
+                .IsRequired()
                 .HasMaxLength(100);
 
             builder.Property(so => so.LastName)

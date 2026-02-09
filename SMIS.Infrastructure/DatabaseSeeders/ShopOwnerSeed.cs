@@ -14,7 +14,7 @@ public static class ShopOwnerSeed
         );
     }
 
-    private static ShopOwner CreateShopOwner(string id, string userId, string shopId, string? firstName, string? lastName, 
+    private static ShopOwner CreateShopOwner(string id, string userId, string shopId, string firstName, string? lastName, 
         string? nationalId, string? phoneNumber, string? email, string? address, decimal ownershipPercentage, bool isActive)
     {
         var owner = ShopOwner.Create(userId, shopId, firstName, lastName, phoneNumber, email, address, ownershipPercentage);
