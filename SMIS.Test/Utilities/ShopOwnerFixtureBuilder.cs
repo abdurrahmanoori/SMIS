@@ -15,13 +15,13 @@ public class ShopOwnerFixtureBuilder
             .RuleFor(so => so.FirstName, f => f.Name.FirstName())
             .RuleFor(so => so.LastName, f => f.Name.LastName())
             .RuleFor(so => so.NationalIdCardNumber, f => f.Random.Replace("########"))
-            .RuleFor(so => so.PhoneNumber, f => f.Phone.PhoneNumber())
+            .RuleFor(so => so.PhoneNumber, f => $"+9370{f.Random.Number(1000000, 9999999)}")
             .RuleFor(so => so.Email, f => f.Internet.Email())
             .RuleFor(so => so.Address, f => f.Address.FullAddress())
             .RuleFor(so => so.OwnershipPercentage, f => f.Random.Decimal(1, 100))
             .RuleFor(so => so.IsActive, true)
-            .RuleFor(so => so.ProvinceId, f => f.Random.Bool() ? f.Random.Guid().ToString() : null)
-            .RuleFor(so => so.DistrictId, f => f.Random.Bool() ? f.Random.Guid().ToString() : null);
+            .RuleFor(so => so.ProvinceId, (string?)null)
+            .RuleFor(so => so.DistrictId, (string?)null);
     }
 
     public ShopOwnerFixtureBuilder WithShopId(string shopId)

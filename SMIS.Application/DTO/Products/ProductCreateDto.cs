@@ -9,7 +9,6 @@ namespace SMIS.Application.DTO.Products
 
         public string ShopId { get; set; } = string.Empty;
         public string BaseUnitId { get; set; } = string.Empty;
-        public int SalePricePerBaseUnit { get; set; }
         [Translatable]
 
         public string? Description { get; set; }

@@ -1,5 +1,6 @@
 using FluentValidation;
 using SMIS.Application.Features.ShopOwners.Commands;
+using SMIS.Application.Validators;
 
 namespace SMIS.Application.Features.ShopOwners.Validators
 {
@@ -26,7 +27,7 @@ namespace SMIS.Application.Features.ShopOwners.Validators
                 .When(x => !string.IsNullOrEmpty(x.ShopOwnerCreateDto.NationalIdCardNumber));
 
             RuleFor(x => x.ShopOwnerCreateDto.PhoneNumber)
-                .Matches(@"^\+?[1-9]\d{1,14}$").WithMessage("PhoneNumber must be a valid phone number")
+                .AfghanistanPhoneNumber()
                 .When(x => !string.IsNullOrEmpty(x.ShopOwnerCreateDto.PhoneNumber));
 
             RuleFor(x => x.ShopOwnerCreateDto.Email)

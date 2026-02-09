@@ -10,8 +10,14 @@ public class ProductPriceCreateCommandValidator : AbstractValidator<ProductPrice
         RuleFor(x => x.ProductPriceCreateDto.ProductId)
             .NotEmpty().WithMessage("ProductId is required");
 
-        RuleFor(x => x.ProductPriceCreateDto.Price)
-            .GreaterThanOrEqualTo(0).WithMessage("Price must be non-negative");
+        RuleFor(x => x.ProductPriceCreateDto.ProductUnitId)
+            .NotEmpty().WithMessage("ProductUnitId is required");
+
+        RuleFor(x => x.ProductPriceCreateDto.BuyPrice)
+            .GreaterThanOrEqualTo(0).WithMessage("Buy price must be non-negative");
+
+        RuleFor(x => x.ProductPriceCreateDto.SellPrice)
+            .GreaterThanOrEqualTo(0).WithMessage("Sell price must be non-negative");
 
         RuleFor(x => x.ProductPriceCreateDto.EffectiveDate)
             .NotEmpty().WithMessage("EffectiveDate is required");

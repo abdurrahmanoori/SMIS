@@ -34,7 +34,9 @@ internal sealed class ProductPriceUpdateCommandHandler : IRequestHandler<Product
         }
 
         entity.SetProductId(request.ProductPriceCreateDto.ProductId);
-        entity.SetPrice(request.ProductPriceCreateDto.Price);
+        entity.SetProductUnitId(request.ProductPriceCreateDto.ProductUnitId);
+        entity.SetBuyPrice(request.ProductPriceCreateDto.BuyPrice);
+        entity.SetSellPrice(request.ProductPriceCreateDto.SellPrice);
         entity.SetEffectiveDate(request.ProductPriceCreateDto.EffectiveDate);
         entity.SetEndDate(request.ProductPriceCreateDto.EndDate);
         if (request.ProductPriceCreateDto.IsActive) entity.Activate(); else entity.Deactivate();

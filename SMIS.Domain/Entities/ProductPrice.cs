@@ -1,5 +1,4 @@
 using SMIS.Domain.Common.BaseAbstract;
-using SMIS.Domain.Common.Interfaces;
 using SMIS.Domain.Exceptions;
 
 namespace SMIS.Domain.Entities;
@@ -7,21 +6,26 @@ namespace SMIS.Domain.Entities;
 public class ProductPrice : BaseAuditableEntity
 {
     public string ProductId { get; private set; } = string.Empty;
-    public int Price { get; private set; }
+    public string ProductUnitId { get; private set; } = string.Empty;
+
+    public long BuyPrice { get; private set; }
+    public long SellPrice { get; private set; }
+
     public DateTime EffectiveDate { get; private set; }
     public DateTime? EndDate { get; private set; }
     public bool IsActive { get; private set; } = true;
-
     // Navigation Properties
     public virtual Product Product { get; set; } = null!;
-
+    public ProductUnit ProductUnit { get; set; } = null!;
     internal ProductPrice() { } // EF Core
 
-    public static ProductPrice Create(string productId, int price, DateTime effectiveDate)
+    public static ProductPrice Create(string productId, string productUnitId, long buyPrice, long sellPrice, DateTime effectiveDate)
     {
         var productPrice = new ProductPrice();
         productPrice.SetProductId(productId);
-        productPrice.SetPrice(price);
+        productPrice.SetProductUnitId(productUnitId);
+        productPrice.SetBuyPrice(buyPrice);
+        productPrice.SetSellPrice(sellPrice);
         productPrice.SetEffectiveDate(effectiveDate);
         return productPrice;
     }
@@ -34,12 +38,28 @@ public class ProductPrice : BaseAuditableEntity
         ProductId = productId;
     }
 
-    public void SetPrice(int price)
+    public void SetProductUnitId(string productUnitId)
     {
-        if (price < 0)
-            throw new DomainValidationException("Price cannot be negative");
+        if (string.IsNullOrWhiteSpace(productUnitId))
+            throw new DomainValidationException("Product unit ID cannot be empty");
 
-        Price = price;
+        ProductUnitId = productUnitId;
+    }
+
+    public void SetBuyPrice(long buyPrice)
+    {
+        if (buyPrice < 0)
+            throw new DomainValidationException("Buy price cannot be negative");
+
+        BuyPrice = buyPrice;
+    }
+
+    public void SetSellPrice(long sellPrice)
+    {
+        if (sellPrice < 0)
+            throw new DomainValidationException("Sell price cannot be negative");
+
+        SellPrice = sellPrice;
     }
 
     public void SetEffectiveDate(DateTime effectiveDate)

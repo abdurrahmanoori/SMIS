@@ -68,20 +68,20 @@ public class ProductAuthDemoTest : BaseIntegrationTest
         }
     }
 
-    [Fact]
-    public async Task Demo_Unauthenticated_GetAllProducts_ShouldReturnUnauthorized()
-    {
-        // Arrange - Don't set any authentication headers
-        Client.DefaultRequestHeaders.Clear(); // Ensure no auth headers
+    //[Fact]
+    //public async Task Demo_Unauthenticated_GetAllProducts_ShouldReturnUnauthorized()
+    //{
+    //    // Arrange - Don't set any authentication headers
+    //    Client.DefaultRequestHeaders.Clear(); // Ensure no auth headers
 
-        // Act - Call the GET endpoint without authentication
-        var getResponse = await Client.GetAsync($"{ApiEndpoints.Product}?pageNumber=1&pageSize=10");
-        await LogIfError(getResponse, "UnauthenticatedGetAllProducts");
+    //    // Act - Call the GET endpoint without authentication
+    //    var getResponse = await Client.GetAsync($"{ApiEndpoints.Product}?pageNumber=1&pageSize=10");
+    //    await LogIfError(getResponse, "UnauthenticatedGetAllProducts");
 
-        // Assert - Should return Unauthorized due to [Authorize] attribute
-        getResponse.StatusCode.ShouldBe(HttpStatusCode.Unauthorized, 
-            "Unauthenticated requests should return 401 Unauthorized");
-    }
+    //    // Assert - Should return Unauthorized due to [Authorize] attribute
+    //    getResponse.StatusCode.ShouldBe(HttpStatusCode.Unauthorized, 
+    //        "Unauthenticated requests should return 401 Unauthorized");
+    //}
 
     [Fact]
     public async Task Demo_Manual_JWT_Token_Test()

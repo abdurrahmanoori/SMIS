@@ -9,21 +9,21 @@ public static class StockTransactionSeed
     public static void DataSeed(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<StockTransaction>().HasData(
-            // Product 1 (Coca Cola) transactions - StockBatch 1 & 2
+            // Product 1 (Coca Cola) transactions - StockBatch 1 & 2 - Unit: Bottle (2)
             CreateStockTransaction("1", "1", "1", "1", 100m, "2", TransactionType.In, new DateTime(2024, 1, 1), "Purchase Order #001"),
             CreateStockTransaction("2", "1", "1", "1", 20m, "2", TransactionType.Out, new DateTime(2024, 1, 2), "Sale #001"),
             CreateStockTransaction("3", "1", "1", "2", 80m, "2", TransactionType.In, new DateTime(2024, 1, 3), "Purchase Order #002"),
             CreateStockTransaction("4", "1", "1", "2", 15m, "2", TransactionType.Out, new DateTime(2024, 1, 4), "Sale #002"),
             
-            // Product 2 (Oreo Biscuits) transactions - StockBatch 3
-            CreateStockTransaction("5", "1", "2", "3", 50m, "2", TransactionType.In, new DateTime(2024, 1, 5), "Purchase Order #003"),
-            CreateStockTransaction("6", "1", "2", "3", 10m, "2", TransactionType.Out, new DateTime(2024, 1, 6), "Sale #003"),
-            CreateStockTransaction("7", "1", "2", "3", 2m, "2", TransactionType.Adujstment, new DateTime(2024, 1, 7), "Damage - Expired"),
+            // Product 4 (Oreo Biscuits) transactions - StockBatch 3 - Unit: Pack (3)
+            CreateStockTransaction("5", "1", "4", "3", 50m, "3", TransactionType.In, new DateTime(2024, 1, 5), "Purchase Order #003"),
+            CreateStockTransaction("6", "1", "4", "3", 10m, "3", TransactionType.Out, new DateTime(2024, 1, 6), "Sale #003"),
+            CreateStockTransaction("7", "1", "4", "3", 2m, "3", TransactionType.Adujstment, new DateTime(2024, 1, 7), "Damage - Expired"),
             
-            // Product 3 (A4 Notebook) transactions - StockBatch 4
-            CreateStockTransaction("8", "1", "3", "4", 200m, "3", TransactionType.In, new DateTime(2024, 1, 8), "Purchase Order #004"),
-            CreateStockTransaction("9", "1", "3", "4", 25m, "3", TransactionType.Out, new DateTime(2024, 1, 9), "Sale #004"),
-            CreateStockTransaction("10", "1", "3", "4", 5m, "3", TransactionType.Out, new DateTime(2024, 1, 10), "Sale #005")
+            // Product 7 (A4 Notebook) transactions - StockBatch 4 - Unit: Piece (1)
+            CreateStockTransaction("8", "1", "7", "4", 200m, "1", TransactionType.In, new DateTime(2024, 1, 8), "Purchase Order #004"),
+            CreateStockTransaction("9", "1", "7", "4", 25m, "1", TransactionType.Out, new DateTime(2024, 1, 9), "Sale #004"),
+            CreateStockTransaction("10", "1", "7", "4", 5m, "1", TransactionType.Out, new DateTime(2024, 1, 10), "Sale #005")
         );
     }
 
@@ -51,8 +51,8 @@ public static class StockTransactionSeed
     private static string? GetProductName(string productId) => productId switch
     {
         "1" => "Coca Cola 500ml",
-        "2" => "Oreo Biscuits", 
-        "3" => "A4 Notebook",
+        "4" => "Oreo Biscuits", 
+        "7" => "A4 Notebook",
         _ => null
     };
 

@@ -21,6 +21,7 @@ using SMIS.Domain.Enums;
 using SMIS.Application.DTO.ProductPrices;
 using SMIS.Application.DTO.Customers;
 using SMIS.Application.DTO.ShopOwners;
+using SMIS.Application.DTO.LoanAccounts;
 
 namespace SMIS.Application.Mappings;
 
@@ -120,7 +121,6 @@ public class MappingProfile : Profile
                 src.ShopId,
                 src.BaseUnitId,
                 src.SKU,
-                src.SalePricePerBaseUnit,
                 src.IsActive,
                 src.Description,
                 src.Barcode,
@@ -164,7 +164,9 @@ public class MappingProfile : Profile
         CreateMap<ProductPriceCreateDto, ProductPrice>()
             .ConstructUsing(src => ProductPrice.Create(
                 src.ProductId,
-                src.Price,
+                src.ProductUnitId,
+                src.BuyPrice,
+                src.SellPrice,
                 src.EffectiveDate
             ))
             .AfterMap((src, dest) =>
@@ -245,6 +247,22 @@ public class MappingProfile : Profile
                 dest.SetNationalIdCardNumber(src.NationalIdCardNumber);
                 if (src.IsActive) dest.Activate(); else dest.Deactivate();
             });
+
+        // LoanAccount mapping
+        CreateMap<LoanAccount, LoanAccountDto>()
+            .ForMember(dest => dest.PaidAmount, opt => opt.MapFrom(src => src.PaidAmount))
+            .ForMember(dest => dest.RemainingAmount, opt => opt.MapFrom(src => src.RemainingAmount));
+        CreateMap<LoanAccountCreateDto, LoanAccount>()
+            .ConstructUsing(src => LoanAccount.Create(
+                src.CustomerId,
+                src.ShopId,
+                src.ProductId,
+                src.Quantity,
+                src.UnitId,
+                src.TotalAmount,
+                src.DueDate,
+                src.Notes
+            ));
     }
 
     private static string ResolveProvinceName(Province src)

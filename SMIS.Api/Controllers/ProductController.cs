@@ -31,6 +31,10 @@ namespace SMIS.Api.Controllers
         public async Task<ActionResult<ProductDto>> GetById(string id, [FromQuery] bool includeCategory = false) =>
             HandleResultResponse(await Mediator.Send(new ProductGetByIdQuery(id, includeCategory)));
 
+        [HttpGet("{id}/loan-info")]
+        public async Task<ActionResult<ProductLoanInfoDto>> GetLoanInfo(string id) =>
+            HandleResultResponse(await Mediator.Send(new ProductGetLoanInfoQuery(id)));
+
         [HttpPut("{id}")]
         public async Task<ActionResult<ProductDto>> Update(string id, ProductCreateDto dto) =>
             HandleResultResponse(await Mediator.Send(new ProductUpdateCommand(id, dto)));

@@ -18,7 +18,6 @@ public class ProductFixtureBuilder
             .RuleFor(p => p.SKU, f => f.Commerce.Ean13())
             .RuleFor(p => p.Barcode, f => f.Random.Bool() ? f.Random.Replace("########") : null)
             .RuleFor(p => p.ImageUrl, f => f.Random.Bool() ? f.Image.PicsumUrl() : null)
-            .RuleFor(p => p.SalePricePerBaseUnit, f => f.Random.Int(100, 50000))
             .RuleFor(p => p.IsActive, true);
     }
 
@@ -75,18 +74,6 @@ public class ProductFixtureBuilder
     public ProductFixtureBuilder WithImageUrl(string? imageUrl)
     {
         _faker.RuleFor(p => p.ImageUrl, imageUrl);
-        return this;
-    }
-
-    public ProductFixtureBuilder WithSalePricePerBaseUnit(int price)
-    {
-        _faker.RuleFor(p => p.SalePricePerBaseUnit, price);
-        return this;
-    }
-
-    public ProductFixtureBuilder WithPrice(int price)
-    {
-        _faker.RuleFor(p => p.SalePricePerBaseUnit, price);
         return this;
     }
 

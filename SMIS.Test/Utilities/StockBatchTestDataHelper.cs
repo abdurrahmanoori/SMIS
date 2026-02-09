@@ -71,7 +71,6 @@ public class StockBatchTestDataHelper
             ShopId = shopId,
             BaseUnitId = baseUnitId,
             CategoryId = categoryId,
-            SalePricePerBaseUnit = 1000,
             SKU = $"SKU-SB-{Guid.NewGuid()}",
             IsActive = true
             

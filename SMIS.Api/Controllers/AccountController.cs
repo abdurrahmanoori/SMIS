@@ -16,6 +16,10 @@ namespace SMIS.Api.Controllers
     [ApiController]
     public class AccountController : BaseApiController
     {
+        [HttpGet("me")]
+        public async Task<ActionResult<UserDto>> GetCurrentUser([FromQuery] bool includeShop = false) =>
+            HandleResultResponse(await Mediator.Send(new UserGetCurrentQuery(includeShop)));
+
         [HttpPost("login")]
         [AllowAnonymous]
         public async Task<ActionResult<LoginResponseDto>> Login(LoginDto dto) =>

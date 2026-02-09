@@ -50,7 +50,6 @@ namespace SMIS.Application.Features.Products.Commands
             entity.SetShopId(request.ProductCreateDto.ShopId);
             entity.SetBaseUnitId(request.ProductCreateDto.BaseUnitId);
             entity.SetSKU(request.ProductCreateDto.SKU);
-            entity.SetSalePricePerBaseUnit(request.ProductCreateDto.SalePricePerBaseUnit);
             entity.SetDescription(request.ProductCreateDto.Description);
             if (!string.IsNullOrWhiteSpace(request.ProductCreateDto.Barcode)) entity.SetBarcode(request.ProductCreateDto.Barcode);
             entity.SetImageUrl(request.ProductCreateDto.ImageUrl);

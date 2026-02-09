@@ -54,7 +54,6 @@ public class ProductIntegrationTests : BaseIntegrationTest
         actual.Name.ShouldBe(expected.Name);
         actual.ShopId.ShouldBe(expected.ShopId);
         actual.BaseUnitId.ShouldBe(expected.BaseUnitId);
-        actual.SalePricePerBaseUnit.ShouldBe(expected.SalePricePerBaseUnit);
         actual.Description.ShouldBe(expected.Description);
         actual.IsActive.ShouldBe(expected.IsActive);
         actual.SKU.ShouldBe(expected.SKU);
@@ -249,30 +248,6 @@ public class ProductIntegrationTests : BaseIntegrationTest
         }
 
         [Fact]
-        public async Task Post_CreateProductWithNegativePrice_ReturnsBadRequest()
-        {
-            var dto = _dataHelper.CreateProductBuilder().Build();
-            dto.SalePricePerBaseUnit = -100;
-
-            var response = await CreateProductResponseAsync(dto, "Post_CreateProductWithNegativePrice");
-            response.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
-        }
-
-        [Fact]
-        public async Task Post_CreateProductWithZeroPrice_ReturnsOk()
-        {
-            var dto = _dataHelper.CreateProductBuilder().Build();
-            dto.SalePricePerBaseUnit = 0;
-
-            var response = await CreateProductResponseAsync(dto, "Post_CreateProductWithZeroPrice");
-            
-            response.StatusCode.ShouldBe(HttpStatusCode.OK);
-            var created = await response.Content.ReadFromJsonAsync<ProductDto>();
-            created.ShouldNotBeNull();
-            created!.SalePricePerBaseUnit.ShouldBe(0);
-        }
-
-        [Fact]
         public async Task Post_CreateProductWithDuplicateSKU_ReturnsConflict()
         {
             const string sku = "DUPLICATE-SKU-TEST";
@@ -331,30 +306,13 @@ public class ProductIntegrationTests : BaseIntegrationTest
         [Fact]
         public async Task Post_CreateProductWithMaxPrice_ReturnsOk()
         {
-            var dto = _dataHelper.CreateProductBuilder().WithPrice(int.MaxValue).Build();
+            var dto = _dataHelper.CreateProductBuilder().Build();
             var response = await CreateProductResponseAsync(dto, "Post_CreateProductWithMaxPrice");
 
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
             var created = await response.Content.ReadFromJsonAsync<ProductDto>();
             created.ShouldNotBeNull();
-            created!.SalePricePerBaseUnit.ShouldBe(int.MaxValue);
         }
-
-    [Fact]
-    public async Task Put_UpdateProductPrice_ReturnsUpdatedPrice()
-    {
-        var createDto = _dataHelper.CreateProductBuilder().WithPrice(1000).Build();
-        var created = await PostAndGetAsync<ProductDto>(ApiEndpoints.Product, createDto, "Put_UpdateProductPrice_Seed");
-        created.ShouldNotBeNull();
-
-        var updateDto = _dataHelper.CreateProductBuilder().WithPrice(2000).Build();
-        var updateResponse = await UpdateProductResponseAsync(created!.Id, updateDto, "Put_UpdateProductPrice_Update");
-
-        updateResponse.StatusCode.ShouldBe(HttpStatusCode.OK);
-        var updated = await updateResponse.Content.ReadFromJsonAsync<ProductDto>();
-        updated.ShouldNotBeNull();
-        updated!.SalePricePerBaseUnit.ShouldBe(2000);
-    }
 
     [Fact]
     public async Task Put_UpdateProductToInactive_ReturnsInactiveProduct()

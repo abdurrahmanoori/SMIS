@@ -13,12 +13,12 @@ public static class UnitOfMeasureSeed
             CreateUnit("1", "Piece", "pcs", "1", "Individual items"),
             CreateUnit("2", "Bottle", "btl", "1", "Liquid containers"),
             CreateUnit("3", "Pack", "pk", "1", "Small packages"),
-            CreateUnit("4", "Box", "box", "2", "Medium containers"),
-            CreateUnit("5", "Carton", "ctn", "2", "Large containers"),
-            CreateUnit("6", "Liter", "L", "2", "Volume measurement"),
-            CreateUnit("7", "Kilogram", "kg", "3", "Weight measurement"),
-            CreateUnit("8", "Gram", "g", "3", "Small weight measurement"),
-            CreateUnit("9", "Milliliter", "ml", "3", "Small volume measurement"),
+            CreateUnit("4", "Box", "box", "1", "Medium containers"),
+            CreateUnit("5", "Carton", "ctn", "1", "Large containers"),
+            CreateUnit("6", "Liter", "L", "1", "Volume measurement"),
+            CreateUnit("7", "Kilogram", "kg", "1", "Weight measurement"),
+            CreateUnit("8", "Gram", "g", "1", "Small weight measurement"),
+            CreateUnit("9", "Milliliter", "ml", "1", "Small volume measurement"),
             CreateUnit("10", "Dozen", "dz", "1", "12 pieces")
         };
 

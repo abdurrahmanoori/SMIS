@@ -13,12 +13,6 @@ namespace SMIS.Domain.Entities;
 public class ProductUnit : EntityPK
 {
     /// <summary>
-    /// Foreign key to the Shop.
-    /// </summary>
-    public string ShopId { get; private set; } = string.Empty;
-    public string? ShopName { get; private set; }
-
-    /// <summary>
     /// Foreign key to the Product.
     /// Example: Biscuit, Notebook, Coca Cola
     /// </summary>
@@ -41,7 +35,8 @@ public class ProductUnit : EntityPK
     /// - Coca Cola: 1 Carton = 24 Bottles → ConversionFactor = 24
     /// </summary>
     public decimal ConversionFactor { get; private set; }
-
+    public string ShopId { get; private set; } = string.Empty;
+    public string? ShopName { get; private set; }
     /// <summary>
     /// Navigation property to Shop.
     /// </summary>
