@@ -259,6 +259,7 @@ public class MappingProfile : Profile
                 src.ProductId,
                 src.Quantity,
                 src.UnitId,
+                src.PriceAtLoanTime,
                 src.TotalAmount,
                 src.DueDate,
                 src.Notes

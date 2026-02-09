@@ -7,6 +7,7 @@ public class LoanAccountCreateDto
     public string ProductId { get; set; } = string.Empty;
     public decimal Quantity { get; set; }
     public string UnitId { get; set; } = string.Empty;
+    public decimal PriceAtLoanTime { get; set; }
     public long TotalAmount { get; set; }
     public DateTime? DueDate { get; set; }
     public string? Notes { get; set; }

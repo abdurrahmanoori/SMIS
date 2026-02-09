@@ -12,6 +12,7 @@ public class LoanAccount : BaseAuditableEntity
    
     public decimal Quantity { get; private set; }
     public string UnitId { get; private set; } = string.Empty;
+    public decimal PriceAtLoanTime { get; private set; }
     public long TotalAmount { get; private set; }
     public DateTime LoanDate { get; private set; }
     public DateTime? DueDate { get; private set; } = null;
@@ -30,7 +31,7 @@ public class LoanAccount : BaseAuditableEntity
 
     internal LoanAccount() { }
 
-    public static LoanAccount Create(string customerId, string shopId, string productId, decimal quantity, string unitId, long totalAmount, DateTime? dueDate = null, string? notes = null)
+    public static LoanAccount Create(string customerId, string shopId, string productId, decimal quantity, string unitId, decimal priceAtLoanTime, long totalAmount, DateTime? dueDate = null, string? notes = null)
     {
         var loan = new LoanAccount();
         loan.SetCustomerId(customerId);
@@ -38,6 +39,7 @@ public class LoanAccount : BaseAuditableEntity
         loan.SetProductId(productId);
         loan.SetQuantity(quantity);
         loan.SetUnitId(unitId);
+        loan.SetPriceAtLoanTime(priceAtLoanTime);
         loan.SetTotalAmount(totalAmount);
         loan.SetLoanDate(DateTime.UtcNow);
         loan.SetDueDate(dueDate);
@@ -78,6 +80,13 @@ public class LoanAccount : BaseAuditableEntity
         if (string.IsNullOrWhiteSpace(unitId))
             throw new DomainValidationException("Unit ID cannot be empty");
         UnitId = unitId.Trim();
+    }
+
+    public void SetPriceAtLoanTime(decimal priceAtLoanTime)
+    {
+        if (priceAtLoanTime <= 0)
+            throw new DomainValidationException("Price at loan time must be greater than zero");
+        PriceAtLoanTime = priceAtLoanTime;
     }
 
     public void SetTotalAmount(long totalAmount)

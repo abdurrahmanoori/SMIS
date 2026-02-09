@@ -22,6 +22,9 @@ public class LoanAccountCreateCommandValidator : AbstractValidator<LoanAccountCr
         RuleFor(x => x.LoanAccountCreateDto.UnitId)
             .NotEmpty().WithMessage("UnitId is required");
 
+        RuleFor(x => x.LoanAccountCreateDto.PriceAtLoanTime)
+            .GreaterThan(0).WithMessage("Price at loan time must be greater than zero");
+
         RuleFor(x => x.LoanAccountCreateDto.TotalAmount)
             .GreaterThan(0).WithMessage("Total amount must be greater than zero");
 

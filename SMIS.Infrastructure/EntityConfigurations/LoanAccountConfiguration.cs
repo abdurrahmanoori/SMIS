@@ -28,6 +28,10 @@ public class LoanAccountConfiguration : IEntityTypeConfiguration<LoanAccount>
         builder.Property(l => l.UnitId)
             .IsRequired();
 
+        builder.Property(l => l.PriceAtLoanTime)
+            .IsRequired()
+            .HasPrecision(18, 2);
+
         builder.Property(l => l.TotalAmount)
             .IsRequired();
 
