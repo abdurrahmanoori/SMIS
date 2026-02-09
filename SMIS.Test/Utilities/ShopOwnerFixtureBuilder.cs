@@ -43,7 +43,7 @@ public class ShopOwnerFixtureBuilder
         return this;
     }
 
-    public ShopOwnerFixtureBuilder WithFirstName(string? firstName)
+    public ShopOwnerFixtureBuilder WithFirstName(string firstName)
     {
         _faker.RuleFor(so => so.FirstName, firstName);
         return this;
