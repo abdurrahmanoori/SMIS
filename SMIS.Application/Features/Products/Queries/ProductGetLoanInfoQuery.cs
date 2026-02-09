@@ -31,15 +31,22 @@ internal sealed class ProductGetLoanInfoQueryHandler : IRequestHandler<ProductGe
             return Result<ProductLoanInfoDto>.NotFoundResult(nameof(ProductLoanInfoDto));
         }
 
-        var baseUnitPrice = product.ProductPrices
+        var activePrice = product.ProductPrices
             .Where(p => p.IsActive && 
                        p.ProductUnit != null &&
-                       p.ProductUnit.ConversionFactor == 1
-
-&&
                        (p.EndDate == null || p.EndDate >= _dateTimeService.Now))
-            .OrderByDescending(p => p.EffectiveDate)
+            .OrderBy(p => p.ProductUnit.ConversionFactor) // Prefer base unit (ConversionFactor=1)
+            .ThenByDescending(p => p.EffectiveDate)
             .FirstOrDefault();
+
+        // Calculate base unit price from any ProductUnit using ConversionFactor
+        var baseUnitSellPrice = activePrice != null && activePrice.ProductUnit != null
+            ? (long)(activePrice.SellPrice / activePrice.ProductUnit.ConversionFactor)
+            : 0;
+        
+        var baseUnitBuyPrice = activePrice != null && activePrice.ProductUnit != null
+            ? (long)(activePrice.BuyPrice / activePrice.ProductUnit.ConversionFactor)
+            : 0;
 
         var dto = new ProductLoanInfoDto
         {
@@ -47,10 +54,10 @@ internal sealed class ProductGetLoanInfoQueryHandler : IRequestHandler<ProductGe
             ProductName = product.Name,
             BaseUnitId = product.BaseUnitId,
             BaseUnitName = product.UnitOfMeasure?.Name ?? string.Empty,
-            LatestSellPrice = baseUnitPrice?.SellPrice ?? 0,
-            LatestBuyPrice = baseUnitPrice?.BuyPrice ?? 0,
-            PriceEffectiveDate = baseUnitPrice?.EffectiveDate,
-            HasActivePrice = baseUnitPrice != null
+            LatestSellPrice = baseUnitSellPrice,
+            LatestBuyPrice = baseUnitBuyPrice,
+            PriceEffectiveDate = activePrice?.EffectiveDate,
+            HasActivePrice = activePrice != null
         };
 
         return Result<ProductLoanInfoDto>.SuccessResult(dto);
