@@ -19,9 +19,6 @@ namespace SMIS.Infrastructure.EntityConfigurations
                 .IsRequired()
                 .HasColumnType("decimal(18,2)");
 
-            builder.Property(pu => pu.ShopName)
-                .HasMaxLength(200);
-
             builder.Property(pu => pu.ProductName)
                 .HasMaxLength(200);
 
@@ -29,11 +26,6 @@ namespace SMIS.Infrastructure.EntityConfigurations
                 .HasMaxLength(100);
 
             // Configure relationships
-            builder.HasOne(pu => pu.Shop)
-                .WithMany()
-                .HasForeignKey(pu => pu.ShopId)
-                .OnDelete(DeleteBehavior.Cascade);
-
             builder.HasOne(pu => pu.Product)
                 .WithMany(p => p.ProductUnits) // Product has a navigation property called ProductUnits
                 .HasForeignKey(pu => pu.ProductId)

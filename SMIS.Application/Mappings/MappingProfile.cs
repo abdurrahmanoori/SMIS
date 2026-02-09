@@ -153,7 +153,6 @@ public class MappingProfile : Profile
         CreateMap<ProductUnit, ProductUnitDto>().ReverseMap();
         CreateMap<ProductUnitCreateDto, ProductUnit>()
             .ConstructUsing(src => ProductUnit.Create(
-                src.ShopId,
                 src.ProductId,
                 src.UnitOfMeasureId,
                 src.ConversionFactor
