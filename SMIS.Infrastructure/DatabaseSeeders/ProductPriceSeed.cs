@@ -8,68 +8,84 @@ public static class ProductPriceSeed
     public static void DataSeed(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<ProductPrice>().HasData(
-            // Coca Cola 500ml (Product 1) - ProductUnit 1 (Box=12 bottles), ProductUnit 2 (Carton=24 bottles)
-            CreateProductPrice("1", "1", "1", 1680, 1920, new DateTime(2024, 1, 1), null, true), // Box
-            CreateProductPrice("2", "1", "2", 3360, 3840, new DateTime(2024, 1, 1), null, true), // Carton
+            // Coca Cola 500ml (Product 1) - Base: Bottle, ProductUnits: 1(Bottle), 2(Box), 3(Carton)
+            CreateProductPrice("1", "1", "1", 140, 160, new DateTime(2024, 1, 1), null, true), // Bottle (base)
+            CreateProductPrice("2", "1", "2", 1680, 1920, new DateTime(2024, 1, 1), null, true), // Box
+            CreateProductPrice("3", "1", "3", 3360, 3840, new DateTime(2024, 1, 1), null, true), // Carton
 
-            // Pepsi 500ml (Product 2) - ProductUnit 3 (Box=12), ProductUnit 4 (Carton=24)
-            CreateProductPrice("3", "2", "3", 1560, 1800, new DateTime(2024, 1, 1), null, true), // Box
-            CreateProductPrice("4", "2", "4", 3120, 3600, new DateTime(2024, 1, 1), null, true), // Carton
+            // Pepsi 500ml (Product 2) - ProductUnits: 4(Bottle), 5(Box), 6(Carton)
+            CreateProductPrice("4", "2", "4", 130, 150, new DateTime(2024, 1, 1), null, true), // Bottle (base)
+            CreateProductPrice("5", "2", "5", 1560, 1800, new DateTime(2024, 1, 1), null, true), // Box
+            CreateProductPrice("6", "2", "6", 3120, 3600, new DateTime(2024, 1, 1), null, true), // Carton
 
-            // Mineral Water 1L (Product 3) - ProductUnit 5 (Box=6), ProductUnit 6 (Carton=12)
-            CreateProductPrice("5", "3", "5", 420, 540, new DateTime(2024, 1, 1), null, true), // Box
-            CreateProductPrice("6", "3", "6", 840, 1080, new DateTime(2024, 1, 1), null, true), // Carton
+            // Mineral Water 1L (Product 3) - ProductUnits: 7(Bottle), 8(Box), 9(Carton)
+            CreateProductPrice("7", "3", "7", 70, 90, new DateTime(2024, 1, 1), null, true), // Bottle (base)
+            CreateProductPrice("8", "3", "8", 420, 540, new DateTime(2024, 1, 1), null, true), // Box
+            CreateProductPrice("9", "3", "9", 840, 1080, new DateTime(2024, 1, 1), null, true), // Carton
 
-            // Oreo Biscuits (Product 4) - ProductUnit 7 (Box=12 packs), ProductUnit 8 (Carton=48)
-            CreateProductPrice("7", "4", "7", 2760, 3240, new DateTime(2024, 1, 1), null, true), // Box
-            CreateProductPrice("8", "4", "8", 11040, 12960, new DateTime(2024, 1, 1), null, true), // Carton
+            // Oreo Biscuits (Product 4) - ProductUnits: 10(Pack), 11(Box), 12(Carton)
+            CreateProductPrice("10", "4", "10", 230, 270, new DateTime(2024, 1, 1), null, true), // Pack (base)
+            CreateProductPrice("11", "4", "11", 2760, 3240, new DateTime(2024, 1, 1), null, true), // Box
+            CreateProductPrice("12", "4", "12", 11040, 12960, new DateTime(2024, 1, 1), null, true), // Carton
 
-            // Lay's Chips (Product 5) - ProductUnit 9 (Box=20), ProductUnit 10 (Carton=60)
-            CreateProductPrice("9", "5", "9", 3200, 3800, new DateTime(2024, 1, 1), null, true), // Box
-            CreateProductPrice("10", "5", "10", 9600, 11400, new DateTime(2024, 1, 1), null, true), // Carton
+            // Lay's Chips (Product 5) - ProductUnits: 13(Pack), 14(Box), 15(Carton)
+            CreateProductPrice("13", "5", "13", 160, 190, new DateTime(2024, 1, 1), null, true), // Pack (base)
+            CreateProductPrice("14", "5", "14", 3200, 3800, new DateTime(2024, 1, 1), null, true), // Box
+            CreateProductPrice("15", "5", "15", 9600, 11400, new DateTime(2024, 1, 1), null, true), // Carton
 
-            // Instant Noodles (Product 6) - ProductUnit 11 (Box=24), ProductUnit 12 (Carton=72)
-            CreateProductPrice("11", "6", "11", 2640, 3120, new DateTime(2024, 1, 1), null, true), // Box
-            CreateProductPrice("12", "6", "12", 7920, 9360, new DateTime(2024, 1, 1), null, true), // Carton
+            // Instant Noodles (Product 6) - ProductUnits: 16(Pack), 17(Box), 18(Carton)
+            CreateProductPrice("16", "6", "16", 110, 130, new DateTime(2024, 1, 1), null, true), // Pack (base)
+            CreateProductPrice("17", "6", "17", 2640, 3120, new DateTime(2024, 1, 1), null, true), // Box
+            CreateProductPrice("18", "6", "18", 7920, 9360, new DateTime(2024, 1, 1), null, true), // Carton
 
-            // A4 Notebook (Product 7) - ProductUnit 13 (Dozen=12), ProductUnit 14 (Box=50)
-            CreateProductPrice("13", "7", "13", 3360, 3840, new DateTime(2024, 1, 1), null, true), // Dozen
-            CreateProductPrice("14", "7", "14", 14000, 16000, new DateTime(2024, 1, 1), null, true), // Box
+            // A4 Notebook (Product 7) - ProductUnits: 19(Piece), 20(Dozen), 21(Box)
+            CreateProductPrice("19", "7", "19", 280, 320, new DateTime(2024, 1, 1), null, true), // Piece (base)
+            CreateProductPrice("20", "7", "20", 3360, 3840, new DateTime(2024, 1, 1), null, true), // Dozen
+            CreateProductPrice("21", "7", "21", 14000, 16000, new DateTime(2024, 1, 1), null, true), // Box
 
-            // Blue Pen (Product 8) - ProductUnit 15 (Dozen=12), ProductUnit 16 (Box=144)
-            CreateProductPrice("15", "8", "15", 540, 660, new DateTime(2024, 1, 1), null, true), // Dozen
-            CreateProductPrice("16", "8", "16", 6480, 7920, new DateTime(2024, 1, 1), null, true), // Box
+            // Blue Pen (Product 8) - ProductUnits: 22(Piece), 23(Dozen), 24(Box)
+            CreateProductPrice("22", "8", "22", 45, 55, new DateTime(2024, 1, 1), null, true), // Piece (base)
+            CreateProductPrice("23", "8", "23", 540, 660, new DateTime(2024, 1, 1), null, true), // Dozen
+            CreateProductPrice("24", "8", "24", 6480, 7920, new DateTime(2024, 1, 1), null, true), // Box
 
-            // Pencil Set (Product 9) - ProductUnit 17 (Carton=20 boxes)
-            CreateProductPrice("17", "9", "17", 7600, 8400, new DateTime(2024, 1, 1), null, true), // Carton
+            // Pencil Set (Product 9) - ProductUnits: 25(Box), 26(Carton)
+            CreateProductPrice("25", "9", "25", 380, 420, new DateTime(2024, 1, 1), null, true), // Box (base)
+            CreateProductPrice("26", "9", "26", 7600, 8400, new DateTime(2024, 1, 1), null, true), // Carton
 
-            // Cooking Oil 1L (Product 10) - ProductUnit 18 (Box=12), ProductUnit 19 (Carton=24)
-            CreateProductPrice("18", "10", "18", 5160, 5640, new DateTime(2024, 1, 1), null, true), // Box
-            CreateProductPrice("19", "10", "19", 10320, 11280, new DateTime(2024, 1, 1), null, true), // Carton
+            // Cooking Oil 1L (Product 10) - ProductUnits: 27(Bottle), 28(Box), 29(Carton)
+            CreateProductPrice("27", "10", "27", 430, 470, new DateTime(2024, 1, 1), null, true), // Bottle (base)
+            CreateProductPrice("28", "10", "28", 5160, 5640, new DateTime(2024, 1, 1), null, true), // Box
+            CreateProductPrice("29", "10", "29", 10320, 11280, new DateTime(2024, 1, 1), null, true), // Carton
 
-            // Rice 1kg (Product 11) - ProductUnit 20 (Box=10kg), ProductUnit 21 (Carton=25kg)
-            CreateProductPrice("20", "11", "20", 2600, 3000, new DateTime(2024, 1, 1), null, true), // Box
-            CreateProductPrice("21", "11", "21", 6500, 7500, new DateTime(2024, 1, 1), null, true), // Carton
+            // Rice 1kg (Product 11) - ProductUnits: 30(Kg), 31(Box), 32(Carton)
+            CreateProductPrice("30", "11", "30", 260, 300, new DateTime(2024, 1, 1), null, true), // Kg (base)
+            CreateProductPrice("31", "11", "31", 2600, 3000, new DateTime(2024, 1, 1), null, true), // Box
+            CreateProductPrice("32", "11", "32", 6500, 7500, new DateTime(2024, 1, 1), null, true), // Carton
 
-            // Sugar 1kg (Product 12) - ProductUnit 22 (Box=20kg), ProductUnit 23 (Carton=50kg)
-            CreateProductPrice("22", "12", "22", 3600, 4400, new DateTime(2024, 1, 1), null, true), // Box
-            CreateProductPrice("23", "12", "23", 9000, 11000, new DateTime(2024, 1, 1), null, true), // Carton
+            // Sugar 1kg (Product 12) - ProductUnits: 33(Kg), 34(Box), 35(Carton)
+            CreateProductPrice("33", "12", "33", 180, 220, new DateTime(2024, 1, 1), null, true), // Kg (base)
+            CreateProductPrice("34", "12", "34", 3600, 4400, new DateTime(2024, 1, 1), null, true), // Box
+            CreateProductPrice("35", "12", "35", 9000, 11000, new DateTime(2024, 1, 1), null, true), // Carton
 
-            // Shampoo 400ml (Product 13) - ProductUnit 24 (Box=12), ProductUnit 25 (Carton=24)
-            CreateProductPrice("24", "13", "24", 3960, 4440, new DateTime(2024, 1, 1), null, true), // Box
-            CreateProductPrice("25", "13", "25", 7920, 8880, new DateTime(2024, 1, 1), null, true), // Carton
+            // Shampoo 400ml (Product 13) - ProductUnits: 36(Bottle), 37(Box), 38(Carton)
+            CreateProductPrice("36", "13", "36", 330, 370, new DateTime(2024, 1, 1), null, true), // Bottle (base)
+            CreateProductPrice("37", "13", "37", 3960, 4440, new DateTime(2024, 1, 1), null, true), // Box
+            CreateProductPrice("38", "13", "38", 7920, 8880, new DateTime(2024, 1, 1), null, true), // Carton
 
-            // Toothpaste (Product 14) - ProductUnit 26 (Box=24), ProductUnit 27 (Carton=72)
-            CreateProductPrice("26", "14", "26", 3840, 4800, new DateTime(2024, 1, 1), null, true), // Box
-            CreateProductPrice("27", "14", "27", 11520, 14400, new DateTime(2024, 1, 1), null, true), // Carton
+            // Toothpaste (Product 14) - ProductUnits: 39(Piece), 40(Box), 41(Carton)
+            CreateProductPrice("39", "14", "39", 160, 200, new DateTime(2024, 1, 1), null, true), // Piece (base)
+            CreateProductPrice("40", "14", "40", 3840, 4800, new DateTime(2024, 1, 1), null, true), // Box
+            CreateProductPrice("41", "14", "41", 11520, 14400, new DateTime(2024, 1, 1), null, true), // Carton
 
-            // USB Cable (Product 15) - ProductUnit 28 (Box=50), ProductUnit 29 (Carton=200)
-            CreateProductPrice("28", "15", "28", 11500, 13500, new DateTime(2024, 1, 1), null, true), // Box
-            CreateProductPrice("29", "15", "29", 46000, 54000, new DateTime(2024, 1, 1), null, true), // Carton
+            // USB Cable (Product 15) - ProductUnits: 42(Piece), 43(Box), 44(Carton)
+            CreateProductPrice("42", "15", "42", 230, 270, new DateTime(2024, 1, 1), null, true), // Piece (base)
+            CreateProductPrice("43", "15", "43", 11500, 13500, new DateTime(2024, 1, 1), null, true), // Box
+            CreateProductPrice("44", "15", "44", 46000, 54000, new DateTime(2024, 1, 1), null, true), // Carton
 
-            // Phone Charger (Product 16) - ProductUnit 30 (Box=20), ProductUnit 31 (Carton=100)
-            CreateProductPrice("30", "16", "30", 15000, 17000, new DateTime(2024, 1, 1), null, true), // Box
-            CreateProductPrice("31", "16", "31", 75000, 85000, new DateTime(2024, 1, 1), null, true) // Carton
+            // Phone Charger (Product 16) - ProductUnits: 45(Piece), 46(Box), 47(Carton)
+            CreateProductPrice("45", "16", "45", 750, 850, new DateTime(2024, 1, 1), null, true), // Piece (base)
+            CreateProductPrice("46", "16", "46", 15000, 17000, new DateTime(2024, 1, 1), null, true), // Box
+            CreateProductPrice("47", "16", "47", 75000, 85000, new DateTime(2024, 1, 1), null, true) // Carton
         );
     }
 
