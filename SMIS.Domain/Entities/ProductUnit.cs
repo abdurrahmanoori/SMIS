@@ -35,12 +35,6 @@ public class ProductUnit : EntityPK
     /// - Coca Cola: 1 Carton = 24 Bottles → ConversionFactor = 24
     /// </summary>
     public decimal ConversionFactor { get; private set; }
-    public string ShopId { get; private set; } = string.Empty;
-    public string? ShopName { get; private set; }
-    /// <summary>
-    /// Navigation property to Shop.
-    /// </summary>
-    public Shop Shop { get; set; } = null!;
 
     /// <summary>
     /// Navigation property to Product.
@@ -54,22 +48,13 @@ public class ProductUnit : EntityPK
 
     internal ProductUnit() { } // EF Core & Seeding
 
-    public static ProductUnit Create(string shopId, string productId, string unitOfMeasureId, decimal conversionFactor)
+    public static ProductUnit Create(string productId, string unitOfMeasureId, decimal conversionFactor)
     {
         var productUnit = new ProductUnit();
-        productUnit.SetShopId(shopId);
         productUnit.SetProductId(productId);
         productUnit.SetUnitOfMeasureId(unitOfMeasureId);
         productUnit.SetConversionFactor(conversionFactor);
         return productUnit;
-    }
-
-    public void SetShopId(string shopId)
-    {
-        if (string.IsNullOrWhiteSpace(shopId))
-            throw new DomainValidationException("Shop ID cannot be empty");
-
-        ShopId = shopId.Trim();
     }
 
     public void SetProductId(string productId)
@@ -94,7 +79,6 @@ public class ProductUnit : EntityPK
         ConversionFactor = conversionFactorVO;
     }
 
-    public void SetShopName(string? shopName) => ShopName = shopName?.Trim();
     public void SetProductName(string? productName) => ProductName = productName?.Trim();
     public void SetUnitName(string? unitName) => UnitName = unitName?.Trim();
 }

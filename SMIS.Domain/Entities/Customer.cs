@@ -1,11 +1,12 @@
 using SMIS.Domain.Common.BaseAbstract;
+using SMIS.Domain.Common.Interfaces;
 using SMIS.Domain.Entities.LocationEntities;
 using SMIS.Domain.Enums;
 using SMIS.Domain.Exceptions;
 
 namespace SMIS.Domain.Entities;
 
-public class Customer : BaseAuditableEntity
+public class Customer : BaseAuditableEntity, IShopEntity
 {
     public string FirstName { get; private set; } = string.Empty;
     public string? LastName { get; private set; }

@@ -35,6 +35,7 @@ internal sealed class LoanAccountUpdateCommandHandler : IRequestHandler<LoanAcco
         entity.SetProductId(request.LoanAccountCreateDto.ProductId);
         entity.SetQuantity(request.LoanAccountCreateDto.Quantity);
         entity.SetUnitId(request.LoanAccountCreateDto.UnitId);
+        entity.SetPriceAtLoanTime(request.LoanAccountCreateDto.PriceAtLoanTime);
         entity.SetTotalAmount(request.LoanAccountCreateDto.TotalAmount);
         entity.SetDueDate(request.LoanAccountCreateDto.DueDate);
         entity.SetNotes(request.LoanAccountCreateDto.Notes);

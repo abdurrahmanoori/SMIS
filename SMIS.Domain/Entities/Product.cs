@@ -4,7 +4,7 @@ using SMIS.Domain.Exceptions;
 
 namespace SMIS.Domain.Entities;
 
-public class Product : BaseAuditableEntity, IEntity
+public class Product : BaseAuditableEntity, IEntity, IShopEntity
 {
     public string Name { get; set; } = string.Empty;
  

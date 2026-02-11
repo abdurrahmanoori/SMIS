@@ -6,28 +6,13 @@ namespace SMIS.Test.Utilities;
 public class ProductUnitFixtureBuilder
 {
     private readonly Faker<ProductUnitCreateDto> _faker;
-    private string? _shopId;
     private string? _productId;
     private string? _unitOfMeasureId;
 
     public ProductUnitFixtureBuilder()
     {
-        //_faker = new Faker<ProductUnitCreateDto>()
-        //    .RuleFor(pu => pu.ConversionFactor, f => f.Random.Decimal(1, 100));
-
         _faker = new Faker<ProductUnitCreateDto>()
             .RuleFor(pu => pu.ConversionFactor,f=> Math.Round(f.Random.Decimal(1,100)));
-
-
-    //    var faker = new AutoFaker<YourModel>()
-    //.RuleFor(m => m.DecimalProperty, f => Math.Round(f.Random.Decimal(0, 1000), 2)); // Scale 2
-
-    }
-
-    public ProductUnitFixtureBuilder WithShopId(string shopId)
-    {
-        _shopId = shopId;
-        return this;
     }
 
     public ProductUnitFixtureBuilder WithProductId(string productId)
@@ -42,9 +27,8 @@ public class ProductUnitFixtureBuilder
         return this;
     }
 
-    public ProductUnitFixtureBuilder WithDependencies(string shopId, string productId, string unitOfMeasureId)
+    public ProductUnitFixtureBuilder WithDependencies(string productId, string unitOfMeasureId)
     {
-        _shopId = shopId;
         _productId = productId;
         _unitOfMeasureId = unitOfMeasureId;
         return this;
@@ -59,7 +43,6 @@ public class ProductUnitFixtureBuilder
     public ProductUnitCreateDto Build()
     {
         var productUnit = _faker.Generate();
-        productUnit.ShopId = _shopId ?? throw new InvalidOperationException("ShopId is required");
         productUnit.ProductId = _productId ?? throw new InvalidOperationException("ProductId is required");
         productUnit.UnitOfMeasureId = _unitOfMeasureId ?? throw new InvalidOperationException("UnitOfMeasureId is required");
         return productUnit;

@@ -5,7 +5,7 @@ using SMIS.Domain.Exceptions;
 
 namespace SMIS.Domain.Entities;
 
-public class ShopOwner : BaseAuditableEntity
+public class ShopOwner : BaseAuditableEntity, IShopEntity
 {
     public string ApplicationUserId { get; private set; } = string.Empty;
     public string ShopId { get; private set; } = string.Empty;

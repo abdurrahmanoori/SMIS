@@ -11,25 +11,25 @@ namespace SMIS.Test.Utilities;
 public class ProductUnitTestDataHelper
 {
     private readonly HttpClient _client;
-    private string? _cachedShopId;
     private string? _cachedProductId;
     private string? _cachedUnitId;
+    private string? _cachedShopId;
 
     public ProductUnitTestDataHelper(HttpClient client)
     {
         _client = client;
     }
 
-    public async Task<(string shopId, string productId, string unitId)> GetOrCreateDependencies()
+    public async Task<(string productId, string unitId)> GetOrCreateDependencies()
     {
         if (HasCachedDependencies())
-            return (_cachedShopId!, _cachedProductId!, _cachedUnitId!);
+            return (_cachedProductId!, _cachedUnitId!);
 
         _cachedShopId = await CreateShopAsync();
         _cachedUnitId = await CreateUnitAsync();
         _cachedProductId = await CreateProductAsync();
 
-        return (_cachedShopId, _cachedProductId, _cachedUnitId);
+        return (_cachedProductId, _cachedUnitId);
     }
 
     public ProductUnitFixtureBuilder CreateProductUnitBuilder()
@@ -38,7 +38,7 @@ public class ProductUnitTestDataHelper
             throw new InvalidOperationException("Dependencies must be created first. Call GetOrCreateDependencies().");
             
         return new ProductUnitFixtureBuilder()
-            .WithDependencies(_cachedShopId!, _cachedProductId!, _cachedUnitId!);
+            .WithDependencies(_cachedProductId!, _cachedUnitId!);
     }
 
     public async Task<string> CreateProductUnitForProductAsync(string productId)
@@ -46,7 +46,7 @@ public class ProductUnitTestDataHelper
         await GetOrCreateDependencies();
         
         var productUnitDto = new ProductUnitFixtureBuilder()
-            .WithDependencies(_cachedShopId!, productId, _cachedUnitId!)
+            .WithDependencies(productId, _cachedUnitId!)
             .Build();
         
         var response = await _client.PostAsJsonAsync(ApiEndpoints.ProductUnit, productUnitDto);
@@ -57,7 +57,7 @@ public class ProductUnitTestDataHelper
     }
 
     private bool HasCachedDependencies() => 
-        _cachedShopId != null && _cachedProductId != null && _cachedUnitId != null;
+        _cachedProductId != null && _cachedUnitId != null;
 
     private async Task<string> CreateUnitAsync()
     {
