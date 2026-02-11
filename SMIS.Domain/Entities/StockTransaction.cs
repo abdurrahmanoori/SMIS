@@ -1,11 +1,12 @@
 ﻿
 using SMIS.Domain.Common.BaseAbstract;
+using SMIS.Domain.Common.Interfaces;
 using SMIS.Domain.Enums;
 using SMIS.Domain.Exceptions;
 
 namespace SMIS.Domain.Entities;
 
-public class StockTransaction : BaseAuditableEntityWithoutName
+public class StockTransaction : BaseAuditableEntityWithoutName, IShopEntity
 {
     public string ShopId { get; private set; } = string.Empty;
     public string? ShopName { get; set; }

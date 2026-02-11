@@ -1,10 +1,10 @@
 using SMIS.Domain.Common.BaseAbstract;
+using SMIS.Domain.Common.Interfaces;
 using SMIS.Domain.Exceptions;
 
 namespace SMIS.Domain.Entities;
-// price of current product must be fetched from productPrice
 
-public class LoanAccount : BaseAuditableEntity
+public class LoanAccount : BaseAuditableEntity, IShopEntity
 {
     public string CustomerId { get; private set; } = string.Empty;
     public string ShopId { get; private set; } = string.Empty;

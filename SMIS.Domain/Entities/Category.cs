@@ -1,10 +1,11 @@
 using SMIS.Domain.Common.BaseAbstract;
+using SMIS.Domain.Common.Interfaces;
 using SMIS.Domain.Exceptions;
 using SMIS.Domain.ValueObjects;
 
 namespace SMIS.Domain.Entities;
 
-public class Category : BaseAuditableEntity
+public class Category : BaseAuditableEntity, IShopEntity
 {
     public string Name { get; private set; } = string.Empty;
     public string? Code { get; private set; }
