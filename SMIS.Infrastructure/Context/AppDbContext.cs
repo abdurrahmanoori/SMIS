@@ -2,7 +2,9 @@
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
+using SMIS.Application.Identity.IServices;
 using SMIS.Domain.Common.BaseAbstract;
+using SMIS.Domain.Common.Interfaces;
 using SMIS.Domain.Entities;
 using SMIS.Domain.Entities.Identity.Entity;
 using SMIS.Domain.Entities.Localization;
@@ -14,8 +16,15 @@ namespace SMIS.Infrastructure.Context;
 
 public partial class AppDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, string, IdentityUserClaim<string>, ApplicationUserRole, IdentityUserLogin<string>, IdentityRoleClaim<string>, IdentityUserToken<string>>
 {
+    private readonly ICurrentUser? _currentUser;
+
     public AppDbContext(DbContextOptions options) : base(options)
     {
+    }
+
+    public AppDbContext(DbContextOptions options, ICurrentUser currentUser) : base(options)
+    {
+        _currentUser = currentUser;
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -34,6 +43,18 @@ public partial class AppDbContext : IdentityDbContext<ApplicationUser, Applicati
                 modelBuilder.Entity(entityType.ClrType)
                     .Property(nameof(BaseEntity.EntityState))
                     .HasConversion<string>();
+            }
+        }
+
+        // Apply global query filter for multi-tenant isolation
+        foreach (var entityType in modelBuilder.Model.GetEntityTypes())
+        {
+            if (typeof(IShopEntity).IsAssignableFrom(entityType.ClrType))
+            {
+                var method = typeof(AppDbContext)
+                    .GetMethod(nameof(SetShopEntityFilter), BindingFlags.NonPublic | BindingFlags.Static)!
+                    .MakeGenericMethod(entityType.ClrType);
+                method.Invoke(null, new object[] { modelBuilder });
             }
         }
 
