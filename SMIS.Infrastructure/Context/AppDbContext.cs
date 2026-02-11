@@ -52,9 +52,9 @@ public partial class AppDbContext : IdentityDbContext<ApplicationUser, Applicati
             if (typeof(IShopEntity).IsAssignableFrom(entityType.ClrType))
             {
                 var method = typeof(AppDbContext)
-                    .GetMethod(nameof(SetShopEntityFilter), BindingFlags.NonPublic | BindingFlags.Static)!
+                    .GetMethod(nameof(SetShopEntityFilter), BindingFlags.NonPublic | BindingFlags.Instance)!
                     .MakeGenericMethod(entityType.ClrType);
-                method.Invoke(null, new object[] { modelBuilder });
+                method.Invoke(this, new object[] { modelBuilder });
             }
         }
 
@@ -102,17 +102,17 @@ public partial class AppDbContext : IdentityDbContext<ApplicationUser, Applicati
     public DbSet<LoanAccountPayment> LoanAccountPayments { get; set; }
     public DbSet<ApplicationUserRole> UserRoles { get; set; }
 
-    private void EnsureShopIdSet()
-    {
-        if (_currentUser != null && string.IsNullOrEmpty(ShopIdHolder.Instance.CurrentShopId))
-        {
-            ShopIdHolder.Instance.CurrentShopId = _currentUser.GetShopId();
-        }
-    }
+    //private void EnsureShopIdSet()
+    //{
+    //    if (_currentUser != null && string.IsNullOrEmpty(ShopIdHolder.Instance.CurrentShopId))
+    //    {
+    //        ShopIdHolder.Instance.CurrentShopId = _currentUser.GetShopId();
+    //    }
+    //}
 
-    public override DbSet<TEntity> Set<TEntity>()
-    {
-        EnsureShopIdSet();
-        return base.Set<TEntity>();
-    }
+    //public override DbSet<TEntity> Set<TEntity>()
+    //{
+    //    EnsureShopIdSet();
+    //    return base.Set<TEntity>();
+    //}
 }
