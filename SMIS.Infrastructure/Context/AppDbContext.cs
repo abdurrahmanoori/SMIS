@@ -101,4 +101,18 @@ public partial class AppDbContext : IdentityDbContext<ApplicationUser, Applicati
     public DbSet<LoanAccount> LoanAccounts { get; set; }
     public DbSet<LoanAccountPayment> LoanAccountPayments { get; set; }
     public DbSet<ApplicationUserRole> UserRoles { get; set; }
+
+    private void EnsureShopIdSet()
+    {
+        if (_currentUser != null && string.IsNullOrEmpty(ShopIdHolder.Instance.CurrentShopId))
+        {
+            ShopIdHolder.Instance.CurrentShopId = _currentUser.GetShopId();
+        }
+    }
+
+    public override DbSet<TEntity> Set<TEntity>()
+    {
+        EnsureShopIdSet();
+        return base.Set<TEntity>();
+    }
 }
