@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Http;
+using SMIS.Application.Common.Contants;
 using SMIS.Application.Identity.IServices;
 using SMIS.Domain.Entities.Identity.Entity;
 using System.Security.Claims;
@@ -30,5 +31,10 @@ public class CurrentUser : ICurrentUser
     {
         var user = _httpContextAccessor.HttpContext?.User;
         return user?.FindFirst(nameof(ApplicationUser.ShopId))?.Value ?? string.Empty;
+    }
+    public bool IsSuperAdmin( )
+    {
+        var user = _httpContextAccessor.HttpContext?.User;
+        return user?.IsInRole(SD.Role_Super_Admin) ?? false;
     }
 }

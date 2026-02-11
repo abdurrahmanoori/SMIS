@@ -8,6 +8,8 @@ public partial class AppDbContext
     private void SetShopEntityFilter<TEntity>(ModelBuilder modelBuilder) where TEntity : class, IShopEntity
     {
         modelBuilder.Entity<TEntity>().HasQueryFilter(e => 
-            string.IsNullOrEmpty(_currentUser.GetShopId()) || e.ShopId == _currentUser.GetShopId());
+            _currentUser.IsSuperAdmin() || 
+            string.IsNullOrEmpty(_currentUser.GetShopId()) || 
+            e.ShopId == _currentUser.GetShopId());
     }
 }

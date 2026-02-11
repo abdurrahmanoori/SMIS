@@ -16,11 +16,11 @@ namespace SMIS.Infrastructure.Context;
 
 public partial class AppDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, string, IdentityUserClaim<string>, ApplicationUserRole, IdentityUserLogin<string>, IdentityRoleClaim<string>, IdentityUserToken<string>>
 {
-    private readonly ICurrentUser? _currentUser;
+    private readonly ICurrentUser _currentUser;
 
-    public AppDbContext(DbContextOptions options) : base(options)
-    {
-    }
+    //public AppDbContext(DbContextOptions options) : base(options)
+    //{
+    //}
 
     public AppDbContext(DbContextOptions options, ICurrentUser currentUser) : base(options)
     {
