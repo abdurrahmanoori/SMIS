@@ -7,5 +7,6 @@ namespace SMIS.Application.Identity.IServices
         string GetLangId();
         string GetShopId();
         bool IsSuperAdmin();
+        public List<string> Roles( );
     }
 }

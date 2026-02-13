@@ -37,4 +37,10 @@ public class CurrentUser : ICurrentUser
         var user = _httpContextAccessor.HttpContext?.User;
         return user?.IsInRole(SD.Role_Super_Admin) ?? false;
     }
+
+    public List<string> Roles( )
+    {
+        var user = _httpContextAccessor.HttpContext?.User;
+        return user?.FindAll(ClaimTypes.Role).Select(c => c.Value).ToList() ?? new List<string>();
+    }
 }
