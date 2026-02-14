@@ -34,7 +34,7 @@ namespace SMIS.Application.Features.Products.Queries
             var query = _productRepository.GetAllQueryable(includeProperties: request.IncludeCategory ? "Category" : null);
             var products = await query.ToPagedList(request.PageNumber, request.PageSize);
 
-            if (!products.Items.Any())
+            if (products.Items.Any())
             {
                 return Result<PagedList<ProductDto>>.EmptyResult(nameof(ProductDto));
             }
