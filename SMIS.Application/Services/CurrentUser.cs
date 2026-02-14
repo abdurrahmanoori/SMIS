@@ -32,6 +32,18 @@ public class CurrentUser : ICurrentUser
         var user = _httpContextAccessor.HttpContext?.User;
         return user?.FindFirst(nameof(ApplicationUser.ShopId))?.Value ?? string.Empty;
     }
+
+    public bool IsRetailAdmin( )
+    {
+        var user = _httpContextAccessor.HttpContext?.User;
+        return user?.IsInRole(SD.Role_RShop_Admin) ?? false;
+    }
+    public bool IsWholesaleAdmin( )
+    {
+        var user = _httpContextAccessor.HttpContext?.User;
+        return user?.IsInRole(SD.Role_WShop_Admin) ?? false;
+    }
+
     public bool IsSuperAdmin( )
     {
         var user = _httpContextAccessor.HttpContext?.User;
