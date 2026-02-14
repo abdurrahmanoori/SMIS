@@ -7,11 +7,14 @@ namespace SMIS.Domain.Entities;
 public class LoanAccount : BaseAuditableEntity, IShopEntity
 {
     public string CustomerId { get; private set; } = string.Empty;
+    public string? CustomerName { get; set; }
     public string ShopId { get; private set; } = string.Empty;
+    public string? ShopName { get; set; }
     public string ProductId { get; private set; } = string.Empty;
-   
+    public string? ProductName { get; set; }
     public decimal Quantity { get; private set; }
     public string UnitId { get; private set; } = string.Empty;
+    public string? UnitName { get; set; }
     public decimal PriceAtLoanTime { get; private set; }
     public long TotalAmount { get; private set; }
     public DateTime LoanDate { get; private set; }

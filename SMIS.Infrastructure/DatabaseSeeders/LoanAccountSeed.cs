@@ -19,6 +19,12 @@ public static class LoanAccountSeed
         var loanAccount = LoanAccount.Create(customerId, shopId, productId, quantity, unitId, priceAtLoanTime, totalAmount, dueDate, notes);
 
         typeof(LoanAccount).GetProperty(nameof(LoanAccount.Id))!.SetValue(loanAccount, id);
+        
+        loanAccount.CustomerName = customerId == "1" ? "John Doe" : customerId == "2" ? "Jane Smith" : null;
+        loanAccount.ShopName = shopId == "1" ? "Main Wholesale Shop" : shopId == "2" ? "Downtown Retail" : null;
+        loanAccount.ProductName = productId == "1" ? "Coca Cola" : productId == "4" ? "Oreo Biscuit" : productId == "7" ? "Notebook A4" : null;
+        loanAccount.UnitName = unitId == "3" ? "Bottle" : unitId == "1" ? "Piece" : null;
+        
         var loanDateProp = typeof(LoanAccount).GetProperty(nameof(LoanAccount.LoanDate));
         if (loanDateProp != null)
         {
