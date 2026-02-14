@@ -8,8 +8,8 @@ public class LoanAccountPayment : BaseAuditableEntity
     public string LoanAccountId { get; private set; } = string.Empty;
     public long Amount { get; private set; }
     public DateTime PaymentDate { get; private set; }
-    public string PaymentMethod { get; private set; } = "Cash";
     public string? Notes { get; private set; }
+    public string PaymentMethod { get; private set; } = "Cash";
     public bool IsActive { get; private set; } = true;
 
     public LoanAccount? LoanAccount { get; set; }
