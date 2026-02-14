@@ -19,11 +19,10 @@ public static class LoanAccountSeed
         var loanAccount = LoanAccount.Create(customerId, shopId, productId, quantity, unitId, priceAtLoanTime, totalAmount, dueDate, notes);
 
         typeof(LoanAccount).GetProperty(nameof(LoanAccount.Id))!.SetValue(loanAccount, id);
-        
-        loanAccount.CustomerName = customerId == "1" ? "John Doe" : customerId == "2" ? "Jane Smith" : null;
-        loanAccount.ShopName = shopId == "1" ? "Main Wholesale Shop" : shopId == "2" ? "Downtown Retail" : null;
-        loanAccount.ProductName = productId == "1" ? "Coca Cola" : productId == "4" ? "Oreo Biscuit" : productId == "7" ? "Notebook A4" : null;
-        loanAccount.UnitName = unitId == "3" ? "Bottle" : unitId == "1" ? "Piece" : null;
+        typeof(LoanAccount).GetProperty(nameof(LoanAccount.CustomerName))!.SetValue(loanAccount, GetCustomerName(customerId));
+        typeof(LoanAccount).GetProperty(nameof(LoanAccount.ShopName))!.SetValue(loanAccount, GetShopName(shopId));
+        typeof(LoanAccount).GetProperty(nameof(LoanAccount.ProductName))!.SetValue(loanAccount, GetProductName(productId));
+        typeof(LoanAccount).GetProperty(nameof(LoanAccount.UnitName))!.SetValue(loanAccount, GetUnitName(unitId));
         
         var loanDateProp = typeof(LoanAccount).GetProperty(nameof(LoanAccount.LoanDate));
         if (loanDateProp != null)
@@ -34,4 +33,33 @@ public static class LoanAccountSeed
 
         return loanAccount;
     }
+
+    private static string? GetCustomerName(string customerId) => customerId switch
+    {
+        "1" => "John",
+        "2" => "Jane",
+        _ => null
+    };
+
+    private static string? GetShopName(string shopId) => shopId switch
+    {
+        "1" => "Main Store",
+        "2" => "Branch Store",
+        _ => null
+    };
+
+    private static string? GetProductName(string productId) => productId switch
+    {
+        "1" => "Coca Cola 500ml",
+        "4" => "Oreo Biscuits",
+        "7" => "A4 Notebook",
+        _ => null
+    };
+
+    private static string? GetUnitName(string unitId) => unitId switch
+    {
+        "1" => "Piece",
+        "3" => "Pack",
+        _ => null
+    };
 }
