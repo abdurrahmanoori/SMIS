@@ -39,7 +39,8 @@ public class DevelopmentJwtMiddleware
             new Claim(ClaimTypes.NameIdentifier, "1"),
             new Claim(ClaimTypes.Name, "superadmin"),
             new Claim(ClaimTypes.Email, "superadmin@smis.com"),
-            new Claim(ClaimTypes.Role, "SuperAdmin")
+            new Claim(ClaimTypes.Role, "SuperAdmin"),
+            new Claim("ShopId", "1")
         };
 
         var token = new JwtSecurityToken(

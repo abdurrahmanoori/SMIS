@@ -16,11 +16,11 @@ namespace SMIS.Infrastructure.Context;
 
 public partial class AppDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, string, IdentityUserClaim<string>, ApplicationUserRole, IdentityUserLogin<string>, IdentityRoleClaim<string>, IdentityUserToken<string>>
 {
-    private readonly ICurrentUser? _currentUser;
+    private readonly ICurrentUser _currentUser;
 
-    public AppDbContext(DbContextOptions options) : base(options)
-    {
-    }
+    //public AppDbContext(DbContextOptions options) : base(options)
+    //{
+    //}
 
     public AppDbContext(DbContextOptions options, ICurrentUser currentUser) : base(options)
     {
@@ -52,9 +52,9 @@ public partial class AppDbContext : IdentityDbContext<ApplicationUser, Applicati
             if (typeof(IShopEntity).IsAssignableFrom(entityType.ClrType))
             {
                 var method = typeof(AppDbContext)
-                    .GetMethod(nameof(SetShopEntityFilter), BindingFlags.NonPublic | BindingFlags.Static)!
+                    .GetMethod(nameof(SetShopEntityFilter), BindingFlags.NonPublic | BindingFlags.Instance)!
                     .MakeGenericMethod(entityType.ClrType);
-                method.Invoke(null, new object[] { modelBuilder });
+                method.Invoke(this, new object[] { modelBuilder });
             }
         }
 
@@ -101,4 +101,18 @@ public partial class AppDbContext : IdentityDbContext<ApplicationUser, Applicati
     public DbSet<LoanAccount> LoanAccounts { get; set; }
     public DbSet<LoanAccountPayment> LoanAccountPayments { get; set; }
     public DbSet<ApplicationUserRole> UserRoles { get; set; }
+
+    //private void EnsureShopIdSet()
+    //{
+    //    if (_currentUser != null && string.IsNullOrEmpty(ShopIdHolder.Instance.CurrentShopId))
+    //    {
+    //        ShopIdHolder.Instance.CurrentShopId = _currentUser.GetShopId();
+    //    }
+    //}
+
+    //public override DbSet<TEntity> Set<TEntity>()
+    //{
+    //    EnsureShopIdSet();
+    //    return base.Set<TEntity>();
+    //}
 }
