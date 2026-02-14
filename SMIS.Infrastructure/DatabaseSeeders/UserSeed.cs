@@ -18,7 +18,7 @@ public static class UserSeed
             CreateUser("3", "wadministration", "wadministration@smis.com", "1", "Wholesale", "Administration", "+855123456791", hasher),
             CreateUser("4", "wmanager", "wmanager@smis.com", "1", "Wholesale", "Manager", "+855123456792", hasher),
             CreateUser("5", "wstaff", "wstaff@smis.com", "1", "Wholesale", "Staff", "+855123456793", hasher),
-            CreateUser("6", "wviewer", "wviewer@smis.com", "1", "Wholesale", "Viewer", "+855123456794", hasher),
+            CreateUser("6", "wviewer", "wviewer@smis.com", "1", "Wholesale", "Viewer", "+855123456666", hasher),
             CreateUser("7", "weditor", "weditor@smis.com", "1", "Wholesale", "Editor", "+855123456795", hasher),
             CreateUser("8", "wuser", "wuser@smis.com", "1", "Wholesale", "User", "+855123456796", hasher),
             
