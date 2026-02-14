@@ -15,11 +15,20 @@ public class LoanAccountConfiguration : IEntityTypeConfiguration<LoanAccount>
         builder.Property(l => l.CustomerId)
             .IsRequired();
 
+        builder.Property(l => l.CustomerName)
+            .HasMaxLength(200);
+
         builder.Property(l => l.ShopId)
             .IsRequired();
 
+        builder.Property(l => l.ShopName)
+            .HasMaxLength(200);
+
         builder.Property(l => l.ProductId)
             .IsRequired();
+
+        builder.Property(l => l.ProductName)
+            .HasMaxLength(200);
 
         builder.Property(l => l.Quantity)
             .IsRequired()
@@ -27,6 +36,9 @@ public class LoanAccountConfiguration : IEntityTypeConfiguration<LoanAccount>
 
         builder.Property(l => l.UnitId)
             .IsRequired();
+
+        builder.Property(l => l.UnitName)
+            .HasMaxLength(100);
 
         builder.Property(l => l.PriceAtLoanTime)
             .IsRequired()
