@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using SMIS.Application.Common.Contants;
 using SMIS.Domain.Entities.Identity.Entity;
 
 namespace SMIS.Infrastructure.DatabaseSeeders;
