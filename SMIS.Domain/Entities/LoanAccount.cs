@@ -2,6 +2,7 @@ using SMIS.Domain.Common.BaseAbstract;
 using SMIS.Domain.Common.Interfaces;
 using SMIS.Domain.Exceptions;
 
+
 namespace SMIS.Domain.Entities;
 
 public class LoanAccount : BaseAuditableEntity, IShopEntity
