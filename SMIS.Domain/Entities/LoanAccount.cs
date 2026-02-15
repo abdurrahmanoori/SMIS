@@ -119,6 +119,10 @@ public class LoanAccount : BaseAuditableEntity, IShopEntity
         Notes = string.IsNullOrWhiteSpace(notes) ? null : notes.Trim();
     }
 
+    /// <summary>
+    /// Records a payment and updates loan status. Call this AFTER adding payment to Payments collection.
+    /// The status is automatically calculated based on PaidAmount vs TotalAmount.
+    /// </summary>
     public void RecordPayment(long amount)
     {
         if (amount <= 0)
@@ -130,6 +134,13 @@ public class LoanAccount : BaseAuditableEntity, IShopEntity
         UpdateStatus();
     }
 
+    /// <summary>
+    /// Calculates and sets the loan status based on payment state:
+    /// - RemainingAmount = 0 → Paid
+    /// - 0 < PaidAmount < TotalAmount → PartiallyPaid
+    /// - PaidAmount = 0 → Unpaid
+    /// - Past due date with remaining balance → Overdue
+    /// </summary>
     private void UpdateStatus()
     {
         if (RemainingAmount == 0)

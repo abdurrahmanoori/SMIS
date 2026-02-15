@@ -37,6 +37,7 @@ public class ProcessCustomerPaymentHandler : IRequestHandler<ProcessCustomerPaym
 
     public async Task<Result<PaymentAllocationResultDto>> Handle(ProcessCustomerPaymentCommand request, CancellationToken cancellationToken)
     {
+        // Step 1: Fetch all unpaid/partially paid loans for this customer
         var unpaidLoans = await _loanAccountRepository
             .GetAllQueryable()
             .Where(l => l.CustomerId == request.CustomerId
@@ -47,16 +48,21 @@ public class ProcessCustomerPaymentHandler : IRequestHandler<ProcessCustomerPaym
         if (!unpaidLoans.Any())
             return Result<PaymentAllocationResultDto>.FailureResult("No unpaid loans found for this customer");
 
+        // Step 2: Validate payment doesn't exceed total debt
         var totalDebt = unpaidLoans.Sum(l => l.RemainingAmount);
         if (request.PaymentAmount > totalDebt)
             return Result<PaymentAllocationResultDto>.FailureResult($"Payment amount ({request.PaymentAmount}) exceeds total debt ({totalDebt})");
 
+        // Step 3: Use domain service to allocate payment across loans (FIFO)
+        // Example: Payment=130, Loans=[100, 50, 150] → Allocations=[Loan1:100, Loan2:30]
         var allocations = _paymentAllocationService.AllocatePayment(unpaidLoans, request.PaymentAmount);
 
         var resultAllocations = new List<LoanPaymentAllocationDto>();
 
+        // Step 4: Process each allocation - create payment record and update loan status
         foreach (var allocation in allocations)
         {
+            // Create payment record for audit trail
             var payment = LoanAccountPayment.Create(
                 allocation.LoanAccount.Id,
                 allocation.AllocatedAmount,
@@ -65,9 +71,13 @@ public class ProcessCustomerPaymentHandler : IRequestHandler<ProcessCustomerPaym
                 request.Notes
             );
 
+            // Add payment to loan's collection (this updates PaidAmount calculation)
             allocation.LoanAccount.Payments.Add(payment);
+            
+            // Validate and update loan status (Unpaid → PartiallyPaid → Paid)
             allocation.LoanAccount.RecordPayment(allocation.AllocatedAmount);
 
+            // Build response DTO
             resultAllocations.Add(new LoanPaymentAllocationDto
             {
                 LoanAccountId = allocation.LoanAccount.Id,
@@ -78,8 +88,10 @@ public class ProcessCustomerPaymentHandler : IRequestHandler<ProcessCustomerPaym
             });
         }
 
+        // Step 5: Persist all changes to database
         await _unitOfWork.SaveChanges(cancellationToken);
 
+        // Step 6: Return result with allocation details
         var result = new PaymentAllocationResultDto
         {
             TotalPaid = request.PaymentAmount,
