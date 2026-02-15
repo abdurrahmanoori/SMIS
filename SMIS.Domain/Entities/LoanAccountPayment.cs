@@ -1,4 +1,5 @@
 using SMIS.Domain.Common.BaseAbstract;
+using SMIS.Domain.Enums;
 using SMIS.Domain.Exceptions;
 
 namespace SMIS.Domain.Entities;
@@ -7,6 +8,7 @@ public class LoanAccountPayment : BaseAuditableEntity
 {
     public string LoanAccountId { get; private set; } = string.Empty;
     public long Amount { get; private set; }
+    public PaymentStatus PaymentStatus { get; private set; }
     public DateTime PaymentDate { get; private set; }
     public string? Notes { get; private set; }
     public string PaymentMethod { get; private set; } = "Cash";
@@ -24,6 +26,7 @@ public class LoanAccountPayment : BaseAuditableEntity
         payment.SetPaymentDate(paymentDate);
         payment.SetPaymentMethod(paymentMethod);
         payment.SetNotes(notes);
+        payment.PaymentStatus = PaymentStatus.Paid;
         return payment;
     }
 

@@ -1,5 +1,6 @@
 using SMIS.Application.DTO.Customers;
 using SMIS.Application.DTO.Products;
+using SMIS.Domain.Enums;
 
 namespace SMIS.Application.DTO.LoanAccounts;
 
@@ -19,7 +20,7 @@ public class LoanAccountDto
     public long TotalAmount { get; set; }
     public DateTime LoanDate { get; set; }
     public DateTime? DueDate { get; set; }
-    public string Status { get; set; } = "Active";
+    public LoanStatus Status { get; set; } = LoanStatus.Unpaid;
     public string? Notes { get; set; }
     public bool IsActive { get; set; }
     public long PaidAmount { get; set; }
