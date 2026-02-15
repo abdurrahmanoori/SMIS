@@ -31,4 +31,19 @@ public class LoanAccountController : BaseApiController
     [HttpDelete("{id}")]
     public async Task<ActionResult<Unit>> Delete(string id) =>
         HandleResultResponse(await Mediator.Send(new LoanAccountDeleteCommand(id)));
+
+    [HttpPost("process-payment")]
+    public async Task<ActionResult<PaymentAllocationResultDto>> ProcessPayment(CustomerPaymentDto dto) =>
+        HandleResultResponse(await Mediator.Send(new ProcessCustomerPaymentCommand
+        {
+            CustomerId = dto.CustomerId,
+            PaymentAmount = dto.PaymentAmount,
+            PaymentDate = dto.PaymentDate,
+            PaymentMethod = dto.PaymentMethod,
+            Notes = dto.Notes
+        }));
+
+    [HttpGet("customer/{customerId}/debt-summary")]
+    public async Task<ActionResult<CustomerDebtSummaryDto>> GetCustomerDebtSummary(string customerId) =>
+        HandleResultResponse(await Mediator.Send(new GetCustomerDebtSummaryQuery { CustomerId = customerId }));
 }

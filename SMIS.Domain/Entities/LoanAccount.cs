@@ -1,7 +1,7 @@
 using SMIS.Domain.Common.BaseAbstract;
 using SMIS.Domain.Common.Interfaces;
+using SMIS.Domain.Enums;
 using SMIS.Domain.Exceptions;
-
 
 namespace SMIS.Domain.Entities;
 
@@ -20,7 +20,7 @@ public class LoanAccount : BaseAuditableEntity, IShopEntity
     public long TotalAmount { get; private set; }
     public DateTime LoanDate { get; private set; }
     public DateTime? DueDate { get; private set; } = null;
-    public string Status { get; private set; } = "Active";
+    public LoanStatus Status { get; private set; } = LoanStatus.Unpaid;
     public string? Notes { get; private set; }
     public bool IsActive { get; private set; } = true;
 
@@ -119,25 +119,40 @@ public class LoanAccount : BaseAuditableEntity, IShopEntity
         Notes = string.IsNullOrWhiteSpace(notes) ? null : notes.Trim();
     }
 
-    public void AddPayment(long amount, DateTime paymentDate, string? paymentNotes = null)
+    public void RecordPayment(long amount)
     {
         if (amount <= 0)
             throw new DomainValidationException("Payment amount must be greater than zero");
 
-        var currentRemainingAmount = TotalAmount - PaidAmount;
-        if (amount > currentRemainingAmount)
-            throw new DomainValidationException("Payment amount cannot exceed remaining amount");
+        if (amount > RemainingAmount)
+            throw new DomainValidationException($"Payment amount ({amount}) cannot exceed remaining amount ({RemainingAmount})");
 
-        if (currentRemainingAmount - amount == 0)
-            Status = "Paid";
+        UpdateStatus();
+    }
+
+    private void UpdateStatus()
+    {
+        if (RemainingAmount == 0)
+            Status = LoanStatus.Paid;
+        else if (PaidAmount > 0 && RemainingAmount > 0)
+            Status = LoanStatus.PartiallyPaid;
+        else if (PaidAmount == 0)
+            Status = LoanStatus.Unpaid;
+
+        if (DueDate.HasValue && DateTime.UtcNow > DueDate.Value && RemainingAmount > 0)
+            Status = LoanStatus.Overdue;
     }
 
 
     public void MarkAsOverdue()
     {
         if (DueDate.HasValue && DateTime.UtcNow > DueDate.Value && RemainingAmount > 0)
-            Status = "Overdue";
+            Status = LoanStatus.Overdue;
     }
+
+    public bool CanAcceptPayment() => Status != LoanStatus.Paid && RemainingAmount > 0;
+
+    public bool IsFullyPaid() => Status == LoanStatus.Paid && RemainingAmount == 0;
 
     public void Activate() => IsActive = true;
     public void Deactivate() => IsActive = false;

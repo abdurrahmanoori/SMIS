@@ -6,6 +6,7 @@ using SMIS.Application.Common.Behaviors;
 using SMIS.Application.Features.Translations.Validators;
 using SMIS.Application.Identity.IServices;
 using SMIS.Application.Services;
+using SMIS.Domain.Services;
 using System.Reflection;
 
 namespace SMIS.Application.Extensions;
@@ -24,6 +25,9 @@ public static class ApplicationServiceRegistration
 
         // Register application services
         services.AddScoped<ICurrentUser, CurrentUser>();
+
+        // Register domain services
+        services.AddScoped<PaymentAllocationService>();
 
         return services;
     }
