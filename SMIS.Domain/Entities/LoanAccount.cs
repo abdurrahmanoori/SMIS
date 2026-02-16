@@ -128,9 +128,6 @@ public class LoanAccount : BaseAuditableEntity, IShopEntity
         if (amount <= 0)
             throw new DomainValidationException("Payment amount must be greater than zero");
 
-        if (amount > RemainingAmount)
-            throw new DomainValidationException($"Payment amount ({amount}) cannot exceed remaining amount ({RemainingAmount})");
-
         UpdateStatus();
     }
 
