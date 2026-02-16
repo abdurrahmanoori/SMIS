@@ -18,4 +18,5 @@ public static class ApiEndpoints
     public const string Account = "/api/account";
     public const string Customer = "/api/customer";
     public const string ShopOwner = "/api/shopowner";
+    public const string LoanAccount = "/api/loanaccount";
 }

@@ -32,15 +32,16 @@ public class PaymentAllocationService
         {
             // Stop if we've distributed all the payment
             if (remainingPayment <= 0) break;
-            
+
             // Skip loans that are already fully paid or can't accept payment
             if (!loan.CanAcceptPayment()) continue;
 
             // Allocate either the full remaining payment OR what the loan needs (whichever is smaller)
+            // Give the smaller amount between what I have and what is needed.
             // Example: RemainingPayment=130, Loan needs 100 → Allocate 100
             //          RemainingPayment=30, Loan needs 50 → Allocate 30
             var amountToAllocate = Math.Min(remainingPayment, loan.RemainingAmount);
-            
+
             allocations.Add(new PaymentAllocation
 
             {
