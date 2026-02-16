@@ -540,4 +540,264 @@ public class LoanAccountIntegrationTests : BaseIntegrationTest
 
         response.StatusCode.ShouldBe(HttpStatusCode.OK);
     }
+
+    [Fact]
+    public async Task Post_ProcessPayment_MultipleLoans_AllocatesFIFO()
+    {
+        var loan1 = _dataHelper.CreateLoanAccountBuilder().WithTotalAmount(5000).Build();
+        var created1 = await CreateLoanAccountAsync(loan1, "Post_ProcessPayment_MultipleLoans_Loan1");
+
+        await Task.Delay(100);
+
+        var loan2 = _dataHelper.CreateLoanAccountBuilder()
+            .WithCustomerId(created1.CustomerId)
+            .WithTotalAmount(8000).Build();
+        var created2 = await CreateLoanAccountAsync(loan2, "Post_ProcessPayment_MultipleLoans_Loan2");
+
+        var paymentDto = new CustomerPaymentDto
+        {
+            CustomerId = created1.CustomerId,
+            PaymentAmount = 10000,
+            PaymentDate = DateTime.UtcNow,
+            PaymentMethod = "Cash"
+        };
+
+        var response = await Client.PostAsJsonAsync($"{ApiEndpoints.LoanAccount}/process-payment", paymentDto);
+        await LogIfError(response, "Post_ProcessPayment_MultipleLoans");
+
+        response.StatusCode.ShouldBe(HttpStatusCode.OK);
+        var result = await response.Content.ReadFromJsonAsync<PaymentAllocationResultDto>();
+        result.ShouldNotBeNull();
+        result!.TotalPaid.ShouldBe(10000);
+        result.Allocations.Count.ShouldBe(2);
+        result.Allocations[0].AllocatedAmount.ShouldBe(5000);
+        result.Allocations[1].AllocatedAmount.ShouldBe(5000);
+    }
+
+    [Fact]
+    public async Task Post_ProcessPayment_ThreeLoans_PartialAllocation()
+    {
+        var loan1 = _dataHelper.CreateLoanAccountBuilder().WithTotalAmount(3000).Build();
+        var created1 = await CreateLoanAccountAsync(loan1, "Post_ProcessPayment_ThreeLoans_Loan1");
+
+        await Task.Delay(100);
+
+        var loan2 = _dataHelper.CreateLoanAccountBuilder()
+            .WithCustomerId(created1.CustomerId)
+            .WithTotalAmount(4000).Build();
+        await CreateLoanAccountAsync(loan2, "Post_ProcessPayment_ThreeLoans_Loan2");
+
+        await Task.Delay(100);
+
+        var loan3 = _dataHelper.CreateLoanAccountBuilder()
+            .WithCustomerId(created1.CustomerId)
+            .WithTotalAmount(5000).Build();
+        await CreateLoanAccountAsync(loan3, "Post_ProcessPayment_ThreeLoans_Loan3");
+
+        var paymentDto = new CustomerPaymentDto
+        {
+            CustomerId = created1.CustomerId,
+            PaymentAmount = 8000,
+            PaymentDate = DateTime.UtcNow,
+            PaymentMethod = "Cash"
+        };
+
+        var response = await Client.PostAsJsonAsync($"{ApiEndpoints.LoanAccount}/process-payment", paymentDto);
+        await LogIfError(response, "Post_ProcessPayment_ThreeLoans");
+
+        response.StatusCode.ShouldBe(HttpStatusCode.OK);
+        var result = await response.Content.ReadFromJsonAsync<PaymentAllocationResultDto>();
+        result.ShouldNotBeNull();
+        result!.Allocations.Count.ShouldBe(3);
+        result.Allocations[0].AllocatedAmount.ShouldBe(3000);
+        result.Allocations[0].Status.ShouldBe("Paid");
+        result.Allocations[1].AllocatedAmount.ShouldBe(4000);
+        result.Allocations[1].Status.ShouldBe("Paid");
+        result.Allocations[2].AllocatedAmount.ShouldBe(1000);
+        result.Allocations[2].Status.ShouldBe("PartiallyPaid");
+    }
+
+    [Fact]
+    public async Task Post_ProcessPayment_ExactTotalDebt_PaysAllLoans()
+    {
+        var loan1 = _dataHelper.CreateLoanAccountBuilder().WithTotalAmount(2000).Build();
+        var created1 = await CreateLoanAccountAsync(loan1, "Post_ProcessPayment_ExactTotal_Loan1");
+
+        await Task.Delay(100);
+
+        var loan2 = _dataHelper.CreateLoanAccountBuilder()
+            .WithCustomerId(created1.CustomerId)
+            .WithTotalAmount(3000).Build();
+        await CreateLoanAccountAsync(loan2, "Post_ProcessPayment_ExactTotal_Loan2");
+
+        var paymentDto = new CustomerPaymentDto
+        {
+            CustomerId = created1.CustomerId,
+            PaymentAmount = 5000,
+            PaymentDate = DateTime.UtcNow,
+            PaymentMethod = "Cash"
+        };
+
+        var response = await Client.PostAsJsonAsync($"{ApiEndpoints.LoanAccount}/process-payment", paymentDto);
+        await LogIfError(response, "Post_ProcessPayment_ExactTotal");
+
+        response.StatusCode.ShouldBe(HttpStatusCode.OK);
+        var result = await response.Content.ReadFromJsonAsync<PaymentAllocationResultDto>();
+        result.ShouldNotBeNull();
+        result!.RemainingUnallocated.ShouldBe(0);
+        result.Allocations.All(a => a.Status == "Paid").ShouldBeTrue();
+    }
+
+    [Fact]
+    public async Task Post_ProcessPayment_ExceedsTotalDebt_ReturnsBadRequest()
+    {
+        var loan1 = _dataHelper.CreateLoanAccountBuilder().WithTotalAmount(5000).Build();
+        var created1 = await CreateLoanAccountAsync(loan1, "Post_ProcessPayment_ExceedsDebt_Loan1");
+
+        var paymentDto = new CustomerPaymentDto
+        {
+            CustomerId = created1.CustomerId,
+            PaymentAmount = 10000,
+            PaymentDate = DateTime.UtcNow,
+            PaymentMethod = "Cash"
+        };
+
+        var response = await Client.PostAsJsonAsync($"{ApiEndpoints.LoanAccount}/process-payment", paymentDto);
+        await LogIfError(response, "Post_ProcessPayment_ExceedsDebt");
+
+        response.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
+    }
+
+    [Fact]
+    public async Task Post_ProcessPayment_SequentialPayments_UpdatesCorrectly()
+    {
+        var loan1 = _dataHelper.CreateLoanAccountBuilder().WithTotalAmount(10000).Build();
+        var created1 = await CreateLoanAccountAsync(loan1, "Post_ProcessPayment_Sequential_Loan1");
+
+        var payment1 = new CustomerPaymentDto
+        {
+            CustomerId = created1.CustomerId,
+            PaymentAmount = 3000,
+            PaymentDate = DateTime.UtcNow,
+            PaymentMethod = "Cash"
+        };
+
+        var response1 = await Client.PostAsJsonAsync($"{ApiEndpoints.LoanAccount}/process-payment", payment1);
+        response1.StatusCode.ShouldBe(HttpStatusCode.OK);
+
+        var payment2 = new CustomerPaymentDto
+        {
+            CustomerId = created1.CustomerId,
+            PaymentAmount = 4000,
+            PaymentDate = DateTime.UtcNow,
+            PaymentMethod = "BankTransfer"
+        };
+
+        var response2 = await Client.PostAsJsonAsync($"{ApiEndpoints.LoanAccount}/process-payment", payment2);
+        await LogIfError(response2, "Post_ProcessPayment_Sequential_Second");
+        response2.StatusCode.ShouldBe(HttpStatusCode.OK);
+
+        var result2 = await response2.Content.ReadFromJsonAsync<PaymentAllocationResultDto>();
+        result2.ShouldNotBeNull();
+        result2!.Allocations[0].RemainingAfterPayment.ShouldBe(3000);
+        result2.Allocations[0].Status.ShouldBe("PartiallyPaid");
+    }
+
+    [Fact]
+    public async Task Post_ProcessPayment_WithDifferentDates_ProcessesCorrectly()
+    {
+        var loan1 = _dataHelper.CreateLoanAccountBuilder()
+            .WithTotalAmount(5000)
+            .WithDueDate(DateTime.UtcNow.AddDays(30))
+            .Build();
+        var created1 = await CreateLoanAccountAsync(loan1, "Post_ProcessPayment_DifferentDates_Loan1");
+
+        await Task.Delay(100);
+
+        var loan2 = _dataHelper.CreateLoanAccountBuilder()
+            .WithCustomerId(created1.CustomerId)
+            .WithTotalAmount(7000)
+            .WithDueDate(DateTime.UtcNow.AddDays(60))
+            .Build();
+        await CreateLoanAccountAsync(loan2, "Post_ProcessPayment_DifferentDates_Loan2");
+
+        var paymentDto = new CustomerPaymentDto
+        {
+            CustomerId = created1.CustomerId,
+            PaymentAmount = 6000,
+            PaymentDate = DateTime.UtcNow,
+            PaymentMethod = "Cash"
+        };
+
+        var response = await Client.PostAsJsonAsync($"{ApiEndpoints.LoanAccount}/process-payment", paymentDto);
+        await LogIfError(response, "Post_ProcessPayment_DifferentDates");
+
+        response.StatusCode.ShouldBe(HttpStatusCode.OK);
+        var result = await response.Content.ReadFromJsonAsync<PaymentAllocationResultDto>();
+        result.ShouldNotBeNull();
+        result!.Allocations.Count.ShouldBe(2);
+    }
+
+    [Fact]
+    public async Task Post_ProcessPayment_CompletePayoffSequence_AllLoansPaid()
+    {
+        var loan1 = _dataHelper.CreateLoanAccountBuilder().WithTotalAmount(2000).Build();
+        var created1 = await CreateLoanAccountAsync(loan1, "Post_ProcessPayment_CompletePayoff_Loan1");
+
+        await Task.Delay(100);
+
+        var loan2 = _dataHelper.CreateLoanAccountBuilder()
+            .WithCustomerId(created1.CustomerId)
+            .WithTotalAmount(3000).Build();
+        await CreateLoanAccountAsync(loan2, "Post_ProcessPayment_CompletePayoff_Loan2");
+
+        var payment1 = new CustomerPaymentDto
+        {
+            CustomerId = created1.CustomerId,
+            PaymentAmount = 2500,
+            PaymentDate = DateTime.UtcNow,
+            PaymentMethod = "Cash"
+        };
+        await Client.PostAsJsonAsync($"{ApiEndpoints.LoanAccount}/process-payment", payment1);
+
+        var payment2 = new CustomerPaymentDto
+        {
+            CustomerId = created1.CustomerId,
+            PaymentAmount = 2500,
+            PaymentDate = DateTime.UtcNow,
+            PaymentMethod = "Cash"
+        };
+
+        var response = await Client.PostAsJsonAsync($"{ApiEndpoints.LoanAccount}/process-payment", payment2);
+        await LogIfError(response, "Post_ProcessPayment_CompletePayoff");
+
+        response.StatusCode.ShouldBe(HttpStatusCode.OK);
+        var result = await response.Content.ReadFromJsonAsync<PaymentAllocationResultDto>();
+        result.ShouldNotBeNull();
+        result!.Allocations.All(a => a.RemainingAfterPayment == 0).ShouldBeTrue();
+    }
+
+    [Fact]
+    public async Task Post_ProcessPayment_SmallPaymentOnLargeLoan_PartiallyPaid()
+    {
+        var loan1 = _dataHelper.CreateLoanAccountBuilder().WithTotalAmount(50000).Build();
+        var created1 = await CreateLoanAccountAsync(loan1, "Post_ProcessPayment_SmallPayment_Loan1");
+
+        var paymentDto = new CustomerPaymentDto
+        {
+            CustomerId = created1.CustomerId,
+            PaymentAmount = 1000,
+            PaymentDate = DateTime.UtcNow,
+            PaymentMethod = "Cash"
+        };
+
+        var response = await Client.PostAsJsonAsync($"{ApiEndpoints.LoanAccount}/process-payment", paymentDto);
+        await LogIfError(response, "Post_ProcessPayment_SmallPayment");
+
+        response.StatusCode.ShouldBe(HttpStatusCode.OK);
+        var result = await response.Content.ReadFromJsonAsync<PaymentAllocationResultDto>();
+        result.ShouldNotBeNull();
+        result!.Allocations[0].RemainingAfterPayment.ShouldBe(49000);
+        result.Allocations[0].Status.ShouldBe("PartiallyPaid");
+    }
 }
