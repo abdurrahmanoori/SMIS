@@ -1,0 +1,78 @@
+@page "/login"
+@using SMIS.UI.Models
+@using SMIS.UI.Services.Auth
+@inject IAuthService AuthService
+@inject NavigationManager Navigation
+
+<div class="login-container">
+    <h3>Login</h3>
+
+    @if (!string.IsNullOrEmpty(_errorMessage))
+    {
+        <div class="alert alert-danger">@_errorMessage</div>
+    }
+
+    <EditForm Model="@_loginRequest" OnValidSubmit="HandleLogin">
+        <DataAnnotationsValidator />
+        
+        <div class="form-group">
+            <label>Email</label>
+            <InputText @bind-Value="_loginRequest.Email" class="form-control" />
+        </div>
+
+        <div class="form-group">
+            <label>Password</label>
+            <InputText @bind-Value="_loginRequest.Password" type="password" class="form-control" />
+        </div>
+
+        <button type="submit" class="btn btn-primary" disabled="@_isLoading">
+            @if (_isLoading)
+            {
+                <span>Logging in...</span>
+            }
+            else
+            {
+                <span>Login</span>
+            }
+        </button>
+    </EditForm>
+</div>
+
+@code {
+    private LoginRequest _loginRequest = new();
+    private string? _errorMessage;
+    private bool _isLoading;
+
+    private async Task HandleLogin()
+    {
+        _isLoading = true;
+        _errorMessage = null;
+
+        try
+        {
+            var result = await AuthService.LoginAsync(_loginRequest);
+
+            if (result.Success)
+            {
+                Navigation.NavigateTo("/");
+            }
+            else
+            {
+                _errorMessage = result.Message ?? "Login failed";
+                
+                if (result.Errors?.Any() == true)
+                {
+                    _errorMessage += ": " + string.Join(", ", result.Errors.Select(e => e.Description));
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            _errorMessage = "An error occurred during login";
+        }
+        finally
+        {
+            _isLoading = false;
+        }
+    }
+}

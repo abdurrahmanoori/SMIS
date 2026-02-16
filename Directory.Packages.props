@@ -80,5 +80,7 @@
     <PackageVersion Include="Syncfusion.Blazor.Popups" Version="27.1.48" />
     <PackageVersion Include="Syncfusion.Blazor.Schedule" Version="27.1.48" />
     <PackageVersion Include="Syncfusion.Blazor.Spinner" Version="27.1.48" />
+    <PackageVersion Include="Microsoft.Extensions.Configuration.Json" Version="9.0.0" />
+    <PackageVersion Include="Microsoft.Extensions.Http" Version="9.0.0" />
   </ItemGroup>
 </Project>
