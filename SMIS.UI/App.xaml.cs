@@ -1,6 +1,6 @@
-﻿namespace SMIS.UI
+namespace SMIS.UI
 {
-    public partial class App : Application
+    public partial class App : Microsoft.Maui.Controls.Application
     {
         public App()
         {
