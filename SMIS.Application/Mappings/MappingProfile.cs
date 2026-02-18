@@ -141,13 +141,19 @@ public class MappingProfile : Profile
         // Category mapping
         CreateMap<Category, CategoryDto>().ReverseMap();
         CreateMap<CategoryCreateDto, Category>()
-            .ConstructUsing(src => Category.Create(
-                src.Name,
-                src.ShopId,
-                src.Code,
-                src.Description,
-                src.IsActive
-            ));
+           .ForMember(dest => dest.Id, opt =>
+           {
+               opt.Condition(src => !string.IsNullOrEmpty(src.Id));
+               opt.MapFrom(src => src.Id);
+           })
+           .ConstructUsing(src => Category.Create(
+               src.Name,
+               src.ShopId,
+               src.Code,
+               src.Description,
+               src.IsActive
+           ));
+
 
         // ProductUnit mapping
         CreateMap<ProductUnit, ProductUnitDto>().ReverseMap();

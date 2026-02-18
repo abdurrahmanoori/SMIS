@@ -32,6 +32,10 @@ namespace SMIS.Infrastructure.EntityConfigurations
                 .WithMany()
                 .HasForeignKey(c => c.ShopId)
                 .OnDelete(DeleteBehavior.Restrict);
+            
+            // Ignore offline-first properties (MAUI only)
+            builder.Ignore(c => c.IsSyncedToServer);
+            builder.Ignore(c => c.LastSyncedAt);
         }
     }
 }
