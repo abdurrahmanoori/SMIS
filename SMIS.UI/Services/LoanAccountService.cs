@@ -21,7 +21,7 @@ public class LoanAccountService : BaseService, ILoanAccountService
     public async Task<ApiResponse<PaymentAllocationResultDto>> ProcessPaymentAsync(ProcessPaymentRequest request)
     {
         return await _apiClient.PostAsync<ProcessPaymentRequest, PaymentAllocationResultDto>(
-            "/api/loanaccounts/process-payment", 
+            "/api/loanaccounts/process-payment",
             request
         );
     }

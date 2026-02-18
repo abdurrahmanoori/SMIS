@@ -1,0 +1,93 @@
+@page "/categories"
+@using SMIS.UI.Services
+@using SMIS.UI.Services.Sync
+@inject CategoryService CategoryService
+@inject SyncService SyncService
+
+<h3>Categories (Offline-First)</h3>
+
+@if (!string.IsNullOrEmpty(_statusMessage))
+{
+    <div class="alert alert-info">@_statusMessage</div>
+}
+
+@if (_isLoading)
+{
+    <p>Loading...</p>
+}
+else if (!string.IsNullOrEmpty(_errorMessage))
+{
+    <div class="alert alert-danger">@_errorMessage</div>
+}
+else
+{
+    <button class="btn btn-primary" @onclick="SyncData">Sync to Server</button>
+    <button class="btn btn-secondary" @onclick="LoadCategories">Refresh</button>
+    
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Code</th>
+                <th>Active</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var category in _categories)
+            {
+                <tr>
+                    <td>@category.Name</td>
+                    <td>@category.Code</td>
+                    <td>@(category.IsActive ? "Yes" : "No")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private List<SMIS.Application.DTO.Categories.CategoryDto> _categories = new();
+    private bool _isLoading = true;
+    private string? _errorMessage;
+    private string? _statusMessage;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadCategories();
+    }
+
+    private async Task LoadCategories()
+    {
+        _isLoading = true;
+        _errorMessage = null;
+        _statusMessage = null;
+
+        var result = await CategoryService.GetAllAsync();
+
+        if (result.Success && result.Response != null)
+        {
+            _categories = result.Response;
+            _statusMessage = result.Message;
+        }
+        else
+        {
+            _errorMessage = result.Message ?? "Failed to load categories";
+        }
+
+        _isLoading = false;
+    }
+
+    private async Task SyncData()
+    {
+        _statusMessage = "Syncing...";
+        StateHasChanged();
+
+        var result = await SyncService.SyncCategoriesAsync();
+        _statusMessage = result.Message;
+
+        if (result.Success)
+        {
+            await LoadCategories();
+        }
+    }
+}

@@ -1,8 +1,11 @@
-﻿using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging;
 using Syncfusion.Blazor;
 using SMIS.UI.Models;
 using SMIS.UI.Services.Auth;
 using SMIS.UI.Services.Http;
+using SMIS.UI.Data;
+using SMIS.UI.Services;
+using SMIS.UI.Services.Sync;
 using System.Reflection;
 using Microsoft.Extensions.Configuration;
 
@@ -33,6 +36,12 @@ namespace SMIS.UI
 
             var appSettings = builder.Configuration.GetSection("AppSettings").Get<AppSettings>() ?? new AppSettings();
 
+            // Local Database
+            builder.Services.AddDbContext<LocalDbContext>();
+
+            // Connectivity
+            builder.Services.AddSingleton(Connectivity.Current);
+
             // HTTP Client with authentication
             builder.Services.AddSingleton<ITokenStorage, SecureTokenStorage>();
             builder.Services.AddTransient<AuthenticatedHttpMessageHandler>();
@@ -46,6 +55,8 @@ namespace SMIS.UI
 
             // Services
             builder.Services.AddScoped<IAuthService, AuthService>();
+            builder.Services.AddScoped<CategoryService>();
+            builder.Services.AddScoped<SyncService>();
 
             builder.Services.AddMauiBlazorWebView();
             builder.Services.AddSyncfusionBlazor();
