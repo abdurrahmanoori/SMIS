@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using SMIS.Domain.Common.Interfaces;
 using SMIS.Domain.Enums;
 using System.ComponentModel.DataAnnotations;
@@ -14,5 +14,9 @@ namespace SMIS.Domain.Common.BaseAbstract
         public int Version { get; set; }
         public EntityStateEnum EntityState { get; set; }
         public DateTimeOffset LastModifiedUtc { get; set; } = DateTimeOffset.UtcNow;
+        
+        // Offline-first properties
+        public bool IsSyncedToServer { get; set; } = false;
+        public DateTime? LastSyncedAt { get; set; }
     }
 }

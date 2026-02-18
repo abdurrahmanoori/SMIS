@@ -32,6 +32,18 @@ namespace SMIS.Application.Features.Categories.Commands
             await _translationKeyRepository.AddTranslationKeysForEntity(request.CategoryCreateDto, _unitOfWork);
 
             var entity = _mapper.Map<Category>(request.CategoryCreateDto);
+            
+            // Use client-provided Id if available (offline sync scenario)
+            if (!string.IsNullOrEmpty(request.CategoryCreateDto.Id))
+            {
+                // Check if already exists (idempotent)
+                var existing = await _categoryRepository.GetByIdAsync(request.CategoryCreateDto.Id);
+                if (existing != null)
+                    return Result<CategoryDto>.SuccessResult(_mapper.Map<CategoryDto>(existing));
+                
+                entity.Id = request.CategoryCreateDto.Id;
+            }
+            
             await _categoryRepository.AddAsync(entity);
             await _unitOfWork.SaveChanges(cancellationToken);
 

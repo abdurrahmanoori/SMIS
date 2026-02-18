@@ -2,14 +2,12 @@ using SMIS.Application.Attributes;
 
 namespace SMIS.Application.DTO.Categories
 {
-    public class CategoryCreateDto
+    public class CategoryUpdateDto
     {
-        public string? Id { get; set; } // Client provides for offline sync
-        
         [Translatable]
         public string Name { get; set; } = string.Empty;
 
-        public string? Code { get; set; } = string.Empty;
+        public string? Code { get; set; }
 
         [Translatable]
         public string? Description { get; set; }
