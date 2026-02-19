@@ -25,7 +25,7 @@ public class CategoryService : BaseService
     {
         if (_connectivity.NetworkAccess == NetworkAccess.Internet)
         {
-            var result = await _apiClient.GetAsync<List<CategoryDto>>("/api/categories");
+            var result = await GetPagedListAsync<CategoryDto>(_apiClient, "/api/category");
             
             if (result.Success && result.Response != null)
             {
@@ -44,7 +44,7 @@ public class CategoryService : BaseService
     {
         if (_connectivity.NetworkAccess == NetworkAccess.Internet)
         {
-            return await _apiClient.GetAsync<CategoryDto>($"/api/categories/{id}");
+            return await _apiClient.GetAsync<CategoryDto>($"/api/category/{id}");
         }
         else
         {
@@ -59,7 +59,7 @@ public class CategoryService : BaseService
     {
         if (_connectivity.NetworkAccess == NetworkAccess.Internet)
         {
-            var result = await _apiClient.PostAsync<CategoryCreateDto, CategoryDto>("/api/categories", dto);
+            var result = await _apiClient.PostAsync<CategoryCreateDto, CategoryDto>("/api/category", dto);
             
             if (result.Success && result.Response != null)
             {
@@ -78,7 +78,7 @@ public class CategoryService : BaseService
     {
         if (_connectivity.NetworkAccess == NetworkAccess.Internet)
         {
-            var result = await _apiClient.PutAsync<CategoryUpdateDto, CategoryDto>($"/api/categories/{id}", dto);
+            var result = await _apiClient.PutAsync<CategoryUpdateDto, CategoryDto>($"/api/category/{id}", dto);
             
             if (result.Success && result.Response != null)
             {
@@ -187,15 +187,6 @@ public class CategoryService : BaseService
             Description = category.Description,
             IsActive = category.IsActive,
             ShopId = category.ShopId
-        };
-    }
-
-    private static ApiResponse<T> CreateError<T>(string code, string description)
-    {
-        return new ApiResponse<T>
-        {
-            Success = false,
-            Errors = new List<ValidationError> { new() { Code = code, Description = description } }
         };
     }
 }
