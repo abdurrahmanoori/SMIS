@@ -63,8 +63,16 @@ public class ApiClient : IApiClient
 
             try
             {
-                return JsonSerializer.Deserialize<ApiResponse<T>>(content, _jsonOptions)
-                    ?? new ApiResponse<T> { Success = true, Response = default };
+                // Try to deserialize as Result<T> wrapper first
+                var resultWrapper = JsonSerializer.Deserialize<ApiResponse<T>>(content, _jsonOptions);
+                if (resultWrapper != null && resultWrapper.Response != null)
+                {
+                    return resultWrapper;
+                }
+                
+                // If no wrapper, deserialize directly as T
+                var directResult = JsonSerializer.Deserialize<T>(content, _jsonOptions);
+                return new ApiResponse<T> { Success = true, Response = directResult };
             }
             catch (JsonException)
             {
