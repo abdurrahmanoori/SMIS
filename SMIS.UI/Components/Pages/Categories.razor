@@ -1,55 +1,101 @@
 @page "/categories"
 @using SMIS.UI.Services
 @using SMIS.UI.Services.Sync
+@using SMIS.Application.DTO.Categories
+@using Syncfusion.Blazor.Grids
 @inject CategoryService CategoryService
 @inject SyncService SyncService
 
-<h3>Categories (Offline-First)</h3>
+<div class="category-container">
+    <div class="page-header">
+        <h2>📦 Categories</h2>
+        <div class="header-actions">
+            <SfButton IconCss="e-icons e-sync" Content="Sync" @onclick="SyncData" CssClass="e-outline"></SfButton>
+            <SfButton IconCss="e-icons e-plus" Content="New Category" @onclick="ShowAddDialog" IsPrimary="true"></SfButton>
+        </div>
+    </div>
 
-@if (!string.IsNullOrEmpty(_statusMessage))
-{
-    <div class="alert alert-info">@_statusMessage</div>
-}
+    @if (_isLoading)
+    {
+        <div class="loading-container">
+            <SfSpinner></SfSpinner>
+        </div>
+    }
+    else
+    {
+        <SfCard>
+            <CardContent>
+                <SfGrid DataSource="@_categories" AllowPaging="true" AllowSorting="true" AllowFiltering="true">
+                    <GridPageSettings PageSize="10"></GridPageSettings>
+                    <GridFilterSettings Type="Syncfusion.Blazor.Grids.FilterType.Menu"></GridFilterSettings>
+                    <GridColumns>
+                        <GridColumn Field="@nameof(CategoryDto.Name)" HeaderText="Name" Width="150"></GridColumn>
+                        <GridColumn Field="@nameof(CategoryDto.Code)" HeaderText="Code" Width="100"></GridColumn>
+                        <GridColumn Field="@nameof(CategoryDto.Description)" HeaderText="Description" Width="200"></GridColumn>
+                        <GridColumn Field="@nameof(CategoryDto.IsActive)" HeaderText="Active" Width="80" DisplayAsCheckBox="true"></GridColumn>
+                        <GridColumn HeaderText="Actions" Width="120">
+                            <Template>
+                                @{
+                                    var category = (context as CategoryDto);
+                                    <div class="action-buttons">
+                                        <SfButton IconCss="e-icons e-edit" CssClass="e-small e-round" @onclick="() => ShowEditDialog(category)"></SfButton>
+                                    </div>
+                                }
+                            </Template>
+                        </GridColumn>
+                    </GridColumns>
+                </SfGrid>
+            </CardContent>
+        </SfCard>
+    }
+</div>
 
-@if (_isLoading)
-{
-    <p>Loading...</p>
-}
-else if (!string.IsNullOrEmpty(_errorMessage))
-{
-    <div class="alert alert-danger">@_errorMessage</div>
-}
-else
-{
-    <button class="btn btn-primary" @onclick="SyncData">Sync to Server</button>
-    <button class="btn btn-secondary" @onclick="LoadCategories">Refresh</button>
-    
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Name</th>
-                <th>Code</th>
-                <th>Active</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var category in _categories)
-            {
-                <tr>
-                    <td>@category.Name</td>
-                    <td>@category.Code</td>
-                    <td>@(category.IsActive ? "Yes" : "No")</td>
-                </tr>
-            }
-        </tbody>
-    </table>
-}
+<SfDialog @ref="DialogObj" Width="500px" IsModal="true" ShowCloseIcon="true" @bind-Visible="@_showDialog">
+    <DialogTemplates>
+        <Header>@(_isEditMode ? "Edit Category" : "New Category")</Header>
+        <Content>
+            <div class="dialog-content">
+                <div class="form-group">
+                    <label>Name *</label>
+                    <SfTextBox @bind-Value="@_formModel.Name" Placeholder="Enter category name"></SfTextBox>
+                </div>
+                
+                <div class="form-group">
+                    <label>Code</label>
+                    <SfTextBox @bind-Value="@_formModel.Code" Placeholder="Enter category code"></SfTextBox>
+                </div>
+                
+                <div class="form-group">
+                    <label>Description</label>
+                    <SfTextBox @bind-Value="@_formModel.Description" Multiline="true" Placeholder="Enter description"></SfTextBox>
+                </div>
+                
+                <div class="form-group">
+                    <SfCheckBox @bind-Checked="@_formModel.IsActive" Label="Active"></SfCheckBox>
+                </div>
+            </div>
+        </Content>
+        <FooterTemplate>
+            <SfButton IsPrimary="true" Content="@(_isEditMode ? "Update" : "Create")" @onclick="SaveCategory"></SfButton>
+            <SfButton Content="Cancel" @onclick="CloseDialog" CssClass="e-outline"></SfButton>
+        </FooterTemplate>
+    </DialogTemplates>
+</SfDialog>
+
+<SfToast @ref="ToastObj" Title="Category" Content="@_toastMessage" ShowCloseButton="true">
+    <ToastPosition X="Right" Y="Top"></ToastPosition>
+</SfToast>
 
 @code {
-    private List<SMIS.Application.DTO.Categories.CategoryDto> _categories = new();
+    private List<CategoryDto> _categories = new();
     private bool _isLoading = true;
-    private string? _errorMessage;
-    private string? _statusMessage;
+    private bool _showDialog = false;
+    private bool _isEditMode = false;
+    private string _toastMessage = "";
+    private SfDialog DialogObj;
+    private SfToast ToastObj;
+    
+    private CategoryFormModel _formModel = new();
 
     protected override async Task OnInitializedAsync()
     {
@@ -59,35 +105,161 @@ else
     private async Task LoadCategories()
     {
         _isLoading = true;
-        _errorMessage = null;
-        _statusMessage = null;
-
         var result = await CategoryService.GetAllAsync();
 
         if (result.Success && result.Response != null)
         {
             _categories = result.Response;
-            _statusMessage = result.Message;
         }
         else
         {
-            _errorMessage = result.Message ?? "Failed to load categories";
+            _toastMessage = result.Message ?? "Failed to load categories";
+            await ToastObj.ShowAsync();
         }
 
         _isLoading = false;
     }
 
+    private void ShowAddDialog()
+    {
+        _isEditMode = false;
+        _formModel = new CategoryFormModel { IsActive = true, ShopId = "1" };
+        _showDialog = true;
+    }
+
+    private void ShowEditDialog(CategoryDto category)
+    {
+        _isEditMode = true;
+        _formModel = new CategoryFormModel
+        {
+            Id = category.Id,
+            Name = category.Name,
+            Code = category.Code,
+            Description = category.Description,
+            IsActive = category.IsActive,
+            ShopId = category.ShopId
+        };
+        _showDialog = true;
+    }
+
+    private async Task SaveCategory()
+    {
+        if (string.IsNullOrWhiteSpace(_formModel.Name))
+        {
+            _toastMessage = "Name is required";
+            await ToastObj.ShowAsync();
+            return;
+        }
+
+        if (_isEditMode)
+        {
+            var updateDto = new CategoryUpdateDto
+            {
+                Name = _formModel.Name,
+                Code = _formModel.Code,
+                Description = _formModel.Description,
+                IsActive = _formModel.IsActive
+            };
+            var result = await CategoryService.UpdateAsync(_formModel.Id, updateDto);
+            _toastMessage = result.Success ? "Category updated successfully" : result.Message ?? "Update failed";
+        }
+        else
+        {
+            var createDto = new CategoryCreateDto
+            {
+                Name = _formModel.Name,
+                Code = _formModel.Code,
+                Description = _formModel.Description,
+                IsActive = _formModel.IsActive,
+                ShopId = _formModel.ShopId
+            };
+            var result = await CategoryService.CreateAsync(createDto);
+            _toastMessage = result.Success ? "Category created successfully" : result.Message ?? "Create failed";
+        }
+
+        await ToastObj.ShowAsync();
+        CloseDialog();
+        await LoadCategories();
+    }
+
+    private void CloseDialog()
+    {
+        _showDialog = false;
+    }
+
     private async Task SyncData()
     {
-        _statusMessage = "Syncing...";
-        StateHasChanged();
+        _toastMessage = "Syncing...";
+        await ToastObj.ShowAsync();
 
         var result = await SyncService.SyncCategoriesAsync();
-        _statusMessage = result.Message;
+        _toastMessage = result.Message ?? "Sync completed";
+        await ToastObj.ShowAsync();
 
         if (result.Success)
         {
             await LoadCategories();
         }
     }
+
+    private class CategoryFormModel
+    {
+        public string Id { get; set; } = "";
+        public string Name { get; set; } = "";
+        public string? Code { get; set; }
+        public string? Description { get; set; }
+        public bool IsActive { get; set; } = true;
+        public string ShopId { get; set; } = "";
+    }
 }
+
+<style>
+    .category-container {
+        padding: 20px;
+    }
+
+    .page-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+
+    .page-header h2 {
+        margin: 0;
+        font-size: 24px;
+        font-weight: 600;
+    }
+
+    .header-actions {
+        display: flex;
+        gap: 10px;
+    }
+
+    .loading-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 300px;
+    }
+
+    .action-buttons {
+        display: flex;
+        gap: 5px;
+    }
+
+    .dialog-content {
+        padding: 20px 0;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 500;
+        color: #333;
+    }
+</style>
