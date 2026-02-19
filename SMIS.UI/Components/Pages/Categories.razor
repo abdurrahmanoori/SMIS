@@ -15,6 +15,13 @@
         </div>
     </div>
 
+    @if (!string.IsNullOrEmpty(_errorMessage))
+    {
+        <SfMessage Severity="MessageSeverity.Error" ShowIcon="true" ShowCloseIcon="true" Closed="@(() => _errorMessage = "")">
+            @_errorMessage
+        </SfMessage>
+    }
+
     @if (_isLoading)
     {
         <div class="loading-container">
@@ -92,6 +99,7 @@
     private bool _showDialog = false;
     private bool _isEditMode = false;
     private string _toastMessage = "";
+    private string _errorMessage = "";
     private SfDialog DialogObj;
     private SfToast ToastObj;
     
@@ -105,6 +113,8 @@
     private async Task LoadCategories()
     {
         _isLoading = true;
+        _errorMessage = "";
+        
         var result = await CategoryService.GetAllAsync();
 
         if (result.Success && result.Response != null)
@@ -113,8 +123,7 @@
         }
         else
         {
-            _toastMessage = result.Message ?? "Failed to load categories";
-            await ToastObj.ShowAsync();
+            _errorMessage = result.Message ?? "Failed to load categories";
         }
 
         _isLoading = false;
