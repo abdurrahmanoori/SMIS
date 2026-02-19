@@ -2,15 +2,26 @@ using SMIS.Domain.Common.BaseAbstract;
 using SMIS.Domain.Common.Interfaces;
 using SMIS.Domain.Exceptions;
 using SMIS.Domain.ValueObjects;
+using System.ComponentModel.DataAnnotations;
 
 namespace SMIS.Domain.Entities;
 
 public class Category : BaseAuditableEntity, IShopEntity
 {
+    [Required]
+    [MaxLength(200)]
     public string Name { get; private set; } = string.Empty;
+    
+    [MaxLength(50)]
     public string? Code { get; private set; }
+    
+    [MaxLength(500)]
     public string? Description { get; private set; }
+    
+    [Required]
     public bool IsActive { get; private set; } = true;
+    
+    [Required]
     public string ShopId { get; private set; } = string.Empty;
 
     // Navigation Properties

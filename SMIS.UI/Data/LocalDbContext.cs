@@ -17,17 +17,7 @@ public class LocalDbContext : DbContext
     {
         modelBuilder.Entity<Category>(b =>
         {
-            b.HasKey(e => e.Id);
-            b.Property(e => e.Name).IsRequired().HasMaxLength(200);
-            b.Property(e => e.Code).HasMaxLength(50);
-            b.Property(e => e.Description).HasMaxLength(500);
-            b.Property(e => e.ShopId).IsRequired();
-            
-            // Offline properties now in BaseEntity - no shadow properties needed
-            b.Property(e => e.IsSyncedToServer);
-            b.Property(e => e.LastSyncedAt);
-            
-            // Ignore navigation properties for local DB
+            // MAUI-specific: Ignore navigation properties (no relationships in local DB)
             b.Ignore(e => e.Shop);
             b.Ignore(e => e.Products);
         });

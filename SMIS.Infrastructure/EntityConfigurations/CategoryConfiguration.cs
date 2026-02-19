@@ -10,30 +10,13 @@ namespace SMIS.Infrastructure.EntityConfigurations
         {
             builder.ToTable(nameof(Category));
 
-            builder.HasKey(c => c.Id);
-
-            builder.Property(c => c.Name)
-                .IsRequired()
-                .HasMaxLength(200);
-
-            builder.Property(c => c.Code)
-                .HasMaxLength(50);
-
-            builder.Property(c => c.Description)
-                .HasMaxLength(500);
-
-            builder.Property(c => c.IsActive)
-                .IsRequired();
-
-            builder.Property(c => c.ShopId)
-                .IsRequired();
-
+            // Backend-specific: Relationships
             builder.HasOne(c => c.Shop)
                 .WithMany()
                 .HasForeignKey(c => c.ShopId)
                 .OnDelete(DeleteBehavior.Restrict);
             
-            // Ignore offline-first properties (MAUI only)
+            // Backend-specific: Ignore offline properties
             builder.Ignore(c => c.IsSyncedToServer);
             builder.Ignore(c => c.LastSyncedAt);
         }
