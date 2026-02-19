@@ -15,7 +15,7 @@ public class SecureTokenStorage : ITokenStorage
     {
         try
         {
-            return await Microsoft.Maui.Storage.SecureStorage.Default.GetAsync(TokenKey);
+            return await SecureStorage.Default.GetAsync(TokenKey);
         }
         catch
         {
@@ -25,12 +25,12 @@ public class SecureTokenStorage : ITokenStorage
 
     public async Task SetTokenAsync(string token)
     {
-        await Microsoft.Maui.Storage.SecureStorage.Default.SetAsync(TokenKey, token);
+        await SecureStorage.Default.SetAsync(TokenKey, token);
     }
 
     public async Task ClearTokenAsync()
     {
-        Microsoft.Maui.Storage.SecureStorage.Default.Remove(TokenKey);
+        SecureStorage.Default.Remove(TokenKey);
         await Task.CompletedTask;
     }
 }
