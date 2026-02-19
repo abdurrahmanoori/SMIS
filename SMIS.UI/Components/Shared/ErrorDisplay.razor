@@ -1,0 +1,186 @@
+@inject NavigationManager Navigation
+
+<div class="error-container">
+    <div class="error-content">
+        <div class="error-header">
+            <span class="error-icon">⚠️</span>
+            <h2>An Error Occurred</h2>
+        </div>
+        
+        <div class="error-details">
+            <div class="error-section">
+                <strong>Exception Type:</strong>
+                <p>@Exception.GetType().FullName</p>
+            </div>
+
+            <div class="error-section">
+                <strong>Message:</strong>
+                <p>@Exception.Message</p>
+            </div>
+            
+            @if (Exception.InnerException != null)
+            {
+                <div class="error-section">
+                    <strong>Inner Exception:</strong>
+                    <p class="inner-ex">@Exception.InnerException.GetType().Name: @Exception.InnerException.Message</p>
+                </div>
+            }
+
+            <div class="error-section">
+                <strong>Source:</strong>
+                <p>@(Exception.Source ?? "N/A")</p>
+            </div>
+
+            <div class="error-section">
+                <strong>Target Site:</strong>
+                <p>@(Exception.TargetSite?.ToString() ?? "N/A")</p>
+            </div>
+
+            <div class="error-section">
+                <strong>Timestamp:</strong>
+                <p>@DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")</p>
+            </div>
+            
+            @if (!string.IsNullOrEmpty(Exception.StackTrace))
+            {
+                <div class="error-section">
+                    <strong>Stack Trace:</strong>
+                    <pre class="stack-trace">@Exception.StackTrace</pre>
+                </div>
+            }
+
+            @if (Exception.Data.Count > 0)
+            {
+                <div class="error-section">
+                    <strong>Additional Data:</strong>
+                    <pre class="stack-trace">@string.Join(Environment.NewLine, Exception.Data.Keys.Cast<object>().Select(k => $"{k}: {Exception.Data[k]}"))</pre>
+                </div>
+            }
+        </div>
+        
+        <div class="error-actions">
+            <button class="btn-reload" @onclick="HandleReload">Reload</button>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter, EditorRequired] public Exception Exception { get; set; } = default!;
+    [Parameter] public EventCallback OnReload { get; set; }
+
+    private async Task HandleReload()
+    {
+        if (OnReload.HasDelegate)
+        {
+            await OnReload.InvokeAsync();
+        }
+        else
+        {
+            Navigation.NavigateTo("/", forceLoad: true);
+        }
+    }
+}
+
+<style>
+    .error-container {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.8);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 10000;
+        padding: 20px;
+    }
+
+    .error-content {
+        background: white;
+        border-radius: 8px;
+        max-width: 800px;
+        max-height: 90vh;
+        overflow: auto;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    .error-header {
+        background: #dc3545;
+        color: white;
+        padding: 20px;
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        border-radius: 8px 8px 0 0;
+    }
+
+    .error-icon {
+        font-size: 32px;
+    }
+
+    .error-header h2 {
+        margin: 0;
+        font-size: 24px;
+    }
+
+    .error-details {
+        padding: 20px;
+    }
+
+    .error-section {
+        margin-bottom: 20px;
+    }
+
+    .error-section strong {
+        display: block;
+        margin-bottom: 8px;
+        color: #333;
+    }
+
+    .error-section p {
+        margin: 0;
+        color: #666;
+        line-height: 1.5;
+        word-break: break-word;
+    }
+
+    .inner-ex {
+        color: #d9534f !important;
+        font-style: italic;
+    }
+
+    .stack-trace {
+        background: #f5f5f5;
+        padding: 15px;
+        border-radius: 4px;
+        overflow-x: auto;
+        font-size: 12px;
+        line-height: 1.4;
+        color: #333;
+        margin: 0;
+    }
+
+    .error-actions {
+        padding: 20px;
+        border-top: 1px solid #ddd;
+        display: flex;
+        gap: 10px;
+        justify-content: flex-end;
+    }
+
+    .btn-reload {
+        padding: 10px 20px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: 500;
+        background: #007bff;
+        color: white;
+    }
+
+    .btn-reload:hover {
+        background: #0056b3;
+    }
+</style>
