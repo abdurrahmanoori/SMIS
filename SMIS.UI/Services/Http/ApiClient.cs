@@ -56,11 +56,27 @@ public class ApiClient : IApiClient
 
         if (response.IsSuccessStatusCode)
         {
-            return JsonSerializer.Deserialize<ApiResponse<T>>(content, _jsonOptions)
-                ?? new ApiResponse<T> { Success = true, Response = default };
+            if (string.IsNullOrWhiteSpace(content))
+            {
+                return new ApiResponse<T> { Success = true, Response = default };
+            }
+
+            try
+            {
+                return JsonSerializer.Deserialize<ApiResponse<T>>(content, _jsonOptions)
+                    ?? new ApiResponse<T> { Success = true, Response = default };
+            }
+            catch (JsonException)
+            {
+                return new ApiResponse<T> { Success = true, Response = default };
+            }
         }
 
-        // API returns Result<T> with errors - deserialize directly
+        if (string.IsNullOrWhiteSpace(content))
+        {
+            return CreateError<T>("Error", $"Request failed: {response.StatusCode}");
+        }
+
         try
         {
             var errorResult = JsonSerializer.Deserialize<ApiResponse<T>>(content, _jsonOptions);
@@ -68,7 +84,6 @@ public class ApiClient : IApiClient
         }
         catch { }
 
-        // Fallback for non-standard responses
         return response.StatusCode switch
         {
             HttpStatusCode.Unauthorized => CreateError<T>("Unauthorized", "Please login again."),
