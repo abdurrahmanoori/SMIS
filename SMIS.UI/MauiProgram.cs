@@ -3,6 +3,8 @@ using Syncfusion.Blazor;
 using System.Reflection;
 using Microsoft.Extensions.Configuration;
 using SMIS.UI.Extensions;
+using SMIS.UI.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace SMIS.UI
 {
@@ -40,7 +42,16 @@ namespace SMIS.UI
     		builder.Logging.AddDebug();
 #endif
 
-            return builder.Build();
+            var app = builder.Build();
+
+            // Apply migrations on startup
+            using (var scope = app.Services.CreateScope())
+            {
+                var db = scope.ServiceProvider.GetRequiredService<LocalDbContext>();
+                db.Database.Migrate();
+            }
+
+            return app;
         }
     }
 }
