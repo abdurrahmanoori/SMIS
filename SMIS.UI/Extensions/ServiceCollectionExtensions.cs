@@ -1,4 +1,5 @@
 using Microsoft.Extensions.Configuration;
+using Microsoft.EntityFrameworkCore;
 using SMIS.UI.Data;
 using SMIS.UI.Models;
 using SMIS.UI.Services;
@@ -15,7 +16,11 @@ public static class ServiceCollectionExtensions
         var appSettings = configuration.GetSection("AppSettings").Get<AppSettings>() ?? new AppSettings();
 
         // Local Database
-        services.AddDbContext<LocalDbContext>();
+        services.AddDbContext<LocalDbContext>(options =>
+        {
+            var dbPath = Path.Combine(FileSystem.AppDataDirectory, "smis_local.db");
+            options.UseSqlite($"Data Source={dbPath}");
+        });
 
         // Connectivity
         services.AddSingleton(Connectivity.Current);
