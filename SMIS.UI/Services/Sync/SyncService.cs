@@ -1,5 +1,5 @@
 using Microsoft.EntityFrameworkCore;
-using SMIS.Application.DTO.Categories;
+using SMIS.Domain.Common.Interfaces;
 using SMIS.UI.Data;
 using SMIS.UI.Services.Http;
 
@@ -18,43 +18,39 @@ public class SyncService
         _connectivity = connectivity;
     }
 
-    public async Task<SyncResult> SyncCategoriesAsync()
+    public async Task<SyncResult> SyncAsync<TEntity, TCreateDto, TUpdateDto, TDto>(
+        ISyncConfiguration<TEntity, TCreateDto, TUpdateDto, TDto> config)
+        where TEntity : class, ISyncableEntity
     {
         if (_connectivity.NetworkAccess != NetworkAccess.Internet)
             return new SyncResult { Success = false, Message = "No internet connection" };
 
-        var pendingCategories = await _localDb.Categories
-            .Where(c => !c.IsSyncedToServer)
+        var pendingEntities = await _localDb.Set<TEntity>()
+            .Where(e => !e.IsSyncedToServer)
             .ToListAsync();
+
+        if (!pendingEntities.Any())
+            return new SyncResult { Success = true, Message = $"No pending {config.EntityName} to sync" };
 
         var synced = 0;
         var failed = 0;
 
-        foreach (var category in pendingCategories)
+        foreach (var entity in pendingEntities)
         {
             try
             {
-                // Check if exists on server (for updates)
-                var existsOnServer = await _apiClient.GetAsync<CategoryDto>($"/api/category/{category.Id}");
+                var existsOnServer = await _apiClient.GetAsync<TDto>($"{config.ApiEndpoint}/{entity.Id}");
 
                 if (existsOnServer.Success)
                 {
-                    // Update existing
-                    var updateDto = new CategoryUpdateDto
-                    {
-                        Name = category.Name,
-                        Code = category.Code,
-                        Description = category.Description,
-                        IsActive = category.IsActive
-                    };
-
-                    var result = await _apiClient.PutAsync<CategoryUpdateDto, CategoryDto>(
-                        $"/api/category/{category.Id}", updateDto);
+                    var updateDto = config.MapToUpdateDto(entity);
+                    var result = await _apiClient.PutAsync<TUpdateDto, TDto>(
+                        $"{config.ApiEndpoint}/{entity.Id}", updateDto);
 
                     if (result.Success)
                     {
-                        category.IsSyncedToServer = true;
-                        category.LastSyncedAt = DateTime.UtcNow;
+                        entity.IsSyncedToServer = true;
+                        entity.LastSyncedAt = DateTime.UtcNow;
                         synced++;
                     }
                     else
@@ -64,23 +60,14 @@ public class SyncService
                 }
                 else
                 {
-                    // Create new
-                    var createDto = new CategoryCreateDto
-                    {
-                        Name = category.Name,
-                        Code = category.Code,
-                        Description = category.Description,
-                        IsActive = category.IsActive,
-                        ShopId = category.ShopId
-                    };
-
-                    var result = await _apiClient.PostAsync<CategoryCreateDto, CategoryDto>(
-                        "/api/category", createDto);
+                    var createDto = config.MapToCreateDto(entity);
+                    var result = await _apiClient.PostAsync<TCreateDto, TDto>(
+                        config.ApiEndpoint, createDto);
 
                     if (result.Success)
                     {
-                        category.IsSyncedToServer = true;
-                        category.LastSyncedAt = DateTime.UtcNow;
+                        entity.IsSyncedToServer = true;
+                        entity.LastSyncedAt = DateTime.UtcNow;
                         synced++;
                     }
                     else
@@ -100,9 +87,30 @@ public class SyncService
         return new SyncResult
         {
             Success = failed == 0,
-            Message = $"Synced {synced} categories, {failed} failed",
+            Message = $"Synced {synced} {config.EntityName}(s), {failed} failed",
             SyncedCount = synced,
             FailedCount = failed
+        };
+    }
+
+    public async Task<SyncResult> SyncCategoriesAsync()
+    {
+        return await SyncAsync(new Configurations.CategorySyncConfiguration());
+    }
+
+    public async Task<SyncAllResult> SyncAllAsync()
+    {
+        var results = new List<SyncResult>();
+
+        results.Add(await SyncCategoriesAsync());
+        // Add more entity syncs here as needed
+
+        return new SyncAllResult
+        {
+            Success = results.All(r => r.Success),
+            Results = results,
+            TotalSynced = results.Sum(r => r.SyncedCount),
+            TotalFailed = results.Sum(r => r.FailedCount)
         };
     }
 }
@@ -113,4 +121,12 @@ public class SyncResult
     public string Message { get; set; } = string.Empty;
     public int SyncedCount { get; set; }
     public int FailedCount { get; set; }
+}
+
+public class SyncAllResult
+{
+    public bool Success { get; set; }
+    public List<SyncResult> Results { get; set; } = new();
+    public int TotalSynced { get; set; }
+    public int TotalFailed { get; set; }
 }
