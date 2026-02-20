@@ -2,6 +2,7 @@
 @using SMIS.UI.Services
 @using SMIS.UI.Services.Sync
 @using SMIS.Application.DTO.Categories
+@using SMIS.UI.Models
 @using Syncfusion.Blazor.Grids
 @inject CategoryService CategoryService
 @inject SyncService SyncService
@@ -33,7 +34,8 @@
         <SfCard>
             <CardContent>
                 <SfGrid DataSource="@_categories" AllowPaging="true" AllowSorting="true" AllowFiltering="true">
-                    <GridPageSettings PageSize="10"></GridPageSettings>
+                    <GridPageSettings PageSize="@_pageSize" PageCount="5" CurrentPage="@_currentPage"></GridPageSettings>
+                    <GridEvents TValue="CategoryDto" OnActionBegin="@OnGridActionBegin"></GridEvents>
                     <GridFilterSettings Type="Syncfusion.Blazor.Grids.FilterType.Menu"></GridFilterSettings>
                     <GridColumns>
                         <GridColumn Field="@nameof(CategoryDto.Name)" HeaderText="Name" Width="150"></GridColumn>
@@ -100,6 +102,10 @@
     private bool _isEditMode = false;
     private string _toastMessage = "";
     private string _errorMessage = "";
+    private int _currentPage = PagedList<CategoryDto>.DefaultPageNumber;
+    private int _pageSize = PagedList<CategoryDto>.DefaultPageSize;
+    private int _totalCount = 0;
+    private int _totalPages = 0;
     private SfDialog DialogObj;
     private SfToast ToastObj;
     
@@ -115,11 +121,15 @@
         _isLoading = true;
         _errorMessage = "";
         
-        var result = await CategoryService.GetAllAsync();
+        var result = await CategoryService.GetAllAsync(_currentPage, _pageSize);
 
         if (result.Success && result.Response != null)
         {
-            _categories = result.Response;
+            _categories = result.Response.Items;
+            _totalCount = result.Response.TotalCount;
+            _totalPages = result.Response.TotalPages;
+            _currentPage = result.Response.PageNumber;
+            _pageSize = result.Response.PageSize;
         }
         else
         {
@@ -127,6 +137,15 @@
         }
 
         _isLoading = false;
+    }
+
+    private async Task OnGridActionBegin(Syncfusion.Blazor.Grids.ActionEventArgs<CategoryDto> args)
+    {
+        if (args.RequestType == Syncfusion.Blazor.Grids.Action.Paging)
+        {
+            _currentPage = (int)args.CurrentPage;
+            await LoadCategories();
+        }
     }
 
     private void ShowAddDialog()
