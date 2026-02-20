@@ -32,27 +32,64 @@ public class SyncService
 
         foreach (var category in pendingCategories)
         {
-            var dto = new CategoryCreateDto
+            try
             {
-                Id = category.Id, // Send client-generated Id
-                Name = category.Name,
-                Code = category.Code,
-                Description = category.Description,
-                IsActive = category.IsActive,
-                ShopId = category.ShopId
-            };
+                // Check if exists on server (for updates)
+                var existsOnServer = await _apiClient.GetAsync<CategoryDto>($"/api/category/{category.Id}");
 
-            // POST to create on server with client Id
-            var result = await _apiClient.PostAsync<CategoryCreateDto, CategoryDto>(
-                "/api/categories", dto);
+                if (existsOnServer.Success)
+                {
+                    // Update existing
+                    var updateDto = new CategoryUpdateDto
+                    {
+                        Name = category.Name,
+                        Code = category.Code,
+                        Description = category.Description,
+                        IsActive = category.IsActive
+                    };
 
-            if (result.Success)
-            {
-                category.IsSyncedToServer = true;
-                category.LastSyncedAt = DateTime.UtcNow;
-                synced++;
+                    var result = await _apiClient.PutAsync<CategoryUpdateDto, CategoryDto>(
+                        $"/api/category/{category.Id}", updateDto);
+
+                    if (result.Success)
+                    {
+                        category.IsSyncedToServer = true;
+                        category.LastSyncedAt = DateTime.UtcNow;
+                        synced++;
+                    }
+                    else
+                    {
+                        failed++;
+                    }
+                }
+                else
+                {
+                    // Create new
+                    var createDto = new CategoryCreateDto
+                    {
+                        Name = category.Name,
+                        Code = category.Code,
+                        Description = category.Description,
+                        IsActive = category.IsActive,
+                        ShopId = category.ShopId
+                    };
+
+                    var result = await _apiClient.PostAsync<CategoryCreateDto, CategoryDto>(
+                        "/api/category", createDto);
+
+                    if (result.Success)
+                    {
+                        category.IsSyncedToServer = true;
+                        category.LastSyncedAt = DateTime.UtcNow;
+                        synced++;
+                    }
+                    else
+                    {
+                        failed++;
+                    }
+                }
             }
-            else
+            catch
             {
                 failed++;
             }
