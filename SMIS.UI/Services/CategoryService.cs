@@ -21,22 +21,25 @@ public class CategoryService : BaseService
         _connectivity = connectivity;
     }
 
-    public async Task<ApiResponse<List<CategoryDto>>> GetAllAsync()
+    public async Task<ApiResponse<PagedList<CategoryDto>>> GetAllAsync(int pageNumber = 0, int pageSize = 0)
     {
+        pageNumber = pageNumber > 0 ? pageNumber : PagedList<CategoryDto>.DefaultPageNumber;
+        pageSize = pageSize > 0 ? pageSize : PagedList<CategoryDto>.DefaultPageSize;
+
         if (_connectivity.NetworkAccess == NetworkAccess.Internet)
         {
-            var result = await GetPagedListAsync<CategoryDto>(_apiClient, "/api/category");
+            var result = await _apiClient.GetAsync<PagedList<CategoryDto>>($"/api/category?pageNumber={pageNumber}&pageSize={pageSize}");
             
-            if (result.Success && result.Response != null)
+            if (result.Success && result.Response?.Items != null)
             {
-                await SyncToLocalAsync(result.Response);
+                await SyncToLocalAsync(result.Response.Items);
             }
             
             return result;
         }
         else
         {
-            return await GetAllOfflineAsync();
+            return await GetAllOfflineAsync(pageNumber, pageSize);
         }
     }
 
@@ -93,15 +96,29 @@ public class CategoryService : BaseService
         }
     }
 
-    private async Task<ApiResponse<List<CategoryDto>>> GetAllOfflineAsync()
+    private async Task<ApiResponse<PagedList<CategoryDto>>> GetAllOfflineAsync(int pageNumber, int pageSize)
     {
-        var categories = await _localDb.Categories.ToListAsync();
+        var totalCount = await _localDb.Categories.CountAsync();
+        var totalPages = (int)Math.Ceiling((double)totalCount / pageSize);
+        
+        var categories = await _localDb.Categories
+            .Skip((pageNumber - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync();
+        
         var dtos = categories.Select(MapToDto).ToList();
         
-        return new ApiResponse<List<CategoryDto>>
+        return new ApiResponse<PagedList<CategoryDto>>
         {
             Success = true,
-            Response = dtos,
+            Response = new PagedList<CategoryDto>
+            {
+                Items = dtos,
+                PageNumber = pageNumber,
+                PageSize = pageSize,
+                TotalCount = totalCount,
+                TotalPages = totalPages
+            },
             Message = "Loaded from offline storage"
         };
     }

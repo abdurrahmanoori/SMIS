@@ -10,11 +10,14 @@ public class ApiResponse<T>
 
 public class PagedList<T>
 {
-    public List<T> Items { get; set; } = new();
-    public int PageNumber { get; set; }
+    public static int DefaultPageSize = 25;
+    public static int DefaultPageNumber = 1;
+
+    public int PageNumber { get; set; } = 1;
     public int PageSize { get; set; }
     public int TotalCount { get; set; }
     public int TotalPages { get; set; }
+    public List<T> Items { get; set; } = new();
 }
 
 public class ValidationError
