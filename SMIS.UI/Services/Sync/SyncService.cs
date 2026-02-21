@@ -41,21 +41,36 @@ public class SyncService
             {
                 var existsOnServer = await _apiClient.GetAsync<TDto>($"{config.ApiEndpoint}/{entity.Id}");
 
-                if (existsOnServer.Success)
+                if (existsOnServer.Success && existsOnServer.Response != null)
                 {
-                    var updateDto = config.MapToUpdateDto(entity);
-                    var result = await _apiClient.PutAsync<TUpdateDto, TDto>(
-                        $"{config.ApiEndpoint}/{entity.Id}", updateDto);
-
-                    if (result.Success)
+                    // Get server timestamp for conflict resolution
+                    var serverDto = existsOnServer.Response as dynamic;
+                    var serverTimestamp = (DateTimeOffset)serverDto.LastModifiedUtc;
+                    
+                    // Conflict resolution: Only update if local is newer
+                    if (entity.LastModifiedUtc > serverTimestamp)
                     {
-                        entity.IsSyncedToServer = true;
-                        entity.LastSyncedAt = DateTime.UtcNow;
-                        synced++;
+                        var updateDto = config.MapToUpdateDto(entity);
+                        var result = await _apiClient.PutAsync<TUpdateDto, TDto>(
+                            $"{config.ApiEndpoint}/{entity.Id}", updateDto);
+
+                        if (result.Success)
+                        {
+                            entity.IsSyncedToServer = true;
+                            entity.LastSyncedAt = DateTime.UtcNow;
+                            synced++;
+                        }
+                        else
+                        {
+                            failed++;
+                        }
                     }
                     else
                     {
-                        failed++;
+                        // Server is newer - skip update, just mark as synced
+                        entity.IsSyncedToServer = true;
+                        entity.LastSyncedAt = DateTime.UtcNow;
+                        synced++;
                     }
                 }
                 else
