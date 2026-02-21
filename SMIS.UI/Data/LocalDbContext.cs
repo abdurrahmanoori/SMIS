@@ -1,23 +1,23 @@
 using Microsoft.EntityFrameworkCore;
 using SMIS.Domain.Entities;
+using SMIS.UI.Data.Interceptors;
 
 namespace SMIS.UI.Data;
 
 public class LocalDbContext : DbContext
 {
+    private readonly AuditInterceptor _auditInterceptor;
+
     public DbSet<Category> Categories { get; set; }
 
-    public LocalDbContext(DbContextOptions<LocalDbContext> options) : base(options)
+    public LocalDbContext(DbContextOptions<LocalDbContext> options, AuditInterceptor auditInterceptor) : base(options)
     {
+        _auditInterceptor = auditInterceptor;
     }
 
-    protected override void OnConfiguring(DbContextOptionsBuilder options)
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        if (!options.IsConfigured)
-        {
-            var dbPath = Path.Combine(FileSystem.AppDataDirectory, "smis_local.db");
-            options.UseSqlite($"Data Source={dbPath}");
-        }
+        optionsBuilder.AddInterceptors(_auditInterceptor);
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
