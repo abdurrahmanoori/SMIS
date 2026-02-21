@@ -40,6 +40,9 @@
         <PackageReference Include="Microsoft.Extensions.Http" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Design" />
+        <PackageReference Include="MediatR" />
+        <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" />
+        <PackageReference Include="AutoMapper" />
         <PackageReference Include="Syncfusion.Blazor.Themes" />
         <PackageReference Include="Syncfusion.Blazor.Buttons" />
         <PackageReference Include="Syncfusion.Blazor.Cards" />
@@ -60,6 +63,7 @@
     <ItemGroup>
         <ProjectReference Include="..\SMIS.Domain\SMIS.Domain.csproj" />
         <ProjectReference Include="..\SMIS.Application\SMIS.Application.csproj" />
+        <ProjectReference Include="..\SMIS.Infrastructure.Mobile\SMIS.Infrastructure.Mobile.csproj" />
     </ItemGroup>
 
     <ItemGroup>

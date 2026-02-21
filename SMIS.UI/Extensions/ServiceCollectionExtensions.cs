@@ -1,13 +1,14 @@
 using Microsoft.Extensions.Configuration;
-using Microsoft.EntityFrameworkCore;
+using MediatR;
 using SMIS.Application.Identity.IServices;
-using SMIS.UI.Data;
-using SMIS.UI.Data.Interceptors;
+using SMIS.Infrastructure.Mobile.Extensions;
+using SMIS.Infrastructure.Mobile.Services.Identity;
 using SMIS.UI.Models;
 using SMIS.UI.Services;
 using SMIS.UI.Services.Auth;
 using SMIS.UI.Services.Http;
-using SMIS.UI.Services.Sync;
+using ApiClient = SMIS.UI.Services.Http.ApiClient;
+using IApiClient = SMIS.UI.Services.Http.IApiClient;
 
 namespace SMIS.UI.Extensions;
 
@@ -17,14 +18,15 @@ public static class ServiceCollectionExtensions
     {
         var appSettings = configuration.GetSection("AppSettings").Get<AppSettings>() ?? new AppSettings();
 
-        // Current User (MAUI-specific implementation)
-        services.AddSingleton<ICurrentUser, MauiCurrentUser>();
+        // Mobile Infrastructure Layer (includes LocalDbContext, Repositories, Sync)
+        var dbPath = Path.Combine(FileSystem.AppDataDirectory, "smis_local.db");
+        services.AddMobileInfrastructure(dbPath);
 
-        // Register Interceptor
-        services.AddScoped<AuditInterceptor>();
+        // MediatR for CQRS (shared Application layer handlers)
+        services.AddMediatR(typeof(SMIS.Application.AssemblyReference).Assembly);
 
-        // Local Database
-        services.AddDbContext<LocalDbContext>();
+        // Current User - Map ILocalCurrentUser to ICurrentUser for Application layer
+        services.AddSingleton<ICurrentUser>(sp => new MauiCurrentUserAdapter(sp.GetRequiredService<ILocalCurrentUser>()));
 
         // Connectivity
         services.AddSingleton(Connectivity.Current);
@@ -43,7 +45,6 @@ public static class ServiceCollectionExtensions
         // Application Services
         services.AddScoped<IAuthService, AuthService>();
         services.AddScoped<CategoryService>();
-        services.AddScoped<SyncService>();
 
         return services;
     }

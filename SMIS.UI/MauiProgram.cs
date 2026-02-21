@@ -3,7 +3,7 @@ using Syncfusion.Blazor;
 using System.Reflection;
 using Microsoft.Extensions.Configuration;
 using SMIS.UI.Extensions;
-using SMIS.UI.Data;
+using SMIS.Infrastructure.Mobile.Context;
 using Microsoft.EntityFrameworkCore;
 
 namespace SMIS.UI
