@@ -1,9 +1,9 @@
 using SMIS.Application.Repositories.Localization;
 using SMIS.Domain.Entities.Localization;
-using SMIS.Infrastructure.Context;
-using SMIS.Infrastructure.Repositories.Base;
+using SMIS.Infrastructure.Server.Context;
+using SMIS.Infrastructure.Server.Repositories.Base;
 
-namespace SMIS.Infrastructure.Repositories.Localization
+namespace SMIS.Infrastructure.Server.Repositories.Localization
 {
     public class TranslationKeyRepository : GenericRepository<TranslationKey>, ITranslationKeyRepository
     {

@@ -9,10 +9,10 @@ using SMIS.Domain.Entities;
 using SMIS.Domain.Entities.Identity.Entity;
 using SMIS.Domain.Entities.Localization;
 using SMIS.Domain.Entities.LocationEntities;
-using SMIS.Infrastructure.DatabaseSeeders;
+using SMIS.Infrastructure.Server.DatabaseSeeders;
 using System.Reflection;
 
-namespace SMIS.Infrastructure.Context;
+namespace SMIS.Infrastructure.Server.Context;
 
 public partial class AppDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, string, IdentityUserClaim<string>, ApplicationUserRole, IdentityUserLogin<string>, IdentityRoleClaim<string>, IdentityUserToken<string>>
 {

@@ -1,7 +1,7 @@
 using Microsoft.Extensions.Configuration;
 using SMIS.Application.Services;
 
-namespace SMIS.Infrastructure.Services
+namespace SMIS.Infrastructure.Server.Services
 {
     public class PublicIdGenerator : IPublicIdGenerator
     {

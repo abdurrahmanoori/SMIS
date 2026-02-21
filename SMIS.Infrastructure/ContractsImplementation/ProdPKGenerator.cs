@@ -1,6 +1,6 @@
 ﻿using SMIS.Domain.Contracts;
 
-namespace SMIS.Infrastructure.ContractsImplementation
+namespace SMIS.Infrastructure.Server.ContractsImplementation
 {
     public class ProdPKGenerator : IPKGenerator
     {

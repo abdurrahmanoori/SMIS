@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using SMIS.Domain.Common.Interfaces;
 
-namespace SMIS.Infrastructure.Context;
+namespace SMIS.Infrastructure.Server.Context;
 
 public partial class AppDbContext
 {

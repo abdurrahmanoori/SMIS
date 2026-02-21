@@ -2,10 +2,10 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using SMIS.Domain.Common.Interfaces;
-using SMIS.Infrastructure.Context;
-using SMIS.Infrastructure.Interceptors;
+using SMIS.Infrastructure.Server.Context;
+using SMIS.Infrastructure.Server.Interceptors;
 
-namespace SMIS.Infrastructure.Extensions
+namespace SMIS.Infrastructure.Server.Extensions
 {
     public static class DbContextExtensions
     {

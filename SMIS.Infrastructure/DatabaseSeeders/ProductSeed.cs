@@ -2,7 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using SMIS.Domain.Entities;
 using SMIS.Domain.Services;
 
-namespace SMIS.Infrastructure.DatabaseSeeders;
+namespace SMIS.Infrastructure.Server.DatabaseSeeders;
 
 public static class ProductSeed
 {

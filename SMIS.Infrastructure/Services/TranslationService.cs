@@ -4,7 +4,7 @@ using SMIS.Application.Repositories.Localization;
 using SMIS.Application.Services;
 using SMIS.Domain.Entities.Localization;
 
-namespace SMIS.Infrastructure.Services
+namespace SMIS.Infrastructure.Server.Services
 {
     public class TranslationService : ITranslationService
     {

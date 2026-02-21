@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 
-namespace SMIS.Infrastructure.RepositoryStores;
+namespace SMIS.Infrastructure.Server.RepositoryStores;
 
 
 public partial class RepositoriesStore

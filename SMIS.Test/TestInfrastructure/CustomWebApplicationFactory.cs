@@ -4,7 +4,7 @@ using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using SMIS.Infrastructure.Context;
+using SMIS.Infrastructure.Server.Context;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Xunit;

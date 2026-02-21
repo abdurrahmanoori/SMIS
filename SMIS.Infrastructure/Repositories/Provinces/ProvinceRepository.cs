@@ -1,9 +1,9 @@
 using SMIS.Application.Repositories.Provinces;
 using SMIS.Domain.Entities.LocationEntities;
-using SMIS.Infrastructure.Context;
-using SMIS.Infrastructure.Repositories.Base;
+using SMIS.Infrastructure.Server.Context;
+using SMIS.Infrastructure.Server.Repositories.Base;
 
-namespace SMIS.Infrastructure.Repositories.Provinces
+namespace SMIS.Infrastructure.Server.Repositories.Provinces
 {
     public class ProvinceRepository : GenericRepository<Province>, IProvinceRepository
     {

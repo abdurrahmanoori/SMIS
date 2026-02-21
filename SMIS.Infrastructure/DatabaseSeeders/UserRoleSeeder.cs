@@ -2,7 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using SMIS.Application.Common.Contants;
 using SMIS.Domain.Entities.Identity.Entity;
 
-namespace SMIS.Infrastructure.DatabaseSeeders
+namespace SMIS.Infrastructure.Server.DatabaseSeeders
 {
     public static class UserRoleSeeder
     {

@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
-using SMIS.Infrastructure.DatabaseSeeders;
+using SMIS.Infrastructure.Server.DatabaseSeeders;
 
-namespace SMIS.Infrastructure.Context;
+namespace SMIS.Infrastructure.Server.Context;
 
 public partial class AppDbContext
 {

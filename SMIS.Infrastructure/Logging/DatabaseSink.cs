@@ -3,9 +3,9 @@ using Serilog.Sinks.PeriodicBatching;
 using SMIS.Domain.Entities;
 using System.Text.Json;
 using Microsoft.Extensions.DependencyInjection;
-using SMIS.Infrastructure.Repositories;
+using SMIS.Infrastructure.Server.Repositories;
 
-namespace SMIS.Infrastructure.Logging
+namespace SMIS.Infrastructure.Server.Logging
 {
     public class DatabaseSink : IBatchedLogEventSink
     {

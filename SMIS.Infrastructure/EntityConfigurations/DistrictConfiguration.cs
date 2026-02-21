@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using SMIS.Domain.Entities.Localization;
 using SMIS.Domain.Entities.LocationEntities;
 
-namespace SMIS.Infrastructure.EntityConfigurations
+namespace SMIS.Infrastructure.Server.EntityConfigurations
 {
     public class DistrictConfiguration : IEntityTypeConfiguration<District>
     {

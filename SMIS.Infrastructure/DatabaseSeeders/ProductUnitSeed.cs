@@ -3,7 +3,7 @@ using SMIS.Domain.Entities;
 using SMIS.Domain.Services;
 using System.Reflection;
 
-namespace SMIS.Infrastructure.DatabaseSeeders;
+namespace SMIS.Infrastructure.Server.DatabaseSeeders;
 
 public static class ProductUnitSeed
 {

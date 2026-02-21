@@ -1,10 +1,10 @@
 using Microsoft.EntityFrameworkCore;
 using SMIS.Application.Repositories.StockTransactions;
 using SMIS.Domain.Entities;
-using SMIS.Infrastructure.Context;
-using SMIS.Infrastructure.Repositories.Base;
+using SMIS.Infrastructure.Server.Context;
+using SMIS.Infrastructure.Server.Repositories.Base;
 
-namespace SMIS.Infrastructure.Repositories.StockTransactions
+namespace SMIS.Infrastructure.Server.Repositories.StockTransactions
 {
     public class StockTransactionRepository : GenericRepository<StockTransaction>, IStockTransactionRepository
     {

@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace SMIS.Infrastructure.Migrations
+namespace SMIS.Infrastructure.Server.Migrations
 {
     /// <inheritdoc />
     public partial class sdfsd : Migration
