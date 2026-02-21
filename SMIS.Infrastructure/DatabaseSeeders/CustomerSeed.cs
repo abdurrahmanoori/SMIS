@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using SMIS.Domain.Entities;
 using SMIS.Domain.Enums;
+using SMIS.Domain.Services;
 
 namespace SMIS.Infrastructure.DatabaseSeeders;
 
@@ -34,6 +35,9 @@ public static class CustomerSeed
         // Set ID and ShopName for seeding
         typeof(Customer).GetProperty(nameof(Customer.Id))!.SetValue(customer, id);
         typeof(Customer).GetProperty(nameof(Customer.ShopName))!.SetValue(customer, GetShopName(shopId));
+        typeof(Customer).GetProperty(nameof(Customer.CreatedDate))!.SetValue(customer, DateTimeService.Now);
+        typeof(Customer).GetProperty(nameof(Customer.UpdatedDate))!.SetValue(customer, DateTimeService.Now);
+        typeof(Customer).GetProperty(nameof(Customer.LastModifiedUtc))!.SetValue(customer, DateTimeService.NowOffSet);
 
         return customer;
     }

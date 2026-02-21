@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using SMIS.Domain.Entities;
 using SMIS.Domain.Enums;
+using SMIS.Domain.Services;
 
 namespace SMIS.Infrastructure.DatabaseSeeders;
 
@@ -36,6 +37,9 @@ public static class StockTransactionSeed
         typeof(StockTransaction).GetProperty(nameof(StockTransaction.ShopName))!.SetValue(transaction, GetShopName(shopId));
         typeof(StockTransaction).GetProperty(nameof(StockTransaction.ProductName))!.SetValue(transaction, GetProductName(productId));
         typeof(StockTransaction).GetProperty(nameof(StockTransaction.UnitName))!.SetValue(transaction, GetUnitName(unitId));
+        typeof(StockTransaction).GetProperty(nameof(StockTransaction.CreatedDate))!.SetValue(transaction, DateTimeService.Now);
+        typeof(StockTransaction).GetProperty(nameof(StockTransaction.UpdatedDate))!.SetValue(transaction, DateTimeService.Now);
+        typeof(StockTransaction).GetProperty(nameof(StockTransaction.LastModifiedUtc))!.SetValue(transaction, DateTimeService.NowOffSet);
 
         return transaction;
     }

@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using SMIS.Domain.Entities;
+using SMIS.Domain.Services;
 
 namespace SMIS.Infrastructure.DatabaseSeeders;
 
@@ -7,22 +8,23 @@ public static class LoanAccountSeed
 {
     public static void DataSeed(ModelBuilder modelBuilder)
     {
+        var now = DateTimeService.Now;
         modelBuilder.Entity<LoanAccount>().HasData(
             // Main Store loans
-            CreateLoanAccount("1", "1", "1", "1", 10, "2", 5000, 50000, DateTime.UtcNow.AddDays(-30), DateTime.UtcNow.AddDays(30), "Coca Cola loan for John", true),
-            CreateLoanAccount("2", "2", "1", "4", 5, "3", 4000, 20000, DateTime.UtcNow.AddDays(-15), DateTime.UtcNow.AddDays(15), "Oreo biscuits for Jane", true),
-            CreateLoanAccount("3", "3", "1", "7", 20, "1", 3000, 60000, DateTime.UtcNow.AddDays(-10), DateTime.UtcNow.AddDays(20), "Notebooks for Michael", true),
-            CreateLoanAccount("4", "1", "1", "10", 15, "2", 8000, 120000, DateTime.UtcNow.AddDays(-5), DateTime.UtcNow.AddDays(45), "Cooking oil bulk order", true),
+            CreateLoanAccount("1", "1", "1", "1", 10, "2", 5000, 50000, now.AddDays(-30), now.AddDays(30), "Coca Cola loan for John", true),
+            CreateLoanAccount("2", "2", "1", "4", 5, "3", 4000, 20000, now.AddDays(-15), now.AddDays(15), "Oreo biscuits for Jane", true),
+            CreateLoanAccount("3", "3", "1", "7", 20, "1", 3000, 60000, now.AddDays(-10), now.AddDays(20), "Notebooks for Michael", true),
+            CreateLoanAccount("4", "1", "1", "10", 15, "2", 8000, 120000, now.AddDays(-5), now.AddDays(45), "Cooking oil bulk order", true),
             
             // Branch Store loans
-            CreateLoanAccount("5", "4", "2", "2", 24, "2", 4500, 108000, DateTime.UtcNow.AddDays(-20), DateTime.UtcNow.AddDays(10), "Pepsi for Sarah", true),
-            CreateLoanAccount("6", "5", "2", "8", 50, "1", 500, 25000, DateTime.UtcNow.AddDays(-12), DateTime.UtcNow.AddDays(18), "Blue pens for David", true),
-            CreateLoanAccount("7", "6", "2", "11", 100, "7", 2000, 200000, DateTime.UtcNow.AddDays(-25), null, "Rice bulk purchase", true),
+            CreateLoanAccount("5", "4", "2", "2", 24, "2", 4500, 108000, now.AddDays(-20), now.AddDays(10), "Pepsi for Sarah", true),
+            CreateLoanAccount("6", "5", "2", "8", 50, "1", 500, 25000, now.AddDays(-12), now.AddDays(18), "Blue pens for David", true),
+            CreateLoanAccount("7", "6", "2", "11", 100, "7", 2000, 200000, now.AddDays(-25), null, "Rice bulk purchase", true),
             
             // Warehouse loans
-            CreateLoanAccount("8", "7", "3", "3", 48, "2", 3000, 144000, DateTime.UtcNow.AddDays(-18), DateTime.UtcNow.AddDays(12), "Mineral water for Robert", true),
-            CreateLoanAccount("9", "8", "3", "6", 30, "3", 1500, 45000, DateTime.UtcNow.AddDays(-8), DateTime.UtcNow.AddDays(22), "Instant noodles for Emily", true),
-            CreateLoanAccount("10", "9", "3", "15", 100, "1", 1000, 100000, DateTime.UtcNow.AddDays(-3), DateTime.UtcNow.AddDays(27), "USB cables for James", true)
+            CreateLoanAccount("8", "7", "3", "3", 48, "2", 3000, 144000, now.AddDays(-18), now.AddDays(12), "Mineral water for Robert", true),
+            CreateLoanAccount("9", "8", "3", "6", 30, "3", 1500, 45000, now.AddDays(-8), now.AddDays(22), "Instant noodles for Emily", true),
+            CreateLoanAccount("10", "9", "3", "15", 100, "1", 1000, 100000, now.AddDays(-3), now.AddDays(27), "USB cables for James", true)
         );
     }
 
@@ -41,6 +43,9 @@ public static class LoanAccountSeed
         {
             loanDateProp.SetValue(loanAccount, loanDate);
         }
+        typeof(LoanAccount).GetProperty(nameof(LoanAccount.CreatedDate))!.SetValue(loanAccount, DateTimeService.Now);
+        typeof(LoanAccount).GetProperty(nameof(LoanAccount.UpdatedDate))!.SetValue(loanAccount, DateTimeService.Now);
+        typeof(LoanAccount).GetProperty(nameof(LoanAccount.LastModifiedUtc))!.SetValue(loanAccount, DateTimeService.NowOffSet);
         if (!isActive) loanAccount.Deactivate();
 
         return loanAccount;

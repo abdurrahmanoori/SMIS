@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using SMIS.Domain.Entities;
 using SMIS.Domain.Enums;
+using SMIS.Domain.Services;
 using System.Reflection;
 
 namespace SMIS.Infrastructure.DatabaseSeeders;
@@ -27,6 +28,9 @@ public static class ShopSeed
         typeof(Shop).GetProperty(nameof(Shop.Id))!.SetValue(shop, id);
         
         if (!isActive) shop.Deactivate();
+        typeof(Shop).GetProperty(nameof(Shop.CreatedDate))!.SetValue(shop, DateTimeService.Now);
+        typeof(Shop).GetProperty(nameof(Shop.UpdatedDate))!.SetValue(shop, DateTimeService.Now);
+        typeof(Shop).GetProperty(nameof(Shop.LastModifiedUtc))!.SetValue(shop, DateTimeService.NowOffSet);
         
         return shop;
     }

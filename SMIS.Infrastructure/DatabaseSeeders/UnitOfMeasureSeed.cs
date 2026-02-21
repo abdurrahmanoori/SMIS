@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using SMIS.Domain.Entities;
+using SMIS.Domain.Services;
 using System.Reflection;
 
 namespace SMIS.Infrastructure.DatabaseSeeders;
@@ -31,6 +32,7 @@ public static class UnitOfMeasureSeed
         
         // Set ID for seeding (bypass domain validation for infrastructure concerns)
         typeof(UnitOfMeasure).GetProperty(nameof(UnitOfMeasure.Id))!.SetValue(unit, id);
+        typeof(UnitOfMeasure).GetProperty(nameof(UnitOfMeasure.LastModifiedUtc))!.SetValue(unit, DateTimeService.NowOffSet);
         
         return unit;
     }

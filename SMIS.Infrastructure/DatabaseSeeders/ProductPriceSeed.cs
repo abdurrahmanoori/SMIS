@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using SMIS.Domain.Entities;
+using SMIS.Domain.Services;
 
 namespace SMIS.Infrastructure.DatabaseSeeders;
 
@@ -96,6 +97,9 @@ public static class ProductPriceSeed
         if (isActive) productPrice.Activate(); else productPrice.Deactivate();
 
         typeof(ProductPrice).GetProperty(nameof(ProductPrice.Id))!.SetValue(productPrice, id);
+        typeof(ProductPrice).GetProperty(nameof(ProductPrice.CreatedDate))!.SetValue(productPrice, DateTimeService.Now);
+        typeof(ProductPrice).GetProperty(nameof(ProductPrice.UpdatedDate))!.SetValue(productPrice, DateTimeService.Now);
+        typeof(ProductPrice).GetProperty(nameof(ProductPrice.LastModifiedUtc))!.SetValue(productPrice, DateTimeService.NowOffSet);
 
         return productPrice;
     }
