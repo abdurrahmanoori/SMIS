@@ -1,11 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using SMIS.Application.Repositories.Base;
-using SMIS.Infrastructure.Context;
+using SMIS.Infrastructure.Server.Context;
 using System.Data;
 using System.Reflection;
 
-namespace SMIS.Infrastructure.Repositories.Base
+namespace SMIS.Infrastructure.Server.Repositories.Base
 {
     public class UnitOfWork : IUnitOfWork
     {

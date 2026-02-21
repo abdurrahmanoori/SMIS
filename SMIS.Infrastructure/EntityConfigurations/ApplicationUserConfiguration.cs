@@ -2,7 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using SMIS.Domain.Entities.Identity.Entity;
 
-namespace SMIS.Infrastructure.EntityConfigurations
+namespace SMIS.Infrastructure.Server.EntityConfigurations
 {
     public class ApplicationUserConfiguration : IEntityTypeConfiguration<ApplicationUser>
     {

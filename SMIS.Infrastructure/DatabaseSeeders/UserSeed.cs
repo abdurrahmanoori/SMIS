@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using SMIS.Domain.Entities.Identity.Entity;
 
-namespace SMIS.Infrastructure.DatabaseSeeders;
+namespace SMIS.Infrastructure.Server.DatabaseSeeders;
 
 public static class UserSeed
 {

@@ -2,7 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using SMIS.Domain.Entities.Localization;
 
-namespace SMIS.Infrastructure.EntityConfigurations
+namespace SMIS.Infrastructure.Server.EntityConfigurations
 {
     public class LanguageConfiguration : IEntityTypeConfiguration<Language>
     {

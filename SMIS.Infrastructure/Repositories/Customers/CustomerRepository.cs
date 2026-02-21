@@ -1,9 +1,9 @@
 using SMIS.Application.Repositories.Customers;
 using SMIS.Domain.Entities;
-using SMIS.Infrastructure.Context;
-using SMIS.Infrastructure.Repositories.Base;
+using SMIS.Infrastructure.Server.Context;
+using SMIS.Infrastructure.Server.Repositories.Base;
 
-namespace SMIS.Infrastructure.Repositories.Customers
+namespace SMIS.Infrastructure.Server.Repositories.Customers
 {
     public class CustomerRepository : GenericRepository<Customer>, ICustomerRepository
     {

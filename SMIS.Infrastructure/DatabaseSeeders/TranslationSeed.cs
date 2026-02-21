@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using SMIS.Domain.Entities.Localization;
 
-namespace SMIS.Infrastructure.DatabaseSeeders;
+namespace SMIS.Infrastructure.Server.DatabaseSeeders;
 
 public static class TranslationSeed
 {

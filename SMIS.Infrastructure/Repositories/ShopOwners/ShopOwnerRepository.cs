@@ -1,9 +1,9 @@
 using SMIS.Application.Repositories.ShopOwners;
 using SMIS.Domain.Entities;
-using SMIS.Infrastructure.Context;
-using SMIS.Infrastructure.Repositories.Base;
+using SMIS.Infrastructure.Server.Context;
+using SMIS.Infrastructure.Server.Repositories.Base;
 
-namespace SMIS.Infrastructure.Repositories.ShopOwners
+namespace SMIS.Infrastructure.Server.Repositories.ShopOwners
 {
     public class ShopOwnerRepository : GenericRepository<ShopOwner>, IShopOwnerRepository
     {

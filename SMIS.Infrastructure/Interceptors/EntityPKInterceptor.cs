@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Diagnostics;
 using SMIS.Application.Identity.IServices;
 using SMIS.Application.Services;
 using SMIS.Domain.Common.Interfaces;
-namespace SMIS.Infrastructure.Interceptors;
+namespace SMIS.Infrastructure.Server.Interceptors;
 
 public class EntityPKInterceptor : SaveChangesInterceptor
 {

@@ -1,6 +1,6 @@
 using SMIS.Domain.Contracts;
 
-namespace SMIS.Infrastructure.Services;
+namespace SMIS.Infrastructure.Server.Services;
 
 public class DateTimeService : IDateTimeService
 {

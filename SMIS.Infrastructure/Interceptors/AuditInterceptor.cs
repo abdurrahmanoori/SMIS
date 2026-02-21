@@ -4,9 +4,9 @@ using SMIS.Application.Identity.IServices;
 using SMIS.Application.Services;
 using SMIS.Domain.Common.BaseAbstract;
 using SMIS.Domain.Services;
-using SMIS.Infrastructure.Context;
+using SMIS.Infrastructure.Server.Context;
 
-namespace SMIS.Infrastructure.Interceptors
+namespace SMIS.Infrastructure.Server.Interceptors
 {
     public class AuditInterceptor : SaveChangesInterceptor
     {

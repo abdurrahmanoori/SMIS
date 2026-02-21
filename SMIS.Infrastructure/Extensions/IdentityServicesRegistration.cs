@@ -7,7 +7,7 @@ using Microsoft.IdentityModel.Tokens;
 using SMIS.Domain.Entities.Identity.Entity;
 using System.Text;
 
-namespace SMIS.Infrastructure.Extensions;
+namespace SMIS.Infrastructure.Server.Extensions;
 
 public static class IdentityServicesRegistration
 {

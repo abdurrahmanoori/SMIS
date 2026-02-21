@@ -1,5 +1,5 @@
 using Microsoft.Extensions.DependencyInjection;
-using SMIS.Infrastructure.Context;
+using SMIS.Infrastructure.Server.Context;
 using SMIS.Test.TestInfrastructure;
 
 namespace SMIS.Test.Extensions;

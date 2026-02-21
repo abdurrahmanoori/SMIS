@@ -30,7 +30,7 @@
 
 	<ItemGroup>
 	  <ProjectReference Include="..\SMIS.Application\SMIS.Application.csproj" />
-	  <ProjectReference Include="..\SMIS.Infrastructure\SMIS.Infrastructure.csproj" />
+	  <ProjectReference Include="..\SMIS.Infrastructure\SMIS.Infrastructure.Server.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>

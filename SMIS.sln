@@ -9,7 +9,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SMIS.Application", "SMIS.Ap
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SMIS.Domain", "SMIS.Domain\SMIS.Domain.csproj", "{348614B7-1B19-4BB4-6EDB-EBB752658212}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SMIS.Infrastructure", "SMIS.Infrastructure\SMIS.Infrastructure.csproj", "{30B80213-A40B-6C96-5390-579E7165D55F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SMIS.Infrastructure.Server", "SMIS.Infrastructure\SMIS.Infrastructure.Server.csproj", "{30B80213-A40B-6C96-5390-579E7165D55F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SMIS.Test", "SMIS.Test\SMIS.Test.csproj", "{4E0F3CD3-6ACA-4836-907F-D50862411270}"
 EndProject

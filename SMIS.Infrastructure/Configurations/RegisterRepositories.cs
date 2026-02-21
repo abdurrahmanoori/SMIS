@@ -1,9 +1,9 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using SMIS.Application.Repositories.Base;
-using SMIS.Infrastructure.Repositories.Base;
-using SMIS.Infrastructure.RepositoryStores;
+using SMIS.Infrastructure.Server.Repositories.Base;
+using SMIS.Infrastructure.Server.RepositoryStores;
 
-namespace SMIS.Infrastructure.Configurations;
+namespace SMIS.Infrastructure.Server.Configurations;
 
 public static class RegisterRepositories
 {

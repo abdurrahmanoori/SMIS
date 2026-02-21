@@ -4,11 +4,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using SMIS.Infrastructure.Context;
+using SMIS.Infrastructure.Server.Context;
 
 #nullable disable
 
-namespace SMIS.Infrastructure.Migrations
+namespace SMIS.Infrastructure.Server.Migrations
 {
     [DbContext(typeof(AppDbContext))]
     [Migration("20260214102235_sdfdfgdsdf")]

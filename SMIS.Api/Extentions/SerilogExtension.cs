@@ -2,7 +2,7 @@
 using Serilog.Core;
 using Serilog.Events;
 using Serilog.Sinks.PeriodicBatching;
-using SMIS.Infrastructure.Logging;
+using SMIS.Infrastructure.Server.Logging;
 
 namespace SMIS.Api.Extensions
 {

@@ -1,9 +1,9 @@
 ﻿using SMIS.Application.Repositories;
 using SMIS.Domain.Entities;
-using SMIS.Infrastructure.Context;
-using SMIS.Infrastructure.Repositories.Base;
+using SMIS.Infrastructure.Server.Context;
+using SMIS.Infrastructure.Server.Repositories.Base;
 
-namespace SMIS.Infrastructure.Repositories
+namespace SMIS.Infrastructure.Server.Repositories
 {
     public class LogRepository : GenericRepository<AppLog>, ILogRepository
     {

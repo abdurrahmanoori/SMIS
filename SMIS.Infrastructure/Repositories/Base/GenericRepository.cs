@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SMIS.Application.Repositories.Base;
-using SMIS.Infrastructure.Context;
+using SMIS.Infrastructure.Server.Context;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,7 +8,7 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SMIS.Infrastructure.Repositories.Base
+namespace SMIS.Infrastructure.Server.Repositories.Base
 {
 
     public class GenericRepository<T> : IGenericRepository<T> where T : class
