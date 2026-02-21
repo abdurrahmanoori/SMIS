@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using SMIS.Application.DTO.Categories;
 using SMIS.Domain.Entities;
+using SMIS.Domain.Services;
 using SMIS.UI.Data;
 using SMIS.UI.Models;
 using SMIS.UI.Services.Base;
@@ -126,7 +127,7 @@ public class CategoryService : BaseService
     private async Task<ApiResponse<CategoryDto>> CreateOfflineAsync(CategoryCreateDto dto)
     {
         var category = Category.Create(dto.Name, dto.ShopId, dto.Code, dto.Description, dto.IsActive);
-        category.CreatedDate = DateTime.UtcNow;
+        category.CreatedDate = DateTimeService.Now;
         category.IsSyncedToServer = false;
         
         _localDb.Categories.Add(category);
@@ -151,7 +152,7 @@ public class CategoryService : BaseService
         category.SetCode(dto.Code);
         category.SetDescription(dto.Description);
         if (dto.IsActive) category.Activate(); else category.Deactivate();
-        category.UpdatedDate = DateTime.UtcNow;
+        category.UpdatedDate = DateTimeService.Now;
         category.IsSyncedToServer = false;
         
         await _localDb.SaveChangesAsync();
@@ -183,7 +184,7 @@ public class CategoryService : BaseService
                 }
                 
                 existing.IsSyncedToServer = true;
-                existing.LastSyncedAt = DateTime.UtcNow;
+                existing.LastSyncedAt = DateTimeService.Now;
             }
             else
             {
@@ -191,7 +192,7 @@ public class CategoryService : BaseService
                 category.Id = dto.Id;
                 category.LastModifiedUtc = dto.LastModifiedUtc;
                 category.IsSyncedToServer = true;
-                category.LastSyncedAt = DateTime.UtcNow;
+                category.LastSyncedAt = DateTimeService.Now;
                 
                 _localDb.Categories.Add(category);
             }
