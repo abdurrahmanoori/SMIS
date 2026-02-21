@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using SMIS.Domain.Entities;
+using SMIS.Domain.Services;
 
 namespace SMIS.Infrastructure.DatabaseSeeders;
 
@@ -27,9 +28,9 @@ public static class CategorySeed
             Code = code,
             Description = description,
             IsActive = true,
-            CreatedDate = DateTime.Now,
-            UpdatedDate = DateTime.Now,
-            LastModifiedUtc = DateTimeOffset.Now,
+            CreatedDate = DateTimeService.Now,
+            UpdatedDate = DateTimeService.Now,
+            LastModifiedUtc = DateTimeService.NowOffSet,
             EntityState = SMIS.Domain.Enums.EntityStateEnum.Unchanged,
             IsPublic = false,
             Version = 0
