@@ -1,0 +1,167 @@
+@page "/categories/create"
+@using SMIS.UI.Services
+@using SMIS.Application.DTO.Categories
+@inject CategoryService CategoryService
+@inject NavigationManager Navigation
+
+<div class="page-container">
+    <div class="page-header">
+        <h3>📦 Create Category</h3>
+    </div>
+
+    <SfCard>
+        <CardHeader Title="Category Information" SubTitle="Fill in the details below"></CardHeader>
+        <CardContent>
+            @if (!string.IsNullOrEmpty(_errorMessage))
+            {
+                <SfMessage Severity="MessageSeverity.Error" ShowIcon="true" ShowCloseIcon="true" Closed="@(() => _errorMessage = "")">
+                    @_errorMessage
+                </SfMessage>
+            }
+
+            <div class="form-group">
+                <label class="required">Name</label>
+                <SfTextBox @bind-Value="@_model.Name" Placeholder="Enter category name" FloatLabelType="FloatLabelType.Auto"></SfTextBox>
+                @if (_validationErrors.ContainsKey("Name"))
+                {
+                    <span class="error-text">@_validationErrors["Name"]</span>
+                }
+            </div>
+
+            <div class="form-group">
+                <label>Code</label>
+                <SfTextBox @bind-Value="@_model.Code" Placeholder="Enter category code" FloatLabelType="FloatLabelType.Auto"></SfTextBox>
+            </div>
+
+            <div class="form-group">
+                <label>Description</label>
+                <SfTextBox @bind-Value="@_model.Description" Multiline="true" Placeholder="Enter description" FloatLabelType="FloatLabelType.Auto"></SfTextBox>
+            </div>
+
+            <div class="form-group">
+                <SfCheckBox @bind-Checked="@_model.IsActive" Label="Active"></SfCheckBox>
+            </div>
+
+            <div class="form-actions">
+                <SfButton Content="Cancel" CssClass="e-outline" @onclick="Cancel"></SfButton>
+                <SfButton Content="@(_isSaving ? "Creating..." : "Create")" IsPrimary="true" Disabled="@_isSaving" @onclick="SaveCategory"></SfButton>
+            </div>
+        </CardContent>
+    </SfCard>
+</div>
+
+<SfToast @ref="ToastObj" Title="Category" Content="@_toastMessage" ShowCloseButton="true">
+    <ToastPosition X="Right" Y="Top"></ToastPosition>
+</SfToast>
+
+@code {
+    private CategoryCreateDto _model = new() { IsActive = true, ShopId = "1" };
+    private Dictionary<string, string> _validationErrors = new();
+    private bool _isSaving = false;
+    private string _errorMessage = "";
+    private string _toastMessage = "";
+    private SfToast ToastObj;
+
+    private bool ValidateForm()
+    {
+        _validationErrors.Clear();
+
+        if (string.IsNullOrWhiteSpace(_model.Name))
+        {
+            _validationErrors["Name"] = "Category name is required";
+        }
+        else if (_model.Name.Length > 200)
+        {
+            _validationErrors["Name"] = "Category name must not exceed 200 characters";
+        }
+
+        if (!string.IsNullOrWhiteSpace(_model.Code) && _model.Code.Length > 50)
+        {
+            _validationErrors["Code"] = "Category code must not exceed 50 characters";
+        }
+
+        return _validationErrors.Count == 0;
+    }
+
+    private async Task SaveCategory()
+    {
+        if (!ValidateForm())
+        {
+            return;
+        }
+
+        _isSaving = true;
+        _errorMessage = "";
+
+        try
+        {
+            var result = await CategoryService.CreateAsync(_model);
+
+            if (result.Success)
+            {
+                _toastMessage = "Category created successfully!";
+                await ToastObj.ShowAsync();
+                await Task.Delay(1000);
+                Navigation.NavigateTo("/categories");
+            }
+            else
+            {
+                _errorMessage = result.Message ?? "Failed to create category";
+            }
+        }
+        catch (Exception ex)
+        {
+            _errorMessage = $"An error occurred: {ex.Message}";
+        }
+        finally
+        {
+            _isSaving = false;
+        }
+    }
+
+    private void Cancel()
+    {
+        Navigation.NavigateTo("/categories");
+    }
+}
+
+<style>
+    .page-container {
+        padding: 20px;
+        max-width: 600px;
+        margin: 0 auto;
+    }
+
+    .page-header {
+        margin-bottom: 20px;
+    }
+
+        .page-header h3 {
+            margin: 0;
+            font-size: 24px;
+            font-weight: 600;
+        }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+        .form-group label.required::after {
+            content: " *";
+            color: #e74c3c;
+        }
+
+    .error-text {
+        display: block;
+        color: #e74c3c;
+        font-size: 12px;
+        margin-top: 4px;
+    }
+
+    .form-actions {
+        display: flex;
+        gap: 10px;
+        justify-content: flex-end;
+        margin-top: 30px;
+    }
+</style>
