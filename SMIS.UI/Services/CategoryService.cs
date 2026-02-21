@@ -172,10 +172,16 @@ public class CategoryService : BaseService
             
             if (existing != null)
             {
-                existing.SetName(dto.Name);
-                existing.SetCode(dto.Code);
-                existing.SetDescription(dto.Description);
-                if (dto.IsActive) existing.Activate(); else existing.Deactivate();
+                // Conflict resolution: Compare timestamps - only update if server is newer
+                if (dto.LastModifiedUtc > existing.LastModifiedUtc)
+                {
+                    existing.SetName(dto.Name);
+                    existing.SetCode(dto.Code);
+                    existing.SetDescription(dto.Description);
+                    if (dto.IsActive) existing.Activate(); else existing.Deactivate();
+                    existing.LastModifiedUtc = dto.LastModifiedUtc;
+                }
+                
                 existing.IsSyncedToServer = true;
                 existing.LastSyncedAt = DateTime.UtcNow;
             }
@@ -183,7 +189,7 @@ public class CategoryService : BaseService
             {
                 var category = Category.Create(dto.Name, dto.ShopId, dto.Code, dto.Description, dto.IsActive);
                 category.Id = dto.Id;
-                category.CreatedDate = DateTime.UtcNow;
+                category.LastModifiedUtc = dto.LastModifiedUtc;
                 category.IsSyncedToServer = true;
                 category.LastSyncedAt = DateTime.UtcNow;
                 
@@ -203,7 +209,8 @@ public class CategoryService : BaseService
             Code = category.Code,
             Description = category.Description,
             IsActive = category.IsActive,
-            ShopId = category.ShopId
+            ShopId = category.ShopId,
+            LastModifiedUtc = category.LastModifiedUtc
         };
     }
 }
