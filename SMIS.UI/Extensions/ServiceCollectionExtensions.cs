@@ -2,6 +2,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.EntityFrameworkCore;
 using SMIS.Application.Identity.IServices;
 using SMIS.UI.Data;
+using SMIS.UI.Data.Interceptors;
 using SMIS.UI.Models;
 using SMIS.UI.Services;
 using SMIS.UI.Services.Auth;
@@ -16,18 +17,17 @@ public static class ServiceCollectionExtensions
     {
         var appSettings = configuration.GetSection("AppSettings").Get<AppSettings>() ?? new AppSettings();
 
+        // Current User (MAUI-specific implementation)
+        services.AddSingleton<ICurrentUser, MauiCurrentUser>();
+
+        // Register Interceptor
+        services.AddScoped<AuditInterceptor>();
+
         // Local Database
-        services.AddDbContext<LocalDbContext>(options =>
-        {
-            var dbPath = Path.Combine(FileSystem.AppDataDirectory, "smis_local.db");
-            options.UseSqlite($"Data Source={dbPath}");
-        });
+        services.AddDbContext<LocalDbContext>();
 
         // Connectivity
         services.AddSingleton(Connectivity.Current);
-
-        // Current User (MAUI-specific implementation)
-        services.AddSingleton<ICurrentUser, MauiCurrentUser>();
 
         // HTTP Client with authentication
         services.AddSingleton<ITokenStorage, SecureTokenStorage>();

@@ -127,7 +127,6 @@ public class CategoryService : BaseService
     private async Task<ApiResponse<CategoryDto>> CreateOfflineAsync(CategoryCreateDto dto)
     {
         var category = Category.Create(dto.Name, dto.ShopId, dto.Code, dto.Description, dto.IsActive);
-        category.CreatedDate = DateTimeService.Now;
         category.IsSyncedToServer = false;
         
         _localDb.Categories.Add(category);
@@ -152,7 +151,6 @@ public class CategoryService : BaseService
         category.SetCode(dto.Code);
         category.SetDescription(dto.Description);
         if (dto.IsActive) category.Activate(); else category.Deactivate();
-        category.UpdatedDate = DateTimeService.Now;
         category.IsSyncedToServer = false;
         
         await _localDb.SaveChangesAsync();
