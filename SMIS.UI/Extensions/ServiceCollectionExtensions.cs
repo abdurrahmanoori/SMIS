@@ -1,5 +1,6 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.EntityFrameworkCore;
+using SMIS.Application.Identity.IServices;
 using SMIS.UI.Data;
 using SMIS.UI.Models;
 using SMIS.UI.Services;
@@ -24,6 +25,9 @@ public static class ServiceCollectionExtensions
 
         // Connectivity
         services.AddSingleton(Connectivity.Current);
+
+        // Current User (MAUI-specific implementation)
+        services.AddSingleton<ICurrentUser, MauiCurrentUser>();
 
         // HTTP Client with authentication
         services.AddSingleton<ITokenStorage, SecureTokenStorage>();
