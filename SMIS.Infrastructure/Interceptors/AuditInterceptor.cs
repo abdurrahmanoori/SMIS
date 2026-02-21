@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore.Diagnostics;
 using SMIS.Application.Identity.IServices;
 using SMIS.Application.Services;
 using SMIS.Domain.Common.BaseAbstract;
+using SMIS.Domain.Services;
 using SMIS.Infrastructure.Context;
 
 namespace SMIS.Infrastructure.Interceptors
@@ -32,14 +33,14 @@ namespace SMIS.Infrastructure.Interceptors
             {
                 if (entry.State == EntityState.Added)
                 {
-                    entry.Entity.CreatedDate = DateTime.UtcNow;
+                    entry.Entity.CreatedDate = DateTimeService.Now;
                     entry.Entity.CreatedBy = _currentUser.GetId();
                     //await AssignSequenceNumber(entry.Entity, context);
                 }
 
                 if (entry.State == EntityState.Modified)
                 {
-                    entry.Entity.UpdatedDate = DateTime.UtcNow;
+                    entry.Entity.UpdatedDate = DateTimeService.Now;
                     entry.Entity.UpdatedBy = _currentUser.GetId();
                     entry.Property(e => e.CreatedDate).IsModified = false; // Ensure CreatedDate is not updated
                 }
