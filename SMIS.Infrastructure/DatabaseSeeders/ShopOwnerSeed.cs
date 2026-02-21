@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using SMIS.Domain.Entities;
+using SMIS.Domain.Services;
 
 namespace SMIS.Infrastructure.DatabaseSeeders;
 
@@ -24,6 +25,9 @@ public static class ShopOwnerSeed
         typeof(ShopOwner).GetProperty(nameof(ShopOwner.ShopName))!.SetValue(owner, GetShopName(shopId));
         owner.SetNationalIdCardNumber(nationalId);
         if (isActive) owner.Activate(); else owner.Deactivate();
+        typeof(ShopOwner).GetProperty(nameof(ShopOwner.CreatedDate))!.SetValue(owner, DateTimeService.Now);
+        typeof(ShopOwner).GetProperty(nameof(ShopOwner.UpdatedDate))!.SetValue(owner, DateTimeService.Now);
+        typeof(ShopOwner).GetProperty(nameof(ShopOwner.LastModifiedUtc))!.SetValue(owner, DateTimeService.NowOffSet);
 
         return owner;
     }
