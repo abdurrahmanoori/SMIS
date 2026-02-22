@@ -1,11 +1,9 @@
-using SMIS.Application.Identity.IServices;
-using SMIS.UI.Models;
-using SMIS.UI.Services.Base;
-using SMIS.UI.Services.Http;
+using SMIS.Infrastructure.Mobile.Services.Http;
+using SMIS.Infrastructure.Mobile.Services.Identity;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 
-namespace SMIS.UI.Services.Auth;
+namespace SMIS.Infrastructure.Mobile.Services.Auth;
 
 public interface IAuthService
 {
@@ -14,17 +12,17 @@ public interface IAuthService
     Task<bool> IsAuthenticatedAsync();
 }
 
-public class AuthService : BaseService, IAuthService
+public class AuthService : IAuthService
 {
     private readonly IApiClient _apiClient;
     private readonly ITokenStorage _tokenStorage;
-    private readonly MauiCurrentUser _currentUser;
+    private readonly IMobileCurrentUser _currentUser;
 
-    public AuthService(IApiClient apiClient, ITokenStorage tokenStorage, ICurrentUser currentUser)
+    public AuthService(IApiClient apiClient, ITokenStorage tokenStorage, IMobileCurrentUser currentUser)
     {
         _apiClient = apiClient;
         _tokenStorage = tokenStorage;
-        _currentUser = (MauiCurrentUser)currentUser;
+        _currentUser = currentUser;
     }
 
     public async Task<ApiResponse<LoginResponse>> LoginAsync(LoginRequest request)
@@ -35,7 +33,6 @@ public class AuthService : BaseService, IAuthService
         {
             await _tokenStorage.SetTokenAsync(response.Response.Token);
             
-            // Parse JWT token and set user claims
             var handler = new JwtSecurityTokenHandler();
             var jwtToken = handler.ReadJwtToken(response.Response.Token);
             var claimsPrincipal = new ClaimsPrincipal(new ClaimsIdentity(jwtToken.Claims, "jwt"));
@@ -56,4 +53,17 @@ public class AuthService : BaseService, IAuthService
         var token = await _tokenStorage.GetTokenAsync();
         return !string.IsNullOrEmpty(token);
     }
+}
+
+public class LoginRequest
+{
+    public string? UserName { get; set; }
+    public string? Password { get; set; }
+}
+
+public class LoginResponse
+{
+    public string? Token { get; set; }
+    public string? UserId { get; set; }
+    public string? UserName { get; set; }
 }

@@ -13,6 +13,14 @@ public class LocalDbContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
+        
         modelBuilder.ApplyConfiguration(new CategoryConfiguration());
+        
+        // Ignore navigation properties for offline database
+        modelBuilder.Entity<Category>(b =>
+        {
+            b.Ignore(e => e.Shop);
+            b.Ignore(e => e.Products);
+        });
     }
 }

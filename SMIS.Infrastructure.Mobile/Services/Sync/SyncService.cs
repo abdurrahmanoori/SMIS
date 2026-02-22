@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using SMIS.Domain.Common.Interfaces;
 using SMIS.Infrastructure.Mobile.Context;
+using SMIS.Infrastructure.Mobile.Services.Http;
 
 namespace SMIS.Infrastructure.Mobile.Services.Sync;
 
@@ -17,17 +18,22 @@ public class SyncService : ISyncService
 {
     private readonly LocalDbContext _localDb;
     private readonly IApiClient _apiClient;
+    private readonly IConnectivity? _connectivity;
 
-    public SyncService(LocalDbContext localDb, IApiClient apiClient)
+    public SyncService(LocalDbContext localDb, IApiClient apiClient, IConnectivity? connectivity = null)
     {
         _localDb = localDb;
         _apiClient = apiClient;
+        _connectivity = connectivity;
     }
 
     public async Task<SyncResult> SyncAsync<TEntity, TCreateDto, TUpdateDto, TDto>(
         ISyncConfiguration<TEntity, TCreateDto, TUpdateDto, TDto> config)
         where TEntity : class, ISyncableEntity
     {
+        if (_connectivity?.NetworkAccess != NetworkAccess.Internet)
+            return new SyncResult { Success = false, Message = "No internet connection" };
+
         var pendingEntities = await _localDb.Set<TEntity>()
             .Where(e => !e.IsSyncedToServer)
             .ToListAsync();
@@ -121,19 +127,6 @@ public class SyncService : ISyncService
             TotalFailed = results.Sum(r => r.FailedCount)
         };
     }
-}
-
-public interface IApiClient
-{
-    Task<ApiResponse<T>> GetAsync<T>(string endpoint);
-    Task<ApiResponse<TResponse>> PostAsync<TRequest, TResponse>(string endpoint, TRequest data);
-    Task<ApiResponse<TResponse>> PutAsync<TRequest, TResponse>(string endpoint, TRequest data);
-}
-
-public class ApiResponse<T>
-{
-    public bool Success { get; set; }
-    public T? Response { get; set; }
 }
 
 public class SyncResult
