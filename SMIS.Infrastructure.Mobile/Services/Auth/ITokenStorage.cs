@@ -1,4 +1,4 @@
-namespace SMIS.UI.Services.Auth;
+namespace SMIS.Infrastructure.Mobile.Services.Auth;
 
 public interface ITokenStorage
 {

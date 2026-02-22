@@ -1,15 +1,14 @@
 using MediatR;
-using SMIS.Application.Common;
 using SMIS.Application.DTO.Categories;
 using SMIS.Application.Features.Categories.Commands;
 using SMIS.Application.Features.Categories.Queries;
+using SMIS.Infrastructure.Mobile.Services.Http;
 using SMIS.Infrastructure.Mobile.Services.Sync;
-using SMIS.UI.Services.Base;
-//using UiApiResponse = SMIS.UI.Models.ApiResponse<T>;
+using AppPagedList = SMIS.Application.Common.PagedList<SMIS.Application.DTO.Categories.CategoryDto>;
 
 namespace SMIS.UI.Services;
 
-public class CategoryService : BaseService
+public class CategoryService
 {
     private readonly IMediator _mediator;
     private readonly ISyncService _syncService;
@@ -22,15 +21,15 @@ public class CategoryService : BaseService
         _connectivity = connectivity;
     }
 
-    public async Task<Models.ApiResponse<PagedList<CategoryDto>>> GetAllAsync(int pageNumber = 0, int pageSize = 0)
+    public async Task<ApiResponse<AppPagedList>> GetAllAsync(int pageNumber = 0, int pageSize = 0)
     {
-        pageNumber = pageNumber > 0 ? pageNumber : PagedList<CategoryDto>.DefaultPageNumber;
-        pageSize = pageSize > 0 ? pageSize : PagedList<CategoryDto>.DefaultPageSize;
+        pageNumber = pageNumber > 0 ? pageNumber : AppPagedList.DefaultPageNumber;
+        pageSize = pageSize > 0 ? pageSize : AppPagedList.DefaultPageSize;
 
         var query = new CategoryGetListQuery(pageNumber, pageSize);
         var result = await _mediator.Send(query);
 
-        return new Models.ApiResponse<PagedList<CategoryDto>>
+        return new ApiResponse<AppPagedList>
         {
             Success = result.Success,
             Response = result.Response,
@@ -38,12 +37,12 @@ public class CategoryService : BaseService
         };
     }
 
-    public async Task<Models.ApiResponse<CategoryDto>> GetByIdAsync(string id)
+    public async Task<ApiResponse<CategoryDto>> GetByIdAsync(string id)
     {
         var query = new CategoryGetByIdQuery(id);
         var result = await _mediator.Send(query);
 
-        return new Models.ApiResponse<CategoryDto>
+        return new ApiResponse<CategoryDto>
         {
             Success = result.Success,
             Response = result.Response,
@@ -51,18 +50,17 @@ public class CategoryService : BaseService
         };
     }
 
-    public async Task<Models.ApiResponse<CategoryDto>> CreateAsync(CategoryCreateDto dto)
+    public async Task<ApiResponse<CategoryDto>> CreateAsync(CategoryCreateDto dto)
     {
         var command = new CategoryCreateCommand(dto);
         var result = await _mediator.Send(command);
 
-        // Sync in background if online
         if (result.Success && _connectivity.NetworkAccess == NetworkAccess.Internet)
         {
             _ = Task.Run(() => _syncService.SyncCategoriesAsync());
         }
 
-        return new Models.ApiResponse<CategoryDto>
+        return new ApiResponse<CategoryDto>
         {
             Success = result.Success,
             Response = result.Response,
@@ -72,7 +70,7 @@ public class CategoryService : BaseService
         };
     }
 
-    public async Task<Models.ApiResponse<CategoryDto>> UpdateAsync(string id, CategoryUpdateDto dto)
+    public async Task<ApiResponse<CategoryDto>> UpdateAsync(string id, CategoryUpdateDto dto)
     {
         var updateDto = new CategoryCreateDto
         {
@@ -85,13 +83,12 @@ public class CategoryService : BaseService
         var command = new CategoryUpdateCommand(id, updateDto);
         var result = await _mediator.Send(command);
 
-        // Sync in background if online
         if (result.Success && _connectivity.NetworkAccess == NetworkAccess.Internet)
         {
             _ = Task.Run(() => _syncService.SyncCategoriesAsync());
         }
 
-        return new Models.ApiResponse<CategoryDto>
+        return new ApiResponse<CategoryDto>
         {
             Success = result.Success,
             Response = result.Response,

@@ -1,17 +1,8 @@
 using System.Net;
 using System.Net.Http.Json;
 using System.Text.Json;
-using SMIS.UI.Models;
 
-namespace SMIS.UI.Services.Http;
-
-public interface IApiClient
-{
-    Task<ApiResponse<TResponse>> GetAsync<TResponse>(string endpoint);
-    Task<ApiResponse<TResponse>> PostAsync<TRequest, TResponse>(string endpoint, TRequest data);
-    Task<ApiResponse<TResponse>> PutAsync<TRequest, TResponse>(string endpoint, TRequest data);
-    Task<ApiResponse<bool>> DeleteAsync(string endpoint);
-}
+namespace SMIS.Infrastructure.Mobile.Services.Http;
 
 public class ApiClient : IApiClient
 {
@@ -63,14 +54,12 @@ public class ApiClient : IApiClient
 
             try
             {
-                // Try to deserialize as Result<T> wrapper first
                 var resultWrapper = JsonSerializer.Deserialize<ApiResponse<T>>(content, _jsonOptions);
                 if (resultWrapper != null && resultWrapper.Response != null)
                 {
                     return resultWrapper;
                 }
                 
-                // If no wrapper, deserialize directly as T
                 var directResult = JsonSerializer.Deserialize<T>(content, _jsonOptions);
                 return new ApiResponse<T> { Success = true, Response = directResult };
             }
@@ -110,3 +99,5 @@ public class ApiClient : IApiClient
         };
     }
 }
+
+

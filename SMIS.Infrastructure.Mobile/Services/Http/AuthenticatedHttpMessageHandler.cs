@@ -1,6 +1,6 @@
-using SMIS.UI.Services.Auth;
+using SMIS.Infrastructure.Mobile.Services.Auth;
 
-namespace SMIS.UI.Services.Http;
+namespace SMIS.Infrastructure.Mobile.Services.Http;
 
 public class AuthenticatedHttpMessageHandler : DelegatingHandler
 {
