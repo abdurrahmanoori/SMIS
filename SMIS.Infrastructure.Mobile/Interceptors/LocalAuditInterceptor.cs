@@ -8,9 +8,9 @@ namespace SMIS.Infrastructure.Mobile.Interceptors;
 
 public class LocalAuditInterceptor : SaveChangesInterceptor
 {
-    private readonly ILocalCurrentUser _currentUser;
+    private readonly IMobileCurrentUser _currentUser;
 
-    public LocalAuditInterceptor(ILocalCurrentUser currentUser)
+    public LocalAuditInterceptor(IMobileCurrentUser currentUser)
     {
         _currentUser = currentUser;
     }
