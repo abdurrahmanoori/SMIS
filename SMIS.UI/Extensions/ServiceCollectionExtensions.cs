@@ -1,7 +1,9 @@
+using AutoMapper;
 using Microsoft.Extensions.Configuration;
 using MediatR;
 using SMIS.Application.Extensions;
 using SMIS.Application.Identity.IServices;
+using SMIS.Application.Mappings;
 using SMIS.Infrastructure.Mobile.Extensions;
 using SMIS.Infrastructure.Mobile.Services.Identity;
 using SMIS.UI.Services;
@@ -20,6 +22,9 @@ public static class ServiceCollectionExtensions
 
         // Application Layer - MediatR, Validators, AutoMapper, Domain Services
         services.ConfigureApplicationServices();
+        
+        // AutoMapper
+        services.AddAutoMapper(typeof(MappingProfile).Assembly);
         
         // Override ICurrentUser with mobile implementation
         services.AddSingleton<ICurrentUser>(sp => sp.GetRequiredService<IMobileCurrentUser>());
