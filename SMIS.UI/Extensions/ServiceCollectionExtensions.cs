@@ -1,5 +1,6 @@
 using Microsoft.Extensions.Configuration;
 using MediatR;
+using SMIS.Application.Extensions;
 using SMIS.Application.Identity.IServices;
 using SMIS.Infrastructure.Mobile.Extensions;
 using SMIS.Infrastructure.Mobile.Services.Identity;
@@ -14,12 +15,17 @@ public static class ServiceCollectionExtensions
         var apiBaseUrl = configuration["AppSettings:ApiBaseUrl"] ?? "https://localhost:7216";
         var timeoutSeconds = int.Parse(configuration["AppSettings:TimeoutSeconds"] ?? "30");
 
+        // Infrastructure.Mobile - DbContext, Repositories, HTTP, Auth, Sync
         services.AddMobileInfrastructure(apiBaseUrl, timeoutSeconds);
 
-        services.AddMediatR(typeof(SMIS.Application.AssemblyReference).Assembly);
+        // Application Layer - MediatR, Validators, AutoMapper, Domain Services
+        services.ConfigureApplicationServices();
+        
+        // Override ICurrentUser with mobile implementation
         services.AddSingleton<ICurrentUser>(sp => sp.GetRequiredService<IMobileCurrentUser>());
+        
+        // MAUI-specific services
         services.AddSingleton(Connectivity.Current);
-
         services.AddScoped<AuthServiceWrapper>();
         services.AddScoped<CategoryService>();
 
