@@ -16,7 +16,6 @@ public static class MobileInfrastructureServiceRegistration
 {
     public static IServiceCollection AddMobileInfrastructure(
         this IServiceCollection services, 
-        string databasePath,
         string apiBaseUrl,
         int timeoutSeconds = 30)
     {
@@ -25,11 +24,12 @@ public static class MobileInfrastructureServiceRegistration
         services.AddSingleton<ILocalCurrentUser, LocalCurrentUser>();
         services.AddSingleton<LocalAuditInterceptor>();
         
-        // Database
+        // Database - path will be determined at runtime by platform
         services.AddDbContext<LocalDbContext>((serviceProvider, options) =>
         {
             var interceptor = serviceProvider.GetRequiredService<LocalAuditInterceptor>();
-            options.UseSqlite($"Data Source={databasePath}")
+            var dbPath = GetDatabasePath();
+            options.UseSqlite($"Data Source={dbPath}")
                    .AddInterceptors(interceptor);
         });
 
@@ -52,5 +52,25 @@ public static class MobileInfrastructureServiceRegistration
         services.AddScoped<ISyncService, SyncService>();
 
         return services;
+    }
+
+    private static string GetDatabasePath()
+    {
+        var fileName = "smis_local.db";
+        
+#if ANDROID
+        var path = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+        return Path.Combine(path, fileName);
+#elif IOS || MACCATALYST
+        var path = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+        var library = Path.Combine(path, "..", "Library");
+        return Path.Combine(library, fileName);
+#elif WINDOWS
+        var path = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+        return Path.Combine(path, fileName);
+#else
+        var path = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+        return Path.Combine(path, fileName);
+#endif
     }
 }
