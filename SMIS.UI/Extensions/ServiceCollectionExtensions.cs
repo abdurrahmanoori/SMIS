@@ -14,8 +14,7 @@ public static class ServiceCollectionExtensions
         var apiBaseUrl = configuration["AppSettings:ApiBaseUrl"] ?? "https://localhost:7216";
         var timeoutSeconds = int.Parse(configuration["AppSettings:TimeoutSeconds"] ?? "30");
 
-        var dbPath = Path.Combine(FileSystem.AppDataDirectory, "smis_local.db");
-        services.AddMobileInfrastructure(dbPath, apiBaseUrl, timeoutSeconds);
+        services.AddMobileInfrastructure(apiBaseUrl, timeoutSeconds);
 
         services.AddMediatR(typeof(SMIS.Application.AssemblyReference).Assembly);
         services.AddSingleton<ICurrentUser>(sp => sp.GetRequiredService<IMobileCurrentUser>());
