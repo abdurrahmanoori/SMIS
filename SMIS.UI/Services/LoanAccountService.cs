@@ -1,11 +1,11 @@
+using SMIS.Application.DTO.LoanAccounts;
 using SMIS.Infrastructure.Mobile.Services.Http;
-using SMIS.UI.Models;
 
 namespace SMIS.UI.Services;
 
 public interface ILoanAccountService
 {
-    Task<ApiResponse<PaymentAllocationResultDto>> ProcessPaymentAsync(ProcessPaymentRequest request);
+    Task<ApiResponse<PaymentAllocationResultDto>> ProcessPaymentAsync(CustomerPaymentDto request);
 }
 
 public class LoanAccountService : ILoanAccountService
@@ -17,9 +17,9 @@ public class LoanAccountService : ILoanAccountService
         _apiClient = apiClient;
     }
 
-    public async Task<ApiResponse<PaymentAllocationResultDto>> ProcessPaymentAsync(ProcessPaymentRequest request)
+    public async Task<ApiResponse<PaymentAllocationResultDto>> ProcessPaymentAsync(CustomerPaymentDto request)
     {
-        return await _apiClient.PostAsync<ProcessPaymentRequest, PaymentAllocationResultDto>(
+        return await _apiClient.PostAsync<CustomerPaymentDto, PaymentAllocationResultDto>(
             "/api/loanaccounts/process-payment",
             request
         );
