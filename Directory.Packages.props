@@ -9,6 +9,7 @@
     <PackageVersion Include="FluentValidation" Version="11.11.0" />
     <PackageVersion Include="FluentValidation.AspNetCore" Version="11.3.0" />
     <PackageVersion Include="FluentValidation.DependencyInjectionExtensions" Version="11.11.0" />
+    <PackageVersion Include="Modern.FluentValidation.Extensions" Version="1.1.2" />
     <PackageVersion Include="Newtonsoft.Json" Version="13.0.3" />
     <!-- Serilog / Logging -->
     <PackageVersion Include="Serilog" Version="4.3.0" />

@@ -17,6 +17,7 @@
 	  <PackageReference Include="Microsoft.Extensions.DependencyInjection" />
 	  <PackageReference Include="Microsoft.AspNetCore.Identity" />
 	  <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" />
+	  <PackageReference Include="Modern.FluentValidation.Extensions" />
 	  <PackageReference Include="System.IdentityModel.Tokens.Jwt" />
 
 	  <PackageReference Include="MediatR" />
