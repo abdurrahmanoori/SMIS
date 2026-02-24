@@ -5,6 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Scrutor;
+using SMIS.Application.Identity.IServices;
 using SMIS.Application.Mappings;
 using SMIS.Application.Services;
 using SMIS.Domain.Contracts;
@@ -12,7 +13,7 @@ using SMIS.Infrastructure.Server.Context;
 using SMIS.Infrastructure.Server.ContractsImplementation;
 using SMIS.Infrastructure.Server.Interceptors;
 using SMIS.Infrastructure.Server.Services;
-
+using SMIS.Infrastructure.Server.Services.Identity;
 // Plan (pseudocode):
 // - Add internal marker types in the target namespaces to avoid magic strings.
 // - Use typeof(NamespaceMarker).Namespace to get the namespace string.
@@ -47,6 +48,8 @@ namespace SMIS.Infrastructure.Server.Extensions
                 services.AddScoped<IPKGenerator, DevPKGenerator>();
             }
 
+            // Register ICurrentUser for Web API (uses HttpContext)
+            services.AddScoped<ICurrentUser, ServerCurrentUser>();
 
             // Automatically register repositories with Scrutor (no magic strings)
             services.Scan(scan => scan
