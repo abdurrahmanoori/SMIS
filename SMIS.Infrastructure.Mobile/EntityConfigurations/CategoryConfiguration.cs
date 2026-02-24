@@ -10,33 +10,35 @@ public class CategoryConfiguration : IEntityTypeConfiguration<Category>
     {
         builder.HasKey(e => e.Id);
         
-        builder.Property(e => e.Name)
-            .IsRequired()
-            .HasMaxLength(200);
+        // BaseEntity properties
+        builder.Property(e => e.Id).IsRequired();
+        builder.Property(e => e.IsPublic).IsRequired().HasDefaultValue(false);
+        builder.Property(e => e.Version).IsRequired().HasDefaultValue(0);
+        builder.Property(e => e.EntityState).IsRequired();
+        builder.Property(e => e.LastModifiedUtc).IsRequired();
+        builder.Property(e => e.IsSyncedToServer).IsRequired().HasDefaultValue(false);
+        builder.Property(e => e.LastSyncedAt);
         
-        builder.Property(e => e.Code)
-            .HasMaxLength(50);
+        // BaseAuditableEntity properties
+        builder.Property(e => e.CreatedBy);
+        builder.Property(e => e.CreatedDate);
+        builder.Property(e => e.UpdatedBy);
+        builder.Property(e => e.UpdatedDate);
         
-        builder.Property(e => e.Description)
-            .HasMaxLength(500);
+        // Category properties
+        builder.Property(e => e.Name).IsRequired().HasMaxLength(200);
+        builder.Property(e => e.Code).HasMaxLength(50);
+        builder.Property(e => e.Description).HasMaxLength(500);
+        builder.Property(e => e.IsActive).IsRequired();
+        builder.Property(e => e.ShopId).IsRequired();
         
-        builder.Property(e => e.IsActive)
-            .IsRequired();
-        
-        builder.Property(e => e.ShopId)
-            .IsRequired();
-        
-        builder.Property(e => e.IsSyncedToServer)
-            .IsRequired()
-            .HasDefaultValue(false);
-        
-        builder.Property(e => e.LastModifiedUtc)
-            .IsRequired();
-        
+        // Indexes
         builder.HasIndex(e => e.Code);
         builder.HasIndex(e => e.IsSyncedToServer);
         builder.HasIndex(e => e.ShopId);
+        builder.HasIndex(e => e.LastModifiedUtc);
         
+        // Ignore navigation properties
         builder.Ignore(e => e.Shop);
         builder.Ignore(e => e.Products);
     }

@@ -11,18 +11,18 @@ public class LocalDbContext : DbContext
 
     public DbSet<Category> Categories => Set<Category>();
 
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
+        base.OnConfiguring(optionsBuilder);
+        optionsBuilder.ConfigureWarnings(warnings => 
+            warnings.Ignore(Microsoft.EntityFrameworkCore.Diagnostics.RelationalEventId.PendingModelChangesWarning));
+    }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
         
         modelBuilder.ApplyConfiguration(new CategoryConfiguration());
-        
-        // Ignore navigation properties for offline database
-        modelBuilder.Entity<Category>(b =>
-        {
-            b.Ignore(e => e.Shop);
-            b.Ignore(e => e.Products);
-        });
         
         // Seed data
         CategorySeed.DataSeed(modelBuilder);
