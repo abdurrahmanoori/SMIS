@@ -57,15 +57,15 @@ public class CategoryService
 
         if (result.Success && _connectivity.NetworkAccess == NetworkAccess.Internet)
         {
-            _ = Task.Run(() => _syncService.SyncCategoriesAsync());
+            _ = Task.Run(async () => await _syncService.SyncCategoriesAsync());
         }
 
         return new ApiResponse<CategoryDto>
         {
             Success = result.Success,
             Response = result.Response,
-            Message = result.Message ?? (_connectivity.NetworkAccess != NetworkAccess.Internet 
-                ? "Created offline - will sync when online" 
+            Message = result.Message ?? (_connectivity.NetworkAccess != NetworkAccess.Internet
+                ? "Created offline - will sync when online"
                 : "Created successfully")
         };
     }
@@ -79,21 +79,21 @@ public class CategoryService
             Description = dto.Description,
             IsActive = dto.IsActive
         };
-        
+
         var command = new CategoryUpdateCommand(id, updateDto);
         var result = await _mediator.Send(command);
 
         if (result.Success && _connectivity.NetworkAccess == NetworkAccess.Internet)
         {
-            _ = Task.Run(() => _syncService.SyncCategoriesAsync());
+            _ = Task.Run(async () =>await _syncService.SyncCategoriesAsync());
         }
 
         return new ApiResponse<CategoryDto>
         {
             Success = result.Success,
             Response = result.Response,
-            Message = result.Message ?? (_connectivity.NetworkAccess != NetworkAccess.Internet 
-                ? "Updated offline - will sync when online" 
+            Message = result.Message ?? (_connectivity.NetworkAccess != NetworkAccess.Internet
+                ? "Updated offline - will sync when online"
                 : "Updated successfully")
         };
     }
