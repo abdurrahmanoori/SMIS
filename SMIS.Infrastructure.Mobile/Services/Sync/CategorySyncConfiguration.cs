@@ -6,7 +6,7 @@ namespace SMIS.Infrastructure.Mobile.Services.Sync;
 public class CategorySyncConfiguration : ISyncConfiguration<Category, CategoryCreateDto, CategoryUpdateDto, CategoryDto>
 {
     public string EntityName => "Category";
-    public string ApiEndpoint => "/api/categories";
+    public string ApiEndpoint => "/api/Category";
 
     public CategoryCreateDto MapToCreateDto(Category entity)
     {
