@@ -31,7 +31,7 @@ namespace SMIS.UI
                 builder.Configuration.AddConfiguration(config);
             }
 
-            // Register application services
+            // Register application services (includes Mobile Infrastructure)
             builder.Services.AddAppServices(builder.Configuration);
 
             builder.Services.AddMauiBlazorWebView();
@@ -44,11 +44,14 @@ namespace SMIS.UI
 
             var app = builder.Build();
 
-            // Apply migrations on startup
+            // Apply migrations on startup - creates DB in platform-specific location
             using (var scope = app.Services.CreateScope())
             {
                 var db = scope.ServiceProvider.GetRequiredService<LocalDbContext>();
+                var dbPath = db.Database.GetConnectionString();
+                System.Diagnostics.Debug.WriteLine($"[MAUI] Database location: {dbPath}");
                 db.Database.Migrate();
+                System.Diagnostics.Debug.WriteLine($"[MAUI] Database migrated successfully");
             }
 
             return app;
