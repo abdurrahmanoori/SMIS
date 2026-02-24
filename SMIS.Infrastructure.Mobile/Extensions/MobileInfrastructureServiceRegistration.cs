@@ -24,14 +24,16 @@ public static class MobileInfrastructureServiceRegistration
         // Current User
         services.AddSingleton<IMobileCurrentUser, MobileCurrentUser>();
         services.AddSingleton<LocalAuditInterceptor>();
+        services.AddSingleton<EntityPKInterceptor>();
 
         // Database - path will be determined at runtime by platform
         services.AddDbContext<LocalDbContext>((serviceProvider, options) =>
         {
-            var interceptor = serviceProvider.GetRequiredService<LocalAuditInterceptor>();
+            var auditInterceptor = serviceProvider.GetRequiredService<LocalAuditInterceptor>();
+            var pkInterceptor = serviceProvider.GetRequiredService<EntityPKInterceptor>();
             var dbPath = GetDatabasePath();
             options.UseSqlite($"Data Source={dbPath}")
-                   .AddInterceptors(interceptor);
+                   .AddInterceptors(auditInterceptor, pkInterceptor);
         });
 
         services.Scan(scan => scan

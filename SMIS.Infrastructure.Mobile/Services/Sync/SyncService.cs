@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using SMIS.Domain.Common.Interfaces;
+using SMIS.Domain.Services;
 using SMIS.Infrastructure.Mobile.Context;
 using SMIS.Infrastructure.Mobile.Services.Http;
 
@@ -64,7 +65,7 @@ public class SyncService : ISyncService
                         if (result.Success)
                         {
                             entity.IsSyncedToServer = true;
-                            entity.LastSyncedAt = DateTime.UtcNow;
+                            entity.LastSyncedAt = DateTimeService.UtcNow;
                             synced++;
                         }
                         else failed++;
@@ -72,7 +73,7 @@ public class SyncService : ISyncService
                     else
                     {
                         entity.IsSyncedToServer = true;
-                        entity.LastSyncedAt = DateTime.UtcNow;
+                        entity.LastSyncedAt = DateTimeService.UtcNow;
                         synced++;
                     }
                 }
@@ -84,7 +85,7 @@ public class SyncService : ISyncService
                     if (result.Success)
                     {
                         entity.IsSyncedToServer = true;
-                        entity.LastSyncedAt = DateTime.UtcNow;
+                        entity.LastSyncedAt = DateTimeService.UtcNow;
                         synced++;
                     }
                     else failed++;

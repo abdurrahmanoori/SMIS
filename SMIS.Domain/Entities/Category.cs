@@ -12,10 +12,7 @@ public class Category : BaseAuditableEntity, IShopEntity, ISyncableEntity
     [MaxLength(200)]
     public string Name { get; private set; } = string.Empty;
     
-    public bool IsSyncedToServer { get; set; }
-    public DateTime? LastSyncedAt { get; set; }
-    public DateTimeOffset LastModifiedUtc { get; set; } = DateTimeOffset.UtcNow;
-    
+   
     [MaxLength(50)]
     public string? Code { get; private set; }
     
