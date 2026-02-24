@@ -1,8 +1,12 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using SMIS.Application.Repositories.Categories;
+using SMIS.Application.Services;
 using SMIS.Infrastructure.Mobile.Context;
 using SMIS.Infrastructure.Mobile.Interceptors;
 using SMIS.Infrastructure.Mobile.Repositories;
+using SMIS.Infrastructure.Mobile.Repositories.Categories;
+using SMIS.Infrastructure.Mobile.Services;
 using SMIS.Infrastructure.Mobile.Services.Auth;
 using SMIS.Infrastructure.Mobile.Services.Http;
 using SMIS.Infrastructure.Mobile.Services.Identity;
@@ -30,12 +34,19 @@ public static class MobileInfrastructureServiceRegistration
                    .AddInterceptors(interceptor);
         });
 
-        // Auto-register all repositories using Scrutor
         services.Scan(scan => scan
-            .FromAssembliesOf(typeof(MobileInfrastructureServiceRegistration))
-            .AddClasses(c => c.InNamespaces("SMIS.Infrastructure.Mobile.Repositories"))
-            .AsImplementedInterfaces()
-            .WithScopedLifetime());
+      .FromAssembliesOf(typeof(MobileInfrastructureServiceRegistration))
+      .AddClasses(c => c.InNamespaces("SMIS.Infrastructure.Mobile.Repositories"))
+      .AsImplementedInterfaces()
+      .WithScopedLifetime());
+        // Repositories
+        services.AddScoped<ILocalUnitOfWork, LocalUnitOfWork>();
+        //services.AddScoped<ICategoryRepository, LocalCategoryRepository>();
+
+        // Domain Services (Mobile implementations)
+        // Note: DateTimeService is static in Domain layer - no registration needed
+        services.AddSingleton<IPublicIdGenerator, MobilePublicIdGenerator>();
+        services.AddScoped<ITranslationService, MobileTranslationService>();
 
         // Auth & HTTP
         services.AddSingleton<ITokenStorage, SecureTokenStorage>();
@@ -54,7 +65,7 @@ public static class MobileInfrastructureServiceRegistration
         return services;
     }
 
-    private static string GetDatabasePath()
+    private static string GetDatabasePath( )
     {
         var fileName = "smis_local.db";
 
