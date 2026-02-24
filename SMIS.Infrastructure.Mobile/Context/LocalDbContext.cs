@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using SMIS.Domain.Entities;
+using SMIS.Infrastructure.Mobile.DatabaseSeeders;
 using SMIS.Infrastructure.Mobile.EntityConfigurations;
 
 namespace SMIS.Infrastructure.Mobile.Context;
@@ -22,5 +23,8 @@ public class LocalDbContext : DbContext
             b.Ignore(e => e.Shop);
             b.Ignore(e => e.Products);
         });
+        
+        // Seed data
+        CategorySeed.DataSeed(modelBuilder);
     }
 }
