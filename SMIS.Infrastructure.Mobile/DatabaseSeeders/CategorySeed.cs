@@ -18,24 +18,17 @@ public static class CategorySeed
         );
     }
 
-    private static object CreateCategory(string id, string name, string shopId, string? code = null, string? description = null)
+    private static Category CreateCategory(string id, string name, string shopId, string? code = null, string? description = null)
     {
-        return new
-        {
-            Id = id,
-            Name = name,
-            ShopId = shopId,
-            Code = code,
-            Description = description,
-            IsActive = true,
-            IsSyncedToServer = true,
-            LastSyncedAt = DateTimeService.UtcNow,
-            LastModifiedUtc = DateTimeService.UtcNowOffSet,
-            CreatedDate = DateTimeService.UtcNow,
-            UpdatedDate = DateTimeService.UtcNow,
-            EntityState = SMIS.Domain.Enums.EntityStateEnum.Unchanged,
-            IsPublic = false,
-            Version = 0
-        };
+        var category = Category.Create(name, shopId, code, description, true);
+        
+        typeof(Category).GetProperty(nameof(Category.Id))!.SetValue(category, id);
+        typeof(Category).GetProperty(nameof(Category.IsSyncedToServer))!.SetValue(category, true);
+        typeof(Category).GetProperty(nameof(Category.LastSyncedAt))!.SetValue(category, DateTimeService.UtcNow);
+        typeof(Category).GetProperty(nameof(Category.CreatedDate))!.SetValue(category, DateTimeService.UtcNow);
+        typeof(Category).GetProperty(nameof(Category.UpdatedDate))!.SetValue(category, DateTimeService.UtcNow);
+        typeof(Category).GetProperty(nameof(Category.LastModifiedUtc))!.SetValue(category, DateTimeService.UtcNowOffSet);
+        
+        return category;
     }
 }
