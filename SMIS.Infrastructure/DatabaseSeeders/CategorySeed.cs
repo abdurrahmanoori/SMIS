@@ -18,22 +18,15 @@ public static class CategorySeed
         );
     }
 
-    private static object CreateCategory(string id, string name, string shopId, string? code = null, string? description = null)
+    private static Category CreateCategory(string id, string name, string shopId, string? code = null, string? description = null)
     {
-        return new
-        {
-            Id = id,
-            Name = name,
-            ShopId = shopId,
-            Code = code,
-            Description = description,
-            IsActive = true,
-            CreatedDate = DateTimeService.Now,
-            UpdatedDate = DateTimeService.Now,
-            LastModifiedUtc = DateTimeService.NowOffSet,
-            EntityState = SMIS.Domain.Enums.EntityStateEnum.Unchanged,
-            IsPublic = false,
-            Version = 0
-        };
+        var category = Category.Create(name, shopId, code, description, true);
+        
+        typeof(Category).GetProperty(nameof(Category.Id))!.SetValue(category, id);
+        typeof(Category).GetProperty(nameof(Category.CreatedDate))!.SetValue(category, DateTimeService.Now);
+        typeof(Category).GetProperty(nameof(Category.UpdatedDate))!.SetValue(category, DateTimeService.Now);
+        typeof(Category).GetProperty(nameof(Category.LastModifiedUtc))!.SetValue(category, DateTimeService.NowOffSet);
+        
+        return category;
     }
 }
