@@ -67,23 +67,24 @@ public static class MobileInfrastructureServiceRegistration
         return services;
     }
 
-    private static string GetDatabasePath( )
+    private static string GetDatabasePath()
     {
         var fileName = "smis_local.db";
+        string path;
 
 #if ANDROID
-        var path = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-        return Path.Combine(path, fileName);
+        path = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
 #elif IOS || MACCATALYST
-        var path = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-        var library = Path.Combine(path, "..", "Library");
-        return Path.Combine(library, fileName);
+        path = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+        path = Path.Combine(path, "..", "Library");
 #elif WINDOWS
-        var path = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-        return Path.Combine(path, fileName);
+        path = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
 #else
-        var path = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-        return Path.Combine(path, fileName);
+        path = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
 #endif
+
+        var fullPath = Path.Combine(path, fileName);
+        System.Diagnostics.Debug.WriteLine($"Database path: {fullPath}");
+        return fullPath;
     }
 }
