@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SMIS.Infrastructure.Mobile.Context;
 
@@ -10,9 +11,11 @@ using SMIS.Infrastructure.Mobile.Context;
 namespace SMIS.Infrastructure.Mobile.Migrations
 {
     [DbContext(typeof(LocalDbContext))]
-    partial class LocalDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260224160810_InitialMobileMigsdrationd")]
+    partial class InitialMobileMigsdrationd
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.0");
@@ -95,102 +98,102 @@ namespace SMIS.Infrastructure.Mobile.Migrations
                         {
                             Id = "1",
                             Code = "BEV",
-                            CreatedDate = new DateTime(2026, 2, 24, 16, 15, 1, 672, DateTimeKind.Utc).AddTicks(3268),
+                            CreatedDate = new DateTime(2026, 2, 24, 16, 8, 9, 996, DateTimeKind.Utc).AddTicks(1594),
                             Description = "Drinks and beverages",
                             EntityState = 0,
                             IsActive = true,
                             IsPublic = false,
                             IsSyncedToServer = true,
-                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 24, 16, 15, 1, 672, DateTimeKind.Unspecified).AddTicks(5450), new TimeSpan(0, 0, 0, 0, 0)),
-                            LastSyncedAt = new DateTime(2026, 2, 24, 16, 15, 1, 672, DateTimeKind.Utc).AddTicks(2577),
+                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 24, 16, 8, 9, 996, DateTimeKind.Unspecified).AddTicks(3371), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastSyncedAt = new DateTime(2026, 2, 24, 16, 8, 9, 996, DateTimeKind.Utc).AddTicks(720),
                             Name = "Beverages",
                             ShopId = "1",
-                            UpdatedDate = new DateTime(2026, 2, 24, 16, 15, 1, 672, DateTimeKind.Utc).AddTicks(3844),
+                            UpdatedDate = new DateTime(2026, 2, 24, 16, 8, 9, 996, DateTimeKind.Utc).AddTicks(2233),
                             Version = 0
                         },
                         new
                         {
                             Id = "2",
                             Code = "FOOD",
-                            CreatedDate = new DateTime(2026, 2, 24, 16, 15, 1, 672, DateTimeKind.Utc).AddTicks(9060),
+                            CreatedDate = new DateTime(2026, 2, 24, 16, 8, 9, 996, DateTimeKind.Utc).AddTicks(6668),
                             Description = "Edible products and snacks",
                             EntityState = 0,
                             IsActive = true,
                             IsPublic = false,
                             IsSyncedToServer = true,
-                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 24, 16, 15, 1, 673, DateTimeKind.Unspecified).AddTicks(726), new TimeSpan(0, 0, 0, 0, 0)),
-                            LastSyncedAt = new DateTime(2026, 2, 24, 16, 15, 1, 672, DateTimeKind.Utc).AddTicks(8093),
+                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 24, 16, 8, 9, 996, DateTimeKind.Unspecified).AddTicks(8325), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastSyncedAt = new DateTime(2026, 2, 24, 16, 8, 9, 996, DateTimeKind.Utc).AddTicks(5812),
                             Name = "Food Items",
                             ShopId = "1",
-                            UpdatedDate = new DateTime(2026, 2, 24, 16, 15, 1, 672, DateTimeKind.Utc).AddTicks(9890),
+                            UpdatedDate = new DateTime(2026, 2, 24, 16, 8, 9, 996, DateTimeKind.Utc).AddTicks(7436),
                             Version = 0
                         },
                         new
                         {
                             Id = "3",
                             Code = "STAT",
-                            CreatedDate = new DateTime(2026, 2, 24, 16, 15, 1, 673, DateTimeKind.Utc).AddTicks(4600),
+                            CreatedDate = new DateTime(2026, 2, 24, 16, 8, 9, 997, DateTimeKind.Utc).AddTicks(1896),
                             Description = "Office and school supplies",
                             EntityState = 0,
                             IsActive = true,
                             IsPublic = false,
                             IsSyncedToServer = true,
-                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 24, 16, 15, 1, 673, DateTimeKind.Unspecified).AddTicks(6664), new TimeSpan(0, 0, 0, 0, 0)),
-                            LastSyncedAt = new DateTime(2026, 2, 24, 16, 15, 1, 673, DateTimeKind.Utc).AddTicks(3506),
+                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 24, 16, 8, 9, 997, DateTimeKind.Unspecified).AddTicks(3825), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastSyncedAt = new DateTime(2026, 2, 24, 16, 8, 9, 997, DateTimeKind.Utc).AddTicks(875),
                             Name = "Stationery",
                             ShopId = "1",
-                            UpdatedDate = new DateTime(2026, 2, 24, 16, 15, 1, 673, DateTimeKind.Utc).AddTicks(5581),
+                            UpdatedDate = new DateTime(2026, 2, 24, 16, 8, 9, 997, DateTimeKind.Utc).AddTicks(2817),
                             Version = 0
                         },
                         new
                         {
                             Id = "4",
                             Code = "GROC",
-                            CreatedDate = new DateTime(2026, 2, 24, 16, 15, 1, 673, DateTimeKind.Utc).AddTicks(7647),
+                            CreatedDate = new DateTime(2026, 2, 24, 16, 8, 9, 997, DateTimeKind.Utc).AddTicks(4751),
                             Description = "Daily household items",
                             EntityState = 0,
                             IsActive = true,
                             IsPublic = false,
                             IsSyncedToServer = true,
-                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 24, 16, 15, 1, 673, DateTimeKind.Unspecified).AddTicks(7657), new TimeSpan(0, 0, 0, 0, 0)),
-                            LastSyncedAt = new DateTime(2026, 2, 24, 16, 15, 1, 673, DateTimeKind.Utc).AddTicks(7635),
+                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 24, 16, 8, 9, 997, DateTimeKind.Unspecified).AddTicks(4759), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastSyncedAt = new DateTime(2026, 2, 24, 16, 8, 9, 997, DateTimeKind.Utc).AddTicks(4740),
                             Name = "Grocery",
                             ShopId = "1",
-                            UpdatedDate = new DateTime(2026, 2, 24, 16, 15, 1, 673, DateTimeKind.Utc).AddTicks(7652),
+                            UpdatedDate = new DateTime(2026, 2, 24, 16, 8, 9, 997, DateTimeKind.Utc).AddTicks(4755),
                             Version = 0
                         },
                         new
                         {
                             Id = "5",
                             Code = "CARE",
-                            CreatedDate = new DateTime(2026, 2, 24, 16, 15, 1, 673, DateTimeKind.Utc).AddTicks(7677),
+                            CreatedDate = new DateTime(2026, 2, 24, 16, 8, 9, 997, DateTimeKind.Utc).AddTicks(4779),
                             Description = "Health and hygiene products",
                             EntityState = 0,
                             IsActive = true,
                             IsPublic = false,
                             IsSyncedToServer = true,
-                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 24, 16, 15, 1, 673, DateTimeKind.Unspecified).AddTicks(7684), new TimeSpan(0, 0, 0, 0, 0)),
-                            LastSyncedAt = new DateTime(2026, 2, 24, 16, 15, 1, 673, DateTimeKind.Utc).AddTicks(7674),
+                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 24, 16, 8, 9, 997, DateTimeKind.Unspecified).AddTicks(4785), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastSyncedAt = new DateTime(2026, 2, 24, 16, 8, 9, 997, DateTimeKind.Utc).AddTicks(4775),
                             Name = "Personal Care",
                             ShopId = "1",
-                            UpdatedDate = new DateTime(2026, 2, 24, 16, 15, 1, 673, DateTimeKind.Utc).AddTicks(7681),
+                            UpdatedDate = new DateTime(2026, 2, 24, 16, 8, 9, 997, DateTimeKind.Utc).AddTicks(4782),
                             Version = 0
                         },
                         new
                         {
                             Id = "6",
                             Code = "ELEC",
-                            CreatedDate = new DateTime(2026, 2, 24, 16, 15, 1, 673, DateTimeKind.Utc).AddTicks(7701),
+                            CreatedDate = new DateTime(2026, 2, 24, 16, 8, 9, 997, DateTimeKind.Utc).AddTicks(4857),
                             Description = "Electronic devices and accessories",
                             EntityState = 0,
                             IsActive = true,
                             IsPublic = false,
                             IsSyncedToServer = true,
-                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 24, 16, 15, 1, 673, DateTimeKind.Unspecified).AddTicks(7707), new TimeSpan(0, 0, 0, 0, 0)),
-                            LastSyncedAt = new DateTime(2026, 2, 24, 16, 15, 1, 673, DateTimeKind.Utc).AddTicks(7697),
+                            LastModifiedUtc = new DateTimeOffset(new DateTime(2026, 2, 24, 16, 8, 9, 997, DateTimeKind.Unspecified).AddTicks(4863), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastSyncedAt = new DateTime(2026, 2, 24, 16, 8, 9, 997, DateTimeKind.Utc).AddTicks(4853),
                             Name = "Electronics",
                             ShopId = "1",
-                            UpdatedDate = new DateTime(2026, 2, 24, 16, 15, 1, 673, DateTimeKind.Utc).AddTicks(7704),
+                            UpdatedDate = new DateTime(2026, 2, 24, 16, 8, 9, 997, DateTimeKind.Utc).AddTicks(4860),
                             Version = 0
                         });
                 });
