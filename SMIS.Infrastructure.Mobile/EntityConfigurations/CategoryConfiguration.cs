@@ -32,6 +32,9 @@ public class CategoryConfiguration : IEntityTypeConfiguration<Category>
         builder.Property(e => e.IsActive).IsRequired();
         builder.Property(e => e.ShopId).IsRequired();
         
+        // Enum as string (same as server)
+        builder.Property(e => e.EntityState).HasConversion<string>();
+        
         // Indexes
         builder.HasIndex(e => e.Code);
         builder.HasIndex(e => e.IsSyncedToServer);
