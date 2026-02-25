@@ -3,6 +3,7 @@ using MediatR;
 using SMIS.Application.DTO.Categories;
 using SMIS.Application.Common.Response;
 using SMIS.Application.Extensions;
+using SMIS.Application.Identity.IServices;
 using SMIS.Application.Repositories.Base;
 using SMIS.Application.Repositories.Categories;
 using SMIS.Application.Repositories.Localization;
@@ -17,21 +18,32 @@ namespace SMIS.Application.Features.Categories.Commands
         private readonly ICategoryRepository _categoryRepository;
         private readonly ITranslationKeyRepository _translationKeyRepository;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly ICurrentUser _currentUser;
         private readonly IMapper _mapper;
 
-        public CategoryCreateCommandHandler(IUnitOfWork unitOfWork, IMapper mapper, ICategoryRepository categoryRepository, ITranslationKeyRepository translationKeyRepository)
+        public CategoryCreateCommandHandler(IUnitOfWork unitOfWork, IMapper mapper, ICategoryRepository categoryRepository, ITranslationKeyRepository translationKeyRepository, ICurrentUser currentUser)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _categoryRepository = categoryRepository;
             _translationKeyRepository = translationKeyRepository;
+            _currentUser = currentUser;
         }
 
         public async Task<Result<CategoryDto>> Handle(CategoryCreateCommand request, CancellationToken cancellationToken)
         {
             await _translationKeyRepository.AddTranslationKeysForEntity(request.CategoryCreateDto, _unitOfWork);
 
-            var entity = _mapper.Map<Category>(request.CategoryCreateDto);
+            // Get ShopId from authenticated user (secure)
+            var shopId = _currentUser.GetShopId();
+            
+            var entity = Category.Create(
+                request.CategoryCreateDto.Name,
+                shopId,
+                request.CategoryCreateDto.Code,
+                request.CategoryCreateDto.Description,
+                request.CategoryCreateDto.IsActive
+            );
             
             // Use client-provided Id if available (offline sync scenario)
             if (!string.IsNullOrEmpty(request.CategoryCreateDto.Id))

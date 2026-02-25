@@ -19,8 +19,7 @@ namespace SMIS.Application.Features.Categories.Validators
                 .MaximumLength(500).WithMessage("Description must not exceed 500 characters")
                 .When(x => !string.IsNullOrEmpty(x.CategoryCreateDto.Description));
 
-            RuleFor(x => x.CategoryCreateDto.ShopId)
-                .NotEmpty().WithMessage("ShopId is required");
+            // ShopId validation removed - it comes from ICurrentUser, not client
         }
     }
 }

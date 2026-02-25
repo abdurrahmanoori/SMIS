@@ -140,19 +140,7 @@ public class MappingProfile : Profile
 
         // Category mapping
         CreateMap<Category, CategoryDto>().ReverseMap();
-        CreateMap<CategoryCreateDto, Category>()
-           .ForMember(dest => dest.Id, opt =>
-           {
-               opt.Condition(src => !string.IsNullOrEmpty(src.Id));
-               opt.MapFrom(src => src.Id);
-           })
-           .ConstructUsing(src => Category.Create(
-               src.Name,
-               src.ShopId,
-               src.Code,
-               src.Description,
-               src.IsActive
-           ));
+        // CategoryCreateDto mapping removed - use Category.Create() in handler with ICurrentUser.GetShopId()
 
 
         // ProductUnit mapping

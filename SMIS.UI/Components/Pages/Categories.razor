@@ -198,8 +198,7 @@
                 Name = _formModel.Name,
                 Code = _formModel.Code,
                 Description = _formModel.Description,
-                IsActive = _formModel.IsActive,
-                ShopId = _formModel.ShopId
+                IsActive = _formModel.IsActive
             };
             var result = await CategoryService.CreateAsync(createDto);
             _errorMessage = result.Success ? "Category created successfully" : result.Message ?? "Create failed";

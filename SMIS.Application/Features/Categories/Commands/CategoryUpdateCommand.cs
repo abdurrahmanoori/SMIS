@@ -3,6 +3,7 @@ using MediatR;
 using SMIS.Application.Common.Response;
 using SMIS.Application.DTO.Categories;
 using SMIS.Application.Extensions;
+using SMIS.Application.Identity.IServices;
 using SMIS.Application.Repositories.Base;
 using SMIS.Application.Repositories.Categories;
 using SMIS.Application.Repositories.Localization;
@@ -16,14 +17,16 @@ namespace SMIS.Application.Features.Categories.Commands
         private readonly ICategoryRepository _categoryRepository;
         private readonly ITranslationKeyRepository _translationKeyRepository;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly ICurrentUser _currentUser;
         private readonly IMapper _mapper;
 
-        public CategoryUpdateCommandHandler(IUnitOfWork unitOfWork, IMapper mapper, ICategoryRepository categoryRepository, ITranslationKeyRepository translationKeyRepository)
+        public CategoryUpdateCommandHandler(IUnitOfWork unitOfWork, IMapper mapper, ICategoryRepository categoryRepository, ITranslationKeyRepository translationKeyRepository, ICurrentUser currentUser)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _categoryRepository = categoryRepository;
             _translationKeyRepository = translationKeyRepository;
+            _currentUser = currentUser;
         }
 
         public async Task<Result<CategoryDto>> Handle(CategoryUpdateCommand request, CancellationToken cancellationToken)
@@ -34,11 +37,17 @@ namespace SMIS.Application.Features.Categories.Commands
                 return Result<CategoryDto>.NotFoundResult(nameof(CategoryDto.Id));
             }
 
+            // Verify user can only update their own shop's categories
+            var userShopId = _currentUser.GetShopId();
+            if (!_currentUser.IsSuperAdmin() && entity.ShopId != userShopId)
+            {
+                return Result<CategoryDto>.FailureResult("You can only update categories from your own shop");
+            }
+
             await _translationKeyRepository.AddTranslationKeysForChangedProperties(request.CategoryCreateDto, entity);
             
-            // Update existing entity using domain methods
+            // Update existing entity using domain methods (ShopId remains unchanged)
             entity.SetName(request.CategoryCreateDto.Name);
-            entity.SetShopId(request.CategoryCreateDto.ShopId);
             entity.SetCode(request.CategoryCreateDto.Code);
             entity.SetDescription(request.CategoryCreateDto.Description);
             if (request.CategoryCreateDto.IsActive) entity.Activate(); else entity.Deactivate();
