@@ -16,8 +16,8 @@ public class CategorySyncConfiguration : ISyncConfiguration<Category, CategoryCr
             Name = entity.Name,
             Code = entity.Code,
             Description = entity.Description,
-            IsActive = entity.IsActive,
-            ShopId = entity.ShopId
+            IsActive = entity.IsActive
+            // ShopId removed - server gets it from ICurrentUser
         };
     }
 
