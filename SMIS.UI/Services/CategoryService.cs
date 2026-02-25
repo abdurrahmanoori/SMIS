@@ -57,7 +57,7 @@ public class CategoryService
 
         if (result.Success && _connectivity.NetworkAccess == NetworkAccess.Internet)
         {
-            _ = Task.Run(async () => await _syncService.SyncCategoriesAsync());
+            var syncResult = await _syncService.SyncCategoriesAsync();
         }
 
         return new ApiResponse<CategoryDto>
