@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using SMIS.Application.Repositories.Base;
 using SMIS.Application.Repositories.Categories;
 using SMIS.Application.Services;
 using SMIS.Infrastructure.Mobile.Context;
@@ -42,7 +43,7 @@ public static class MobileInfrastructureServiceRegistration
       .AsImplementedInterfaces()
       .WithScopedLifetime());
         // Repositories
-        services.AddScoped<ILocalUnitOfWork, LocalUnitOfWork>();
+        services.AddScoped<IUnitOfWork, LocalUnitOfWork>();
         //services.AddScoped<ICategoryRepository, LocalCategoryRepository>();
 
         // Domain Services (Mobile implementations)
