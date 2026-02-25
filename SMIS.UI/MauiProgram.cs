@@ -44,14 +44,14 @@ namespace SMIS.UI
 
             var app = builder.Build();
 
-            // Apply migrations on startup - creates DB in platform-specific location
+            // Ensure database is created (without migrations for now)
             using (var scope = app.Services.CreateScope())
             {
                 var db = scope.ServiceProvider.GetRequiredService<LocalDbContext>();
                 var dbPath = db.Database.GetConnectionString();
                 System.Diagnostics.Debug.WriteLine($"[MAUI] Database location: {dbPath}");
-                db.Database.Migrate();
-                System.Diagnostics.Debug.WriteLine($"[MAUI] Database migrated successfully");
+                db.Database.EnsureCreated();
+                System.Diagnostics.Debug.WriteLine($"[MAUI] Database created successfully");
             }
 
             return app;
