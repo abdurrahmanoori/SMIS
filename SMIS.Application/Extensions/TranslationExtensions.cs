@@ -11,12 +11,20 @@ namespace SMIS.Application.Extensions
         public static string GetTranslation(this IQueryable<TranslationKey> translationKeys, 
             string originalValue, string languageId)
         {
-            return translationKeys
-                .Where(tk => tk.Name == originalValue)
-                .SelectMany(tk => tk.Translations)
-                .Where(t => t.LanguageNo == languageId)
-                .Select(t => t.Name)
-                .FirstOrDefault() ?? originalValue;
+            try
+            {
+                return translationKeys
+                    .Where(tk => tk.Name == originalValue)
+                    .SelectMany(tk => tk.Translations)
+                    .Where(t => t.LanguageNo == languageId)
+                    .Select(t => t.Name)
+                    .FirstOrDefault() ?? originalValue;
+            }
+            catch
+            {
+                // Fallback for mobile/offline scenarios without translation tables
+                return originalValue;
+            }
         }
 
         public static T TranslateEntity<T>(this T entity, 
