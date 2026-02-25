@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using SMIS.Domain.Entities;
+using SMIS.Domain.Entities.Localization;
 using SMIS.Infrastructure.Mobile.DatabaseSeeders;
 using SMIS.Infrastructure.Mobile.EntityConfigurations;
 
@@ -10,6 +11,9 @@ public class LocalDbContext : DbContext
     public LocalDbContext(DbContextOptions<LocalDbContext> options) : base(options) { }
 
     public DbSet<Category> Categories => Set<Category>();
+    public DbSet<Language> Languages => Set<Language>();
+    public DbSet<TranslationKey> TranslationKeys => Set<TranslationKey>();
+    public DbSet<Translation> Translations => Set<Translation>();
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
@@ -23,6 +27,9 @@ public class LocalDbContext : DbContext
         base.OnModelCreating(modelBuilder);
         
         modelBuilder.ApplyConfiguration(new CategoryConfiguration());
+        modelBuilder.ApplyConfiguration(new LanguageConfiguration());
+        modelBuilder.ApplyConfiguration(new TranslationKeyConfiguration());
+        modelBuilder.ApplyConfiguration(new TranslationConfiguration());
         
         // Seed data
         CategorySeed.DataSeed(modelBuilder);
