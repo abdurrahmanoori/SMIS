@@ -16,7 +16,7 @@ public class AuthServiceWrapper
     {
         return _authService.LoginAsync(new LoginRequest 
         { 
-            UserName = userName, 
+            Email = userName, 
             Password = password 
         });
     }
