@@ -27,7 +27,7 @@ public class AuthService : IAuthService
 
     public async Task<ApiResponse<LoginResponse>> LoginAsync(LoginRequest request)
     {
-        var response = await _apiClient.PostAsync<LoginRequest, LoginResponse>("/api/auth/login", request);
+        var response = await _apiClient.PostAsync<LoginRequest, LoginResponse>("/api/account/login", request);
         
         if (response.Success && response.Response?.Token != null)
         {
@@ -57,7 +57,7 @@ public class AuthService : IAuthService
 
 public class LoginRequest
 {
-    public string? UserName { get; set; }
+    public string? Email { get; set; }
     public string? Password { get; set; }
 }
 

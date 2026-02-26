@@ -33,6 +33,7 @@ public static class ServiceCollectionExtensions
         services.AddSingleton(Connectivity.Current);
         services.AddScoped<AuthServiceWrapper>();
         services.AddScoped<CategoryService>();
+        services.AddScoped<DevelopmentAutoLoginService>();
 
         return services;
     }

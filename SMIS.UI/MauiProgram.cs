@@ -5,6 +5,7 @@ using Microsoft.Extensions.Configuration;
 using SMIS.UI.Extensions;
 using SMIS.Infrastructure.Mobile.Context;
 using Microsoft.EntityFrameworkCore;
+using SMIS.UI.Services;
 
 namespace SMIS.UI
 {
@@ -52,6 +53,15 @@ namespace SMIS.UI
                 System.Diagnostics.Debug.WriteLine($"[MAUI] Database location: {dbPath}");
                 db.Database.EnsureCreated();
                 System.Diagnostics.Debug.WriteLine($"[MAUI] Database created successfully");
+
+#if DEBUG
+                _ = Task.Run(async () =>
+                {
+                    var autoLogin = scope.ServiceProvider.GetRequiredService<DevelopmentAutoLoginService>();
+                    var loginSuccess = await autoLogin.TryAutoLoginAsync();
+                    System.Diagnostics.Debug.WriteLine($"[MAUI] Auto-login: {(loginSuccess ? "Success" : "Failed")}");
+                });
+#endif
             }
 
             return app;
