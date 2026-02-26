@@ -54,14 +54,15 @@ namespace SMIS.UI
                 db.Database.EnsureCreated();
                 System.Diagnostics.Debug.WriteLine($"[MAUI] Database created successfully");
 
-#if DEBUG
-                _ = Task.Run(async () =>
-                {
-                    var autoLogin = scope.ServiceProvider.GetRequiredService<DevelopmentAutoLoginService>();
-                    var loginSuccess = await autoLogin.TryAutoLoginAsync();
-                    System.Diagnostics.Debug.WriteLine($"[MAUI] Auto-login: {(loginSuccess ? "Success" : "Failed")}");
-                });
-#endif
+//#if DEBUG
+//                _ = Task.Run(async () =>
+//                {
+//                    var autoLogin = scope.ServiceProvider.GetRequiredService<DevelopmentAutoLoginService>();
+//                    var loginSuccess = await autoLogin.TryAutoLoginAsync();
+//                    System.Diagnostics.Debug.WriteLine($"[MAUI] Auto-login: {(loginSuccess ? "Success" : "Failed")}");
+//                });
+//#endif
+
             }
 
             return app;
