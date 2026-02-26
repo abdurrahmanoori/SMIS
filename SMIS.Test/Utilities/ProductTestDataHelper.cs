@@ -49,7 +49,7 @@ public class ProductTestDataHelper
             Name = "Test Category for Products",
             Code = "TCP",
             Description = "Test category created for product tests",
-            ShopId = await CreateShopAsync(),
+            //ShopId = await CreateShopAsync(),
             IsActive = true
         };
         
