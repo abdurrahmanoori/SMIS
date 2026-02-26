@@ -64,16 +64,14 @@ public class SyncService : ISyncService
 
                         if (result.Success)
                         {
-                            entity.IsSyncedToServer = true;
-                            entity.LastSyncedAt = DateTimeService.UtcNow;
+                            await UpdateSyncStatus(entity);
                             synced++;
                         }
                         else failed++;
                     }
                     else
                     {
-                        entity.IsSyncedToServer = true;
-                        entity.LastSyncedAt = DateTimeService.UtcNow;
+                        await UpdateSyncStatus(entity);
                         synced++;
                     }
                 }
@@ -84,8 +82,7 @@ public class SyncService : ISyncService
 
                     if (result.Success)
                     {
-                        entity.IsSyncedToServer = true;
-                        entity.LastSyncedAt = DateTimeService.UtcNow;
+                        await UpdateSyncStatus(entity);
                         synced++;
                     }
                     else failed++;
@@ -96,9 +93,6 @@ public class SyncService : ISyncService
                 failed++;
             }
         }
-
-        await _localDb.SaveChangesAsync();
-
         return new SyncResult
         {
             Success = failed == 0,
@@ -106,6 +100,14 @@ public class SyncService : ISyncService
             SyncedCount = synced,
             FailedCount = failed
         };
+    }
+
+    private async Task UpdateSyncStatus<TEntity>(TEntity entity) where TEntity : class, ISyncableEntity
+    {
+        var tableName = _localDb.Model.FindEntityType(typeof(TEntity))?.GetTableName();
+        var now = DateTimeService.UtcNow;
+        await _localDb.Database.ExecuteSqlRawAsync(
+            $"UPDATE {tableName} SET IsSyncedToServer = 1, LastSyncedAt = '{now:O}' WHERE Id = '{entity.Id}'");
     }
 
     public async Task<SyncResult> SyncCategoriesAsync()
