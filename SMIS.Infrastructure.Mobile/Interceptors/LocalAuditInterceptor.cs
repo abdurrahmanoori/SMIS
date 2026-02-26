@@ -38,9 +38,9 @@ public class LocalAuditInterceptor : SaveChangesInterceptor
 
         foreach (var entry in context.ChangeTracker.Entries<ISyncableEntity>())
         {
-            if (entry.State == EntityState.Added || entry.State == EntityState.Modified)
+            if (entry.State == EntityState.Added)
             {
-                entry.Entity.LastModifiedUtc = DateTimeService.UtcNow;
+                entry.Entity.LastModifiedUtc = DateTimeService.Now;
                 entry.Entity.IsSyncedToServer = false;
             }
         }
