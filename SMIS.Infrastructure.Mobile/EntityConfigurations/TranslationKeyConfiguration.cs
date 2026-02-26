@@ -31,6 +31,6 @@ public class TranslationKeyConfiguration : IEntityTypeConfiguration<TranslationK
 
         builder.HasIndex(x => x.MessageCode);
         
-        builder.Ignore(e => e.Translations);
+
     }
 }
