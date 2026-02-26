@@ -9,6 +9,11 @@ public class LanguageConfiguration : IEntityTypeConfiguration<Language>
     public void Configure(EntityTypeBuilder<Language> builder)
     {
         builder.HasKey(x => x.Id);
+        
+        builder.Property(x => x.Id).IsRequired();
+        builder.Property(x => x.Version).IsRequired().HasDefaultValue(0);
+        builder.Property(x => x.EntityState).IsRequired().HasConversion<string>();
+        builder.Property(x => x.LastModifiedUtc).IsRequired();
             
         builder.Property(x => x.Name)
             .IsRequired()
@@ -18,8 +23,5 @@ public class LanguageConfiguration : IEntityTypeConfiguration<Language>
             .HasMaxLength(10);
             
         builder.HasIndex(x => x.Code).IsUnique();
-        
-        // Ignore navigation properties for offline database
-        //builder.Ignore(e => e.tra);
     }
 }
