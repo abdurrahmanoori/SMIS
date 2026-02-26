@@ -5,7 +5,7 @@ namespace SMIS.Domain.ValueObjects;
 
 public sealed class CategoryCode
 {
-    private static readonly Regex CodeRegex = new(@"^[A-Z0-9_-]+$", RegexOptions.Compiled);
+    //private static readonly Regex CodeRegex = new(@"^[A-Z0-9_-]+$", RegexOptions.Compiled);
 
     public string Value { get; }
 
@@ -13,7 +13,7 @@ public sealed class CategoryCode
 
     public static CategoryCode? Create(string? code)
     {
-        if (string.IsNullOrWhiteSpace(code))
+        if (code == null)
             return null;
 
         var cleaned = code.Trim().ToUpperInvariant();
@@ -21,12 +21,12 @@ public sealed class CategoryCode
         if (cleaned.Length > 50)
             throw new DomainValidationException("Category code cannot exceed 50 characters");
 
-        if (!CodeRegex.IsMatch(cleaned))
-            throw new DomainValidationException("Category code can only contain letters, numbers, underscores, and hyphens");
+        //if (!CodeRegex.IsMatch(cleaned))
+        //    throw new DomainValidationException("Category code can only contain letters, numbers, underscores, and hyphens");
 
         return new CategoryCode(cleaned);
     }
 
     public static implicit operator string?(CategoryCode? code) => code?.Value;
-    public override string ToString() => Value;
+    public override string ToString( ) => Value;
 }
