@@ -18,19 +18,19 @@ public class LocalDbContext : DbContext
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         base.OnConfiguring(optionsBuilder);
-        optionsBuilder.ConfigureWarnings(warnings => 
+        optionsBuilder.ConfigureWarnings(warnings =>
             warnings.Ignore(Microsoft.EntityFrameworkCore.Diagnostics.RelationalEventId.PendingModelChangesWarning));
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
-        
+
         modelBuilder.ApplyConfiguration(new CategoryConfiguration());
         modelBuilder.ApplyConfiguration(new LanguageConfiguration());
         modelBuilder.ApplyConfiguration(new TranslationKeyConfiguration());
         modelBuilder.ApplyConfiguration(new TranslationConfiguration());
-        
+
         // Seed data
         CategorySeed.DataSeed(modelBuilder);
     }

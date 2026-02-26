@@ -1,7 +1,7 @@
 using AutoMapper;
 using MediatR;
-using SMIS.Application.DTO.Categories;
 using SMIS.Application.Common.Response;
+using SMIS.Application.DTO.Categories;
 using SMIS.Application.Extensions;
 using SMIS.Application.Identity.IServices;
 using SMIS.Application.Repositories.Base;
@@ -36,7 +36,7 @@ namespace SMIS.Application.Features.Categories.Commands
 
             // Get ShopId from authenticated user (secure)
             var shopId = _currentUser.GetShopId();
-            
+
             var entity = Category.Create(
                 request.CategoryCreateDto.Name,
                 shopId,
@@ -44,7 +44,7 @@ namespace SMIS.Application.Features.Categories.Commands
                 request.CategoryCreateDto.Description,
                 request.CategoryCreateDto.IsActive
             );
-            
+
             // Use client-provided Id if available (offline sync scenario)
             if (!string.IsNullOrEmpty(request.CategoryCreateDto.Id))
             {
@@ -52,10 +52,10 @@ namespace SMIS.Application.Features.Categories.Commands
                 var existing = await _categoryRepository.GetByIdAsync(request.CategoryCreateDto.Id);
                 if (existing != null)
                     return Result<CategoryDto>.SuccessResult(_mapper.Map<CategoryDto>(existing));
-                
+
                 entity.Id = request.CategoryCreateDto.Id;
             }
-            
+
             await _categoryRepository.AddAsync(entity);
             await _unitOfWork.SaveChanges(cancellationToken);
 
