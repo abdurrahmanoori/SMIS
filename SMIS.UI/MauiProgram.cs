@@ -1,11 +1,10 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using SMIS.Infrastructure.Mobile.Context;
+using SMIS.UI.Extensions;
 using Syncfusion.Blazor;
 using System.Reflection;
-using Microsoft.Extensions.Configuration;
-using SMIS.UI.Extensions;
-using SMIS.Infrastructure.Mobile.Context;
-using Microsoft.EntityFrameworkCore;
-using SMIS.UI.Services;
 
 namespace SMIS.UI
 {
@@ -39,8 +38,8 @@ namespace SMIS.UI
             builder.Services.AddSyncfusionBlazor();
 
 #if DEBUG
-    		builder.Services.AddBlazorWebViewDeveloperTools();
-    		builder.Logging.AddDebug();
+            builder.Services.AddBlazorWebViewDeveloperTools();
+            builder.Logging.AddDebug();
 #endif
 
             var app = builder.Build();
@@ -54,14 +53,14 @@ namespace SMIS.UI
                 db.Database.EnsureCreated();
                 System.Diagnostics.Debug.WriteLine($"[MAUI] Database created successfully");
 
-//#if DEBUG
-//                _ = Task.Run(async () =>
-//                {
-//                    var autoLogin = scope.ServiceProvider.GetRequiredService<DevelopmentAutoLoginService>();
-//                    var loginSuccess = await autoLogin.TryAutoLoginAsync();
-//                    System.Diagnostics.Debug.WriteLine($"[MAUI] Auto-login: {(loginSuccess ? "Success" : "Failed")}");
-//                });
-//#endif
+                //#if DEBUG
+                //                _ = Task.Run(async () =>
+                //                {
+                //                    var autoLogin = scope.ServiceProvider.GetRequiredService<DevelopmentAutoLoginService>();
+                //                    var loginSuccess = await autoLogin.TryAutoLoginAsync();
+                //                    System.Diagnostics.Debug.WriteLine($"[MAUI] Auto-login: {(loginSuccess ? "Success" : "Failed")}");
+                //                });
+                //#endif
 
             }
 
