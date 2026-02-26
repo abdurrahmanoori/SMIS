@@ -91,7 +91,7 @@ public class StockBatchTestDataHelper
             Code = "TCSB",
             Description = "Test category for stock batch tests",
             IsActive = true,
-            ShopId = await CreateShopAsync()
+            //ShopId = await CreateShopAsync()
         };
         
         var response = await _client.PostAsJsonAsync(ApiEndpoints.Category, categoryDto);

@@ -106,7 +106,7 @@ public class ProductUnitTestDataHelper
             Code = "TCPU",
             Description = "Test category for product unit tests",
             IsActive = true,
-            ShopId = _cachedShopId!
+            //ShopId = _cachedShopId!
         };
         
         var response = await _client.PostAsJsonAsync(ApiEndpoints.Category, categoryDto);
