@@ -13,8 +13,8 @@ public class CategoryFixtureBuilder
             .RuleFor(c => c.Name, f => f.Commerce.Department())
             .RuleFor(c => c.Code, f => f.Commerce.Categories(1)[0].ToUpper().Replace(" ", ""))
             .RuleFor(c => c.Description, f => f.Lorem.Sentence())
-            .RuleFor(c => c.IsActive, true)
-            .RuleFor(c => c.ShopId, "1"); // Default to shop ID "1" from seed data
+            .RuleFor(c => c.IsActive, true);
+            //.RuleFor(c => c.ShopId, "1"); // Default to shop ID "1" from seed data
     }
 
     public CategoryFixtureBuilder WithName(string name)
@@ -41,11 +41,11 @@ public class CategoryFixtureBuilder
         return this;
     }
 
-    public CategoryFixtureBuilder WithShopId(string shopId)
-    {
-        _faker.RuleFor(c => c.ShopId, shopId);
-        return this;
-    }
+    //public CategoryFixtureBuilder WithShopId(string shopId)
+    //{
+    //    //_faker.RuleFor(c => c.ShopId, shopId);
+    //    return this;
+    //}
 
     public CategoryCreateDto Build() => _faker.Generate();
 }
