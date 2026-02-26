@@ -34,8 +34,5 @@ public class TranslationConfiguration : IEntityTypeConfiguration<Translation>
 
         builder.Property(x => x.LanguageNo)
             .IsRequired();
-        
-        builder.Ignore(e => e.TranslationKey);
-        builder.Ignore(e => e.Language);
     }
 }

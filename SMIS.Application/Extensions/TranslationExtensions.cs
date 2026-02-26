@@ -22,7 +22,6 @@ namespace SMIS.Application.Extensions
             }
             catch
             {
-                // Fallback for mobile/offline scenarios without translation tables
                 return originalValue;
             }
         }
