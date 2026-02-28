@@ -1,5 +1,9 @@
 ﻿@page "/"
 
+<SfMessage Severity="MessageSeverity.Success" Visible="@showMessage" Closed="OnMessageClosed">
+    Toast shown at @messageTime
+</SfMessage>
+
 <div class="home-container">
     <SfCard>
         <CardHeader Title="Welcome to SMIS" SubTitle="Student Management Information System"></CardHeader>
@@ -11,6 +15,7 @@
                 <div class="button-group">
                     <SfButton IsPrimary="true" Content="Get Started"></SfButton>
                     <SfButton Content="Learn More" CssClass="e-outline"></SfButton>
+                    <SfButton Content="Show Toast" CssClass="e-success" OnClick="ShowToast"></SfButton>
                 </div>
             </div>
         </CardContent>
@@ -93,3 +98,20 @@
         font-size: 2.5em;
     }
 </style>
+
+@code {
+    private bool showMessage = false;
+    private string messageTime = "";
+
+    private void ShowToast()
+    {
+        messageTime = DateTime.Now.ToString("HH:mm:ss");
+        showMessage = true;
+        StateHasChanged();
+    }
+
+    private void OnMessageClosed()
+    {
+        showMessage = false;
+    }
+}
