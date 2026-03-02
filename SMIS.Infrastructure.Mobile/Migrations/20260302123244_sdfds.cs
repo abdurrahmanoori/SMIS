@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace SMIS.Infrastructure.Mobile.Migrations
 {
     /// <inheritdoc />
-    public partial class jjioew : Migration
+    public partial class sdfds : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -102,6 +102,18 @@ namespace SMIS.Infrastructure.Mobile.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Translations", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Translations_Languages_LanguageNo",
+                        column: x => x.LanguageNo,
+                        principalTable: "Languages",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Translations_TranslationKeys_TranslationKeyId",
+                        column: x => x.TranslationKeyId,
+                        principalTable: "TranslationKeys",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.InsertData(
@@ -109,12 +121,12 @@ namespace SMIS.Infrastructure.Mobile.Migrations
                 columns: new[] { "Id", "Code", "CreatedBy", "CreatedDate", "Description", "EntityState", "IsActive", "IsSyncedToServer", "LastModifiedUtc", "LastSyncedAt", "Name", "ShopId", "UpdatedBy", "UpdatedDate" },
                 values: new object[,]
                 {
-                    { "1", "BEV", null, new DateTime(2026, 2, 26, 7, 2, 23, 157, DateTimeKind.Utc).AddTicks(1420), "Drinks and beverages", "Unchanged", true, true, new DateTimeOffset(new DateTime(2026, 2, 26, 7, 2, 23, 157, DateTimeKind.Unspecified).AddTicks(1861), new TimeSpan(0, 0, 0, 0, 0)), new DateTime(2026, 2, 26, 7, 2, 23, 157, DateTimeKind.Utc).AddTicks(1144), "Beverages", "1", null, new DateTime(2026, 2, 26, 7, 2, 23, 157, DateTimeKind.Utc).AddTicks(1550) },
-                    { "2", "FOOD", null, new DateTime(2026, 2, 26, 7, 2, 23, 157, DateTimeKind.Utc).AddTicks(3667), "Edible products and snacks", "Unchanged", true, true, new DateTimeOffset(new DateTime(2026, 2, 26, 7, 2, 23, 157, DateTimeKind.Unspecified).AddTicks(4073), new TimeSpan(0, 0, 0, 0, 0)), new DateTime(2026, 2, 26, 7, 2, 23, 157, DateTimeKind.Utc).AddTicks(3359), "Food Items", "1", null, new DateTime(2026, 2, 26, 7, 2, 23, 157, DateTimeKind.Utc).AddTicks(3907) },
-                    { "3", "STAT", null, new DateTime(2026, 2, 26, 7, 2, 23, 157, DateTimeKind.Utc).AddTicks(5465), "Office and school supplies", "Unchanged", true, true, new DateTimeOffset(new DateTime(2026, 2, 26, 7, 2, 23, 157, DateTimeKind.Unspecified).AddTicks(5976), new TimeSpan(0, 0, 0, 0, 0)), new DateTime(2026, 2, 26, 7, 2, 23, 157, DateTimeKind.Utc).AddTicks(5111), "Stationery", "1", null, new DateTime(2026, 2, 26, 7, 2, 23, 157, DateTimeKind.Utc).AddTicks(5748) },
-                    { "4", "GROC", null, new DateTime(2026, 2, 26, 7, 2, 23, 157, DateTimeKind.Utc).AddTicks(6208), "Daily household items", "Unchanged", true, true, new DateTimeOffset(new DateTime(2026, 2, 26, 7, 2, 23, 157, DateTimeKind.Unspecified).AddTicks(6210), new TimeSpan(0, 0, 0, 0, 0)), new DateTime(2026, 2, 26, 7, 2, 23, 157, DateTimeKind.Utc).AddTicks(6205), "Grocery", "1", null, new DateTime(2026, 2, 26, 7, 2, 23, 157, DateTimeKind.Utc).AddTicks(6209) },
-                    { "5", "CARE", null, new DateTime(2026, 2, 26, 7, 2, 23, 157, DateTimeKind.Utc).AddTicks(6220), "Health and hygiene products", "Unchanged", true, true, new DateTimeOffset(new DateTime(2026, 2, 26, 7, 2, 23, 157, DateTimeKind.Unspecified).AddTicks(6223), new TimeSpan(0, 0, 0, 0, 0)), new DateTime(2026, 2, 26, 7, 2, 23, 157, DateTimeKind.Utc).AddTicks(6219), "Personal Care", "1", null, new DateTime(2026, 2, 26, 7, 2, 23, 157, DateTimeKind.Utc).AddTicks(6221) },
-                    { "6", "ELEC", null, new DateTime(2026, 2, 26, 7, 2, 23, 157, DateTimeKind.Utc).AddTicks(6230), "Electronic devices and accessories", "Unchanged", true, true, new DateTimeOffset(new DateTime(2026, 2, 26, 7, 2, 23, 157, DateTimeKind.Unspecified).AddTicks(6232), new TimeSpan(0, 0, 0, 0, 0)), new DateTime(2026, 2, 26, 7, 2, 23, 157, DateTimeKind.Utc).AddTicks(6229), "Electronics", "1", null, new DateTime(2026, 2, 26, 7, 2, 23, 157, DateTimeKind.Utc).AddTicks(6231) }
+                    { "1", "BEV", null, new DateTime(2026, 3, 2, 12, 32, 43, 775, DateTimeKind.Utc).AddTicks(6618), "Drinks and beverages", "Unchanged", true, true, new DateTimeOffset(new DateTime(2026, 3, 2, 12, 32, 43, 775, DateTimeKind.Unspecified).AddTicks(7418), new TimeSpan(0, 0, 0, 0, 0)), new DateTime(2026, 3, 2, 12, 32, 43, 775, DateTimeKind.Utc).AddTicks(6153), "Beverages", "1", null, new DateTime(2026, 3, 2, 12, 32, 43, 775, DateTimeKind.Utc).AddTicks(6847) },
+                    { "2", "FOOD", null, new DateTime(2026, 3, 2, 12, 32, 43, 776, DateTimeKind.Utc).AddTicks(277), "Edible products and snacks", "Unchanged", true, true, new DateTimeOffset(new DateTime(2026, 3, 2, 12, 32, 43, 776, DateTimeKind.Unspecified).AddTicks(2082), new TimeSpan(0, 0, 0, 0, 0)), new DateTime(2026, 3, 2, 12, 32, 43, 775, DateTimeKind.Utc).AddTicks(9714), "Food Items", "1", null, new DateTime(2026, 3, 2, 12, 32, 43, 776, DateTimeKind.Utc).AddTicks(1564) },
+                    { "3", "STAT", null, new DateTime(2026, 3, 2, 12, 32, 43, 776, DateTimeKind.Utc).AddTicks(4443), "Office and school supplies", "Unchanged", true, true, new DateTimeOffset(new DateTime(2026, 3, 2, 12, 32, 43, 776, DateTimeKind.Unspecified).AddTicks(5115), new TimeSpan(0, 0, 0, 0, 0)), new DateTime(2026, 3, 2, 12, 32, 43, 776, DateTimeKind.Utc).AddTicks(3874), "Stationery", "1", null, new DateTime(2026, 3, 2, 12, 32, 43, 776, DateTimeKind.Utc).AddTicks(4817) },
+                    { "4", "GROC", null, new DateTime(2026, 3, 2, 12, 32, 43, 776, DateTimeKind.Utc).AddTicks(5444), "Daily household items", "Unchanged", true, true, new DateTimeOffset(new DateTime(2026, 3, 2, 12, 32, 43, 776, DateTimeKind.Unspecified).AddTicks(5448), new TimeSpan(0, 0, 0, 0, 0)), new DateTime(2026, 3, 2, 12, 32, 43, 776, DateTimeKind.Utc).AddTicks(5441), "Grocery", "1", null, new DateTime(2026, 3, 2, 12, 32, 43, 776, DateTimeKind.Utc).AddTicks(5446) },
+                    { "5", "CARE", null, new DateTime(2026, 3, 2, 12, 32, 43, 776, DateTimeKind.Utc).AddTicks(5466), "Health and hygiene products", "Unchanged", true, true, new DateTimeOffset(new DateTime(2026, 3, 2, 12, 32, 43, 776, DateTimeKind.Unspecified).AddTicks(5469), new TimeSpan(0, 0, 0, 0, 0)), new DateTime(2026, 3, 2, 12, 32, 43, 776, DateTimeKind.Utc).AddTicks(5465), "Personal Care", "1", null, new DateTime(2026, 3, 2, 12, 32, 43, 776, DateTimeKind.Utc).AddTicks(5468) },
+                    { "6", "ELEC", null, new DateTime(2026, 3, 2, 12, 32, 43, 776, DateTimeKind.Utc).AddTicks(5478), "Electronic devices and accessories", "Unchanged", true, true, new DateTimeOffset(new DateTime(2026, 3, 2, 12, 32, 43, 776, DateTimeKind.Unspecified).AddTicks(5480), new TimeSpan(0, 0, 0, 0, 0)), new DateTime(2026, 3, 2, 12, 32, 43, 776, DateTimeKind.Utc).AddTicks(5477), "Electronics", "1", null, new DateTime(2026, 3, 2, 12, 32, 43, 776, DateTimeKind.Utc).AddTicks(5479) }
                 });
 
             migrationBuilder.CreateIndex(
@@ -149,6 +161,11 @@ namespace SMIS.Infrastructure.Mobile.Migrations
                 column: "MessageCode");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Translations_LanguageNo",
+                table: "Translations",
+                column: "LanguageNo");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Translations_TranslationKeyId_LanguageNo",
                 table: "Translations",
                 columns: new[] { "TranslationKeyId", "LanguageNo" },
@@ -162,13 +179,13 @@ namespace SMIS.Infrastructure.Mobile.Migrations
                 name: "Categories");
 
             migrationBuilder.DropTable(
+                name: "Translations");
+
+            migrationBuilder.DropTable(
                 name: "Languages");
 
             migrationBuilder.DropTable(
                 name: "TranslationKeys");
-
-            migrationBuilder.DropTable(
-                name: "Translations");
         }
     }
 }
