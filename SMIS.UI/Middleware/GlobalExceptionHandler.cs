@@ -28,8 +28,8 @@ namespace SMIS.UI.Middleware
         public static void HandleException(Exception exception)
         {
             // Filter out framework/system exceptions
-            if (ShouldIgnoreException(exception))
-                return;
+            //if (ShouldIgnoreException(exception))
+            //    return;
 
             var log = ExceptionLog.CreateLog(exception);
 
@@ -53,7 +53,20 @@ namespace SMIS.UI.Middleware
 
                 if (Microsoft.Maui.Controls.Application.Current?.MainPage != null)
                 {
-                    await Microsoft.Maui.Controls.Application.Current.MainPage.DisplayAlert("Error", message, "OK");
+                    var result = await Microsoft.Maui.Controls.Application.Current.MainPage.DisplayAlert(
+                        "Error", 
+                        message, 
+                        "Copy", 
+                        "Close");
+
+                    if (result)
+                    {
+                        await Clipboard.SetTextAsync(message);
+                        await Microsoft.Maui.Controls.Application.Current.MainPage.DisplayAlert(
+                            "Copied", 
+                            "Error details copied to clipboard", 
+                            "OK");
+                    }
                 }
             });
         }
