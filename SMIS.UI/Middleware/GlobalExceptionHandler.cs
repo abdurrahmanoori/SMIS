@@ -28,8 +28,8 @@ namespace SMIS.UI.Middleware
         public static void HandleException(Exception exception)
         {
             // Filter out framework/system exceptions
-            //if (ShouldIgnoreException(exception))
-            //    return;
+            if (ShouldIgnoreException(exception))
+                return;
 
             var log = ExceptionLog.CreateLog(exception);
 
@@ -43,29 +43,33 @@ namespace SMIS.UI.Middleware
             }
 #endif
 
-            MainThread.BeginInvokeOnMainThread(async () =>
+            MainThread.BeginInvokeOnMainThread(async ( ) =>
             {
                 var message = $"An unexpected error occurred.\nError ID: {log.Id}\n\n{log.Message}";
-                
+
 #if DEBUG
                 message += $"\n\nStack Trace:\n{log.StackTrace}";
 #endif
 
-                if (Microsoft.Maui.Controls.Application.Current?.MainPage != null)
+                if (Microsoft.Maui.Controls.Application.Current?.Windows.Any() == true)
                 {
-                    var result = await Microsoft.Maui.Controls.Application.Current.MainPage.DisplayAlert(
-                        "Error", 
-                        message, 
-                        "Copy", 
-                        "Close");
-
-                    if (result)
+                    var mainPage = Microsoft.Maui.Controls.Application.Current.Windows[0].Page;
+                    if (mainPage != null)
                     {
-                        await Clipboard.SetTextAsync(message);
-                        await Microsoft.Maui.Controls.Application.Current.MainPage.DisplayAlert(
-                            "Copied", 
-                            "Error details copied to clipboard", 
-                            "OK");
+                        var result = await mainPage.DisplayAlert(
+                            "Error",
+                            message,
+                            "Copy",
+                            "Close");
+
+                        if (result)
+                        {
+                            await Clipboard.SetTextAsync(message);
+                            await mainPage.DisplayAlert(
+                                "Copied",
+                                "Error details copied to clipboard",
+                                "OK");
+                        }
                     }
                 }
             });
