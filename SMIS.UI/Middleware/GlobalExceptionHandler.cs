@@ -34,13 +34,7 @@ namespace SMIS.UI.Middleware
             var log = ExceptionLog.CreateLog(exception);
 
 #if DEBUG
-            Debug.WriteLine($"[EXCEPTION] Id: {log.Id}");
-            Debug.WriteLine($"[EXCEPTION] Message: {log.Message}");
-            Debug.WriteLine($"[EXCEPTION] StackTrace: {log.StackTrace}");
-            if (log.InnerException != null)
-            {
-                Debug.WriteLine($"[EXCEPTION] InnerException: {log.InnerException.Message}");
-            }
+            WriteToDebugWindow(log);
 #endif
 
             MainThread.BeginInvokeOnMainThread(async ( ) =>
@@ -91,6 +85,17 @@ namespace SMIS.UI.Middleware
                 return true;
 
             return false;
+        }
+
+        public static void WriteToDebugWindow(ExceptionLog log)
+        {
+            Debug.WriteLine($"[EXCEPTION] Id: {log.Id}");
+            Debug.WriteLine($"[EXCEPTION] Message: {log.Message}");
+            Debug.WriteLine($"[EXCEPTION] StackTrace: {log.StackTrace}");
+            if (log.InnerException != null)
+            {
+                Debug.WriteLine($"[EXCEPTION] InnerException: {log.InnerException.Message}");
+            }
         }
     }
 }
