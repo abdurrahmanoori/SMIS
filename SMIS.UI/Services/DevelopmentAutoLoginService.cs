@@ -15,12 +15,13 @@ public class DevelopmentAutoLoginService
     {
 #if DEBUG
         var isAuthenticated = await _authService.IsAuthenticatedAsync();
+        //await _authService.LogoutAsync();
         if (!isAuthenticated)
         {
             var result = await _authService.LoginAsync(DevUsername, DevPassword);
-            return result.Success;
+            return result.Success ? true : throw new Exception("user is not authinticated");
         }
-        return true;
+        return isAuthenticated;
 #else
         return await _authService.IsAuthenticatedAsync();
 #endif
