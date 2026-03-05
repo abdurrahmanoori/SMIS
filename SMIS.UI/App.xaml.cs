@@ -1,12 +1,16 @@
 using SMIS.UI.Middleware;
+using SMIS.UI.Services;
 
 namespace SMIS.UI
 {
     public partial class App : Microsoft.Maui.Controls.Application
     {
-        public App()
+        private readonly DevelopmentAutoLoginService _autoLoginService;
+
+        public App(DevelopmentAutoLoginService autoLoginService)
         {
             InitializeComponent();
+            _autoLoginService = autoLoginService;
             
             //GlobalExceptionHandler.Initialize();
             
@@ -18,7 +22,7 @@ namespace SMIS.UI
 
         protected override Window CreateWindow(IActivationState? activationState)
         {
-            return new Window(new MainPage()) { Title = "SMIS.UI" };
+            return new Window(new MainPage(_autoLoginService)) { Title = "SMIS.UI" };
         }
     }
 }
