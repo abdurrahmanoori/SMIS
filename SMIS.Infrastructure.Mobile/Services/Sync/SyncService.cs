@@ -44,12 +44,22 @@ public class SyncService : ISyncService
 
         var synced = 0;
         var failed = 0;
+        var connectionFailed = false;
 
         foreach (var entity in pendingEntities)
         {
+            if (connectionFailed) break;
+
             try
             {
                 var existsOnServer = await _apiClient.GetAsync<TDto>($"{config.ApiEndpoint}/{entity.Id}");
+
+                if (!existsOnServer.Success && existsOnServer.Errors?.Any(e => e.Code == "Error") == true)
+                {
+                    connectionFailed = true;
+                    failed = pendingEntities.Count;
+                    break;
+                }
 
                 if (existsOnServer.Success && existsOnServer.Response != null)
                 {
@@ -91,11 +101,28 @@ public class SyncService : ISyncService
                     else failed++;
                 }
             }
+            catch (HttpRequestException ex)
+            {
+                connectionFailed = true;
+                failed = pendingEntities.Count;
+                break;
+            }
             catch
             {
                 failed++;
             }
         }
+
+        if (connectionFailed)
+        {
+            return new SyncResult
+            {
+                Success = false,
+                Message = "Server unavailable - sync cancelled",
+                FailedCount = pendingEntities.Count
+            };
+        }
+
         await _localDb.SaveChangesAsync();
 
         return new SyncResult
