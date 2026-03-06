@@ -15,14 +15,14 @@ namespace SMIS.Application.Features.Categories.Queries
     internal sealed class CategoryGetListQueryHandler : IRequestHandler<CategoryGetListQuery, Result<PagedList<CategoryDto>>>
     {
         private readonly ICategoryRepository _categoryRepository;
-        private readonly ITranslationKeyRepository _translationKeyRepository;
+        //private readonly ITranslationKeyRepository _translationKeyRepository;
         private readonly ICurrentUser _currentUser;
         private readonly IMapper _mapper;
 
-        public CategoryGetListQueryHandler(ICategoryRepository categoryRepository, ITranslationKeyRepository translationKeyRepository, ICurrentUser currentUser, IMapper mapper)
+        public CategoryGetListQueryHandler(ICategoryRepository categoryRepository, /*ITranslationKeyRepository translationKeyRepository,*/ ICurrentUser currentUser, IMapper mapper)
         {
             _categoryRepository = categoryRepository;
-            _translationKeyRepository = translationKeyRepository;
+            //_translationKeyRepository = translationKeyRepository;
             _currentUser = currentUser;
             _mapper = mapper;
         }
@@ -38,10 +38,10 @@ namespace SMIS.Application.Features.Categories.Queries
             }
 
             var categoryDtos = _mapper.Map<List<CategoryDto>>(categories.Items);
-            var translationKeys = _translationKeyRepository.GetAllQueryable();
-            var userLangId = _currentUser.GetLangId();
+            //var translationKeys = _translationKeyRepository.GetAllQueryable();
+            //var userLangId = _currentUser.GetLangId();
 
-            categoryDtos.ForEach(category => category.TranslateEntityByAttributes(translationKeys, userLangId));
+            //categoryDtos.ForEach(category => category.TranslateEntityByAttributes(translationKeys, userLangId));
 
             return Result<PagedList<CategoryDto>>.SuccessResult(new PagedList<CategoryDto>
             {

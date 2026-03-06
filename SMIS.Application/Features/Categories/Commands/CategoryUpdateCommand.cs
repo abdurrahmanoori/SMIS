@@ -15,17 +15,17 @@ namespace SMIS.Application.Features.Categories.Commands
     internal sealed class CategoryUpdateCommandHandler : IRequestHandler<CategoryUpdateCommand, Result<CategoryDto>>
     {
         private readonly ICategoryRepository _categoryRepository;
-        private readonly ITranslationKeyRepository _translationKeyRepository;
+        //private readonly ITranslationKeyRepository _translationKeyRepository;
         private readonly IUnitOfWork _unitOfWork;
         private readonly ICurrentUser _currentUser;
         private readonly IMapper _mapper;
 
-        public CategoryUpdateCommandHandler(IUnitOfWork unitOfWork, IMapper mapper, ICategoryRepository categoryRepository, ITranslationKeyRepository translationKeyRepository, ICurrentUser currentUser)
+        public CategoryUpdateCommandHandler(IUnitOfWork unitOfWork, IMapper mapper, ICategoryRepository categoryRepository, /*ITranslationKeyRepository translationKeyRepository,*/ ICurrentUser currentUser)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _categoryRepository = categoryRepository;
-            _translationKeyRepository = translationKeyRepository;
+            //_translationKeyRepository = translationKeyRepository;
             _currentUser = currentUser;
         }
 
@@ -44,7 +44,7 @@ namespace SMIS.Application.Features.Categories.Commands
                 return Result<CategoryDto>.FailureResult("You can only update categories from your own shop");
             }
 
-            await _translationKeyRepository.AddTranslationKeysForChangedProperties(request.CategoryCreateDto, entity);
+            //await _translationKeyRepository.AddTranslationKeysForChangedProperties(request.CategoryCreateDto, entity);
             
             // Update existing entity using domain methods (ShopId remains unchanged)
             entity.SetName(request.CategoryCreateDto.Name);

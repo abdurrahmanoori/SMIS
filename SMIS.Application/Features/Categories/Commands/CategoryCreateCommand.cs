@@ -16,23 +16,23 @@ namespace SMIS.Application.Features.Categories.Commands
     internal sealed class CategoryCreateCommandHandler : IRequestHandler<CategoryCreateCommand, Result<CategoryDto>>
     {
         private readonly ICategoryRepository _categoryRepository;
-        private readonly ITranslationKeyRepository _translationKeyRepository;
+        //private readonly ITranslationKeyRepository _translationKeyRepository;
         private readonly IUnitOfWork _unitOfWork;
         private readonly ICurrentUser _currentUser;
         private readonly IMapper _mapper;
 
-        public CategoryCreateCommandHandler(IUnitOfWork unitOfWork, IMapper mapper, ICategoryRepository categoryRepository, ITranslationKeyRepository translationKeyRepository, ICurrentUser currentUser)
+        public CategoryCreateCommandHandler(IUnitOfWork unitOfWork, IMapper mapper, ICategoryRepository categoryRepository, /*ITranslationKeyRepository translationKeyRepository,*/ ICurrentUser currentUser)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _categoryRepository = categoryRepository;
-            _translationKeyRepository = translationKeyRepository;
+            //_translationKeyRepository = translationKeyRepository;
             _currentUser = currentUser;
         }
 
         public async Task<Result<CategoryDto>> Handle(CategoryCreateCommand request, CancellationToken cancellationToken)
         {
-            await _translationKeyRepository.AddTranslationKeysForEntity(request.CategoryCreateDto, _unitOfWork);
+            //await _translationKeyRepository.AddTranslationKeysForEntity(request.CategoryCreateDto, _unitOfWork);
 
             // Get ShopId from authenticated user (secure)
             var shopId = _currentUser.GetShopId();

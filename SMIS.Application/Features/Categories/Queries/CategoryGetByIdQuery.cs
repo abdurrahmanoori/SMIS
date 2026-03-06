@@ -14,14 +14,14 @@ namespace SMIS.Application.Features.Categories.Queries
     internal sealed class CategoryGetByIdQueryHandler : IRequestHandler<CategoryGetByIdQuery, Result<CategoryDto>>
     {
         private readonly ICategoryRepository _categoryRepository;
-        private readonly ITranslationKeyRepository _translationKeyRepository;
+        //private readonly ITranslationKeyRepository _translationKeyRepository;
         private readonly ICurrentUser _currentUser;
         private readonly IMapper _mapper;
 
-        public CategoryGetByIdQueryHandler(ICategoryRepository categoryRepository, ITranslationKeyRepository translationKeyRepository, ICurrentUser currentUser, IMapper mapper)
+        public CategoryGetByIdQueryHandler(ICategoryRepository categoryRepository, /*ITranslationKeyRepository translationKeyRepository,*/ ICurrentUser currentUser, IMapper mapper)
         {
             _categoryRepository = categoryRepository;
-            _translationKeyRepository = translationKeyRepository;
+            //_translationKeyRepository = translationKeyRepository;
             _currentUser = currentUser;
             _mapper = mapper;
         }
@@ -36,7 +36,7 @@ namespace SMIS.Application.Features.Categories.Queries
             }
 
             var category = _mapper.Map<CategoryDto>(dbCategory);
-            category.TranslateEntityByAttributes(_translationKeyRepository.GetAllQueryable(), _currentUser.GetLangId());
+            //category.TranslateEntityByAttributes(_translationKeyRepository.GetAllQueryable(), _currentUser.GetLangId());
 
             return Result<CategoryDto>.SuccessResult(category);
         }
