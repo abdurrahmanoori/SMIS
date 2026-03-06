@@ -30,9 +30,9 @@ public class EntityPKInterceptor : SaveChangesInterceptor
         {
             if (entry.State == EntityState.Added)
             {
-                await AssignSequenceNumber(entry.Entity, context);
                 if (string.IsNullOrEmpty(entry.Entity.Id))
                 {
+                    await AssignSequenceNumber(entry.Entity, context);
                     entry.Entity.Id = _publicIdGenerator.Generate();
                 }
             }
