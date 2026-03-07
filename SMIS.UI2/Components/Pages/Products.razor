@@ -1,0 +1,58 @@
+@page "/products"
+
+<div class="products-page">
+    <SfCard>
+        <CardHeader Title="Product Management" />
+        <CardContent>
+            <div class="card-actions">
+                <SfButton CssClass="e-primary" IconCss="e-icons e-plus">Add Product</SfButton>
+                <SfButton CssClass="e-info" IconCss="e-icons e-refresh">Refresh</SfButton>
+            </div>
+
+            <SfGrid DataSource="@products" AllowPaging="true" AllowSorting="true" AllowFiltering="true">
+                <GridPageSettings PageSize="10"></GridPageSettings>
+                <GridColumns>
+                    <GridColumn Field="@nameof(Product.Id)" HeaderText="ID" Width="80"></GridColumn>
+                    <GridColumn Field="@nameof(Product.Name)" HeaderText="Product Name" Width="150"></GridColumn>
+                    <GridColumn Field="@nameof(Product.Category)" HeaderText="Category" Width="120"></GridColumn>
+                    <GridColumn Field="@nameof(Product.Price)" HeaderText="Price" Format="C2" Width="100"></GridColumn>
+                    <GridColumn Field="@nameof(Product.Stock)" HeaderText="Stock" Width="80"></GridColumn>
+                    <GridColumn Field="@nameof(Product.IsActive)" HeaderText="Active" DisplayAsCheckBox="true" Width="80"></GridColumn>
+                </GridColumns>
+            </SfGrid>
+        </CardContent>
+    </SfCard>
+</div>
+
+@code {
+    private List<Product> products = new List<Product>
+    {
+        new Product { Id = 1, Name = "Coca Cola", Category = "Beverages", Price = 1.50m, Stock = 100, IsActive = true },
+        new Product { Id = 2, Name = "Pepsi", Category = "Beverages", Price = 1.45m, Stock = 85, IsActive = true },
+        new Product { Id = 3, Name = "Notebook", Category = "Stationery", Price = 2.50m, Stock = 50, IsActive = true },
+        new Product { Id = 4, Name = "Pen", Category = "Stationery", Price = 0.75m, Stock = 200, IsActive = true },
+        new Product { Id = 5, Name = "Rice", Category = "Grocery", Price = 15.00m, Stock = 30, IsActive = true },
+    };
+
+    public class Product
+    {
+        public int Id { get; set; }
+        public string Name { get; set; } = string.Empty;
+        public string Category { get; set; } = string.Empty;
+        public decimal Price { get; set; }
+        public int Stock { get; set; }
+        public bool IsActive { get; set; }
+    }
+}
+
+<style>
+    .products-page {
+        max-width: 1200px;
+    }
+
+    .card-actions {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 20px;
+    }
+</style>

@@ -1,17 +1,84 @@
 ﻿@inherits LayoutComponentBase
 
-<div class="page">
-    <div class="sidebar">
-        <NavMenu />
-    </div>
+<div class="page-container">
+    <SfSidebar @ref="sidebar" Width="250px" Type="SidebarType.Auto" @bind-IsOpen="isSidebarOpen">
+        <ChildContent>
+            <div class="sidebar-content">
+                <div class="sidebar-header">
+                    <h3>SMIS</h3>
+                </div>
+                <NavMenu />
+            </div>
+        </ChildContent>
+    </SfSidebar>
 
-    <main>
-        <div class="top-row px-4">
-            <a href="https://learn.microsoft.com/aspnet/core/" target="_blank">About</a>
+    <div class="main-content">
+        <div class="header">
+            <SfButton CssClass="e-flat" IconCss="e-icons e-menu" @onclick="ToggleSidebar"></SfButton>
+            <h4>Shop Management System</h4>
         </div>
-
-        <article class="content px-4">
+        <div class="content">
             @Body
-        </article>
-    </main>
+        </div>
+    </div>
 </div>
+
+@code {
+    private SfSidebar? sidebar;
+    private bool isSidebarOpen = true;
+
+    private void ToggleSidebar()
+    {
+        isSidebarOpen = !isSidebarOpen;
+    }
+}
+
+<style>
+    .page-container {
+        display: flex;
+        height: 100vh;
+        overflow: hidden;
+    }
+
+    .sidebar-content {
+        height: 100%;
+        background-color: #f8f9fa;
+    }
+
+    .sidebar-header {
+        padding: 20px;
+        background-color: #0d6efd;
+        color: white;
+        text-align: center;
+    }
+
+    .sidebar-header h3 {
+        margin: 0;
+    }
+
+    .main-content {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+    }
+
+    .header {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        padding: 15px 20px;
+        background-color: #fff;
+        border-bottom: 1px solid #dee2e6;
+    }
+
+    .header h4 {
+        margin: 0;
+    }
+
+    .content {
+        flex: 1;
+        padding: 20px;
+        overflow-y: auto;
+    }
+</style>

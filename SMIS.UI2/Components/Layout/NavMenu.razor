@@ -1,27 +1,20 @@
-﻿<div class="top-row ps-3 navbar navbar-dark">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="">SMIS.UI2</a>
-    </div>
-</div>
+﻿<nav class="nav-menu">
+    <SfMenu Items="@menuItems" Orientation="Orientation.Vertical"></SfMenu>
+</nav>
 
-<input type="checkbox" title="Navigation menu" class="navbar-toggler" />
+@code {
+    private List<MenuItem> menuItems = new List<MenuItem>
+    {
+        new MenuItem { Text = "Home", IconCss = "e-icons e-home", Url = "/" },
+        new MenuItem { Text = "Counter", IconCss = "e-icons e-plus", Url = "/counter" },
+        new MenuItem { Text = "Weather", IconCss = "e-icons e-list", Url = "/weather" },
+        new MenuItem { Text = "Products", IconCss = "e-icons e-shopping-cart", Url = "/products" },
+        new MenuItem { Text = "Add Product", IconCss = "e-icons e-edit", Url = "/product-form" },
+    };
+}
 
-<div class="nav-scrollable" onclick="document.querySelector('.navbar-toggler').click()">
-    <nav class="flex-column">
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Home
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="counter">
-                <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Counter
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="weather">
-                <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Weather
-            </NavLink>
-        </div>
-    </nav>
-</div>
+<style>
+    .nav-menu {
+        padding: 10px 0;
+    }
+</style>

@@ -1,0 +1,119 @@
+@page "/product-form"
+
+<div class="product-form-page">
+    <SfCard>
+        <CardHeader Title="Add New Product" />
+        <CardContent>
+            <EditForm Model="@product" OnValidSubmit="HandleSubmit">
+                <div class="form-group">
+                    <label>Product Name</label>
+                    <SfTextBox @bind-Value="@product.Name" Placeholder="Enter product name"></SfTextBox>
+                </div>
+
+                <div class="form-group">
+                    <label>Category</label>
+                    <SfDropDownList TValue="string" TItem="string" @bind-Value="@product.Category" 
+                                   DataSource="@categories" Placeholder="Select category">
+                    </SfDropDownList>
+                </div>
+
+                <div class="form-group">
+                    <label>Price</label>
+                    <SfNumericTextBox TValue="decimal?" @bind-Value="@product.Price" 
+                                     Format="C2" Placeholder="0.00" Min="0">
+                    </SfNumericTextBox>
+                </div>
+
+                <div class="form-group">
+                    <label>Stock Quantity</label>
+                    <SfNumericTextBox TValue="int?" @bind-Value="@product.Stock" 
+                                     Placeholder="0" Min="0">
+                    </SfNumericTextBox>
+                </div>
+
+                <div class="form-group">
+                    <label>Description</label>
+                    <SfTextBox @bind-Value="@product.Description" Multiline="true" 
+                              Placeholder="Enter product description"></SfTextBox>
+                </div>
+
+                <div class="form-group">
+                    <SfCheckBox @bind-Checked="@product.IsActive" Label="Active"></SfCheckBox>
+                </div>
+
+                <div class="form-actions">
+                    <SfButton Type="ButtonType.Submit" CssClass="e-primary" IconCss="e-icons e-save">Save Product</SfButton>
+                    <SfButton CssClass="e-outline" IconCss="e-icons e-close" @onclick="ClearForm">Clear</SfButton>
+                </div>
+            </EditForm>
+
+            @if (showSuccess)
+            {
+                <SfMessage Severity="MessageSeverity.Success">Product saved successfully!</SfMessage>
+            }
+        </CardContent>
+    </SfCard>
+</div>
+
+@code {
+    private ProductModel product = new ProductModel();
+    private bool showSuccess = false;
+    private List<string> categories = new List<string> 
+    { 
+        "Beverages", 
+        "Stationery", 
+        "Grocery", 
+        "Electronics",
+        "Clothing"
+    };
+
+    private void HandleSubmit()
+    {
+        showSuccess = true;
+        StateHasChanged();
+        Task.Delay(3000).ContinueWith(_ => 
+        {
+            showSuccess = false;
+            InvokeAsync(StateHasChanged);
+        });
+    }
+
+    private void ClearForm()
+    {
+        product = new ProductModel();
+        showSuccess = false;
+    }
+
+    public class ProductModel
+    {
+        public string Name { get; set; } = string.Empty;
+        public string Category { get; set; } = string.Empty;
+        public decimal? Price { get; set; }
+        public int? Stock { get; set; }
+        public string Description { get; set; } = string.Empty;
+        public bool IsActive { get; set; } = true;
+    }
+}
+
+<style>
+    .product-form-page {
+        max-width: 600px;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 500;
+        color: #212529;
+    }
+
+    .form-actions {
+        display: flex;
+        gap: 10px;
+        margin-top: 30px;
+    }
+</style>

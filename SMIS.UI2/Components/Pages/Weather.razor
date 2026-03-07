@@ -1,54 +1,51 @@
 ﻿@page "/weather"
 
-<h1>Weather</h1>
+<div class="weather-page">
+    <SfCard>
+        <CardHeader Title="Weather Forecast" />
+        <CardContent>
+            <p>This component demonstrates Syncfusion Grid with weather data.</p>
 
-<p>This component demonstrates showing data.</p>
-
-@if (forecasts == null)
-{
-    <p><em>Loading...</em></p>
-}
-else
-{
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Date</th>
-                <th>Temp. (C)</th>
-                <th>Temp. (F)</th>
-                <th>Summary</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var forecast in forecasts)
+            @if (forecasts == null)
             {
-                <tr>
-                    <td>@forecast.Date.ToShortDateString()</td>
-                    <td>@forecast.TemperatureC</td>
-                    <td>@forecast.TemperatureF</td>
-                    <td>@forecast.Summary</td>
-                </tr>
+                <div class="loading-container">
+                    <SfSpinner @bind-Visible="@isLoading" Label="Loading weather data..."></SfSpinner>
+                </div>
             }
-        </tbody>
-    </table>
-}
+            else
+            {
+                <SfGrid DataSource="@forecasts" AllowPaging="true" AllowSorting="true">
+                    <GridPageSettings PageSize="5"></GridPageSettings>
+                    <GridColumns>
+                        <GridColumn Field="@nameof(WeatherForecast.Date)" HeaderText="Date" Format="d" Width="120"></GridColumn>
+                        <GridColumn Field="@nameof(WeatherForecast.TemperatureC)" HeaderText="Temp. (C)" Width="120"></GridColumn>
+                        <GridColumn Field="@nameof(WeatherForecast.TemperatureF)" HeaderText="Temp. (F)" Width="120"></GridColumn>
+                        <GridColumn Field="@nameof(WeatherForecast.Summary)" HeaderText="Summary" Width="150"></GridColumn>
+                    </GridColumns>
+                </SfGrid>
+            }
+        </CardContent>
+    </SfCard>
+</div>
 
 @code {
     private WeatherForecast[]? forecasts;
+    private bool isLoading = true;
 
     protected override async Task OnInitializedAsync()
     {
-        // Simulate asynchronous loading to demonstrate a loading indicator
         await Task.Delay(500);
 
         var startDate = DateOnly.FromDateTime(DateTime.Now);
         var summaries = new[] { "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching" };
-        forecasts = Enumerable.Range(1, 5).Select(index => new WeatherForecast
+        forecasts = Enumerable.Range(1, 10).Select(index => new WeatherForecast
         {
             Date = startDate.AddDays(index),
             TemperatureC = Random.Shared.Next(-20, 55),
             Summary = summaries[Random.Shared.Next(summaries.Length)]
         }).ToArray();
+
+        isLoading = false;
     }
 
     private class WeatherForecast
@@ -59,3 +56,16 @@ else
         public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
     }
 }
+
+<style>
+    .weather-page {
+        max-width: 900px;
+    }
+
+    .loading-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 200px;
+    }
+</style>
