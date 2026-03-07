@@ -1,0 +1,99 @@
+﻿@page "/"
+
+<div class="home-page">
+    <SfCard>
+        <CardHeader Title="Welcome to SMIS" />
+        <CardContent>
+            <h2>Shop Management Information System</h2>
+            <p>A comprehensive shop management solution with Syncfusion Blazor components.</p>
+            
+            <div class="feature-cards">
+                <SfCard>
+                    <CardContent>
+                        <div class="feature-icon">📦</div>
+                        <h4>Inventory Management</h4>
+                        <p>Track products, stock levels, and batches with precision.</p>
+                    </CardContent>
+                </SfCard>
+
+                <SfCard>
+                    <CardContent>
+                        <div class="feature-icon">🌍</div>
+                        <h4>Multi-Language</h4>
+                        <p>Built-in translation system supporting multiple languages.</p>
+                    </CardContent>
+                </SfCard>
+
+                <SfCard>
+                    <CardContent>
+                        <div class="feature-icon">📱</div>
+                        <h4>Cross-Platform</h4>
+                        <p>Access from Android, iOS, Windows, and macOS.</p>
+                    </CardContent>
+                </SfCard>
+            </div>
+
+            <div class="action-buttons">
+                <SfButton CssClass="e-primary e-large" IconCss="e-icons e-shopping-cart" @onclick="NavigateToProducts">View Products</SfButton>
+                <SfButton CssClass="e-success e-large" IconCss="e-icons e-plus">Add New Product</SfButton>
+            </div>
+        </CardContent>
+    </SfCard>
+</div>
+
+@code {
+    [Inject]
+    private NavigationManager? Navigation { get; set; }
+
+    private void NavigateToProducts()
+    {
+        Navigation?.NavigateTo("/products");
+    }
+}
+
+<style>
+    .home-page {
+        max-width: 1200px;
+    }
+
+    .home-page h2 {
+        color: #0d6efd;
+        margin-bottom: 10px;
+    }
+
+    .home-page p {
+        color: #6c757d;
+        font-size: 16px;
+    }
+
+    .feature-cards {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 20px;
+        margin: 30px 0;
+    }
+
+    .feature-icon {
+        font-size: 48px;
+        text-align: center;
+        margin-bottom: 10px;
+    }
+
+    .feature-cards h4 {
+        text-align: center;
+        color: #212529;
+        margin: 10px 0;
+    }
+
+    .feature-cards p {
+        text-align: center;
+        font-size: 14px;
+    }
+
+    .action-buttons {
+        display: flex;
+        gap: 15px;
+        margin-top: 30px;
+        flex-wrap: wrap;
+    }
+</style>
