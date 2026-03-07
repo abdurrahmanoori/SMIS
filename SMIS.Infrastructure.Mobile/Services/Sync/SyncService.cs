@@ -76,6 +76,7 @@ public class SyncService : ISyncService
                         {
                             entity.IsSyncedToServer = true;
                             entity.LastSyncedAt = DateTimeService.UtcNow;
+                            await _localDb.SaveChangesAsync();
                             synced++;
                         }
                         else failed++;
@@ -84,6 +85,7 @@ public class SyncService : ISyncService
                     {
                         entity.IsSyncedToServer = true;
                         entity.LastSyncedAt = DateTimeService.UtcNow;
+                        await _localDb.SaveChangesAsync();
                         synced++;
                     }
                 }
@@ -96,6 +98,7 @@ public class SyncService : ISyncService
                     {
                         entity.IsSyncedToServer = true;
                         entity.LastSyncedAt = DateTimeService.UtcNow;
+                        await _localDb.SaveChangesAsync();
                         synced++;
                     }
                     else failed++;
@@ -122,8 +125,6 @@ public class SyncService : ISyncService
                 FailedCount = pendingEntities.Count
             };
         }
-
-        await _localDb.SaveChangesAsync();
 
         return new SyncResult
         {
