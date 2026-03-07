@@ -1,11 +1,10 @@
 using SMIS.Application.Attributes;
+using SMIS.Application.DTO.Common;
 
 namespace SMIS.Application.DTO.Categories
 {
-    public class CategoryCreateDto
+    public class CategoryCreateDto : BaseCreateDto
     {
-        public string? Id { get; set; } // Client provides for offline sync
-        
         [Translatable]
         public string Name { get; set; } = string.Empty;
 
@@ -15,6 +14,5 @@ namespace SMIS.Application.DTO.Categories
         public string? Description { get; set; }
 
         public bool IsActive { get; set; } = true;
-        // ShopId removed - comes from ICurrentUser on server
     }
 }

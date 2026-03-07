@@ -54,6 +54,12 @@ namespace SMIS.Application.Features.Categories.Commands
                     return Result<CategoryDto>.SuccessResult(_mapper.Map<CategoryDto>(existing));
 
                 entity.Id = request.CategoryCreateDto.Id;
+                
+                // Preserve original timestamps from mobile sync
+                if (request.CategoryCreateDto.CreatedDate.HasValue)
+                    entity.CreatedDate = request.CategoryCreateDto.CreatedDate.Value;
+                if (!string.IsNullOrEmpty(request.CategoryCreateDto.CreatedBy))
+                    entity.CreatedBy = request.CategoryCreateDto.CreatedBy;
             }
 
             await _categoryRepository.AddAsync(entity);

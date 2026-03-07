@@ -72,15 +72,7 @@ public class CategoryService
 
     public async Task<ApiResponse<CategoryDto>> UpdateAsync(string id, CategoryUpdateDto dto)
     {
-        var updateDto = new CategoryCreateDto
-        {
-            Name = dto.Name,
-            Code = dto.Code,
-            Description = dto.Description,
-            IsActive = dto.IsActive
-        };
-
-        var command = new CategoryUpdateCommand(id, updateDto);
+        var command = new CategoryUpdateCommand(id, dto);
         var result = await _mediator.Send(command);
 
         if (result.Success && _connectivity.NetworkAccess == NetworkAccess.Internet)
