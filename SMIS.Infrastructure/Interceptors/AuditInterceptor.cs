@@ -4,7 +4,6 @@ using SMIS.Application.Identity.IServices;
 using SMIS.Application.Services;
 using SMIS.Domain.Common.BaseAbstract;
 using SMIS.Domain.Services;
-using SMIS.Infrastructure.Server.Context;
 
 namespace SMIS.Infrastructure.Server.Interceptors
 {
@@ -33,15 +32,26 @@ namespace SMIS.Infrastructure.Server.Interceptors
             {
                 if (entry.State == EntityState.Added)
                 {
-                    entry.Entity.CreatedDate = DateTimeService.Now;
-                    entry.Entity.CreatedBy = _currentUser.GetId();
-                    //await AssignSequenceNumber(entry.Entity, context);
+                    if (entry.Entity.CreatedDate == default)
+                    {
+                        entry.Entity.CreatedDate = DateTimeService.Now;
+                    }
+                    if (string.IsNullOrEmpty(entry.Entity.CreatedBy))
+                    {
+                        entry.Entity.CreatedBy = _currentUser.GetId();
+                    }
                 }
 
                 if (entry.State == EntityState.Modified)
                 {
-                    entry.Entity.UpdatedDate = DateTimeService.Now;
-                    entry.Entity.UpdatedBy = _currentUser.GetId();
+                    if (entry.Entity.UpdatedDate == default)
+                    {
+                        entry.Entity.UpdatedDate = DateTimeService.Now;
+                    }
+                    if (string.IsNullOrEmpty(entry.Entity.UpdatedBy))
+                    {
+                        entry.Entity.UpdatedBy = _currentUser.GetId();
+                    }
                     entry.Property(e => e.CreatedDate).IsModified = false; // Ensure CreatedDate is not updated
                 }
                 if (entry.State == EntityState.Deleted)
@@ -104,8 +114,8 @@ namespace SMIS.Infrastructure.Server.Interceptors
 
                 // Get max ID from pending entities in change tracker
                 var pendingEntities = context.ChangeTracker.Entries<BaseAuditableEntity>()
-                    .Where(e => e.State == EntityState.Added && 
-                               e.Entity.GetType() == entityType && 
+                    .Where(e => e.State == EntityState.Added &&
+                               e.Entity.GetType() == entityType &&
                                !string.IsNullOrEmpty(e.Entity.Id))
                     .Select(e => e.Entity.Id)
                     .Where(id => int.TryParse(id, out _))
