@@ -28,7 +28,7 @@ namespace SMIS.Api.Controllers
             HandleResultResponse(await Mediator.Send(new CategoryGetByIdQuery(id)));
 
         [HttpPut("{id}")]
-        public async Task<ActionResult<CategoryDto>> Update(string id, CategoryCreateDto dto) =>
+        public async Task<ActionResult<CategoryDto>> Update(string id, CategoryUpdateDto dto) =>
             HandleResultResponse(await Mediator.Send(new CategoryUpdateCommand(id, dto)));
 
         [HttpDelete("{id}")]

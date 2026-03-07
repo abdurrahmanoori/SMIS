@@ -10,7 +10,7 @@ using SMIS.Application.Repositories.Localization;
 
 namespace SMIS.Application.Features.Categories.Commands
 {
-    public record CategoryUpdateCommand(string Id, CategoryCreateDto CategoryCreateDto) : IRequest<Result<CategoryDto>>;
+    public record CategoryUpdateCommand(string Id, CategoryUpdateDto CategoryUpdateDto) : IRequest<Result<CategoryDto>>;
 
     internal sealed class CategoryUpdateCommandHandler : IRequestHandler<CategoryUpdateCommand, Result<CategoryDto>>
     {
@@ -31,6 +31,7 @@ namespace SMIS.Application.Features.Categories.Commands
 
         public async Task<Result<CategoryDto>> Handle(CategoryUpdateCommand request, CancellationToken cancellationToken)
         {
+            //request.CategoryUpdateDto.Name += request.CategoryUpdateDto.Name;
             var entity = await _categoryRepository.GetByIdAsync(request.Id);
             if (entity == null)
             {
@@ -44,13 +45,19 @@ namespace SMIS.Application.Features.Categories.Commands
                 return Result<CategoryDto>.FailureResult("You can only update categories from your own shop");
             }
 
-            //await _translationKeyRepository.AddTranslationKeysForChangedProperties(request.CategoryCreateDto, entity);
+            //await _translationKeyRepository.AddTranslationKeysForChangedProperties(request.CategoryUpdateDto, entity);
             
             // Update existing entity using domain methods (ShopId remains unchanged)
-            entity.SetName(request.CategoryCreateDto.Name);
-            entity.SetCode(request.CategoryCreateDto.Code);
-            entity.SetDescription(request.CategoryCreateDto.Description);
-            if (request.CategoryCreateDto.IsActive) entity.Activate(); else entity.Deactivate();
+            entity.SetName(request.CategoryUpdateDto.Name);
+            entity.SetCode(request.CategoryUpdateDto.Code);
+            entity.SetDescription(request.CategoryUpdateDto.Description);
+            if (request.CategoryUpdateDto.IsActive) entity.Activate(); else entity.Deactivate();
+            
+            // Preserve original timestamps from mobile sync if provided
+            if (request.CategoryUpdateDto.UpdatedDate.HasValue)
+                entity.UpdatedDate = request.CategoryUpdateDto.UpdatedDate;
+            if (!string.IsNullOrEmpty(request.CategoryUpdateDto.UpdatedBy))
+                entity.UpdatedBy = request.CategoryUpdateDto.UpdatedBy;
             
             await _unitOfWork.SaveChanges(cancellationToken);
 

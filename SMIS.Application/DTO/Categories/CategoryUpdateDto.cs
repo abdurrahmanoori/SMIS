@@ -1,8 +1,9 @@
 using SMIS.Application.Attributes;
+using SMIS.Application.DTO.Common;
 
 namespace SMIS.Application.DTO.Categories
 {
-    public class CategoryUpdateDto
+    public class CategoryUpdateDto : BaseUpdateDto
     {
         [Translatable]
         public string Name { get; set; } = string.Empty;
