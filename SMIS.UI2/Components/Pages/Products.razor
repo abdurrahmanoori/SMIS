@@ -23,16 +23,17 @@
             </div>
 
             <SfGrid @ref="grid" DataSource="@filteredProducts" AllowPaging="true" AllowSorting="true" AllowFiltering="true" 
-                    AllowExcelExport="true" AllowPdfExport="true" AllowSelection="true" Toolbar="@toolbarItems" ShowColumnChooser="true">
+                    AllowExcelExport="true" AllowPdfExport="true" AllowSelection="true" Toolbar="@toolbarItems" ShowColumnChooser="true"
+                    AllowResizing="true">
                 <GridPageSettings PageSize="10"></GridPageSettings>
                 <GridSelectionSettings Type="GridSelectionType.Multiple"></GridSelectionSettings>
                 <GridColumns>
-                    <GridColumn Type="ColumnType.CheckBox" Width="50"></GridColumn>
-                    <GridColumn Field="@nameof(Product.Id)" HeaderText="ID" Width="80"></GridColumn>
-                    <GridColumn Field="@nameof(Product.Name)" HeaderText="Product Name" Width="150"></GridColumn>
-                    <GridColumn Field="@nameof(Product.Category)" HeaderText="Category" Width="120"></GridColumn>
-                    <GridColumn Field="@nameof(Product.Price)" HeaderText="Price" Format="C2" Width="100"></GridColumn>
-                    <GridColumn Field="@nameof(Product.Stock)" HeaderText="Stock" Width="80">
+                    <GridColumn Type="ColumnType.CheckBox" Width="50" MinWidth="50" HideAtMedia="(max-width: 768px)"></GridColumn>
+                    <GridColumn Field="@nameof(Product.Id)" HeaderText="ID" Width="80" MinWidth="60" HideAtMedia="(max-width: 768px)"></GridColumn>
+                    <GridColumn Field="@nameof(Product.Name)" HeaderText="Product Name" Width="150" MinWidth="120"></GridColumn>
+                    <GridColumn Field="@nameof(Product.Category)" HeaderText="Category" Width="120" MinWidth="100" HideAtMedia="(max-width: 576px)"></GridColumn>
+                    <GridColumn Field="@nameof(Product.Price)" HeaderText="Price" Format="C2" Width="100" MinWidth="80"></GridColumn>
+                    <GridColumn Field="@nameof(Product.Stock)" HeaderText="Stock" Width="80" MinWidth="70" HideAtMedia="(max-width: 576px)">
                         <Template>
                             @{
                                 var product = (context as Product)!;
@@ -41,8 +42,8 @@
                             }
                         </Template>
                     </GridColumn>
-                    <GridColumn Field="@nameof(Product.IsActive)" HeaderText="Active" DisplayAsCheckBox="true" Width="80"></GridColumn>
-                    <GridColumn HeaderText="Actions" Width="180">
+                    <GridColumn Field="@nameof(Product.IsActive)" HeaderText="Active" DisplayAsCheckBox="true" Width="80" MinWidth="70" HideAtMedia="(max-width: 992px)"></GridColumn>
+                    <GridColumn HeaderText="Actions" Width="180" MinWidth="120">
                         <Template>
                             @{
                                 var product = (context as Product)!;
@@ -330,6 +331,7 @@
 <style>
     .products-page {
         max-width: 1400px;
+        padding: 10px;
     }
 
     .card-actions {
@@ -351,6 +353,7 @@
     .action-buttons {
         display: flex;
         gap: 5px;
+        flex-wrap: wrap;
     }
 
     .form-group {
@@ -368,6 +371,7 @@
         gap: 10px;
         margin-top: 20px;
         justify-content: flex-end;
+        flex-wrap: wrap;
     }
 
     .low-stock {
@@ -431,6 +435,8 @@
         align-items: center;
         padding: 12px 0;
         border-bottom: 1px solid #f0f0f0;
+        flex-wrap: wrap;
+        gap: 10px;
     }
 
     .detail-row strong {
@@ -463,5 +469,89 @@
     .inactive-chip {
         background-color: #6c757d !important;
         color: white !important;
+    }
+
+    /* Mobile Responsive Styles */
+    @@media (max-width: 768px) {
+        .products-page {
+            padding: 5px;
+        }
+
+        .card-actions {
+            gap: 5px;
+        }
+
+        .card-actions .e-btn {
+            font-size: 12px;
+            padding: 6px 10px;
+        }
+
+        .search-input {
+            max-width: 100%;
+        }
+
+        .action-buttons {
+            gap: 3px;
+        }
+
+        .action-buttons .e-btn {
+            min-width: 32px;
+            padding: 4px;
+        }
+
+        .quick-view-header h3 {
+            font-size: 1.2rem;
+        }
+
+        .quick-view-panel {
+            padding: 15px;
+        }
+
+        .detail-row {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .e-dialog {
+            width: 95% !important;
+            max-width: 95% !important;
+        }
+
+        .dialog-actions {
+            justify-content: stretch;
+        }
+
+        .dialog-actions .e-btn {
+            flex: 1;
+        }
+    }
+
+    @@media (max-width: 576px) {
+        .quick-view-header h3 {
+            font-size: 1rem;
+        }
+
+        .product-image {
+            margin-bottom: 15px;
+        }
+
+        .detail-row .price {
+            font-size: 1.1rem;
+        }
+
+        .e-grid .e-gridcontent {
+            overflow-x: auto;
+        }
+    }
+
+    /* Sidebar responsive */
+    @@media (max-width: 600px) {
+        .e-sidebar {
+            width: 100% !important;
+        }
+
+        .e-sidebar.e-right {
+            width: 100% !important;
+        }
     }
 </style>
