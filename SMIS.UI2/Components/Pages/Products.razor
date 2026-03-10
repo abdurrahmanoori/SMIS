@@ -1,15 +1,16 @@
 @page "/products"
+@using Syncfusion.Blazor.Popups
 
 <div class="products-page">
     <SfCard>
         <CardHeader Title="Product Management" />
         <CardContent>
             <div class="card-actions">
-                <SfButton CssClass="e-primary" IconCss="e-icons e-plus">Add Product</SfButton>
-                <SfButton CssClass="e-info" IconCss="e-icons e-refresh">Refresh</SfButton>
+                <SfButton CssClass="e-primary" IconCss="e-icons e-plus" @onclick="OpenAddDialog">Add Product</SfButton>
+                <SfButton CssClass="e-info" IconCss="e-icons e-refresh" @onclick="RefreshGrid">Refresh</SfButton>
             </div>
 
-            <SfGrid DataSource="@products" AllowPaging="true" AllowSorting="true" AllowFiltering="true">
+            <SfGrid @ref="grid" DataSource="@products" AllowPaging="true" AllowSorting="true" AllowFiltering="true">
                 <GridPageSettings PageSize="10"></GridPageSettings>
                 <GridColumns>
                     <GridColumn Field="@nameof(Product.Id)" HeaderText="ID" Width="80"></GridColumn>
@@ -18,13 +19,77 @@
                     <GridColumn Field="@nameof(Product.Price)" HeaderText="Price" Format="C2" Width="100"></GridColumn>
                     <GridColumn Field="@nameof(Product.Stock)" HeaderText="Stock" Width="80"></GridColumn>
                     <GridColumn Field="@nameof(Product.IsActive)" HeaderText="Active" DisplayAsCheckBox="true" Width="80"></GridColumn>
+                    <GridColumn HeaderText="Actions" Width="150">
+                        <Template>
+                            @{
+                                var product = (context as Product)!;
+                                <div class="action-buttons">
+                                    <SfButton CssClass="e-small e-info" IconCss="e-icons e-edit" @onclick="() => OpenEditDialog(product)"></SfButton>
+                                    <SfButton CssClass="e-small e-danger" IconCss="e-icons e-delete" @onclick="() => OpenDeleteDialog(product)"></SfButton>
+                                </div>
+                            }
+                        </Template>
+                    </GridColumn>
                 </GridColumns>
             </SfGrid>
         </CardContent>
     </SfCard>
 </div>
 
+<SfDialog @bind-Visible="@showDialog" Width="500px" IsModal="true">
+    <DialogTemplates>
+        <Header>@dialogTitle</Header>
+        <Content>
+            <EditForm Model="@currentProduct" OnValidSubmit="SaveProduct">
+                <div class="form-group">
+                    <label>Product Name</label>
+                    <SfTextBox @bind-Value="@currentProduct.Name" Placeholder="Enter product name"></SfTextBox>
+                </div>
+                <div class="form-group">
+                    <label>Category</label>
+                    <SfDropDownList TValue="string" TItem="string" @bind-Value="@currentProduct.Category" 
+                                   DataSource="@categories" Placeholder="Select category">
+                    </SfDropDownList>
+                </div>
+                <div class="form-group">
+                    <label>Price</label>
+                    <SfNumericTextBox TValue="decimal" @bind-Value="@currentProduct.Price" 
+                                     Format="C2" Placeholder="0.00" Min="0">
+                    </SfNumericTextBox>
+                </div>
+                <div class="form-group">
+                    <label>Stock Quantity</label>
+                    <SfNumericTextBox TValue="int" @bind-Value="@currentProduct.Stock" 
+                                     Placeholder="0" Min="0">
+                    </SfNumericTextBox>
+                </div>
+                <div class="form-group">
+                    <SfCheckBox @bind-Checked="@currentProduct.IsActive" Label="Active"></SfCheckBox>
+                </div>
+                <div class="dialog-actions">
+                    <SfButton Type="ButtonType.Submit" CssClass="e-primary" IconCss="e-icons e-save">Save</SfButton>
+                    <SfButton CssClass="e-outline" @onclick="CloseDialog">Cancel</SfButton>
+                </div>
+            </EditForm>
+        </Content>
+    </DialogTemplates>
+</SfDialog>
+
+<SfDialog @bind-Visible="@showDeleteDialog" Width="400px" IsModal="true">
+    <DialogTemplates>
+        <Header>Confirm Delete</Header>
+        <Content>
+            <p>Are you sure you want to delete <strong>@productToDelete?.Name</strong>?</p>
+            <div class="dialog-actions">
+                <SfButton CssClass="e-danger" IconCss="e-icons e-delete" @onclick="ConfirmDelete">Delete</SfButton>
+                <SfButton CssClass="e-outline" @onclick="CloseDeleteDialog">Cancel</SfButton>
+            </div>
+        </Content>
+    </DialogTemplates>
+</SfDialog>
+
 @code {
+    private SfGrid<Product>? grid;
     private List<Product> products = new List<Product>
     {
         new Product { Id = 1, Name = "Coca Cola", Category = "Beverages", Price = 1.50m, Stock = 100, IsActive = true },
@@ -33,6 +98,94 @@
         new Product { Id = 4, Name = "Pen", Category = "Stationery", Price = 0.75m, Stock = 200, IsActive = true },
         new Product { Id = 5, Name = "Rice", Category = "Grocery", Price = 15.00m, Stock = 30, IsActive = true },
     };
+
+    private List<string> categories = new List<string> { "Beverages", "Stationery", "Grocery", "Electronics", "Clothing" };
+    private bool showDialog = false;
+    private bool showDeleteDialog = false;
+    private string dialogTitle = "";
+    private Product currentProduct = new Product();
+    private Product? productToDelete;
+    private bool isEditMode = false;
+
+    private void OpenAddDialog()
+    {
+        dialogTitle = "Add New Product";
+        currentProduct = new Product { IsActive = true };
+        isEditMode = false;
+        showDialog = true;
+    }
+
+    private void OpenEditDialog(Product product)
+    {
+        dialogTitle = "Edit Product";
+        currentProduct = new Product
+        {
+            Id = product.Id,
+            Name = product.Name,
+            Category = product.Category,
+            Price = product.Price,
+            Stock = product.Stock,
+            IsActive = product.IsActive
+        };
+        isEditMode = true;
+        showDialog = true;
+    }
+
+    private void OpenDeleteDialog(Product product)
+    {
+        productToDelete = product;
+        showDeleteDialog = true;
+    }
+
+    private void SaveProduct()
+    {
+        if (isEditMode)
+        {
+            var existing = products.FirstOrDefault(p => p.Id == currentProduct.Id);
+            if (existing != null)
+            {
+                existing.Name = currentProduct.Name;
+                existing.Category = currentProduct.Category;
+                existing.Price = currentProduct.Price;
+                existing.Stock = currentProduct.Stock;
+                existing.IsActive = currentProduct.IsActive;
+            }
+        }
+        else
+        {
+            currentProduct.Id = products.Any() ? products.Max(p => p.Id) + 1 : 1;
+            products.Add(currentProduct);
+        }
+        CloseDialog();
+        grid?.Refresh();
+    }
+
+    private void ConfirmDelete()
+    {
+        if (productToDelete != null)
+        {
+            products.Remove(productToDelete);
+            grid?.Refresh();
+        }
+        CloseDeleteDialog();
+    }
+
+    private void CloseDialog()
+    {
+        showDialog = false;
+        currentProduct = new Product();
+    }
+
+    private void CloseDeleteDialog()
+    {
+        showDeleteDialog = false;
+        productToDelete = null;
+    }
+
+    private void RefreshGrid()
+    {
+        grid?.Refresh();
+    }
 
     public class Product
     {
@@ -54,5 +207,27 @@
         display: flex;
         gap: 10px;
         margin-bottom: 20px;
+    }
+
+    .action-buttons {
+        display: flex;
+        gap: 5px;
+    }
+
+    .form-group {
+        margin-bottom: 15px;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: 500;
+    }
+
+    .dialog-actions {
+        display: flex;
+        gap: 10px;
+        margin-top: 20px;
+        justify-content: flex-end;
     }
 </style>

@@ -1,8 +1,9 @@
 @page "/product-form"
+@page "/product-form/{ProductId:int}"
 
 <div class="product-form-page">
     <SfCard>
-        <CardHeader Title="Add New Product" />
+        <CardHeader Title="@(ProductId.HasValue ? "Edit Product" : "Add New Product")" />
         <CardContent>
             <EditForm Model="@product" OnValidSubmit="HandleSubmit">
                 <div class="form-group">
@@ -42,20 +43,27 @@
                 </div>
 
                 <div class="form-actions">
-                    <SfButton Type="ButtonType.Submit" CssClass="e-primary" IconCss="e-icons e-save">Save Product</SfButton>
+                    <SfButton Type="ButtonType.Submit" CssClass="e-primary" IconCss="e-icons e-save">@(ProductId.HasValue ? "Update" : "Save") Product</SfButton>
                     <SfButton CssClass="e-outline" IconCss="e-icons e-close" @onclick="ClearForm">Clear</SfButton>
+                    <SfButton CssClass="e-outline" IconCss="e-icons e-arrow-left" @onclick="NavigateBack">Back to List</SfButton>
                 </div>
             </EditForm>
 
             @if (showSuccess)
             {
-                <SfMessage Severity="MessageSeverity.Success">Product saved successfully!</SfMessage>
+                <SfMessage Severity="MessageSeverity.Success">Product @(ProductId.HasValue ? "updated" : "saved") successfully!</SfMessage>
             }
         </CardContent>
     </SfCard>
 </div>
 
 @code {
+    [Parameter]
+    public int? ProductId { get; set; }
+
+    [Inject]
+    private NavigationManager? Navigation { get; set; }
+
     private ProductModel product = new ProductModel();
     private bool showSuccess = false;
     private List<string> categories = new List<string> 
@@ -67,14 +75,39 @@
         "Clothing"
     };
 
+    protected override void OnParametersSet()
+    {
+        if (ProductId.HasValue)
+        {
+            LoadProduct(ProductId.Value);
+        }
+    }
+
+    private void LoadProduct(int id)
+    {
+        // Simulate loading product data
+        product = new ProductModel
+        {
+            Name = "Sample Product",
+            Category = "Beverages",
+            Price = 10.50m,
+            Stock = 50,
+            Description = "Sample description",
+            IsActive = true
+        };
+    }
+
     private void HandleSubmit()
     {
         showSuccess = true;
         StateHasChanged();
-        Task.Delay(3000).ContinueWith(_ => 
+        Task.Delay(2000).ContinueWith(_ => 
         {
             showSuccess = false;
-            InvokeAsync(StateHasChanged);
+            InvokeAsync(() =>
+            {
+                Navigation?.NavigateTo("/products");
+            });
         });
     }
 
@@ -82,6 +115,11 @@
     {
         product = new ProductModel();
         showSuccess = false;
+    }
+
+    private void NavigateBack()
+    {
+        Navigation?.NavigateTo("/products");
     }
 
     public class ProductModel
