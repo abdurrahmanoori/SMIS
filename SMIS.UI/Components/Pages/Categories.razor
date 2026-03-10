@@ -11,7 +11,7 @@
     <div class="page-header">
         <h2>📦 Categories</h2>
         <div class="header-actions">
-            <SfButton IconCss="e-icons e-sync" Content="Sync" @onclick="SyncData" CssClass="e-outline"></SfButton>
+            <SfButton IconCss="e-icons e-sync" Content="@(_isSyncing ? "Syncing..." : "Sync")" @onclick="SyncData" CssClass="e-outline" Disabled="@_isSyncing"></SfButton>
             <SfButton IconCss="e-icons e-plus" Content="New Category" @onclick="NavigateToCreate" IsPrimary="true"></SfButton>
         </div>
     </div>
@@ -214,18 +214,34 @@
         _showDialog = false;
     }
 
+    private bool _isSyncing = false;
+
     private async Task SyncData()
     {
+        if (_isSyncing) return;
+        
+        _isSyncing = true;
         _errorMessage = "Syncing...";
-        await ToastObj.ShowAsync();
+        StateHasChanged();
 
-        var result = await SyncService.SyncCategoriesAsync();
-        _errorMessage = result.Message ?? "Sync completed";
-        await ToastObj.ShowAsync();
-
-        if (result.Success)
+        try
         {
-            await LoadCategories();
+            var result = await Task.Run(async () => await CategoryService.SyncAsync());
+            _errorMessage = result.Message ?? "Sync completed";
+            
+            if (result.Success)
+            {
+                await LoadCategories();
+            }
+        }
+        catch (Exception ex)
+        {
+            _errorMessage = $"Sync failed: {ex.Message}";
+        }
+        finally
+        {
+            _isSyncing = false;
+            await InvokeAsync(StateHasChanged);
         }
     }
 
