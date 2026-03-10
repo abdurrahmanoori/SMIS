@@ -1,5 +1,9 @@
 @page "/products"
 @using Syncfusion.Blazor.Popups
+@using Syncfusion.Blazor.Navigations
+@using Syncfusion.Blazor.Data
+@using Syncfusion.Blazor.Grids
+@using GridSelectionType = Syncfusion.Blazor.Grids.SelectionType
 
 <div class="products-page">
     <SfCard>
@@ -7,25 +11,45 @@
         <CardContent>
             <div class="card-actions">
                 <SfButton CssClass="e-primary" IconCss="e-icons e-plus" @onclick="OpenAddDialog">Add Product</SfButton>
+                <SfButton CssClass="e-success" IconCss="e-icons e-export-excel" @onclick="ExportToExcel">Export Excel</SfButton>
+                <SfButton CssClass="e-warning" IconCss="e-icons e-export-pdf" @onclick="ExportToPdf">Export PDF</SfButton>
                 <SfButton CssClass="e-info" IconCss="e-icons e-refresh" @onclick="RefreshGrid">Refresh</SfButton>
             </div>
 
-            <SfGrid @ref="grid" DataSource="@products" AllowPaging="true" AllowSorting="true" AllowFiltering="true">
+            <div class="search-bar">
+                <SfTextBox Placeholder="Search products..." @bind-Value="@searchText" CssClass="search-input">
+                    <TextBoxEvents Input="@OnSearchInput"></TextBoxEvents>
+                </SfTextBox>
+            </div>
+
+            <SfGrid @ref="grid" DataSource="@filteredProducts" AllowPaging="true" AllowSorting="true" AllowFiltering="true" 
+                    AllowExcelExport="true" AllowPdfExport="true" AllowSelection="true" Toolbar="@toolbarItems" ShowColumnChooser="true">
                 <GridPageSettings PageSize="10"></GridPageSettings>
+                <GridSelectionSettings Type="GridSelectionType.Multiple"></GridSelectionSettings>
                 <GridColumns>
+                    <GridColumn Type="ColumnType.CheckBox" Width="50"></GridColumn>
                     <GridColumn Field="@nameof(Product.Id)" HeaderText="ID" Width="80"></GridColumn>
                     <GridColumn Field="@nameof(Product.Name)" HeaderText="Product Name" Width="150"></GridColumn>
                     <GridColumn Field="@nameof(Product.Category)" HeaderText="Category" Width="120"></GridColumn>
                     <GridColumn Field="@nameof(Product.Price)" HeaderText="Price" Format="C2" Width="100"></GridColumn>
-                    <GridColumn Field="@nameof(Product.Stock)" HeaderText="Stock" Width="80"></GridColumn>
+                    <GridColumn Field="@nameof(Product.Stock)" HeaderText="Stock" Width="80">
+                        <Template>
+                            @{
+                                var product = (context as Product)!;
+                                var stockClass = product.Stock < 20 ? "low-stock" : product.Stock < 50 ? "medium-stock" : "high-stock";
+                                <SfChip CssClass="@stockClass">@product.Stock</SfChip>
+                            }
+                        </Template>
+                    </GridColumn>
                     <GridColumn Field="@nameof(Product.IsActive)" HeaderText="Active" DisplayAsCheckBox="true" Width="80"></GridColumn>
-                    <GridColumn HeaderText="Actions" Width="150">
+                    <GridColumn HeaderText="Actions" Width="180">
                         <Template>
                             @{
                                 var product = (context as Product)!;
                                 <div class="action-buttons">
-                                    <SfButton CssClass="e-small e-info" IconCss="e-icons e-edit" @onclick="() => OpenEditDialog(product)"></SfButton>
-                                    <SfButton CssClass="e-small e-danger" IconCss="e-icons e-delete" @onclick="() => OpenDeleteDialog(product)"></SfButton>
+                                    <SfButton CssClass="e-small" IconCss="e-icons e-eye" @onclick="() => OpenQuickView(product)" Title="Quick View"></SfButton>
+                                    <SfButton CssClass="e-small e-info" IconCss="e-icons e-edit" @onclick="() => OpenEditDialog(product)" Title="Edit"></SfButton>
+                                    <SfButton CssClass="e-small e-danger" IconCss="e-icons e-delete" @onclick="() => OpenDeleteDialog(product)" Title="Delete"></SfButton>
                                 </div>
                             }
                         </Template>
@@ -35,6 +59,51 @@
         </CardContent>
     </SfCard>
 </div>
+
+<SfSidebar @ref="sidebar" @bind-IsOpen="@showQuickView" Width="400px" Position="SidebarPosition.Right" Type="SidebarType.Over">
+    <ChildContent>
+        @if (selectedProduct != null)
+        {
+            <div class="quick-view-panel">
+                <div class="quick-view-header">
+                    <h3>@selectedProduct.Name</h3>
+                    <SfButton CssClass="e-small" IconCss="e-icons e-close" @onclick="CloseQuickView"></SfButton>
+                </div>
+                <div class="quick-view-content">
+                    <div class="product-image">
+                        <img src="https://via.placeholder.com/300x200?text=@selectedProduct.Name" alt="@selectedProduct.Name" />
+                    </div>
+                    <div class="product-details">
+                        <div class="detail-row">
+                            <strong>ID:</strong> <span>@selectedProduct.Id</span>
+                        </div>
+                        <div class="detail-row">
+                            <strong>Category:</strong> <SfChip>@selectedProduct.Category</SfChip>
+                        </div>
+                        <div class="detail-row">
+                            <strong>Price:</strong> <span class="price">@selectedProduct.Price.ToString("C2")</span>
+                        </div>
+                        <div class="detail-row">
+                            <strong>Stock:</strong> 
+                            @{
+                                var stockClass = selectedProduct.Stock < 20 ? "low-stock" : selectedProduct.Stock < 50 ? "medium-stock" : "high-stock";
+                                <SfChip CssClass="@stockClass">@selectedProduct.Stock units</SfChip>
+                            }
+                        </div>
+                        <div class="detail-row">
+                            <strong>Status:</strong> 
+                            <SfChip CssClass="@(selectedProduct.IsActive ? "active-chip" : "inactive-chip")">@(selectedProduct.IsActive ? "Active" : "Inactive")</SfChip>
+                        </div>
+                    </div>
+                    <div class="quick-actions">
+                        <SfButton CssClass="e-primary e-block" IconCss="e-icons e-edit" @onclick="() => { CloseQuickView(); OpenEditDialog(selectedProduct); }">Edit Product</SfButton>
+                        <SfButton CssClass="e-danger e-block" IconCss="e-icons e-delete" @onclick="() => { CloseQuickView(); OpenDeleteDialog(selectedProduct); }">Delete Product</SfButton>
+                    </div>
+                </div>
+            </div>
+        }
+    </ChildContent>
+</SfSidebar>
 
 <SfDialog @bind-Visible="@showDialog" Width="500px" IsModal="true">
     <DialogTemplates>
@@ -90,22 +159,80 @@
 
 @code {
     private SfGrid<Product>? grid;
+    private SfSidebar? sidebar;
     private List<Product> products = new List<Product>
     {
-        new Product { Id = 1, Name = "Coca Cola", Category = "Beverages", Price = 1.50m, Stock = 100, IsActive = true },
+        new Product { Id = 1, Name = "Coca Cola", Category = "Beverages", Price = 1.50m, Stock = 15, IsActive = true },
         new Product { Id = 2, Name = "Pepsi", Category = "Beverages", Price = 1.45m, Stock = 85, IsActive = true },
-        new Product { Id = 3, Name = "Notebook", Category = "Stationery", Price = 2.50m, Stock = 50, IsActive = true },
+        new Product { Id = 3, Name = "Notebook", Category = "Stationery", Price = 2.50m, Stock = 45, IsActive = true },
         new Product { Id = 4, Name = "Pen", Category = "Stationery", Price = 0.75m, Stock = 200, IsActive = true },
-        new Product { Id = 5, Name = "Rice", Category = "Grocery", Price = 15.00m, Stock = 30, IsActive = true },
+        new Product { Id = 5, Name = "Rice", Category = "Grocery", Price = 15.00m, Stock = 8, IsActive = true },
+        new Product { Id = 6, Name = "Sprite", Category = "Beverages", Price = 1.40m, Stock = 120, IsActive = true },
+        new Product { Id = 7, Name = "Eraser", Category = "Stationery", Price = 0.50m, Stock = 150, IsActive = false },
     };
 
+    private List<Product> filteredProducts = new List<Product>();
     private List<string> categories = new List<string> { "Beverages", "Stationery", "Grocery", "Electronics", "Clothing" };
+    private List<object> toolbarItems = new List<object> { "ColumnChooser" };
     private bool showDialog = false;
     private bool showDeleteDialog = false;
+    private bool showQuickView = false;
     private string dialogTitle = "";
+    private string searchText = "";
     private Product currentProduct = new Product();
     private Product? productToDelete;
+    private Product? selectedProduct;
     private bool isEditMode = false;
+
+    protected override void OnInitialized()
+    {
+        filteredProducts = products.ToList();
+    }
+
+    private void OnSearchInput(InputEventArgs args)
+    {
+        searchText = args.Value;
+        if (string.IsNullOrWhiteSpace(searchText))
+        {
+            filteredProducts = products.ToList();
+        }
+        else
+        {
+            filteredProducts = products.Where(p => 
+                p.Name.Contains(searchText, StringComparison.OrdinalIgnoreCase) ||
+                p.Category.Contains(searchText, StringComparison.OrdinalIgnoreCase)
+            ).ToList();
+        }
+        StateHasChanged();
+    }
+
+    private void OpenQuickView(Product product)
+    {
+        selectedProduct = product;
+        showQuickView = true;
+    }
+
+    private void CloseQuickView()
+    {
+        showQuickView = false;
+        selectedProduct = null;
+    }
+
+    private async Task ExportToExcel()
+    {
+        if (grid != null)
+        {
+            await grid.ExcelExport();
+        }
+    }
+
+    private async Task ExportToPdf()
+    {
+        if (grid != null)
+        {
+            await grid.PdfExport();
+        }
+    }
 
     private void OpenAddDialog()
     {
@@ -157,7 +284,7 @@
             products.Add(currentProduct);
         }
         CloseDialog();
-        grid?.Refresh();
+        OnSearchInput(new InputEventArgs { Value = searchText });
     }
 
     private void ConfirmDelete()
@@ -165,7 +292,7 @@
         if (productToDelete != null)
         {
             products.Remove(productToDelete);
-            grid?.Refresh();
+            OnSearchInput(new InputEventArgs { Value = searchText });
         }
         CloseDeleteDialog();
     }
@@ -184,7 +311,9 @@
 
     private void RefreshGrid()
     {
-        grid?.Refresh();
+        filteredProducts = products.ToList();
+        searchText = "";
+        StateHasChanged();
     }
 
     public class Product
@@ -200,13 +329,23 @@
 
 <style>
     .products-page {
-        max-width: 1200px;
+        max-width: 1400px;
     }
 
     .card-actions {
         display: flex;
         gap: 10px;
+        margin-bottom: 15px;
+        flex-wrap: wrap;
+    }
+
+    .search-bar {
         margin-bottom: 20px;
+    }
+
+    .search-input {
+        width: 100%;
+        max-width: 400px;
     }
 
     .action-buttons {
@@ -229,5 +368,100 @@
         gap: 10px;
         margin-top: 20px;
         justify-content: flex-end;
+    }
+
+    .low-stock {
+        background-color: #dc3545 !important;
+        color: white !important;
+    }
+
+    .medium-stock {
+        background-color: #ffc107 !important;
+        color: black !important;
+    }
+
+    .high-stock {
+        background-color: #28a745 !important;
+        color: white !important;
+    }
+
+    .quick-view-panel {
+        padding: 20px;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .quick-view-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+        padding-bottom: 15px;
+        border-bottom: 2px solid #e0e0e0;
+    }
+
+    .quick-view-header h3 {
+        margin: 0;
+        font-size: 1.5rem;
+    }
+
+    .quick-view-content {
+        flex: 1;
+        overflow-y: auto;
+    }
+
+    .product-image {
+        margin-bottom: 20px;
+    }
+
+    .product-image img {
+        width: 100%;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .product-details {
+        margin-bottom: 20px;
+    }
+
+    .detail-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 12px 0;
+        border-bottom: 1px solid #f0f0f0;
+    }
+
+    .detail-row strong {
+        color: #666;
+        font-size: 0.9rem;
+    }
+
+    .detail-row .price {
+        font-size: 1.3rem;
+        font-weight: bold;
+        color: #28a745;
+    }
+
+    .quick-actions {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        margin-top: 20px;
+    }
+
+    .e-block {
+        width: 100%;
+    }
+
+    .active-chip {
+        background-color: #28a745 !important;
+        color: white !important;
+    }
+
+    .inactive-chip {
+        background-color: #6c757d !important;
+        color: white !important;
     }
 </style>
