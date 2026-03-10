@@ -64,6 +64,11 @@
         <PackageReference Include="Microsoft.Maui.Controls" />
         <PackageReference Include="Microsoft.AspNetCore.Components.WebView.Maui" />
         <PackageReference Include="Microsoft.Extensions.Logging.Debug" />
+        <PackageReference Include="Syncfusion.Blazor.Themes" />
+        <PackageReference Include="Syncfusion.Blazor.Layouts" />
+        <PackageReference Include="Syncfusion.Blazor.Charts" />
+        <PackageReference Include="Syncfusion.Blazor.Grid" />
+        <PackageReference Include="Syncfusion.Blazor.Cards" />
     </ItemGroup>
 
 </Project>
