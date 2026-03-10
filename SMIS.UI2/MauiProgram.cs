@@ -9,7 +9,7 @@ namespace SMIS.UI2
         public static MauiApp CreateMauiApp()
         {
             // Register Syncfusion license key
-            SyncfusionLicenseProvider.RegisterLicense("Ngo9BigBOggjHTQxAR8/V1JGaF1cXmhKYVJyWmFZfVhgc19CaVZUTGYuP1ZhSXxVdkZjXn9ZdH1QTmJfWUB9XEA=");
+            SyncfusionLicenseProvider.RegisterLicense("Ngo9BigBOggjHTQxAR8/V1NDaF5cWWtCf1FpRmJGdld5fUVHYVZUTXxaS00DNHVRdkdlWXxfcHRVRWBZWER2X0dWYU4=");
 
             var builder = MauiApp.CreateBuilder();
             builder
