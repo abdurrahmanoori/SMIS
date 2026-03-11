@@ -1,4 +1,6 @@
 ﻿@inherits LayoutComponentBase
+@inject IJSRuntime JSRuntime
+@implements IDisposable
 
 <div class="page-container">
     <SfSidebar @ref="sidebar" Width="250px" Type="SidebarType.Auto" @bind-IsOpen="isSidebarOpen" CloseOnDocumentClick="true">
@@ -26,10 +28,35 @@
 @code {
     private SfSidebar? sidebar;
     private bool isSidebarOpen = true;
+    private DotNetObjectReference<MainLayout>? objRef;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            objRef = DotNetObjectReference.Create(this);
+            await JSRuntime.InvokeVoidAsync("setupResizeListener", objRef);
+        }
+    }
+
+    [JSInvokable]
+    public void CloseSidebarFromJS()
+    {
+        if (isSidebarOpen)
+        {
+            isSidebarOpen = false;
+            StateHasChanged();
+        }
+    }
 
     private void ToggleSidebar()
     {
         isSidebarOpen = !isSidebarOpen;
+    }
+
+    public void Dispose()
+    {
+        objRef?.Dispose();
     }
 }
 
