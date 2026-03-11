@@ -3,22 +3,19 @@
 @using Syncfusion.Blazor.Grids
 @using GridSelectionType = Syncfusion.Blazor.Grids.SelectionType
 
-<div class="products-page">
-    <SfCard>
-        <CardHeader Title="Product Management" />
-        <CardContent>
-            <div class="card-actions">
-                <SfButton CssClass="e-primary" IconCss="e-icons e-plus" @onclick="OpenAddDialog">Add Product</SfButton>
-                <SfButton CssClass="e-success" IconCss="e-icons e-export-excel" @onclick="ExportToExcel">Export Excel</SfButton>
-                <SfButton CssClass="e-warning" IconCss="e-icons e-export-pdf" @onclick="ExportToPdf">Export PDF</SfButton>
-                <SfButton CssClass="e-info" IconCss="e-icons e-refresh" @onclick="RefreshGrid">Refresh</SfButton>
-            </div>
+<SfCard>
+    <CardHeader Title="Product Management" />
+    <CardContent>
+        <div class="card-actions">
+            <SfButton CssClass="e-primary" IconCss="e-icons e-plus" @onclick="OpenAddDialog">Add Product</SfButton>
+            <SfButton CssClass="e-success" IconCss="e-icons e-export-excel" @onclick="ExportToExcel">Export Excel</SfButton>
+            <SfButton CssClass="e-warning" IconCss="e-icons e-export-pdf" @onclick="ExportToPdf">Export PDF</SfButton>
+            <SfButton CssClass="e-info" IconCss="e-icons e-refresh" @onclick="RefreshGrid">Refresh</SfButton>
+        </div>
 
-            <div class="search-bar">
-                <SfTextBox Placeholder="Search products..." Value="@searchText" CssClass="search-input">
-                    <TextBoxEvents Input="@OnSearchInput"></TextBoxEvents>
-                </SfTextBox>
-            </div>
+        <SfTextBox Placeholder="Search products..." Value="@searchText" CssClass="search-bar">
+            <TextBoxEvents Input="@OnSearchInput"></TextBoxEvents>
+        </SfTextBox>
 
             <SfGrid @ref="grid" DataSource="@filteredProducts" AllowPaging="true" AllowSorting="true" AllowFiltering="true" 
                     AllowExcelExport="true" AllowPdfExport="true" AllowSelection="true" Toolbar="@toolbarItems" ShowColumnChooser="true"
@@ -55,54 +52,47 @@
                     </GridColumn>
                 </GridColumns>
             </SfGrid>
-        </CardContent>
-    </SfCard>
-</div>
+    </CardContent>
+</SfCard>
 
 @if (showQuickView && selectedProduct != null)
 {
     <SfDialog @bind-Visible="@showQuickView" Width="500px" IsModal="true" ShowCloseIcon="true">
         <DialogTemplates>
             <Header>
-                <div class="dialog-header-content">
-                    <span class="e-icons e-eye"></span>
-                    <span>Product Details</span>
-                </div>
+                <span class="e-icons e-eye"></span>
+                <span>Product Details</span>
             </Header>
             <Content>
-                <div class="quick-view-panel">
-                    <div class="product-image">
-                        <img src="https://via.placeholder.com/450x250?text=@selectedProduct.Name" alt="@selectedProduct.Name" />
-                    </div>
-                    <div class="product-details">
-                        <div class="detail-row">
-                            <strong>Product Name:</strong> <span class="detail-value">@selectedProduct.Name</span>
-                        </div>
-                        <div class="detail-row">
-                            <strong>ID:</strong> <span class="detail-value">@selectedProduct.Id</span>
-                        </div>
-                        <div class="detail-row">
-                            <strong>Category:</strong> <SfChip>@selectedProduct.Category</SfChip>
-                        </div>
-                        <div class="detail-row">
-                            <strong>Price:</strong> <span class="price">@selectedProduct.Price.ToString("C2")</span>
-                        </div>
-                        <div class="detail-row">
-                            <strong>Stock:</strong> 
-                            @{
-                                var stockClass = selectedProduct.Stock < 20 ? "low-stock" : selectedProduct.Stock < 50 ? "medium-stock" : "high-stock";
-                                <SfChip CssClass="@stockClass">@selectedProduct.Stock units</SfChip>
-                            }
-                        </div>
-                        <div class="detail-row">
-                            <strong>Status:</strong> 
-                            <SfChip CssClass="@(selectedProduct.IsActive ? "active-chip" : "inactive-chip")">@(selectedProduct.IsActive ? "Active" : "Inactive")</SfChip>
-                        </div>
-                    </div>
-                    <div class="quick-actions">
-                        <SfButton CssClass="e-primary" IconCss="e-icons e-edit" @onclick="() => { CloseQuickView(); OpenEditDialog(selectedProduct); }">Edit Product</SfButton>
-                        <SfButton CssClass="e-danger" IconCss="e-icons e-delete" @onclick="() => { CloseQuickView(); OpenDeleteDialog(selectedProduct); }">Delete Product</SfButton>
-                    </div>
+                <div class="product-image">
+                    <img src="https://via.placeholder.com/450x250?text=@selectedProduct.Name" alt="@selectedProduct.Name" />
+                </div>
+                <div class="detail-row">
+                    <strong>Product Name:</strong> <span>@selectedProduct.Name</span>
+                </div>
+                <div class="detail-row">
+                    <strong>ID:</strong> <span>@selectedProduct.Id</span>
+                </div>
+                <div class="detail-row">
+                    <strong>Category:</strong> <SfChip>@selectedProduct.Category</SfChip>
+                </div>
+                <div class="detail-row">
+                    <strong>Price:</strong> <span class="price">@selectedProduct.Price.ToString("C2")</span>
+                </div>
+                <div class="detail-row">
+                    <strong>Stock:</strong> 
+                    @{
+                        var stockClass = selectedProduct.Stock < 20 ? "low-stock" : selectedProduct.Stock < 50 ? "medium-stock" : "high-stock";
+                        <SfChip CssClass="@stockClass">@selectedProduct.Stock units</SfChip>
+                    }
+                </div>
+                <div class="detail-row">
+                    <strong>Status:</strong> 
+                    <SfChip CssClass="@(selectedProduct.IsActive ? "active-chip" : "inactive-chip")">@(selectedProduct.IsActive ? "Active" : "Inactive")</SfChip>
+                </div>
+                <div class="quick-actions">
+                    <SfButton CssClass="e-primary" IconCss="e-icons e-edit" @onclick="() => { CloseQuickView(); OpenEditDialog(selectedProduct); }">Edit</SfButton>
+                    <SfButton CssClass="e-danger" IconCss="e-icons e-delete" @onclick="() => { CloseQuickView(); OpenDeleteDialog(selectedProduct); }">Delete</SfButton>
                 </div>
             </Content>
         </DialogTemplates>
@@ -394,12 +384,6 @@
         color: white !important;
     }
 
-    .dialog-header-content {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-    }
-
     .product-image {
         margin-bottom: 20px;
         text-align: center;
@@ -420,11 +404,6 @@
     .detail-row strong {
         color: #666;
         min-width: 120px;
-    }
-
-    .detail-value {
-        color: #333;
-        font-weight: 500;
     }
 
     .price {
