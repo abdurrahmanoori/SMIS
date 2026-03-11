@@ -17,7 +17,7 @@
             </div>
 
             <div class="search-bar">
-                <SfTextBox Placeholder="Search products..." @bind-Value="@searchText" CssClass="search-input">
+                <SfTextBox Placeholder="Search products..." Value="@searchText" CssClass="search-input">
                     <TextBoxEvents Input="@OnSearchInput"></TextBoxEvents>
                 </SfTextBox>
             </div>
@@ -61,50 +61,49 @@
     </SfCard>
 </div>
 
-<SfSidebar @ref="sidebar" @bind-IsOpen="@showQuickView" Width="400px" Position="SidebarPosition.Right" Type="SidebarType.Over">
-    <ChildContent>
-        @if (selectedProduct != null)
-        {
-            <div class="quick-view-panel">
-                <div class="quick-view-header">
-                    <h3>@selectedProduct.Name</h3>
-                    <SfButton CssClass="e-small" IconCss="e-icons e-close" @onclick="CloseQuickView"></SfButton>
+@if (showQuickView && selectedProduct != null)
+{
+    <div class="quick-view-overlay" @onclick="CloseQuickView"></div>
+    <div class="quick-view-sidebar @(showQuickView ? "open" : "")">
+        <div class="quick-view-panel">
+            <div class="quick-view-header">
+                <h3>@selectedProduct.Name</h3>
+                <SfButton CssClass="e-small close-btn" IconCss="e-icons e-close" @onclick="CloseQuickView" IsPrimary="false"></SfButton>
+            </div>
+            <div class="quick-view-content">
+                <div class="product-image">
+                    <img src="https://via.placeholder.com/300x200?text=@selectedProduct.Name" alt="@selectedProduct.Name" />
                 </div>
-                <div class="quick-view-content">
-                    <div class="product-image">
-                        <img src="https://via.placeholder.com/300x200?text=@selectedProduct.Name" alt="@selectedProduct.Name" />
+                <div class="product-details">
+                    <div class="detail-row">
+                        <strong>ID:</strong> <span>@selectedProduct.Id</span>
                     </div>
-                    <div class="product-details">
-                        <div class="detail-row">
-                            <strong>ID:</strong> <span>@selectedProduct.Id</span>
-                        </div>
-                        <div class="detail-row">
-                            <strong>Category:</strong> <SfChip>@selectedProduct.Category</SfChip>
-                        </div>
-                        <div class="detail-row">
-                            <strong>Price:</strong> <span class="price">@selectedProduct.Price.ToString("C2")</span>
-                        </div>
-                        <div class="detail-row">
-                            <strong>Stock:</strong> 
-                            @{
-                                var stockClass = selectedProduct.Stock < 20 ? "low-stock" : selectedProduct.Stock < 50 ? "medium-stock" : "high-stock";
-                                <SfChip CssClass="@stockClass">@selectedProduct.Stock units</SfChip>
-                            }
-                        </div>
-                        <div class="detail-row">
-                            <strong>Status:</strong> 
-                            <SfChip CssClass="@(selectedProduct.IsActive ? "active-chip" : "inactive-chip")">@(selectedProduct.IsActive ? "Active" : "Inactive")</SfChip>
-                        </div>
+                    <div class="detail-row">
+                        <strong>Category:</strong> <SfChip>@selectedProduct.Category</SfChip>
                     </div>
-                    <div class="quick-actions">
-                        <SfButton CssClass="e-primary e-block" IconCss="e-icons e-edit" @onclick="() => { CloseQuickView(); OpenEditDialog(selectedProduct); }">Edit Product</SfButton>
-                        <SfButton CssClass="e-danger e-block" IconCss="e-icons e-delete" @onclick="() => { CloseQuickView(); OpenDeleteDialog(selectedProduct); }">Delete Product</SfButton>
+                    <div class="detail-row">
+                        <strong>Price:</strong> <span class="price">@selectedProduct.Price.ToString("C2")</span>
                     </div>
+                    <div class="detail-row">
+                        <strong>Stock:</strong> 
+                        @{
+                            var stockClass = selectedProduct.Stock < 20 ? "low-stock" : selectedProduct.Stock < 50 ? "medium-stock" : "high-stock";
+                            <SfChip CssClass="@stockClass">@selectedProduct.Stock units</SfChip>
+                        }
+                    </div>
+                    <div class="detail-row">
+                        <strong>Status:</strong> 
+                        <SfChip CssClass="@(selectedProduct.IsActive ? "active-chip" : "inactive-chip")">@(selectedProduct.IsActive ? "Active" : "Inactive")</SfChip>
+                    </div>
+                </div>
+                <div class="quick-actions">
+                    <SfButton CssClass="e-primary e-block" IconCss="e-icons e-edit" @onclick="() => { CloseQuickView(); OpenEditDialog(selectedProduct); }">Edit Product</SfButton>
+                    <SfButton CssClass="e-danger e-block" IconCss="e-icons e-delete" @onclick="() => { CloseQuickView(); OpenDeleteDialog(selectedProduct); }">Delete Product</SfButton>
                 </div>
             </div>
-        }
-    </ChildContent>
-</SfSidebar>
+        </div>
+    </div>
+}
 
 <SfDialog @bind-Visible="@showDialog" Width="500px" IsModal="true">
     <DialogTemplates>
@@ -160,7 +159,6 @@
 
 @code {
     private SfGrid<Product>? grid;
-    private SfSidebar? sidebar;
     private List<Product> products = new List<Product>
     {
         new Product { Id = 1, Name = "Coca Cola", Category = "Beverages", Price = 1.50m, Stock = 15, IsActive = true },
@@ -188,6 +186,7 @@
     protected override void OnInitialized()
     {
         filteredProducts = products.ToList();
+        showQuickView = false; // Ensure sidebar starts closed
     }
 
     private void OnSearchInput(InputEventArgs args)
@@ -211,12 +210,14 @@
     {
         selectedProduct = product;
         showQuickView = true;
+        StateHasChanged();
     }
 
     private void CloseQuickView()
     {
         showQuickView = false;
         selectedProduct = null;
+        StateHasChanged();
     }
 
     private async Task ExportToExcel()
@@ -285,7 +286,7 @@
             products.Add(currentProduct);
         }
         CloseDialog();
-        OnSearchInput(new InputEventArgs { Value = searchText });
+        RefreshFilteredProducts();
     }
 
     private void ConfirmDelete()
@@ -293,9 +294,25 @@
         if (productToDelete != null)
         {
             products.Remove(productToDelete);
-            OnSearchInput(new InputEventArgs { Value = searchText });
+            RefreshFilteredProducts();
         }
         CloseDeleteDialog();
+    }
+
+    private void RefreshFilteredProducts()
+    {
+        if (string.IsNullOrWhiteSpace(searchText))
+        {
+            filteredProducts = products.ToList();
+        }
+        else
+        {
+            filteredProducts = products.Where(p => 
+                p.Name.Contains(searchText, StringComparison.OrdinalIgnoreCase) ||
+                p.Category.Contains(searchText, StringComparison.OrdinalIgnoreCase)
+            ).ToList();
+        }
+        StateHasChanged();
     }
 
     private void CloseDialog()
@@ -403,11 +420,22 @@
         margin-bottom: 20px;
         padding-bottom: 15px;
         border-bottom: 2px solid #e0e0e0;
+        gap: 10px;
     }
 
     .quick-view-header h3 {
         margin: 0;
         font-size: 1.5rem;
+        flex: 1;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .close-btn {
+        flex-shrink: 0;
+        min-width: 36px;
+        height: 36px;
     }
 
     .quick-view-content {
@@ -544,14 +572,57 @@
         }
     }
 
+    /* Quick View Sidebar - Custom Implementation */
+    .quick-view-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 1050;
+    }
+
+    .quick-view-sidebar {
+        position: fixed;
+        top: 0;
+        right: -400px;
+        width: 400px;
+        height: 100vh;
+        background-color: white;
+        box-shadow: -2px 0 8px rgba(0, 0, 0, 0.15);
+        z-index: 1051;
+        transition: right 0.3s ease;
+        overflow-y: auto;
+    }
+
+    .quick-view-sidebar.open {
+        right: 0;
+    }
+
     /* Sidebar responsive */
     @@media (max-width: 600px) {
-        .e-sidebar {
-            width: 100% !important;
+        .quick-view-sidebar {
+            width: 90%;
+            right: -90%;
         }
 
-        .e-sidebar.e-right {
-            width: 100% !important;
+        .close-btn {
+            background-color: #dc3545 !important;
+            color: white !important;
+            min-width: 40px !important;
+            height: 40px !important;
+        }
+
+        .quick-view-header h3 {
+            font-size: 1.1rem;
+        }
+    }
+
+    @@media (max-width: 400px) {
+        .quick-view-sidebar {
+            width: 85%;
+            right: -85%;
         }
     }
 </style>
