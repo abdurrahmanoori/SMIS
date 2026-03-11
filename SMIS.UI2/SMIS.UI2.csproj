@@ -64,6 +64,8 @@
         <PackageReference Include="Microsoft.Maui.Controls" />
         <PackageReference Include="Microsoft.AspNetCore.Components.WebView.Maui" />
         <PackageReference Include="Microsoft.Extensions.Logging.Debug" />
+        <PackageReference Include="Microsoft.Extensions.Configuration.Json" />
+        <PackageReference Include="Microsoft.Extensions.Http" />
         <PackageReference Include="Syncfusion.Blazor.Themes" />
         <PackageReference Include="Syncfusion.Blazor.Buttons" />
         <PackageReference Include="Syncfusion.Blazor.Cards" />
@@ -74,6 +76,23 @@
         <PackageReference Include="Syncfusion.Blazor.Spinner" />
         <PackageReference Include="Syncfusion.Blazor.ProgressBar" />
         <PackageReference Include="Syncfusion.Blazor.DropDowns" />
+        <PackageReference Include="Syncfusion.Blazor.Popups" />
+        <PackageReference Include="CommunityToolkit.Maui" />
+        <PackageReference Include="AutoMapper" />
+        <PackageReference Include="MediatR" />
+        <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\SMIS.Application\SMIS.Application.csproj" />
+        <ProjectReference Include="..\SMIS.Domain\SMIS.Domain.csproj" />
+        <ProjectReference Include="..\SMIS.Infrastructure.Mobile\SMIS.Infrastructure.Mobile.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <EmbeddedResource Include="appsettings.json" />
     </ItemGroup>
 
 </Project>
