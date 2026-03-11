@@ -63,46 +63,52 @@
 
 @if (showQuickView && selectedProduct != null)
 {
-    <div class="quick-view-overlay" @onclick="CloseQuickView"></div>
-    <div class="quick-view-sidebar @(showQuickView ? "open" : "")">
-        <div class="quick-view-panel">
-            <div class="quick-view-header">
-                <h3>@selectedProduct.Name</h3>
-                <SfButton CssClass="e-small close-btn" IconCss="e-icons e-close" @onclick="CloseQuickView" IsPrimary="false"></SfButton>
-            </div>
-            <div class="quick-view-content">
-                <div class="product-image">
-                    <img src="https://via.placeholder.com/300x200?text=@selectedProduct.Name" alt="@selectedProduct.Name" />
+    <SfDialog @bind-Visible="@showQuickView" Width="500px" IsModal="true" ShowCloseIcon="true">
+        <DialogTemplates>
+            <Header>
+                <div class="dialog-header-content">
+                    <span class="e-icons e-eye"></span>
+                    <span>Product Details</span>
                 </div>
-                <div class="product-details">
-                    <div class="detail-row">
-                        <strong>ID:</strong> <span>@selectedProduct.Id</span>
+            </Header>
+            <Content>
+                <div class="quick-view-panel">
+                    <div class="product-image">
+                        <img src="https://via.placeholder.com/450x250?text=@selectedProduct.Name" alt="@selectedProduct.Name" />
                     </div>
-                    <div class="detail-row">
-                        <strong>Category:</strong> <SfChip>@selectedProduct.Category</SfChip>
+                    <div class="product-details">
+                        <div class="detail-row">
+                            <strong>Product Name:</strong> <span class="detail-value">@selectedProduct.Name</span>
+                        </div>
+                        <div class="detail-row">
+                            <strong>ID:</strong> <span class="detail-value">@selectedProduct.Id</span>
+                        </div>
+                        <div class="detail-row">
+                            <strong>Category:</strong> <SfChip>@selectedProduct.Category</SfChip>
+                        </div>
+                        <div class="detail-row">
+                            <strong>Price:</strong> <span class="price">@selectedProduct.Price.ToString("C2")</span>
+                        </div>
+                        <div class="detail-row">
+                            <strong>Stock:</strong> 
+                            @{
+                                var stockClass = selectedProduct.Stock < 20 ? "low-stock" : selectedProduct.Stock < 50 ? "medium-stock" : "high-stock";
+                                <SfChip CssClass="@stockClass">@selectedProduct.Stock units</SfChip>
+                            }
+                        </div>
+                        <div class="detail-row">
+                            <strong>Status:</strong> 
+                            <SfChip CssClass="@(selectedProduct.IsActive ? "active-chip" : "inactive-chip")">@(selectedProduct.IsActive ? "Active" : "Inactive")</SfChip>
+                        </div>
                     </div>
-                    <div class="detail-row">
-                        <strong>Price:</strong> <span class="price">@selectedProduct.Price.ToString("C2")</span>
-                    </div>
-                    <div class="detail-row">
-                        <strong>Stock:</strong> 
-                        @{
-                            var stockClass = selectedProduct.Stock < 20 ? "low-stock" : selectedProduct.Stock < 50 ? "medium-stock" : "high-stock";
-                            <SfChip CssClass="@stockClass">@selectedProduct.Stock units</SfChip>
-                        }
-                    </div>
-                    <div class="detail-row">
-                        <strong>Status:</strong> 
-                        <SfChip CssClass="@(selectedProduct.IsActive ? "active-chip" : "inactive-chip")">@(selectedProduct.IsActive ? "Active" : "Inactive")</SfChip>
+                    <div class="quick-actions">
+                        <SfButton CssClass="e-primary" IconCss="e-icons e-edit" @onclick="() => { CloseQuickView(); OpenEditDialog(selectedProduct); }">Edit Product</SfButton>
+                        <SfButton CssClass="e-danger" IconCss="e-icons e-delete" @onclick="() => { CloseQuickView(); OpenDeleteDialog(selectedProduct); }">Delete Product</SfButton>
                     </div>
                 </div>
-                <div class="quick-actions">
-                    <SfButton CssClass="e-primary e-block" IconCss="e-icons e-edit" @onclick="() => { CloseQuickView(); OpenEditDialog(selectedProduct); }">Edit Product</SfButton>
-                    <SfButton CssClass="e-danger e-block" IconCss="e-icons e-delete" @onclick="() => { CloseQuickView(); OpenDeleteDialog(selectedProduct); }">Delete Product</SfButton>
-                </div>
-            </div>
-        </div>
-    </div>
+            </Content>
+        </DialogTemplates>
+    </SfDialog>
 }
 
 <SfDialog @bind-Visible="@showDialog" Width="500px" IsModal="true">
@@ -407,44 +413,20 @@
     }
 
     .quick-view-panel {
-        padding: 20px;
-        height: 100%;
-        display: flex;
-        flex-direction: column;
+        padding: 0;
     }
 
-    .quick-view-header {
+    .dialog-header-content {
         display: flex;
-        justify-content: space-between;
         align-items: center;
-        margin-bottom: 20px;
-        padding-bottom: 15px;
-        border-bottom: 2px solid #e0e0e0;
         gap: 10px;
-    }
-
-    .quick-view-header h3 {
-        margin: 0;
-        font-size: 1.5rem;
-        flex: 1;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-    }
-
-    .close-btn {
-        flex-shrink: 0;
-        min-width: 36px;
-        height: 36px;
-    }
-
-    .quick-view-content {
-        flex: 1;
-        overflow-y: auto;
+        font-size: 1.1rem;
+        font-weight: 600;
     }
 
     .product-image {
         margin-bottom: 20px;
+        text-align: center;
     }
 
     .product-image img {
@@ -463,13 +445,17 @@
         align-items: center;
         padding: 12px 0;
         border-bottom: 1px solid #f0f0f0;
-        flex-wrap: wrap;
-        gap: 10px;
     }
 
     .detail-row strong {
         color: #666;
-        font-size: 0.9rem;
+        font-size: 0.95rem;
+        min-width: 120px;
+    }
+
+    .detail-row .detail-value {
+        color: #333;
+        font-weight: 500;
     }
 
     .detail-row .price {
@@ -480,13 +466,11 @@
 
     .quick-actions {
         display: flex;
-        flex-direction: column;
         gap: 10px;
-        margin-top: 20px;
-    }
-
-    .e-block {
-        width: 100%;
+        margin-top: 25px;
+        padding-top: 20px;
+        border-top: 2px solid #f0f0f0;
+        justify-content: center;
     }
 
     .active-chip {
@@ -527,19 +511,6 @@
             padding: 4px;
         }
 
-        .quick-view-header h3 {
-            font-size: 1.2rem;
-        }
-
-        .quick-view-panel {
-            padding: 15px;
-        }
-
-        .detail-row {
-            flex-direction: column;
-            align-items: flex-start;
-        }
-
         .e-dialog {
             width: 95% !important;
             max-width: 95% !important;
@@ -552,13 +523,27 @@
         .dialog-actions .e-btn {
             flex: 1;
         }
+
+        .quick-actions {
+            flex-direction: column;
+        }
+
+        .quick-actions .e-btn {
+            width: 100%;
+        }
+
+        .detail-row {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 5px;
+        }
+
+        .detail-row strong {
+            min-width: auto;
+        }
     }
 
     @@media (max-width: 576px) {
-        .quick-view-header h3 {
-            font-size: 1rem;
-        }
-
         .product-image {
             margin-bottom: 15px;
         }
@@ -569,60 +554,6 @@
 
         .e-grid .e-gridcontent {
             overflow-x: auto;
-        }
-    }
-
-    /* Quick View Sidebar - Custom Implementation */
-    .quick-view-overlay {
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background-color: rgba(0, 0, 0, 0.5);
-        z-index: 1050;
-    }
-
-    .quick-view-sidebar {
-        position: fixed;
-        top: 0;
-        right: -400px;
-        width: 400px;
-        height: 100vh;
-        background-color: white;
-        box-shadow: -2px 0 8px rgba(0, 0, 0, 0.15);
-        z-index: 1051;
-        transition: right 0.3s ease;
-        overflow-y: auto;
-    }
-
-    .quick-view-sidebar.open {
-        right: 0;
-    }
-
-    /* Sidebar responsive */
-    @@media (max-width: 600px) {
-        .quick-view-sidebar {
-            width: 90%;
-            right: -90%;
-        }
-
-        .close-btn {
-            background-color: #dc3545 !important;
-            color: white !important;
-            min-width: 40px !important;
-            height: 40px !important;
-        }
-
-        .quick-view-header h3 {
-            font-size: 1.1rem;
-        }
-    }
-
-    @@media (max-width: 400px) {
-        .quick-view-sidebar {
-            width: 85%;
-            right: -85%;
         }
     }
 </style>
