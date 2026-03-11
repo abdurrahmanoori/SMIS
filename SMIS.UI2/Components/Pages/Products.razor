@@ -1,7 +1,5 @@
 @page "/products"
 @using Syncfusion.Blazor.Popups
-@using Syncfusion.Blazor.Navigations
-@using Syncfusion.Blazor.Data
 @using Syncfusion.Blazor.Grids
 @using GridSelectionType = Syncfusion.Blazor.Grids.SelectionType
 
@@ -192,7 +190,6 @@
     protected override void OnInitialized()
     {
         filteredProducts = products.ToList();
-        showQuickView = false; // Ensure sidebar starts closed
     }
 
     private void OnSearchInput(InputEventArgs args)
@@ -216,14 +213,12 @@
     {
         selectedProduct = product;
         showQuickView = true;
-        StateHasChanged();
     }
 
     private void CloseQuickView()
     {
         showQuickView = false;
         selectedProduct = null;
-        StateHasChanged();
     }
 
     private async Task ExportToExcel()
@@ -337,7 +332,6 @@
     {
         filteredProducts = products.ToList();
         searchText = "";
-        StateHasChanged();
     }
 
     public class Product
@@ -352,11 +346,6 @@
 }
 
 <style>
-    .products-page {
-        max-width: 1400px;
-        padding: 10px;
-    }
-
     .card-actions {
         display: flex;
         gap: 10px;
@@ -368,15 +357,9 @@
         margin-bottom: 20px;
     }
 
-    .search-input {
-        width: 100%;
-        max-width: 400px;
-    }
-
     .action-buttons {
         display: flex;
         gap: 5px;
-        flex-wrap: wrap;
     }
 
     .form-group {
@@ -394,7 +377,6 @@
         gap: 10px;
         margin-top: 20px;
         justify-content: flex-end;
-        flex-wrap: wrap;
     }
 
     .low-stock {
@@ -412,16 +394,10 @@
         color: white !important;
     }
 
-    .quick-view-panel {
-        padding: 0;
-    }
-
     .dialog-header-content {
         display: flex;
         align-items: center;
         gap: 10px;
-        font-size: 1.1rem;
-        font-weight: 600;
     }
 
     .product-image {
@@ -432,33 +408,26 @@
     .product-image img {
         width: 100%;
         border-radius: 8px;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    }
-
-    .product-details {
-        margin-bottom: 20px;
     }
 
     .detail-row {
         display: flex;
         justify-content: space-between;
-        align-items: center;
         padding: 12px 0;
         border-bottom: 1px solid #f0f0f0;
     }
 
     .detail-row strong {
         color: #666;
-        font-size: 0.95rem;
         min-width: 120px;
     }
 
-    .detail-row .detail-value {
+    .detail-value {
         color: #333;
         font-weight: 500;
     }
 
-    .detail-row .price {
+    .price {
         font-size: 1.3rem;
         font-weight: bold;
         color: #28a745;
@@ -467,7 +436,7 @@
     .quick-actions {
         display: flex;
         gap: 10px;
-        margin-top: 25px;
+        margin-top: 20px;
         padding-top: 20px;
         border-top: 2px solid #f0f0f0;
         justify-content: center;
@@ -483,27 +452,10 @@
         color: white !important;
     }
 
-    /* Mobile Responsive Styles */
     @@media (max-width: 768px) {
-        .products-page {
-            padding: 5px;
-        }
-
-        .card-actions {
-            gap: 5px;
-        }
-
         .card-actions .e-btn {
             font-size: 12px;
             padding: 6px 10px;
-        }
-
-        .search-input {
-            max-width: 100%;
-        }
-
-        .action-buttons {
-            gap: 3px;
         }
 
         .action-buttons .e-btn {
@@ -513,23 +465,15 @@
 
         .e-dialog {
             width: 95% !important;
-            max-width: 95% !important;
         }
 
-        .dialog-actions {
-            justify-content: stretch;
-        }
-
-        .dialog-actions .e-btn {
+        .dialog-actions .e-btn,
+        .quick-actions .e-btn {
             flex: 1;
         }
 
         .quick-actions {
             flex-direction: column;
-        }
-
-        .quick-actions .e-btn {
-            width: 100%;
         }
 
         .detail-row {
@@ -544,16 +488,8 @@
     }
 
     @@media (max-width: 576px) {
-        .product-image {
-            margin-bottom: 15px;
-        }
-
-        .detail-row .price {
+        .price {
             font-size: 1.1rem;
-        }
-
-        .e-grid .e-gridcontent {
-            overflow-x: auto;
         }
     }
 </style>
