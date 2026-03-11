@@ -1,0 +1,418 @@
+@page "/categories"
+@using SMIS.UI2.Services
+@using SMIS.Application.DTO.Categories
+@using SMIS.Infrastructure.Mobile.Services.Sync
+@using Syncfusion.Blazor.Grids
+@using Syncfusion.Blazor.Buttons
+@using Syncfusion.Blazor.Cards
+@using Syncfusion.Blazor.Notifications
+@using Syncfusion.Blazor.Popups
+@using Syncfusion.Blazor.Inputs
+@inject CategoryService CategoryService
+@inject ISyncService SyncService
+@inject NavigationManager Navigation
+
+<SfCard>
+    <CardHeader Title="Category Management" />
+    <CardContent>
+        <div class="card-actions">
+            <SfButton CssClass="e-primary" IconCss="e-icons e-plus" OnClick="OpenAddDialog">Add Category</SfButton>
+            <SfButton CssClass="e-success" IconCss="e-icons e-export-excel" OnClick="ExportToExcel">Export Excel</SfButton>
+            <SfButton CssClass="e-warning" IconCss="e-icons e-export-pdf" OnClick="ExportToPdf">Export PDF</SfButton>
+            <SfButton CssClass="e-info" IconCss="e-icons e-sync" OnClick="SyncData">Sync</SfButton>
+            <SfButton CssClass="e-success" IconCss="e-icons e-refresh" OnClick="RefreshGrid">Refresh</SfButton>
+        </div>
+
+        <SfTextBox Placeholder="Search categories..." Value="@searchText" CssClass="search-bar">
+            <TextBoxEvents Input="@OnSearchInput"></TextBoxEvents>
+        </SfTextBox>
+
+        @if (_isLoading)
+        {
+            <div class="loading-container">
+                <SfSpinner></SfSpinner>
+            </div>
+        }
+        else
+        {
+            <SfGrid @ref="grid" DataSource="@filteredCategories" AllowPaging="true" AllowSorting="true" AllowFiltering="true" 
+                    AllowExcelExport="true" AllowPdfExport="true" AllowSelection="true" Toolbar="@toolbarItems" ShowColumnChooser="true"
+                    AllowResizing="true">
+                <GridPageSettings PageSize="10"></GridPageSettings>
+                <GridColumns>
+                    <GridColumn Field="@nameof(CategoryDto.Name)" HeaderText="Name" Width="150"></GridColumn>
+                    <GridColumn Field="@nameof(CategoryDto.Code)" HeaderText="Code" Width="100"></GridColumn>
+                    <GridColumn Field="@nameof(CategoryDto.Description)" HeaderText="Description" Width="200"></GridColumn>
+                    <GridColumn Field="@nameof(CategoryDto.IsActive)" HeaderText="Active" DisplayAsCheckBox="true" Width="80"></GridColumn>
+                    <GridColumn HeaderText="Actions" Width="180">
+                        <Template>
+                            @{
+                                var category = (context as CategoryDto)!;
+                                <div class="action-buttons">
+                                    <SfButton CssClass="e-small" IconCss="e-icons e-eye" OnClick="() => OpenQuickView(category)" Title="Quick View"></SfButton>
+                                    <SfButton CssClass="e-small e-info" IconCss="e-icons e-edit" OnClick="() => OpenEditDialog(category)" Title="Edit"></SfButton>
+                                </div>
+                            }
+                        </Template>
+                    </GridColumn>
+                </GridColumns>
+            </SfGrid>
+        }
+    </CardContent>
+</SfCard>
+
+@if (showQuickView && selectedCategory != null)
+{
+    <SfDialog @bind-Visible="@showQuickView" Width="500px" IsModal="true" ShowCloseIcon="true">
+        <DialogTemplates>
+            <Header>
+                <span class="e-icons e-eye"></span>
+                <span>Category Details</span>
+            </Header>
+            <Content>
+                <div class="detail-row">
+                    <strong>Category Name:</strong> <span>@selectedCategory.Name</span>
+                </div>
+                <div class="detail-row">
+                    <strong>Code:</strong> <span>@(selectedCategory.Code ?? "N/A")</span>
+                </div>
+                <div class="detail-row">
+                    <strong>Description:</strong> <span>@(selectedCategory.Description ?? "N/A")</span>
+                </div>
+                <div class="detail-row">
+                    <strong>Status:</strong> 
+                    <SfChip CssClass="@(selectedCategory.IsActive ? "active-chip" : "inactive-chip")">@(selectedCategory.IsActive ? "Active" : "Inactive")</SfChip>
+                </div>
+                <div class="quick-actions">
+                    <SfButton CssClass="e-primary" IconCss="e-icons e-edit" OnClick="() => { CloseQuickView(); OpenEditDialog(selectedCategory); }">Edit</SfButton>
+                </div>
+            </Content>
+        </DialogTemplates>
+    </SfDialog>
+}
+
+<SfDialog @bind-Visible="@showDialog" Width="500px" IsModal="true">
+    <DialogTemplates>
+        <Header>@dialogTitle</Header>
+        <Content>
+            <EditForm Model="@currentCategory" OnValidSubmit="SaveCategory">
+                <div class="form-group">
+                    <label>Category Name</label>
+                    <SfTextBox @bind-Value="@currentCategory.Name" Placeholder="Enter category name"></SfTextBox>
+                </div>
+                <div class="form-group">
+                    <label>Code</label>
+                    <SfTextBox @bind-Value="@currentCategory.Code" Placeholder="Enter category code"></SfTextBox>
+                </div>
+                <div class="form-group">
+                    <label>Description</label>
+                    <SfTextBox @bind-Value="@currentCategory.Description" Multiline="true" Placeholder="Enter description"></SfTextBox>
+                </div>
+                <div class="form-group">
+                    <SfCheckBox @bind-Checked="@currentCategory.IsActive" Label="Active"></SfCheckBox>
+                </div>
+                <div class="dialog-actions">
+                    <SfButton Type="ButtonType.Submit" CssClass="e-primary" IconCss="e-icons e-save">Save</SfButton>
+                    <SfButton CssClass="e-outline" OnClick="CloseDialog">Cancel</SfButton>
+                </div>
+            </EditForm>
+        </Content>
+    </DialogTemplates>
+</SfDialog>
+
+<SfToast @ref="ToastObj" Title="Category" Content="@_toastMessage" ShowCloseButton="true">
+    <ToastPosition X="Right" Y="Top"></ToastPosition>
+</SfToast>
+
+@code {
+    private SfGrid<CategoryDto>? grid;
+    private List<CategoryDto> _categories = new();
+    private List<CategoryDto> filteredCategories = new();
+    private bool _isLoading = true;
+    private bool showDialog = false;
+    private bool showQuickView = false;
+    private string dialogTitle = "";
+    private string searchText = "";
+    private string _toastMessage = "";
+    private CategoryFormModel currentCategory = new();
+    private CategoryDto? selectedCategory;
+    private bool isEditMode = false;
+    private SfToast ToastObj;
+    private List<object> toolbarItems = new List<object> { "ColumnChooser" };
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadCategories();
+    }
+
+    private async Task LoadCategories()
+    {
+        _isLoading = true;
+        
+        var result = await CategoryService.GetAllAsync(1, 100);
+
+        if (result.Success && result.Response != null)
+        {
+            _categories = result.Response.Items;
+            filteredCategories = _categories.ToList();
+        }
+        else
+        {
+            _toastMessage = result.Message ?? "Failed to load categories";
+            await ToastObj.ShowAsync();
+        }
+
+        _isLoading = false;
+    }
+
+    private void OnSearchInput(InputEventArgs args)
+    {
+        searchText = args.Value;
+        if (string.IsNullOrWhiteSpace(searchText))
+        {
+            filteredCategories = _categories.ToList();
+        }
+        else
+        {
+            filteredCategories = _categories.Where(c => 
+                c.Name.Contains(searchText, StringComparison.OrdinalIgnoreCase) ||
+                (c.Code != null && c.Code.Contains(searchText, StringComparison.OrdinalIgnoreCase))
+            ).ToList();
+        }
+        StateHasChanged();
+    }
+
+    private void OpenQuickView(CategoryDto category)
+    {
+        selectedCategory = category;
+        showQuickView = true;
+    }
+
+    private void CloseQuickView()
+    {
+        showQuickView = false;
+        selectedCategory = null;
+    }
+
+    private async Task ExportToExcel()
+    {
+        if (grid != null)
+        {
+            await grid.ExcelExport();
+        }
+    }
+
+    private async Task ExportToPdf()
+    {
+        if (grid != null)
+        {
+            await grid.PdfExport();
+        }
+    }
+
+    private void OpenAddDialog()
+    {
+        dialogTitle = "Add New Category";
+        currentCategory = new CategoryFormModel { IsActive = true };
+        isEditMode = false;
+        showDialog = true;
+    }
+
+    private void OpenEditDialog(CategoryDto category)
+    {
+        dialogTitle = "Edit Category";
+        currentCategory = new CategoryFormModel
+        {
+            Id = category.Id,
+            Name = category.Name,
+            Code = category.Code,
+            Description = category.Description,
+            IsActive = category.IsActive
+        };
+        isEditMode = true;
+        showDialog = true;
+    }
+
+    private async Task SaveCategory()
+    {
+        if (string.IsNullOrWhiteSpace(currentCategory.Name))
+        {
+            _toastMessage = "Name is required";
+            await ToastObj.ShowAsync();
+            return;
+        }
+
+        if (isEditMode)
+        {
+            var updateDto = new CategoryUpdateDto
+            {
+                Name = currentCategory.Name,
+                Code = currentCategory.Code,
+                Description = currentCategory.Description,
+                IsActive = currentCategory.IsActive
+            };
+            var result = await CategoryService.UpdateAsync(currentCategory.Id, updateDto);
+            _toastMessage = result.Success ? "Category updated successfully" : result.Message ?? "Update failed";
+        }
+        else
+        {
+            var createDto = new CategoryCreateDto
+            {
+                Name = currentCategory.Name,
+                Code = currentCategory.Code,
+                Description = currentCategory.Description,
+                IsActive = currentCategory.IsActive
+            };
+            var result = await CategoryService.CreateAsync(createDto);
+            _toastMessage = result.Success ? "Category created successfully" : result.Message ?? "Create failed";
+        }
+
+        await ToastObj.ShowAsync();
+        CloseDialog();
+        await LoadCategories();
+    }
+
+    private void CloseDialog()
+    {
+        showDialog = false;
+        currentCategory = new CategoryFormModel();
+    }
+
+    private async Task SyncData()
+    {
+        _toastMessage = "Syncing...";
+        await ToastObj.ShowAsync();
+
+        var result = await SyncService.SyncCategoriesAsync();
+        _toastMessage = result.Message ?? "Sync completed";
+        await ToastObj.ShowAsync();
+
+        if (result.Success)
+        {
+            await LoadCategories();
+        }
+    }
+
+    private async Task RefreshGrid()
+    {
+        searchText = "";
+        await LoadCategories();
+    }
+
+    private class CategoryFormModel
+    {
+        public string Id { get; set; } = "";
+        public string Name { get; set; } = "";
+        public string? Code { get; set; }
+        public string? Description { get; set; }
+        public bool IsActive { get; set; } = true;
+    }
+}
+
+<style>
+    .card-actions {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 15px;
+        flex-wrap: wrap;
+    }
+
+    .search-bar {
+        margin-bottom: 20px;
+    }
+
+    .loading-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 300px;
+    }
+
+    .action-buttons {
+        display: flex;
+        gap: 5px;
+    }
+
+    .form-group {
+        margin-bottom: 15px;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: 500;
+    }
+
+    .dialog-actions {
+        display: flex;
+        gap: 10px;
+        margin-top: 20px;
+        justify-content: flex-end;
+    }
+
+    .detail-row {
+        display: flex;
+        justify-content: space-between;
+        padding: 12px 0;
+        border-bottom: 1px solid #f0f0f0;
+    }
+
+    .detail-row strong {
+        color: #666;
+        min-width: 120px;
+    }
+
+    .quick-actions {
+        display: flex;
+        gap: 10px;
+        margin-top: 20px;
+        padding-top: 20px;
+        border-top: 2px solid #f0f0f0;
+        justify-content: center;
+    }
+
+    .active-chip {
+        background-color: #28a745 !important;
+        color: white !important;
+    }
+
+    .inactive-chip {
+        background-color: #6c757d !important;
+        color: white !important;
+    }
+
+    @@media (max-width: 768px) {
+        .card-actions .e-btn {
+            font-size: 12px;
+            padding: 6px 10px;
+        }
+
+        .action-buttons .e-btn {
+            min-width: 32px;
+            padding: 4px;
+        }
+
+        .e-dialog {
+            width: 95% !important;
+        }
+
+        .dialog-actions .e-btn,
+        .quick-actions .e-btn {
+            flex: 1;
+        }
+
+        .quick-actions {
+            flex-direction: column;
+        }
+
+        .detail-row {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 5px;
+        }
+
+        .detail-row strong {
+            min-width: auto;
+        }
+    }
+</style>
