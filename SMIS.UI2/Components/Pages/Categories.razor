@@ -17,6 +17,8 @@
     <CardContent>
         <div class="card-actions">
             <SfButton CssClass="e-primary" IconCss="e-icons e-plus" OnClick="OpenAddDialog">Add Category</SfButton>
+            <SfButton CssClass="e-success" IconCss="e-icons e-export-excel" OnClick="ExportToExcel">Export Excel</SfButton>
+            <SfButton CssClass="e-warning" IconCss="e-icons e-export-pdf" OnClick="ExportToPdf">Export PDF</SfButton>
             <SfButton CssClass="e-info" IconCss="e-icons e-sync" OnClick="SyncData">Sync</SfButton>
             <SfButton CssClass="e-success" IconCss="e-icons e-refresh" OnClick="RefreshGrid">Refresh</SfButton>
         </div>
@@ -34,7 +36,8 @@
         else
         {
             <SfGrid @ref="grid" DataSource="@filteredCategories" AllowPaging="true" AllowSorting="true" AllowFiltering="true" 
-                    AllowSelection="true" ShowColumnChooser="true" AllowResizing="true">
+                    AllowExcelExport="true" AllowPdfExport="true" AllowSelection="true" Toolbar="@toolbarItems" ShowColumnChooser="true"
+                    AllowResizing="true">
                 <GridPageSettings PageSize="10"></GridPageSettings>
                 <GridColumns>
                     <GridColumn Field="@nameof(CategoryDto.Name)" HeaderText="Name" Width="150"></GridColumn>
@@ -135,6 +138,7 @@
     private CategoryDto? selectedCategory;
     private bool isEditMode = false;
     private SfToast ToastObj;
+    private List<object> toolbarItems = new List<object> { "ColumnChooser" };
 
     protected override async Task OnInitializedAsync()
     {
@@ -188,6 +192,22 @@
     {
         showQuickView = false;
         selectedCategory = null;
+    }
+
+    private async Task ExportToExcel()
+    {
+        if (grid != null)
+        {
+            await grid.ExcelExport();
+        }
+    }
+
+    private async Task ExportToPdf()
+    {
+        if (grid != null)
+        {
+            await grid.PdfExport();
+        }
     }
 
     private void OpenAddDialog()
