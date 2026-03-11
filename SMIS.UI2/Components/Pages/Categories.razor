@@ -283,7 +283,7 @@
         _toastMessage = "Syncing...";
         await ToastObj.ShowAsync();
 
-        var result = await SyncService.SyncCategoriesAsync();
+        var result = await CategoryService.SyncAsync();
         _toastMessage = result.Message ?? "Sync completed";
         await ToastObj.ShowAsync();
 

@@ -21,7 +21,7 @@ public class CategoryService
         _connectivity = connectivity;
     }
 
-    public async Task<ApiResponse<AppPagedList>> GetAllAsync(int pageNumber = 0, int pageSize = 0)
+    public async Task<ApiResponse<AppPagedList>> GetAllAsync(int pageNumber = 0, int pageSize = 10)
     {
         pageNumber = pageNumber > 0 ? pageNumber : AppPagedList.DefaultPageNumber;
         pageSize = pageSize > 0 ? pageSize : AppPagedList.DefaultPageSize;
