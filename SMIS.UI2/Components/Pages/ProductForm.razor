@@ -1,71 +1,119 @@
 @page "/product-form"
 @page "/product-form/{ProductId:int}"
+@using System.ComponentModel.DataAnnotations
+@using Syncfusion.Blazor.Notifications
+@using ChangeEventArgs = Microsoft.AspNetCore.Components.ChangeEventArgs
+@inject NavigationManager Navigation
+@inject IJSRuntime JSRuntime
 
-<div class="product-form-page">
-    <SfCard>
-        <CardHeader Title="@(ProductId.HasValue ? "Edit Product" : "Add New Product")" />
-        <CardContent>
-            <EditForm Model="@product" OnValidSubmit="HandleSubmit">
+<SfCard>
+    <CardHeader Title="@(ProductId.HasValue ? "Edit Product" : "Add New Product")" />
+    <CardContent>
+        <EditForm Model="@product" OnValidSubmit="HandleSubmit">
+            <DataAnnotationsValidator />
+            
+            <div class="form-row">
                 <div class="form-group">
-                    <label>Product Name</label>
+                    <label>Product Name <span class="required">*</span></label>
                     <SfTextBox @bind-Value="@product.Name" Placeholder="Enter product name"></SfTextBox>
+                    <ValidationMessage For="@(() => product.Name)" />
                 </div>
 
                 <div class="form-group">
-                    <label>Category</label>
+                    <label>SKU/Barcode</label>
+                    <SfTextBox @bind-Value="@product.SKU" Placeholder="Enter SKU or barcode"></SfTextBox>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Category <span class="required">*</span></label>
                     <SfDropDownList TValue="string" TItem="string" @bind-Value="@product.Category" 
                                    DataSource="@categories" Placeholder="Select category">
                     </SfDropDownList>
+                    <ValidationMessage For="@(() => product.Category)" />
                 </div>
 
                 <div class="form-group">
-                    <label>Price</label>
+                    <label>Price <span class="required">*</span></label>
                     <SfNumericTextBox TValue="decimal?" @bind-Value="@product.Price" 
                                      Format="C2" Placeholder="0.00" Min="0">
                     </SfNumericTextBox>
+                    <ValidationMessage For="@(() => product.Price)" />
                 </div>
+            </div>
 
+            <div class="form-row">
                 <div class="form-group">
-                    <label>Stock Quantity</label>
+                    <label>Stock Quantity <span class="required">*</span></label>
                     <SfNumericTextBox TValue="int?" @bind-Value="@product.Stock" 
                                      Placeholder="0" Min="0">
                     </SfNumericTextBox>
+                    <ValidationMessage For="@(() => product.Stock)" />
                 </div>
 
                 <div class="form-group">
-                    <label>Description</label>
-                    <SfTextBox @bind-Value="@product.Description" Multiline="true" 
-                              Placeholder="Enter product description"></SfTextBox>
+                    <label>Reorder Level</label>
+                    <SfNumericTextBox TValue="int?" @bind-Value="@product.ReorderLevel" 
+                                     Placeholder="Minimum stock level" Min="0">
+                    </SfNumericTextBox>
                 </div>
+            </div>
 
-                <div class="form-group">
-                    <SfCheckBox @bind-Checked="@product.IsActive" Label="Active"></SfCheckBox>
+            <div class="form-group full-width">
+                <label>Product Image</label>
+                <div class="image-upload-container">
+                    @if (!string.IsNullOrEmpty(product.ImageUrl))
+                    {
+                        <div class="image-preview">
+                            <img src="@product.ImageUrl" alt="Product preview" />
+                            <SfButton CssClass="e-small e-danger remove-image" IconCss="e-icons e-close" @onclick="RemoveImage"></SfButton>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="image-placeholder" @onclick="TriggerImageUpload">
+                            <span class="e-icons e-image"></span>
+                            <p>Click to upload image</p>
+                        </div>
+                    }
+                    <input type="file" @ref="fileInput" accept="image/*" @onchange="OnImageChange" style="display: none;" />
                 </div>
+            </div>
 
-                <div class="form-actions">
-                    <SfButton Type="ButtonType.Submit" CssClass="e-primary" IconCss="e-icons e-save">@(ProductId.HasValue ? "Update" : "Save") Product</SfButton>
-                    <SfButton CssClass="e-outline" IconCss="e-icons e-close" @onclick="ClearForm">Clear</SfButton>
-                    <SfButton CssClass="e-outline" IconCss="e-icons e-arrow-left" @onclick="NavigateBack">Back to List</SfButton>
-                </div>
-            </EditForm>
+            <div class="form-group full-width">
+                <label>Description</label>
+                <SfTextBox @bind-Value="@product.Description" Multiline="true" RowCount="4"
+                          Placeholder="Enter product description"></SfTextBox>
+            </div>
 
-            @if (showSuccess)
-            {
-                <SfMessage Severity="MessageSeverity.Success">Product @(ProductId.HasValue ? "updated" : "saved") successfully!</SfMessage>
-            }
-        </CardContent>
-    </SfCard>
-</div>
+            <div class="form-group full-width">
+                <SfCheckBox @bind-Checked="@product.IsActive" Label="Active Product"></SfCheckBox>
+            </div>
+
+            <div class="form-actions">
+                <SfButton Type="ButtonType.Submit" CssClass="e-primary" IconCss="e-icons e-save">
+                    @(ProductId.HasValue ? "Update" : "Save") Product
+                </SfButton>
+                <SfButton CssClass="e-outline" IconCss="e-icons e-refresh" @onclick="ClearForm">Clear</SfButton>
+                <SfButton CssClass="e-outline" IconCss="e-icons e-arrow-left" @onclick="NavigateBack">Back to List</SfButton>
+            </div>
+        </EditForm>
+    </CardContent>
+</SfCard>
+
+<SfToast @ref="toast" Title="Success" Content="@toastMessage" Timeout="3000">
+    <ToastPosition X="Right" Y="Top"></ToastPosition>
+</SfToast>
 
 @code {
     [Parameter]
     public int? ProductId { get; set; }
 
-    [Inject]
-    private NavigationManager? Navigation { get; set; }
-
     private ProductModel product = new ProductModel();
-    private bool showSuccess = false;
+    private SfToast? toast;
+    private string toastMessage = "";
+    private ElementReference fileInput;
     private List<string> categories = new List<string> 
     { 
         "Beverages", 
@@ -85,73 +133,191 @@
 
     private void LoadProduct(int id)
     {
-        // Simulate loading product data
         product = new ProductModel
         {
             Name = "Sample Product",
+            SKU = "SKU-001",
             Category = "Beverages",
             Price = 10.50m,
             Stock = 50,
+            ReorderLevel = 10,
             Description = "Sample description",
+            ImageUrl = "https://via.placeholder.com/300x200?text=Product",
             IsActive = true
         };
     }
 
-    private void HandleSubmit()
+    private async Task HandleSubmit()
     {
-        showSuccess = true;
-        StateHasChanged();
-        Task.Delay(2000).ContinueWith(_ => 
-        {
-            showSuccess = false;
-            InvokeAsync(() =>
-            {
-                Navigation?.NavigateTo("/products");
-            });
-        });
+        toastMessage = $"Product {(ProductId.HasValue ? "updated" : "saved")} successfully!";
+        await toast!.ShowAsync();
+        
+        await Task.Delay(2000);
+        Navigation.NavigateTo("/products");
     }
 
     private void ClearForm()
     {
         product = new ProductModel();
-        showSuccess = false;
     }
 
     private void NavigateBack()
     {
-        Navigation?.NavigateTo("/products");
+        Navigation.NavigateTo("/products");
+    }
+
+    private async Task TriggerImageUpload()
+    {
+        var module = await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./js/fileHelper.js");
+        await module.InvokeVoidAsync("triggerFileInput", fileInput);
+    }
+
+    private void OnImageChange(ChangeEventArgs e)
+    {
+        product.ImageUrl = "https://via.placeholder.com/300x200?text=Uploaded+Image";
+    }
+
+    private void RemoveImage()
+    {
+        product.ImageUrl = string.Empty;
     }
 
     public class ProductModel
     {
+        [Required(ErrorMessage = "Product name is required")]
         public string Name { get; set; } = string.Empty;
+        
+        public string SKU { get; set; } = string.Empty;
+        
+        [Required(ErrorMessage = "Category is required")]
         public string Category { get; set; } = string.Empty;
+        
+        [Required(ErrorMessage = "Price is required")]
+        [Range(0.01, double.MaxValue, ErrorMessage = "Price must be greater than 0")]
         public decimal? Price { get; set; }
+        
+        [Required(ErrorMessage = "Stock quantity is required")]
+        [Range(0, int.MaxValue, ErrorMessage = "Stock must be 0 or greater")]
         public int? Stock { get; set; }
+        
+        public int? ReorderLevel { get; set; }
         public string Description { get; set; } = string.Empty;
+        public string ImageUrl { get; set; } = string.Empty;
         public bool IsActive { get; set; } = true;
     }
 }
 
 <style>
-    .product-form-page {
-        max-width: 600px;
-    }
-
-    .form-group {
+    .form-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
         margin-bottom: 20px;
     }
 
+    .form-group {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .form-group.full-width {
+        grid-column: 1 / -1;
+    }
+
     .form-group label {
-        display: block;
         margin-bottom: 8px;
         font-weight: 500;
         color: #212529;
+    }
+
+    .required {
+        color: #dc3545;
+    }
+
+    .validation-message {
+        color: #dc3545;
+        font-size: 0.875rem;
+        margin-top: 4px;
+    }
+
+    .image-upload-container {
+        margin-top: 8px;
+    }
+
+    .image-preview {
+        position: relative;
+        width: 300px;
+        height: 200px;
+        border-radius: 8px;
+        overflow: hidden;
+        border: 2px solid #dee2e6;
+    }
+
+    .image-preview img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .remove-image {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background-color: rgba(220, 53, 69, 0.9) !important;
+    }
+
+    .image-placeholder {
+        width: 300px;
+        height: 200px;
+        border: 2px dashed #dee2e6;
+        border-radius: 8px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.3s;
+    }
+
+    .image-placeholder:hover {
+        border-color: #0d6efd;
+        background-color: #f8f9fa;
+    }
+
+    .image-placeholder .e-icons {
+        font-size: 48px;
+        color: #6c757d;
+        margin-bottom: 10px;
+    }
+
+    .image-placeholder p {
+        color: #6c757d;
+        margin: 0;
     }
 
     .form-actions {
         display: flex;
         gap: 10px;
         margin-top: 30px;
+    }
+
+    @@media (max-width: 768px) {
+        .form-row {
+            grid-template-columns: 1fr;
+        }
+
+        .image-preview,
+        .image-placeholder {
+            width: 100%;
+            max-width: 300px;
+        }
+
+        .form-actions {
+            flex-direction: column;
+        }
+
+        .form-actions .e-btn {
+            width: 100%;
+        }
     }
 </style>
