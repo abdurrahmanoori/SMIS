@@ -148,7 +148,7 @@
     private async Task LoadCategories()
     {
         _isLoading = true;
-        
+
         var result = await CategoryService.GetAllAsync(1, 100);
 
         if (result.Success && result.Response != null)
@@ -280,17 +280,26 @@
 
     private async Task SyncData()
     {
-        _toastMessage = "Syncing...";
-        await ToastObj.ShowAsync();
+        await ShowToast("Syncing...");
 
         var result = await CategoryService.SyncAsync();
-        _toastMessage = result.Message ?? "Sync completed";
-        await ToastObj.ShowAsync();
+        await ShowToast(result.Message ?? "Sync completed");
 
         if (result.Success)
         {
             await LoadCategories();
         }
+    }
+
+    private async Task ShowToast(string message)
+    {
+        var toastModel = new ToastModel
+        {
+            Title = "Category",
+            Content = message,
+            CssClass = "e-toast-info"
+        };
+        await ToastObj.ShowAsync(toastModel);
     }
 
     private async Task RefreshGrid()
