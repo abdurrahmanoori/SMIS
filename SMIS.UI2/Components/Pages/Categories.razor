@@ -1,5 +1,6 @@
 @page "/categories"
 @using SMIS.UI2.Services
+@using SMIS.UI2.Helpers
 @using SMIS.Application.DTO.Categories
 @using SMIS.Infrastructure.Mobile.Services.Sync
 @using Syncfusion.Blazor.Grids
@@ -158,8 +159,7 @@
         }
         else
         {
-            _toastMessage = result.Message ?? "Failed to load categories";
-            await ToastObj.ShowAsync();
+            await ToastHelper.ShowErrorAsync(ToastObj, result.Message ?? "Failed to load categories", "Category");
         }
 
         _isLoading = false;
@@ -237,8 +237,7 @@
     {
         if (string.IsNullOrWhiteSpace(currentCategory.Name))
         {
-            _toastMessage = "Name is required";
-            await ToastObj.ShowAsync();
+            await ToastHelper.ShowWarningAsync(ToastObj, "Name is required", "Category");
             return;
         }
 
@@ -252,7 +251,10 @@
                 IsActive = currentCategory.IsActive
             };
             var result = await CategoryService.UpdateAsync(currentCategory.Id, updateDto);
-            _toastMessage = result.Success ? "Category updated successfully" : result.Message ?? "Update failed";
+            if (result.Success)
+                await ToastHelper.ShowSuccessAsync(ToastObj, "Category updated successfully", "Category");
+            else
+                await ToastHelper.ShowErrorAsync(ToastObj, result.Message ?? "Update failed", "Category");
         }
         else
         {
@@ -264,10 +266,12 @@
                 IsActive = currentCategory.IsActive
             };
             var result = await CategoryService.CreateAsync(createDto);
-            _toastMessage = result.Success ? "Category created successfully" : result.Message ?? "Create failed";
+            if (result.Success)
+                await ToastHelper.ShowSuccessAsync(ToastObj, "Category created successfully", "Category");
+            else
+                await ToastHelper.ShowErrorAsync(ToastObj, result.Message ?? "Create failed", "Category");
         }
 
-        await ToastObj.ShowAsync();
         CloseDialog();
         await LoadCategories();
     }
@@ -280,26 +284,18 @@
 
     private async Task SyncData()
     {
-        await ShowToast("Syncing...");
+        await ToastHelper.ShowInfoAsync(ToastObj, "Syncing...", "Category");
 
         var result = await CategoryService.SyncAsync();
-        await ShowToast(result.Message ?? "Sync completed");
+        if (result.Success)
+            await ToastHelper.ShowSuccessAsync(ToastObj, result.Message ?? "Sync completed", "Category");
+        else
+            await ToastHelper.ShowErrorAsync(ToastObj, result.Message ?? "Sync failed", "Category");
 
         if (result.Success)
         {
             await LoadCategories();
         }
-    }
-
-    private async Task ShowToast(string message)
-    {
-        var toastModel = new ToastModel
-        {
-            Title = "Category",
-            Content = message,
-            CssClass = "e-toast-info"
-        };
-        await ToastObj.ShowAsync(toastModel);
     }
 
     private async Task RefreshGrid()
