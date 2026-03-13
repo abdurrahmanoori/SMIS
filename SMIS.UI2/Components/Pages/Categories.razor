@@ -281,6 +281,9 @@
 
     private async Task SaveCategory( )
     {
+        Result<CategoryDto> result;
+        string successMessage;
+
         if (isEditMode)
         {
             var updateDto = new CategoryUpdateDto
@@ -290,18 +293,8 @@
                 Description = currentCategory.Description,
                 IsActive = currentCategory.IsActive
             };
-            var result = await CategoryService.UpdateAsync(currentCategory.Id, updateDto);
-            
-            if (result.Success)
-            {
-                await ToastHelper.ShowSuccessAsync(ToastObj, "Category updated successfully", "Category");
-                CloseDialog();
-                await LoadCategories();
-            }
-            else
-            {
-                await DisplayValidationErrors(result);
-            }
+            result = await CategoryService.UpdateAsync(currentCategory.Id, updateDto);
+            successMessage = "Category updated successfully";
         }
         else
         {
@@ -312,43 +305,30 @@
                 Description = currentCategory.Description,
                 IsActive = currentCategory.IsActive
             };
-            var result = await CategoryService.CreateAsync(createDto);
-            
-            if (result.Success)
-            {
-                await ToastHelper.ShowSuccessAsync(ToastObj, "Category created successfully", "Category");
-                CloseDialog();
-                await LoadCategories();
-            }
-            else
-            {
-                await DisplayValidationErrors(result);
-            }
+            result = await CategoryService.CreateAsync(createDto);
+            successMessage = "Category created successfully";
         }
-    }
 
-    private async Task DisplayValidationErrors(Result<CategoryDto> result)
-    {
-        validationErrors.Clear();
-        
-        if (result.Errors != null && result.Errors.Any())
+        if (result.Success)
         {
-            foreach (var error in result.Errors)
-            {
-                if (!string.IsNullOrEmpty(error.Property))
-                {
-                    var propertyName = char.ToUpper(error.Property[0]) + error.Property.Substring(1);
-                    validationErrors[propertyName] = error.Description ?? "Invalid value";
-                }
-            }
-        }
-        else if (!string.IsNullOrEmpty(result.Message))
-        {
-            await ToastHelper.ShowErrorAsync(ToastObj, result.Message, "Error");
+            await ToastHelper.ShowSuccessAsync(ToastObj, successMessage, "Category");
+            CloseDialog();
+            await LoadCategories();
         }
         else
         {
-            await ToastHelper.ShowErrorAsync(ToastObj, "Operation failed", "Error");
+            await HandleValidationErrors(result);
+        }
+    }
+
+    private async Task HandleValidationErrors(Result<CategoryDto> result)
+    {
+        validationErrors = ValidationHelper.ExtractValidationErrors(result);
+        
+        if (!validationErrors.Any())
+        {
+            var errorMessage = result.Message ?? "Operation failed";
+            await ToastHelper.ShowErrorAsync(ToastObj, errorMessage, "Error");
         }
         
         StateHasChanged();
