@@ -2,6 +2,7 @@
 @using SMIS.UI2.Services
 @using SMIS.UI2.Helpers
 @using SMIS.Application.DTO.Categories
+@using SMIS.Application.Common.Response
 @using SMIS.Infrastructure.Mobile.Services.Sync
 @using Syncfusion.Blazor.Grids
 @using Syncfusion.Blazor.Buttons
@@ -265,12 +266,6 @@
 
     private async Task SaveCategory( )
     {
-        if (string.IsNullOrWhiteSpace(currentCategory.Name))
-        {
-            await ToastHelper.ShowWarningAsync(ToastObj, "Name is required", "Category");
-            return;
-        }
-
         if (isEditMode)
         {
             var updateDto = new CategoryUpdateDto
@@ -281,17 +276,17 @@
                 IsActive = currentCategory.IsActive
             };
             var result = await CategoryService.UpdateAsync(currentCategory.Id, updateDto);
+            
             if (result.Success)
             {
                 await ToastHelper.ShowSuccessAsync(ToastObj, "Category updated successfully", "Category");
-                if (result.Message != null)
-                {
-                    await ToastHelper.ShowInfoAsync(ToastObj, result.Message, "Category");
-                }
+                CloseDialog();
+                await LoadCategories();
             }
-
             else
-                await ToastHelper.ShowErrorAsync(ToastObj, result.Message ?? "Update failed", "Category");
+            {
+                await DisplayValidationErrors(result);
+            }
         }
         else
         {
@@ -303,20 +298,35 @@
                 IsActive = currentCategory.IsActive
             };
             var result = await CategoryService.CreateAsync(createDto);
+            
             if (result.Success)
             {
                 await ToastHelper.ShowSuccessAsync(ToastObj, "Category created successfully", "Category");
-                if (result.Message != null)
-                {
-                    await ToastHelper.ShowInfoAsync(ToastObj, result.Message, "Category");
-                }
+                CloseDialog();
+                await LoadCategories();
             }
             else
-                await ToastHelper.ShowErrorAsync(ToastObj, result.Message ?? "Create failed", "Category");
+            {
+                await DisplayValidationErrors(result);
+            }
         }
+    }
 
-        CloseDialog();
-        await LoadCategories();
+    private async Task DisplayValidationErrors(Result<CategoryDto> result)
+    {
+        if (result.Errors != null && result.Errors.Any())
+        {
+            var errorMessages = string.Join("\n", result.Errors.Select(e => e.Description));
+            await ToastHelper.ShowErrorAsync(ToastObj, errorMessages, "Validation Error");
+        }
+        else if (!string.IsNullOrEmpty(result.Message))
+        {
+            await ToastHelper.ShowErrorAsync(ToastObj, result.Message, "Error");
+        }
+        else
+        {
+            await ToastHelper.ShowErrorAsync(ToastObj, "Operation failed", "Error");
+        }
     }
 
     private void CloseDialog( )
