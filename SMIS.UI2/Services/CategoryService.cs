@@ -43,7 +43,11 @@ public class CategoryService
 
         if (result.Success && _connectivity.NetworkAccess == NetworkAccess.Internet)
         {
-            _ = _syncService.SyncCategoriesAsync();
+            var syncResult = await _syncService.SyncCategoriesAsync();
+            if (!syncResult.Success)
+            {
+                result.Message = $"{result.Message} (Sync: {syncResult.Message})";
+            }
         }
 
         return result;
@@ -56,7 +60,11 @@ public class CategoryService
 
         if (result.Success && _connectivity.NetworkAccess == NetworkAccess.Internet)
         {
-            _ = _syncService.SyncCategoriesAsync();
+            var syncResult = await _syncService.SyncCategoriesAsync();
+            if (!syncResult.Success)
+            {
+                result.Message = $"{result.Message} (Sync: {syncResult.Message})";
+            }
         }
 
         return result;
