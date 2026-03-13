@@ -8,7 +8,7 @@ namespace SMIS.Application.Features.Categories.Validators
         public CategoryCreateCommandValidator()
         {
             RuleFor(x => x.CategoryCreateDto.Name)
-                .NotEmpty().WithMessage("Name is required")
+                .NotEmpty().WithMessage("Name is required from app layer")
                 .MaximumLength(200).WithMessage("Name must not exceed 200 characters");
 
             RuleFor(x => x.CategoryCreateDto.Code)
