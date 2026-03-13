@@ -122,16 +122,28 @@
         <Content>
             <EditForm Model="@currentCategory" OnValidSubmit="SaveCategory">
                 <div class="form-group">
-                    <label>Category Name</label>
+                    <label>Category Name <span class="required">*</span></label>
                     <SfTextBox @bind-Value="@currentCategory.Name" Placeholder="Enter category name"></SfTextBox>
+                    @if (validationErrors.ContainsKey("Name"))
+                    {
+                        <div class="validation-message">@validationErrors["Name"]</div>
+                    }
                 </div>
                 <div class="form-group">
                     <label>Code</label>
                     <SfTextBox @bind-Value="@currentCategory.Code" Placeholder="Enter category code"></SfTextBox>
+                    @if (validationErrors.ContainsKey("Code"))
+                    {
+                        <div class="validation-message">@validationErrors["Code"]</div>
+                    }
                 </div>
                 <div class="form-group">
                     <label>Description</label>
                     <SfTextBox @bind-Value="@currentCategory.Description" Multiline="true" Placeholder="Enter description"></SfTextBox>
+                    @if (validationErrors.ContainsKey("Description"))
+                    {
+                        <div class="validation-message">@validationErrors["Description"]</div>
+                    }
                 </div>
                 <div class="form-group">
                     <SfCheckBox @bind-Checked="@currentCategory.IsActive" Label="Active"></SfCheckBox>
@@ -164,6 +176,7 @@
     private bool isEditMode = false;
     private SfToast ToastObj;
     private List<object> toolbarItems = new List<object> { "ColumnChooser" };
+    private Dictionary<string, string> validationErrors = new();
     private int _currentPage = 1;
     private int _pageSize = 10;
     private int _totalCount = 0;
@@ -246,6 +259,7 @@
         dialogTitle = "Add New Category";
         currentCategory = new CategoryFormModel { IsActive = true };
         isEditMode = false;
+        validationErrors.Clear();
         showDialog = true;
     }
 
@@ -261,6 +275,7 @@
             IsActive = category.IsActive
         };
         isEditMode = true;
+        validationErrors.Clear();
         showDialog = true;
     }
 
@@ -314,10 +329,18 @@
 
     private async Task DisplayValidationErrors(Result<CategoryDto> result)
     {
+        validationErrors.Clear();
+        
         if (result.Errors != null && result.Errors.Any())
         {
-            var errorMessages = string.Join("\n", result.Errors.Select(e => e.Description));
-            await ToastHelper.ShowErrorAsync(ToastObj, errorMessages, "Validation Error");
+            foreach (var error in result.Errors)
+            {
+                if (!string.IsNullOrEmpty(error.Property))
+                {
+                    var propertyName = char.ToUpper(error.Property[0]) + error.Property.Substring(1);
+                    validationErrors[propertyName] = error.Description ?? "Invalid value";
+                }
+            }
         }
         else if (!string.IsNullOrEmpty(result.Message))
         {
@@ -327,6 +350,8 @@
         {
             await ToastHelper.ShowErrorAsync(ToastObj, "Operation failed", "Error");
         }
+        
+        StateHasChanged();
     }
 
     private void CloseDialog( )
@@ -401,6 +426,16 @@
             margin-bottom: 5px;
             font-weight: 500;
         }
+
+    .required {
+        color: #dc3545;
+    }
+
+    .validation-message {
+        color: #dc3545;
+        font-size: 0.875rem;
+        margin-top: 4px;
+    }
 
     .dialog-actions {
         display: flex;
