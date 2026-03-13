@@ -23,8 +23,8 @@ public class CategoryService
 
     public async Task<Result<AppPagedList>> GetAllAsync(int pageNumber = 0, int pageSize = 10)
     {
-        pageNumber = pageNumber > 0 ? pageNumber : AppPagedList.DefaultPageNumber;
-        pageSize = pageSize > 0 ? pageSize : AppPagedList.DefaultPageSize;
+        //pageNumber = pageNumber > 0 ? pageNumber : AppPagedList.DefaultPageNumber;
+        //pageSize = pageSize > 0 ? pageSize : AppPagedList.DefaultPageSize;
 
         var query = new CategoryGetListQuery(pageNumber, pageSize);
         return await _mediator.Send(query);
