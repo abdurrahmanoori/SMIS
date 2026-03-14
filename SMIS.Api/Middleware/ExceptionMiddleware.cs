@@ -1,4 +1,5 @@
 using SMIS.Application.Common.Exceptions;
+using SMIS.Domain.Exceptions;
 using System.Text.Json;
 using Serilog;
 using Microsoft.EntityFrameworkCore;
@@ -39,6 +40,7 @@ namespace SMIS.Api.Middleware
             context.Response.Clear();
             context.Response.StatusCode = exception switch
             {
+                DomainValidationException => StatusCodes.Status400BadRequest,
                 UnauthorizedAccessException => StatusCodes.Status401Unauthorized,
                 DbUpdateException dbEx
                     when dbEx.InnerException?.Message.Contains("FOREIGN KEY constraint failed") == true
@@ -48,13 +50,21 @@ namespace SMIS.Api.Middleware
             };
             context.Response.ContentType = "application/json";
 
-            var response = hostEnvironment.IsDevelopment()
-                ? JsonSerializer.Serialize(log, new JsonSerializerOptions { WriteIndented = true })
-                : JsonSerializer.Serialize(new
+            var response = exception switch
+            {
+                DomainValidationException domainEx => JsonSerializer.Serialize(new
                 {
-                    Message = "An unexpected error occurred.",
-                    Exception = $"Please contact the administrator with id: {log.Id}"
-                });
+                    Success = false,
+                    Errors = new[] { new { Code = "DomainValidation", Description = domainEx.Message } }
+                }),
+                _ => hostEnvironment.IsDevelopment()
+                    ? JsonSerializer.Serialize(log, new JsonSerializerOptions { WriteIndented = true })
+                    : JsonSerializer.Serialize(new
+                    {
+                        Message = "An unexpected error occurred.",
+                        Exception = $"Please contact the administrator with id: {log.Id}"
+                    })
+            };
 
             await context.Response.WriteAsync(response);
         }

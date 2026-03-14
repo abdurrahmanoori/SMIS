@@ -65,7 +65,7 @@ namespace SMIS.Application.Features.Categories.Commands
             await _categoryRepository.AddAsync(entity);
             await _unitOfWork.SaveChanges(cancellationToken);
 
-            return Result<CategoryDto>.SuccessResult(_mapper.Map<CategoryDto>(entity));
+            return Result<CategoryDto>.SuccessResult(_mapper.Map<CategoryDto>(entity),"Category Created Successfully.");
         }
     }
 }

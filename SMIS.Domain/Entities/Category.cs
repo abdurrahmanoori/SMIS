@@ -72,7 +72,7 @@ public class Category : BaseAuditableEntity, IShopEntity, ISyncableEntity
         if (!string.IsNullOrWhiteSpace(description) && description.Length > 500)
             throw new DomainValidationException("Category description cannot exceed 500 characters");
 
-        Description = string.IsNullOrWhiteSpace(description) ? null : description.Trim();
+        Description =  description?.Trim();
     }
 
     public void Activate() => IsActive = true;
