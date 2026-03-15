@@ -1,8 +1,0 @@
-feat(ui2): add authentication and login system
-
-Implement complete authentication flow with login page and auth guard components
-- Add Login.razor page with email/password form and validation
-- Add AuthLayout.razor for authentication page layout
-- Add AuthGuard.razor component for route protection
-- Update MainLayout.razor with logout functionality
-- Update Routes.razor to include login route
