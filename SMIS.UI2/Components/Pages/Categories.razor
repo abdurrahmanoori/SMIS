@@ -25,9 +25,7 @@
             <SfButton CssClass="e-success" IconCss="e-icons e-refresh" OnClick="RefreshGrid">Refresh</SfButton>
         </div>
 
-        <SfTextBox Placeholder="Search categories..." Value="@searchText" CssClass="search-bar">
-            <TextBoxEvents Input="@OnSearchInput"></TextBoxEvents>
-        </SfTextBox>
+        <input type="text" placeholder="Search categories..." class="e-input search-bar" value="@searchText" @oninput="@(async (e) => await OnSearchInput(e))" />
 
         @if (_isLoading)
         {
@@ -187,12 +185,12 @@
         await LoadCategories();
     }
 
-    private async Task LoadCategories( )
+    private async Task LoadCategories(string? searchTerm = null)
     {
         _isLoading = true;
         _errorMessage = "";
 
-        var result = await CategoryService.GetAllAsync(_currentPage, _pageSize);
+        var result = await CategoryService.GetAllAsync(_currentPage, _pageSize, searchTerm);
 
         if (result.Success && result.Response != null)
         {
@@ -215,15 +213,16 @@
     {
         if (page < 1 || page > _totalPages || page == _currentPage)
             return;
-            
+
         _currentPage = page;
-        await LoadCategories();
+        await LoadCategories(string.IsNullOrWhiteSpace(searchText) ? null : searchText);
     }
 
-    private void OnSearchInput(InputEventArgs args)
+    private async Task OnSearchInput(Microsoft.AspNetCore.Components.ChangeEventArgs args)
     {
-        searchText = args.Value;
-        StateHasChanged();
+        searchText = args.Value?.ToString() ?? "";
+        _currentPage = 1;
+        await LoadCategories(string.IsNullOrWhiteSpace(searchText) ? null : searchText);
     }
 
     private void OpenQuickView(CategoryDto category)

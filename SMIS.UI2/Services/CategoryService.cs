@@ -21,12 +21,9 @@ public class CategoryService
         _connectivity = connectivity;
     }
 
-    public async Task<Result<AppPagedList>> GetAllAsync(int pageNumber = 0, int pageSize = 10)
+    public async Task<Result<AppPagedList>> GetAllAsync(int pageNumber = 0, int pageSize = 10, string? searchTerm = null)
     {
-        //pageNumber = pageNumber > 0 ? pageNumber : AppPagedList.DefaultPageNumber;
-        //pageSize = pageSize > 0 ? pageSize : AppPagedList.DefaultPageSize;
-
-        var query = new CategoryGetListQuery(pageNumber, pageSize);
+        var query = new CategoryGetListQuery(pageNumber, pageSize, searchTerm);
         return await _mediator.Send(query);
     }
 

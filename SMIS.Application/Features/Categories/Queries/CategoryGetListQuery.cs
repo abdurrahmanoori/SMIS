@@ -10,7 +10,7 @@ using SMIS.Application.Repositories.Localization;
 
 namespace SMIS.Application.Features.Categories.Queries
 {
-    public record CategoryGetListQuery(int PageNumber = 1, int PageSize = 25) : IRequest<Result<PagedList<CategoryDto>>>;
+    public record CategoryGetListQuery(int PageNumber = 1, int PageSize = 25, string? SearchTerm = null) : IRequest<Result<PagedList<CategoryDto>>>;
 
     internal sealed class CategoryGetListQueryHandler : IRequestHandler<CategoryGetListQuery, Result<PagedList<CategoryDto>>>
     {
@@ -29,8 +29,18 @@ namespace SMIS.Application.Features.Categories.Queries
 
         public async Task<Result<PagedList<CategoryDto>>> Handle(CategoryGetListQuery request, CancellationToken cancellationToken)
         {
-            var categories = await _categoryRepository.GetAllQueryable()
-                .ToPagedList(request.PageNumber, request.PageSize);
+            var query = _categoryRepository.GetAllQueryable();
+
+            if (!string.IsNullOrWhiteSpace(request.SearchTerm))
+            {
+                var term = request.SearchTerm.ToLower();
+                query = query.Where(c =>
+                    c.Name.ToLower().Contains(term) ||
+                    (c.Code != null && c.Code.ToLower().Contains(term)) ||
+                    (c.Description != null && c.Description.ToLower().Contains(term)));
+            }
+
+            var categories = await query.ToPagedList(request.PageNumber, request.PageSize);
 
             if (!categories.Items.Any())
             {
