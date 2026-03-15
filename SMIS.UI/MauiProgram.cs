@@ -1,0 +1,66 @@
+﻿using CommunityToolkit.Maui;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
+using SMIS.Infrastructure.Mobile.Context;
+using SMIS.UI.Extensions;
+using Syncfusion.Blazor;
+using Syncfusion.Licensing;
+using System.Reflection;
+
+namespace SMIS.UI
+{
+    public static class MauiProgram
+    {
+        public static MauiApp CreateMauiApp()
+        {
+            // Register Syncfusion license key
+            SyncfusionLicenseProvider.RegisterLicense("Ngo9BigBOggjHTQxAR8/V1NDaF5cWWtCf1FpRmJGdld5fUVHYVZUTXxaS00DNHVRdkdlWXxfcHRVRWBZWER2X0dWYU4=");
+
+            var builder = MauiApp.CreateBuilder();
+            builder
+                .UseMauiApp<App>()
+                .UseMauiCommunityToolkit()
+                .ConfigureFonts(fonts =>
+                {
+                    fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
+                });
+
+            // Configuration
+            var assembly = Assembly.GetExecutingAssembly();
+            using var stream = assembly.GetManifestResourceStream("SMIS.UI.appsettings.json");
+            if (stream != null)
+            {
+                var config = new ConfigurationBuilder()
+                    .AddJsonStream(stream)
+                    .Build();
+                builder.Configuration.AddConfiguration(config);
+            }
+
+            // Register application services (includes Mobile Infrastructure)
+            builder.Services.AddAppServices(builder.Configuration);
+
+            builder.Services.AddMauiBlazorWebView();
+            builder.Services.AddSyncfusionBlazor();
+
+#if DEBUG
+            builder.Services.AddBlazorWebViewDeveloperTools();
+            builder.Logging.AddDebug();
+#endif
+
+            var app = builder.Build();
+
+            // Ensure database is created
+            using (var scope = app.Services.CreateScope())
+            {
+                var db = scope.ServiceProvider.GetRequiredService<LocalDbContext>();
+                var dbPath = db.Database.GetConnectionString();
+                System.Diagnostics.Debug.WriteLine($"[MAUI] Database location: {dbPath}");
+                db.Database.EnsureCreated();
+                System.Diagnostics.Debug.WriteLine($"[MAUI] Database created successfully");
+            }
+
+            return app;
+        }
+    }
+}

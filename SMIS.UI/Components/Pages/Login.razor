@@ -1,0 +1,245 @@
+@page "/login"
+@using SMIS.UI.Services
+@using SMIS.UI.Components.Layout
+@layout AuthLayout
+@inject AuthServiceWrapper AuthService
+@inject NavigationManager Navigation
+
+<div class="login-wrapper">
+    <div class="login-card">
+        <div class="login-header">
+            <div class="login-logo">
+                <span class="e-icons e-shopping-cart logo-icon"></span>
+            </div>
+            <h2>SMIS</h2>
+            <p>Shop Management Information System</p>
+        </div>
+
+        <div class="login-body">
+            <div class="form-group">
+                <label>Email</label>
+                <SfTextBox @bind-Value="_email"
+                           Placeholder="Enter your email"
+                           Type="InputType.Email"
+                           CssClass="login-input">
+                </SfTextBox>
+            </div>
+
+            <div class="form-group">
+                <label>Password</label>
+                <SfTextBox @bind-Value="_password"
+                           Placeholder="Enter your password"
+                           Type="InputType.Password"
+                           CssClass="login-input">
+                </SfTextBox>
+            </div>
+
+            @if (!string.IsNullOrEmpty(_errorMessage))
+            {
+                <div class="error-message">
+                    <span class="e-icons e-circle-info"></span> @_errorMessage
+                </div>
+            }
+
+            <SfButton CssClass="e-primary login-btn"
+                      IsPrimary="true"
+                      Disabled="_isLoading"
+                      OnClick="HandleLogin">
+                @if (_isLoading)
+                {
+                    <SfSpinner Visible="true" Size="20" CssClass="btn-spinner"></SfSpinner>
+                    <span>Signing in...</span>
+                }
+                else
+                {
+                    <span class="e-icons e-chevron-right"></span>
+                    <span>Sign In</span>
+                }
+            </SfButton>
+
+#if DEBUG
+            <SfButton CssClass="e-outline skip-btn" OnClick="@(() => Navigation.NavigateTo("/"))">
+                <span class="e-icons e-arrow-right"></span> Skip Login (Dev Only)
+            </SfButton>
+#endif
+        </div>
+
+        <div class="login-footer">
+            <span>© @DateTime.Now.Year SMIS. All rights reserved.</span>
+        </div>
+    </div>
+</div>
+
+@code {
+    private string _email = "";
+    private string _password = "";
+    private string _errorMessage = "";
+    private bool _isLoading = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (await AuthService.IsAuthenticatedAsync())
+            Navigation.NavigateTo("/");
+    }
+
+    private async Task HandleLogin()
+    {
+        if (string.IsNullOrWhiteSpace(_email) || string.IsNullOrWhiteSpace(_password))
+        {
+            _errorMessage = "Please enter your email and password.";
+            return;
+        }
+
+        _isLoading = true;
+        _errorMessage = "";
+
+        try
+        {
+            var result = await AuthService.LoginAsync(_email, _password);
+            if (result.Success)
+                Navigation.NavigateTo("/");
+            else
+                _errorMessage = result.Message ?? "Invalid email or password.";
+        }
+        catch (HttpRequestException)
+        {
+            _errorMessage = "Unable to connect to server. Please check your connection.";
+        }
+        catch
+        {
+            _errorMessage = "An unexpected error occurred. Please try again.";
+        }
+        finally
+        {
+            _isLoading = false;
+        }
+    }
+}
+
+<style>
+    .login-wrapper {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        background: linear-gradient(135deg, #1a237e 0%, #0d47a1 50%, #1565c0 100%);
+        padding: 20px;
+    }
+
+    .login-card {
+        background: #fff;
+        border-radius: 16px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        width: 100%;
+        max-width: 420px;
+        overflow: hidden;
+    }
+
+    .login-header {
+        background: linear-gradient(135deg, #1a237e, #1565c0);
+        color: white;
+        text-align: center;
+        padding: 40px 30px 30px;
+    }
+
+    .login-logo {
+        width: 70px;
+        height: 70px;
+        background: rgba(255,255,255,0.2);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 16px;
+    }
+
+    .logo-icon {
+        font-size: 32px;
+        color: white;
+    }
+
+    .login-header h2 {
+        margin: 0 0 6px;
+        font-size: 28px;
+        font-weight: 700;
+        letter-spacing: 2px;
+    }
+
+    .login-header p {
+        margin: 0;
+        font-size: 13px;
+        opacity: 0.85;
+    }
+
+    .login-body {
+        padding: 32px 30px;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 6px;
+        font-weight: 600;
+        font-size: 13px;
+        color: #444;
+    }
+
+    .login-input {
+        width: 100%;
+    }
+
+    .error-message {
+        background: #fff3f3;
+        border: 1px solid #f5c6cb;
+        color: #c0392b;
+        border-radius: 8px;
+        padding: 10px 14px;
+        font-size: 13px;
+        margin-bottom: 16px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .login-btn {
+        width: 100%;
+        height: 44px;
+        font-size: 15px;
+        font-weight: 600;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        margin-top: 4px;
+    }
+
+    .skip-btn {
+        width: 100%;
+        height: 40px;
+        margin-top: 10px;
+        font-size: 13px;
+        color: #999;
+        border-color: #ddd;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+    }
+
+    .btn-spinner {
+        display: inline-flex;
+    }
+
+    .login-footer {
+        text-align: center;
+        padding: 16px;
+        background: #f8f9fa;
+        border-top: 1px solid #eee;
+        font-size: 12px;
+        color: #999;
+    }
+</style>
