@@ -1,5 +1,4 @@
-using SMIS.UI.Middleware;
-using SMIS.UI.Services;
+﻿using SMIS.UI.Services;
 
 namespace SMIS.UI
 {
@@ -11,13 +10,6 @@ namespace SMIS.UI
         {
             InitializeComponent();
             _autoLoginService = autoLoginService;
-            
-            //GlobalExceptionHandler.Initialize();
-            
-            AppDomain.CurrentDomain.FirstChanceException += (sender, e) =>
-            {
-                GlobalExceptionHandler.HandleException(e.Exception);
-            };
         }
 
         protected override Window CreateWindow(IActivationState? activationState)

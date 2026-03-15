@@ -15,7 +15,6 @@ public class DevelopmentAutoLoginService
     {
 #if DEBUG
         var isAuthenticated = await _authService.IsAuthenticatedAsync();
-        //await _authService.LogoutAsync();
         if (!isAuthenticated)
         {
             var result = await _authService.LoginAsync(DevUsername, DevPassword);

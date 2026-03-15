@@ -1,10 +1,11 @@
-using CommunityToolkit.Maui;
+﻿using CommunityToolkit.Maui;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using SMIS.Infrastructure.Mobile.Context;
 using SMIS.UI.Extensions;
 using Syncfusion.Blazor;
+using Syncfusion.Licensing;
 using System.Reflection;
 
 namespace SMIS.UI
@@ -13,6 +14,9 @@ namespace SMIS.UI
     {
         public static MauiApp CreateMauiApp()
         {
+            // Register Syncfusion license key
+            SyncfusionLicenseProvider.RegisterLicense("Ngo9BigBOggjHTQxAR8/V1NDaF5cWWtCf1FpRmJGdld5fUVHYVZUTXxaS00DNHVRdkdlWXxfcHRVRWBZWER2X0dWYU4=");
+
             var builder = MauiApp.CreateBuilder();
             builder
                 .UseMauiApp<App>()
@@ -46,7 +50,7 @@ namespace SMIS.UI
 
             var app = builder.Build();
 
-            // Ensure database is created (without migrations for now)
+            // Ensure database is created
             using (var scope = app.Services.CreateScope())
             {
                 var db = scope.ServiceProvider.GetRequiredService<LocalDbContext>();
@@ -54,16 +58,6 @@ namespace SMIS.UI
                 System.Diagnostics.Debug.WriteLine($"[MAUI] Database location: {dbPath}");
                 db.Database.EnsureCreated();
                 System.Diagnostics.Debug.WriteLine($"[MAUI] Database created successfully");
-
-                //#if DEBUG
-                //                _ = Task.Run(async () =>
-                //                {
-                //                    var autoLogin = scope.ServiceProvider.GetRequiredService<DevelopmentAutoLoginService>();
-                //                    var loginSuccess = await autoLogin.TryAutoLoginAsync();
-                //                    System.Diagnostics.Debug.WriteLine($"[MAUI] Auto-login: {(loginSuccess ? "Success" : "Failed")}");
-                //                });
-                //#endif
-
             }
 
             return app;

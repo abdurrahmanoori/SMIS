@@ -5,29 +5,8 @@ namespace SMIS.UI.Middleware
 {
     public class GlobalExceptionHandler
     {
-        //public static void Initialize()
-        //{
-        //    AppDomain.CurrentDomain.UnhandledException += OnUnhandledException;
-        //    TaskScheduler.UnobservedTaskException += OnUnobservedTaskException;
-        //}
-
-        //private static void OnUnhandledException(object sender, UnhandledExceptionEventArgs e)
-        //{
-        //    if (e.ExceptionObject is Exception exception)
-        //    {
-        //        HandleException(exception);
-        //    }
-        //}
-
-        //private static void OnUnobservedTaskException(object? sender, UnobservedTaskExceptionEventArgs e)
-        //{
-        //    HandleException(e.Exception);
-        //    e.SetObserved();
-        //}
-
         public static void HandleException(Exception exception)
         {
-            // Filter out framework/system exceptions
             if (ShouldIgnoreException(exception))
                 return;
 
@@ -74,13 +53,11 @@ namespace SMIS.UI.Middleware
             var exceptionType = exception.GetType().FullName ?? string.Empty;
             var stackTrace = exception.StackTrace ?? string.Empty;
 
-            // Ignore common framework exceptions
             if (exceptionType.Contains("TaskCanceledException") ||
                 exceptionType.Contains("OperationCanceledException") ||
                 exceptionType.Contains("ObjectDisposedException"))
                 return true;
 
-            // Ignore if exception is from framework only (not from SMIS code)
             if (!stackTrace.Contains("SMIS."))
                 return true;
 

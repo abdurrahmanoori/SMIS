@@ -1,8 +1,8 @@
 using MediatR;
+using SMIS.Application.Common.Response;
 using SMIS.Application.DTO.Categories;
 using SMIS.Application.Features.Categories.Commands;
 using SMIS.Application.Features.Categories.Queries;
-using SMIS.Infrastructure.Mobile.Services.Http;
 using SMIS.Infrastructure.Mobile.Services.Sync;
 using AppPagedList = SMIS.Application.Common.PagedList<SMIS.Application.DTO.Categories.CategoryDto>;
 
@@ -21,36 +21,19 @@ public class CategoryService
         _connectivity = connectivity;
     }
 
-    public async Task<ApiResponse<AppPagedList>> GetAllAsync(int pageNumber = 0, int pageSize = 0)
+    public async Task<Result<AppPagedList>> GetAllAsync(int pageNumber = 0, int pageSize = 10, string? searchTerm = null)
     {
-        pageNumber = pageNumber > 0 ? pageNumber : AppPagedList.DefaultPageNumber;
-        pageSize = pageSize > 0 ? pageSize : AppPagedList.DefaultPageSize;
-
-        var query = new CategoryGetListQuery(pageNumber, pageSize);
-        var result = await _mediator.Send(query);
-
-        return new ApiResponse<AppPagedList>
-        {
-            Success = result.Success,
-            Response = result.Response,
-            Message = result.Message
-        };
+        var query = new CategoryGetListQuery(pageNumber, pageSize, searchTerm);
+        return await _mediator.Send(query);
     }
 
-    public async Task<ApiResponse<CategoryDto>> GetByIdAsync(string id)
+    public async Task<Result<CategoryDto>> GetByIdAsync(string id)
     {
         var query = new CategoryGetByIdQuery(id);
-        var result = await _mediator.Send(query);
-
-        return new ApiResponse<CategoryDto>
-        {
-            Success = result.Success,
-            Response = result.Response,
-            Message = result.Message
-        };
+        return await _mediator.Send(query);
     }
 
-    public async Task<ApiResponse<CategoryDto>> CreateAsync(CategoryCreateDto dto)
+    public async Task<Result<CategoryDto>> CreateAsync(CategoryCreateDto dto)
     {
         var command = new CategoryCreateCommand(dto);
         var result = await _mediator.Send(command);
@@ -58,36 +41,30 @@ public class CategoryService
         if (result.Success && _connectivity.NetworkAccess == NetworkAccess.Internet)
         {
             var syncResult = await _syncService.SyncCategoriesAsync();
+            if (!syncResult.Success)
+            {
+                result.Message = $"{result.Message} (Sync: {syncResult.Message})";
+            }
         }
 
-        return new ApiResponse<CategoryDto>
-        {
-            Success = result.Success,
-            Response = result.Response,
-            Message = result.Message ?? (_connectivity.NetworkAccess != NetworkAccess.Internet
-                ? "Created offline - will sync when online"
-                : "Created successfully")
-        };
+        return result;
     }
 
-    public async Task<ApiResponse<CategoryDto>> UpdateAsync(string id, CategoryUpdateDto dto)
+    public async Task<Result<CategoryDto>> UpdateAsync(string id, CategoryUpdateDto dto)
     {
         var command = new CategoryUpdateCommand(id, dto);
         var result = await _mediator.Send(command);
 
         if (result.Success && _connectivity.NetworkAccess == NetworkAccess.Internet)
         {
-            _ = Task.Run(async () =>await _syncService.SyncCategoriesAsync());
+            var syncResult = await _syncService.SyncCategoriesAsync();
+            if (!syncResult.Success)
+            {
+                result.Message = $"{result.Message} (Sync: {syncResult.Message})";
+            }
         }
 
-        return new ApiResponse<CategoryDto>
-        {
-            Success = result.Success,
-            Response = result.Response,
-            Message = result.Message ?? (_connectivity.NetworkAccess != NetworkAccess.Internet
-                ? "Updated offline - will sync when online"
-                : "Updated successfully")
-        };
+        return result;
     }
 
     public async Task<SyncResult> SyncAsync()

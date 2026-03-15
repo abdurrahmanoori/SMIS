@@ -1,9 +1,0 @@
-﻿@using SMIS.UI2.Components.Shared
-<Router AppAssembly="@typeof(MauiProgram).Assembly">
-    <Found Context="routeData">
-        <AuthGuard>
-            <RouteView RouteData="@routeData" DefaultLayout="@typeof(Layout.MainLayout)" />
-            <FocusOnNavigate RouteData="@routeData" Selector="h1" />
-        </AuthGuard>
-    </Found>
-</Router>
