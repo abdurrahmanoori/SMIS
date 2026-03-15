@@ -1,5 +1,8 @@
-﻿@inherits LayoutComponentBase
+﻿@using SMIS.UI2.Services
+@inherits LayoutComponentBase
 @inject IJSRuntime JSRuntime
+@inject AuthServiceWrapper AuthService
+@inject NavigationManager Navigation
 @implements IDisposable
 
 <div class="page-container">
@@ -18,6 +21,9 @@
         <div class="header">
             <SfButton CssClass="e-flat" IconCss="e-icons e-menu" @onclick="ToggleSidebar"></SfButton>
             <h4>Shop Management System</h4>
+            <div class="header-actions">
+                <SfButton CssClass="e-flat e-danger" IconCss="e-icons e-logout" OnClick="Logout" title="Logout">Logout</SfButton>
+            </div>
         </div>
         <div class="content">
             @Body
@@ -26,6 +32,13 @@
 </div>
 
 @code {
+    private async Task Logout()
+    {
+        await AuthService.LogoutAsync();
+        var res = await AuthService.IsAuthenticatedAsync();
+        Navigation.NavigateTo("/login", replace: true);
+    }
+
     private SfSidebar? sidebar;
     private bool isSidebarOpen = true;
     private DotNetObjectReference<MainLayout>? objRef;
@@ -97,6 +110,11 @@
         padding: 15px 20px;
         background-color: #fff;
         border-bottom: 1px solid #dee2e6;
+        justify-content: space-between;
+    }
+
+    .header-actions {
+        margin-left: auto;
     }
 
     .header h4 {
