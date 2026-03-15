@@ -15,7 +15,7 @@ SMIS/
 ├── SMIS.Infrastructure/   # Data access & external services
 ├── SMIS.Identity/         # Authentication & authorization
 ├── SMIS.Test/            # Unit & integration tests
-└── SMIS.UI/              # Cross-platform mobile app (.NET MAUI)
+└── SMIS.UI3/             # Cross-platform mobile app (.NET MAUI)
 ```
 
 ## 🚀 Tech Stack
@@ -79,7 +79,7 @@ The API will be available at `https://localhost:7216`
 
 ### 5. Run the Mobile App
 ```bash
-cd SMIS.UI
+cd SMIS.UI3
 dotnet build -t:Run -f net9.0-android    # For Android
 dotnet build -t:Run -f net9.0-ios        # For iOS
 dotnet build -t:Run -f net9.0-windows    # For Windows
@@ -286,7 +286,7 @@ Application logging for monitoring and debugging.
 - **Extensions/** - Identity configuration
 - **Seed/** - Default user/role seeding
 
-### SMIS.UI
+### SMIS.UI3
 - **Components/** - Reusable Blazor components
 - **Services/** - UI services
 - **Resources/** - Images, fonts, assets
