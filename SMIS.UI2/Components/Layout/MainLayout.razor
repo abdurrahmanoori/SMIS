@@ -20,7 +20,7 @@
     <div class="main-content">
         <div class="header">
             <SfButton CssClass="e-flat" IconCss="e-icons e-menu" @onclick="ToggleSidebar"></SfButton>
-            <h4>Shop Management System</h4>
+            <h4 style="cursor: pointer;" @onclick="@(() => Navigation.NavigateTo("/"))">Shop Management System</h4>
             <div class="header-actions">
                 <SfButton CssClass="e-flat e-danger" IconCss="e-icons e-logout" OnClick="Logout" title="Logout">Logout</SfButton>
             </div>

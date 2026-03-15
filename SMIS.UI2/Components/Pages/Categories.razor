@@ -25,7 +25,13 @@
             <SfButton CssClass="e-success" IconCss="e-icons e-refresh" OnClick="RefreshGrid">Refresh</SfButton>
         </div>
 
-        <input type="text" placeholder="Search categories..." class="e-input search-bar" value="@searchText" @oninput="@(async (e) => await OnSearchInput(e))" />
+        <div style="position: relative; margin-bottom: 16px;">
+            <input type="text" placeholder="Search categories..." class="e-input" value="@searchText" @oninput="@(async (e) => await OnSearchInput(e))" style="display: block; width: 100%; padding-right: 30px;" />
+            @if (!string.IsNullOrWhiteSpace(searchText))
+            {
+                <span @onclick="ClearSearch" style="position: absolute; right: 8px; top: 50%; transform: translateY(-50%); cursor: pointer; color: #999;" class="e-icons e-close"></span>
+            }
+        </div>
 
         @if (_isLoading)
         {
@@ -218,6 +224,13 @@
         await LoadCategories(string.IsNullOrWhiteSpace(searchText) ? null : searchText);
     }
 
+    private async Task ClearSearch()
+    {
+        searchText = "";
+        _currentPage = 1;
+        await LoadCategories();
+    }
+
     private async Task OnSearchInput(Microsoft.AspNetCore.Components.ChangeEventArgs args)
     {
         searchText = args.Value?.ToString() ?? "";
@@ -382,6 +395,7 @@
 
     .search-bar {
         margin-bottom: 20px;
+        width: 100%;
     }
 
     .loading-container {
