@@ -36,6 +36,8 @@ public class MobileCurrentUser : IMobileCurrentUser
     public void ClearUser()
     {
         _currentUser = null;
+        Preferences.Remove("UserId");
+        Preferences.Remove("ShopId");
     }
 
     public string GetId()
