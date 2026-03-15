@@ -30,11 +30,11 @@ public static class MobileInfrastructureServiceRegistration
         // Database - path will be determined at runtime by platform
         services.AddDbContext<LocalDbContext>((serviceProvider, options) =>
         {
-            var auditInterceptor = serviceProvider.GetRequiredService<LocalAuditInterceptor>();
+            var syncInterceptor = serviceProvider.GetRequiredService<LocalAuditInterceptor>();
             var pkInterceptor = serviceProvider.GetRequiredService<EntityPKInterceptor>();
             var dbPath = GetDatabasePath();
             options.UseSqlite($"Data Source={dbPath}")
-                   .AddInterceptors(auditInterceptor, pkInterceptor);
+                   .AddInterceptors(syncInterceptor, pkInterceptor);
         });
 
         services.Scan(scan => scan
