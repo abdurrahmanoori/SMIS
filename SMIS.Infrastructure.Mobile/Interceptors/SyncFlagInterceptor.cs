@@ -32,8 +32,17 @@ public class SyncFlagInterceptor : SaveChangesInterceptor
 
         foreach (var entry in eventData.Context.ChangeTracker.Entries<ISyncableEntity>())
         {
-            // Mark as unsynced when modified (but not when initially created)
-            if (entry.State == EntityState.Modified && entry.Entity.IsSyncedToServer)
+            if (entry.State != EntityState.Modified) continue;
+
+            var changedProperties = entry.Properties
+                .Where(p => p.IsModified)
+                .Select(p => p.Metadata.Name)
+                .ToHashSet();
+
+            var isSyncOnlyUpdate = changedProperties.IsSubsetOf(
+                new[] { nameof(ISyncableEntity.IsSyncedToServer), nameof(ISyncableEntity.LastSyncedAt) });
+
+            if (!isSyncOnlyUpdate && entry.Entity.IsSyncedToServer)
             {
                 entry.Entity.IsSyncedToServer = false;
                 entry.Entity.LastModifiedUtc = DateTimeService.NowOffSet;

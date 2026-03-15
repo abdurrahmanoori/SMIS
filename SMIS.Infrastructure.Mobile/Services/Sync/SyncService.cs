@@ -73,7 +73,7 @@ public class SyncService : ISyncService
                             $"{config.ApiEndpoint}/{entity.Id}", updateDto);
 
                         if (result.Success)
-                        {
+                        {     
                             entity.IsSyncedToServer = true;
                             entity.LastSyncedAt = DateTimeService.UtcNow;
                             await _localDb.SaveChangesAsync();
