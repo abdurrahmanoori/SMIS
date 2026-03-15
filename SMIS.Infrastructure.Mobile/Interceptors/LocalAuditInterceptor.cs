@@ -30,6 +30,15 @@ public class LocalAuditInterceptor : SaveChangesInterceptor
         return base.SavingChangesAsync(eventData, result, cancellationToken);
     }
 
+    private static readonly HashSet<string> _syncProperties = new()
+    {
+        nameof(ISyncableEntity.IsSyncedToServer),
+        nameof(ISyncableEntity.LastSyncedAt)
+    };
+
+    private static bool IsSyncOnlyUpdate(Microsoft.EntityFrameworkCore.ChangeTracking.EntityEntry entry) =>
+        entry.Properties.Where(p => p.IsModified).Select(p => p.Metadata.Name).All(_syncProperties.Contains);
+
     private void UpdateEntities(DbContext? context)
     {
         if (context == null) return;
@@ -53,7 +62,7 @@ public class LocalAuditInterceptor : SaveChangesInterceptor
                 entry.Entity.CreatedBy = userId;
             }
 
-            if (entry.State == EntityState.Modified)
+            if (entry.State == EntityState.Modified && !IsSyncOnlyUpdate(entry))
             {
                 entry.Entity.UpdatedDate = DateTimeService.Now;
                 entry.Entity.UpdatedBy = userId;
