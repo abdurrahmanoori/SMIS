@@ -13,34 +13,7 @@ namespace SMIS.Api.Controllers.Base
     {
         private IMediator? _mediator;
         protected IMediator Mediator => _mediator ??= HttpContext.RequestServices.GetService<IMediator>()!;
-        public IActionResult HandleResult<T>(Result<T> response)
-        {
-            try
-            {
-                if (response.Success && response.Response == null)
-                {
-                    return NotFound();
-                }
-                else if (response.Success && response.Response != null)
-                {
-                    return Ok(response.Response);
-                }
-                else if (!response.Success && response.Errors != null)
-                {
-                    return BadRequest(response.Errors);
-                }
-                else
-                {
-                    return NotFound();
-                }
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-
-        }
-
+   
         public ActionResult<T> HandleResultResponse<T>(Result<T> response)
         {
             try
@@ -73,6 +46,34 @@ namespace SMIS.Api.Controllers.Base
             }
 
         }
+        public IActionResult HandleResult<T>(Result<T> response)
+        {
+            try
+            {
+                if (response.Success && response.Response == null)
+                {
+                    return NotFound();
+                }
+                else if (response.Success && response.Response != null)
+                {
+                    return Ok(response.Response);
+                }
+                else if (!response.Success && response.Errors != null)
+                {
+                    return BadRequest(response.Errors);
+                }
+                else
+                {
+                    return NotFound();
+                }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
+        }
+
 
     }
 }
