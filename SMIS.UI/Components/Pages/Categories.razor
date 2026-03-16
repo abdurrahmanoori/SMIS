@@ -21,7 +21,13 @@
             <SfButton CssClass="e-primary" IconCss="e-icons e-plus" OnClick="OpenAddDialog">Add Category</SfButton>
             <SfButton CssClass="e-success" IconCss="e-icons e-export-excel" OnClick="ExportToExcel">Export Excel</SfButton>
             <SfButton CssClass="e-warning" IconCss="e-icons e-export-pdf" OnClick="ExportToPdf">Export PDF</SfButton>
-            <SfButton CssClass="e-info" IconCss="e-icons e-sync" OnClick="SyncData">Sync</SfButton>
+            <div class="sync-btn-wrapper">
+                <SfButton CssClass="e-info" IconCss="e-icons e-sync" OnClick="SyncData">Sync</SfButton>
+                @if (_pendingCount > 0)
+                {
+                    <span class="pending-badge">@_pendingCount</span>
+                }
+            </div>
             <SfButton CssClass="e-success" IconCss="e-icons e-refresh" OnClick="RefreshGrid">Refresh</SfButton>
         </div>
 
@@ -181,6 +187,7 @@
     private SfToast ToastObj;
     private List<object> toolbarItems = new List<object> { "ColumnChooser" };
     private Dictionary<string, string> validationErrors = new();
+    private int _pendingCount = 0;
     private int _currentPage = 1;
     private int _pageSize = 10;
     private int _totalCount = 0;
@@ -189,6 +196,12 @@
     protected override async Task OnInitializedAsync( )
     {
         await LoadCategories();
+        await LoadPendingCount();
+    }
+
+    private async Task LoadPendingCount()
+    {
+        _pendingCount = await CategoryService.GetPendingCountAsync();
     }
 
     private async Task LoadCategories(string? searchTerm = null)
@@ -326,6 +339,7 @@
             await ToastHelper.ShowSuccessAsync(ToastObj, successMessage, "Category");
             CloseDialog();
             await LoadCategories();
+            await LoadPendingCount();
         }
         else
         {
@@ -365,6 +379,7 @@
         if (result.Success)
         {
             await LoadCategories();
+            await LoadPendingCount();
         }
     }
 
@@ -373,6 +388,7 @@
         searchText = "";
         _currentPage = 1;
         await LoadCategories();
+        await LoadPendingCount();
     }
 
     private class CategoryFormModel
@@ -393,7 +409,28 @@
         flex-wrap: wrap;
     }
 
-    .search-bar {
+    .sync-btn-wrapper {
+        position: relative;
+        display: inline-flex;
+    }
+
+    .pending-badge {
+        position: absolute;
+        top: -6px;
+        right: -6px;
+        background-color: #dc3545;
+        color: white;
+        border-radius: 50%;
+        min-width: 18px;
+        height: 18px;
+        font-size: 11px;
+        font-weight: bold;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0 4px;
+        pointer-events: none;
+    }
         margin-bottom: 20px;
         width: 100%;
     }

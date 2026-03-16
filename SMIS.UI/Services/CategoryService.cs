@@ -28,4 +28,7 @@ public class CategoryService : BaseService
 
     public async Task<SyncResult> SyncAsync()
         => await SyncService.SyncCategoriesAsync();
+
+    public async Task<int> GetPendingCountAsync()
+        => await SyncService.GetPendingCountAsync<SMIS.Domain.Entities.Category>();
 }

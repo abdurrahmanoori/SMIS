@@ -13,6 +13,7 @@ public interface ISyncService
         where TEntity : class, ISyncableEntity;
     Task<SyncResult> SyncCategoriesAsync();
     Task<SyncAllResult> SyncAllAsync();
+    Task<int> GetPendingCountAsync<TEntity>() where TEntity : class, ISyncableEntity;
 }
 
 public class SyncService : ISyncService
@@ -138,6 +139,12 @@ public class SyncService : ISyncService
     public async Task<SyncResult> SyncCategoriesAsync()
     {
         return await SyncAsync(new CategorySyncConfiguration());
+    }
+
+    public async Task<int> GetPendingCountAsync<TEntity>() where TEntity : class, ISyncableEntity
+    {
+        return await _localDb.Set<TEntity>()
+            .CountAsync(e => !e.IsSyncedToServer);
     }
 
     public async Task<SyncAllResult> SyncAllAsync()
