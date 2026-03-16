@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using SMIS.Domain.Entities;
 using SMIS.Domain.Entities.Localization;
 using SMIS.Infrastructure.Mobile.DatabaseSeeders;
+using SMIS.Infrastructure.Mobile.Entities;
 using SMIS.Infrastructure.Mobile.EntityConfigurations;
 using SMIS.Infrastructure.Mobile.Interceptors;
 
@@ -15,6 +16,7 @@ public class LocalDbContext : DbContext
     public DbSet<Language> Languages => Set<Language>();
     public DbSet<TranslationKey> TranslationKeys => Set<TranslationKey>();
     public DbSet<Translation> Translations => Set<Translation>();
+    public DbSet<DeletedRecord> DeletedRecords => Set<DeletedRecord>();
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
@@ -32,6 +34,7 @@ public class LocalDbContext : DbContext
         modelBuilder.ApplyConfiguration(new LanguageConfiguration());
         modelBuilder.ApplyConfiguration(new TranslationKeyConfiguration());
         modelBuilder.ApplyConfiguration(new TranslationConfiguration());
+        modelBuilder.ApplyConfiguration(new DeletedRecordConfiguration());
 
         // Seed data
         CategorySeed.DataSeed(modelBuilder);
