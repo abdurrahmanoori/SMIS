@@ -56,13 +56,14 @@
                     <GridColumn Field="@nameof(CategoryDto.Code)" HeaderText="Code" Width="100"></GridColumn>
                     <GridColumn Field="@nameof(CategoryDto.Description)" HeaderText="Description" Width="200"></GridColumn>
                     <GridColumn Field="@nameof(CategoryDto.IsActive)" HeaderText="Active" DisplayAsCheckBox="true" Width="80"></GridColumn>
-                    <GridColumn HeaderText="Actions" Width="180">
+                    <GridColumn HeaderText="Actions" Width="210">
                         <Template>
                             @{
                                 var category = (context as CategoryDto)!;
                                 <div class="action-buttons">
                                     <SfButton CssClass="e-small" IconCss="e-icons e-eye" OnClick="( ) => OpenQuickView(category)" Title="Quick View"></SfButton>
                                     <SfButton CssClass="e-small e-info" IconCss="e-icons e-edit" OnClick="( ) => OpenEditDialog(category)" Title="Edit"></SfButton>
+                                    <SfButton CssClass="e-small e-danger" IconCss="e-icons e-delete" OnClick="() => OpenDeleteConfirm(category)" Title="Delete"></SfButton>
                                 </div>
                             }
                         </Template>
@@ -120,6 +121,7 @@
                 </div>
                 <div class="quick-actions">
                     <SfButton CssClass="e-primary" IconCss="e-icons e-edit" OnClick="( ) => { CloseQuickView(); OpenEditDialog(selectedCategory); }">Edit</SfButton>
+                    <SfButton CssClass="e-danger" IconCss="e-icons e-delete" OnClick="() => { CloseQuickView(); OpenDeleteConfirm(selectedCategory!); }">Delete</SfButton>
                 </div>
             </Content>
         </DialogTemplates>
@@ -167,6 +169,24 @@
     </DialogTemplates>
 </SfDialog>
 
+<SfDialog @bind-Visible="@showDeleteConfirm" Width="400px" IsModal="true" ShowCloseIcon="true">
+    <DialogTemplates>
+        <Header>
+            <span class="e-icons e-warning" style="color:#dc3545; margin-right:8px;"></span> Confirm Delete
+        </Header>
+        <Content>
+            <p>Are you sure you want to delete <strong>@categoryToDelete?.Name</strong>?</p>
+            <p style="color:#6c757d; font-size:0.875rem;">This will be synced to the server on next sync.</p>
+        </Content>
+        <FooterTemplate>
+            <div class="dialog-actions">
+                <SfButton CssClass="e-danger" IconCss="e-icons e-delete" OnClick="ConfirmDelete">Delete</SfButton>
+                <SfButton CssClass="e-outline" OnClick="() => showDeleteConfirm = false">Cancel</SfButton>
+            </div>
+        </FooterTemplate>
+    </DialogTemplates>
+</SfDialog>
+
 <SfToast @ref="ToastObj" Title="Category" Content="@_toastMessage" ShowCloseButton="true">
     <ToastPosition X="Right" Y="Top"></ToastPosition>
 </SfToast>
@@ -177,6 +197,8 @@
     private bool _isLoading = true;
     private bool showDialog = false;
     private bool showQuickView = false;
+    private bool showDeleteConfirm = false;
+    private CategoryDto? categoryToDelete;
     private string dialogTitle = "";
     private string searchText = "";
     private string _toastMessage = "";
@@ -364,6 +386,32 @@
     {
         showDialog = false;
         currentCategory = new CategoryFormModel();
+    }
+
+    private void OpenDeleteConfirm(CategoryDto category)
+    {
+        categoryToDelete = category;
+        showDeleteConfirm = true;
+    }
+
+    private async Task ConfirmDelete()
+    {
+        if (categoryToDelete == null) return;
+
+        showDeleteConfirm = false;
+        var result = await CategoryService.DeleteAsync(categoryToDelete.Id);
+
+        if (result.Success)
+        {
+            await ToastHelper.ShowSuccessAsync(ToastObj, $"{categoryToDelete.Name} deleted successfully", "Category");
+            categoryToDelete = null;
+            await LoadCategories(string.IsNullOrWhiteSpace(searchText) ? null : searchText);
+            await LoadPendingCount();
+        }
+        else
+        {
+            await ToastHelper.ShowErrorAsync(ToastObj, result.Message ?? "Delete failed", "Error");
+        }
     }
 
     private async Task SyncData( )

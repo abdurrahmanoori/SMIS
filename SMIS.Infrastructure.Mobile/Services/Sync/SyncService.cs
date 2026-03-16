@@ -15,6 +15,7 @@ public interface ISyncService
     Task<SyncResult> SyncDeletesAsync();
     Task<SyncAllResult> SyncAllAsync();
     Task<int> GetPendingCountAsync<TEntity>() where TEntity : class, ISyncableEntity;
+    Task<int> GetTotalPendingCountAsync();
 }
 
 public class SyncService : ISyncService
@@ -208,6 +209,15 @@ public class SyncService : ISyncService
     {
         return await _localDb.Set<TEntity>()
             .CountAsync(e => !e.IsSyncedToServer);
+    }
+
+    public async Task<int> GetTotalPendingCountAsync()
+    {
+        var entityPending = await _localDb.Set<SMIS.Domain.Entities.Category>()
+            .CountAsync(e => !e.IsSyncedToServer);
+        var deletePending = await _localDb.DeletedRecords
+            .CountAsync(d => !d.IsSyncedToServer);
+        return entityPending + deletePending;
     }
 
     public async Task<SyncAllResult> SyncAllAsync()
