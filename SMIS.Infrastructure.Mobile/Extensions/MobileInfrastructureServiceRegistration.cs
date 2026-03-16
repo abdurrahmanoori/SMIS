@@ -26,15 +26,17 @@ public static class MobileInfrastructureServiceRegistration
         services.AddSingleton<IMobileCurrentUser, MobileCurrentUser>();
         services.AddSingleton<LocalAuditInterceptor>();
         services.AddSingleton<EntityPKInterceptor>();
+        services.AddSingleton<TombstoneInterceptor>();
 
         // Database - path will be determined at runtime by platform
         services.AddDbContext<LocalDbContext>((serviceProvider, options) =>
         {
             var syncInterceptor = serviceProvider.GetRequiredService<LocalAuditInterceptor>();
             var pkInterceptor = serviceProvider.GetRequiredService<EntityPKInterceptor>();
+            var tombstoneInterceptor = serviceProvider.GetRequiredService<TombstoneInterceptor>();
             var dbPath = GetDatabasePath();
             options.UseSqlite($"Data Source={dbPath}")
-                   .AddInterceptors(syncInterceptor, pkInterceptor);
+                   .AddInterceptors(syncInterceptor, pkInterceptor, tombstoneInterceptor);
         });
 
         services.Scan(scan => scan

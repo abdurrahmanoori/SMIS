@@ -12,6 +12,7 @@ public interface ISyncService
         ISyncConfiguration<TEntity, TCreateDto, TUpdateDto, TDto> config)
         where TEntity : class, ISyncableEntity;
     Task<SyncResult> SyncCategoriesAsync();
+    Task<SyncResult> SyncDeletesAsync();
     Task<SyncAllResult> SyncAllAsync();
     Task<int> GetPendingCountAsync<TEntity>() where TEntity : class, ISyncableEntity;
 }
@@ -141,6 +142,68 @@ public class SyncService : ISyncService
         return await SyncAsync(new CategorySyncConfiguration());
     }
 
+    public async Task<SyncResult> SyncDeletesAsync()
+    {
+        if (_connectivity?.NetworkAccess != NetworkAccess.Internet)
+            return new SyncResult { Success = false, Message = "No internet connection" };
+
+        var pendingDeletes = await _localDb.DeletedRecords
+            .Where(d => !d.IsSyncedToServer)
+            .ToListAsync();
+
+        if (!pendingDeletes.Any())
+            return new SyncResult { Success = true, Message = "No pending deletes to sync" };
+
+        var synced = 0;
+        var failed = 0;
+        var connectionFailed = false;
+
+        foreach (var record in pendingDeletes)
+        {
+            if (connectionFailed) break;
+            try
+            {
+                var result = await _apiClient.DeleteAsync($"{record.ApiEndpoint}/{record.EntityId}");
+
+                if (result.Success)
+                {
+                    _localDb.DeletedRecords.Remove(record);
+                    await _localDb.SaveChangesAsync();
+                    synced++;
+                }
+                else
+                {
+                    record.RetryCount++;
+                    await _localDb.SaveChangesAsync();
+                    failed++;
+                }
+            }
+            catch (HttpRequestException)
+            {
+                connectionFailed = true;
+                failed = pendingDeletes.Count;
+                break;
+            }
+            catch
+            {
+                record.RetryCount++;
+                await _localDb.SaveChangesAsync();
+                failed++;
+            }
+        }
+
+        if (connectionFailed)
+            return new SyncResult { Success = false, Message = "Server unavailable - delete sync cancelled", FailedCount = pendingDeletes.Count };
+
+        return new SyncResult
+        {
+            Success = failed == 0,
+            Message = $"Deleted {synced} record(s) on server, {failed} failed",
+            SyncedCount = synced,
+            FailedCount = failed
+        };
+    }
+
     public async Task<int> GetPendingCountAsync<TEntity>() where TEntity : class, ISyncableEntity
     {
         return await _localDb.Set<TEntity>()
@@ -151,7 +214,8 @@ public class SyncService : ISyncService
     {
         var results = new List<SyncResult>
         {
-            await SyncCategoriesAsync()
+            await SyncCategoriesAsync(),
+            await SyncDeletesAsync()
         };
 
         return new SyncAllResult

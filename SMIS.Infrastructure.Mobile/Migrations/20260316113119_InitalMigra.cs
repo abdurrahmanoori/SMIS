@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace SMIS.Infrastructure.Mobile.Migrations
 {
     /// <inheritdoc />
-    public partial class inital : Migration
+    public partial class InitalMigra : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -37,6 +37,24 @@ namespace SMIS.Infrastructure.Mobile.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Categories", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "DeletedRecords",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    EntityType = table.Column<string>(type: "TEXT", maxLength: 100, nullable: false),
+                    EntityId = table.Column<string>(type: "TEXT", maxLength: 100, nullable: false),
+                    ApiEndpoint = table.Column<string>(type: "TEXT", maxLength: 200, nullable: false),
+                    DeletedAt = table.Column<DateTimeOffset>(type: "TEXT", nullable: false),
+                    IsSyncedToServer = table.Column<bool>(type: "INTEGER", nullable: false, defaultValue: false),
+                    RetryCount = table.Column<int>(type: "INTEGER", nullable: false, defaultValue: 0)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_DeletedRecords", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -121,12 +139,12 @@ namespace SMIS.Infrastructure.Mobile.Migrations
                 columns: new[] { "Id", "Code", "CreatedBy", "CreatedDate", "Description", "EntityState", "IsActive", "IsSyncedToServer", "LastModifiedUtc", "LastSyncedAt", "Name", "ShopId", "UpdatedBy", "UpdatedDate" },
                 values: new object[,]
                 {
-                    { "1", "BEV", null, new DateTime(2026, 3, 7, 5, 15, 37, 593, DateTimeKind.Utc).AddTicks(1116), "Drinks and beverages", "Unchanged", true, true, new DateTimeOffset(new DateTime(2026, 3, 7, 5, 15, 37, 593, DateTimeKind.Unspecified).AddTicks(1824), new TimeSpan(0, 0, 0, 0, 0)), new DateTime(2026, 3, 7, 5, 15, 37, 593, DateTimeKind.Utc).AddTicks(765), "Beverages", "1", null, new DateTime(2026, 3, 7, 5, 15, 37, 593, DateTimeKind.Utc).AddTicks(1282) },
-                    { "2", "FOOD", null, new DateTime(2026, 3, 7, 5, 15, 37, 593, DateTimeKind.Utc).AddTicks(4146), "Edible products and snacks", "Unchanged", true, true, new DateTimeOffset(new DateTime(2026, 3, 7, 5, 15, 37, 593, DateTimeKind.Unspecified).AddTicks(4736), new TimeSpan(0, 0, 0, 0, 0)), new DateTime(2026, 3, 7, 5, 15, 37, 593, DateTimeKind.Utc).AddTicks(3617), "Food Items", "1", null, new DateTime(2026, 3, 7, 5, 15, 37, 593, DateTimeKind.Utc).AddTicks(4481) },
-                    { "3", "STAT", null, new DateTime(2026, 3, 7, 5, 15, 37, 593, DateTimeKind.Utc).AddTicks(6479), "Office and school supplies", "Unchanged", true, true, new DateTimeOffset(new DateTime(2026, 3, 7, 5, 15, 37, 593, DateTimeKind.Unspecified).AddTicks(8079), new TimeSpan(0, 0, 0, 0, 0)), new DateTime(2026, 3, 7, 5, 15, 37, 593, DateTimeKind.Utc).AddTicks(6032), "Stationery", "1", null, new DateTime(2026, 3, 7, 5, 15, 37, 593, DateTimeKind.Utc).AddTicks(6839) },
-                    { "4", "GROC", null, new DateTime(2026, 3, 7, 5, 15, 37, 593, DateTimeKind.Utc).AddTicks(8717), "Daily household items", "Unchanged", true, true, new DateTimeOffset(new DateTime(2026, 3, 7, 5, 15, 37, 593, DateTimeKind.Unspecified).AddTicks(8723), new TimeSpan(0, 0, 0, 0, 0)), new DateTime(2026, 3, 7, 5, 15, 37, 593, DateTimeKind.Utc).AddTicks(8703), "Grocery", "1", null, new DateTime(2026, 3, 7, 5, 15, 37, 593, DateTimeKind.Utc).AddTicks(8720) },
-                    { "5", "CARE", null, new DateTime(2026, 3, 7, 5, 15, 37, 593, DateTimeKind.Utc).AddTicks(8734), "Health and hygiene products", "Unchanged", true, true, new DateTimeOffset(new DateTime(2026, 3, 7, 5, 15, 37, 593, DateTimeKind.Unspecified).AddTicks(8737), new TimeSpan(0, 0, 0, 0, 0)), new DateTime(2026, 3, 7, 5, 15, 37, 593, DateTimeKind.Utc).AddTicks(8732), "Personal Care", "1", null, new DateTime(2026, 3, 7, 5, 15, 37, 593, DateTimeKind.Utc).AddTicks(8735) },
-                    { "6", "ELEC", null, new DateTime(2026, 3, 7, 5, 15, 37, 593, DateTimeKind.Utc).AddTicks(8746), "Electronic devices and accessories", "Unchanged", true, true, new DateTimeOffset(new DateTime(2026, 3, 7, 5, 15, 37, 593, DateTimeKind.Unspecified).AddTicks(8748), new TimeSpan(0, 0, 0, 0, 0)), new DateTime(2026, 3, 7, 5, 15, 37, 593, DateTimeKind.Utc).AddTicks(8744), "Electronics", "1", null, new DateTime(2026, 3, 7, 5, 15, 37, 593, DateTimeKind.Utc).AddTicks(8747) }
+                    { "1", "BEV", null, new DateTime(2026, 3, 16, 11, 31, 18, 766, DateTimeKind.Utc).AddTicks(97), "Drinks and beverages", "Unchanged", true, true, new DateTimeOffset(new DateTime(2026, 3, 16, 11, 31, 18, 766, DateTimeKind.Unspecified).AddTicks(553), new TimeSpan(0, 0, 0, 0, 0)), new DateTime(2026, 3, 16, 11, 31, 18, 765, DateTimeKind.Utc).AddTicks(9827), "Beverages", "1", null, new DateTime(2026, 3, 16, 11, 31, 18, 766, DateTimeKind.Utc).AddTicks(233) },
+                    { "2", "FOOD", null, new DateTime(2026, 3, 16, 11, 31, 18, 766, DateTimeKind.Utc).AddTicks(2425), "Edible products and snacks", "Unchanged", true, true, new DateTimeOffset(new DateTime(2026, 3, 16, 11, 31, 18, 766, DateTimeKind.Unspecified).AddTicks(2889), new TimeSpan(0, 0, 0, 0, 0)), new DateTime(2026, 3, 16, 11, 31, 18, 766, DateTimeKind.Utc).AddTicks(2081), "Food Items", "1", null, new DateTime(2026, 3, 16, 11, 31, 18, 766, DateTimeKind.Utc).AddTicks(2689) },
+                    { "3", "STAT", null, new DateTime(2026, 3, 16, 11, 31, 18, 766, DateTimeKind.Utc).AddTicks(4836), "Office and school supplies", "Unchanged", true, true, new DateTimeOffset(new DateTime(2026, 3, 16, 11, 31, 18, 766, DateTimeKind.Unspecified).AddTicks(5452), new TimeSpan(0, 0, 0, 0, 0)), new DateTime(2026, 3, 16, 11, 31, 18, 766, DateTimeKind.Utc).AddTicks(4369), "Stationery", "1", null, new DateTime(2026, 3, 16, 11, 31, 18, 766, DateTimeKind.Utc).AddTicks(5151) },
+                    { "4", "GROC", null, new DateTime(2026, 3, 16, 11, 31, 18, 766, DateTimeKind.Utc).AddTicks(5734), "Daily household items", "Unchanged", true, true, new DateTimeOffset(new DateTime(2026, 3, 16, 11, 31, 18, 766, DateTimeKind.Unspecified).AddTicks(5738), new TimeSpan(0, 0, 0, 0, 0)), new DateTime(2026, 3, 16, 11, 31, 18, 766, DateTimeKind.Utc).AddTicks(5730), "Grocery", "1", null, new DateTime(2026, 3, 16, 11, 31, 18, 766, DateTimeKind.Utc).AddTicks(5736) },
+                    { "5", "CARE", null, new DateTime(2026, 3, 16, 11, 31, 18, 766, DateTimeKind.Utc).AddTicks(5746), "Health and hygiene products", "Unchanged", true, true, new DateTimeOffset(new DateTime(2026, 3, 16, 11, 31, 18, 766, DateTimeKind.Unspecified).AddTicks(5749), new TimeSpan(0, 0, 0, 0, 0)), new DateTime(2026, 3, 16, 11, 31, 18, 766, DateTimeKind.Utc).AddTicks(5745), "Personal Care", "1", null, new DateTime(2026, 3, 16, 11, 31, 18, 766, DateTimeKind.Utc).AddTicks(5747) },
+                    { "6", "ELEC", null, new DateTime(2026, 3, 16, 11, 31, 18, 766, DateTimeKind.Utc).AddTicks(5765), "Electronic devices and accessories", "Unchanged", true, true, new DateTimeOffset(new DateTime(2026, 3, 16, 11, 31, 18, 766, DateTimeKind.Unspecified).AddTicks(5767), new TimeSpan(0, 0, 0, 0, 0)), new DateTime(2026, 3, 16, 11, 31, 18, 766, DateTimeKind.Utc).AddTicks(5763), "Electronics", "1", null, new DateTime(2026, 3, 16, 11, 31, 18, 766, DateTimeKind.Utc).AddTicks(5766) }
                 });
 
             migrationBuilder.CreateIndex(
@@ -148,6 +166,16 @@ namespace SMIS.Infrastructure.Mobile.Migrations
                 name: "IX_Categories_ShopId",
                 table: "Categories",
                 column: "ShopId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_DeletedRecords_EntityType",
+                table: "DeletedRecords",
+                column: "EntityType");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_DeletedRecords_IsSyncedToServer",
+                table: "DeletedRecords",
+                column: "IsSyncedToServer");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Languages_Code",
@@ -177,6 +205,9 @@ namespace SMIS.Infrastructure.Mobile.Migrations
         {
             migrationBuilder.DropTable(
                 name: "Categories");
+
+            migrationBuilder.DropTable(
+                name: "DeletedRecords");
 
             migrationBuilder.DropTable(
                 name: "Translations");
