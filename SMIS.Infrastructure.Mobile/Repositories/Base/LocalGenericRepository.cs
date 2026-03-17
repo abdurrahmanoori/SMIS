@@ -154,9 +154,13 @@ public class LocalGenericRepository<T> : IGenericRepository<T> where T : class
         return await _dbSet.Where(lambda).ToListAsync();
     }
 
-    public async Task<IEnumerable<T>> GetAllAsync(Expression<Func<T, bool>>? filter = null, string? includeProperties = null)
+    public async Task<IEnumerable<T>> GetAllAsync(Expression<Func<T, bool>>? filter = null, string? includeProperties = null, bool tracked = false)
     {
-        IQueryable<T> query = _dbSet;
+        IQueryable<T> query = _dbSet.AsNoTracking();
+        if (tracked)
+        {
+            query = _dbSet.AsTracking();
+        }
 
         if (filter != null)
         {
@@ -174,10 +178,13 @@ public class LocalGenericRepository<T> : IGenericRepository<T> where T : class
         return await query.ToListAsync();
     }
 
-    public IQueryable<T> GetAllQueryable(Expression<Func<T, bool>>? filter = null, string? includeProperties = null)
+    public IQueryable<T> GetAllQueryable(Expression<Func<T, bool>>? filter = null, string? includeProperties = null, bool tracked = false)
     {
-        IQueryable<T> query = _dbSet;
-
+        IQueryable<T> query = _dbSet.AsNoTracking();
+        if (tracked)
+        {
+            query = query.AsTracking();
+        }
         if (filter != null)
         {
             query = query.Where(filter);
