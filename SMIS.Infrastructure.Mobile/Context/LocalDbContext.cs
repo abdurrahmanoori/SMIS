@@ -23,6 +23,9 @@ public class LocalDbContext : DbContext
         base.OnConfiguring(optionsBuilder);
         optionsBuilder.ConfigureWarnings(warnings =>
             warnings.Ignore(Microsoft.EntityFrameworkCore.Diagnostics.RelationalEventId.PendingModelChangesWarning));
+#if DEBUG
+        optionsBuilder.EnableSensitiveDataLogging();
+#endif
         //optionsBuilder.AddInterceptors(new SyncFlagInterceptor());
     }
 
