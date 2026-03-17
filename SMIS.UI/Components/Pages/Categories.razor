@@ -120,25 +120,25 @@
                 <div class="form-group">
                     <label>Category Name <span class="required">*</span></label>
                     <SfTextBox @bind-Value="@currentCategory.Name" Placeholder="Enter category name"></SfTextBox>
-                    @if (validationErrors.ContainsKey("Name"))
+                    @if (validationErrors.ContainsKey(nameof(CategoryCreateDto.Name)))
                     {
-                        <div class="validation-message">@validationErrors["Name"]</div>
+                        <div class="validation-message">@validationErrors[nameof(CategoryCreateDto.Name)]</div>
                     }
                 </div>
                 <div class="form-group">
                     <label>Code</label>
                     <SfTextBox @bind-Value="@currentCategory.Code" Placeholder="Enter category code"></SfTextBox>
-                    @if (validationErrors.ContainsKey("Code"))
+                    @if (validationErrors.ContainsKey(nameof(CategoryCreateDto.Code)))
                     {
-                        <div class="validation-message">@validationErrors["Code"]</div>
+                        <div class="validation-message">@validationErrors[nameof(CategoryCreateDto.Code)]</div>
                     }
                 </div>
                 <div class="form-group">
                     <label>Description</label>
                     <SfTextBox @bind-Value="@currentCategory.Description" Multiline="true" Placeholder="Enter description"></SfTextBox>
-                    @if (validationErrors.ContainsKey("Description"))
+                    @if (validationErrors.ContainsKey(nameof(CategoryCreateDto.Description)))
                     {
-                        <div class="validation-message">@validationErrors["Description"]</div>
+                        <div class="validation-message">@validationErrors[nameof(CategoryCreateDto.Description)]</div>
                     }
                 </div>
                 <div class="form-group">
