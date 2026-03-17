@@ -26,6 +26,9 @@ public class CategoryService : BaseService
     public async Task<Result<CategoryDto>> UpdateAsync(string id, CategoryUpdateDto dto)
         => await SendAndSyncAsync(new CategoryUpdateCommand(id, dto), SyncService.SyncCategoriesAsync);
 
+    public async Task<Result<MediatR.Unit>> DeleteAsync(string id)
+        => await SendAndSyncAsync(new CategoryDeleteCommand(id), SyncService.SyncDeletesAsync);
+
     public async Task<SyncResult> SyncAsync()
         => await SyncService.SyncCategoriesAsync();
 

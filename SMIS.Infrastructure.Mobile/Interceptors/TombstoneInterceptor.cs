@@ -38,8 +38,7 @@ public class TombstoneInterceptor : SaveChangesInterceptor
             var apiEndpoint = ResolveEndpoint(entityType);
 
             // Only write tombstone if the entity was previously synced to server.
-            // If it was never synced (created offline and deleted before sync),
-            // a physical delete is safe — no server record exists.
+            // If never synced, no server record exists — physical delete alone is sufficient.
             if (entry.Entity.IsSyncedToServer)
             {
                 context.Set<DeletedRecord>().Add(new DeletedRecord
@@ -51,8 +50,8 @@ public class TombstoneInterceptor : SaveChangesInterceptor
                 });
             }
 
-            // Cancel the physical delete — let EF skip it
-            entry.State = EntityState.Detached;
+            // Physical delete proceeds normally — EF will delete the row.
+            // The tombstone insert and physical delete both commit in the same transaction.
         }
     }
 

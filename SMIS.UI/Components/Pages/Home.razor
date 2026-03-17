@@ -1,4 +1,8 @@
 ﻿@page "/"
+@using SMIS.Infrastructure.Mobile.Services.Sync
+@using SMIS.UI.Helpers
+@using Syncfusion.Blazor.Notifications
+@inject ISyncService SyncService
 
 <div class="home-page">
     <SfCard>
@@ -36,18 +40,65 @@
             <div class="action-buttons">
                 <SfButton CssClass="e-primary e-large" IconCss="e-icons e-shopping-cart" @onclick="NavigateToProducts">View Products</SfButton>
                 <SfButton CssClass="e-success e-large" IconCss="e-icons e-plus">Add New Product</SfButton>
+                <div class="sync-btn-wrapper">
+                    <SfButton CssClass="e-info e-large" IconCss="e-icons e-sync" OnClick="SyncAll" Disabled="@_isSyncing">Sync All</SfButton>
+                    @if (_totalPending > 0)
+                    {
+                        <span class="pending-badge">@_totalPending</span>
+                    }
+                </div>
             </div>
+
+            @if (!string.IsNullOrEmpty(_syncMessage))
+            {
+                <div class="sync-result @_syncResultCss">
+                    @_syncMessage
+                </div>
+            }
         </CardContent>
     </SfCard>
 </div>
 
 @code {
-    [Inject]
-    private NavigationManager? Navigation { get; set; }
+    [Inject] private NavigationManager? Navigation { get; set; }
+
+    private bool _isSyncing = false;
+    private int _totalPending = 0;
+    private string _syncMessage = "";
+    private string _syncResultCss = "";
+
+    protected override async Task OnInitializedAsync()
+    {
+        _totalPending = await SyncService.GetTotalPendingCountAsync();
+    }
 
     private void NavigateToProducts()
     {
         Navigation?.NavigateTo("/products");
+    }
+
+    private async Task SyncAll()
+    {
+        _isSyncing = true;
+        _syncMessage = "Syncing...";
+        _syncResultCss = "sync-info";
+        StateHasChanged();
+
+        var result = await SyncService.SyncAllAsync();
+
+        _isSyncing = false;
+        _totalPending = await SyncService.GetTotalPendingCountAsync();
+
+        if (result.Success)
+        {
+            _syncMessage = $"Sync complete — {result.TotalSynced} synced, {result.TotalFailed} failed";
+            _syncResultCss = "sync-success";
+        }
+        else
+        {
+            _syncMessage = $"Sync failed — {result.TotalFailed} failed";
+            _syncResultCss = "sync-error";
+        }
     }
 }
 
@@ -95,5 +146,40 @@
         gap: 15px;
         margin-top: 30px;
         flex-wrap: wrap;
+        align-items: center;
     }
+
+    .sync-btn-wrapper {
+        position: relative;
+        display: inline-flex;
+    }
+
+    .pending-badge {
+        position: absolute;
+        top: -6px;
+        right: -6px;
+        background-color: #dc3545;
+        color: white;
+        border-radius: 50%;
+        min-width: 18px;
+        height: 18px;
+        font-size: 11px;
+        font-weight: bold;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0 4px;
+        pointer-events: none;
+    }
+
+    .sync-result {
+        margin-top: 15px;
+        padding: 10px 16px;
+        border-radius: 4px;
+        font-size: 14px;
+    }
+
+    .sync-success { background-color: #d4edda; color: #155724; }
+    .sync-error   { background-color: #f8d7da; color: #721c24; }
+    .sync-info    { background-color: #d1ecf1; color: #0c5460; }
 </style>
