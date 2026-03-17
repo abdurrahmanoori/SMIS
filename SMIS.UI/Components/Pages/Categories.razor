@@ -18,24 +18,25 @@
     <CardHeader Title="Category Management" />
     <CardContent>
         <div class="card-actions">
-            <SfButton CssClass="e-primary" IconCss="e-icons e-plus" OnClick="OpenAddDialog">Add Category</SfButton>
-            <SfButton CssClass="e-success" IconCss="e-icons e-export-excel" OnClick="ExportToExcel">Export Excel</SfButton>
-            <SfButton CssClass="e-warning" IconCss="e-icons e-export-pdf" OnClick="ExportToPdf">Export PDF</SfButton>
+            <SfButton CssClass="e-primary" IconCss="e-icons e-plus" @onclick="OpenAddDialog">Add Category</SfButton>
+            <SfButton CssClass="e-success" IconCss="e-icons e-export-excel" @onclick="ExportToExcel">Export Excel</SfButton>
+            <SfButton CssClass="e-warning" IconCss="e-icons e-export-pdf" @onclick="ExportToPdf">Export PDF</SfButton>
             <div class="sync-btn-wrapper">
-                <SfButton CssClass="e-info" IconCss="e-icons e-sync" OnClick="SyncData">Sync</SfButton>
+                <SfButton CssClass="e-info" IconCss="e-icons e-sync" @onclick="SyncData">Sync</SfButton>
                 @if (_pendingCount > 0)
                 {
                     <span class="pending-badge">@_pendingCount</span>
                 }
             </div>
-            <SfButton CssClass="e-success" IconCss="e-icons e-refresh" OnClick="RefreshGrid">Refresh</SfButton>
+            <SfButton CssClass="e-success" IconCss="e-icons e-refresh" @onclick="RefreshGrid">Refresh</SfButton>
         </div>
 
-        <div style="position: relative; margin-bottom: 16px;">
-            <input type="text" placeholder="Search categories..." class="e-input" value="@searchText" @oninput="@(async (e) => await OnSearchInput(e))" style="display: block; width: 100%; padding-right: 30px;" />
+        <div class="search-wrapper">
+            <input type="text" placeholder="Search categories..." class="e-input" value="@searchText"
+                   @oninput="@(async (e) => await OnSearchInput(e))" />
             @if (!string.IsNullOrWhiteSpace(searchText))
             {
-                <span @onclick="ClearSearch" style="position: absolute; right: 8px; top: 50%; transform: translateY(-50%); cursor: pointer; color: #999;" class="e-icons e-close"></span>
+                <span @onclick="ClearSearch" class="e-icons e-close search-clear"></span>
             }
         </div>
 
@@ -48,64 +49,45 @@
         else
         {
             <SfGrid @ref="grid" DataSource="@_categories" AllowPaging="false" AllowSorting="true" AllowFiltering="true"
-                    AllowExcelExport="true" AllowPdfExport="true" AllowSelection="true" Toolbar="@toolbarItems" ShowColumnChooser="true"
-                    AllowResizing="true">
+                    AllowExcelExport="true" AllowPdfExport="true" AllowSelection="true" Toolbar="@toolbarItems"
+                    ShowColumnChooser="true" AllowResizing="true" Height="400px">
                 <GridFilterSettings Type="Syncfusion.Blazor.Grids.FilterType.Menu"></GridFilterSettings>
                 <GridColumns>
                     <GridColumn Field="@nameof(CategoryDto.Name)" HeaderText="Name" Width="150"></GridColumn>
                     <GridColumn Field="@nameof(CategoryDto.Code)" HeaderText="Code" Width="100"></GridColumn>
                     <GridColumn Field="@nameof(CategoryDto.Description)" HeaderText="Description" Width="200"></GridColumn>
                     <GridColumn Field="@nameof(CategoryDto.IsActive)" HeaderText="Active" DisplayAsCheckBox="true" Width="80"></GridColumn>
-                    <GridColumn HeaderText="Actions" Width="210">
+                    <GridColumn HeaderText="Actions" Width="150">
                         <Template>
                             @{
                                 var category = (context as CategoryDto)!;
                                 <div class="action-buttons">
-                                    <SfButton CssClass="e-small" IconCss="e-icons e-eye" OnClick="( ) => OpenQuickView(category)" Title="Quick View"></SfButton>
-                                    <SfButton CssClass="e-small e-info" IconCss="e-icons e-edit" OnClick="( ) => OpenEditDialog(category)" Title="Edit"></SfButton>
-                                    <SfButton CssClass="e-small e-danger" IconCss="e-icons e-delete" OnClick="() => OpenDeleteConfirm(category)" Title="Delete"></SfButton>
+                                    <SfButton CssClass="e-small" IconCss="e-icons e-eye" @onclick="() => OpenQuickView(category)" Title="Quick View"></SfButton>
+                                    <SfButton CssClass="e-small e-info" IconCss="e-icons e-edit" @onclick="() => OpenEditDialog(category)" Title="Edit"></SfButton>
+                                    <SfButton CssClass="e-small e-danger" IconCss="e-icons e-delete" @onclick="() => OpenDeleteConfirm(category)" Title="Delete"></SfButton>
                                 </div>
                             }
                         </Template>
                     </GridColumn>
                 </GridColumns>
             </SfGrid>
-            
-            <div class="e-pager e-control">
-                <div class="e-pagercontainer">
-                    <div class="e-parentmsgbar">
-                        <span class="e-pagenomsg">@((_currentPage - 1) * _pageSize + 1) - @(Math.Min(_currentPage * _pageSize, _totalCount)) of @_totalCount items</span>
-                    </div>
-                    <div class="e-pagerexternalmsg"></div>
-                </div>
-                <div class="e-pagercontainer" style="float: right;">
-                    <a class="e-link e-numericitem e-spacing @(_currentPage <= 1 ? "e-disable" : "")" @onclick="@(() => ChangePage(_currentPage - 1))" style="cursor: pointer;">
-                        <span class="e-icons e-icon-prev"></span>
-                    </a>
-                    @for (int i = 1; i <= _totalPages; i++)
-                    {
-                        var pageNumber = i;
-                        var activeClass = pageNumber == _currentPage ? "e-currentitem e-active" : "";
-                        <a class="e-link e-numericitem e-spacing @activeClass" @onclick="@(() => ChangePage(pageNumber))" style="cursor: pointer;">@pageNumber</a>
-                    }
-                    <a class="e-link e-numericitem e-spacing @(_currentPage >= _totalPages ? "e-disable" : "")" @onclick="@(() => ChangePage(_currentPage + 1))" style="cursor: pointer;">
-                        <span class="e-icons e-icon-next"></span>
-                    </a>
-                </div>
-            </div>
+
+            <SfPager PageSize="@_pageSize" TotalItemsCount="@_totalCount" CurrentPage="@_currentPage"
+                     PageChanged="OnPageChanged">
+            </SfPager>
         }
     </CardContent>
 </SfCard>
 
-@if (showQuickView && selectedCategory != null)
-{
-    <SfDialog @bind-Visible="@showQuickView" Width="500px" IsModal="true" ShowCloseIcon="true">
-        <DialogTemplates>
-            <Header>
-                <span class="e-icons e-eye"></span>
-                <span>Category Details</span>
-            </Header>
-            <Content>
+<SfDialog @bind-Visible="@showQuickView" Width="500px" IsModal="true" ShowCloseIcon="true">
+    <DialogTemplates>
+        <Header>
+            <span class="e-icons e-eye"></span>
+            <span>Category Details</span>
+        </Header>
+        <Content>
+            @if (selectedCategory != null)
+            {
                 <div class="detail-row">
                     <strong>Category Name:</strong> <span>@selectedCategory.Name</span>
                 </div>
@@ -117,16 +99,18 @@
                 </div>
                 <div class="detail-row">
                     <strong>Status:</strong>
-                    <SfChip CssClass="@(selectedCategory.IsActive ? "active-chip" : "inactive-chip")">@(selectedCategory.IsActive ? "Active" : "Inactive")</SfChip>
+                    <SfChip CssClass="@(selectedCategory.IsActive ? "active-chip" : "inactive-chip")">
+                        @(selectedCategory.IsActive ? "Active" : "Inactive")
+                    </SfChip>
                 </div>
                 <div class="quick-actions">
-                    <SfButton CssClass="e-primary" IconCss="e-icons e-edit" OnClick="( ) => { CloseQuickView(); OpenEditDialog(selectedCategory); }">Edit</SfButton>
-                    <SfButton CssClass="e-danger" IconCss="e-icons e-delete" OnClick="() => { CloseQuickView(); OpenDeleteConfirm(selectedCategory!); }">Delete</SfButton>
+                    <SfButton CssClass="e-primary" IconCss="e-icons e-edit" @onclick="() => { CloseQuickView(); OpenEditDialog(selectedCategory); }">Edit</SfButton>
+                    <SfButton CssClass="e-danger" IconCss="e-icons e-delete" @onclick="() => { CloseQuickView(); OpenDeleteConfirm(selectedCategory); }">Delete</SfButton>
                 </div>
-            </Content>
-        </DialogTemplates>
-    </SfDialog>
-}
+            }
+        </Content>
+    </DialogTemplates>
+</SfDialog>
 
 <SfDialog @bind-Visible="@showDialog" Width="500px" IsModal="true">
     <DialogTemplates>
@@ -162,7 +146,7 @@
                 </div>
                 <div class="dialog-actions">
                     <SfButton Type="ButtonType.Submit" CssClass="e-primary" IconCss="e-icons e-save">Save</SfButton>
-                    <SfButton CssClass="e-outline" OnClick="CloseDialog">Cancel</SfButton>
+                    <SfButton CssClass="e-outline" @onclick="CloseDialog">Cancel</SfButton>
                 </div>
             </EditForm>
         </Content>
@@ -172,53 +156,50 @@
 <SfDialog @bind-Visible="@showDeleteConfirm" Width="400px" IsModal="true" ShowCloseIcon="true">
     <DialogTemplates>
         <Header>
-            <span class="e-icons e-warning" style="color:#dc3545; margin-right:8px;"></span> Confirm Delete
+            <span class="e-icons e-warning delete-warning-icon"></span> Confirm Delete
         </Header>
         <Content>
             <p>Are you sure you want to delete <strong>@categoryToDelete?.Name</strong>?</p>
-            <p style="color:#6c757d; font-size:0.875rem;">This will be synced to the server on next sync.</p>
+            <p class="delete-hint">This will be synced to the server on next sync.</p>
         </Content>
         <FooterTemplate>
             <div class="dialog-actions">
-                <SfButton CssClass="e-danger" IconCss="e-icons e-delete" OnClick="ConfirmDelete">Delete</SfButton>
-                <SfButton CssClass="e-outline" OnClick="() => showDeleteConfirm = false">Cancel</SfButton>
+                <SfButton CssClass="e-danger" IconCss="e-icons e-delete" @onclick="ConfirmDelete">Delete</SfButton>
+                <SfButton CssClass="e-outline" @onclick="() => showDeleteConfirm = false">Cancel</SfButton>
             </div>
         </FooterTemplate>
     </DialogTemplates>
 </SfDialog>
 
-<SfToast @ref="ToastObj" Title="Category" Content="@_toastMessage" ShowCloseButton="true">
+<SfToast @ref="ToastObj" ShowCloseButton="true">
     <ToastPosition X="Right" Y="Top"></ToastPosition>
 </SfToast>
 
 @code {
     private SfGrid<CategoryDto>? grid;
+    private SfToast? ToastObj;
     private List<CategoryDto> _categories = new();
+    private List<object> toolbarItems = new() { "ColumnChooser" };
+    private Dictionary<string, string> validationErrors = new();
+    private CategoryFormModel currentCategory = new();
+    private CategoryDto? selectedCategory;
+    private CategoryDto? categoryToDelete;
+    private string dialogTitle = "";
+    private string searchText = "";
     private bool _isLoading = true;
     private bool showDialog = false;
     private bool showQuickView = false;
     private bool showDeleteConfirm = false;
-    private CategoryDto? categoryToDelete;
-    private string dialogTitle = "";
-    private string searchText = "";
-    private string _toastMessage = "";
-    private string _errorMessage = "";
-    private CategoryFormModel currentCategory = new();
-    private CategoryDto? selectedCategory;
     private bool isEditMode = false;
-    private SfToast ToastObj;
-    private List<object> toolbarItems = new List<object> { "ColumnChooser" };
-    private Dictionary<string, string> validationErrors = new();
     private int _pendingCount = 0;
     private int _currentPage = 1;
     private int _pageSize = 10;
     private int _totalCount = 0;
     private int _totalPages = 0;
 
-    protected override async Task OnInitializedAsync( )
+    protected override async Task OnInitializedAsync()
     {
-        await LoadCategories();
-        await LoadPendingCount();
+        await Task.WhenAll(LoadCategories(), LoadPendingCount());
     }
 
     private async Task LoadPendingCount()
@@ -229,7 +210,6 @@
     private async Task LoadCategories(string? searchTerm = null)
     {
         _isLoading = true;
-        _errorMessage = "";
 
         var result = await CategoryService.GetAllAsync(_currentPage, _pageSize, searchTerm);
 
@@ -239,23 +219,25 @@
             _totalCount = result.Response.TotalCount;
             _totalPages = result.Response.TotalPages;
             _currentPage = result.Response.PageNumber;
-            _pageSize = result.Response.PageSize;
         }
         else if (ToastObj != null)
         {
-            _errorMessage = result.Message ?? "Failed to load categories";
-            await ToastHelper.ShowErrorAsync(ToastObj, _errorMessage, "Category");
+            await ToastHelper.ShowErrorAsync(ToastObj, result.Message ?? "Failed to load categories", "Category");
         }
 
         _isLoading = false;
     }
 
-    private async Task ChangePage(int page)
+    private async Task OnPageChanged(PageChangedEventArgs args)
     {
-        if (page < 1 || page > _totalPages || page == _currentPage)
-            return;
+        _currentPage = args.CurrentPage;
+        await LoadCategories(string.IsNullOrWhiteSpace(searchText) ? null : searchText);
+    }
 
-        _currentPage = page;
+    private async Task OnSearchInput(Microsoft.AspNetCore.Components.ChangeEventArgs args)
+    {
+        searchText = args.Value?.ToString() ?? "";
+        _currentPage = 1;
         await LoadCategories(string.IsNullOrWhiteSpace(searchText) ? null : searchText);
     }
 
@@ -266,42 +248,19 @@
         await LoadCategories();
     }
 
-    private async Task OnSearchInput(Microsoft.AspNetCore.Components.ChangeEventArgs args)
-    {
-        searchText = args.Value?.ToString() ?? "";
-        _currentPage = 1;
-        await LoadCategories(string.IsNullOrWhiteSpace(searchText) ? null : searchText);
-    }
-
     private void OpenQuickView(CategoryDto category)
     {
         selectedCategory = category;
         showQuickView = true;
     }
 
-    private void CloseQuickView( )
+    private void CloseQuickView()
     {
         showQuickView = false;
         selectedCategory = null;
     }
 
-    private async Task ExportToExcel( )
-    {
-        if (grid != null)
-        {
-            await grid.ExportToExcelAsync();
-        }
-    }
-
-    private async Task ExportToPdf( )
-    {
-        if (grid != null)
-        {
-            await grid.ExportToPdfAsync();
-        }
-    }
-
-    private void OpenAddDialog( )
+    private void OpenAddDialog()
     {
         dialogTitle = "Add New Category";
         currentCategory = new CategoryFormModel { IsActive = true };
@@ -326,7 +285,13 @@
         showDialog = true;
     }
 
-    private async Task SaveCategory( )
+    private void CloseDialog()
+    {
+        showDialog = false;
+        currentCategory = new CategoryFormModel();
+    }
+
+    private async Task SaveCategory()
     {
         Result<CategoryDto> result;
         string successMessage;
@@ -358,34 +323,17 @@
 
         if (result.Success)
         {
-            await ToastHelper.ShowSuccessAsync(ToastObj, successMessage, "Category");
+            await ToastHelper.ShowSuccessAsync(ToastObj!, successMessage, "Category");
             CloseDialog();
-            await LoadCategories();
-            await LoadPendingCount();
+            await Task.WhenAll(LoadCategories(), LoadPendingCount());
         }
         else
         {
-            await HandleValidationErrors(result);
+            validationErrors = ValidationHelper.ExtractValidationErrors(result);
+            if (!validationErrors.Any())
+                await ToastHelper.ShowErrorAsync(ToastObj!, result.Message ?? "Operation failed", "Error");
+            StateHasChanged();
         }
-    }
-
-    private async Task HandleValidationErrors(Result<CategoryDto> result)
-    {
-        validationErrors = ValidationHelper.ExtractValidationErrors(result);
-        
-        if (!validationErrors.Any())
-        {
-            var errorMessage = result.Message ?? "Operation failed";
-            await ToastHelper.ShowErrorAsync(ToastObj, errorMessage, "Error");
-        }
-        
-        StateHasChanged();
-    }
-
-    private void CloseDialog( )
-    {
-        showDialog = false;
-        currentCategory = new CategoryFormModel();
     }
 
     private void OpenDeleteConfirm(CategoryDto category)
@@ -403,40 +351,51 @@
 
         if (result.Success)
         {
-            await ToastHelper.ShowSuccessAsync(ToastObj, $"{categoryToDelete.Name} deleted successfully", "Category");
+            await ToastHelper.ShowSuccessAsync(ToastObj!, $"{categoryToDelete.Name} deleted successfully", "Category");
             categoryToDelete = null;
-            await LoadCategories(string.IsNullOrWhiteSpace(searchText) ? null : searchText);
-            await LoadPendingCount();
+            await Task.WhenAll(
+                LoadCategories(string.IsNullOrWhiteSpace(searchText) ? null : searchText),
+                LoadPendingCount());
         }
         else
         {
-            await ToastHelper.ShowErrorAsync(ToastObj, result.Message ?? "Delete failed", "Error");
+            await ToastHelper.ShowErrorAsync(ToastObj!, result.Message ?? "Delete failed", "Error");
         }
     }
 
-    private async Task SyncData( )
+    private async Task SyncData()
     {
-        await ToastHelper.ShowInfoAsync(ToastObj, "Syncing...", "Category");
-
+        await ToastHelper.ShowInfoAsync(ToastObj!, "Syncing...", "Category");
         var result = await CategoryService.SyncAsync();
-        if (result.Success)
-            await ToastHelper.ShowSuccessAsync(ToastObj, result.Message ?? "Sync completed", "Category");
-        else
-            await ToastHelper.ShowErrorAsync(ToastObj, result.Message ?? "Sync failed", "Category");
 
         if (result.Success)
         {
-            await LoadCategories();
-            await LoadPendingCount();
+            await ToastHelper.ShowSuccessAsync(ToastObj!, result.Message ?? "Sync completed", "Category");
+            await Task.WhenAll(LoadCategories(), LoadPendingCount());
+        }
+        else
+        {
+            await ToastHelper.ShowErrorAsync(ToastObj!, result.Message ?? "Sync failed", "Category");
         }
     }
 
-    private async Task RefreshGrid( )
+    private async Task RefreshGrid()
     {
         searchText = "";
         _currentPage = 1;
-        await LoadCategories();
-        await LoadPendingCount();
+        await Task.WhenAll(LoadCategories(), LoadPendingCount());
+    }
+
+    private async Task ExportToExcel()
+    {
+        if (grid != null)
+            await grid.ExportToExcelAsync();
+    }
+
+    private async Task ExportToPdf()
+    {
+        if (grid != null)
+            await grid.ExportToPdfAsync();
     }
 
     private class CategoryFormModel
@@ -479,8 +438,25 @@
         padding: 0 4px;
         pointer-events: none;
     }
-        margin-bottom: 20px;
-        width: 100%;
+
+    .search-wrapper {
+        position: relative;
+        margin-bottom: 16px;
+    }
+
+        .search-wrapper .e-input {
+            display: block;
+            width: 100%;
+            padding-right: 30px;
+        }
+
+    .search-clear {
+        position: absolute;
+        right: 8px;
+        top: 50%;
+        transform: translateY(-50%);
+        cursor: pointer;
+        color: #999;
     }
 
     .loading-container {
@@ -520,6 +496,16 @@
         gap: 10px;
         margin-top: 20px;
         justify-content: flex-end;
+    }
+
+    .delete-warning-icon {
+        color: #dc3545;
+        margin-right: 8px;
+    }
+
+    .delete-hint {
+        color: #6c757d;
+        font-size: 0.875rem;
     }
 
     .detail-row {
@@ -586,5 +572,6 @@
             .detail-row strong {
                 min-width: auto;
             }
+
     }
 </style>
