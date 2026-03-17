@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
     <title>SMIS.UI</title>
     <base href="/" />
-    <link href="https://cdn.syncfusion.com/blazor/27.1.48/styles/bootstrap5.css" rel="stylesheet" />
+    <link id="syncfusion-theme" href="https://cdn.syncfusion.com/blazor/27.1.48/styles/bootstrap5.css" rel="stylesheet" />
     <link rel="stylesheet" href="css/app.css" />
     <link rel="icon" href="data:,">
 </head>
@@ -31,6 +31,26 @@
                     window.mainLayoutRef.invokeMethodAsync('CloseSidebarFromJS');
                 }
             });
+        };
+
+        window.themeInterop = {
+            setTheme: function (isDark) {
+                var link = document.getElementById('syncfusion-theme');
+                var base = 'https://cdn.syncfusion.com/blazor/27.1.48/styles/';
+                link.href = isDark ? base + 'bootstrap5-dark.css' : base + 'bootstrap5.css';
+                document.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light');
+                document.body.setAttribute('data-theme', isDark ? 'dark' : 'light');
+            },
+            getDevicePreference: function () {
+                return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+            },
+            watchDevicePreference: function (dotnetHelper) {
+                if (window.matchMedia) {
+                    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function (e) {
+                        dotnetHelper.invokeMethodAsync('OnDeviceThemeChanged', e.matches);
+                    });
+                }
+            }
         };
     </script>
     <script src="_framework/blazor.webview.js" autostart="false"></script>

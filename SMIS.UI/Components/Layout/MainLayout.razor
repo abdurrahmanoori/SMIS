@@ -1,8 +1,9 @@
-﻿@using SMIS.UI.Services
+@using SMIS.UI.Services
 @inherits LayoutComponentBase
 @inject IJSRuntime JSRuntime
 @inject AuthServiceWrapper AuthService
 @inject NavigationManager Navigation
+@inject ThemeService ThemeService
 @implements IDisposable
 
 <div class="page-container">
@@ -22,6 +23,18 @@
             <SfButton CssClass="e-flat" IconCss="e-icons e-menu" @onclick="ToggleSidebar"></SfButton>
             <h4 style="cursor: pointer;" @onclick="@(() => Navigation.NavigateTo("/"))">Shop Management System</h4>
             <div class="header-actions">
+                <SfButton CssClass="e-outline theme-toggle-btn" @onclick="ToggleTheme">
+                    @if (_isDark)
+                    {
+                        <span class="e-icons e-sun-icon" style="margin-right:6px;"></span>
+                        <span>Light</span>
+                    }
+                    else
+                    {
+                        <span class="e-icons e-moon-icon" style="margin-right:6px;"></span>
+                        <span>Dark</span>
+                    }
+                </SfButton>
                 <SfButton CssClass="e-flat e-danger" IconCss="e-icons e-logout" OnClick="Logout" title="Logout">Logout</SfButton>
             </div>
         </div>
@@ -32,15 +45,9 @@
 </div>
 
 @code {
-    private async Task Logout()
-    {
-        await AuthService.LogoutAsync();
-        var res = await AuthService.IsAuthenticatedAsync();
-        Navigation.NavigateTo("/login", replace: true);
-    }
-
     private SfSidebar? sidebar;
     private bool isSidebarOpen = true;
+    private bool _isDark = false;
     private DotNetObjectReference<MainLayout>? objRef;
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -49,7 +56,31 @@
         {
             objRef = DotNetObjectReference.Create(this);
             await JSRuntime.InvokeVoidAsync("setupResizeListener", objRef);
+
+            _isDark = await JSRuntime.InvokeAsync<bool>("themeInterop.getDevicePreference");
+            await JSRuntime.InvokeVoidAsync("themeInterop.watchDevicePreference", objRef);
+            await ApplyTheme(_isDark);
+            StateHasChanged();
         }
+    }
+
+    private async Task ToggleTheme()
+    {
+        await ApplyTheme(!_isDark);
+    }
+
+    private async Task ApplyTheme(bool isDark)
+    {
+        _isDark = isDark;
+        ThemeService.SetTheme(isDark);
+        await JSRuntime.InvokeVoidAsync("themeInterop.setTheme", isDark);
+    }
+
+    [JSInvokable]
+    public async Task OnDeviceThemeChanged(bool isDark)
+    {
+        await ApplyTheme(isDark);
+        StateHasChanged();
     }
 
     [JSInvokable]
@@ -62,15 +93,15 @@
         }
     }
 
-    private void ToggleSidebar()
+    private void ToggleSidebar() => isSidebarOpen = !isSidebarOpen;
+
+    private async Task Logout()
     {
-        isSidebarOpen = !isSidebarOpen;
+        await AuthService.LogoutAsync();
+        Navigation.NavigateTo("/login", replace: true);
     }
 
-    public void Dispose()
-    {
-        objRef?.Dispose();
-    }
+    public void Dispose() => objRef?.Dispose();
 }
 
 <style>
@@ -113,17 +144,57 @@
         justify-content: space-between;
     }
 
-    .header-actions {
-        margin-left: auto;
-    }
-
     .header h4 {
         margin: 0;
+    }
+
+    .header-actions {
+        margin-left: auto;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .theme-toggle-btn {
+        display: flex;
+        align-items: center;
+    }
+
+    .e-sun-icon::before {
+        content: "\e91e";
+    }
+
+    .e-moon-icon::before {
+        content: "\e91f";
     }
 
     .content {
         flex: 1;
         padding: 20px;
         overflow-y: auto;
+    }
+
+    /* ── Dark mode overrides for custom elements ── */
+    [data-theme="dark"] .sidebar-content {
+        background-color: #1e1e2e;
+    }
+
+    [data-theme="dark"] .header {
+        background-color: #1e1e2e;
+        border-bottom-color: #3a3a4a;
+        color: #e0e0e0;
+    }
+
+    [data-theme="dark"] .header h4 {
+        color: #e0e0e0;
+    }
+
+    [data-theme="dark"] .content {
+        background-color: #13131f;
+        color: #e0e0e0;
+    }
+
+    [data-theme="dark"] .page-container {
+        background-color: #13131f;
     }
 </style>
