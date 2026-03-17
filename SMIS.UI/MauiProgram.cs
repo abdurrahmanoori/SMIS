@@ -42,6 +42,7 @@ namespace SMIS.UI
 
             builder.Services.AddMauiBlazorWebView();
             builder.Services.AddSyncfusionBlazor();
+            builder.Services.AddSingleton<SMIS.UI.Services.ThemeService>();
 
 #if DEBUG
             builder.Services.AddBlazorWebViewDeveloperTools();
