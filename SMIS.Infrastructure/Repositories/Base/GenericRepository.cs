@@ -88,9 +88,13 @@ namespace SMIS.Infrastructure.Server.Repositories.Base
 
         /// <inheritdoc/>
         public async Task<IEnumerable<T>>
-            GetAllAsync(Expression<Func<T, bool>>? filter = null, string? includeProperties = null)
+            GetAllAsync(Expression<Func<T, bool>>? filter = null, string? includeProperties = null, bool tracked = false)
         {
-            IQueryable<T> query = this.dbSet.AsQueryable<T>();
+            IQueryable<T> query = this.dbSet.AsQueryable<T>().AsNoTracking();
+            if (tracked)
+            {
+                query = dbSet.AsTracking();
+            }
             if (filter != null) // If requested records are based on a condation, then this block will execute.
             {
                 query = query.Where(filter);
@@ -108,9 +112,13 @@ namespace SMIS.Infrastructure.Server.Repositories.Base
         }
 
         public IQueryable<T>
-            GetAllQueryable(Expression<Func<T, bool>>? filter = null, string? includeProperties = null)
+            GetAllQueryable(Expression<Func<T, bool>>? filter = null, string? includeProperties = null, bool tracked = false)
         {
-            IQueryable<T> query = this.dbSet.AsQueryable();
+            IQueryable<T> query = this.dbSet.AsQueryable().AsNoTracking();
+            if (tracked)
+            {
+                query = dbSet.AsTracking();
+            }
             if (filter != null) // If requested records are based on a condation, then this block will execute.
             {
                 query = query.Where(filter);
