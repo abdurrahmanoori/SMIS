@@ -1,8 +1,11 @@
 using Microsoft.EntityFrameworkCore;
+using SMIS.Application.DTO.Categories;
 using SMIS.Domain.Common.Interfaces;
+using SMIS.Domain.Entities;
 using SMIS.Domain.Services;
 using SMIS.Infrastructure.Mobile.Context;
 using SMIS.Infrastructure.Mobile.Services.Http;
+using SMIS.Infrastructure.Mobile.Services.Identity;
 
 namespace SMIS.Infrastructure.Mobile.Services.Sync;
 
@@ -12,6 +15,7 @@ public interface ISyncService
         ISyncConfiguration<TEntity, TCreateDto, TUpdateDto, TDto> config)
         where TEntity : class, ISyncableEntity;
     Task<SyncResult> SyncCategoriesAsync();
+    Task<SyncResult> PullCategoriesAsync();
     Task<SyncResult> SyncDeletesAsync();
     Task<SyncAllResult> SyncAllAsync();
     Task<int> GetPendingCountAsync<TEntity>() where TEntity : class, ISyncableEntity;
@@ -23,11 +27,14 @@ public class SyncService : ISyncService
     private readonly LocalDbContext _localDb;
     private readonly IApiClient _apiClient;
     private readonly IConnectivity? _connectivity;
+    private readonly IMobileCurrentUser _currentUser;
+    private const string PullTimestampKeyPrefix = "category_pull_";
 
-    public SyncService(LocalDbContext localDb, IApiClient apiClient, IConnectivity? connectivity = null)
+    public SyncService(LocalDbContext localDb, IApiClient apiClient, IMobileCurrentUser currentUser, IConnectivity? connectivity = null)
     {
         _localDb = localDb;
         _apiClient = apiClient;
+        _currentUser = currentUser;
         _connectivity = connectivity;
     }
 
@@ -138,6 +145,101 @@ public class SyncService : ISyncService
         };
     }
 
+    public async Task<SyncResult> PullCategoriesAsync()
+    {
+        if (_connectivity?.NetworkAccess != NetworkAccess.Internet)
+            return new SyncResult { Success = false, Message = "No internet connection" };
+
+        var shopId = _currentUser.GetShopId();
+
+        // Scope the timestamp key per shop so different shops on the same device
+        // each maintain their own independent pull cursor.
+        var timestampKey = $"{PullTimestampKeyPrefix}{shopId}";
+
+        // Read the last successful pull time from device storage.
+        // On the very first pull, DateTimeOffset.MinValue is used as fallback,
+        // which tells the server "give me everything from the beginning".
+        var lastPull = DateTimeOffset.Parse(
+            Preferences.Get(timestampKey, DateTimeOffset.MinValue.ToString("o")));
+
+        // "o" is the ISO 8601 round-trip format e.g. 2025-01-15T10:30:00.000+00:00
+        // Uri.EscapeDataString ensures the + and : characters in the timestamp
+        // are safely encoded and not misinterpreted by the HTTP layer.
+        var response = await _apiClient.GetAsync<List<CategoryDto>>(
+            $"/api/Category/pull?changedSince={Uri.EscapeDataString(lastPull.ToString("o"))}");
+
+        if (!response.Success)
+            return new SyncResult { Success = false, Message = response.Message ?? "Pull failed" };
+
+        // Response.Response can be null if the server returned an empty body.
+        // Falling back to an empty list keeps the rest of the logic uniform.
+        var serverCategories = response.Response ?? new List<CategoryDto>();
+
+        var upserted = 0;
+        foreach (var dto in serverCategories)
+        {
+            // Check whether this server record already exists in the local DB.
+            var local = await _localDb.Categories
+                .FirstOrDefaultAsync(c => c.Id == dto.Id);
+
+            if (local == null)
+            {
+                // This category does not exist locally — it was created by another
+                // user on the same shop. Use the domain factory to respect all validation rules.
+                var newCategory = Category.Create(dto.Name, dto.ShopId, dto.Code, dto.Description, dto.IsActive);
+
+                // Category enforces private setters for domain encapsulation, so we use
+                // reflection to set sync-related fields that have no public domain method.
+                // This is the same pattern used in CategorySeed.
+                typeof(Category).GetProperty(nameof(Category.Id))!.SetValue(newCategory, dto.Id);
+                typeof(Category).GetProperty(nameof(Category.LastModifiedUtc))!.SetValue(newCategory, dto.LastModifiedUtc);
+
+                // Mark as already synced so the push step does not try to push
+                // this record back up — it came from the server.
+                typeof(Category).GetProperty(nameof(Category.IsSyncedToServer))!.SetValue(newCategory, true);
+                typeof(Category).GetProperty(nameof(Category.LastSyncedAt))!.SetValue(newCategory, DateTimeService.UtcNow);
+
+                await _localDb.Categories.AddAsync(newCategory);
+                upserted++;
+            }
+            else if (dto.LastModifiedUtc > local.LastModifiedUtc)
+            {
+                // The record exists locally but the server version is newer.
+                // This happens when another user on the same shop edited this category
+                // after our last pull. Server wins — overwrite local with server data.
+                local.SetName(dto.Name);
+                local.SetCode(dto.Code);
+                local.SetDescription(dto.Description);
+                if (dto.IsActive) local.Activate(); else local.Deactivate();
+
+                // Reflection is required here for the same reason as the insert above.
+                // Importantly, the LocalAuditInterceptor's IsSyncOnly guard detects that
+                // only IsSyncedToServer and LastSyncedAt changed, and skips resetting
+                // IsSyncedToServer back to false — preventing an infinite sync loop.
+                typeof(Category).GetProperty(nameof(Category.LastModifiedUtc))!.SetValue(local, dto.LastModifiedUtc);
+                typeof(Category).GetProperty(nameof(Category.IsSyncedToServer))!.SetValue(local, true);
+                typeof(Category).GetProperty(nameof(Category.LastSyncedAt))!.SetValue(local, DateTimeService.UtcNow);
+                upserted++;
+            }
+            // Local is newer than server — local wins, nothing to do here.
+            // SyncCategoriesAsync (push) will upload the local version to the server
+            // in the same sync cycle.
+        }
+
+        // Persist all inserts and updates in a single transaction.
+        await _localDb.SaveChangesAsync();
+
+        // Advance the pull cursor so the next pull only fetches changes after this moment.
+        Preferences.Set(timestampKey, DateTimeOffset.UtcNow.ToString("o"));
+
+        return new SyncResult
+        {
+            Success = true,
+            Message = upserted == 0 ? "No new changes from server" : $"Pulled {upserted} category change(s) from server",
+            SyncedCount = upserted
+        };
+    }
+
     public async Task<SyncResult> SyncCategoriesAsync()
     {
         return await SyncAsync(new CategorySyncConfiguration());
@@ -224,6 +326,7 @@ public class SyncService : ISyncService
     {
         var results = new List<SyncResult>
         {
+            await PullCategoriesAsync(),
             await SyncCategoriesAsync(),
             await SyncDeletesAsync()
         };

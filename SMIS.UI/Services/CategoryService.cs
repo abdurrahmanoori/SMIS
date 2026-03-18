@@ -30,7 +30,18 @@ public class CategoryService : BaseService
         => await SendAndSyncAsync(new CategoryDeleteCommand(id), SyncService.SyncDeletesAsync);
 
     public async Task<SyncResult> SyncAsync()
-        => await SyncService.SyncCategoriesAsync();
+    {
+        var pullResult = await SyncService.PullCategoriesAsync();
+        var pushResult = await SyncService.SyncCategoriesAsync();
+
+        return new SyncResult
+        {
+            Success = pullResult.Success && pushResult.Success,
+            Message = $"Pull: {pullResult.Message} | Push: {pushResult.Message}",
+            SyncedCount = pullResult.SyncedCount + pushResult.SyncedCount,
+            FailedCount = pushResult.FailedCount
+        };
+    }
 
     public async Task<int> GetPendingCountAsync()
         => await SyncService.GetPendingCountAsync<SMIS.Domain.Entities.Category>();
