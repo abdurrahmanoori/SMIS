@@ -5,7 +5,7 @@ namespace SMIS.UI.Middleware
 {
     public class GlobalExceptionHandler
     {
-        public static void HandleException(Exception exception)
+        public static void HandleException(Exception exception, bool showAlert = true)
         {
             if (ShouldIgnoreException(exception))
                 return;
@@ -15,6 +15,9 @@ namespace SMIS.UI.Middleware
 #if DEBUG
             WriteToDebugWindow(log);
 #endif
+
+            if (!showAlert)
+                return;
 
             MainThread.BeginInvokeOnMainThread(async ( ) =>
             {

@@ -1,4 +1,5 @@
-﻿using SMIS.UI.Services;
+﻿using SMIS.UI.Middleware;
+using SMIS.UI.Services;
 
 namespace SMIS.UI
 {
@@ -10,6 +11,15 @@ namespace SMIS.UI
         {
             InitializeComponent();
             _autoLoginService = autoLoginService;
+
+            AppDomain.CurrentDomain.UnhandledException += (_, e) =>
+                GlobalExceptionHandler.HandleException(e.ExceptionObject as Exception ?? new Exception(e.ExceptionObject?.ToString()));
+
+            TaskScheduler.UnobservedTaskException += (_, e) =>
+            {
+                e.SetObserved();
+                GlobalExceptionHandler.HandleException(e.Exception);
+            };
         }
 
         protected override Window CreateWindow(IActivationState? activationState)
