@@ -15,7 +15,17 @@ namespace SMIS.UI
 
         private async Task InitializeAsync()
         {
-            await _autoLoginService.TryAutoLoginAsync();
+            try
+            {
+#if DEBUG
+                throw new InvalidOperationException("[TEST] Intentional CLR exception to verify GlobalExceptionHandler.");
+#endif
+                await _autoLoginService.TryAutoLoginAsync();
+            }
+            catch (Exception ex)
+            {
+                Middleware.GlobalExceptionHandler.HandleException(ex);
+            }
         }
     }
 }

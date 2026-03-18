@@ -11,6 +11,13 @@
         
         <div class="error-details">
             <div class="error-section">
+                <strong>Timestamp:</strong>
+                <p>@DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")</p>
+            </div>
+
+@if (_isDebug)
+{
+            <div class="error-section">
                 <strong>Exception Type:</strong>
                 <p>@Exception.GetType().FullName</p>
             </div>
@@ -38,11 +45,6 @@
                 <p>@(Exception.TargetSite?.ToString() ?? "N/A")</p>
             </div>
 
-            <div class="error-section">
-                <strong>Timestamp:</strong>
-                <p>@DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")</p>
-            </div>
-            
             @if (!string.IsNullOrEmpty(Exception.StackTrace))
             {
                 <div class="error-section">
@@ -58,6 +60,13 @@
                     <pre class="stack-trace">@string.Join(Environment.NewLine, Exception.Data.Keys.Cast<object>().Select(k => $"{k}: {Exception.Data[k]}"))</pre>
                 </div>
             }
+}
+else
+{
+            <div class="error-section">
+                <p>An unexpected error occurred. Please try again or contact support if the problem persists.</p>
+            </div>
+}
         </div>
         
         <div class="error-actions">
@@ -70,21 +79,23 @@
     [Parameter, EditorRequired] public Exception Exception { get; set; } = default!;
     [Parameter] public EventCallback OnReload { get; set; }
 
+#if DEBUG
+    private readonly bool _isDebug = true;
+#else
+    private readonly bool _isDebug = false;
+#endif
+
     protected override void OnInitialized()
     {
-        GlobalExceptionHandler.HandleException(Exception);
+        GlobalExceptionHandler.HandleException(Exception, showAlert: false);
     }
 
     private async Task HandleReload()
     {
         if (OnReload.HasDelegate)
-        {
             await OnReload.InvokeAsync();
-        }
         else
-        {
             Navigation.NavigateTo("/", forceLoad: true);
-        }
     }
 }
 

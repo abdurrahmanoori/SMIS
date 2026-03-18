@@ -2,8 +2,24 @@
 <Router AppAssembly="@typeof(MauiProgram).Assembly">
     <Found Context="routeData">
         <AuthGuard>
-            <RouteView RouteData="@routeData" DefaultLayout="@typeof(Layout.MainLayout)" />
-            <FocusOnNavigate RouteData="@routeData" Selector="h1" />
+            <ErrorBoundary @ref="_errorBoundary">
+                <ChildContent>
+                    <RouteView RouteData="@routeData" DefaultLayout="@typeof(Layout.MainLayout)" />
+                    <FocusOnNavigate RouteData="@routeData" Selector="h1" />
+                </ChildContent>
+                <ErrorContent Context="ex">
+                    <ErrorDisplay Exception="ex" OnReload="RecoverFromError" />
+                </ErrorContent>
+            </ErrorBoundary>
         </AuthGuard>
     </Found>
 </Router>
+
+@code {
+    private ErrorBoundary? _errorBoundary;
+
+    private void RecoverFromError()
+    {
+        _errorBoundary?.Recover();
+    }
+}
