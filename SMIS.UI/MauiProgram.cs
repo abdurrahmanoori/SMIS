@@ -57,7 +57,8 @@ namespace SMIS.UI
                 var db = scope.ServiceProvider.GetRequiredService<LocalDbContext>();
                 var dbPath = db.Database.GetConnectionString();
                 System.Diagnostics.Debug.WriteLine($"[MAUI] Database location: {dbPath}");
-                db.Database.EnsureCreated();
+                //db.Database.EnsureCreated();
+                db.Database.Migrate();
                 System.Diagnostics.Debug.WriteLine($"[MAUI] Database created successfully");
             }
 
