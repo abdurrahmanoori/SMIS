@@ -1,77 +1,76 @@
 @inject NavigationManager Navigation
 @using SMIS.UI.Middleware
 @using SMIS.Application.Common.Exceptions
+@using Syncfusion.Blazor.Cards
+@using Syncfusion.Blazor.Buttons
+@using Syncfusion.Blazor.Notifications
 
-<div class="error-container">
-    <div class="error-content">
-        <div class="error-header">
-            <span class="error-icon">⚠️</span>
-            <h2>An Error Occurred</h2>
-        </div>
-        
-        <div class="error-details">
-            <div class="error-section">
-                <strong>Timestamp:</strong>
-                <p>@DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")</p>
-            </div>
+<div class="error-overlay">
+    <div class="error-wrapper">
+        <SfCard>
+            <CardHeader>
+                <span class="e-icons e-warning error-header-icon"></span>
+                <span class="error-header-title">An Error Occurred</span>
+            </CardHeader>
+            <CardContent>
+                <SfMessage Severity="MessageSeverity.Error" ShowCloseIcon="false">
+                    @if (_isDebug)
+                    {
+                        <strong>@Exception.GetType().FullName</strong>
+                        <p>@Exception.Message</p>
+                    }
+                    else
+                    {
+                        <p>An unexpected error occurred. Please try again or contact support if the problem persists.</p>
+                    }
+                </SfMessage>
 
-@if (_isDebug)
-{
-            <div class="error-section">
-                <strong>Exception Type:</strong>
-                <p>@Exception.GetType().FullName</p>
-            </div>
+                @if (_isDebug)
+                {
+                    <div class="error-meta">
+                        @if (Exception.InnerException != null)
+                        {
+                            <SfMessage Severity="MessageSeverity.Warning" ShowCloseIcon="false">
+                                <strong>Inner Exception:</strong> @Exception.InnerException.GetType().Name: @Exception.InnerException.Message
+                            </SfMessage>
+                        }
 
-            <div class="error-section">
-                <strong>Message:</strong>
-                <p>@Exception.Message</p>
-            </div>
-            
-            @if (Exception.InnerException != null)
-            {
-                <div class="error-section">
-                    <strong>Inner Exception:</strong>
-                    <p class="inner-ex">@Exception.InnerException.GetType().Name: @Exception.InnerException.Message</p>
+                        <div class="meta-row">
+                            <SfChip>
+                                <ChipItems>
+                                    <ChipItem Text="@($"Source: {Exception.Source ?? "N/A"}")" CssClass="e-outline"></ChipItem>
+                                    <ChipItem Text="@($"Time: {DateTime.Now:yyyy-MM-dd HH:mm:ss}")" CssClass="e-outline"></ChipItem>
+                                </ChipItems>
+                            </SfChip>
+                        </div>
+
+                        @if (!string.IsNullOrEmpty(Exception.StackTrace))
+                        {
+                            <div class="stack-trace-block">
+                                <strong>Stack Trace:</strong>
+                                <pre>@Exception.StackTrace</pre>
+                            </div>
+                        }
+                    </div>
+                }
+                else
+                {
+                    <div class="meta-row">
+                        <SfChip>
+                            <ChipItems>
+                                <ChipItem Text="@($"Time: {DateTime.Now:yyyy-MM-dd HH:mm:ss}")" CssClass="e-outline"></ChipItem>
+                            </ChipItems>
+                        </SfChip>
+                    </div>
+                }
+            </CardContent>
+            <CardFooter>
+                <div class="error-actions">
+                    <SfButton CssClass="e-primary" IconCss="e-icons e-refresh" @onclick="HandleReload">Reload</SfButton>
+                    <SfButton CssClass="e-outline" IconCss="e-icons e-home" @onclick="@(() => Navigation.NavigateTo("/"))">Go Home</SfButton>
                 </div>
-            }
-
-            <div class="error-section">
-                <strong>Source:</strong>
-                <p>@(Exception.Source ?? "N/A")</p>
-            </div>
-
-            <div class="error-section">
-                <strong>Target Site:</strong>
-                <p>@(Exception.TargetSite?.ToString() ?? "N/A")</p>
-            </div>
-
-            @if (!string.IsNullOrEmpty(Exception.StackTrace))
-            {
-                <div class="error-section">
-                    <strong>Stack Trace:</strong>
-                    <pre class="stack-trace">@Exception.StackTrace</pre>
-                </div>
-            }
-
-            @if (Exception.Data.Count > 0)
-            {
-                <div class="error-section">
-                    <strong>Additional Data:</strong>
-                    <pre class="stack-trace">@string.Join(Environment.NewLine, Exception.Data.Keys.Cast<object>().Select(k => $"{k}: {Exception.Data[k]}"))</pre>
-                </div>
-            }
-}
-else
-{
-            <div class="error-section">
-                <p>An unexpected error occurred. Please try again or contact support if the problem persists.</p>
-            </div>
-}
-        </div>
-        
-        <div class="error-actions">
-            <button class="btn-reload" @onclick="HandleReload">Reload</button>
-        </div>
+            </CardFooter>
+        </SfCard>
     </div>
 </div>
 
@@ -100,13 +99,13 @@ else
 }
 
 <style>
-    .error-container {
+    .error-overlay {
         position: fixed;
         top: 0;
         left: 0;
         right: 0;
         bottom: 0;
-        background: rgba(0, 0, 0, 0.8);
+        background: rgba(0, 0, 0, 0.6);
         display: flex;
         align-items: center;
         justify-content: center;
@@ -114,91 +113,61 @@ else
         padding: 20px;
     }
 
-    .error-content {
-        background: white;
-        border-radius: 8px;
-        max-width: 800px;
+    .error-wrapper {
+        width: 100%;
+        max-width: 700px;
         max-height: 90vh;
-        overflow: auto;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        overflow-y: auto;
     }
 
-    .error-header {
-        background: #dc3545;
-        color: white;
-        padding: 20px;
+    .error-header-icon {
+        font-size: 22px;
+        color: #dc3545;
+        margin-right: 10px;
+        vertical-align: middle;
+    }
+
+    .error-header-title {
+        font-size: 18px;
+        font-weight: 600;
+        vertical-align: middle;
+    }
+
+    .error-meta {
+        margin-top: 16px;
         display: flex;
-        align-items: center;
-        gap: 15px;
-        border-radius: 8px 8px 0 0;
+        flex-direction: column;
+        gap: 12px;
     }
 
-    .error-icon {
-        font-size: 32px;
+    .meta-row {
+        margin-top: 12px;
     }
 
-    .error-header h2 {
-        margin: 0;
-        font-size: 24px;
+    .stack-trace-block {
+        margin-top: 8px;
     }
 
-    .error-details {
-        padding: 20px;
-    }
-
-    .error-section {
-        margin-bottom: 20px;
-    }
-
-    .error-section strong {
-        display: block;
-        margin-bottom: 8px;
-        color: #333;
-    }
-
-    .error-section p {
-        margin: 0;
-        color: #666;
-        line-height: 1.5;
-        word-break: break-word;
-    }
-
-    .inner-ex {
-        color: #d9534f !important;
-        font-style: italic;
-    }
-
-    .stack-trace {
+    .stack-trace-block pre {
         background: #f5f5f5;
-        padding: 15px;
+        padding: 12px;
         border-radius: 4px;
+        font-size: 11px;
+        line-height: 1.5;
         overflow-x: auto;
-        font-size: 12px;
-        line-height: 1.4;
+        margin-top: 6px;
         color: #333;
-        margin: 0;
     }
 
     .error-actions {
-        padding: 20px;
-        border-top: 1px solid #ddd;
         display: flex;
         gap: 10px;
         justify-content: flex-end;
+        padding: 4px 0;
     }
 
-    .btn-reload {
-        padding: 10px 20px;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-        font-size: 14px;
-        font-weight: 500;
-        background: #007bff;
-        color: white;
-    }
-
-    .btn-reload:hover {
-        background: #0056b3;
+    [data-theme="dark"] .stack-trace-block pre {
+        background: #2a2a3a;
+        color: #e0e0e0;
     }
 </style>
