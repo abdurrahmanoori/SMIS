@@ -34,5 +34,9 @@ namespace SMIS.Api.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult<Unit>> Delete(string id) =>
             HandleResultResponse(await Mediator.Send(new CategoryDeleteCommand(id)));
+
+        [HttpGet("pull")]
+        public async Task<ActionResult<List<CategoryDto>>> Pull([FromQuery] DateTimeOffset changedSince)
+            => HandleResultResponse(await Mediator.Send(new CategoryPullQuery(changedSince)));
     }
 }
