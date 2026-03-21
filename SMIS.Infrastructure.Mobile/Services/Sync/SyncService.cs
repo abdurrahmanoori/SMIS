@@ -187,17 +187,10 @@ public class SyncService : ISyncService
                 // This category does not exist locally — it was created by another
                 // user on the same shop. Use the domain factory to respect all validation rules.
                 var newCategory = Category.Create(dto.Name, dto.ShopId, dto.Code, dto.Description, dto.IsActive);
-
-                // Category enforces private setters for domain encapsulation, so we use
-                // reflection to set sync-related fields that have no public domain method.
-                // This is the same pattern used in CategorySeed.
-                typeof(Category).GetProperty(nameof(Category.Id))!.SetValue(newCategory, dto.Id);
-                typeof(Category).GetProperty(nameof(Category.LastModifiedUtc))!.SetValue(newCategory, dto.LastModifiedUtc);
-
-                // Mark as already synced so the push step does not try to push
-                // this record back up — it came from the server.
-                typeof(Category).GetProperty(nameof(Category.IsSyncedToServer))!.SetValue(newCategory, true);
-                typeof(Category).GetProperty(nameof(Category.LastSyncedAt))!.SetValue(newCategory, DateTimeService.UtcNow);
+                newCategory.Id = dto.Id;
+                newCategory.LastModifiedUtc = dto.LastModifiedUtc;
+                newCategory.IsSyncedToServer = true;
+                newCategory.LastSyncedAt = DateTimeService.UtcNow;
 
                 await _localDb.Categories.AddAsync(newCategory);
                 upserted++;
@@ -212,13 +205,9 @@ public class SyncService : ISyncService
                 local.SetDescription(dto.Description);
                 if (dto.IsActive) local.Activate(); else local.Deactivate();
 
-                // Reflection is required here for the same reason as the insert above.
-                // Importantly, the LocalAuditInterceptor's IsSyncOnly guard detects that
-                // only IsSyncedToServer and LastSyncedAt changed, and skips resetting
-                // IsSyncedToServer back to false — preventing an infinite sync loop.
-                typeof(Category).GetProperty(nameof(Category.LastModifiedUtc))!.SetValue(local, dto.LastModifiedUtc);
-                typeof(Category).GetProperty(nameof(Category.IsSyncedToServer))!.SetValue(local, true);
-                typeof(Category).GetProperty(nameof(Category.LastSyncedAt))!.SetValue(local, DateTimeService.UtcNow);
+                local.LastModifiedUtc = dto.LastModifiedUtc;
+                local.IsSyncedToServer = true;
+                local.LastSyncedAt = DateTimeService.UtcNow;
                 upserted++;
             }
             // Local is newer than server — local wins, nothing to do here.
