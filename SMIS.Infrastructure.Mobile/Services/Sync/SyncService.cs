@@ -74,7 +74,7 @@ public class SyncService : ISyncService
                 if (existsOnServer.Success && existsOnServer.Response != null)
                 {
                     var serverDto = existsOnServer.Response as dynamic;
-                    var serverTimestamp = (DateTimeOffset)serverDto.LastModifiedUtc;
+                    var serverTimestamp = (DateTime)serverDto.LastModifiedUtc;
 
                     if (entity.LastModifiedUtc > serverTimestamp)
                     {
@@ -157,10 +157,10 @@ public class SyncService : ISyncService
         var timestampKey = $"{PullTimestampKeyPrefix}{shopId}";
 
         // Read the last successful pull time from device storage.
-        // On the very first pull, DateTimeOffset.MinValue is used as fallback,
+        // On the very first pull, DateTime.MinValue is used as fallback,
         // which tells the server "give me everything from the beginning".
-        var lastPull = DateTimeOffset.Parse(
-            Preferences.Get(timestampKey, DateTimeOffset.MinValue.ToString("o")));
+        var lastPull = DateTime.Parse(
+            Preferences.Get(timestampKey, DateTime.MinValue.ToString("o")));
 
         // "o" is the ISO 8601 round-trip format e.g. 2025-01-15T10:30:00.000+00:00
         // Uri.EscapeDataString ensures the + and : characters in the timestamp
@@ -219,7 +219,7 @@ public class SyncService : ISyncService
         await _localDb.SaveChangesAsync();
 
         // Advance the pull cursor so the next pull only fetches changes after this moment.
-        Preferences.Set(timestampKey, DateTimeOffset.UtcNow.ToString("o"));
+        Preferences.Set(timestampKey, DateTime.UtcNow.ToString("o"));
 
         return new SyncResult
         {

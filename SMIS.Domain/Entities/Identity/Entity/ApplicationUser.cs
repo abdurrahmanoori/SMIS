@@ -16,7 +16,7 @@ public class ApplicationUser : IdentityUser<string>, IEntityPK
     public string? ShopName { get; set; }
     public int Version { get; set; }
     public EntityStateEnum EntityState { get; set; }
-    public DateTimeOffset LastModifiedUtc { get; set; }
+    public DateTime LastModifiedUtc { get; set; }
 
     // Navigation Properties
     public virtual Shop Shop { get; set; } = null!;

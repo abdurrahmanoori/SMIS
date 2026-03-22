@@ -55,7 +55,7 @@ public class LocalAuditInterceptor : SaveChangesInterceptor
             if (entry.State == EntityState.Added)
             {
                 // New local entities start as unsynced so the sync service picks them up.
-                entry.Entity.LastModifiedUtc = DateTimeService.NowOffSet;
+                entry.Entity.LastModifiedUtc = DateTimeService.UtcNow;
                 entry.Entity.IsSyncedToServer = false;
             }
             else if (entry.State == EntityState.Modified && !IsSyncOnly(entry))
@@ -63,7 +63,7 @@ public class LocalAuditInterceptor : SaveChangesInterceptor
                 // Real local change — mark unsynced so the sync service pushes it to the server.
                 // IsSyncOnly guard prevents this from firing when the sync service sets IsSyncedToServer = true.
                 entry.Entity.IsSyncedToServer = false;
-                entry.Entity.LastModifiedUtc = DateTimeService.NowOffSet;
+                entry.Entity.LastModifiedUtc = DateTimeService.UtcNow;
             }
         }
 

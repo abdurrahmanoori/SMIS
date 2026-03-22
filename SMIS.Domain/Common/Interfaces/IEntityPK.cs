@@ -7,6 +7,6 @@ namespace SMIS.Domain.Common.Interfaces
         public string Id { get; set; }
         public int Version { get; set; } // increment on every change
         public EntityStateEnum EntityState { get; set; }
-        public DateTimeOffset LastModifiedUtc { get;  set; }
+        public DateTime LastModifiedUtc { get;  set; }
     }
 }
