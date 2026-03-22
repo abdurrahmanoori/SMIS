@@ -1,3 +1,4 @@
+using SMIS.Application.Common.Response;
 using SMIS.Infrastructure.Mobile.Services.Auth;
 using SMIS.Infrastructure.Mobile.Services.Http;
 
@@ -12,7 +13,7 @@ public class AuthServiceWrapper
         _authService = authService;
     }
 
-    public Task<ApiResponse<LoginResponse>> LoginAsync(string userName, string password)
+    public Task<Result<LoginResponse>> LoginAsync(string userName, string password)
     {
         return _authService.LoginAsync(new LoginRequest 
         { 
