@@ -4,6 +4,7 @@ using SMIS.Application.Common.Response;
 using SMIS.Application.DTO.Products;
 using SMIS.Application.Repositories.Products;
 using SMIS.Domain.Contracts;
+using SMIS.Domain.Services;
 
 namespace SMIS.Application.Features.Products.Queries;
 
@@ -12,12 +13,10 @@ public record ProductGetLoanInfoQuery(string ProductId) : IRequest<Result<Produc
 internal sealed class ProductGetLoanInfoQueryHandler : IRequestHandler<ProductGetLoanInfoQuery, Result<ProductLoanInfoDto>>
 {
     private readonly IProductRepository _productRepository;
-    private readonly IDateTimeService _dateTimeService;
 
-    public ProductGetLoanInfoQueryHandler(IProductRepository productRepository, IDateTimeService dateTimeService)
+    public ProductGetLoanInfoQueryHandler(IProductRepository productRepository)
     {
         _productRepository = productRepository;
-        _dateTimeService = dateTimeService;
     }
 
     public async Task<Result<ProductLoanInfoDto>> Handle(ProductGetLoanInfoQuery request, CancellationToken cancellationToken)
@@ -34,7 +33,7 @@ internal sealed class ProductGetLoanInfoQueryHandler : IRequestHandler<ProductGe
         var activePrice = product.ProductPrices
             .Where(p => p.IsActive && 
                        p.ProductUnit != null &&
-                       (p.EndDate == null || p.EndDate >= _dateTimeService.Now))
+                       (p.EndDate == null || p.EndDate >= DateTimeService.Now))
             .OrderBy(p => p.ProductUnit.ConversionFactor) // Prefer base unit (ConversionFactor=1)
             .ThenByDescending(p => p.EffectiveDate)
             .FirstOrDefault();
