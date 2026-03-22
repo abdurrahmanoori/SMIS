@@ -30,7 +30,7 @@ public static class ShopSeed
         if (!isActive) shop.Deactivate();
         typeof(Shop).GetProperty(nameof(Shop.CreatedDate))!.SetValue(shop, DateTimeService.Now);
         typeof(Shop).GetProperty(nameof(Shop.UpdatedDate))!.SetValue(shop, DateTimeService.Now);
-        typeof(Shop).GetProperty(nameof(Shop.LastModifiedUtc))!.SetValue(shop, DateTimeService.NowOffSet);
+        typeof(Shop).GetProperty(nameof(Shop.LastModifiedUtc))!.SetValue(shop, DateTimeService.UtcNow);
         
         return shop;
     }

@@ -37,7 +37,7 @@ public static class CustomerSeed
         typeof(Customer).GetProperty(nameof(Customer.ShopName))!.SetValue(customer, GetShopName(shopId));
         typeof(Customer).GetProperty(nameof(Customer.CreatedDate))!.SetValue(customer, DateTimeService.Now);
         typeof(Customer).GetProperty(nameof(Customer.UpdatedDate))!.SetValue(customer, DateTimeService.Now);
-        typeof(Customer).GetProperty(nameof(Customer.LastModifiedUtc))!.SetValue(customer, DateTimeService.NowOffSet);
+        typeof(Customer).GetProperty(nameof(Customer.LastModifiedUtc))!.SetValue(customer, DateTimeService.UtcNow);
 
         return customer;
     }

@@ -26,7 +26,7 @@ public static class CategorySeed
         category.LastSyncedAt = DateTimeService.UtcNow;
         category.CreatedDate = DateTimeService.UtcNow;
         category.UpdatedDate = DateTimeService.UtcNow;
-        category.LastModifiedUtc = DateTimeService.UtcNowOffSet;
+        category.LastModifiedUtc = DateTimeService.UtcNow;
         return category;
 
         //typeof(Category).GetProperty(nameof(Category.Id))!.SetValue(category, id);

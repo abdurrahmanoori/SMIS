@@ -39,7 +39,7 @@ public static class StockTransactionSeed
         typeof(StockTransaction).GetProperty(nameof(StockTransaction.UnitName))!.SetValue(transaction, GetUnitName(unitId));
         typeof(StockTransaction).GetProperty(nameof(StockTransaction.CreatedDate))!.SetValue(transaction, DateTimeService.Now);
         typeof(StockTransaction).GetProperty(nameof(StockTransaction.UpdatedDate))!.SetValue(transaction, DateTimeService.Now);
-        typeof(StockTransaction).GetProperty(nameof(StockTransaction.LastModifiedUtc))!.SetValue(transaction, DateTimeService.NowOffSet);
+        typeof(StockTransaction).GetProperty(nameof(StockTransaction.LastModifiedUtc))!.SetValue(transaction, DateTimeService.UtcNow);
 
         return transaction;
     }

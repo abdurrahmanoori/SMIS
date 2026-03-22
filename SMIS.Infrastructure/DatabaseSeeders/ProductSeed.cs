@@ -50,7 +50,7 @@ public static class ProductSeed
         typeof(Product).GetProperty(nameof(Product.CategoryName))!.SetValue(product, GetCategoryName(categoryId));
         typeof(Product).GetProperty(nameof(Product.CreatedDate))!.SetValue(product, DateTimeService.Now);
         typeof(Product).GetProperty(nameof(Product.UpdatedDate))!.SetValue(product, DateTimeService.Now);
-        typeof(Product).GetProperty(nameof(Product.LastModifiedUtc))!.SetValue(product, DateTimeService.NowOffSet);
+        typeof(Product).GetProperty(nameof(Product.LastModifiedUtc))!.SetValue(product, DateTimeService.UtcNow);
 
         return product;
     }
