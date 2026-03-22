@@ -45,7 +45,7 @@ public static class LoanAccountSeed
         }
         typeof(LoanAccount).GetProperty(nameof(LoanAccount.CreatedDate))!.SetValue(loanAccount, DateTimeService.Now);
         typeof(LoanAccount).GetProperty(nameof(LoanAccount.UpdatedDate))!.SetValue(loanAccount, DateTimeService.Now);
-        typeof(LoanAccount).GetProperty(nameof(LoanAccount.LastModifiedUtc))!.SetValue(loanAccount, DateTimeService.NowOffSet);
+        typeof(LoanAccount).GetProperty(nameof(LoanAccount.LastModifiedUtc))!.SetValue(loanAccount, DateTimeService.UtcNow);
         if (!isActive) loanAccount.Deactivate();
 
         return loanAccount;

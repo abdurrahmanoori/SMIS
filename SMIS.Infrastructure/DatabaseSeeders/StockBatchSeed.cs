@@ -32,7 +32,7 @@ public static class StockBatchSeed
         typeof(StockBatch).GetProperty(nameof(StockBatch.UnitName))!.SetValue(batch, GetUnitName(unitId));
         typeof(StockBatch).GetProperty(nameof(StockBatch.CreatedDate))!.SetValue(batch, DateTimeService.Now);
         typeof(StockBatch).GetProperty(nameof(StockBatch.UpdatedDate))!.SetValue(batch, DateTimeService.Now);
-        typeof(StockBatch).GetProperty(nameof(StockBatch.LastModifiedUtc))!.SetValue(batch, DateTimeService.NowOffSet);
+        typeof(StockBatch).GetProperty(nameof(StockBatch.LastModifiedUtc))!.SetValue(batch, DateTimeService.UtcNow);
         
         return batch;
     }

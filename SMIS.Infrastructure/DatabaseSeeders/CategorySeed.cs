@@ -24,13 +24,13 @@ public static class CategorySeed
         category.Id = id;
         category.CreatedDate = DateTimeService.Now;
         category.UpdatedDate = DateTimeService.Now;
-        category.LastModifiedUtc = DateTimeService.NowOffSet;
+        category.LastModifiedUtc = DateTimeService.UtcNow;
         return category;
 
 
         //typeof(Category).GetProperty(nameof(Category.Id))!.SetValue(category, id);
         //typeof(Category).GetProperty(nameof(Category.CreatedDate))!.SetValue(category, DateTimeService.Now);
         //typeof(Category).GetProperty(nameof(Category.UpdatedDate))!.SetValue(category, DateTimeService.Now);
-        //typeof(Category).GetProperty(nameof(Category.LastModifiedUtc))!.SetValue(category, DateTimeService.NowOffSet);
+        //typeof(Category).GetProperty(nameof(Category.LastModifiedUtc))!.SetValue(category, DateTimeService.UtcNow);
     }
 }

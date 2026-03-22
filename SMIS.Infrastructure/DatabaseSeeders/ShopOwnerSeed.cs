@@ -27,7 +27,7 @@ public static class ShopOwnerSeed
         if (isActive) owner.Activate(); else owner.Deactivate();
         typeof(ShopOwner).GetProperty(nameof(ShopOwner.CreatedDate))!.SetValue(owner, DateTimeService.Now);
         typeof(ShopOwner).GetProperty(nameof(ShopOwner.UpdatedDate))!.SetValue(owner, DateTimeService.Now);
-        typeof(ShopOwner).GetProperty(nameof(ShopOwner.LastModifiedUtc))!.SetValue(owner, DateTimeService.NowOffSet);
+        typeof(ShopOwner).GetProperty(nameof(ShopOwner.LastModifiedUtc))!.SetValue(owner, DateTimeService.UtcNow);
 
         return owner;
     }
