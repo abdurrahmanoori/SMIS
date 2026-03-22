@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
+using SMIS.Domain.Common.BaseAbstract;
 using SMIS.Application.Repositories.Base;
 using SMIS.Infrastructure.Server.Context;
 using System.Data;
@@ -243,8 +244,14 @@ namespace SMIS.Infrastructure.Server.Repositories.Base
 
 
         public async Task SaveChanges(CancellationToken cancellationToken)
-
         {
+            //var now = DateTimeOffset.UtcNow;
+            //foreach (var entry in this._context.ChangeTracker.Entries<BaseEntity>()
+            //             .Where(e => e.State == EntityState.Added || e.State == EntityState.Modified))
+            //{
+            //    entry.Entity.LastModifiedUtc = now;
+            //}
+
             var entities = this._context.ChangeTracker.Entries();
             //// var taxP = this._context.Entry(test);
             ///
