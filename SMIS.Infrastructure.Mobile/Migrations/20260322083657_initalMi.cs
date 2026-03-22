@@ -26,7 +26,7 @@ namespace SMIS.Infrastructure.Mobile.Migrations
                     IsPublic = table.Column<bool>(type: "INTEGER", nullable: false, defaultValue: false),
                     Version = table.Column<int>(type: "INTEGER", nullable: false, defaultValue: 0),
                     EntityState = table.Column<string>(type: "TEXT", nullable: false),
-                    LastModifiedUtc = table.Column<DateTimeOffset>(type: "TEXT", nullable: false),
+                    LastModifiedUtc = table.Column<DateTime>(type: "TEXT", nullable: false),
                     IsSyncedToServer = table.Column<bool>(type: "INTEGER", nullable: false, defaultValue: false),
                     LastSyncedAt = table.Column<DateTime>(type: "TEXT", nullable: true),
                     CreatedBy = table.Column<string>(type: "TEXT", nullable: true),
@@ -48,7 +48,7 @@ namespace SMIS.Infrastructure.Mobile.Migrations
                     EntityType = table.Column<string>(type: "TEXT", maxLength: 100, nullable: false),
                     EntityId = table.Column<string>(type: "TEXT", maxLength: 100, nullable: false),
                     ApiEndpoint = table.Column<string>(type: "TEXT", maxLength: 200, nullable: false),
-                    DeletedAt = table.Column<DateTimeOffset>(type: "TEXT", nullable: false),
+                    DeletedAt = table.Column<DateTime>(type: "TEXT", nullable: false),
                     IsSyncedToServer = table.Column<bool>(type: "INTEGER", nullable: false, defaultValue: false),
                     RetryCount = table.Column<int>(type: "INTEGER", nullable: false, defaultValue: 0)
                 },
@@ -67,7 +67,7 @@ namespace SMIS.Infrastructure.Mobile.Migrations
                     IsActive = table.Column<bool>(type: "INTEGER", nullable: false),
                     Version = table.Column<int>(type: "INTEGER", nullable: false, defaultValue: 0),
                     EntityState = table.Column<string>(type: "TEXT", nullable: false),
-                    LastModifiedUtc = table.Column<DateTimeOffset>(type: "TEXT", nullable: false)
+                    LastModifiedUtc = table.Column<DateTime>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -85,7 +85,7 @@ namespace SMIS.Infrastructure.Mobile.Migrations
                     IsPublic = table.Column<bool>(type: "INTEGER", nullable: false, defaultValue: false),
                     Version = table.Column<int>(type: "INTEGER", nullable: false, defaultValue: 0),
                     EntityState = table.Column<string>(type: "TEXT", nullable: false),
-                    LastModifiedUtc = table.Column<DateTimeOffset>(type: "TEXT", nullable: false),
+                    LastModifiedUtc = table.Column<DateTime>(type: "TEXT", nullable: false),
                     IsSyncedToServer = table.Column<bool>(type: "INTEGER", nullable: false, defaultValue: false),
                     LastSyncedAt = table.Column<DateTime>(type: "TEXT", nullable: true),
                     CreatedBy = table.Column<string>(type: "TEXT", nullable: true),
@@ -109,7 +109,7 @@ namespace SMIS.Infrastructure.Mobile.Migrations
                     IsPublic = table.Column<bool>(type: "INTEGER", nullable: false, defaultValue: false),
                     Version = table.Column<int>(type: "INTEGER", nullable: false, defaultValue: 0),
                     EntityState = table.Column<string>(type: "TEXT", nullable: false),
-                    LastModifiedUtc = table.Column<DateTimeOffset>(type: "TEXT", nullable: false),
+                    LastModifiedUtc = table.Column<DateTime>(type: "TEXT", nullable: false),
                     IsSyncedToServer = table.Column<bool>(type: "INTEGER", nullable: false, defaultValue: false),
                     LastSyncedAt = table.Column<DateTime>(type: "TEXT", nullable: true),
                     CreatedBy = table.Column<string>(type: "TEXT", nullable: true),
@@ -139,12 +139,12 @@ namespace SMIS.Infrastructure.Mobile.Migrations
                 columns: new[] { "Id", "Code", "CreatedBy", "CreatedDate", "Description", "EntityState", "IsActive", "IsSyncedToServer", "LastModifiedUtc", "LastSyncedAt", "Name", "ShopId", "UpdatedBy", "UpdatedDate" },
                 values: new object[,]
                 {
-                    { "1", "BEV", null, new DateTime(2026, 3, 18, 17, 18, 40, 709, DateTimeKind.Utc).AddTicks(6153), "Drinks and beverages", "Unchanged", true, true, new DateTimeOffset(new DateTime(2026, 3, 18, 17, 18, 40, 709, DateTimeKind.Unspecified).AddTicks(7127), new TimeSpan(0, 0, 0, 0, 0)), new DateTime(2026, 3, 18, 17, 18, 40, 709, DateTimeKind.Utc).AddTicks(5713), "Beverages", "1", null, new DateTime(2026, 3, 18, 17, 18, 40, 709, DateTimeKind.Utc).AddTicks(6422) },
-                    { "2", "FOOD", null, new DateTime(2026, 3, 18, 17, 18, 40, 709, DateTimeKind.Utc).AddTicks(7463), "Edible products and snacks", "Unchanged", true, true, new DateTimeOffset(new DateTime(2026, 3, 18, 17, 18, 40, 709, DateTimeKind.Unspecified).AddTicks(7465), new TimeSpan(0, 0, 0, 0, 0)), new DateTime(2026, 3, 18, 17, 18, 40, 709, DateTimeKind.Utc).AddTicks(7461), "Food Items", "1", null, new DateTime(2026, 3, 18, 17, 18, 40, 709, DateTimeKind.Utc).AddTicks(7464) },
-                    { "3", "STAT", null, new DateTime(2026, 3, 18, 17, 18, 40, 709, DateTimeKind.Utc).AddTicks(7472), "Office and school supplies", "Unchanged", true, true, new DateTimeOffset(new DateTime(2026, 3, 18, 17, 18, 40, 709, DateTimeKind.Unspecified).AddTicks(7472), new TimeSpan(0, 0, 0, 0, 0)), new DateTime(2026, 3, 18, 17, 18, 40, 709, DateTimeKind.Utc).AddTicks(7471), "Stationery", "1", null, new DateTime(2026, 3, 18, 17, 18, 40, 709, DateTimeKind.Utc).AddTicks(7472) },
-                    { "4", "GROC", null, new DateTime(2026, 3, 18, 17, 18, 40, 709, DateTimeKind.Utc).AddTicks(7476), "Daily household items", "Unchanged", true, true, new DateTimeOffset(new DateTime(2026, 3, 18, 17, 18, 40, 709, DateTimeKind.Unspecified).AddTicks(7477), new TimeSpan(0, 0, 0, 0, 0)), new DateTime(2026, 3, 18, 17, 18, 40, 709, DateTimeKind.Utc).AddTicks(7476), "Grocery", "1", null, new DateTime(2026, 3, 18, 17, 18, 40, 709, DateTimeKind.Utc).AddTicks(7477) },
-                    { "5", "CARE", null, new DateTime(2026, 3, 18, 17, 18, 40, 709, DateTimeKind.Utc).AddTicks(7482), "Health and hygiene products", "Unchanged", true, true, new DateTimeOffset(new DateTime(2026, 3, 18, 17, 18, 40, 709, DateTimeKind.Unspecified).AddTicks(7483), new TimeSpan(0, 0, 0, 0, 0)), new DateTime(2026, 3, 18, 17, 18, 40, 709, DateTimeKind.Utc).AddTicks(7482), "Personal Care", "1", null, new DateTime(2026, 3, 18, 17, 18, 40, 709, DateTimeKind.Utc).AddTicks(7483) },
-                    { "6", "ELEC", null, new DateTime(2026, 3, 18, 17, 18, 40, 709, DateTimeKind.Utc).AddTicks(7486), "Electronic devices and accessories", "Unchanged", true, true, new DateTimeOffset(new DateTime(2026, 3, 18, 17, 18, 40, 709, DateTimeKind.Unspecified).AddTicks(7487), new TimeSpan(0, 0, 0, 0, 0)), new DateTime(2026, 3, 18, 17, 18, 40, 709, DateTimeKind.Utc).AddTicks(7486), "Electronics", "1", null, new DateTime(2026, 3, 18, 17, 18, 40, 709, DateTimeKind.Utc).AddTicks(7487) }
+                    { "1", "BEV", null, new DateTime(2026, 3, 22, 8, 36, 55, 581, DateTimeKind.Utc).AddTicks(4673), "Drinks and beverages", "Unchanged", true, true, new DateTime(2026, 3, 22, 8, 36, 55, 581, DateTimeKind.Utc).AddTicks(5865), new DateTime(2026, 3, 22, 8, 36, 55, 581, DateTimeKind.Utc).AddTicks(3572), "Beverages", "1", null, new DateTime(2026, 3, 22, 8, 36, 55, 581, DateTimeKind.Utc).AddTicks(5306) },
+                    { "2", "FOOD", null, new DateTime(2026, 3, 22, 8, 36, 55, 581, DateTimeKind.Utc).AddTicks(6589), "Edible products and snacks", "Unchanged", true, true, new DateTime(2026, 3, 22, 8, 36, 55, 581, DateTimeKind.Utc).AddTicks(6591), new DateTime(2026, 3, 22, 8, 36, 55, 581, DateTimeKind.Utc).AddTicks(6587), "Food Items", "1", null, new DateTime(2026, 3, 22, 8, 36, 55, 581, DateTimeKind.Utc).AddTicks(6590) },
+                    { "3", "STAT", null, new DateTime(2026, 3, 22, 8, 36, 55, 581, DateTimeKind.Utc).AddTicks(6602), "Office and school supplies", "Unchanged", true, true, new DateTime(2026, 3, 22, 8, 36, 55, 581, DateTimeKind.Utc).AddTicks(6604), new DateTime(2026, 3, 22, 8, 36, 55, 581, DateTimeKind.Utc).AddTicks(6602), "Stationery", "1", null, new DateTime(2026, 3, 22, 8, 36, 55, 581, DateTimeKind.Utc).AddTicks(6603) },
+                    { "4", "GROC", null, new DateTime(2026, 3, 22, 8, 36, 55, 581, DateTimeKind.Utc).AddTicks(6628), "Daily household items", "Unchanged", true, true, new DateTime(2026, 3, 22, 8, 36, 55, 581, DateTimeKind.Utc).AddTicks(6629), new DateTime(2026, 3, 22, 8, 36, 55, 581, DateTimeKind.Utc).AddTicks(6627), "Grocery", "1", null, new DateTime(2026, 3, 22, 8, 36, 55, 581, DateTimeKind.Utc).AddTicks(6629) },
+                    { "5", "CARE", null, new DateTime(2026, 3, 22, 8, 36, 55, 581, DateTimeKind.Utc).AddTicks(6638), "Health and hygiene products", "Unchanged", true, true, new DateTime(2026, 3, 22, 8, 36, 55, 581, DateTimeKind.Utc).AddTicks(6639), new DateTime(2026, 3, 22, 8, 36, 55, 581, DateTimeKind.Utc).AddTicks(6637), "Personal Care", "1", null, new DateTime(2026, 3, 22, 8, 36, 55, 581, DateTimeKind.Utc).AddTicks(6639) },
+                    { "6", "ELEC", null, new DateTime(2026, 3, 22, 8, 36, 55, 581, DateTimeKind.Utc).AddTicks(6646), "Electronic devices and accessories", "Unchanged", true, true, new DateTime(2026, 3, 22, 8, 36, 55, 581, DateTimeKind.Utc).AddTicks(6647), new DateTime(2026, 3, 22, 8, 36, 55, 581, DateTimeKind.Utc).AddTicks(6645), "Electronics", "1", null, new DateTime(2026, 3, 22, 8, 36, 55, 581, DateTimeKind.Utc).AddTicks(6647) }
                 });
 
             migrationBuilder.CreateIndex(

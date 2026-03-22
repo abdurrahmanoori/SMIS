@@ -2,11 +2,9 @@ using AutoMapper;
 using MediatR;
 using SMIS.Application.Common.Response;
 using SMIS.Application.DTO.Categories;
-using SMIS.Application.Extensions;
 using SMIS.Application.Identity.IServices;
 using SMIS.Application.Repositories.Base;
 using SMIS.Application.Repositories.Categories;
-using SMIS.Application.Repositories.Localization;
 using SMIS.Domain.Entities;
 
 namespace SMIS.Application.Features.Categories.Commands
@@ -54,7 +52,7 @@ namespace SMIS.Application.Features.Categories.Commands
                     return Result<CategoryDto>.SuccessResult(_mapper.Map<CategoryDto>(existing));
 
                 entity.Id = request.CategoryCreateDto.Id;
-                
+
                 // Preserve original timestamps from mobile sync
                 if (request.CategoryCreateDto.CreatedDate.HasValue)
                     entity.CreatedDate = request.CategoryCreateDto.CreatedDate.Value;
@@ -65,7 +63,7 @@ namespace SMIS.Application.Features.Categories.Commands
             await _categoryRepository.AddAsync(entity);
             await _unitOfWork.SaveChanges(cancellationToken);
 
-            return Result<CategoryDto>.SuccessResult(_mapper.Map<CategoryDto>(entity),"Category Created Successfully.");
+            return Result<CategoryDto>.SuccessResult(_mapper.Map<CategoryDto>(entity), "Category Created Successfully.");
         }
     }
 }
