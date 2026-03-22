@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SMIS.Application.Identity.IServices;
 using SMIS.Domain.Common.BaseAbstract;
 using SMIS.Domain.Common.Interfaces;
@@ -43,6 +44,20 @@ public partial class AppDbContext : IdentityDbContext<ApplicationUser, Applicati
                 modelBuilder.Entity(entityType.ClrType)
                     .Property(nameof(BaseEntity.EntityState))
                     .HasConversion<string>();
+            }
+
+            var lastModifiedProperty = entityType.FindProperty(nameof(BaseEntity.LastModifiedUtc));
+            if (lastModifiedProperty != null)
+            {
+                var converter = new ValueConverter<DateTime, string>(
+                    v => v.ToString("yyyy-MM-dd HH:mm:ss.ffffff"),  // write
+                    v => DateTime.ParseExact(v, "yyyy-MM-dd HH:mm:ss.ffffff",// read
+                        System.Globalization.CultureInfo.InvariantCulture));
+
+                modelBuilder.Entity(entityType.ClrType)
+                    .Property(nameof(BaseEntity.LastModifiedUtc))
+                    .HasColumnType("TEXT")
+                    .HasConversion(converter);
             }
         }
 

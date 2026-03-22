@@ -160,13 +160,12 @@ public class SyncService : ISyncService
         // On the very first pull, DateTime.MinValue is used as fallback,
         // which tells the server "give me everything from the beginning".
         var lastPull = DateTime.Parse(
-            Preferences.Get(timestampKey, DateTime.MinValue.ToString("o")));
+            Preferences.Get(timestampKey, DateTime.MinValue.ToString("o")),
+            null,
+            System.Globalization.DateTimeStyles.RoundtripKind);
 
-        // "o" is the ISO 8601 round-trip format e.g. 2025-01-15T10:30:00.000+00:00
-        // Uri.EscapeDataString ensures the + and : characters in the timestamp
-        // are safely encoded and not misinterpreted by the HTTP layer.
         var response = await _apiClient.GetAsync<List<CategoryDto>>(
-            $"/api/Category/pull?changedSince={Uri.EscapeDataString(lastPull.ToString("o"))}");
+            $"/api/Category/pull?changedSince={lastPull.ToUniversalTime():yyyy-MM-ddTHH:mm:ss}");
 
         if (!response.Success)
             return new SyncResult { Success = false, Message = response.Message ?? "Pull failed" };
@@ -219,7 +218,7 @@ public class SyncService : ISyncService
         await _localDb.SaveChangesAsync();
 
         // Advance the pull cursor so the next pull only fetches changes after this moment.
-        Preferences.Set(timestampKey, DateTime.UtcNow.ToString("o"));
+        Preferences.Set(timestampKey, DateTimeService.UtcNow.ToString("o"));
 
         return new SyncResult
         {
