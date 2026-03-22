@@ -13,7 +13,7 @@ namespace SMIS.Domain.Common.BaseAbstract
         public bool IsPublic { get; set; } = false;
         public int Version { get; set; }
         public EntityStateEnum EntityState { get; set; }
-        public DateTimeOffset LastModifiedUtc { get; set; } //= DateTimeService.NowOffSet;
+        public DateTime LastModifiedUtc { get; set; } //= DateTimeService.UtcNow;
 
         // Offline-first properties
         public virtual bool IsSyncedToServer { get; set; } = true;

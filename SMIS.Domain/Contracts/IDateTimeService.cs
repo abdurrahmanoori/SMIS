@@ -3,5 +3,5 @@
 public interface IDateTimeService
 {
     DateTime Now { get; }
-    DateTimeOffset NowOffSet {  get; }
+    DateTime NowOffSet {  get; }
 }

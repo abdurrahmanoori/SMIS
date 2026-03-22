@@ -6,7 +6,7 @@ using SMIS.Application.Repositories.Categories;
 
 namespace SMIS.Application.Features.Categories.Queries
 {
-    public record CategoryPullQuery(DateTimeOffset ChangedSince) : IRequest<Result<List<CategoryDto>>>;
+    public record CategoryPullQuery(DateTime ChangedSince) : IRequest<Result<List<CategoryDto>>>;
 
     internal sealed class CategoryPullQueryHandler : IRequestHandler<CategoryPullQuery, Result<List<CategoryDto>>>
     {

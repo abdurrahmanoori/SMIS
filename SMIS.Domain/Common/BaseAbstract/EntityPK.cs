@@ -11,6 +11,6 @@ namespace SMIS.Domain.Common.BaseAbstract
         public string Id { get; set; } = Guid.NewGuid().ToString();
         public int Version { get; set; } = 0; // increment on every change
         public EntityStateEnum EntityState { get; set; } = EntityStateEnum.Added;
-        public DateTimeOffset LastModifiedUtc { get;  set; } = DateTimeOffset.UtcNow;
+        public DateTime LastModifiedUtc { get;  set; } = DateTime.UtcNow;
     }
 }

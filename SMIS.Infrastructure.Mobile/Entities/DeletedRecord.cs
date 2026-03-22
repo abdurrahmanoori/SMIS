@@ -6,7 +6,7 @@ public class DeletedRecord
     public string EntityType { get; set; } = string.Empty;
     public string EntityId { get; set; } = string.Empty;
     public string ApiEndpoint { get; set; } = string.Empty;
-    public DateTimeOffset DeletedAt { get; set; }
+    public DateTime DeletedAt { get; set; }
     public bool IsSyncedToServer { get; set; } = false;
     public int RetryCount { get; set; } = 0;
 }

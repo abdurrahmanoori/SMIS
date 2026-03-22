@@ -15,6 +15,6 @@ namespace SMIS.Domain.Common.BaseAbstract
         public DateTime? UpdatedDate { get; set; } = DateTime.Now;
         public int Version { get ; set ; }
         public EntityStateEnum EntityState { get ; set ; }
-        public DateTimeOffset LastModifiedUtc { get;  set; }
+        public DateTime LastModifiedUtc { get;  set; }
     }
 }

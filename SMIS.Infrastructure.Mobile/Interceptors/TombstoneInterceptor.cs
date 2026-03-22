@@ -46,7 +46,7 @@ public class TombstoneInterceptor : SaveChangesInterceptor
                     EntityType = entityType,
                     EntityId = entry.Entity.Id,
                     ApiEndpoint = apiEndpoint,
-                    DeletedAt = DateTimeService.NowOffSet
+                    DeletedAt = DateTimeService.UtcNow
                 });
             }
 

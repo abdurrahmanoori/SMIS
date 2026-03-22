@@ -5,5 +5,5 @@ public interface ISyncableEntity
     string Id { get; }
     bool IsSyncedToServer { get; set; }
     DateTime? LastSyncedAt { get; set; }
-    DateTimeOffset LastModifiedUtc { get; set; }
+    DateTime LastModifiedUtc { get; set; }
 }
