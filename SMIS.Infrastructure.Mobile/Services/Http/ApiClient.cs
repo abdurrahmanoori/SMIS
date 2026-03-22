@@ -1,6 +1,7 @@
 using System.Net;
 using System.Net.Http.Json;
 using System.Text.Json;
+using SMIS.Application.Common.Response;
 
 namespace SMIS.Infrastructure.Mobile.Services.Http;
 
@@ -15,89 +16,77 @@ public class ApiClient : IApiClient
         _jsonOptions = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
     }
 
-    public async Task<ApiResponse<TResponse>> GetAsync<TResponse>(string endpoint)
+    public async Task<Result<TResponse>> GetAsync<TResponse>(string endpoint)
     {
         var response = await _httpClient.GetAsync(endpoint);
         return await HandleResponseAsync<TResponse>(response);
     }
 
-    public async Task<ApiResponse<TResponse>> PostAsync<TRequest, TResponse>(string endpoint, TRequest data)
+    public async Task<Result<TResponse>> PostAsync<TRequest, TResponse>(string endpoint, TRequest data)
     {
         var response = await _httpClient.PostAsJsonAsync(endpoint, data);
         return await HandleResponseAsync<TResponse>(response);
     }
 
-    public async Task<ApiResponse<TResponse>> PutAsync<TRequest, TResponse>(string endpoint, TRequest data)
+    public async Task<Result<TResponse>> PutAsync<TRequest, TResponse>(string endpoint, TRequest data)
     {
         var response = await _httpClient.PutAsJsonAsync(endpoint, data);
         return await HandleResponseAsync<TResponse>(response);
     }
 
-    public async Task<ApiResponse<bool>> DeleteAsync(string endpoint)
+    public async Task<Result<bool>> DeleteAsync(string endpoint)
     {
         var response = await _httpClient.DeleteAsync(endpoint);
         return response.IsSuccessStatusCode
-            ? new ApiResponse<bool> { Success = true, Response = true }
+            ? Result<bool>.SuccessResult(true)
             : await HandleResponseAsync<bool>(response);
     }
 
-    private async Task<ApiResponse<T>> HandleResponseAsync<T>(HttpResponseMessage response)
+    private async Task<Result<T>> HandleResponseAsync<T>(HttpResponseMessage response)
     {
         var content = await response.Content.ReadAsStringAsync();
 
         if (response.IsSuccessStatusCode)
         {
             if (string.IsNullOrWhiteSpace(content))
-            {
-                return new ApiResponse<T> { Success = true, Response = default };
-            }
+                return Result<T>.SuccessResult(default);
+
+            //try
+            //{
+            //    var wrapper = JsonSerializer.Deserialize<Result<T>>(content, _jsonOptions);
+            //    //if (wrapper?.Response != null)
+            //    //    return wrapper;
+            //}
+            //catch (JsonException) { }
 
             try
             {
-                var resultWrapper = JsonSerializer.Deserialize<ApiResponse<T>>(content, _jsonOptions);
-                if (resultWrapper != null && resultWrapper.Response != null)
-                {
-                    return resultWrapper;
-                }
-                
-                var directResult = JsonSerializer.Deserialize<T>(content, _jsonOptions);
-                return new ApiResponse<T> { Success = true, Response = directResult };
+                var direct = JsonSerializer.Deserialize<T>(content, _jsonOptions);
+                return Result<T>.SuccessResult(direct);
             }
             catch (JsonException)
             {
-                return new ApiResponse<T> { Success = true, Response = default };
+                return Result<T>.SuccessResult(default);
             }
         }
 
-        if (string.IsNullOrWhiteSpace(content))
+        if (!string.IsNullOrWhiteSpace(content))
         {
-            return CreateError<T>("Error", $"Request failed: {response.StatusCode}");
+            try
+            {
+                var errorResult = JsonSerializer.Deserialize<Result<T>>(content, _jsonOptions);
+                if (errorResult != null) return errorResult;
+            }
+            catch { }
         }
-
-        try
-        {
-            var errorResult = JsonSerializer.Deserialize<ApiResponse<T>>(content, _jsonOptions);
-            if (errorResult != null) return errorResult;
-        }
-        catch { }
 
         return response.StatusCode switch
         {
-            HttpStatusCode.Unauthorized => CreateError<T>("Unauthorized", "Please login again."),
-            HttpStatusCode.Forbidden => CreateError<T>("Forbidden", "Access denied."),
-            HttpStatusCode.NotFound => CreateError<T>("NotFound", "Resource not found."),
-            _ => CreateError<T>("Error", $"Request failed: {response.StatusCode}")
-        };
-    }
-
-    private static ApiResponse<T> CreateError<T>(string code, string description)
-    {
-        return new ApiResponse<T>
-        {
-            Success = false,
-            Errors = new List<ValidationError> { new() { Code = code, Description = description } }
+            HttpStatusCode.Unauthorized => Result<T>.FailureResult("Unauthorized", "Please login again."),
+            HttpStatusCode.Forbidden    => Result<T>.FailureResult("Forbidden", "Access denied."),
+            HttpStatusCode.NotFound     => Result<T>.FailureResult("NotFound", "Resource not found."),
+            _                           => Result<T>.FailureResult("Error", $"Request failed: {response.StatusCode}")
         };
     }
 }
-
 

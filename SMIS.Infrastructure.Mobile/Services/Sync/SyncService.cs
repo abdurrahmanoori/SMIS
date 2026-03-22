@@ -163,7 +163,7 @@ public class SyncService : ISyncService
             Preferences.Get(timestampKey, DateTime.MinValue.ToString("o")),
             null,
             System.Globalization.DateTimeStyles.RoundtripKind);
-
+        //var datee = lastPull.ToUniversalTime();
         var response = await _apiClient.GetAsync<List<CategoryDto>>(
             $"/api/Category/pull?changedSince={lastPull.ToUniversalTime():yyyy-MM-ddTHH:mm:ss}");
 

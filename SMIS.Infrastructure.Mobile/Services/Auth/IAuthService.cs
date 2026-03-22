@@ -1,3 +1,4 @@
+using SMIS.Application.Common.Response;
 using SMIS.Infrastructure.Mobile.Services.Http;
 using SMIS.Infrastructure.Mobile.Services.Identity;
 using System.IdentityModel.Tokens.Jwt;
@@ -7,7 +8,7 @@ namespace SMIS.Infrastructure.Mobile.Services.Auth;
 
 public interface IAuthService
 {
-    Task<ApiResponse<LoginResponse>> LoginAsync(LoginRequest request);
+    Task<Result<LoginResponse>> LoginAsync(LoginRequest request);
     Task LogoutAsync();
     Task<bool> IsAuthenticatedAsync();
 }
@@ -25,7 +26,7 @@ public class AuthService : IAuthService
         _currentUser = currentUser;
     }
 
-    public async Task<ApiResponse<LoginResponse>> LoginAsync(LoginRequest request)
+    public async Task<Result<LoginResponse>> LoginAsync(LoginRequest request)
     {
         var response = await _apiClient.PostAsync<LoginRequest, LoginResponse>("/api/account/login", request);
         
