@@ -1,22 +1,18 @@
 using FluentValidation.AspNetCore;
-using SMIS.Api.Converters;
 using SMIS.Application.Extensions;
-using SMIS.Domain.Enums;
 using SMIS.Infrastructure.Server.Extensions;
 using SMIS.Infrastructure.Server.Context;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using Microsoft.AspNetCore.Identity;
-using SMIS.Domain.Entities.Identity.Entity;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
-using System.Text;
 using SMIS.Application.Identity.IServices;
 using SMIS.Application.Services;
 using SMIS.Api.Middleware;
 using SMIS.Api.Extensions;
+using SMIS.Domain.Services;
 
 var builder = WebApplication.CreateBuilder(args);
+
+DateTimeService.UseUtc = builder.Configuration.GetValue<bool>("UseUtcTime");
 
 // Add services to the container.
 builder.AddSerilogService();
