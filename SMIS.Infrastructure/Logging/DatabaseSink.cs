@@ -1,6 +1,7 @@
 using Serilog.Events;
 using Serilog.Sinks.PeriodicBatching;
 using SMIS.Domain.Entities;
+using SMIS.Domain.Services;
 using System.Text.Json;
 using Microsoft.Extensions.DependencyInjection;
 using SMIS.Infrastructure.Server.Repositories;
@@ -41,7 +42,7 @@ namespace SMIS.Infrastructure.Server.Logging
                 Exception = logEvent.Exception?.ToString(),
                 Properties = JsonSerializer.Serialize(properties),
                 UserId = ExtractUserId(properties),
-                CreatedAt = logEvent.Timestamp.UtcDateTime
+                CreatedAt = DateTimeService.Now
             };
         }
 
