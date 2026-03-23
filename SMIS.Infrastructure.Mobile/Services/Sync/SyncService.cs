@@ -161,10 +161,15 @@ public class SyncService : ISyncService
         // which tells the server "give me everything from the beginning".
         var lastPull = DateTime.Parse(
           Preferences.Get(timestampKey, DateTime.MinValue.ToString("yyyy-MM-ddTHH:mm:ss")));
-        //lastPull =  lastPull.AddDays(5);
         var response = await _apiClient.GetAsync<List<CategoryDto>>(
             $"/api/Category/pull?changedSince={lastPull:yyyy-MM-ddTHH:mm:ss}");
-
+        /*
+            var lastPull = DateTime.Parse(
+        Preferences.Get(timestampKey, DateTime.MinValue.ToString("o")),
+        null, System.Globalization.DateTimeStyles.RoundtripKind);
+    var response = await _apiClient.GetAsync<List<CategoryDto>>(
+        $"/api/Category/pull?changedSince={lastPull:o}");
+     */
         if (!response.Success)
             return new SyncResult { Success = false, Message = response.Message ?? "Pull failed" };
 
