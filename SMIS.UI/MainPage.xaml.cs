@@ -18,7 +18,7 @@ namespace SMIS.UI
             try
             {
 #if DEBUG
-                throw new InvalidOperationException("[TEST] Intentional CLR exception to verify GlobalExceptionHandler.");
+                //throw new InvalidOperationException("[TEST] Intentional CLR exception to verify GlobalExceptionHandler.");
 #endif
                 await _autoLoginService.TryAutoLoginAsync();
             }
