@@ -160,12 +160,10 @@ public class SyncService : ISyncService
         // On the very first pull, DateTime.MinValue is used as fallback,
         // which tells the server "give me everything from the beginning".
         var lastPull = DateTime.Parse(
-            Preferences.Get(timestampKey, DateTime.MinValue.ToString("o")),
-            null,
-            System.Globalization.DateTimeStyles.RoundtripKind);
-        //var datee = lastPull.ToUniversalTime();
+          Preferences.Get(timestampKey, DateTime.MinValue.ToString("yyyy-MM-ddTHH:mm:ss")));
+        //lastPull =  lastPull.AddDays(5);
         var response = await _apiClient.GetAsync<List<CategoryDto>>(
-            $"/api/Category/pull?changedSince={lastPull.ToUniversalTime():yyyy-MM-ddTHH:mm:ss}");
+            $"/api/Category/pull?changedSince={lastPull:yyyy-MM-ddTHH:mm:ss}");
 
         if (!response.Success)
             return new SyncResult { Success = false, Message = response.Message ?? "Pull failed" };
