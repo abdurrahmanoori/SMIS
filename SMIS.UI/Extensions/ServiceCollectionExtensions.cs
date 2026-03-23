@@ -4,6 +4,7 @@ using MediatR;
 using SMIS.Application.Extensions;
 using SMIS.Application.Identity.IServices;
 using SMIS.Application.Mappings;
+using SMIS.Domain.Services;
 using SMIS.Infrastructure.Mobile.Extensions;
 using SMIS.Infrastructure.Mobile.Services.Identity;
 using SMIS.UI.Services;
@@ -16,6 +17,12 @@ public static class ServiceCollectionExtensions
     {
         var apiBaseUrl = configuration["AppSettings:ApiBaseUrl"] ?? "https://localhost:7216";
         var timeoutSeconds = int.Parse(configuration["AppSettings:TimeoutSeconds"] ?? "30");
+
+#if DEBUG
+        DateTimeService.UseUtc = false;
+#else
+        DateTimeService.UseUtc = true;
+#endif
 
         // Infrastructure.Mobile - DbContext, Repositories, HTTP, Auth, Sync
         services.AddMobileInfrastructure(apiBaseUrl, timeoutSeconds);
