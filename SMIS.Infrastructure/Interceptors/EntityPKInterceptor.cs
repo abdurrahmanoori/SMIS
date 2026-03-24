@@ -30,8 +30,16 @@ public class EntityPKInterceptor : SaveChangesInterceptor
         {
             if (entry.State == EntityState.Added)
             {
+// In DEBUG mode, we also replace auto-generated GUIDs (from EntityPK base class default)
+                // with sequential numeric IDs for easier testing and readability.
+                // In Release (production), we only generate an ID when it is truly empty,
+                // preserving any GUID set by either the client or the server.
+#if DEBUG
+                if (string.IsNullOrEmpty(entry.Entity.Id) || Guid.TryParse(entry.Entity.Id, out _))
+#else
                 if (string.IsNullOrEmpty(entry.Entity.Id))
-                {
+#endif
+        {
                     await AssignSequenceNumber(entry.Entity, context);
                     entry.Entity.Id = _publicIdGenerator.Generate();
                 }
