@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace SMIS.Domain.Common.BaseAbstract
 {
-    public abstract class BaseEntity : IEntityPK, ISyncableEntity
+    public abstract class BaseEntity : IEntityPK, ISyncableEntity, ISoftDeletable
     {
         [Key]
         public virtual string Id { get; set; } = Guid.NewGuid().ToString();
@@ -18,5 +18,9 @@ namespace SMIS.Domain.Common.BaseAbstract
         // Offline-first properties
         public virtual bool IsSyncedToServer { get; set; } = true;
         public virtual DateTime? LastSyncedAt { get; set; }
+
+        // Soft delete
+        public bool IsDeleted { get; set; } = false;
+        public DateTime? DeletedAt { get; set; }
     }
 }

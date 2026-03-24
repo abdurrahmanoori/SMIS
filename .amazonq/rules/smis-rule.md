@@ -5,3 +5,5 @@ whenever I ask you to modify code or introduce changes in the codebase, first ch
 Additionally, if you encounter any part of the code that does not follow standard or maintainable practices, you should explicitly point it out and explain why it is not considered good practice. At the end of the response, you may summarize those observations and highlight the problematic parts of the code.
 
 If you need to introduce any new service or component, first check whether it already exists in the project and reuse it if available. If it does not exist, then create it according to the existing project structure and conventions.
+
+please make sure to do not remove any comment from my classes and wherever if i wrote comments.

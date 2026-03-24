@@ -61,14 +61,17 @@ public partial class AppDbContext : IdentityDbContext<ApplicationUser, Applicati
             }
         }
 
-        // Apply global query filter for multi-tenant isolation
+        // Apply global query filters: shop-scope + soft-delete combined.
+        // Only entities implementing both IShopEntity and ISoftDeletable get this filter.
         foreach (var entityType in modelBuilder.Model.GetEntityTypes())
         {
-            if (typeof(IShopEntity).IsAssignableFrom(entityType.ClrType))
+            var clrType = entityType.ClrType;
+            if (typeof(IShopEntity).IsAssignableFrom(clrType) &&
+                typeof(ISoftDeletable).IsAssignableFrom(clrType))
             {
                 var method = typeof(AppDbContext)
                     .GetMethod(nameof(SetShopEntityFilter), BindingFlags.NonPublic | BindingFlags.Instance)!
-                    .MakeGenericMethod(entityType.ClrType);
+                    .MakeGenericMethod(clrType);
                 method.Invoke(this, new object[] { modelBuilder });
             }
         }
