@@ -39,7 +39,7 @@ namespace SMIS.Application.Repositories.Base
 
         public Task<List<T>> GetWhenAsync(Expression<Func<T, bool>> condition);
         public Task<List<T>> GetWhenContainsAsync<TProperty>(Expression<Func<T, TProperty>> property, List<TProperty> ids);
-        Task<IEnumerable<T>> GetAllAsync(Expression<Func<T, bool>>? filter = null, string? includeProperties = null, bool tracked = false);
+        Task<IEnumerable<T>> GetAllAsync(Expression<Func<T, bool>>? filter = null, string? includeProperties = null, bool tracked = false, bool ignoreQueryFilters = false);
 
         Task<List<T>> GetListAsync<T>(IQueryable<T> query);
 

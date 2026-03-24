@@ -11,8 +11,5 @@ public class LocalCategoryRepository : LocalGenericRepository<Category>, ICatego
     {
     }
 
-    public Task<IEnumerable<Category>> GetChangedSinceAsync(DateTime changedSince)
-    {
-        throw new NotImplementedException();
-    }
+    
 }
