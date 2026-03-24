@@ -15,5 +15,11 @@ namespace SMIS.Application.DTO.Common
         /// Last updater from mobile device (sync only)
         /// </summary>
         public string? UpdatedBy { get; set; } = null;
+
+        /// <summary>
+        /// LastModifiedUtc from mobile device (sync only).
+        /// Preserved on the server so the pull cursor reflects the client's actual change time.
+        /// </summary>
+        public DateTime? LastModifiedUtc { get; set; } = null;
     }
 }

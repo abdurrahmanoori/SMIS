@@ -18,7 +18,8 @@ public class CategorySyncConfiguration : ISyncConfiguration<Category, CategoryCr
             Description = entity.Description,
             IsActive = entity.IsActive,
             CreatedDate = entity.CreatedDate,
-            CreatedBy = entity.CreatedBy
+            CreatedBy = entity.CreatedBy,
+            LastModifiedUtc = entity.LastModifiedUtc
         };
     }
 
@@ -31,7 +32,8 @@ public class CategorySyncConfiguration : ISyncConfiguration<Category, CategoryCr
             Description = entity.Description,
             IsActive = entity.IsActive,
             UpdatedDate = entity.UpdatedDate,
-            UpdatedBy = entity.UpdatedBy
+            UpdatedBy = entity.UpdatedBy,
+            LastModifiedUtc = entity.LastModifiedUtc
         };
     }
 }

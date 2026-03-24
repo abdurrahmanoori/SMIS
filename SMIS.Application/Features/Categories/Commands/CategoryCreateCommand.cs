@@ -58,6 +58,8 @@ namespace SMIS.Application.Features.Categories.Commands
                     entity.CreatedDate = request.CategoryCreateDto.CreatedDate.Value;
                 if (!string.IsNullOrEmpty(request.CategoryCreateDto.CreatedBy))
                     entity.CreatedBy = request.CategoryCreateDto.CreatedBy;
+                if (request.CategoryCreateDto.LastModifiedUtc.HasValue)
+                    entity.LastModifiedUtc = request.CategoryCreateDto.LastModifiedUtc.Value;
             }
 
             await _categoryRepository.AddAsync(entity);

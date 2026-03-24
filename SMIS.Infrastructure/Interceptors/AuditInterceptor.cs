@@ -40,6 +40,12 @@ namespace SMIS.Infrastructure.Server.Interceptors
                     {
                         entry.Entity.CreatedBy = _currentUser.GetId();
                     }
+                    // Respect client-provided LastModifiedUtc (offline sync scenario).
+                    // Only stamp server time when the entity was created directly on the server.
+                    if (entry.Entity.LastModifiedUtc == default)
+                    {
+                        entry.Entity.LastModifiedUtc = DateTimeService.UtcNow;
+                    }
                 }
                 else if (entry.State == EntityState.Deleted && entry.Entity is ISoftDeletable softDeletable)
                 {
@@ -67,6 +73,12 @@ namespace SMIS.Infrastructure.Server.Interceptors
                     if (string.IsNullOrEmpty(entry.Entity.UpdatedBy))
                     {
                         entry.Entity.UpdatedBy = _currentUser.GetId();
+                    }
+                    // Respect client-provided LastModifiedUtc (offline sync scenario).
+                    // Only stamp server time when the update originated directly on the server.
+                    if (entry.Entity.LastModifiedUtc == default)
+                    {
+                        entry.Entity.LastModifiedUtc = DateTimeService.UtcNow;
                     }
                     entry.Property(e => e.CreatedDate).IsModified = false; // Ensure CreatedDate is not updated
                 }
