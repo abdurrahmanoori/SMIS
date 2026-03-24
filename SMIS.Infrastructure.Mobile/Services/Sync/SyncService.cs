@@ -83,7 +83,7 @@ public class SyncService : ISyncService
                             $"{config.ApiEndpoint}/{entity.Id}", updateDto);
 
                         if (result.Success)
-                        {     
+                        {
                             entity.IsSyncedToServer = true;
                             entity.LastSyncedAt = DateTimeService.UtcNow;
                             await _localDb.SaveChangesAsync();
@@ -165,11 +165,11 @@ public class SyncService : ISyncService
             $"/api/Category/pull?changedSince={lastPull:yyyy-MM-ddTHH:mm:ss}");
         /*
             var lastPull = DateTime.Parse(
-        Preferences.Get(timestampKey, DateTime.MinValue.ToString("o")),
-        null, System.Globalization.DateTimeStyles.RoundtripKind);
-    var response = await _apiClient.GetAsync<List<CategoryDto>>(
-        $"/api/Category/pull?changedSince={lastPull:o}");
-     */
+            Preferences.Get(timestampKey, DateTime.MinValue.ToString("o")),
+            null, System.Globalization.DateTimeStyles.RoundtripKind);
+            var response = await _apiClient.GetAsync<List<CategoryDto>>(
+            $"/api/Category/pull?changedSince={lastPull:o}");
+         */
         if (!response.Success)
             return new SyncResult { Success = false, Message = response.Message ?? "Pull failed" };
 
