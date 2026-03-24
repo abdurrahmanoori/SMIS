@@ -10,4 +10,9 @@ public class LocalCategoryRepository : LocalGenericRepository<Category>, ICatego
     public LocalCategoryRepository(LocalDbContext context) : base(context)
     {
     }
+
+    public Task<IEnumerable<Category>> GetChangedSinceAsync(DateTime changedSince)
+    {
+        throw new NotImplementedException();
+    }
 }

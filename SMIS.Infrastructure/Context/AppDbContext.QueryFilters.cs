@@ -5,10 +5,14 @@ namespace SMIS.Infrastructure.Server.Context;
 
 public partial class AppDbContext
 {
-    private void SetShopEntityFilter<TEntity>(ModelBuilder modelBuilder) where TEntity : class, IShopEntity
+    // Shop-scoped entities: exclude soft-deleted rows AND scope to current shop.
+    // EF Core allows only one HasQueryFilter per entity type, so both conditions
+    // are combined here rather than applied separately.
+    private void SetShopEntityFilter<TEntity>(ModelBuilder modelBuilder)
+        where TEntity : class, IShopEntity, ISoftDeletable
     {
-        modelBuilder.Entity<TEntity>().HasQueryFilter(e => 
-            _currentUser.IsSuperAdmin() ||             
-            e.ShopId == _currentUser.GetShopId());
+        modelBuilder.Entity<TEntity>().HasQueryFilter(e =>
+            !e.IsDeleted &&
+            (_currentUser.IsSuperAdmin() || e.ShopId == _currentUser.GetShopId()));
     }
 }

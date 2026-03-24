@@ -180,9 +180,19 @@ public class SyncService : ISyncService
         var upserted = 0;
         foreach (var dto in serverCategories)
         {
-            // Check whether this server record already exists in the local DB.
             var local = await _localDb.Categories
                 .FirstOrDefaultAsync(c => c.Id == dto.Id);
+
+            // Server says this record was deleted — remove it locally if it exists.
+            if (dto.IsDeleted)
+            {
+                if (local != null)
+                {
+                    _localDb.Categories.Remove(local);
+                    upserted++;
+                }
+                continue;
+            }
 
             if (local == null)
             {

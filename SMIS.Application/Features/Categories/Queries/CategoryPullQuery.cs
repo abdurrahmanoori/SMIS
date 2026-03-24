@@ -21,9 +21,7 @@ namespace SMIS.Application.Features.Categories.Queries
 
         public async Task<Result<List<CategoryDto>>> Handle(CategoryPullQuery request, CancellationToken cancellationToken)
         {
-            var categories = await _categoryRepository
-                .GetAllAsync(c => c.LastModifiedUtc > request.ChangedSince);
-
+            var categories = await _categoryRepository.GetChangedSinceAsync(request.ChangedSince);
             return Result<List<CategoryDto>>.SuccessResult(_mapper.Map<List<CategoryDto>>(categories));
         }
     }

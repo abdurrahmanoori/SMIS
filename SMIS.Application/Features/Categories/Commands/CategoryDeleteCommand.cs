@@ -22,10 +22,10 @@ namespace SMIS.Application.Features.Categories.Commands
         {
             var entity = await _categoryRepository.GetByIdAsync(request.Id);
             if (entity == null)
-            {
                 return Result<Unit>.NotFoundResult(request?.Id);
-            }
 
+            // Physical remove — SoftDeleteInterceptor converts this to a soft delete
+            // transparently before EF Core hits the database.
             await _categoryRepository.RemoveAsync(entity);
             await _unitOfWork.SaveChanges(cancellationToken);
             return Result<Unit>.SuccessResult(Unit.Value);

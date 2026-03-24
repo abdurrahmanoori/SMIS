@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore.Diagnostics;
 using SMIS.Application.Identity.IServices;
 using SMIS.Application.Services;
 using SMIS.Domain.Common.BaseAbstract;
+using SMIS.Domain.Common.Interfaces;
 using SMIS.Domain.Services;
 
 namespace SMIS.Infrastructure.Server.Interceptors
@@ -26,7 +27,6 @@ namespace SMIS.Infrastructure.Server.Interceptors
             var context = eventData.Context;
 
             if (context == null) return await base.SavingChangesAsync(eventData, result, cancellationToken);
-            var rest = context.ChangeTracker.Entries<BaseAuditableEntity>();
 
             foreach (var entry in context.ChangeTracker.Entries<BaseAuditableEntity>())
             {
@@ -41,8 +41,24 @@ namespace SMIS.Infrastructure.Server.Interceptors
                         entry.Entity.CreatedBy = _currentUser.GetId();
                     }
                 }
+                else if (entry.State == EntityState.Deleted && entry.Entity is ISoftDeletable softDeletable)
+                {
+                    // Convert physical delete to soft delete so the row is never removed.
+                    // Flipping state to Modified causes EF Core to issue UPDATE instead of DELETE.
+                    // LastModifiedUtc is bumped so the pull endpoint's changedSince cursor
+                    // picks up this record and propagates the deletion to all other clients.
+                    entry.State = EntityState.Modified;
 
-                if (entry.State == EntityState.Modified)
+                    softDeletable.IsDeleted = true;
+                    softDeletable.DeletedAt = DateTimeService.UtcNow;
+
+                    entry.Entity.UpdatedDate = DateTimeService.UtcNow;
+                    entry.Entity.UpdatedBy = _currentUser.GetId();
+                    entry.Entity.LastModifiedUtc = DateTimeService.UtcNow;
+
+                    entry.Property(e => e.CreatedDate).IsModified = false; // Ensure CreatedDate is not updated
+                }
+                else if (entry.State == EntityState.Modified)
                 {
                     if (entry.Entity.UpdatedDate == default)
                     {
@@ -54,37 +70,7 @@ namespace SMIS.Infrastructure.Server.Interceptors
                     }
                     entry.Property(e => e.CreatedDate).IsModified = false; // Ensure CreatedDate is not updated
                 }
-                if (entry.State == EntityState.Deleted)
-                {
-                    //entry.State = EntityStateEnum.Modified; // Soft-delete the entity
-                    //entry.Entity.IsDeleted = true;
-                    //entry.Entity.DeletedAt = DateTime.UtcNow;
-                    //entry.Entity.DeletedBy = _currentUser.GetId();
-                }
             }
-
-            //foreach (var entry in context.ChangeTracker.Entries<AuditableEntity>())
-            //{
-            //    if (entry.State == EntityStateEnum.Added)
-            //    {
-            //        entry.Entity.CreatedAt = DateTime.UtcNow;
-            //        entry.Entity.CreatedBy = _currentUser.GetId();
-            //    }
-
-            //    if (entry.State == EntityStateEnum.Modified)
-            //    {
-            //        entry.Entity.UpdatedAt = DateTime.UtcNow;
-            //        entry.Entity.UpdatedBy = _currentUser.GetId();
-            //        entry.Property(e => e.CreatedAt).IsModified = false; // Ensure CreatedDate is not updated
-            //    }
-            //    if (entry.State == EntityStateEnum.Deleted)
-            //    {
-            //        entry.State = EntityStateEnum.Modified; // Soft-delete the entity
-            //        entry.Entity.IsDeleted = true;
-            //        entry.Entity.DeletedAt = DateTime.UtcNow;
-            //        entry.Entity.DeletedBy = _currentUser.GetId();
-            //    }
-            //}
 
             return await base.SavingChangesAsync(eventData, result, cancellationToken);
         }

@@ -17,5 +17,6 @@ namespace SMIS.Application.DTO.Categories
         public bool IsActive { get; set; } = true;
         public string ShopId { get; set; } = string.Empty;
         public DateTime LastModifiedUtc { get; set; }
+        public bool IsDeleted { get; set; }
     }
 }
