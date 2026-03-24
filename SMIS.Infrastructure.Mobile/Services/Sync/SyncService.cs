@@ -78,6 +78,7 @@ public class SyncService : ISyncService
 
                     if (entity.LastModifiedUtc > serverTimestamp)
                     {
+                        // Local is newer — push local version to server.
                         var updateDto = config.MapToUpdateDto(entity);
                         var result = await _apiClient.PutAsync<TUpdateDto, TDto>(
                             $"{config.ApiEndpoint}/{entity.Id}", updateDto);
@@ -93,6 +94,10 @@ public class SyncService : ISyncService
                     }
                     else
                     {
+                        // Server is newer or equal — this entity was already pushed by another
+                        // path (e.g. another device) or clocks are in sync. Mark as synced locally
+                        // without pushing to avoid overwriting a more recent server version.
+                        // Pull will have already applied the server version in the same sync cycle.
                         entity.IsSyncedToServer = true;
                         entity.LastSyncedAt = DateTimeService.UtcNow;
                         await _localDb.SaveChangesAsync();
