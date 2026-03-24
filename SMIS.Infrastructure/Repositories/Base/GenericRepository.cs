@@ -88,13 +88,21 @@ namespace SMIS.Infrastructure.Server.Repositories.Base
 
         /// <inheritdoc/>
         public async Task<IEnumerable<T>>
-            GetAllAsync(Expression<Func<T, bool>>? filter = null, string? includeProperties = null, bool tracked = false)
+            GetAllAsync(Expression<Func<T, bool>>? filter = null, string? includeProperties = null, bool tracked = false, bool ignoreQueryFilters = false)
         {
             IQueryable<T> query = this.dbSet.AsQueryable<T>().AsNoTracking();
             if (tracked)
             {
                 query = dbSet.AsTracking();
             }
+
+            // When ignoreQueryFilters is true, bypass global filters (e.g. soft-delete, shop-scope).
+            // Used by pull endpoints that need to include soft-deleted records for client sync.
+            if (ignoreQueryFilters)
+            {
+                query = query.IgnoreQueryFilters();
+            }
+
             if (filter != null) // If requested records are based on a condation, then this block will execute.
             {
                 query = query.Where(filter);

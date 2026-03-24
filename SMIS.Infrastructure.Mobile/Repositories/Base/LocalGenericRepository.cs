@@ -154,13 +154,16 @@ public class LocalGenericRepository<T> : IGenericRepository<T> where T : class
         return await _dbSet.Where(lambda).ToListAsync();
     }
 
-    public async Task<IEnumerable<T>> GetAllAsync(Expression<Func<T, bool>>? filter = null, string? includeProperties = null, bool tracked = false)
+    public async Task<IEnumerable<T>> GetAllAsync(Expression<Func<T, bool>>? filter = null, string? includeProperties = null, bool tracked = false, bool ignoreQueryFilters = false)
     {
         IQueryable<T> query = _dbSet.AsNoTracking();
         if (tracked)
         {
             query = _dbSet.AsTracking();
         }
+
+        // ignoreQueryFilters is not applicable for local SQLite — no global query filters are configured.
+        // The parameter exists solely to satisfy the shared IGenericRepository<T> contract.
 
         if (filter != null)
         {
