@@ -193,6 +193,10 @@ public class SyncService : ISyncService
             {
                 if (local != null)
                 {
+                    // Mark as never synced before removing so TombstoneInterceptor
+                    // does not write a DeletedRecord — the server already deleted this,
+                    // we must not push a redundant DELETE back.
+                    local.IsSyncedToServer = false;
                     _localDb.Categories.Remove(local);
                     upserted++;
                 }
