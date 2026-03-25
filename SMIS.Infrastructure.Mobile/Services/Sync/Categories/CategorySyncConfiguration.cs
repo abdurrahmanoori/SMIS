@@ -1,7 +1,7 @@
 using SMIS.Application.DTO.Categories;
 using SMIS.Domain.Entities;
 
-namespace SMIS.Infrastructure.Mobile.Services.Sync;
+namespace SMIS.Infrastructure.Mobile.Services.Sync.Categories;
 
 public class CategorySyncConfiguration : ISyncConfiguration<Category, CategoryCreateDto, CategoryUpdateDto, CategoryDto>
 {
