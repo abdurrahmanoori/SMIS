@@ -27,10 +27,10 @@ public class CategoryService : BaseService
         => await SendAsync(new CategoryGetByIdQuery(id));
 
     public async Task<Result<CategoryDto>> CreateAsync(CategoryCreateDto dto)
-        => await SendAndSyncAsync(new CategoryCreateCommand(dto), _categorySyncService.SyncCategoriesAsync);
+        => await SendAndSyncAsync(new CategoryCreateCommand(dto), SyncService.SyncCategoriesAsync);
 
     public async Task<Result<CategoryDto>> UpdateAsync(string id, CategoryUpdateDto dto)
-        => await SendAndSyncAsync(new CategoryUpdateCommand(id, dto), _categorySyncService.SyncCategoriesAsync);
+        => await SendAndSyncAsync(new CategoryUpdateCommand(id, dto), SyncService.SyncCategoriesAsync);
 
     public async Task<Result<MediatR.Unit>> DeleteAsync(string id)
         => await SendAndSyncAsync(new CategoryDeleteCommand(id), SyncService.SyncDeletesAsync);
@@ -38,7 +38,7 @@ public class CategoryService : BaseService
     public async Task<SyncResult> SyncAsync()
     {
         var pullResult = await _categorySyncService.PullCategoriesAsync();
-        var pushResult = await _categorySyncService.SyncCategoriesAsync();
+        var pushResult = await SyncService.SyncCategoriesAsync();
 
         return new SyncResult
         {

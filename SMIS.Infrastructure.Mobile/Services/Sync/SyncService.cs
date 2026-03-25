@@ -7,12 +7,17 @@ using SMIS.Infrastructure.Mobile.Services.Sync.Categories;
 
 namespace SMIS.Infrastructure.Mobile.Services.Sync;
 
-public interface ISyncService
+public interface ISyncEngine
 {
     Task<SyncResult> SyncAsync<TEntity, TCreateDto, TUpdateDto, TDto>(
         ISyncConfiguration<TEntity, TCreateDto, TUpdateDto, TDto> config)
         where TEntity : class, ISyncableEntity;
+}
+
+public interface ISyncService : ISyncEngine
+{
     Task<SyncResult> SyncDeletesAsync();
+    Task<SyncResult> SyncCategoriesAsync();
     Task<SyncAllResult> SyncAllAsync();
     Task<int> GetPendingCountAsync<TEntity>() where TEntity : class, ISyncableEntity;
     Task<int> GetTotalPendingCountAsync();
@@ -224,12 +229,15 @@ public class SyncService : ISyncService
         return entityPending + deletePending;
     }
 
+    public Task<SyncResult> SyncCategoriesAsync()
+        => SyncAsync(new CategorySyncConfiguration());
+
     public async Task<SyncAllResult> SyncAllAsync()
     {
         var results = new List<SyncResult>
         {
             await _categorySyncService.PullCategoriesAsync(),
-            await _categorySyncService.SyncCategoriesAsync(),
+            await SyncAsync(new CategorySyncConfiguration()),
             await SyncDeletesAsync()
         };
 
