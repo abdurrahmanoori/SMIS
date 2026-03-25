@@ -5,6 +5,7 @@ using SMIS.Domain.Services;
 using SMIS.Infrastructure.Mobile.Context;
 using SMIS.Infrastructure.Mobile.Services.Http;
 using SMIS.Infrastructure.Mobile.Services.Identity;
+using SMIS.Infrastructure.Mobile.Services.Sync;
 
 namespace SMIS.Infrastructure.Mobile.Services.Sync.Categories;
 
@@ -42,8 +43,8 @@ public class CategorySyncService : ICategorySyncService
 
     public async Task<SyncResult> PullCategoriesAsync()
     {
-        if (_connectivity?.NetworkAccess != NetworkAccess.Internet)
-            return new SyncResult { Success = false, Message = "No internet connection" };
+        if (!ConnectivityGuard.IsConnected(_connectivity))
+            return ConnectivityGuard.OfflineResult();
 
         var shopId = _currentUser.GetShopId();
         var timestampKey = $"{PullTimestampKeyPrefix}{shopId}";

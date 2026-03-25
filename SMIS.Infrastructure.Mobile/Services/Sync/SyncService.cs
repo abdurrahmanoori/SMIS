@@ -41,8 +41,7 @@ public class SyncService : ISyncService
         ISyncConfiguration<TEntity, TCreateDto, TUpdateDto, TDto> config)
         where TEntity : class, ISyncableEntity
     {
-        if (_connectivity?.NetworkAccess != NetworkAccess.Internet)
-            return new SyncResult { Success = false, Message = "No internet connection" };
+        if (!ConnectivityGuard.IsConnected(_connectivity)) return ConnectivityGuard.OfflineResult();
 
         var pendingEntities = await _localDb.Set<TEntity>()
             .Where(e => !e.IsSyncedToServer)
@@ -151,8 +150,8 @@ public class SyncService : ISyncService
 
     public async Task<SyncResult> SyncDeletesAsync()
     {
-        if (_connectivity?.NetworkAccess != NetworkAccess.Internet)
-            return new SyncResult { Success = false, Message = "No internet connection" };
+        if (!ConnectivityGuard.IsConnected(_connectivity))
+            return ConnectivityGuard.OfflineResult();
 
         var pendingDeletes = await _localDb.DeletedRecords
             .Where(d => !d.IsSyncedToServer)
