@@ -5,14 +5,20 @@ using SMIS.Application.DTO.Categories;
 using SMIS.Application.Features.Categories.Commands;
 using SMIS.Application.Features.Categories.Queries;
 using SMIS.Infrastructure.Mobile.Services.Sync;
+using SMIS.Infrastructure.Mobile.Services.Sync.Categories;
 using SMIS.UI.Services.Base;
 
 namespace SMIS.UI.Services;
 
 public class CategoryService : BaseService
 {
-    public CategoryService(IMediator mediator, IConnectivity connectivity, ISyncService syncService)
-        : base(mediator, connectivity, syncService) { }
+    private readonly ICategorySyncService _categorySyncService;
+
+    public CategoryService(IMediator mediator, IConnectivity connectivity, ISyncService syncService, ICategorySyncService categorySyncService)
+        : base(mediator, connectivity, syncService)
+    {
+        _categorySyncService = categorySyncService;
+    }
 
     public async Task<Result<PagedList<CategoryDto>>> GetAllAsync(int pageNumber = 1, int pageSize = 10, string? searchTerm = null)
         => await SendAsync(new CategoryGetListQuery(pageNumber, pageSize, searchTerm));
@@ -21,18 +27,18 @@ public class CategoryService : BaseService
         => await SendAsync(new CategoryGetByIdQuery(id));
 
     public async Task<Result<CategoryDto>> CreateAsync(CategoryCreateDto dto)
-        => await SendAndSyncAsync(new CategoryCreateCommand(dto), SyncService.SyncCategoriesAsync);
+        => await SendAndSyncAsync(new CategoryCreateCommand(dto), _categorySyncService.SyncCategoriesAsync);
 
     public async Task<Result<CategoryDto>> UpdateAsync(string id, CategoryUpdateDto dto)
-        => await SendAndSyncAsync(new CategoryUpdateCommand(id, dto), SyncService.SyncCategoriesAsync);
+        => await SendAndSyncAsync(new CategoryUpdateCommand(id, dto), _categorySyncService.SyncCategoriesAsync);
 
     public async Task<Result<MediatR.Unit>> DeleteAsync(string id)
         => await SendAndSyncAsync(new CategoryDeleteCommand(id), SyncService.SyncDeletesAsync);
 
     public async Task<SyncResult> SyncAsync()
     {
-        var pullResult = await SyncService.PullCategoriesAsync();
-        var pushResult = await SyncService.SyncCategoriesAsync();
+        var pullResult = await _categorySyncService.PullCategoriesAsync();
+        var pushResult = await _categorySyncService.SyncCategoriesAsync();
 
         return new SyncResult
         {

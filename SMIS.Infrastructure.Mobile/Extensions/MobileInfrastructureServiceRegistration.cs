@@ -1,17 +1,15 @@
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 using SMIS.Application.Repositories.Base;
-using SMIS.Application.Repositories.Categories;
 using SMIS.Application.Services;
 using SMIS.Infrastructure.Mobile.Context;
 using SMIS.Infrastructure.Mobile.Interceptors;
 using SMIS.Infrastructure.Mobile.Repositories;
-using SMIS.Infrastructure.Mobile.Repositories.Categories;
 using SMIS.Infrastructure.Mobile.Services;
 using SMIS.Infrastructure.Mobile.Services.Auth;
 using SMIS.Infrastructure.Mobile.Services.Http;
 using SMIS.Infrastructure.Mobile.Services.Identity;
 using SMIS.Infrastructure.Mobile.Services.Sync;
+using SMIS.Infrastructure.Mobile.Services.Sync.Categories;
 
 namespace SMIS.Infrastructure.Mobile.Extensions;
 
@@ -66,6 +64,7 @@ public static class MobileInfrastructureServiceRegistration
 
         services.AddScoped<IAuthService, AuthService>();
         services.AddScoped<ISyncService, SyncService>();
+        services.AddScoped<ICategorySyncService, CategorySyncService>();
 
         return services;
     }
