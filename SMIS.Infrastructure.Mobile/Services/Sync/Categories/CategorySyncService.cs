@@ -12,7 +12,6 @@ namespace SMIS.Infrastructure.Mobile.Services.Sync.Categories;
 public interface ICategorySyncService
 {
     Task<SyncResult> PullCategoriesAsync();
-    Task<SyncResult> SyncCategoriesAsync();
 }
 
 public class CategorySyncService : ICategorySyncService
@@ -21,7 +20,6 @@ public class CategorySyncService : ICategorySyncService
     private readonly IApiClient _apiClient;
     private readonly IConnectivity? _connectivity;
     private readonly IMobileCurrentUser _currentUser;
-    private readonly ISyncService _syncService;
 
     // Scope the timestamp key per shop so different shops on the same device
     // each maintain their own independent pull cursor.
@@ -31,13 +29,11 @@ public class CategorySyncService : ICategorySyncService
         LocalDbContext localDb,
         IApiClient apiClient,
         IMobileCurrentUser currentUser,
-        ISyncService syncService,
         IConnectivity? connectivity = null)
     {
         _localDb = localDb;
         _apiClient = apiClient;
         _currentUser = currentUser;
-        _syncService = syncService;
         _connectivity = connectivity;
     }
 
@@ -138,8 +134,4 @@ public class CategorySyncService : ICategorySyncService
         };
     }
 
-    public async Task<SyncResult> SyncCategoriesAsync()
-    {
-        return await _syncService.SyncAsync(new CategorySyncConfiguration());
-    }
 }
