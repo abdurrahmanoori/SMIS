@@ -1,6 +1,31 @@
-﻿<Router AppAssembly="typeof(Program).Assembly">
-    <Found Context="routeData">
-        <RouteView RouteData="routeData" DefaultLayout="typeof(Layout.MainLayout)" />
-        <FocusOnNavigate RouteData="routeData" Selector="h1" />
-    </Found>
-</Router>
+﻿@using SMIS.UI.Shared.Components.Shared
+@inject SMIS.WebMaui.Services.DevelopmentAutoLoginService AutoLoginService
+
+@if (_isInitializing)
+{
+    <div style="display:flex;justify-content:center;align-items:center;height:100vh;">
+        <SfSpinner Visible="true" Size="40"></SfSpinner>
+    </div>
+}
+else
+{
+    <Router AppAssembly="typeof(Program).Assembly"
+            AdditionalAssemblies="new[] { typeof(SMIS.UI.Shared.Components.Pages.Home).Assembly }">
+        <Found Context="routeData">
+            <AuthGuard>
+                <RouteView RouteData="routeData" DefaultLayout="typeof(Layout.MainLayout)" />
+                <FocusOnNavigate RouteData="routeData" Selector="h1" />
+            </AuthGuard>
+        </Found>
+    </Router>
+}
+
+@code {
+    private bool _isInitializing = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await AutoLoginService.TryAutoLoginAsync();
+        _isInitializing = false;
+    }
+}
