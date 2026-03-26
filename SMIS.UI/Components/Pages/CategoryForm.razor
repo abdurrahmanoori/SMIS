@@ -1,11 +1,11 @@
 @page "/categories/create"
-@using SMIS.UI.Services
+@using SMIS.UI.Services.Interfaces
 @using SMIS.Application.DTO.Categories
 @using Syncfusion.Blazor.Buttons
 @using Syncfusion.Blazor.Cards
 @using Syncfusion.Blazor.Inputs
 @using Syncfusion.Blazor.Notifications
-@inject CategoryService CategoryService
+@inject ICategoryService CategoryService
 @inject NavigationManager Navigation
 
 <div class="page-container">

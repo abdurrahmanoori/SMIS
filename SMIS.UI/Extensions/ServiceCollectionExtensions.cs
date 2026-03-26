@@ -8,6 +8,7 @@ using SMIS.Domain.Services;
 using SMIS.Infrastructure.Mobile.Extensions;
 using SMIS.Infrastructure.Mobile.Services.Identity;
 using SMIS.UI.Services;
+using SMIS.UI.Services.Interfaces;
 
 namespace SMIS.UI.Extensions;
 
@@ -38,8 +39,10 @@ public static class ServiceCollectionExtensions
         
         // MAUI-specific services
         services.AddSingleton(Connectivity.Current);
-        services.AddScoped<AuthServiceWrapper>();
-        services.AddScoped<CategoryService>();
+        services.AddScoped<IUiAuthService, AuthServiceWrapper>();
+        services.AddScoped<ICategoryService, CategoryService>();
+        services.AddScoped<ISyncFacade, SyncFacade>();
+        services.AddSingleton<IThemeService, ThemeService>();
         services.AddScoped<DevelopmentAutoLoginService>();
 
         return services;

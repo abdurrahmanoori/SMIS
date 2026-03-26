@@ -1,9 +1,9 @@
-@using SMIS.UI.Services
+@using SMIS.UI.Services.Interfaces
 @inherits LayoutComponentBase
 @inject IJSRuntime JSRuntime
-@inject AuthServiceWrapper AuthService
+@inject IUiAuthService AuthService
 @inject NavigationManager Navigation
-@inject ThemeService ThemeService
+@inject IThemeService ThemeService
 @implements IDisposable
 
 <div class="page-container">

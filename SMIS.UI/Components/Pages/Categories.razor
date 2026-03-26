@@ -1,17 +1,15 @@
 @page "/categories"
-@using SMIS.UI.Services
+@using SMIS.UI.Services.Interfaces
 @using SMIS.UI.Helpers
 @using SMIS.Application.DTO.Categories
 @using SMIS.Application.Common.Response
-@using SMIS.Infrastructure.Mobile.Services.Sync
 @using Syncfusion.Blazor.Grids
 @using Syncfusion.Blazor.Buttons
 @using Syncfusion.Blazor.Cards
 @using Syncfusion.Blazor.Notifications
 @using Syncfusion.Blazor.Popups
 @using Syncfusion.Blazor.Inputs
-@inject CategoryService CategoryService
-@inject ISyncService SyncService
+@inject ICategoryService CategoryService
 @inject NavigationManager Navigation
 
 <SfCard>
