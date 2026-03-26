@@ -19,6 +19,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SMIS.UI", "SMIS.UI\SMIS.UI.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SMIS.UI.Shared", "SMIS.UI.Shared\SMIS.UI.Shared.csproj", "{65A69121-6989-4006-8736-00BF2CC3827A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SMIS.Web", "SMIS.Web\SMIS.Web.csproj", "{B06D3660-715C-473D-9100-78075871F9B8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -58,6 +60,10 @@ Global
 		{65A69121-6989-4006-8736-00BF2CC3827A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{65A69121-6989-4006-8736-00BF2CC3827A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{65A69121-6989-4006-8736-00BF2CC3827A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B06D3660-715C-473D-9100-78075871F9B8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B06D3660-715C-473D-9100-78075871F9B8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B06D3660-715C-473D-9100-78075871F9B8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B06D3660-715C-473D-9100-78075871F9B8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
