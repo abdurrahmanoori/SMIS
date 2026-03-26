@@ -1,9 +1,201 @@
-﻿@inherits LayoutComponentBase
+@using SMIS.UI.Shared.Services.Interfaces
+@using SMIS.UI.Shared.Components.Layout
+@inherits LayoutComponentBase
+@inject IJSRuntime JSRuntime
+@inject IUiAuthService AuthService
+@inject NavigationManager Navigation
+@inject IThemeService ThemeService
+@implements IDisposable
 
-@Body
+<div class="page-container">
+    <SfSidebar @ref="sidebar" Width="250px" Type="SidebarType.Auto" @bind-IsOpen="isSidebarOpen" CloseOnDocumentClick="false">
+        <ChildContent>
+            <div class="sidebar-content">
+                <div class="sidebar-header">
+                    <h3>SMIS</h3>
+                </div>
+                <NavMenu />
+            </div>
+        </ChildContent>
+    </SfSidebar>
 
-<div id="blazor-error-ui" data-nosnippet>
-    An unhandled error has occurred.
-    <a href="." class="reload">Reload</a>
-    <span class="dismiss">🗙</span>
+    <div class="main-content">
+        <div class="header">
+            <SfButton CssClass="e-flat" IconCss="e-icons e-menu" @onclick="ToggleSidebar"></SfButton>
+            <h4 style="cursor: pointer;" @onclick="@(() => Navigation.NavigateTo("/"))">Shop Management System</h4>
+            <div class="header-actions">
+                <SfButton CssClass="e-outline theme-toggle-btn" @onclick="ToggleTheme">
+                    @if (_isDark)
+                    {
+                        <span class="e-icons e-sun-icon" style="margin-right:6px;"></span>
+                        <span>Light</span>
+                    }
+                    else
+                    {
+                        <span class="e-icons e-moon-icon" style="margin-right:6px;"></span>
+                        <span>Dark</span>
+                    }
+                </SfButton>
+                <SfButton CssClass="e-flat e-danger" IconCss="e-icons e-logout" OnClick="Logout" title="Logout">Logout</SfButton>
+            </div>
+        </div>
+        <div class="content">
+            @Body
+        </div>
+    </div>
 </div>
+
+@code {
+    private SfSidebar? sidebar;
+    private bool isSidebarOpen = true;
+    private bool _isDark = false;
+    private DotNetObjectReference<MainLayout>? objRef;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            objRef = DotNetObjectReference.Create(this);
+            await JSRuntime.InvokeVoidAsync("setupResizeListener", objRef);
+
+            _isDark = await JSRuntime.InvokeAsync<bool>("themeInterop.getDevicePreference");
+            await JSRuntime.InvokeVoidAsync("themeInterop.watchDevicePreference", objRef);
+            await ApplyTheme(_isDark);
+            StateHasChanged();
+        }
+    }
+
+    private async Task ToggleTheme()
+    {
+        await ApplyTheme(!_isDark);
+    }
+
+    private async Task ApplyTheme(bool isDark)
+    {
+        _isDark = isDark;
+        ThemeService.SetTheme(isDark);
+        await JSRuntime.InvokeVoidAsync("themeInterop.setTheme", isDark);
+    }
+
+    [JSInvokable]
+    public async Task OnDeviceThemeChanged(bool isDark)
+    {
+        await ApplyTheme(isDark);
+        StateHasChanged();
+    }
+
+    [JSInvokable]
+    public void CloseSidebarFromJS()
+    {
+        if (isSidebarOpen)
+        {
+            isSidebarOpen = false;
+            StateHasChanged();
+        }
+    }
+
+    private void ToggleSidebar() => isSidebarOpen = !isSidebarOpen;
+
+    private async Task Logout()
+    {
+        await AuthService.LogoutAsync();
+        Navigation.NavigateTo("/login", replace: true);
+    }
+
+    public void Dispose() => objRef?.Dispose();
+}
+
+<style>
+    .page-container {
+        display: flex;
+        height: 100vh;
+        overflow: hidden;
+    }
+
+    .sidebar-content {
+        height: 100%;
+        background-color: #f8f9fa;
+    }
+
+    .sidebar-header {
+        padding: 20px;
+        background-color: #0d6efd;
+        color: white;
+        text-align: center;
+    }
+
+    .sidebar-header h3 {
+        margin: 0;
+    }
+
+    .main-content {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+    }
+
+    .header {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        padding: 15px 20px;
+        background-color: #fff;
+        border-bottom: 1px solid #dee2e6;
+        justify-content: space-between;
+    }
+
+    .header h4 {
+        margin: 0;
+    }
+
+    .header-actions {
+        margin-left: auto;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .theme-toggle-btn {
+        display: flex;
+        align-items: center;
+    }
+
+    .e-sun-icon::before {
+        content: "\e91e";
+    }
+
+    .e-moon-icon::before {
+        content: "\e91f";
+    }
+
+    .content {
+        flex: 1;
+        padding: 20px;
+        overflow-y: auto;
+    }
+
+    /* ── Dark mode overrides for custom elements ── */
+    [data-theme="dark"] .sidebar-content {
+        background-color: #1e1e2e;
+    }
+
+    [data-theme="dark"] .header {
+        background-color: #1e1e2e;
+        border-bottom-color: #3a3a4a;
+        color: #e0e0e0;
+    }
+
+    [data-theme="dark"] .header h4 {
+        color: #e0e0e0;
+    }
+
+    [data-theme="dark"] .content {
+        background-color: #13131f;
+        color: #e0e0e0;
+    }
+
+    [data-theme="dark"] .page-container {
+        background-color: #13131f;
+    }
+</style>
