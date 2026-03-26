@@ -1,0 +1,29 @@
+@page "/"
+
+<MudText Typo="Typo.h5" Class="mb-2">Welcome to SMIS</MudText>
+<MudText Typo="Typo.body1" Color="Color.Secondary" Class="mb-6">Shop Management Information System</MudText>
+
+<MudGrid>
+    <MudItem xs="12" sm="4">
+        <MudPaper Elevation="2" Class="pa-4" Style="cursor:pointer" @onclick='() => Nav.NavigateTo("/categories")'>
+            <MudStack AlignItems="AlignItems.Center" Spacing="2">
+                <MudIcon Icon="@Icons.Material.Filled.Category" Color="Color.Primary" Size="Size.Large" />
+                <MudText Typo="Typo.h6">Categories</MudText>
+                <MudText Typo="Typo.body2" Color="Color.Secondary">Manage product categories</MudText>
+            </MudStack>
+        </MudPaper>
+    </MudItem>
+    <MudItem xs="12" sm="4">
+        <MudPaper Elevation="2" Class="pa-4" Style="cursor:pointer" @onclick='() => Nav.NavigateTo("/products")'>
+            <MudStack AlignItems="AlignItems.Center" Spacing="2">
+                <MudIcon Icon="@Icons.Material.Filled.ShoppingCart" Color="Color.Secondary" Size="Size.Large" />
+                <MudText Typo="Typo.h6">Products</MudText>
+                <MudText Typo="Typo.body2" Color="Color.Secondary">Manage inventory</MudText>
+            </MudStack>
+        </MudPaper>
+    </MudItem>
+</MudGrid>
+
+@code {
+    [Inject] private NavigationManager Nav { get; set; } = default!;
+}
