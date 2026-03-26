@@ -1,7 +1,7 @@
 using MediatR;
 using SMIS.Application.Common.Response;
 
-namespace SMIS.UI.Services.Base;
+namespace SMIS.UI.Shared.Services.Base;
 
 public abstract class BaseService
 {

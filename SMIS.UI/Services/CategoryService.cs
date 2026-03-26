@@ -6,8 +6,8 @@ using SMIS.Application.Features.Categories.Commands;
 using SMIS.Application.Features.Categories.Queries;
 using SMIS.Infrastructure.Mobile.Services.Sync;
 using SMIS.Infrastructure.Mobile.Services.Sync.Categories;
-using SMIS.UI.Services.Base;
-using SMIS.UI.Services.Interfaces;
+using SMIS.UI.Shared.Services.Base;
+using SMIS.UI.Shared.Services.Interfaces;
 
 namespace SMIS.UI.Services;
 

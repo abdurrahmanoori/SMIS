@@ -1,3 +1,5 @@
+using SMIS.Application.Common.Response;
+
 namespace SMIS.Infrastructure.Mobile.Services.Sync;
 
 internal static class ConnectivityGuard

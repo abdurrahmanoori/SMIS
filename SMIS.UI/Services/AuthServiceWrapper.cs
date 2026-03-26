@@ -1,6 +1,6 @@
 using SMIS.Application.Common.Response;
 using SMIS.Infrastructure.Mobile.Services.Auth;
-using SMIS.UI.Services.Interfaces;
+using SMIS.UI.Shared.Services.Interfaces;
 
 namespace SMIS.UI.Services;
 

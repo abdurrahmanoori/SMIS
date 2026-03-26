@@ -1,4 +1,4 @@
-namespace SMIS.UI.Services.Interfaces;
+namespace SMIS.UI.Shared.Services.Interfaces;
 
 public interface IThemeService
 {

@@ -8,7 +8,7 @@ using SMIS.Domain.Services;
 using SMIS.Infrastructure.Mobile.Extensions;
 using SMIS.Infrastructure.Mobile.Services.Identity;
 using SMIS.UI.Services;
-using SMIS.UI.Services.Interfaces;
+using SMIS.UI.Shared.Services.Interfaces;
 
 namespace SMIS.UI.Extensions;
 
