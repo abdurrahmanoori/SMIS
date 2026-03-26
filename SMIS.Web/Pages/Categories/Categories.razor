@@ -1,0 +1,280 @@
+@page "/categories"
+@using SMIS.Application.DTO.Categories
+@using SMIS.Application.Common.Response
+@using SMIS.Web.Services
+@inject CategoryService CategoryService
+@inject IDialogService DialogService
+@inject ISnackbar Snackbar
+
+<MudText Typo="Typo.h5" Class="mb-4">Category Management</MudText>
+
+<MudPaper Elevation="2" Class="pa-4">
+    <MudStack Row="true" AlignItems="AlignItems.Center" Class="mb-4">
+        <MudTextField @bind-Value="_searchTerm"
+                      Placeholder="Search categories..."
+                      Adornment="Adornment.Start"
+                      AdornmentIcon="@Icons.Material.Filled.Search"
+                      Immediate="true"
+                      DebounceInterval="300"
+                      OnDebounceIntervalElapsed="LoadCategories"
+                      Class="flex-grow-1" />
+        <MudButton Variant="Variant.Filled"
+                   Color="Color.Primary"
+                   StartIcon="@Icons.Material.Filled.Add"
+                   OnClick="OpenCreateDialog">
+            Add Category
+        </MudButton>
+    </MudStack>
+
+    <MudTable Items="_categories"
+              Loading="_isLoading"
+              Hover="true"
+              Striped="true"
+              Dense="true"
+              Elevation="0">
+        <HeaderContent>
+            <MudTh>Name</MudTh>
+            <MudTh>Code</MudTh>
+            <MudTh>Description</MudTh>
+            <MudTh>Status</MudTh>
+            <MudTh Style="text-align:right">Actions</MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="Name">@context.Name</MudTd>
+            <MudTd DataLabel="Code">@(context.Code ?? "—")</MudTd>
+            <MudTd DataLabel="Description">@(context.Description ?? "—")</MudTd>
+            <MudTd DataLabel="Status">
+                <MudChip T="string"
+                         Color="@(context.IsActive ? Color.Success : Color.Default)"
+                         Size="Size.Small">
+                    @(context.IsActive ? "Active" : "Inactive")
+                </MudChip>
+            </MudTd>
+            <MudTd Style="text-align:right">
+                <MudIconButton Icon="@Icons.Material.Filled.Edit"
+                               Color="Color.Primary"
+                               Size="Size.Small"
+                               OnClick="() => OpenEditDialog(context)" />
+                <MudIconButton Icon="@Icons.Material.Filled.Delete"
+                               Color="Color.Error"
+                               Size="Size.Small"
+                               OnClick="() => OpenDeleteDialog(context)" />
+            </MudTd>
+        </RowTemplate>
+        <NoRecordsContent>
+            <MudText Class="pa-4" Color="Color.Secondary">No categories found.</MudText>
+        </NoRecordsContent>
+        <LoadingContent>
+            <MudText Class="pa-4">Loading...</MudText>
+        </LoadingContent>
+        <PagerContent>
+            <MudTablePager PageSizeOptions="new int[] { 10, 25, 50 }" />
+        </PagerContent>
+    </MudTable>
+</MudPaper>
+
+@* ── Create / Edit Dialog ── *@
+<MudDialog @bind-Visible="_showFormDialog" Options="_dialogOptions">
+    <TitleContent>
+        <MudText Typo="Typo.h6">
+            <MudIcon Icon="@(_isEditMode ? Icons.Material.Filled.Edit : Icons.Material.Filled.Add)" Class="mr-2" />
+            @(_isEditMode ? "Edit Category" : "New Category")
+        </MudText>
+    </TitleContent>
+    <DialogContent>
+        <MudStack Spacing="3">
+            <MudTextField @bind-Value="_form.Name"
+                          Label="Name"
+                          Required="true"
+                          RequiredError="Name is required"
+                          Error="@_errors.ContainsKey("Name")"
+                          ErrorText="@(_errors.TryGetValue("Name", out var n) ? n : "")" />
+            <MudTextField @bind-Value="_form.Code"
+                          Label="Code"
+                          Error="@_errors.ContainsKey("Code")"
+                          ErrorText="@(_errors.TryGetValue("Code", out var c) ? c : "")" />
+            <MudTextField @bind-Value="_form.Description"
+                          Label="Description"
+                          Lines="3" />
+            <MudSwitch @bind-Value="_form.IsActive"
+                       Label="Active"
+                       Color="Color.Primary" />
+        </MudStack>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="CloseFormDialog">Cancel</MudButton>
+        <MudButton Variant="Variant.Filled"
+                   Color="Color.Primary"
+                   Disabled="_isSaving"
+                   OnClick="SaveCategory">
+            @(_isSaving ? "Saving..." : "Save")
+        </MudButton>
+    </DialogActions>
+</MudDialog>
+
+@* ── Delete Confirm Dialog ── *@
+<MudDialog @bind-Visible="_showDeleteDialog" Options="_dialogOptions">
+    <TitleContent>
+        <MudText Typo="Typo.h6" Color="Color.Error">
+            <MudIcon Icon="@Icons.Material.Filled.Warning" Class="mr-2" />
+            Confirm Delete
+        </MudText>
+    </TitleContent>
+    <DialogContent>
+        <MudText>Are you sure you want to delete <strong>@_categoryToDelete?.Name</strong>?</MudText>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="() => _showDeleteDialog = false">Cancel</MudButton>
+        <MudButton Variant="Variant.Filled" Color="Color.Error" OnClick="ConfirmDelete">Delete</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    private List<CategoryDto> _categories = new();
+    private Dictionary<string, string> _errors = new();
+    private CategoryFormModel _form = new();
+    private CategoryDto? _categoryToDelete;
+    private string _searchTerm = "";
+    private bool _isLoading = true;
+    private bool _isSaving = false;
+    private bool _isEditMode = false;
+    private bool _showFormDialog = false;
+    private bool _showDeleteDialog = false;
+
+    private readonly DialogOptions _dialogOptions = new()
+    {
+        MaxWidth = MaxWidth.Small,
+        FullWidth = true,
+        CloseOnEscapeKey = true
+    };
+
+    protected override async Task OnInitializedAsync()
+        => await LoadCategories();
+
+    private async Task LoadCategories()
+    {
+        _isLoading = true;
+        var result = await CategoryService.GetAllAsync(searchTerm: _searchTerm);
+        if (result.Success && result.Response != null)
+            _categories = result.Response.Items;
+        else
+            Snackbar.Add(result.Message ?? "Failed to load categories", Severity.Error);
+        _isLoading = false;
+    }
+
+    private void OpenCreateDialog()
+    {
+        _form = new CategoryFormModel { IsActive = true };
+        _errors.Clear();
+        _isEditMode = false;
+        _showFormDialog = true;
+    }
+
+    private void OpenEditDialog(CategoryDto category)
+    {
+        _form = new CategoryFormModel
+        {
+            Id = category.Id,
+            Name = category.Name,
+            Code = category.Code,
+            Description = category.Description,
+            IsActive = category.IsActive
+        };
+        _errors.Clear();
+        _isEditMode = true;
+        _showFormDialog = true;
+    }
+
+    private void CloseFormDialog()
+    {
+        _showFormDialog = false;
+        _form = new CategoryFormModel();
+    }
+
+    private async Task SaveCategory()
+    {
+        if (string.IsNullOrWhiteSpace(_form.Name))
+        {
+            _errors["Name"] = "Name is required";
+            return;
+        }
+
+        _isSaving = true;
+        _errors.Clear();
+
+        Result<CategoryDto> result;
+
+        if (_isEditMode)
+        {
+            result = await CategoryService.UpdateAsync(_form.Id, new CategoryUpdateDto
+            {
+                Name = _form.Name,
+                Code = _form.Code,
+                Description = _form.Description,
+                IsActive = _form.IsActive
+            });
+        }
+        else
+        {
+            result = await CategoryService.CreateAsync(new CategoryCreateDto
+            {
+                Name = _form.Name,
+                Code = _form.Code,
+                Description = _form.Description,
+                IsActive = _form.IsActive
+            });
+        }
+
+        if (result.Success)
+        {
+            Snackbar.Add(_isEditMode ? "Category updated" : "Category created", Severity.Success);
+            CloseFormDialog();
+            await LoadCategories();
+        }
+        else
+        {
+            // Map server validation errors back to fields
+            if (result.Errors?.Any() == true)
+                foreach (var e in result.Errors.Where(e => !string.IsNullOrEmpty(e.Property)))
+                    _errors[e.Property!] = e.Description ?? "Invalid value";
+            else
+                Snackbar.Add(result.Message ?? "Operation failed", Severity.Error);
+        }
+
+        _isSaving = false;
+    }
+
+    private void OpenDeleteDialog(CategoryDto category)
+    {
+        _categoryToDelete = category;
+        _showDeleteDialog = true;
+    }
+
+    private async Task ConfirmDelete()
+    {
+        if (_categoryToDelete == null) return;
+        _showDeleteDialog = false;
+
+        var result = await CategoryService.DeleteAsync(_categoryToDelete.Id);
+        if (result.Success)
+        {
+            Snackbar.Add($"{_categoryToDelete.Name} deleted", Severity.Success);
+            await LoadCategories();
+        }
+        else
+        {
+            Snackbar.Add(result.Message ?? "Delete failed", Severity.Error);
+        }
+
+        _categoryToDelete = null;
+    }
+
+    private class CategoryFormModel
+    {
+        public string Id { get; set; } = "";
+        public string Name { get; set; } = "";
+        public string? Code { get; set; }
+        public string? Description { get; set; }
+        public bool IsActive { get; set; } = true;
+    }
+}

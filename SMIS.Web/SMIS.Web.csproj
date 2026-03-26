@@ -8,6 +8,14 @@
 
   <ItemGroup>
     <PackageReference Include="MudBlazor" />
+    <PackageReference Include="MediatR" />
+    <PackageReference Include="AutoMapper.Collection.EntityFrameworkCore" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\SMIS.Application\SMIS.Application.csproj" />
+    <ProjectReference Include="..\SMIS.Infrastructure\SMIS.Infrastructure.Server.csproj" />
+    <ProjectReference Include="..\SMIS.UI.Shared\SMIS.UI.Shared.csproj" />
   </ItemGroup>
 
 </Project>
