@@ -1,6 +1,6 @@
 using SMIS.Application.Common.Response;
 
-namespace SMIS.UI.Helpers;
+namespace SMIS.UI.Shared.Helpers;
 
 public static class ValidationHelper
 {
@@ -24,14 +24,10 @@ public static class ValidationHelper
     }
 
     public static string GetValidationMessage(Dictionary<string, string> validationErrors, string propertyName)
-    {
-        return validationErrors.TryGetValue(propertyName, out var message) ? message : string.Empty;
-    }
+        => validationErrors.TryGetValue(propertyName, out var message) ? message : string.Empty;
 
     public static bool HasValidationError(Dictionary<string, string> validationErrors, string propertyName)
-    {
-        return validationErrors.ContainsKey(propertyName);
-    }
+        => validationErrors.ContainsKey(propertyName);
 
     private static string CapitalizeFirstLetter(string input)
     {

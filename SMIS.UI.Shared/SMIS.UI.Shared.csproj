@@ -11,8 +11,19 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Components.Web"/>
+    <PackageReference Include="Microsoft.AspNetCore.Components.Web" />
     <PackageReference Include="MediatR" />
+    <PackageReference Include="Syncfusion.Blazor.Themes" />
+    <PackageReference Include="Syncfusion.Blazor.Buttons" />
+    <PackageReference Include="Syncfusion.Blazor.Cards" />
+    <PackageReference Include="Syncfusion.Blazor.Grid" />
+    <PackageReference Include="Syncfusion.Blazor.Inputs" />
+    <PackageReference Include="Syncfusion.Blazor.Navigations" />
+    <PackageReference Include="Syncfusion.Blazor.Notifications" />
+    <PackageReference Include="Syncfusion.Blazor.Spinner" />
+    <PackageReference Include="Syncfusion.Blazor.ProgressBar" />
+    <PackageReference Include="Syncfusion.Blazor.DropDowns" />
+    <PackageReference Include="Syncfusion.Blazor.Popups" />
   </ItemGroup>
 
   <ItemGroup>
