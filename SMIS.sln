@@ -1,15 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 18
-VisualStudioVersion = 18.4.11519.219
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.36623.8 d17.14
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SMIS.Api", "SMIS.Api\SMIS.Api.csproj", "{6094DC5B-079C-4458-A6DB-BADB2C97FDBB}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SMIS.Application", "SMIS.Application\SMIS.Application.csproj", "{2C3612BB-7029-4281-2BCA-41749AF0903C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SMIS.Domain", "SMIS.Domain\SMIS.Domain.csproj", "{348614B7-1B19-4BB4-6EDB-EBB752658212}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SMIS.Infrastructure.Server", "SMIS.Infrastructure\SMIS.Infrastructure.Server.csproj", "{30B80213-A40B-6C96-5390-579E7165D55F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SMIS.Test", "SMIS.Test\SMIS.Test.csproj", "{4E0F3CD3-6ACA-4836-907F-D50862411270}"
 EndProject
@@ -22,6 +20,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SMIS.Web", "SMIS.Web\SMIS.Web.csproj", "{B06D3660-715C-473D-9100-78075871F9B8}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SMIS.WebMaui", "SMIS.WebMaui\SMIS.WebMaui.csproj", "{F32CCA3E-3C43-4F08-B3DA-9BE95FD63F51}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SMIS.Infrastructure.Server", "SMIS.Infrastructure.Server\SMIS.Infrastructure.Server.csproj", "{B5A53ED5-198D-94A6-CE07-0460F2F5DD15}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -41,10 +41,6 @@ Global
 		{348614B7-1B19-4BB4-6EDB-EBB752658212}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{348614B7-1B19-4BB4-6EDB-EBB752658212}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{348614B7-1B19-4BB4-6EDB-EBB752658212}.Release|Any CPU.Build.0 = Release|Any CPU
-		{30B80213-A40B-6C96-5390-579E7165D55F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{30B80213-A40B-6C96-5390-579E7165D55F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{30B80213-A40B-6C96-5390-579E7165D55F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{30B80213-A40B-6C96-5390-579E7165D55F}.Release|Any CPU.Build.0 = Release|Any CPU
 		{4E0F3CD3-6ACA-4836-907F-D50862411270}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{4E0F3CD3-6ACA-4836-907F-D50862411270}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4E0F3CD3-6ACA-4836-907F-D50862411270}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -70,6 +66,10 @@ Global
 		{F32CCA3E-3C43-4F08-B3DA-9BE95FD63F51}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F32CCA3E-3C43-4F08-B3DA-9BE95FD63F51}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F32CCA3E-3C43-4F08-B3DA-9BE95FD63F51}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B5A53ED5-198D-94A6-CE07-0460F2F5DD15}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B5A53ED5-198D-94A6-CE07-0460F2F5DD15}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B5A53ED5-198D-94A6-CE07-0460F2F5DD15}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B5A53ED5-198D-94A6-CE07-0460F2F5DD15}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
