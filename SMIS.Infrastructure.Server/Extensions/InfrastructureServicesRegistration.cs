@@ -36,7 +36,7 @@ namespace SMIS.Infrastructure.Server.Extensions
     {
         public static IServiceCollection ConfigurePersistenceServices(this IServiceCollection services, IConfiguration configuration, IWebHostEnvironment environment)
         {
-            services.AddApplicationDbContext(configuration);
+            services.AddApplicationDbContext(configuration, environment);
             services.AddScoped<AuditInterceptor>();
             services.AddScoped<EntityPKInterceptor>();
             if (environment.IsProduction())
