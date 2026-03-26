@@ -87,6 +87,7 @@
         <ProjectReference Include="..\SMIS.Application\SMIS.Application.csproj" />
         <ProjectReference Include="..\SMIS.Domain\SMIS.Domain.csproj" />
         <ProjectReference Include="..\SMIS.Infrastructure.Mobile\SMIS.Infrastructure.Mobile.csproj" />
+        <ProjectReference Include="..\SMIS.UI.Shared\SMIS.UI.Shared.csproj" />
     </ItemGroup>
 
     <ItemGroup>

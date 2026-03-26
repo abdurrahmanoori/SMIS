@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using SMIS.Application.Common.Response;
 using SMIS.Domain.Common.Interfaces;
 using SMIS.Domain.Services;
 using SMIS.Infrastructure.Mobile.Context;
@@ -251,18 +252,4 @@ public class SyncService : ISyncService
     }
 }
 
-public class SyncResult
-{
-    public bool Success { get; set; }
-    public string Message { get; set; } = string.Empty;
-    public int SyncedCount { get; set; }
-    public int FailedCount { get; set; }
-}
-
-public class SyncAllResult
-{
-    public bool Success { get; set; }
-    public List<SyncResult> Results { get; set; } = new();
-    public int TotalSynced { get; set; }
-    public int TotalFailed { get; set; }
-}
+// SyncResult and SyncAllResult have been moved to SMIS.Application.Common.Response.SyncResult

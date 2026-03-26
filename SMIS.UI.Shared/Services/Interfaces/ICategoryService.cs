@@ -1,9 +1,8 @@
 using SMIS.Application.Common;
 using SMIS.Application.Common.Response;
 using SMIS.Application.DTO.Categories;
-using SMIS.Infrastructure.Mobile.Services.Sync;
 
-namespace SMIS.UI.Services.Interfaces;
+namespace SMIS.UI.Shared.Services.Interfaces;
 
 public interface ICategoryService
 {

@@ -1,6 +1,6 @@
-using SMIS.Infrastructure.Mobile.Services.Sync;
+using SMIS.Application.Common.Response;
 
-namespace SMIS.UI.Services.Interfaces;
+namespace SMIS.UI.Shared.Services.Interfaces;
 
 public interface ISyncFacade
 {
