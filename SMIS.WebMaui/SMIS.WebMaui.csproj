@@ -21,9 +21,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\SMIS.Domain\SMIS.Domain.csproj" />
     <ProjectReference Include="..\SMIS.Infrastructure.Server\SMIS.Infrastructure.Server.csproj" />
     <ProjectReference Include="..\SMIS.UI.Shared\SMIS.UI.Shared.csproj" />
-    <ProjectReference Include="..\SMIS.Infrastructure\SMIS.Infrastructure.Server.csproj" />
   </ItemGroup>
 
 </Project>

@@ -4,7 +4,6 @@ using SMIS.Infrastructure.Mobile.Context;
 
 namespace SMIS.Infrastructure.Mobile.Repositories;
 
-
 public class LocalUnitOfWork : IUnitOfWork
 {
     private readonly LocalDbContext _context;
@@ -13,11 +12,6 @@ public class LocalUnitOfWork : IUnitOfWork
     {
         _context = context;
     }
-
-  
-
- 
-
     public async Task StartTransactionAsync(CancellationToken cancellationToken)
     {
         await _context.Database.BeginTransactionAsync();
@@ -92,15 +86,9 @@ public class LocalUnitOfWork : IUnitOfWork
                     EntityName = e.Entity.GetType().Name,
                 }).ToList(),
         };
-
         // Save changes to the database
         await this._context.SaveChangesAsync(cancellationToken);
-
-
-
-
         //await this._context.Entry(entity!).ReloadAsync(cancellationToken);
-
         //return entity;
     }
 }
