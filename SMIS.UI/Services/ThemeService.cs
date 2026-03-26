@@ -1,6 +1,8 @@
+using SMIS.UI.Services.Interfaces;
+
 namespace SMIS.UI.Services;
 
-public class ThemeService
+public class ThemeService : IThemeService
 {
     public bool IsDarkMode { get; private set; }
 

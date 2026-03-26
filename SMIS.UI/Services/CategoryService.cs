@@ -7,10 +7,11 @@ using SMIS.Application.Features.Categories.Queries;
 using SMIS.Infrastructure.Mobile.Services.Sync;
 using SMIS.Infrastructure.Mobile.Services.Sync.Categories;
 using SMIS.UI.Services.Base;
+using SMIS.UI.Services.Interfaces;
 
 namespace SMIS.UI.Services;
 
-public class CategoryService : BaseService
+public class CategoryService : BaseService, ICategoryService
 {
     private readonly ICategorySyncService _categorySyncService;
 

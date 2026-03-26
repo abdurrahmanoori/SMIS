@@ -1,12 +1,14 @@
+using SMIS.UI.Services.Interfaces;
+
 namespace SMIS.UI.Services;
 
 public class DevelopmentAutoLoginService
 {
-    private readonly AuthServiceWrapper _authService;
+    private readonly IUiAuthService _authService;
     private const string DevUsername = "superadmin@smis.com";
     private const string DevPassword = "Pass123!";
 
-    public DevelopmentAutoLoginService(AuthServiceWrapper authService)
+    public DevelopmentAutoLoginService(IUiAuthService authService)
     {
         _authService = authService;
     }

@@ -1,10 +1,10 @@
 using SMIS.Application.Common.Response;
 using SMIS.Infrastructure.Mobile.Services.Auth;
-using SMIS.Infrastructure.Mobile.Services.Http;
+using SMIS.UI.Services.Interfaces;
 
 namespace SMIS.UI.Services;
 
-public class AuthServiceWrapper
+public class AuthServiceWrapper : IUiAuthService
 {
     private readonly IAuthService _authService;
 

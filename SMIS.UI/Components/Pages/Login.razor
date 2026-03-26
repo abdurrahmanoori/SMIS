@@ -1,8 +1,8 @@
 @page "/login"
-@using SMIS.UI.Services
+@using SMIS.UI.Services.Interfaces
 @using SMIS.UI.Components.Layout
 @layout AuthLayout
-@inject AuthServiceWrapper AuthService
+@inject IUiAuthService AuthService
 @inject NavigationManager Navigation
 
 <div class="login-wrapper">
