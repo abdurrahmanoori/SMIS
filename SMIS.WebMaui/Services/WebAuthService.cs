@@ -3,51 +3,57 @@ using SMIS.Application.Common.Response;
 using SMIS.Application.DTO.Auth;
 using SMIS.Application.Features.Auth.Commands;
 using SMIS.UI.Shared.Services.Interfaces;
+using SMIS.UI.Shared.Services.Interfaces;
 
 namespace SMIS.WebMaui.Services;
 
+/// <summary>
+/// Blazor Server auth service.
+/// Depends only on Application layer abstractions — no infrastructure types.
+/// </summary>
 public class WebAuthService : IUiAuthService
 {
     private readonly IMediator _mediator;
+    private readonly ISignInService _signInService;
 
-    // Tracks authentication state within the Blazor Server circuit lifetime
-    private bool _isAuthenticated = false;
-
-    public WebAuthService(IMediator mediator)
+    public WebAuthService(IMediator mediator, ISignInService signInService)
     {
         _mediator = mediator;
+        _signInService = signInService;
     }
 
     public async Task<Result<LoginResponse>> LoginAsync(string userName, string password)
     {
+        // All credential validation is handled by LoginCommand — single place, no duplication
         var result = await _mediator.Send(new LoginCommand(new LoginDto
         {
             Email = userName,
             Password = password
         }));
 
-        if (result.Success && result.Response != null)
+        if (!result.Success || result.Response == null)
+            return Result<LoginResponse>.FailureResult(result.Message ?? "Login failed.");
+
+        // Establish the host session (cookie) via the abstraction
+        await _signInService.SignInAsync(result.Response.UserId);
+
+        return Result<LoginResponse>.SuccessResult(new LoginResponse
         {
-            _isAuthenticated = true;
-
-            // Map LoginResponseDto -> LoginResponse (shared contract)
-            return Result<LoginResponse>.SuccessResult(new LoginResponse
-            {
-                Token = result.Response.Token,
-                UserId = result.Response.UserId,
-                UserName = result.Response.Email
-            });
-        }
-
-        return Result<LoginResponse>.FailureResult(result.Message ?? "Login failed.");
+            // Token is empty — Blazor Server relies on the Identity cookie, not a JWT
+            Token = string.Empty,
+            UserId = result.Response.UserId,
+            UserName = result.Response.Email
+        });
     }
 
-    public Task LogoutAsync()
+    public async Task LogoutAsync()
     {
-        _isAuthenticated = false;
-        return Task.CompletedTask;
+        await _signInService.SignOutAsync();
     }
 
     public Task<bool> IsAuthenticatedAsync()
-        => Task.FromResult(_isAuthenticated);
+    {
+        // Session state is owned by ISignInService implementation
+        return _signInService.IsAuthenticatedAsync();
+    }
 }
