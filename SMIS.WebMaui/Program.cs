@@ -1,6 +1,5 @@
-using Microsoft.AspNetCore.Identity;
 using SMIS.Application.Extensions;
-using SMIS.Domain.Entities.Identity.Entity;
+using SMIS.Application.Identity.IServices;
 using SMIS.Infrastructure.Server.Context;
 using SMIS.Infrastructure.Server.Extensions;
 using SMIS.UI.Shared.Services.Interfaces;
@@ -24,22 +23,16 @@ builder.Services.AddSyncfusionBlazor();
 builder.Services.ConfigurePersistenceServices(builder.Configuration, builder.Environment);
 builder.Services.ConfigureApplicationServices();
 
-// Register ASP.NET Identity (UserManager, SignInManager) without JWT bearer middleware
-// JWT is only needed in SMIS.Api — this app talks directly to the database
-builder.Services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
-{
-    options.Password.RequireDigit = false;
-    options.Password.RequireLowercase = false;
-    options.Password.RequireNonAlphanumeric = false;
-    options.Password.RequireUppercase = false;
-    options.Password.RequiredLength = 6;
-})
-.AddEntityFrameworkStores<AppDbContext>()
-.AddDefaultTokenProviders();
+// Register ASP.NET Identity (UserManager, SignInManager) — no JWT bearer, Blazor Server uses cookie auth
+builder.Services.AddIdentityServices<AppDbContext>();
 
 builder.Services.AddHttpContextAccessor();
 
 // Register web-specific implementations of shared service interfaces
+// NullTokenGenerator satisfies ITokenGenerator for LoginCommand DI — token is unused here,
+// Blazor Server auth is handled by the Identity cookie via SignInManager
+builder.Services.AddScoped<ITokenGenerator, NullTokenGenerator>();
+builder.Services.AddScoped<ISignInService, CookieSignInService>();
 builder.Services.AddScoped<IUiAuthService, WebAuthService>();
 builder.Services.AddScoped<ICategoryService, WebCategoryService>();
 builder.Services.AddScoped<ISyncFacade, WebSyncFacade>();

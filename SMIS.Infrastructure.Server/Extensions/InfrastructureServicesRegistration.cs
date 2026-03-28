@@ -51,6 +51,9 @@ namespace SMIS.Infrastructure.Server.Extensions
             // Register ICurrentUser for Web API (uses HttpContext)
             services.AddScoped<ICurrentUser, ServerCurrentUser>();
 
+            // Register JWT token generator — only the infrastructure layer knows about JWT
+            services.AddScoped<ITokenGenerator, JwtTokenGenerator>();
+
             // Automatically register repositories with Scrutor (no magic strings)
             services.Scan(scan => scan
                 .FromAssemblies(typeof(InfrastructureServicesRegistration).Assembly)

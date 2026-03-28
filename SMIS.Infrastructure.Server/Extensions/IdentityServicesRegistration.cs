@@ -11,7 +11,11 @@ namespace SMIS.Infrastructure.Server.Extensions;
 
 public static class IdentityServicesRegistration
 {
-    public static IServiceCollection ConfigureIdentityServices<TContext>(this IServiceCollection services, IConfiguration configuration)
+    /// <summary>
+    /// Registers ASP.NET Identity (UserManager, SignInManager, RoleManager).
+    /// Called by all hosts — API, Blazor Server, etc.
+    /// </summary>
+    public static IServiceCollection AddIdentityServices<TContext>(this IServiceCollection services)
         where TContext : DbContext
     {
         services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
@@ -25,6 +29,15 @@ public static class IdentityServicesRegistration
         .AddEntityFrameworkStores<TContext>()
         .AddDefaultTokenProviders();
 
+        return services;
+    }
+
+    /// <summary>
+    /// Registers JWT bearer authentication.
+    /// Called only by hosts that authenticate via JWT — SMIS.Api.
+    /// </summary>
+    public static IServiceCollection AddJwtAuthentication(this IServiceCollection services, IConfiguration configuration)
+    {
         services.AddAuthentication(options =>
         {
             options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -45,8 +58,6 @@ public static class IdentityServicesRegistration
             };
         });
 
-        services.AddHttpContextAccessor();
-        
         return services;
     }
 }

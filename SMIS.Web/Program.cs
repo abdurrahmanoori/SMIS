@@ -13,7 +13,7 @@ builder.Services.AddMudServices();
 builder.Services.AddHttpContextAccessor();
 
 // Identity — registers UserManager, RoleManager, and ASP.NET Identity
-builder.Services.ConfigureIdentityServices<AppDbContext>(builder.Configuration);
+builder.Services.AddIdentityServices<AppDbContext>();
 
 // Application layer — MediatR, validators, pipeline behaviors
 builder.Services.ConfigureApplicationServices();
