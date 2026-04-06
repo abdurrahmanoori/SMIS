@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using SMIS.Infrastructure.Server.Context;
@@ -16,6 +17,18 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>, IAsyn
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
+        // Use Testing environment so PublicIdGenerator generates GUIDs (not sequential IDs)
+        builder.UseEnvironment("Testing");
+
+        builder.ConfigureAppConfiguration((context, config) =>
+        {
+            // Override the Environment config key so PublicIdGenerator picks up Testing
+            config.AddInMemoryCollection(new Dictionary<string, string?>
+            {
+                ["Environment"] = "Testing"
+            });
+        });
+
         builder.ConfigureServices(services =>
         {
             // Remove existing registration
@@ -50,8 +63,6 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>, IAsyn
             db.Database.EnsureCreated();
         });
 
-        // Set development environment for integration tests
-        builder.UseEnvironment("Development");
     }
 
     public async Task InitializeAsync( )
