@@ -1,3 +1,5 @@
+Whenever I give you a prompt, first rewrite it clearly in proper English to reflect exactly what I mean. Then proceed with the task.
+
 please do not include any .md files unsless I ask you. I mean do not include any markdown for summary or anything else.
 
 whenever I ask you to modify code or introduce changes in the codebase, first check whether the change aligns with good standards and maintainable practices. Only apply the change if it follows proper design and coding principles. If the requested approach is not a good practice, clearly explain why it is problematic and describe the disadvantages of that approach.
