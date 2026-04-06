@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.14.36623.8
+# Visual Studio Version 18
+VisualStudioVersion = 18.5.11626.173 insiders
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SMIS.Api", "SMIS.Api\SMIS.Api.csproj", "{6094DC5B-079C-4458-A6DB-BADB2C97FDBB}"
 EndProject
@@ -24,6 +24,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SMIS.Infrastructure.Server", "SMIS.Infrastructure.Server\SMIS.Infrastructure.Server.csproj", "{B5A53ED5-198D-94A6-CE07-0460F2F5DD15}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SMIS.UI.Test", "SMIS.UI.Test\SMIS.UI.Test.csproj", "{AD9A630B-EE8E-47F7-B970-15524068473D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SMIS.Infra.M.Test", "SMIS.Infra.M.Test\SMIS.Infra.M.Test.csproj", "{698115C4-5FEB-4E4C-B1DC-278F1811CF0C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -168,6 +170,18 @@ Global
 		{AD9A630B-EE8E-47F7-B970-15524068473D}.Release|x64.Build.0 = Release|Any CPU
 		{AD9A630B-EE8E-47F7-B970-15524068473D}.Release|x86.ActiveCfg = Release|Any CPU
 		{AD9A630B-EE8E-47F7-B970-15524068473D}.Release|x86.Build.0 = Release|Any CPU
+		{698115C4-5FEB-4E4C-B1DC-278F1811CF0C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{698115C4-5FEB-4E4C-B1DC-278F1811CF0C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{698115C4-5FEB-4E4C-B1DC-278F1811CF0C}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{698115C4-5FEB-4E4C-B1DC-278F1811CF0C}.Debug|x64.Build.0 = Debug|Any CPU
+		{698115C4-5FEB-4E4C-B1DC-278F1811CF0C}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{698115C4-5FEB-4E4C-B1DC-278F1811CF0C}.Debug|x86.Build.0 = Debug|Any CPU
+		{698115C4-5FEB-4E4C-B1DC-278F1811CF0C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{698115C4-5FEB-4E4C-B1DC-278F1811CF0C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{698115C4-5FEB-4E4C-B1DC-278F1811CF0C}.Release|x64.ActiveCfg = Release|Any CPU
+		{698115C4-5FEB-4E4C-B1DC-278F1811CF0C}.Release|x64.Build.0 = Release|Any CPU
+		{698115C4-5FEB-4E4C-B1DC-278F1811CF0C}.Release|x86.ActiveCfg = Release|Any CPU
+		{698115C4-5FEB-4E4C-B1DC-278F1811CF0C}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
