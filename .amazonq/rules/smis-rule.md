@@ -1,4 +1,4 @@
-Whenever I give you a prompt, first rewrite it clearly in proper English to reflect exactly what I mean. Then proceed with the task.
+Whenever I give you a prompt(not the error or stack trance), first rewrite it clearly in proper English to reflect exactly what I mean. Then proceed with the task.
 
 please do not include any .md files unsless I ask you. I mean do not include any markdown for summary or anything else.
 
