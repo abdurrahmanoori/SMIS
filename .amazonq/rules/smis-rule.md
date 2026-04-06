@@ -7,3 +7,5 @@ Additionally, if you encounter any part of the code that does not follow standar
 If you need to introduce any new service or component, first check whether it already exists in the project and reuse it if available. If it does not exist, then create it according to the existing project structure and conventions.
 
 please make sure to do not remove any comment from my classes and wherever if i wrote comments.
+
+Please do not run my project, restore it, or execute any migrations. If any of these steps are required, simply inform me at the end so I can handle them myself.
