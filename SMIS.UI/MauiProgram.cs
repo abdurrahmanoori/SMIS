@@ -14,9 +14,6 @@ namespace SMIS.UI
     {
         public static MauiApp CreateMauiApp()
         {
-            // Register Syncfusion license key
-            SyncfusionLicenseProvider.RegisterLicense("Ngo9BigBOggjHTQxAR8/V1NDaF5cWWtCf1FpRmJGdld5fUVHYVZUTXxaS00DNHVRdkdlWXxfcHRVRWBZWER2X0dWYU4=");
-
             var builder = MauiApp.CreateBuilder();
             builder
                 .UseMauiApp<App>()
@@ -36,6 +33,19 @@ namespace SMIS.UI
                     .Build();
                 builder.Configuration.AddConfiguration(config);
             }
+
+            // Load secrets (git-ignored) — overrides appsettings.json values if present
+            using var secretsStream = assembly.GetManifestResourceStream("SMIS.UI.appsettings.secrets.json");
+            if (secretsStream != null)
+            {
+                var secretsConfig = new ConfigurationBuilder()
+                    .AddJsonStream(secretsStream)
+                    .Build();
+                builder.Configuration.AddConfiguration(secretsConfig);
+            }
+
+            // Syncfusion license key loaded from appsettings.secrets.json (git-ignored)
+            SyncfusionLicenseProvider.RegisterLicense(builder.Configuration["SyncfusionLicenseKey"]);
 
             // Register application services (includes Mobile Infrastructure)
             builder.Services.AddAppServices(builder.Configuration);
