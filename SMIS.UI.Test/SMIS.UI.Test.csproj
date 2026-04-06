@@ -1,0 +1,35 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <!-- Must be net9.0 (not MAUI) — MAUI targets cannot run in xUnit -->
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="xunit" />
+    <PackageReference Include="xunit.runner.visualstudio">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" />
+    <PackageReference Include="coverlet.collector">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="FluentAssertions" />
+    <PackageReference Include="Moq" />
+    <PackageReference Include="bunit" />
+    <PackageReference Include="Bogus" />
+    <PackageReference Include="Syncfusion.Blazor.Core" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- SMIS.UI.Shared contains the interfaces and razor components under test -->
+    <ProjectReference Include="..\SMIS.UI.Shared\SMIS.UI.Shared.csproj" />
+    <!-- SMIS.Application needed for DTOs and Result<T> -->
+    <ProjectReference Include="..\SMIS.Application\SMIS.Application.csproj" />
+  </ItemGroup>
+
+</Project>

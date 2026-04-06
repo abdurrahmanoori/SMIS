@@ -267,6 +267,9 @@
         showDialog = true;
     }
 
+    // Public wrapper for testability
+    public void OpenAddDialogPublic() => OpenAddDialog();
+
     private void OpenEditDialog(CategoryDto category)
     {
         dialogTitle = "Edit Category";
@@ -334,11 +337,17 @@
         }
     }
 
+    // Public wrapper for testability
+    public Task SaveCategoryPublic() => SaveCategory();
+
     private void OpenDeleteConfirm(CategoryDto category)
     {
         categoryToDelete = category;
         showDeleteConfirm = true;
     }
+
+    // Public wrapper for testability — bUnit cannot click inside Syncfusion SfGrid row templates
+    public void OpenDeleteConfirmPublic(CategoryDto category) => OpenDeleteConfirm(category);
 
     private async Task ConfirmDelete()
     {
@@ -361,6 +370,9 @@
         }
     }
 
+    // Public wrapper for testability
+    public Task ConfirmDeletePublic() => ConfirmDelete();
+
     private async Task SyncData()
     {
         await ToastHelper.ShowInfoAsync(ToastObj!, "Syncing...", "Category");
@@ -376,6 +388,9 @@
             await ToastHelper.ShowErrorAsync(ToastObj!, result.Message ?? "Sync failed", "Category");
         }
     }
+
+    // Public wrapper for testability
+    public Task SyncDataPublic() => SyncData();
 
     private async Task RefreshGrid()
     {
