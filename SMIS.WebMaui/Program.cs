@@ -8,10 +8,10 @@ using SMIS.WebMaui.Services;
 using Syncfusion.Blazor;
 using Syncfusion.Licensing;
 
-// Register Syncfusion license key
-SyncfusionLicenseProvider.RegisterLicense("Ngo9BigBOggjHTQxAR8/V1NDaF5cWWtCf1FpRmJGdld5fUVHYVZUTXxaS00DNHVRdkdlWXxfcHRVRWBZWER2X0dWYU4=");
-
 var builder = WebApplication.CreateBuilder(args);
+
+// Syncfusion license key is stored in appsettings.Development.json (git-ignored) or as an environment variable
+SyncfusionLicenseProvider.RegisterLicense(builder.Configuration["SyncfusionLicenseKey"]);
 
 // Add Blazor Server with interactive server components
 builder.Services.AddRazorComponents()
