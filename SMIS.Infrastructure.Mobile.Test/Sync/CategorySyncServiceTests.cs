@@ -4,6 +4,7 @@ using SMIS.Application.Common.Response;
 using SMIS.Application.DTO.Categories;
 using SMIS.Infrastructure.Mobile.Services.Http;
 using SMIS.Infrastructure.Mobile.Services.Identity;
+using SMIS.Infrastructure.Mobile.Services.Platform;
 using SMIS.Infrastructure.Mobile.Services.Sync.Categories;
 using SMIS.Infrastructure.Mobile.Test.TestInfrastructure;
 using SMIS.Infrastructure.Mobile.Test.Utilities;
@@ -17,12 +18,19 @@ public class CategorySyncServiceTests : BaseSyncTest
     private readonly Mock<IApiClient> _apiClient = new();
     private readonly Mock<IConnectivity> _connectivity = new();
     private readonly Mock<IMobileCurrentUser> _currentUser = new();
+    private readonly Mock<IPreferencesService> _preferences = new();
     private readonly CategoryEntityBuilder _builder = new();
 
     public CategorySyncServiceTests(ITestOutputHelper output) : base(output)
     {
         // Default: authenticated user with a known shop
         _currentUser.Setup(u => u.GetShopId()).Returns("shop-1");
+
+        // Default: preferences returns the epoch fallback so every test starts
+        // with a clean pull cursor without hitting the real MAUI Preferences API.
+        _preferences
+            .Setup(p => p.Get(It.IsAny<string>(), It.IsAny<string>()))
+            .Returns((string _, string def) => def);
     }
 
     /// <summary>
@@ -32,7 +40,7 @@ public class CategorySyncServiceTests : BaseSyncTest
     /// </summary>
     /// <returns>A CategorySyncService instance wired for unit/integration tests.</returns>
     private CategorySyncService CreateSut() =>
-        new(Db, _apiClient.Object, _currentUser.Object, _connectivity.Object);
+        new(Db, _apiClient.Object, _currentUser.Object, _preferences.Object, _connectivity.Object);
 
     private void SetOnline() =>
         _connectivity.Setup(c => c.NetworkAccess).Returns(NetworkAccess.Internet);
