@@ -1,12 +1,10 @@
 using AutoMapper;
 using MediatR;
-using SMIS.Application.DTO.Categories;
 using SMIS.Application.Common;
 using SMIS.Application.Common.Response;
-using SMIS.Application.Extensions;
+using SMIS.Application.DTO.Categories;
 using SMIS.Application.Identity.IServices;
 using SMIS.Application.Repositories.Categories;
-using SMIS.Application.Repositories.Localization;
 
 namespace SMIS.Application.Features.Categories.Queries
 {

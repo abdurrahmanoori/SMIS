@@ -3,7 +3,6 @@ using SMIS.Application.Common.Response;
 using SMIS.Application.DTO.Auth;
 using SMIS.Application.Features.Auth.Commands;
 using SMIS.UI.Shared.Services.Interfaces;
-using SMIS.UI.Shared.Services.Interfaces;
 
 namespace SMIS.WebMaui.Services;
 
