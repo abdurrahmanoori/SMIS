@@ -8,6 +8,7 @@ using SMIS.Infrastructure.Mobile.Services;
 using SMIS.Infrastructure.Mobile.Services.Auth;
 using SMIS.Infrastructure.Mobile.Services.Http;
 using SMIS.Infrastructure.Mobile.Services.Identity;
+using SMIS.Infrastructure.Mobile.Services.Platform;
 using SMIS.Infrastructure.Mobile.Services.Sync;
 using SMIS.Infrastructure.Mobile.Services.Sync.Categories;
 
@@ -22,6 +23,7 @@ public static class MobileInfrastructureServiceRegistration
     {
         // Current User
         services.AddSingleton<IMobileCurrentUser, MobileCurrentUser>();
+        services.AddSingleton<IPreferencesService, MauiPreferencesService>();
         services.AddSingleton<LocalAuditInterceptor>();
         services.AddSingleton<EntityPKInterceptor>();
         services.AddSingleton<TombstoneInterceptor>();
