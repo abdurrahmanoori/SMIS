@@ -25,6 +25,12 @@ public class CategorySyncServiceTests : BaseSyncTest
         _currentUser.Setup(u => u.GetShopId()).Returns("shop-1");
     }
 
+    /// <summary>
+    /// Creates the CategorySyncService used in tests, injecting the test LocalDbContext
+    /// and the configured mock dependencies (<see cref="_apiClient"/>, <see cref="_currentUser"/>, 
+    /// and <see cref="_connectivity"/>).
+    /// </summary>
+    /// <returns>A CategorySyncService instance wired for unit/integration tests.</returns>
     private CategorySyncService CreateSut() =>
         new(Db, _apiClient.Object, _currentUser.Object, _connectivity.Object);
 
