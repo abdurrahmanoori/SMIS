@@ -6,6 +6,7 @@ using SMIS.Domain.Services;
 using SMIS.Infrastructure.Mobile.Context;
 using SMIS.Infrastructure.Mobile.Services.Http;
 using SMIS.Infrastructure.Mobile.Services.Identity;
+using SMIS.Infrastructure.Mobile.Services.Platform;
 using SMIS.Infrastructure.Mobile.Services.Sync;
 
 namespace SMIS.Infrastructure.Mobile.Services.Sync.Categories;
@@ -21,6 +22,7 @@ public class CategorySyncService : ICategorySyncService
     private readonly IApiClient _apiClient;
     private readonly IConnectivity? _connectivity;
     private readonly IMobileCurrentUser _currentUser;
+    private readonly IPreferencesService _preferences;
 
     // Scope the timestamp key per shop so different shops on the same device
     // each maintain their own independent pull cursor.
@@ -30,11 +32,13 @@ public class CategorySyncService : ICategorySyncService
         LocalDbContext localDb,
         IApiClient apiClient,
         IMobileCurrentUser currentUser,
+        IPreferencesService preferences,
         IConnectivity? connectivity = null)
     {
         _localDb = localDb;
         _apiClient = apiClient;
         _currentUser = currentUser;
+        _preferences = preferences;
         _connectivity = connectivity;
     }
 
@@ -50,7 +54,7 @@ public class CategorySyncService : ICategorySyncService
         // On the very first pull, DateTime.MinValue is used as fallback,
         // which tells the server "give me everything from the beginning".
         var lastPull = DateTime.Parse(
-            Preferences.Get(timestampKey, DateTime.MinValue.ToString("yyyy-MM-ddTHH:mm:ss")));
+            _preferences.Get(timestampKey, DateTime.MinValue.ToString("yyyy-MM-ddTHH:mm:ss")));
         var response = await _apiClient.GetAsync<List<CategoryDto>>(
             $"/api/Category/pull?changedSince={lastPull:yyyy-MM-ddTHH:mm:ss}");
         /*
@@ -125,7 +129,7 @@ public class CategorySyncService : ICategorySyncService
         await _localDb.SaveChangesAsync();
 
         // Advance the pull cursor so the next pull only fetches changes after this moment.
-        Preferences.Set(timestampKey, DateTimeService.UtcNow.ToString("o"));
+        _preferences.Set(timestampKey, DateTimeService.UtcNow.ToString("o"));
 
         return new SyncResult
         {
