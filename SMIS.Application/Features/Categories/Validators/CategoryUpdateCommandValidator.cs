@@ -11,7 +11,7 @@ namespace SMIS.Application.Features.Categories.Validators
                 .NotEmpty().WithMessage("Category ID is required");
 
             RuleFor(x => x.CategoryUpdateDto.Name)
-                .NotEmpty().WithMessage("Name is required from and this message comes app layer update opeartion")
+                .NotEmpty().WithMessage("Category Name is required")
                 .MaximumLength(200).WithMessage("Name must not exceed 200 characters");
 
             RuleFor(x => x.CategoryUpdateDto.Code)
