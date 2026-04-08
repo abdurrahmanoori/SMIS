@@ -66,17 +66,20 @@ namespace SMIS.Infrastructure.Server.Interceptors
                 }
                 else if (entry.State == EntityState.Modified)
                 {
-                    if (entry.Entity.UpdatedDate == default)
+                    // For server-side updates (non-sync), UpdatedDate/UpdatedBy are not pre-set by the command,
+                    // so they retain their old tracked value. We must always stamp them here for direct API calls.
+                    // For sync pushes, the command pre-sets them from the DTO before SaveChanges, so we skip.
+                    if (!entry.Property(e => e.UpdatedDate).IsModified || entry.Entity.UpdatedDate == null)
                     {
                         entry.Entity.UpdatedDate = DateTimeService.UtcNow;
                     }
-                    if (string.IsNullOrEmpty(entry.Entity.UpdatedBy))
+                    if (!entry.Property(e => e.UpdatedBy).IsModified || string.IsNullOrEmpty(entry.Entity.UpdatedBy))
                     {
                         entry.Entity.UpdatedBy = _currentUser.GetId();
                     }
                     // Respect client-provided LastModifiedUtc (offline sync scenario).
                     // Only stamp server time when the update originated directly on the server.
-                    if (entry.Entity.LastModifiedUtc == default)
+                    if (!entry.Property(e => e.LastModifiedUtc).IsModified || entry.Entity.LastModifiedUtc == default)
                     {
                         entry.Entity.LastModifiedUtc = DateTimeService.UtcNow;
                     }
