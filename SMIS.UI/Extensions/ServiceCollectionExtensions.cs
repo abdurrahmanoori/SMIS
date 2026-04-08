@@ -41,6 +41,7 @@ public static class ServiceCollectionExtensions
         services.AddSingleton(Connectivity.Current);
         services.AddScoped<IUiAuthService, AuthServiceWrapper>();
         services.AddScoped<ICategoryService, CategoryService>();
+        services.AddScoped<IShopService, ShopService>();
         services.AddScoped<ISyncFacade, SyncFacade>();
         services.AddSingleton<IThemeService, ThemeService>();
         services.AddScoped<DevelopmentAutoLoginService>();

@@ -27,12 +27,16 @@ namespace SMIS.Api.Controllers
             HandleResultResponse(await Mediator.Send(new ShopGetByIdQuery(id)));
 
         [HttpPut("{id}")]
-        public async Task<ActionResult<ShopDto>> Update(string id, ShopCreateDto dto) =>
+        public async Task<ActionResult<ShopDto>> Update(string id, ShopUpdateDto dto) =>
             HandleResultResponse(await Mediator.Send(new ShopUpdateCommand(id, dto)));
 
         [HttpDelete("{id}")]
         public async Task<ActionResult<Unit>> Delete(string id) =>
             HandleResultResponse(await Mediator.Send(new ShopDeleteCommand(id)));
+
+        [HttpGet("pull")]
+        public async Task<ActionResult<List<ShopDto>>> Pull([FromQuery] DateTime changedSince) =>
+            HandleResultResponse(await Mediator.Send(new ShopPullQuery(changedSince)));
     }
 }
 

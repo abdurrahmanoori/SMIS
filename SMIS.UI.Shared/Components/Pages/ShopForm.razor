@@ -1,0 +1,237 @@
+@page "/shops/create"
+@using SMIS.UI.Shared.Services.Interfaces
+@using SMIS.Application.DTO.Shops
+@using SMIS.Domain.Enums
+@using Syncfusion.Blazor.Buttons
+@using Syncfusion.Blazor.Cards
+@using Syncfusion.Blazor.Inputs
+@using Syncfusion.Blazor.Notifications
+@inject IShopService ShopService
+@inject NavigationManager Navigation
+
+<div class="page-container">
+    <div class="page-header">
+        <h3>🏪 Create Shop</h3>
+    </div>
+
+    <SfCard>
+        <CardHeader Title="Shop Information" SubTitle="Fill in the details below"></CardHeader>
+        <CardContent>
+            @if (!string.IsNullOrEmpty(_errorMessage))
+            {
+                <SfMessage Severity="MessageSeverity.Error" ShowIcon="true" ShowCloseIcon="true"
+                    Closed="@(() => _errorMessage = "")">
+                    @_errorMessage
+                </SfMessage>
+            }
+
+            <div class="form-group">
+                <label class="required">Name</label>
+                <SfTextBox @bind-Value="@_model.Name" Placeholder="Enter shop name"
+                    FloatLabelType="FloatLabelType.Auto"></SfTextBox>
+                @if (_validationErrors.ContainsKey("Name"))
+                {
+                    <span class="error-text">@_validationErrors["Name"]</span>
+                }
+            </div>
+
+            <div class="form-group">
+                <label class="required">Shop Type</label>
+                <SfDropDownList TItem="ShopType" TValue="ShopType" @bind-Value="@_model.ShopType"
+                    DataSource="@_shopTypes" Placeholder="Select shop type" FloatLabelType="FloatLabelType.Auto">
+                </SfDropDownList>
+                @if (_validationErrors.ContainsKey("ShopType"))
+                {
+                    <span class="error-text">@_validationErrors["ShopType"]</span>
+                }
+            </div>
+
+            <div class="form-group">
+                <label>Address</label>
+                <SfTextBox @bind-Value="@_model.Address" Placeholder="Enter address"
+                    FloatLabelType="FloatLabelType.Auto"></SfTextBox>
+            </div>
+
+            <div class="form-group">
+                <label>Phone Number</label>
+                <SfTextBox @bind-Value="@_model.PhoneNumber" Placeholder="Enter phone number"
+                    FloatLabelType="FloatLabelType.Auto"></SfTextBox>
+                @if (_validationErrors.ContainsKey("PhoneNumber"))
+                {
+                    <span class="error-text">@_validationErrors["PhoneNumber"]</span>
+                }
+            </div>
+
+            <div class="form-group">
+                <label>Email</label>
+                <SfTextBox @bind-Value="@_model.Email" Placeholder="Enter email" FloatLabelType="FloatLabelType.Auto">
+                </SfTextBox>
+                @if (_validationErrors.ContainsKey("Email"))
+                {
+                    <span class="error-text">@_validationErrors["Email"]</span>
+                }
+            </div>
+
+            <div class="form-group">
+                <label>Tax Number</label>
+                <SfTextBox @bind-Value="@_model.TaxNumber" Placeholder="Enter tax number"
+                    FloatLabelType="FloatLabelType.Auto"></SfTextBox>
+                @if (_validationErrors.ContainsKey("TaxNumber"))
+                {
+                    <span class="error-text">@_validationErrors["TaxNumber"]</span>
+                }
+            </div>
+
+            <div class="form-group">
+                <SfCheckBox @bind-Checked="@_model.IsActive" Label="Active"></SfCheckBox>
+            </div>
+
+            <div class="form-actions">
+                <SfButton Content="Cancel" CssClass="e-outline" OnClick="Cancel"></SfButton>
+                <SfButton Content="@(_isSaving ? "Creating..." : "Create")" IsPrimary="true" Disabled="@_isSaving"
+                    OnClick="SaveShop"></SfButton>
+            </div>
+        </CardContent>
+    </SfCard>
+</div>
+
+<SfToast @ref="ToastObj" Title="Shop" Content="@_toastMessage" ShowCloseButton="true">
+    <ToastPosition X="Right" Y="Top"></ToastPosition>
+</SfToast>
+
+@code {
+    private ShopCreateDto _model = new() { IsActive = true };
+    private Dictionary<string, string> _validationErrors = new();
+    private bool _isSaving = false;
+    private string _errorMessage = "";
+    private string _toastMessage = "";
+    private SfToast? ToastObj;
+    private List<ShopType> _shopTypes = Enum.GetValues<ShopType>().ToList();
+
+    private bool ValidateForm()
+    {
+        _validationErrors.Clear();
+
+        if (string.IsNullOrWhiteSpace(_model.Name))
+        {
+            _validationErrors["Name"] = "Shop name is required";
+        }
+        else if (_model.Name.Length > 200)
+        {
+            _validationErrors["Name"] = "Shop name must not exceed 200 characters";
+        }
+
+        if (!string.IsNullOrWhiteSpace(_model.Address) && _model.Address.Length > 500)
+        {
+            _validationErrors["Address"] = "Address must not exceed 500 characters";
+        }
+
+        if (!string.IsNullOrWhiteSpace(_model.PhoneNumber))
+        {
+            if (_model.PhoneNumber.Length < 8 || _model.PhoneNumber.Length > 20)
+            {
+                _validationErrors["PhoneNumber"] = "Phone number must be between 8 and 20 characters";
+            }
+        }
+
+        if (!string.IsNullOrWhiteSpace(_model.Email))
+        {
+            if (_model.Email.Length > 100 || !_model.Email.Contains("@"))
+            {
+                _validationErrors["Email"] = "Email must be a valid email address";
+            }
+        }
+
+        if (!string.IsNullOrWhiteSpace(_model.TaxNumber))
+        {
+            if (_model.TaxNumber.Length < 5 || _model.TaxNumber.Length > 20)
+            {
+                _validationErrors["TaxNumber"] = "Tax number must be between 5 and 20 characters";
+            }
+        }
+
+        return _validationErrors.Count == 0;
+    }
+
+    private async Task SaveShop()
+    {
+        if (!ValidateForm()) return;
+
+        _isSaving = true;
+        _errorMessage = "";
+
+        try
+        {
+            var result = await ShopService.CreateAsync(_model);
+
+            if (result.Success)
+            {
+                _toastMessage = "Shop created successfully!";
+                if (ToastObj != null)
+                {
+                    await ToastObj.ShowAsync();
+                }
+                await Task.Delay(1000);
+                Navigation.NavigateTo("/shops");
+            }
+            else
+            {
+                _errorMessage = result.Message ?? "Failed to create shop";
+            }
+        }
+        catch (Exception ex)
+        {
+            _errorMessage = $"An error occurred: {ex.Message}";
+        }
+        finally
+        {
+            _isSaving = false;
+        }
+    }
+
+    private void Cancel()
+    {
+        Navigation.NavigateTo("/shops");
+    }
+}
+
+<style>
+    .page-container {
+        padding: 20px;
+        max-width: 600px;
+        margin: 0 auto;
+    }
+
+    .page-header {
+        margin-bottom: 20px;
+    }
+
+    .page-header h3 {
+        margin: 0;
+        font-size: 24px;
+        font-weight: 600;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .form-group label.required::after {
+        content: " *";
+        color: #e74c3c;
+    }
+
+    .error-text {
+        display: block;
+        color: #e74c3c;
+        font-size: 12px;
+        margin-top: 4px;
+    }
+
+    .form-actions {
+        display: flex;
+        gap: 10px;
+        justify-content: flex-end;
+        margin-top: 30px;
+    }
+</style>

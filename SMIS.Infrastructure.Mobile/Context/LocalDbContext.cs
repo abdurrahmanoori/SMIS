@@ -13,6 +13,7 @@ public class LocalDbContext : DbContext
     public LocalDbContext(DbContextOptions<LocalDbContext> options) : base(options) { }
 
     public DbSet<Category> Categories => Set<Category>();
+    public DbSet<Shop> Shops => Set<Shop>();
     public DbSet<Language> Languages => Set<Language>();
     public DbSet<TranslationKey> TranslationKeys => Set<TranslationKey>();
     public DbSet<Translation> Translations => Set<Translation>();
@@ -34,6 +35,7 @@ public class LocalDbContext : DbContext
         base.OnModelCreating(modelBuilder);
 
         modelBuilder.ApplyConfiguration(new CategoryConfiguration());
+        modelBuilder.ApplyConfiguration(new ShopConfiguration());
         modelBuilder.ApplyConfiguration(new LanguageConfiguration());
         modelBuilder.ApplyConfiguration(new TranslationKeyConfiguration());
         modelBuilder.ApplyConfiguration(new TranslationConfiguration());
@@ -41,5 +43,6 @@ public class LocalDbContext : DbContext
 
         // Seed data
         CategorySeed.DataSeed(modelBuilder);
+        ShopSeed.DataSeed(modelBuilder);
     }
 }

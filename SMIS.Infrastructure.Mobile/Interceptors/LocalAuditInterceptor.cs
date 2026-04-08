@@ -71,13 +71,13 @@ public class LocalAuditInterceptor : SaveChangesInterceptor
         {
             if (entry.State == EntityState.Added)
             {
-                entry.Entity.CreatedDate = DateTimeService.Now;
+                entry.Entity.CreatedDate = DateTimeService.UtcNow;
                 entry.Entity.CreatedBy = userId;
             }
             else if (entry.State == EntityState.Modified && !IsSyncOnly(entry))
             {
                 // Skip audit update for sync-only saves to avoid triggering another sync cycle.
-                entry.Entity.UpdatedDate = DateTimeService.Now;
+                entry.Entity.UpdatedDate = DateTimeService.UtcNow;
                 entry.Entity.UpdatedBy = userId;
             }
         }

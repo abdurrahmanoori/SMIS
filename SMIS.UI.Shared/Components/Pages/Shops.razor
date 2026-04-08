@@ -1,0 +1,644 @@
+@page "/shops"
+@using SMIS.UI.Shared.Services.Interfaces
+@using SMIS.UI.Shared.Helpers
+@using SMIS.Application.DTO.Shops
+@using SMIS.Application.Common.Response
+@using SMIS.Domain.Enums
+@using Syncfusion.Blazor.Grids
+@using Syncfusion.Blazor.Buttons
+@using Syncfusion.Blazor.Cards
+@using Syncfusion.Blazor.Notifications
+@using Syncfusion.Blazor.Popups
+@using Syncfusion.Blazor.Inputs
+@using Syncfusion.Blazor.DropDowns
+@inject IShopService ShopService
+@inject NavigationManager Navigation
+
+<SfCard>
+    <CardHeader Title="Shop Management" />
+    <CardContent>
+        <div class="card-actions">
+            <SfButton CssClass="e-primary" IconCss="e-icons e-plus" @onclick="OpenAddDialog">Add Shop</SfButton>
+            <SfButton CssClass="e-success" IconCss="e-icons e-export-excel" @onclick="ExportToExcel">Export Excel
+            </SfButton>
+            <SfButton CssClass="e-warning" IconCss="e-icons e-export-pdf" @onclick="ExportToPdf">Export PDF</SfButton>
+            <div class="sync-btn-wrapper">
+                <SfButton CssClass="e-info" IconCss="e-icons e-sync" @onclick="SyncData">Sync</SfButton>
+                @if (_pendingCount > 0)
+                {
+                    <span class="pending-badge">@_pendingCount</span>
+                }
+            </div>
+            <SfButton CssClass="e-success" IconCss="e-icons e-refresh" @onclick="RefreshGrid">Refresh</SfButton>
+        </div>
+
+        <div class="search-wrapper">
+            <input type="text" placeholder="Search shops..." class="e-input" value="@searchText"
+                @oninput="@(async (e) => await OnSearchInput(e))" />
+            @if (!string.IsNullOrWhiteSpace(searchText))
+            {
+                <span @onclick="ClearSearch" class="e-icons e-close search-clear"></span>
+            }
+        </div>
+
+        @if (_isLoading)
+        {
+            <div class="loading-container">
+                <SfSpinner></SfSpinner>
+            </div>
+        }
+        else
+        {
+            <SfGrid @ref="grid" DataSource="@_shops" AllowPaging="false" AllowSorting="true" AllowFiltering="true"
+                AllowExcelExport="true" AllowPdfExport="true" AllowSelection="true" Toolbar="@toolbarItems"
+                ShowColumnChooser="true" AllowResizing="true" Height="400px">
+                <GridFilterSettings Type="Syncfusion.Blazor.Grids.FilterType.Menu"></GridFilterSettings>
+                <GridColumns>
+                    <GridColumn Field="@nameof(ShopDto.Name)" HeaderText="Name" Width="150"></GridColumn>
+                    <GridColumn Field="@nameof(ShopDto.ShopType)" HeaderText="Type" Width="120"></GridColumn>
+                    <GridColumn Field="@nameof(ShopDto.Address)" HeaderText="Address" Width="200"></GridColumn>
+                    <GridColumn Field="@nameof(ShopDto.PhoneNumber)" HeaderText="Phone" Width="120"></GridColumn>
+                    <GridColumn Field="@nameof(ShopDto.Email)" HeaderText="Email" Width="150"></GridColumn>
+                    <GridColumn Field="@nameof(ShopDto.IsActive)" HeaderText="Active" DisplayAsCheckBox="true" Width="80">
+                    </GridColumn>
+                    <GridColumn HeaderText="Actions" Width="150">
+                        <Template>
+                            @{
+                                var shop = (context as ShopDto)!;
+                                <div class="action-buttons">
+                                    <SfButton CssClass="e-small" IconCss="e-icons e-eye" @onclick="() => OpenQuickView(shop)"
+                                        Title="Quick View"></SfButton>
+                                    <SfButton CssClass="e-small e-info" IconCss="e-icons e-edit"
+                                        @onclick="() => OpenEditDialog(shop)" Title="Edit"></SfButton>
+                                    <SfButton CssClass="e-small e-danger" IconCss="e-icons e-delete"
+                                        @onclick="() => OpenDeleteConfirm(shop)" Title="Delete"></SfButton>
+                                </div>
+                            }
+                        </Template>
+                    </GridColumn>
+                </GridColumns>
+            </SfGrid>
+
+            <SfPager PageSize="@_pageSize" TotalItemsCount="@_totalCount" CurrentPage="@_currentPage"
+                PageChanged="OnPageChanged">
+            </SfPager>
+        }
+    </CardContent>
+</SfCard>
+
+<SfDialog @bind-Visible="@showQuickView" Width="500px" IsModal="true" ShowCloseIcon="true">
+    <DialogTemplates>
+        <Header>
+            <span class="e-icons e-eye"></span>
+            <span>Shop Details</span>
+        </Header>
+        <Content>
+            @if (selectedShop != null)
+            {
+                <div class="detail-row">
+                    <strong>Shop Name:</strong> <span>@selectedShop.Name</span>
+                </div>
+                <div class="detail-row">
+                    <strong>Type:</strong> <span>@selectedShop.ShopType</span>
+                </div>
+                <div class="detail-row">
+                    <strong>Address:</strong> <span>@(selectedShop.Address ?? "N/A")</span>
+                </div>
+                <div class="detail-row">
+                    <strong>Phone:</strong> <span>@(selectedShop.PhoneNumber ?? "N/A")</span>
+                </div>
+                <div class="detail-row">
+                    <strong>Email:</strong> <span>@(selectedShop.Email ?? "N/A")</span>
+                </div>
+                <div class="detail-row">
+                    <strong>Tax Number:</strong> <span>@(selectedShop.TaxNumber ?? "N/A")</span>
+                </div>
+                <div class="detail-row">
+                    <strong>Status:</strong>
+                    <SfChip CssClass="@(selectedShop.IsActive ? "active-chip" : "inactive-chip")">
+                        @(selectedShop.IsActive ? "Active" : "Inactive")
+                    </SfChip>
+                </div>
+                <div class="quick-actions">
+                    <SfButton CssClass="e-primary" IconCss="e-icons e-edit"
+                        @onclick="() => { CloseQuickView(); OpenEditDialog(selectedShop); }">Edit</SfButton>
+                    <SfButton CssClass="e-danger" IconCss="e-icons e-delete"
+                        @onclick="() => { CloseQuickView(); OpenDeleteConfirm(selectedShop); }">Delete</SfButton>
+                </div>
+            }
+        </Content>
+    </DialogTemplates>
+</SfDialog>
+
+<SfDialog @bind-Visible="@showDialog" Width="500px" IsModal="true">
+    <DialogTemplates>
+        <Header>@dialogTitle</Header>
+        <Content>
+            <EditForm Model="@currentShop" OnValidSubmit="SaveShop">
+                <div class="form-group">
+                    <label>Shop Name <span class="required">*</span></label>
+                    <SfTextBox @bind-Value="@currentShop.Name" Placeholder="Enter shop name"></SfTextBox>
+                    @if (validationErrors.ContainsKey(nameof(ShopCreateDto.Name)))
+                    {
+                        <div class="validation-message">@validationErrors[nameof(ShopCreateDto.Name)]</div>
+                    }
+                </div>
+                <div class="form-group">
+                    <label>Shop Type <span class="required">*</span></label>
+                    <SfDropDownList TItem="ShopType" TValue="ShopType" @bind-Value="@currentShop.ShopType"
+                        DataSource="@_shopTypes" Placeholder="Select shop type"></SfDropDownList>
+                    @if (validationErrors.ContainsKey(nameof(ShopCreateDto.ShopType)))
+                    {
+                        <div class="validation-message">@validationErrors[nameof(ShopCreateDto.ShopType)]</div>
+                    }
+                </div>
+                <div class="form-group">
+                    <label>Address</label>
+                    <SfTextBox @bind-Value="@currentShop.Address" Placeholder="Enter address"></SfTextBox>
+                </div>
+                <div class="form-group">
+                    <label>Phone</label>
+                    <SfTextBox @bind-Value="@currentShop.PhoneNumber" Placeholder="Enter phone number"></SfTextBox>
+                    @if (validationErrors.ContainsKey(nameof(ShopCreateDto.PhoneNumber)))
+                    {
+                        <div class="validation-message">@validationErrors[nameof(ShopCreateDto.PhoneNumber)]</div>
+                    }
+                </div>
+                <div class="form-group">
+                    <label>Email</label>
+                    <SfTextBox @bind-Value="@currentShop.Email" Placeholder="Enter email"></SfTextBox>
+                    @if (validationErrors.ContainsKey(nameof(ShopCreateDto.Email)))
+                    {
+                        <div class="validation-message">@validationErrors[nameof(ShopCreateDto.Email)]</div>
+                    }
+                </div>
+                <div class="form-group">
+                    <label>Tax Number</label>
+                    <SfTextBox @bind-Value="@currentShop.TaxNumber" Placeholder="Enter tax number"></SfTextBox>
+                    @if (validationErrors.ContainsKey(nameof(ShopCreateDto.TaxNumber)))
+                    {
+                        <div class="validation-message">@validationErrors[nameof(ShopCreateDto.TaxNumber)]</div>
+                    }
+                </div>
+                <div class="form-group">
+                    <SfCheckBox @bind-Checked="@currentShop.IsActive" Label="Active"></SfCheckBox>
+                </div>
+                <div class="dialog-actions">
+                    <SfButton Type="ButtonType.Submit" CssClass="e-primary" IconCss="e-icons e-save">Save</SfButton>
+                    <SfButton CssClass="e-outline" @onclick="CloseDialog">Cancel</SfButton>
+                </div>
+            </EditForm>
+        </Content>
+    </DialogTemplates>
+</SfDialog>
+
+<SfDialog @bind-Visible="@showDeleteConfirm" Width="400px" IsModal="true" ShowCloseIcon="true">
+    <DialogTemplates>
+        <Header>
+            <span class="e-icons e-warning delete-warning-icon"></span> Confirm Delete
+        </Header>
+        <Content>
+            <p>Are you sure you want to delete <strong>@shopToDelete?.Name</strong>?</p>
+            <p class="delete-hint">This will be synced to the server on next sync.</p>
+        </Content>
+        <FooterTemplate>
+            <div class="dialog-actions">
+                <SfButton CssClass="e-danger" IconCss="e-icons e-delete" @onclick="ConfirmDelete">Delete</SfButton>
+                <SfButton CssClass="e-outline" @onclick="() => showDeleteConfirm = false">Cancel</SfButton>
+            </div>
+        </FooterTemplate>
+    </DialogTemplates>
+</SfDialog>
+
+<SfToast @ref="ToastObj" ShowCloseButton="true">
+    <ToastPosition X="Right" Y="Top"></ToastPosition>
+</SfToast>
+
+@code {
+    private SfGrid<ShopDto>? grid;
+    private SfToast? ToastObj;
+    private List<ShopDto> _shops = new();
+    private List<object> toolbarItems = new() { "ColumnChooser" };
+    private Dictionary<string, string> validationErrors = new();
+    private ShopFormModel currentShop = new();
+    private ShopDto? selectedShop;
+    private ShopDto? shopToDelete;
+    private string dialogTitle = "";
+    private string searchText = "";
+    private bool _isLoading = true;
+    private bool showDialog = false;
+    private bool showQuickView = false;
+    private bool showDeleteConfirm = false;
+    private bool isEditMode = false;
+    private int _pendingCount = 0;
+    private int _currentPage = 1;
+    private int _pageSize = 10;
+    private int _totalCount = 0;
+    private int _totalPages = 0;
+    private ShopType[] _shopTypes = Enum.GetValues<ShopType>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await Task.WhenAll(LoadShops(), LoadPendingCount());
+    }
+
+    private async Task LoadPendingCount()
+    {
+        _pendingCount = await ShopService.GetPendingCountAsync();
+    }
+
+    private async Task LoadShops(string? searchTerm = null)
+    {
+        _isLoading = true;
+
+        var result = await ShopService.GetAllAsync(_currentPage, _pageSize, searchTerm);
+
+        if (result.Success && result.Response != null)
+        {
+            _shops = result.Response.Items;
+            _totalCount = result.Response.TotalCount;
+            _totalPages = result.Response.TotalPages;
+            _currentPage = result.Response.PageNumber;
+        }
+        else if (ToastObj != null)
+        {
+            await ToastHelper.ShowErrorAsync(ToastObj, result.Message ?? "Failed to load shops", "Shop");
+        }
+
+        _isLoading = false;
+    }
+
+    private async Task OnPageChanged(PageChangedEventArgs args)
+    {
+        _currentPage = args.CurrentPage;
+        await LoadShops(string.IsNullOrWhiteSpace(searchText) ? null : searchText);
+    }
+
+    private async Task OnSearchInput(Microsoft.AspNetCore.Components.ChangeEventArgs args)
+    {
+        searchText = args.Value?.ToString() ?? "";
+        _currentPage = 1;
+        await LoadShops(string.IsNullOrWhiteSpace(searchText) ? null : searchText);
+    }
+
+    private async Task ClearSearch()
+    {
+        searchText = "";
+        _currentPage = 1;
+        await LoadShops();
+    }
+
+    private void OpenQuickView(ShopDto shop)
+    {
+        selectedShop = shop;
+        showQuickView = true;
+    }
+
+    private void CloseQuickView()
+    {
+        showQuickView = false;
+        selectedShop = null;
+    }
+
+    private void OpenAddDialog()
+    {
+        dialogTitle = "Add New Shop";
+        currentShop = new ShopFormModel { IsActive = true };
+        isEditMode = false;
+        validationErrors.Clear();
+        showDialog = true;
+    }
+
+    // Public wrapper for testability
+    public void OpenAddDialogPublic() => OpenAddDialog();
+
+    private void OpenEditDialog(ShopDto shop)
+    {
+        dialogTitle = "Edit Shop";
+        currentShop = new ShopFormModel
+        {
+            Id = shop.Id,
+            Name = shop.Name,
+            ShopType = shop.ShopType,
+            Address = shop.Address ?? "",
+            PhoneNumber = shop.PhoneNumber ?? "",
+            Email = shop.Email ?? "",
+            TaxNumber = shop.TaxNumber ?? "",
+            IsActive = shop.IsActive
+        };
+        isEditMode = true;
+        validationErrors.Clear();
+        showDialog = true;
+    }
+
+    private void CloseDialog()
+    {
+        showDialog = false;
+        currentShop = new ShopFormModel();
+    }
+
+    private async Task SaveShop()
+    {
+        Result<ShopDto> result;
+        string successMessage;
+
+        if (isEditMode)
+        {
+            var updateDto = new ShopUpdateDto
+            {
+                Name = currentShop.Name,
+                ShopType = currentShop.ShopType,
+                Address = currentShop.Address,
+                PhoneNumber = currentShop.PhoneNumber,
+                Email = currentShop.Email,
+                TaxNumber = currentShop.TaxNumber,
+                IsActive = currentShop.IsActive
+            };
+            result = await ShopService.UpdateAsync(currentShop.Id, updateDto);
+            successMessage = "Shop updated successfully";
+        }
+        else
+        {
+            var createDto = new ShopCreateDto
+            {
+                Name = currentShop.Name,
+                ShopType = currentShop.ShopType,
+                Address = currentShop.Address,
+                PhoneNumber = currentShop.PhoneNumber,
+                Email = currentShop.Email,
+                TaxNumber = currentShop.TaxNumber,
+                IsActive = currentShop.IsActive
+            };
+            result = await ShopService.CreateAsync(createDto);
+            successMessage = "Shop created successfully";
+        }
+
+        if (result.Success)
+        {
+            await ToastHelper.ShowSuccessAsync(ToastObj!, successMessage, "Shop");
+            CloseDialog();
+            await Task.WhenAll(LoadShops(), LoadPendingCount());
+        }
+        else
+        {
+            validationErrors = ValidationHelper.ExtractValidationErrors(result);
+            if (!validationErrors.Any())
+                await ToastHelper.ShowErrorAsync(ToastObj!, result.Message ?? "Operation failed", "Error");
+            StateHasChanged();
+        }
+    }
+
+    // Public wrapper for testability
+    public Task SaveCategoryPublic() => SaveShop();
+
+    private void OpenDeleteConfirm(ShopDto shop)
+    {
+        shopToDelete = shop;
+        showDeleteConfirm = true;
+    }
+
+    // Public wrapper for testability — bUnit cannot click inside Syncfusion SfGrid row templates
+    public void OpenDeleteConfirmPublic(ShopDto shop) => OpenDeleteConfirm(shop);
+
+    private async Task ConfirmDelete()
+    {
+        if (shopToDelete == null) return;
+
+        showDeleteConfirm = false;
+        var result = await ShopService.DeleteAsync(shopToDelete.Id);
+
+        if (result.Success)
+        {
+            await ToastHelper.ShowSuccessAsync(ToastObj!, $"{shopToDelete.Name} deleted successfully", "Shop");
+            shopToDelete = null;
+            await Task.WhenAll(
+            LoadShops(string.IsNullOrWhiteSpace(searchText) ? null : searchText),
+            LoadPendingCount());
+        }
+        else
+        {
+            await ToastHelper.ShowErrorAsync(ToastObj!, result.Message ?? "Delete failed", "Error");
+        }
+    }
+
+    // Public wrapper for testability
+    public Task ConfirmDeletePublic() => ConfirmDelete();
+
+    private async Task SyncData()
+    {
+        await ToastHelper.ShowInfoAsync(ToastObj!, "Syncing...", "Shop");
+        var result = await ShopService.SyncAsync();
+
+        if (result.Success)
+        {
+            await ToastHelper.ShowSuccessAsync(ToastObj!, result.Message ?? "Sync completed", "Shop");
+            await Task.WhenAll(LoadShops(), LoadPendingCount());
+        }
+        else
+        {
+            await ToastHelper.ShowErrorAsync(ToastObj!, result.Message ?? "Sync failed", "Error");
+        }
+    }
+
+    // Public wrapper for testability
+    public Task SyncDataPublic() => SyncData();
+
+    private async Task RefreshGrid()
+    {
+        searchText = "";
+        _currentPage = 1;
+        await Task.WhenAll(LoadShops(), LoadPendingCount());
+    }
+
+    private async Task ExportToExcel()
+    {
+        if (grid != null)
+            await grid.ExportToExcelAsync();
+    }
+
+    private async Task ExportToPdf()
+    {
+        if (grid != null)
+            await grid.ExportToPdfAsync();
+    }
+
+    private class ShopFormModel
+    {
+        public string Id { get; set; } = "";
+        public string Name { get; set; } = "";
+        public ShopType ShopType { get; set; }
+        public string? Address { get; set; }
+        public string? PhoneNumber { get; set; }
+        public string? Email { get; set; }
+        public string? TaxNumber { get; set; }
+        public bool IsActive { get; set; } = true;
+    }
+}
+
+<style>
+    .card-actions {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 15px;
+        flex-wrap: wrap;
+    }
+
+    .sync-btn-wrapper {
+        position: relative;
+        display: inline-flex;
+    }
+
+    .pending-badge {
+        position: absolute;
+        top: -6px;
+        right: -6px;
+        background-color: #dc3545;
+        color: white;
+        border-radius: 50%;
+        min-width: 18px;
+        height: 18px;
+        font-size: 11px;
+        font-weight: bold;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0 4px;
+        pointer-events: none;
+    }
+
+    .search-wrapper {
+        position: relative;
+        margin-bottom: 16px;
+    }
+
+    .search-wrapper .e-input {
+        display: block;
+        width: 100%;
+        padding-right: 30px;
+    }
+
+    .search-clear {
+        position: absolute;
+        right: 8px;
+        top: 50%;
+        transform: translateY(-50%);
+        cursor: pointer;
+        color: #999;
+    }
+
+    .loading-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 300px;
+    }
+
+    .action-buttons {
+        display: flex;
+        gap: 5px;
+    }
+
+    .form-group {
+        margin-bottom: 15px;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: 500;
+    }
+
+    .required {
+        color: #dc3545;
+    }
+
+    .validation-message {
+        color: #dc3545;
+        font-size: 0.875rem;
+        margin-top: 4px;
+    }
+
+    .dialog-actions {
+        display: flex;
+        gap: 10px;
+        margin-top: 20px;
+        justify-content: flex-end;
+    }
+
+    .delete-warning-icon {
+        color: #dc3545;
+        margin-right: 8px;
+    }
+
+    .delete-hint {
+        color: #6c757d;
+        font-size: 0.875rem;
+    }
+
+    .detail-row {
+        display: flex;
+        justify-content: space-between;
+        padding: 12px 0;
+        border-bottom: 1px solid #f0f0f0;
+    }
+
+    .detail-row strong {
+        color: #666;
+        min-width: 120px;
+    }
+
+    .quick-actions {
+        display: flex;
+        gap: 10px;
+        margin-top: 20px;
+        padding-top: 20px;
+        border-top: 2px solid #f0f0f0;
+        justify-content: center;
+    }
+
+    .active-chip {
+        background-color: #28a745 !important;
+        color: white !important;
+    }
+
+    .inactive-chip {
+        background-color: #6c757d !important;
+        color: white !important;
+    }
+
+    @@media (max-width: 768px) {
+        .card-actions .e-btn {
+            font-size: 12px;
+            padding: 6px 10px;
+        }
+
+        .action-buttons .e-btn {
+            min-width: 32px;
+            padding: 4px;
+        }
+
+        .e-dialog {
+            width: 95% !important;
+        }
+
+        .dialog-actions .e-btn,
+        .quick-actions .e-btn {
+            flex: 1;
+        }
+
+        .quick-actions {
+            flex-direction: column;
+        }
+
+        .detail-row {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 5px;
+        }
+
+        .detail-row strong {
+            min-width: auto;
+        }
+
+    }
+</style>

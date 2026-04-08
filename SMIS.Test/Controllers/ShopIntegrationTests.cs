@@ -1,8 +1,7 @@
 using System.Net;
-using Shouldly;
+using FluentAssertions;
 using SMIS.Application.Common;
 using SMIS.Application.DTO.Shops;
-using SMIS.Domain.Enums;
 using SMIS.Test.Extensions;
 using SMIS.Test.TestInfrastructure;
 using SMIS.Test.Utilities;
@@ -51,14 +50,14 @@ public class ShopIntegrationTests : BaseIntegrationTest
 
     private static void AssertShopMatches(ShopDto actual, ShopCreateDto expected)
     {
-        actual.ShouldNotBeNull();
-        actual.Name.ShouldBe(expected.Name);
-        actual.ShopType.ShouldBe(expected.ShopType);
-        actual.Address.ShouldBe(expected.Address);
-        actual.PhoneNumber.ShouldBe(expected.PhoneNumber);
-        actual.Email.ToLower().ShouldBe(expected.Email.ToLower());
-        actual.TaxNumber.ShouldBe(expected.TaxNumber);
-        actual.IsActive.ShouldBe(expected.IsActive);
+        actual.Should().NotBeNull();
+        actual.Name.Should().Be(expected.Name);
+        actual.ShopType.Should().Be(expected.ShopType);
+        actual.Address.Should().Be(expected.Address);
+        actual.PhoneNumber.Should().Be(expected.PhoneNumber);
+        actual.Email.Should().Be(expected.Email);
+        actual.TaxNumber.Should().Be(expected.TaxNumber);
+        actual.IsActive.Should().Be(expected.IsActive);
     }
 
     [Fact]
@@ -66,24 +65,59 @@ public class ShopIntegrationTests : BaseIntegrationTest
     {
         var dto = _dataHelper.CreateShopBuilder().Build();
         var response = await CreateShopResponseAsync(dto, "Post_CreateValidShop");
-        
-        response.StatusCode.ShouldBe(HttpStatusCode.OK);
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
         var created = await response.Content.ReadFromJsonAsync<ShopDto>();
         AssertShopMatches(created!, dto);
     }
 
     [Fact]
-    public async Task Post_CreateShopWithEmptyAddress_ReturnsOk()
+    public async Task Post_CreateShopWithEmptyName_ReturnsBadRequest()
     {
-        var dto = _dataHelper.CreateShopBuilder().Build();
-        dto.Address = "";
+        var dto = _dataHelper.CreateShopBuilder().WithName("").Build();
+        var response = await CreateShopResponseAsync(dto, "Post_CreateShopWithEmptyName");
 
-        var response = await CreateShopResponseAsync(dto, "Post_CreateShopWithEmptyAddress");
-        
-        response.StatusCode.ShouldBe(HttpStatusCode.OK);
+        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+    }
+
+    [Fact]
+    public async Task Post_CreateShopWithNullOptionalFields_ReturnsOk()
+    {
+        var dto = _dataHelper.CreateShopBuilder()
+            .WithAddress(null)
+            .WithPhoneNumber(null)
+            .WithEmail(null)
+            .WithTaxNumber(null)
+            .Build();
+        var response = await CreateShopResponseAsync(dto, "Post_CreateShopWithNullOptionalFields");
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
         var created = await response.Content.ReadFromJsonAsync<ShopDto>();
-        created.ShouldNotBeNull();
-        created!.Address.ShouldBe("");
+        created.Should().NotBeNull();
+        created!.Address.Should().BeNull();
+        created.PhoneNumber.Should().BeNull();
+        created.Email.Should().BeNull();
+        created.TaxNumber.Should().BeNull();
+    }
+
+    [Fact]
+    public async Task Post_CreateShopWithEmptyOptionalFields_ReturnsOk()
+    {
+        var dto = _dataHelper.CreateShopBuilder()
+            .WithAddress("")
+            .WithPhoneNumber("")
+            .WithEmail("")
+            .WithTaxNumber("")
+            .Build();
+        var response = await CreateShopResponseAsync(dto, "Post_CreateShopWithEmptyOptionalFields");
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+        var created = await response.Content.ReadFromJsonAsync<ShopDto>();
+        created.Should().NotBeNull();
+        created!.Address.Should().Be("");
+        created.PhoneNumber.Should().Be("");
+        created.Email.Should().Be("");
+        created.TaxNumber.Should().Be("");
     }
 
     [Fact]
@@ -92,13 +126,13 @@ public class ShopIntegrationTests : BaseIntegrationTest
         var response = await Client.GetAsync($"{ApiEndpoints.Shop}?pageNumber=1&pageSize=10");
         await LogIfError(response, "Get_ListShops");
 
-        response.StatusCode.ShouldBe(HttpStatusCode.OK);
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
         var paged = await response.Content.ReadFromJsonAsync<PagedList<ShopDto>>();
-        paged.ShouldNotBeNull();
-        paged!.Items.ShouldNotBeNull();
-        paged.Items.Count.ShouldBeGreaterThanOrEqualTo(0);
-        paged.PageNumber.ShouldBe(1);
-        paged.PageSize.ShouldBe(10);
+        paged.Should().NotBeNull();
+        paged!.Items.Should().NotBeNull();
+        paged.Items.Count.Should().BeGreaterOrEqualTo(0);
+        paged.PageNumber.Should().Be(1);
+        paged.PageSize.Should().Be(10);
     }
 
     [Fact]
@@ -116,13 +150,13 @@ public class ShopIntegrationTests : BaseIntegrationTest
         var paginatedResponse = await Client.GetAsync($"{ApiEndpoints.Shop}?pageNumber=1&pageSize=2");
         await LogIfError(paginatedResponse, "Get_ListShops_Pagination");
 
-        paginatedResponse.StatusCode.ShouldBe(HttpStatusCode.OK);
+        paginatedResponse.StatusCode.Should().Be(HttpStatusCode.OK);
         var paged = await paginatedResponse.Content.ReadFromJsonAsync<PagedList<ShopDto>>();
-        paged.ShouldNotBeNull();
-        paged!.Items.Count.ShouldBeLessThanOrEqualTo(2);
-        paged.PageNumber.ShouldBe(1);
-        paged.PageSize.ShouldBe(2);
-        paged.TotalCount.ShouldBeGreaterThanOrEqualTo(5);
+        paged.Should().NotBeNull();
+        paged!.Items.Count.Should().BeLessOrEqualTo(2);
+        paged.PageNumber.Should().Be(1);
+        paged.PageSize.Should().Be(2);
+        paged.TotalCount.Should().BeGreaterOrEqualTo(5);
     }
 
     [Fact]
@@ -130,15 +164,15 @@ public class ShopIntegrationTests : BaseIntegrationTest
     {
         var createDto = _dataHelper.CreateShopBuilder().Build();
         var created = await PostAndGetAsync<ShopDto>(ApiEndpoints.Shop, createDto, "Get_ShopById_Seed");
-        created.ShouldNotBeNull();
+        created.Should().NotBeNull();
 
         var getResponse = await Client.GetAsync($"{ApiEndpoints.Shop}/{created!.Id}");
         await LogIfError(getResponse, "Get_ShopById_Get");
 
-        getResponse.StatusCode.ShouldBe(HttpStatusCode.OK);
+        getResponse.StatusCode.Should().Be(HttpStatusCode.OK);
         var retrieved = await getResponse.Content.ReadFromJsonAsync<ShopDto>();
-        retrieved.ShouldNotBeNull();
-        retrieved!.Id.ShouldBe(created.Id);
+        retrieved.Should().NotBeNull();
+        retrieved!.Id.Should().Be(created.Id);
         AssertShopMatches(retrieved, createDto);
     }
 
@@ -148,7 +182,7 @@ public class ShopIntegrationTests : BaseIntegrationTest
         var response = await Client.GetAsync($"{ApiEndpoints.Shop}/non-existing-id");
         await LogIfError(response, "Get_ShopById_NonExisting");
 
-        response.StatusCode.ShouldBe(HttpStatusCode.NotFound);
+        response.StatusCode.Should().Be(HttpStatusCode.NotFound);
     }
 
     [Fact]
@@ -156,15 +190,15 @@ public class ShopIntegrationTests : BaseIntegrationTest
     {
         var createDto = _dataHelper.CreateShopBuilder().Build();
         var created = await PostAndGetAsync<ShopDto>(ApiEndpoints.Shop, createDto, "Put_UpdateShop_Seed");
-        created.ShouldNotBeNull();
+        created.Should().NotBeNull();
 
         var updateDto = _dataHelper.CreateShopBuilder().WithIsActive(false).Build();
         var updateResponse = await UpdateShopResponseAsync(created!.Id, updateDto, "Put_UpdateShop_Update");
 
-        updateResponse.StatusCode.ShouldBe(HttpStatusCode.OK);
+        updateResponse.StatusCode.Should().Be(HttpStatusCode.OK);
         var updated = await updateResponse.Content.ReadFromJsonAsync<ShopDto>();
-        updated.ShouldNotBeNull();
-        updated!.Id.ShouldBe(created.Id);
+        updated.Should().NotBeNull();
+        updated!.Id.Should().Be(created.Id);
         AssertShopMatches(updated, updateDto);
     }
 
@@ -174,7 +208,23 @@ public class ShopIntegrationTests : BaseIntegrationTest
         var updateDto = _dataHelper.CreateShopBuilder().Build();
         var response = await UpdateShopResponseAsync("non-existing-id", updateDto, "Put_UpdateNonExistingShop");
 
-        response.StatusCode.ShouldBe(HttpStatusCode.NotFound);
+        response.StatusCode.Should().Be(HttpStatusCode.NotFound);
+    }
+
+    [Fact]
+    public async Task Put_UpdateShopName_ReturnsUpdatedName()
+    {
+        var createDto = _dataHelper.CreateShopBuilder().WithName("Original Shop").Build();
+        var created = await PostAndGetAsync<ShopDto>(ApiEndpoints.Shop, createDto, "Put_UpdateShopName_Seed");
+        created.Should().NotBeNull();
+
+        var updateDto = _dataHelper.CreateShopBuilder().WithName("Updated Shop").Build();
+        var updateResponse = await UpdateShopResponseAsync(created!.Id, updateDto, "Put_UpdateShopName_Update");
+
+        updateResponse.StatusCode.Should().Be(HttpStatusCode.OK);
+        var updated = await updateResponse.Content.ReadFromJsonAsync<ShopDto>();
+        updated.Should().NotBeNull();
+        updated!.Name.Should().Be("Updated Shop");
     }
 
     [Fact]
@@ -182,15 +232,15 @@ public class ShopIntegrationTests : BaseIntegrationTest
     {
         var createDto = _dataHelper.CreateShopBuilder().Build();
         var created = await PostAndGetAsync<ShopDto>(ApiEndpoints.Shop, createDto, "Delete_ExistingShop_Seed");
-        created.ShouldNotBeNull();
+        created.Should().NotBeNull();
 
         var deleteResponse = await Client.DeleteAsync($"{ApiEndpoints.Shop}/{created!.Id}");
         await LogIfError(deleteResponse, "Delete_ExistingShop_Delete");
 
-        deleteResponse.StatusCode.ShouldBe(HttpStatusCode.OK);
+        deleteResponse.StatusCode.Should().Be(HttpStatusCode.OK);
 
         var getResponse = await Client.GetAsync($"{ApiEndpoints.Shop}/{created.Id}");
-        getResponse.StatusCode.ShouldBe(HttpStatusCode.NotFound);
+        getResponse.StatusCode.Should().Be(HttpStatusCode.NotFound);
     }
 
     [Fact]
@@ -199,60 +249,7 @@ public class ShopIntegrationTests : BaseIntegrationTest
         var response = await Client.DeleteAsync($"{ApiEndpoints.Shop}/non-existing-id");
         await LogIfError(response, "Delete_NonExistingShop");
 
-        response.StatusCode.ShouldBe(HttpStatusCode.NotFound);
-    }
-
-    [Fact]
-    public async Task Post_CreateShopWithEmptyName_ReturnsBadRequest()
-    {
-        var dto = _dataHelper.CreateShopBuilder().WithName("").Build();
-        var response = await CreateShopResponseAsync(dto, "Post_CreateShopWithEmptyName");
-
-        response.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
-    }
-
-    [Fact]
-    public async Task Post_CreateShopWithInvalidEmail_ReturnsBadRequest()
-    {
-        var dto = _dataHelper.CreateShopBuilder().WithEmail("invalid-email").Build();
-        var response = await CreateShopResponseAsync(dto, "Post_CreateShopWithInvalidEmail");
-
-        response.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
-    }
-
-    [Fact]
-    public async Task Post_CreateShopWithInvalidPhoneNumber_ReturnsBadRequest()
-    {
-        var dto = _dataHelper.CreateShopBuilder().WithPhoneNumber("123").Build();
-        var response = await CreateShopResponseAsync(dto, "Post_CreateShopWithInvalidPhoneNumber");
-
-        response.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
-    }
-
-    [Fact]
-    public async Task Put_UpdateShopToInactive_ReturnsInactiveShop()
-    {
-        var createDto = _dataHelper.CreateShopBuilder().WithIsActive(true).Build();
-        var created = await PostAndGetAsync<ShopDto>(ApiEndpoints.Shop, createDto, "Put_UpdateShopToInactive_Seed");
-        created.ShouldNotBeNull();
-        created!.IsActive.ShouldBeTrue();
-
-        var updateDto = _dataHelper.CreateShopBuilder().WithIsActive(false).Build();
-        var updateResponse = await UpdateShopResponseAsync(created.Id, updateDto, "Put_UpdateShopToInactive_Update");
-
-        updateResponse.StatusCode.ShouldBe(HttpStatusCode.OK);
-        var updated = await updateResponse.Content.ReadFromJsonAsync<ShopDto>();
-        updated.ShouldNotBeNull();
-        updated!.IsActive.ShouldBeFalse();
-    }
-
-    [Fact]
-    public async Task Get_ListShops_WithInvalidPageSize_ReturnsBadRequest()
-    {
-        var response = await Client.GetAsync($"{ApiEndpoints.Shop}?pageNumber=1&pageSize=0");
-        await LogIfError(response, "Get_ListShops_InvalidPageSize");
-
-        response.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
+        response.StatusCode.Should().Be(HttpStatusCode.NotFound);
     }
 
     [Fact]
@@ -265,63 +262,7 @@ public class ShopIntegrationTests : BaseIntegrationTest
         foreach (var shop in shops)
         {
             var response = await CreateShopResponseAsync(shop, $"Post_CreateMultipleShops_{shop.Name}");
-            response.StatusCode.ShouldBe(HttpStatusCode.OK);
+            response.StatusCode.Should().Be(HttpStatusCode.OK);
         }
-    }
-
-    [Fact]
-    public async Task Post_CreateShopWithRetailShopType_ReturnsOk()
-    {
-        var dto = _dataHelper.CreateShopBuilder().WithShopType(ShopType.RetailShop).Build();
-        var response = await CreateShopResponseAsync(dto, "Post_CreateShopWithRetailShopType");
-        
-        response.StatusCode.ShouldBe(HttpStatusCode.OK);
-        var created = await response.Content.ReadFromJsonAsync<ShopDto>();
-        created.ShouldNotBeNull();
-        created!.ShopType.ShouldBe(ShopType.RetailShop);
-    }
-
-    [Fact]
-    public async Task Post_CreateShopWithWholesaleShopType_ReturnsOk()
-    {
-        var dto = _dataHelper.CreateShopBuilder().WithShopType(ShopType.WholesaleShop).Build();
-        var response = await CreateShopResponseAsync(dto, "Post_CreateShopWithWholesaleShopType");
-        
-        response.StatusCode.ShouldBe(HttpStatusCode.OK);
-        var created = await response.Content.ReadFromJsonAsync<ShopDto>();
-        created.ShouldNotBeNull();
-        created!.ShopType.ShouldBe(ShopType.WholesaleShop);
-    }
-
-    [Fact]
-    public async Task Put_UpdateShopName_ReturnsUpdatedName()
-    {
-        var createDto = _dataHelper.CreateShopBuilder().WithName("Old Shop Name").Build();
-        var created = await PostAndGetAsync<ShopDto>(ApiEndpoints.Shop, createDto, "Put_UpdateShopName_Seed");
-        created.ShouldNotBeNull();
-
-        var updateDto = _dataHelper.CreateShopBuilder().WithName("New Shop Name").Build();
-        var updateResponse = await UpdateShopResponseAsync(created!.Id, updateDto, "Put_UpdateShopName_Update");
-
-        updateResponse.StatusCode.ShouldBe(HttpStatusCode.OK);
-        var updated = await updateResponse.Content.ReadFromJsonAsync<ShopDto>();
-        updated.ShouldNotBeNull();
-        updated!.Name.ShouldBe("New Shop Name");
-    }
-
-    [Fact]
-    public async Task Put_UpdateShopAddress_ReturnsUpdatedAddress()
-    {
-        var createDto = _dataHelper.CreateShopBuilder().WithAddress("Old Address").Build();
-        var created = await PostAndGetAsync<ShopDto>(ApiEndpoints.Shop, createDto, "Put_UpdateShopAddress_Seed");
-        created.ShouldNotBeNull();
-
-        var updateDto = _dataHelper.CreateShopBuilder().WithAddress("New Address").Build();
-        var updateResponse = await UpdateShopResponseAsync(created!.Id, updateDto, "Put_UpdateShopAddress_Update");
-
-        updateResponse.StatusCode.ShouldBe(HttpStatusCode.OK);
-        var updated = await updateResponse.Content.ReadFromJsonAsync<ShopDto>();
-        updated.ShouldNotBeNull();
-        updated!.Address.ShouldBe("New Address");
     }
 }

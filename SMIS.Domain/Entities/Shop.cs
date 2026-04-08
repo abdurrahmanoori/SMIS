@@ -6,15 +6,20 @@ using SMIS.Domain.ValueObjects;
 
 namespace SMIS.Domain.Entities;
 
-public class Shop : BaseAuditableEntity, IEntity
+public class Shop : BaseAuditableEntity, ISyncableEntity
 {
-    public string Name { get; set; } = string.Empty;
+    public string Name { get; private set; } = string.Empty;
     public ShopType ShopType { get; private set; }
     public string? Address { get; private set; } = string.Empty;
     public string? PhoneNumber { get; private set; } = string.Empty;
     public string? Email { get; private set; } = string.Empty;
     public string? TaxNumber { get; private set; } = string.Empty;
     public bool IsActive { get; private set; } = true;
+
+    // ISyncableEntity properties (mobile sync)
+    public bool IsSyncedToServer { get; set; }
+    public DateTime? LastSyncedAt { get; set; }
+    public DateTime LastModifiedUtc { get; set; }
 
     // Navigation Properties
     //public virtual ICollection<Product> Products { get; set; } = new List<Product>();
@@ -26,7 +31,7 @@ public class Shop : BaseAuditableEntity, IEntity
 
     internal Shop() { } // EF Core & Seeding
 
-    public static Shop Create(string name, ShopType shopType, string address, string phoneNumber, string email, string taxNumber, bool isActive = true)
+    public static Shop Create(string name, ShopType shopType, string? address = null, string? phoneNumber = null, string? email = null, string? taxNumber = null, bool isActive = true)
     {
         var shop = new Shop();
         shop.SetName(name);
@@ -58,31 +63,43 @@ public class Shop : BaseAuditableEntity, IEntity
         ShopType = shopType;
     }
 
-    public void SetAddress(string address)
+    public void SetAddress(string? address)
     {
-        //if (string.IsNullOrWhiteSpace(address))
-        //    throw new DomainValidationException("Address cannot be empty");
-
-        if (address.Length > 500)
+        if (!string.IsNullOrWhiteSpace(address) && address.Length > 500)
             throw new DomainValidationException("Address cannot exceed 500 characters");
 
-        Address = address.Trim();
+        Address = address?.Trim();
     }
 
-    public void SetPhoneNumber(string phoneNumber)
+    public void SetPhoneNumber(string? phoneNumber)
     {
+        if (string.IsNullOrWhiteSpace(phoneNumber))
+        {
+            PhoneNumber = null;
+            return;
+        }
         var phone = ValueObjects.PhoneNumber.Create(phoneNumber);
         PhoneNumber = phone;
     }
 
-    public void SetEmail(string email)
+    public void SetEmail(string? email)
     {
+        if (string.IsNullOrWhiteSpace(email))
+        {
+            Email = null;
+            return;
+        }
         var emailVO = ValueObjects.Email.Create(email);
         Email = emailVO;
     }
 
-    public void SetTaxNumber(string taxNumber)
+    public void SetTaxNumber(string? taxNumber)
     {
+        if (string.IsNullOrWhiteSpace(taxNumber))
+        {
+            TaxNumber = null;
+            return;
+        }
         var tax = ValueObjects.TaxNumber.Create(taxNumber);
         TaxNumber = tax;
     }
