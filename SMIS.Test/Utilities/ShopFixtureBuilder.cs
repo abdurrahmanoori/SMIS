@@ -14,9 +14,9 @@ public class ShopFixtureBuilder
             .RuleFor(s => s.Name, f => f.Company.CompanyName())
             .RuleFor(s => s.ShopType, f => f.PickRandom<ShopType>())
             .RuleFor(s => s.Address, f => f.Address.FullAddress())
-            .RuleFor(s => s.PhoneNumber, f => f.Phone.PhoneNumber("+855##-###-####"))
+            .RuleFor(s => s.PhoneNumber, f => f.Phone.PhoneNumber())
             .RuleFor(s => s.Email, f => f.Internet.Email())
-            .RuleFor(s => s.TaxNumber, f => f.Random.Replace("TAX-####-####"))
+            .RuleFor(s => s.TaxNumber, f => f.Random.AlphaNumeric(10).ToUpper())
             .RuleFor(s => s.IsActive, true);
     }
 
@@ -32,25 +32,25 @@ public class ShopFixtureBuilder
         return this;
     }
 
-    public ShopFixtureBuilder WithAddress(string address)
+    public ShopFixtureBuilder WithAddress(string? address)
     {
         _faker.RuleFor(s => s.Address, address);
         return this;
     }
 
-    public ShopFixtureBuilder WithPhoneNumber(string phoneNumber)
+    public ShopFixtureBuilder WithPhoneNumber(string? phoneNumber)
     {
         _faker.RuleFor(s => s.PhoneNumber, phoneNumber);
         return this;
     }
 
-    public ShopFixtureBuilder WithEmail(string email)
+    public ShopFixtureBuilder WithEmail(string? email)
     {
         _faker.RuleFor(s => s.Email, email);
         return this;
     }
 
-    public ShopFixtureBuilder WithTaxNumber(string taxNumber)
+    public ShopFixtureBuilder WithTaxNumber(string? taxNumber)
     {
         _faker.RuleFor(s => s.TaxNumber, taxNumber);
         return this;
@@ -62,8 +62,5 @@ public class ShopFixtureBuilder
         return this;
     }
 
-    public ShopCreateDto Build()
-    {
-        return _faker.Generate();
-    }
+    public ShopCreateDto Build() => _faker.Generate();
 }

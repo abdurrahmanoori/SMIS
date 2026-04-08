@@ -5,6 +5,7 @@ using SMIS.Domain.Services;
 using SMIS.Infrastructure.Mobile.Context;
 using SMIS.Infrastructure.Mobile.Services.Http;
 using SMIS.Infrastructure.Mobile.Services.Sync.Categories;
+using SMIS.Infrastructure.Mobile.Services.Sync.Shops;
 
 namespace SMIS.Infrastructure.Mobile.Services.Sync;
 
@@ -19,6 +20,7 @@ public interface ISyncService : ISyncEngine
 {
     Task<SyncResult> SyncDeletesAsync();
     Task<SyncResult> SyncCategoriesAsync();
+    Task<SyncResult> SyncShopsAsync();
     Task<SyncAllResult> SyncAllAsync();
     Task<int> GetPendingCountAsync<TEntity>() where TEntity : class, ISyncableEntity;
     Task<int> GetTotalPendingCountAsync();
@@ -30,16 +32,19 @@ public class SyncService : ISyncService
     private readonly IApiClient _apiClient;
     private readonly IConnectivity? _connectivity;
     private readonly ICategorySyncService _categorySyncService;
+    private readonly IShopSyncService _shopSyncService;
 
     public SyncService(
         LocalDbContext localDb,
         IApiClient apiClient,
         ICategorySyncService categorySyncService,
+        IShopSyncService shopSyncService,
         IConnectivity? connectivity = null)
     {
         _localDb = localDb;
         _apiClient = apiClient;
         _categorySyncService = categorySyncService;
+        _shopSyncService = shopSyncService;
         _connectivity = connectivity;
     }
 
@@ -224,21 +229,27 @@ public class SyncService : ISyncService
 
     public async Task<int> GetTotalPendingCountAsync()
     {
-        var entityPending = await GetPendingCountAsync<SMIS.Domain.Entities.Category>();
+        var categoryPending = await GetPendingCountAsync<SMIS.Domain.Entities.Category>();
+        var shopPending = await GetPendingCountAsync<SMIS.Domain.Entities.Shop>();
         var deletePending = await _localDb.DeletedRecords
             .CountAsync(d => !d.IsSyncedToServer);
-        return entityPending + deletePending;
+        return categoryPending + shopPending + deletePending;
     }
 
     public Task<SyncResult> SyncCategoriesAsync()
         => SyncAsync(new CategorySyncConfiguration());
+
+    public Task<SyncResult> SyncShopsAsync()
+        => SyncAsync(new ShopSyncConfiguration());
 
     public async Task<SyncAllResult> SyncAllAsync()
     {
         var results = new List<SyncResult>
         {
             await _categorySyncService.PullCategoriesAsync(),
+            await _shopSyncService.PullShopsAsync(),
             await SyncAsync(new CategorySyncConfiguration()),
+            await SyncAsync(new ShopSyncConfiguration()),
             await SyncDeletesAsync()
         };
 

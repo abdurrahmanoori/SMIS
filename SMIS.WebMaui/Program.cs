@@ -35,6 +35,7 @@ builder.Services.AddScoped<ITokenGenerator, NullTokenGenerator>();
 builder.Services.AddScoped<ISignInService, CookieSignInService>();
 builder.Services.AddScoped<IUiAuthService, WebAuthService>();
 builder.Services.AddScoped<ICategoryService, WebCategoryService>();
+builder.Services.AddScoped<IShopService, WebShopService>();
 builder.Services.AddScoped<ISyncFacade, WebSyncFacade>();
 builder.Services.AddSingleton<IThemeService, ThemeService>();
 builder.Services.AddScoped<DevelopmentAutoLoginService>();

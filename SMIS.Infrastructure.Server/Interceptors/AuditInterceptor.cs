@@ -68,7 +68,7 @@ namespace SMIS.Infrastructure.Server.Interceptors
                 {
                     if (entry.Entity.UpdatedDate == default)
                     {
-                        entry.Entity.UpdatedDate = DateTimeService.Now;
+                        entry.Entity.UpdatedDate = DateTimeService.UtcNow;
                     }
                     if (string.IsNullOrEmpty(entry.Entity.UpdatedBy))
                     {

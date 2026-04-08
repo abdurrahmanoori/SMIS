@@ -11,6 +11,7 @@ using SMIS.Infrastructure.Mobile.Services.Identity;
 using SMIS.Infrastructure.Mobile.Services.Platform;
 using SMIS.Infrastructure.Mobile.Services.Sync;
 using SMIS.Infrastructure.Mobile.Services.Sync.Categories;
+using SMIS.Infrastructure.Mobile.Services.Sync.Shops;
 
 namespace SMIS.Infrastructure.Mobile.Extensions;
 
@@ -67,6 +68,7 @@ public static class MobileInfrastructureServiceRegistration
         services.AddScoped<IAuthService, AuthService>();
         services.AddScoped<ISyncService, SyncService>();
         services.AddScoped<ICategorySyncService, CategorySyncService>();
+        services.AddScoped<IShopSyncService, ShopSyncService>();
 
         return services;
     }

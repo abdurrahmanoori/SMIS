@@ -4,8 +4,11 @@ using SMIS.Application.Common.Response;
 using SMIS.Application.DTO.Categories;
 using SMIS.Infrastructure.Mobile.Entities;
 using SMIS.Infrastructure.Mobile.Services.Http;
+using SMIS.Infrastructure.Mobile.Services.Identity;
+using SMIS.Infrastructure.Mobile.Services.Platform;
 using SMIS.Infrastructure.Mobile.Services.Sync;
 using SMIS.Infrastructure.Mobile.Services.Sync.Categories;
+using SMIS.Infrastructure.Mobile.Services.Sync.Shops;
 using SMIS.Infrastructure.Mobile.Test.TestInfrastructure;
 using SMIS.Infrastructure.Mobile.Test.Utilities;
 using Xunit;
@@ -19,19 +22,23 @@ public class SyncServiceTests : BaseSyncTest
     private readonly Mock<IApiClient> _apiClient = new();
     private readonly Mock<IConnectivity> _connectivity = new();
     private readonly Mock<ICategorySyncService> _categorySyncService = new();
+    private readonly Mock<IShopSyncService> _shopSyncService = new();
     private readonly CategoryEntityBuilder _builder = new();
 
-    public SyncServiceTests(ITestOutputHelper output) : base(output) { }
+    public SyncServiceTests(ITestOutputHelper output) : base(output)
+    {
+       
+    }
 
     /// <summary>
     /// Creates a new instance of <see cref="SyncService"/> using the test database context and mocked dependencies.
     /// </summary>
     /// <returns>
     /// A <see cref="SyncService"/> configured with the in-memory database, mocked <see cref="IApiClient"/>,
-    /// <see cref="ICategorySyncService"/>, and <see cref="IConnectivity"/> for unit testing.
+    /// <see cref="ICategorySyncService"/>, <see cref="IShopSyncService"/>, <see cref="IPreferencesService"/>, and <see cref="IConnectivity"/> for unit testing.
     /// </returns>
     private SyncService CreateSut() =>
-        new(Db, _apiClient.Object, _categorySyncService.Object, _connectivity.Object);
+        new(Db, _apiClient.Object, _categorySyncService.Object, _shopSyncService.Object, _connectivity.Object);
 
     private void SetOnline() =>
         _connectivity.Setup(c => c.NetworkAccess).Returns(NetworkAccess.Internet);
