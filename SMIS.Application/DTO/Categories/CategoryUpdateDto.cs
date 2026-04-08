@@ -5,12 +5,12 @@ namespace SMIS.Application.DTO.Categories
 {
     public class CategoryUpdateDto : BaseUpdateDto
     {
-        [Translatable]
+        //[Translatable]
         public string Name { get; set; } = string.Empty;
 
         public string? Code { get; set; }
 
-        [Translatable]
+        //[Translatable]
         public string? Description { get; set; }
 
         public bool IsActive { get; set; } = true;
