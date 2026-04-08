@@ -23,6 +23,13 @@ public class SyncServiceTests : BaseSyncTest
 
     public SyncServiceTests(ITestOutputHelper output) : base(output) { }
 
+    /// <summary>
+    /// Creates a new instance of <see cref="SyncService"/> using the test database context and mocked dependencies.
+    /// </summary>
+    /// <returns>
+    /// A <see cref="SyncService"/> configured with the in-memory database, mocked <see cref="IApiClient"/>,
+    /// <see cref="ICategorySyncService"/>, and <see cref="IConnectivity"/> for unit testing.
+    /// </returns>
     private SyncService CreateSut() =>
         new(Db, _apiClient.Object, _categorySyncService.Object, _connectivity.Object);
 
