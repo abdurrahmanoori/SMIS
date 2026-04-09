@@ -28,10 +28,8 @@ namespace SMIS.Infrastructure.Server.Extensions
                 }
                 else
                 {
-                    // Development/Staging: SQLite with relative path resolution
-                    var resolvedConnection = ResolveConnectionString(connectionString, environment.ContentRootPath);
-                    options.UseSqlite(resolvedConnection)
-                        //o => o.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery))
+                    // Development/Staging: SQL Server LocalDB
+                    options.UseSqlServer(connectionString)
                            .AddInterceptors(interceptor, pkEntityInterceptor);
                 }
 
