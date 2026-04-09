@@ -35,6 +35,7 @@
                         <span>Dark</span>
                     }
                 </SfButton>
+                <SfButton CssClass="e-flat profile-btn" IconCss="e-icons e-people" OnClick="@(_ => Navigation.NavigateTo("/profile"))" title="My Profile"></SfButton>
                 <SfButton CssClass="e-flat e-danger" IconCss="e-icons e-logout" OnClick="@(_ => Logout())" title="Logout">Logout</SfButton>
             </div>
         </div>
@@ -159,6 +160,11 @@
     .theme-toggle-btn {
         display: flex;
         align-items: center;
+    }
+
+    .profile-btn {
+        font-size: 18px;
+        padding: 4px 8px;
     }
 
     .e-sun-icon::before {
