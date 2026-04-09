@@ -49,14 +49,14 @@ public partial class AppDbContext : IdentityDbContext<ApplicationUser, Applicati
             var lastModifiedProperty = entityType.FindProperty(nameof(BaseEntity.LastModifiedUtc));
             if (lastModifiedProperty != null)
             {
+                // Store as ISO-8601 string — compatible with both SQLite (TEXT) and SQL Server (nvarchar)
                 var converter = new ValueConverter<DateTime, string>(
-                    v => v.ToString("yyyy-MM-dd HH:mm:ss.ffffff"),  // write
-                    v => DateTime.ParseExact(v, "yyyy-MM-dd HH:mm:ss.ffffff",// read
+                    v => v.ToString("yyyy-MM-dd HH:mm:ss.ffffff"),
+                    v => DateTime.ParseExact(v, "yyyy-MM-dd HH:mm:ss.ffffff",
                         System.Globalization.CultureInfo.InvariantCulture));
 
                 modelBuilder.Entity(entityType.ClrType)
                     .Property(nameof(BaseEntity.LastModifiedUtc))
-                    .HasColumnType("TEXT")
                     .HasConversion(converter);
             }
         }

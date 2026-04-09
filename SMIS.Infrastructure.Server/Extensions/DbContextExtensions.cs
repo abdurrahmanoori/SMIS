@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using SMIS.Domain.Common.Interfaces;
@@ -14,21 +15,25 @@ namespace SMIS.Infrastructure.Server.Extensions
         {
             services.AddDbContext<AppDbContext>((serviceProvider, options) =>
             {
-                var rawConnection = configuration.GetConnectionString("DefaultConnection") ?? string.Empty;
-    //            var dbPath = Path.Combine(
-    //Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-    //"smis.db"
-//);
-                // Resolve relative "Data Source=..." paths against the API content root so the
-                // db file is found correctly on any machine without hardcoded paths.
-                var connectionString = ResolveConnectionString(rawConnection, environment.ContentRootPath);
+                var connectionString = configuration.GetConnectionString("DefaultConnection") ?? string.Empty;
 
                 var interceptor = serviceProvider.GetRequiredService<AuditInterceptor>();
                 var pkEntityInterceptor = serviceProvider.GetRequiredService<EntityPKInterceptor>();
 
-                options.UseSqlite(connectionString)
-                    //o => o.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery))
-                       .AddInterceptors(interceptor, pkEntityInterceptor);
+                if (environment.IsProduction())
+                {
+                    // Production: SQL Server hosted on databaseasp.net
+                    options.UseSqlServer(connectionString)
+                           .AddInterceptors(interceptor, pkEntityInterceptor);
+                }
+                else
+                {
+                    // Development/Staging: SQLite with relative path resolution
+                    var resolvedConnection = ResolveConnectionString(connectionString, environment.ContentRootPath);
+                    options.UseSqlite(resolvedConnection)
+                        //o => o.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery))
+                           .AddInterceptors(interceptor, pkEntityInterceptor);
+                }
 
                 options.EnableSensitiveDataLogging(true);
             });
