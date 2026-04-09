@@ -40,6 +40,7 @@
             <div class="action-buttons">
                 <SfButton CssClass="e-primary e-large" IconCss="e-icons e-shopping-cart" @onclick="NavigateToProducts">View Products</SfButton>
                 <SfButton CssClass="e-success e-large" IconCss="e-icons e-plus">Add New Product</SfButton>
+                <SfButton CssClass="e-outline e-large" IconCss="e-icons e-people" @onclick="NavigateToProfile">My Profile</SfButton>
                 <div class="sync-btn-wrapper">
                     <SfButton CssClass="e-info e-large" IconCss="e-icons e-sync" OnClick="SyncAll" Disabled="@_isSyncing">Sync All</SfButton>
                     @if (_totalPending > 0)
@@ -75,6 +76,11 @@
     private void NavigateToProducts()
     {
         Navigation?.NavigateTo("/products");
+    }
+
+    private void NavigateToProfile()
+    {
+        Navigation?.NavigateTo("/profile");
     }
 
     private async Task SyncAll()

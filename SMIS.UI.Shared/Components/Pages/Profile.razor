@@ -1,0 +1,391 @@
+@page "/profile"
+@using SMIS.UI.Shared.Services.Interfaces
+@using SMIS.UI.Shared.Helpers
+@using Syncfusion.Blazor.Buttons
+@using Syncfusion.Blazor.Cards
+@using Syncfusion.Blazor.Inputs
+@using Syncfusion.Blazor.Notifications
+@using Syncfusion.Blazor.Spinner
+@inject IProfileService ProfileService
+
+<div class="profile-page">
+
+    @if (_isLoading)
+    {
+        <div class="loading-container">
+            <SfSpinner></SfSpinner>
+        </div>
+    }
+    else if (_user != null)
+    {
+        <!-- ── Profile Header Card ── -->
+        <SfCard CssClass="profile-header-card">
+            <CardContent>
+                <div class="profile-header">
+                    <div class="avatar-circle">
+                        <span class="avatar-initials">@GetInitials()</span>
+                    </div>
+                    <div class="profile-meta">
+                        <h2 class="profile-name">@GetFullName()</h2>
+                        <span class="profile-username">@@@_user.UserName</span>
+                        <div class="profile-badges">
+                            @foreach (var role in _user.Roles)
+                            {
+                                <span class="role-badge">@role</span>
+                            }
+                            <span class="status-badge @(_user.EmailConfirmed ? "verified" : "unverified")">
+                                @(_user.EmailConfirmed ? "✓ Verified" : "Unverified")
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </CardContent>
+        </SfCard>
+
+        <!-- ── Info + Change Password row ── -->
+        <div class="profile-grid">
+
+            <!-- Account Information -->
+            <SfCard>
+                <CardHeader Title="Account Information" />
+                <CardContent>
+                    <div class="info-list">
+                        <div class="info-item">
+                            <span class="info-label"><span class="e-icons e-mail"></span> Email</span>
+                            <span class="info-value">@(_user.Email ?? "—")</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label"><span class="e-icons e-mobile"></span> Phone</span>
+                            <span class="info-value">@(_user.PhoneNumber ?? "—")</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label"><span class="e-icons e-building"></span> Shop</span>
+                            <span class="info-value">@(_user.ShopName ?? "—")</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label"><span class="e-icons e-globe"></span> Language</span>
+                            <span class="info-value">@_user.LanguageId</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label"><span class="e-icons e-check"></span> Phone Confirmed</span>
+                            <span class="info-value">@(_user.PhoneNumberConfirmed ? "Yes" : "No")</span>
+                        </div>
+                    </div>
+                </CardContent>
+            </SfCard>
+
+            <!-- Change Password -->
+            <SfCard>
+                <CardHeader Title="Change Password" />
+                <CardContent>
+                    <EditForm Model="_passwordModel" OnValidSubmit="ChangePasswordAsync">
+                        <div class="form-group">
+                            <label>Current Password</label>
+                            <SfTextBox @bind-Value="_passwordModel.CurrentPassword"
+                                       Type="InputType.Password"
+                                       Placeholder="Enter current password">
+                            </SfTextBox>
+                            @if (_pwErrors.ContainsKey("CurrentPassword"))
+                            {
+                                <div class="validation-message">@_pwErrors["CurrentPassword"]</div>
+                            }
+                        </div>
+                        <div class="form-group">
+                            <label>New Password</label>
+                            <SfTextBox @bind-Value="_passwordModel.NewPassword"
+                                       Type="InputType.Password"
+                                       Placeholder="Enter new password">
+                            </SfTextBox>
+                            @if (_pwErrors.ContainsKey("NewPassword"))
+                            {
+                                <div class="validation-message">@_pwErrors["NewPassword"]</div>
+                            }
+                        </div>
+                        <div class="form-group">
+                            <label>Confirm New Password</label>
+                            <SfTextBox @bind-Value="_confirmPassword"
+                                       Type="InputType.Password"
+                                       Placeholder="Confirm new password">
+                            </SfTextBox>
+                            @if (_pwErrors.ContainsKey("Confirm"))
+                            {
+                                <div class="validation-message">@_pwErrors["Confirm"]</div>
+                            }
+                        </div>
+                        <SfButton Type="ButtonType.Submit"
+                                  CssClass="e-primary e-block"
+                                  IconCss="e-icons e-lock"
+                                  Disabled="_isSaving">
+                            @(_isSaving ? "Saving..." : "Update Password")
+                        </SfButton>
+                    </EditForm>
+                </CardContent>
+            </SfCard>
+
+        </div>
+    }
+    else
+    {
+        <div class="error-state">
+            <span class="e-icons e-warning" style="font-size:32px;color:#dc3545;"></span>
+            <p>Could not load profile. Please try again.</p>
+        </div>
+    }
+
+</div>
+
+<SfToast @ref="_toast" ShowCloseButton="true">
+    <ToastPosition X="Right" Y="Top"></ToastPosition>
+</SfToast>
+
+@code {
+    private SfToast? _toast;
+    private ProfileDto? _user;
+    private bool _isLoading = true;
+    private bool _isSaving = false;
+
+    private PasswordFormModel _passwordModel = new();
+    private string _confirmPassword = string.Empty;
+    private Dictionary<string, string> _pwErrors = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        var result = await ProfileService.GetCurrentUserAsync();
+        _user = result.Success ? result.Response : null;
+        _isLoading = false;
+    }
+
+    private string GetInitials()
+    {
+        if (_user == null) return "?";
+        var first = _user.FirstName?.FirstOrDefault();
+        var last = _user.LastName?.FirstOrDefault();
+        if (first.HasValue && last.HasValue) return $"{first}{last}".ToUpper();
+        return (_user.UserName?.Substring(0, Math.Min(2, _user.UserName.Length)) ?? "?").ToUpper();
+    }
+
+    private string GetFullName()
+    {
+        if (!string.IsNullOrWhiteSpace(_user?.FirstName) || !string.IsNullOrWhiteSpace(_user?.LastName))
+            return $"{_user?.FirstName} {_user?.LastName}".Trim();
+        return _user?.UserName ?? "Unknown";
+    }
+
+    private async Task ChangePasswordAsync()
+    {
+        _pwErrors.Clear();
+
+        if (string.IsNullOrWhiteSpace(_passwordModel.CurrentPassword))
+            _pwErrors["CurrentPassword"] = "Current password is required.";
+
+        if (string.IsNullOrWhiteSpace(_passwordModel.NewPassword))
+            _pwErrors["NewPassword"] = "New password is required.";
+
+        if (_passwordModel.NewPassword != _confirmPassword)
+            _pwErrors["Confirm"] = "Passwords do not match.";
+
+        if (_pwErrors.Any()) return;
+
+        _isSaving = true;
+        var result = await ProfileService.ChangePasswordAsync(_passwordModel.CurrentPassword, _passwordModel.NewPassword);
+        _isSaving = false;
+
+        if (result.Success)
+        {
+            _passwordModel = new();
+            _confirmPassword = string.Empty;
+            await ToastHelper.ShowSuccessAsync(_toast!, "Password updated successfully.", "Profile");
+        }
+        else
+        {
+            await ToastHelper.ShowErrorAsync(_toast!, result.Message ?? "Failed to update password.", "Profile");
+        }
+    }
+
+    // Simple local model — avoids coupling the shared page to Application DTOs
+    private class PasswordFormModel
+    {
+        public string CurrentPassword { get; set; } = string.Empty;
+        public string NewPassword { get; set; } = string.Empty;
+    }
+}
+
+<style>
+    .profile-page {
+        max-width: 1100px;
+    }
+
+    .profile-header-card {
+        margin-bottom: 24px;
+    }
+
+    .profile-header {
+        display: flex;
+        align-items: center;
+        gap: 24px;
+        padding: 8px 0;
+    }
+
+    .avatar-circle {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #0d6efd, #6610f2);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+    }
+
+    .avatar-initials {
+        color: white;
+        font-size: 28px;
+        font-weight: 700;
+        letter-spacing: 1px;
+    }
+
+    .profile-meta {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+    }
+
+    .profile-name {
+        margin: 0;
+        font-size: 22px;
+        font-weight: 700;
+        color: #212529;
+    }
+
+    .profile-username {
+        color: #6c757d;
+        font-size: 14px;
+    }
+
+    .profile-badges {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        margin-top: 4px;
+    }
+
+    .role-badge {
+        background-color: #e7f1ff;
+        color: #0d6efd;
+        border: 1px solid #b6d4fe;
+        border-radius: 12px;
+        padding: 2px 10px;
+        font-size: 12px;
+        font-weight: 600;
+    }
+
+    .status-badge {
+        border-radius: 12px;
+        padding: 2px 10px;
+        font-size: 12px;
+        font-weight: 600;
+    }
+
+    .status-badge.verified {
+        background-color: #d4edda;
+        color: #155724;
+        border: 1px solid #c3e6cb;
+    }
+
+    .status-badge.unverified {
+        background-color: #fff3cd;
+        color: #856404;
+        border: 1px solid #ffc107;
+    }
+
+    .profile-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 24px;
+    }
+
+    .info-list {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .info-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 12px 0;
+        border-bottom: 1px solid #f0f0f0;
+    }
+
+    .info-item:last-child {
+        border-bottom: none;
+    }
+
+    .info-label {
+        color: #6c757d;
+        font-size: 14px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .info-value {
+        font-weight: 500;
+        color: #212529;
+        font-size: 14px;
+        text-align: right;
+        max-width: 60%;
+        word-break: break-word;
+    }
+
+    .form-group {
+        margin-bottom: 16px;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 6px;
+        font-size: 14px;
+        font-weight: 500;
+        color: #495057;
+    }
+
+    .validation-message {
+        color: #dc3545;
+        font-size: 0.8rem;
+        margin-top: 4px;
+    }
+
+    .e-block {
+        width: 100%;
+        margin-top: 8px;
+    }
+
+    .loading-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 300px;
+    }
+
+    .error-state {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 12px;
+        padding: 60px 0;
+        color: #6c757d;
+    }
+
+    [data-theme="dark"] .profile-name { color: #e0e0e0; }
+    [data-theme="dark"] .info-value { color: #e0e0e0; }
+    [data-theme="dark"] .info-item { border-bottom-color: #3a3a4a; }
+    [data-theme="dark"] .form-group label { color: #c0c0c0; }
+
+    @@media (max-width: 768px) {
+        .profile-grid { grid-template-columns: 1fr; }
+        .profile-header { flex-direction: column; text-align: center; }
+        .profile-badges { justify-content: center; }
+        .info-value { max-width: 55%; }
+    }
+</style>

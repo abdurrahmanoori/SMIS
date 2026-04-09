@@ -43,6 +43,7 @@ public static class ServiceCollectionExtensions
         services.AddScoped<ICategoryService, CategoryService>();
         services.AddScoped<IShopService, ShopService>();
         services.AddScoped<ISyncFacade, SyncFacade>();
+        services.AddScoped<IProfileService, MobileProfileService>();
         services.AddSingleton<IThemeService, ThemeService>();
         services.AddScoped<DevelopmentAutoLoginService>();
 
