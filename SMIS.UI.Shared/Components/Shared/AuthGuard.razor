@@ -1,6 +1,7 @@
 @using SMIS.UI.Shared.Services.Interfaces
 @inject IUiAuthService AuthService
 @inject NavigationManager Navigation
+@implements IDisposable
 
 @if (_isChecking)
 {
@@ -8,7 +9,7 @@
         <SfSpinner Visible="true" Size="40"></SfSpinner>
     </div>
 }
-else
+else if (_isAuthenticated || _isPublicRoute)
 {
     @ChildContent
 }
@@ -17,24 +18,44 @@ else
     [Parameter] public RenderFragment? ChildContent { get; set; }
 
     private bool _isChecking = true;
+    private bool _isAuthenticated = false;
+    private bool _isPublicRoute = false;
     private static readonly string[] PublicRoutes = ["/login"];
 
     protected override async Task OnInitializedAsync()
     {
-        var currentPath = new Uri(Navigation.Uri).AbsolutePath.ToLower();
+        Navigation.LocationChanged += OnLocationChanged;
+        await CheckAuthAsync();
+    }
 
-        if (PublicRoutes.Contains(currentPath))
+    private async void OnLocationChanged(object? sender, LocationChangedEventArgs e)
+    {
+        await CheckAuthAsync();
+        await InvokeAsync(StateHasChanged);
+    }
+
+    private async Task CheckAuthAsync()
+    {
+        var currentPath = new Uri(Navigation.Uri).AbsolutePath.ToLower();
+        _isPublicRoute = PublicRoutes.Contains(currentPath);
+
+        if (_isPublicRoute)
         {
+            _isAuthenticated = false;
             _isChecking = false;
             return;
         }
 
-        var isAuthenticated = await AuthService.IsAuthenticatedAsync();
-        if (!isAuthenticated)
+        _isChecking = true;
+        _isAuthenticated = await AuthService.IsAuthenticatedAsync();
+
+        if (!_isAuthenticated)
             Navigation.NavigateTo("/login", replace: true);
 
         _isChecking = false;
     }
+
+    public void Dispose() => Navigation.LocationChanged -= OnLocationChanged;
 }
 
 <style>

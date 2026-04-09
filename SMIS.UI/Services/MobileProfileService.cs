@@ -8,8 +8,8 @@ namespace SMIS.UI.Services;
 
 /// <summary>
 /// Mobile implementation of IProfileService.
-/// Reads profile data from the public API of IMobileCurrentUser (backed by JWT claims).
-/// Delegates password change to the REST API.
+/// Fetches full user details from the API (GET /api/account/me).
+/// Delegates password change to the API (POST /api/account/{id}/change-password).
 /// </summary>
 public class MobileProfileService : IProfileService
 {
@@ -22,26 +22,35 @@ public class MobileProfileService : IProfileService
         _apiClient = apiClient;
     }
 
-    public Task<Result<ProfileDto>> GetCurrentUserAsync()
+    public async Task<Result<ProfileDto>> GetCurrentUserAsync()
     {
-        var dto = new ProfileDto
-        {
-            Id = _currentUser.GetId(),
-            ShopName = _currentUser.GetShopId(),
-            LanguageId = _currentUser.GetLangId(),
-            Roles = _currentUser.Roles(),
-            // UserName, Email, Phone, FirstName, LastName are not exposed by IMobileCurrentUser.
-            // They would require an API call — left null here; extend if needed.
-        };
+        var result = await _apiClient.GetAsync<UserDto>("/api/account/me?includeShop=true");
 
-        return Task.FromResult(Result<ProfileDto>.SuccessResult(dto));
+        if (!result.Success || result.Response == null)
+            return Result<ProfileDto>.FailureResult(result.Message ?? result.Errors?.FirstOrDefault()?.Description ?? "Failed to load profile.");
+
+        var user = result.Response;
+        return Result<ProfileDto>.SuccessResult(new ProfileDto
+        {
+            Id = user.Id,
+            UserName = user.UserName,
+            Email = user.Email,
+            PhoneNumber = user.PhoneNumber,
+            FirstName = user.FirstName,
+            LastName = user.LastName,
+            ShopName = user.Shop?.Name ?? user.ShopId,
+            LanguageId = user.LanguageId,
+            EmailConfirmed = user.EmailConfirmed,
+            PhoneNumberConfirmed = user.PhoneNumberConfirmed,
+            Roles = user.Roles ?? new List<string>()
+        });
     }
 
     public async Task<Result> ChangePasswordAsync(string currentPassword, string newPassword)
     {
         var userId = _currentUser.GetId();
         var result = await _apiClient.PostAsync<ChangePasswordDto, bool>(
-            $"/api/users/{userId}/change-password",
+            $"/api/account/{userId}/change-password",
             new ChangePasswordDto { CurrentPassword = currentPassword, NewPassword = newPassword });
 
         return result.Success

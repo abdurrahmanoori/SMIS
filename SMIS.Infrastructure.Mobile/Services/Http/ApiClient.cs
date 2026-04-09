@@ -1,6 +1,7 @@
 using System.Net;
 using System.Net.Http.Json;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using SMIS.Application.Common.Response;
 
 namespace SMIS.Infrastructure.Mobile.Services.Http;
@@ -13,7 +14,11 @@ public class ApiClient : IApiClient
     public ApiClient(HttpClient httpClient)
     {
         _httpClient = httpClient;
-        _jsonOptions = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+        _jsonOptions = new JsonSerializerOptions
+        {
+            PropertyNameCaseInsensitive = true,
+            Converters = { new JsonStringEnumConverter(JsonNamingPolicy.CamelCase) }
+        };
     }
 
     public async Task<Result<TResponse>> GetAsync<TResponse>(string endpoint)
@@ -51,23 +56,8 @@ public class ApiClient : IApiClient
             if (string.IsNullOrWhiteSpace(content))
                 return Result<T>.SuccessResult(default);
 
-            //try
-            //{
-            //    var wrapper = JsonSerializer.Deserialize<Result<T>>(content, _jsonOptions);
-            //    //if (wrapper?.Response != null)
-            //    //    return wrapper;
-            //}
-            //catch (JsonException) { }
-
-            try
-            {
-                var direct = JsonSerializer.Deserialize<T>(content, _jsonOptions);
-                return Result<T>.SuccessResult(direct);
-            }
-            catch (JsonException)
-            {
-                return Result<T>.SuccessResult(default);
-            }
+            var direct = JsonSerializer.Deserialize<T>(content, _jsonOptions);
+            return Result<T>.SuccessResult(direct);
         }
 
         if (!string.IsNullOrWhiteSpace(content))
@@ -83,9 +73,9 @@ public class ApiClient : IApiClient
         return response.StatusCode switch
         {
             HttpStatusCode.Unauthorized => Result<T>.FailureResult("Unauthorized", "Please login again."),
-            HttpStatusCode.Forbidden    => Result<T>.FailureResult("Forbidden", "Access denied."),
-            HttpStatusCode.NotFound     => Result<T>.FailureResult("NotFound", "Resource not found."),
-            _                           => Result<T>.FailureResult("Error", $"Request failed: {response.StatusCode}")
+            HttpStatusCode.Forbidden => Result<T>.FailureResult("Forbidden", "Access denied."),
+            HttpStatusCode.NotFound => Result<T>.FailureResult("NotFound", "Resource not found."),
+            _ => Result<T>.FailureResult("Error", $"Request failed: {response.StatusCode}")
         };
     }
 }

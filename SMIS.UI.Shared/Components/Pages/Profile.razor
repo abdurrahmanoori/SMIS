@@ -128,7 +128,7 @@
     {
         <div class="error-state">
             <span class="e-icons e-warning" style="font-size:32px;color:#dc3545;"></span>
-            <p>Could not load profile. Please try again.</p>
+            <p>@_errorMessage</p>
         </div>
     }
 
@@ -143,6 +143,7 @@
     private ProfileDto? _user;
     private bool _isLoading = true;
     private bool _isSaving = false;
+    private string _errorMessage = string.Empty;
 
     private PasswordFormModel _passwordModel = new();
     private string _confirmPassword = string.Empty;
@@ -152,6 +153,8 @@
     {
         var result = await ProfileService.GetCurrentUserAsync();
         _user = result.Success ? result.Response : null;
+        if (!result.Success)
+            _errorMessage = result.Message ?? result.Errors?.FirstOrDefault()?.Description ?? "Could not load profile.";
         _isLoading = false;
     }
 
