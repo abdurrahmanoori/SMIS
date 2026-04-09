@@ -15,6 +15,14 @@ namespace SMIS.Infrastructure.Server.EntityConfigurations
             builder.Property(pu => pu.Id)
                 .ValueGeneratedOnAdd();
 
+            builder.Property(pu => pu.ProductId)
+                .IsRequired()
+                .HasMaxLength(450);
+
+            builder.Property(pu => pu.UnitOfMeasureId)
+                .IsRequired()
+                .HasMaxLength(450);
+
             builder.Property(pu => pu.ConversionFactor)
                 .IsRequired()
                 .HasColumnType("decimal(18,2)");

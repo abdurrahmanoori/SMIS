@@ -24,7 +24,8 @@ namespace SMIS.Infrastructure.Server.EntityConfigurations
                 .HasMaxLength(200);
 
             builder.Property(p => p.BaseUnitId)
-                .IsRequired();
+                .IsRequired()
+                .HasMaxLength(450);
 
             builder.Property(p => p.BaseUnitName)
                 .HasMaxLength(100);
@@ -46,7 +47,7 @@ namespace SMIS.Infrastructure.Server.EntityConfigurations
                 .HasMaxLength(500);
 
             builder.Property(p => p.CategoryId)
-                .HasMaxLength(50);
+                .HasMaxLength(450);
 
             builder.Property(p => p.CategoryName)
                 .HasMaxLength(200);

@@ -10,6 +10,9 @@ public class AppLogConfiguration : IEntityTypeConfiguration<AppLog>
     {
         builder.HasKey(x => x.Id);
         
+        builder.Property(x => x.Name)
+            .IsRequired();
+        
         builder.Property(x => x.Level)
             .IsRequired()
             .HasMaxLength(50);
@@ -21,7 +24,8 @@ public class AppLogConfiguration : IEntityTypeConfiguration<AppLog>
         
         builder.Property(x => x.Properties);
         
-        builder.Property(x => x.UserId);
+        builder.Property(x => x.UserId)
+            .HasMaxLength(450);
         
         builder.Property(x => x.CreatedAt)
             .IsRequired();

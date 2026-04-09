@@ -24,7 +24,8 @@ namespace SMIS.Infrastructure.Server.EntityConfigurations
                 .HasMaxLength(500);
 
             builder.Property(u => u.ShopId)
-                .IsRequired();
+                .IsRequired()
+                .HasMaxLength(450);
 
             builder.HasOne(u => u.Shop)
                 .WithMany()

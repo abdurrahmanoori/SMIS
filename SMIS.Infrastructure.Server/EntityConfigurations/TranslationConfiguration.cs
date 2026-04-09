@@ -19,10 +19,12 @@ namespace SMIS.Infrastructure.Server.EntityConfigurations
                 .IsUnique();
 
             builder.Property(x => x.TranslationKeyId)
-                .IsRequired();
+                .IsRequired()
+                .HasMaxLength(450);
 
             builder.Property(x => x.LanguageNo)
-                .IsRequired();
+                .IsRequired()
+                .HasMaxLength(450);
 
             builder.HasOne(t => t.TranslationKey)
                 .WithMany(tk => tk.Translations)

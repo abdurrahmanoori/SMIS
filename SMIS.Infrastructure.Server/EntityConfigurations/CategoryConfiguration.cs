@@ -10,6 +10,25 @@ namespace SMIS.Infrastructure.Server.EntityConfigurations
         {
             builder.ToTable(nameof(Category));
 
+            builder.HasKey(c => c.Id);
+
+            builder.Property(c => c.Name)
+                .IsRequired()
+                .HasMaxLength(200);
+
+            builder.Property(c => c.Code)
+                .HasMaxLength(50);
+
+            builder.Property(c => c.Description)
+                .HasMaxLength(500);
+
+            builder.Property(c => c.ShopId)
+                .IsRequired()
+                .HasMaxLength(450);
+
+            builder.Property(c => c.IsActive)
+                .IsRequired();
+
             // Backend-specific: Relationships
             builder.HasOne(c => c.Shop)
                 .WithMany()

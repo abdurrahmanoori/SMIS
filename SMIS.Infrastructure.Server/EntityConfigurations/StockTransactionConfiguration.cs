@@ -13,13 +13,15 @@ namespace SMIS.Infrastructure.Server.EntityConfigurations
             builder.HasKey(st => st.Id);
 
             builder.Property(st => st.ShopId)
-                .IsRequired();
+                .IsRequired()
+                .HasMaxLength(450);
 
             builder.Property(st => st.ShopName)
                 .HasMaxLength(200);
 
             builder.Property(st => st.ProductId)
-                .IsRequired();
+                .IsRequired()
+                .HasMaxLength(450);
 
             builder.Property(st => st.ProductName)
                 .HasMaxLength(200);
@@ -32,7 +34,8 @@ namespace SMIS.Infrastructure.Server.EntityConfigurations
                 .HasPrecision(18, 4);
 
             builder.Property(st => st.UnitId)
-                .IsRequired();
+                .IsRequired()
+                .HasMaxLength(450);
 
             builder.Property(st => st.UnitName)
                 .HasMaxLength(100);

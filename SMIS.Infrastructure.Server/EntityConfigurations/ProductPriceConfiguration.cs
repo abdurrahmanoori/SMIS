@@ -13,7 +13,8 @@ public class ProductPriceConfiguration : IEntityTypeConfiguration<ProductPrice>
         builder.HasKey(p => p.Id);
 
         builder.Property(p => p.ProductId)
-            .IsRequired();
+            .IsRequired()
+            .HasMaxLength(450);
 
         builder.Property(p => p.ProductUnitId)
             .IsRequired();

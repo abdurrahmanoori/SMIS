@@ -9,7 +9,7 @@ namespace SMIS.Infrastructure.Server.EntityConfigurations
         public void Configure(EntityTypeBuilder<Customer> builder)
         {
             builder.HasKey(e => e.Id);
-            builder.Property(e => e.Id).HasMaxLength(50);
+            builder.Property(e => e.Id).HasMaxLength(450);
 
             builder.Property(e => e.FirstName).IsRequired().HasMaxLength(100);
             builder.Property(e => e.LastName).HasMaxLength(100);
@@ -21,8 +21,8 @@ namespace SMIS.Infrastructure.Server.EntityConfigurations
             builder.Property(e => e.PhoneNumber).HasMaxLength(20);
             builder.Property(e => e.Address).HasMaxLength(500);
             builder.Property(e => e.TaxNumber).HasMaxLength(20);
-            builder.Property(e => e.ProvinceId).HasMaxLength(50);
-            builder.Property(e => e.DistrictId).HasMaxLength(50);
+            builder.Property(e => e.ProvinceId).HasMaxLength(450);
+            builder.Property(e => e.DistrictId).HasMaxLength(450);
 
             builder.HasIndex(e => e.Email);
             builder.HasIndex(e => e.PhoneNumber);
