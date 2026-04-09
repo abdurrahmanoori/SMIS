@@ -16,7 +16,8 @@ namespace SMIS.Infrastructure.Server.EntityConfigurations
                 .IsRequired();
 
             builder.Property(so => so.ShopId)
-                .IsRequired();
+                .IsRequired()
+                .HasMaxLength(450);
 
             builder.Property(so => so.ShopName)
                 .HasMaxLength(200);
