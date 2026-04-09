@@ -1,5 +1,7 @@
+using Microsoft.AspNetCore.Identity;
 using SMIS.Application.Extensions;
 using SMIS.Application.Identity.IServices;
+using SMIS.Domain.Entities.Identity.Entity;
 using SMIS.Infrastructure.Server.Context;
 using SMIS.Infrastructure.Server.Extensions;
 using SMIS.UI.Shared.Services.Interfaces;
@@ -50,11 +52,21 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseAuthentication();
+app.UseAuthorization();
 app.UseAntiforgery();
 
 app.MapStaticAssets();
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode()
     .AddAdditionalAssemblies(typeof(SMIS.UI.Shared.Components.Pages.Home).Assembly);
+
+// Logout endpoint: must run in a real HTTP request/response cycle so SignInManager
+// can clear the Identity cookie. Blazor Server's SignalR circuit cannot write cookies.
+app.MapGet("/logout", async (SignInManager<ApplicationUser> signInManager) =>
+{
+    await signInManager.SignOutAsync();
+    return Results.Redirect("/login");
+});
 
 app.Run();

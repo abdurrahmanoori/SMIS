@@ -2,7 +2,6 @@
 @using SMIS.UI.Shared.Components.Layout
 @inherits LayoutComponentBase
 @inject IJSRuntime JSRuntime
-@inject IUiAuthService AuthService
 @inject NavigationManager Navigation
 @inject IThemeService ThemeService
 @implements IDisposable
@@ -36,7 +35,7 @@
                         <span>Dark</span>
                     }
                 </SfButton>
-                <SfButton CssClass="e-flat e-danger" IconCss="e-icons e-logout" OnClick="Logout" title="Logout">Logout</SfButton>
+                <SfButton CssClass="e-flat e-danger" IconCss="e-icons e-logout" OnClick="@(_ => Logout())" title="Logout">Logout</SfButton>
             </div>
         </div>
         <div class="content">
@@ -96,10 +95,11 @@
 
     private void ToggleSidebar() => isSidebarOpen = !isSidebarOpen;
 
-    private async Task Logout()
+    private void Logout()
     {
-        await AuthService.LogoutAsync();
-        Navigation.NavigateTo("/login", replace: true);
+        // Full-page navigation required: Blazor Server's SignalR circuit cannot write HTTP response headers.
+        // Cookie must be cleared in a real HTTP request via the /logout endpoint.
+        Navigation.NavigateTo("/logout", forceLoad: true);
     }
 
     public void Dispose() => objRef?.Dispose();
