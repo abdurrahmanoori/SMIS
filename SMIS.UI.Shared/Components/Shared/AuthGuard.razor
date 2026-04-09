@@ -50,7 +50,10 @@ else if (_isAuthenticated || _isPublicRoute)
         _isAuthenticated = await AuthService.IsAuthenticatedAsync();
 
         if (!_isAuthenticated)
+        {
             Navigation.NavigateTo("/login", replace: true);
+            return; // keep _isChecking = true so nothing renders while redirecting
+        }
 
         _isChecking = false;
     }
