@@ -56,11 +56,12 @@
                 }
             </SfButton>
 
-#if DEBUG
-            <SfButton CssClass="e-outline skip-btn" OnClick="DevLogin">
-                <span class="e-icons e-arrow-right"></span> Skip Login (Dev Only)
-            </SfButton>
-#endif
+            @if (_isDevMode)
+            {
+                <SfButton CssClass="e-outline skip-btn" OnClick="DevLogin">
+                    <span class="e-icons e-arrow-right"></span> Skip Login (Dev Only)
+                </SfButton>
+            }
         </div>
 
         <div class="login-footer">
@@ -115,6 +116,11 @@
     }
 
 #if DEBUG
+    private const bool _isDevMode = true;
+#else
+    private const bool _isDevMode = false;
+#endif
+
     private async Task DevLogin()
     {
         var result = await AuthService.LoginAsync("superadmin@smis.com", "Pass123!");
@@ -123,7 +129,6 @@
         else
             _errorMessage = "Dev auto-login failed.";
     }
-#endif
 }
 
 <style>
