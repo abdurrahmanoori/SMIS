@@ -57,7 +57,7 @@
             </SfButton>
 
 #if DEBUG
-            <SfButton CssClass="e-outline skip-btn" OnClick="@(() => Navigation.NavigateTo("/"))">
+            <SfButton CssClass="e-outline skip-btn" OnClick="DevLogin">
                 <span class="e-icons e-arrow-right"></span> Skip Login (Dev Only)
             </SfButton>
 #endif
@@ -113,6 +113,17 @@
             _isLoading = false;
         }
     }
+
+#if DEBUG
+    private async Task DevLogin()
+    {
+        var result = await AuthService.LoginAsync("superadmin@smis.com", "Pass123!");
+        if (result.Success)
+            Navigation.NavigateTo("/");
+        else
+            _errorMessage = "Dev auto-login failed.";
+    }
+#endif
 }
 
 <style>
