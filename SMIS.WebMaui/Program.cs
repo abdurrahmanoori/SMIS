@@ -6,6 +6,7 @@ using SMIS.Infrastructure.Server.Context;
 using SMIS.Infrastructure.Server.Extensions;
 using SMIS.UI.Shared.Services.Interfaces;
 using SMIS.WebMaui.Components;
+using SMIS.WebMaui.Endpoints;
 using SMIS.WebMaui.Services;
 using Syncfusion.Blazor;
 using Syncfusion.Licensing;
@@ -57,6 +58,9 @@ app.UseAuthorization();
 app.UseAntiforgery();
 
 app.MapStaticAssets();
+
+AuthEndpoints.Map(app);
+
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode()
     .AddAdditionalAssemblies(typeof(SMIS.UI.Shared.Components.Pages.Home).Assembly);
