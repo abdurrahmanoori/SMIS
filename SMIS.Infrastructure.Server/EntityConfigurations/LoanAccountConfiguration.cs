@@ -13,19 +13,22 @@ public class LoanAccountConfiguration : IEntityTypeConfiguration<LoanAccount>
         builder.HasKey(l => l.Id);
 
         builder.Property(l => l.CustomerId)
-            .IsRequired();
+            .IsRequired()
+            .HasMaxLength(450);
 
         builder.Property(l => l.CustomerName)
             .HasMaxLength(200);
 
         builder.Property(l => l.ShopId)
-            .IsRequired();
+            .IsRequired()
+            .HasMaxLength(450);
 
         builder.Property(l => l.ShopName)
             .HasMaxLength(200);
 
         builder.Property(l => l.ProductId)
-            .IsRequired();
+            .IsRequired()
+            .HasMaxLength(450);
 
         builder.Property(l => l.ProductName)
             .HasMaxLength(200);
@@ -35,7 +38,8 @@ public class LoanAccountConfiguration : IEntityTypeConfiguration<LoanAccount>
             .HasPrecision(18, 2);
 
         builder.Property(l => l.UnitId)
-            .IsRequired();
+            .IsRequired()
+            .HasMaxLength(450);
 
         builder.Property(l => l.UnitName)
             .HasMaxLength(100);

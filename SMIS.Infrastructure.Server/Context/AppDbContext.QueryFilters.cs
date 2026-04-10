@@ -11,8 +11,6 @@ public partial class AppDbContext
     private void SetShopEntityFilter<TEntity>(ModelBuilder modelBuilder)
         where TEntity : class, IShopEntity, ISoftDeletable
     {
-        var test = _currentUser.GetShopId();
-        var test2 = _currentUser.IsSuperAdmin();
         modelBuilder.Entity<TEntity>().HasQueryFilter(e =>
             !e.IsDeleted &&
             (_currentUser.IsSuperAdmin() || e.ShopId == _currentUser.GetShopId()));

@@ -13,6 +13,9 @@ namespace SMIS.Infrastructure.Server.EntityConfigurations
 
             builder.Property(x => x.Name).HasMaxLength(200).IsRequired();
 
+            builder.Property(x => x.TranslationKeyId)
+                .HasMaxLength(450);
+
             // Configure one-to-one relationship with TranslationKey using Id
             builder.HasOne(d => d.TranslationKey)
                 .WithOne()

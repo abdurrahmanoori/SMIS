@@ -13,7 +13,8 @@ public class LoanAccountPaymentConfiguration : IEntityTypeConfiguration<LoanAcco
         builder.HasKey(p => p.Id);
 
         builder.Property(p => p.LoanAccountId)
-            .IsRequired();
+            .IsRequired()
+            .HasMaxLength(450);
 
         builder.Property(p => p.Amount)
             .IsRequired();

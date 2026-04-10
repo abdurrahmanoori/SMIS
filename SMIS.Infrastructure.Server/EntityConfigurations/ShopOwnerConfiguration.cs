@@ -13,7 +13,8 @@ namespace SMIS.Infrastructure.Server.EntityConfigurations
             builder.HasKey(so => so.Id);
 
             builder.Property(so => so.ApplicationUserId)
-                .IsRequired();
+                .IsRequired()
+                .HasMaxLength(450);
 
             builder.Property(so => so.ShopId)
                 .IsRequired()
