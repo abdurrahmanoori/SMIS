@@ -178,7 +178,7 @@ namespace SMIS.Infrastructure.Server.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("AppLogs");
+                    b.ToTable("AppLogs", (string)null);
                 });
 
             modelBuilder.Entity("SMIS.Domain.Entities.Category", b =>
@@ -462,7 +462,7 @@ namespace SMIS.Infrastructure.Server.Migrations
 
                     b.HasIndex("TaxNumber");
 
-                    b.ToTable("Customers");
+                    b.ToTable("Customers", (string)null);
 
                     b.HasData(
                         new
@@ -2016,7 +2016,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                         .IsUnique()
                         .HasFilter("[Code] IS NOT NULL");
 
-                    b.ToTable("Languages");
+                    b.ToTable("Languages", (string)null);
 
                     b.HasData(
                         new
@@ -2116,7 +2116,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                     b.HasIndex("TranslationKeyId", "LanguageNo")
                         .IsUnique();
 
-                    b.ToTable("Translations");
+                    b.ToTable("Translations", (string)null);
 
                     b.HasData(
                         new
@@ -2336,7 +2336,7 @@ namespace SMIS.Infrastructure.Server.Migrations
 
                     b.HasIndex("MessageCode");
 
-                    b.ToTable("TranslationKeys");
+                    b.ToTable("TranslationKeys", (string)null);
 
                     b.HasData(
                         new
@@ -2503,7 +2503,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                         .IsUnique()
                         .HasFilter("[TranslationKeyId] IS NOT NULL");
 
-                    b.ToTable("Districts");
+                    b.ToTable("Districts", (string)null);
 
                     b.HasData(
                         new
@@ -2594,7 +2594,7 @@ namespace SMIS.Infrastructure.Server.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Provinces");
+                    b.ToTable("Provinces", (string)null);
 
                     b.HasData(
                         new
@@ -2687,7 +2687,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                     b.HasIndex("ProvinceId", "LanguageId")
                         .IsUnique();
 
-                    b.ToTable("ProvinceTranslations");
+                    b.ToTable("ProvinceTranslations", (string)null);
 
                     b.HasData(
                         new
