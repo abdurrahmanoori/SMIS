@@ -41,6 +41,9 @@ builder.Services.AddHttpContextAccessor();
 // Register web-specific implementations of shared service interfaces
 // NullTokenGenerator satisfies ITokenGenerator for LoginCommand DI — token is unused here,
 // Blazor Server auth is handled by the Identity cookie via SignInManager
+// Override ICurrentUser registered by ConfigurePersistenceServices — Blazor Server cannot use
+// IHttpContextAccessor after the SignalR circuit starts; AuthenticationStateProvider works correctly.
+builder.Services.AddScoped<ICurrentUser, BlazorCurrentUser>();
 builder.Services.AddScoped<ITokenGenerator, NullTokenGenerator>();
 builder.Services.AddScoped<ISignInService, CookieSignInService>();
 builder.Services.AddScoped<IUiAuthService, WebAuthService>();

@@ -5,6 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using SMIS.Domain.Entities.Identity.Entity;
+using SMIS.Infrastructure.Server.Services.Identity;
 using System.Text;
 
 namespace SMIS.Infrastructure.Server.Extensions;
@@ -27,7 +28,8 @@ public static class IdentityServicesRegistration
             options.Password.RequiredLength = 6;
         })
         .AddEntityFrameworkStores<TContext>()
-        .AddDefaultTokenProviders();
+        .AddDefaultTokenProviders()
+        .AddClaimsPrincipalFactory<ApplicationUserClaimsPrincipalFactory>();
 
         return services;
     }
