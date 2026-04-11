@@ -22,7 +22,7 @@ public class AppDbContextFactory : IDesignTimeDbContextFactory<AppDbContext>
                        ?? baseConfig["Environment"]
                        ?? "Development";
         //throw new Exception(apiProjectPath);
-        throw new Exception(environment);
+        //throw new Exception(environment);
         // Second pass: layer the environment-specific file on top
         var configuration = new ConfigurationBuilder()
             .SetBasePath(apiProjectPath)
