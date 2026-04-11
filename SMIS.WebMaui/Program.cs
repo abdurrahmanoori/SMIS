@@ -61,11 +61,10 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseStaticFiles();
 app.UseAuthentication();
 app.UseAuthorization();
 app.UseAntiforgery();
-
-app.MapStaticAssets();
 
 // All auth endpoints (login page, login POST, logout) are in AuthEndpoints.
 // They must be registered before MapRazorComponents to take priority over Blazor component routes.
