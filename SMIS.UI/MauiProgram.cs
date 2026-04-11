@@ -23,8 +23,18 @@ namespace SMIS.UI
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
                 });
 
-            // Configuration
+            // Configuration — load shared settings first, then project-specific overrides
             var assembly = Assembly.GetExecutingAssembly();
+
+            using var sharedStream = assembly.GetManifestResourceStream("SMIS.UI.appsettings.shared.json");
+            if (sharedStream != null)
+            {
+                var sharedConfig = new ConfigurationBuilder()
+                    .AddJsonStream(sharedStream)
+                    .Build();
+                builder.Configuration.AddConfiguration(sharedConfig);
+            }
+
             using var stream = assembly.GetManifestResourceStream("SMIS.UI.appsettings.json");
             if (stream != null)
             {

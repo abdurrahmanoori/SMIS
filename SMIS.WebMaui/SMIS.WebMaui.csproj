@@ -22,6 +22,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <!-- Shared configuration — single source of truth across all projects -->
+    <Content Include="..\appsettings.shared.json" Link="appsettings.shared.json" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\SMIS.Domain\SMIS.Domain.csproj" />
     <ProjectReference Include="..\SMIS.Infrastructure.Server\SMIS.Infrastructure.Server.csproj" />
     <ProjectReference Include="..\SMIS.UI.Shared\SMIS.UI.Shared.csproj" />

@@ -39,4 +39,9 @@
 	  <Folder Include="JsonConverters\" />
 	</ItemGroup>
 
+	<ItemGroup>
+		<!-- Shared configuration — single source of truth across all projects -->
+		<Content Include="..\appsettings.shared.json" Link="appsettings.shared.json" CopyToOutputDirectory="PreserveNewest" />
+	</ItemGroup>
+
 </Project>
