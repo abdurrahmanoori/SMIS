@@ -1,14 +1,14 @@
 using FluentValidation.AspNetCore;
+using SMIS.Api.Extensions;
+using SMIS.Api.Middleware;
 using SMIS.Application.Extensions;
-using SMIS.Infrastructure.Server.Extensions;
-using SMIS.Infrastructure.Server.Context;
-using System.Text.Json;
-using System.Text.Json.Serialization;
 using SMIS.Application.Identity.IServices;
 using SMIS.Application.Services;
-using SMIS.Api.Middleware;
-using SMIS.Api.Extensions;
 using SMIS.Domain.Services;
+using SMIS.Infrastructure.Server.Context;
+using SMIS.Infrastructure.Server.Extensions;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -48,7 +48,7 @@ builder.Services.AddSwaggerWithJwt();
 builder.Services.AddHttpContextAccessor();
 
 // Configure services
-builder.Services.ConfigurePersistenceServices(builder.Configuration,builder.Environment);
+builder.Services.ConfigurePersistenceServices(builder.Configuration, builder.Environment);
 builder.Services.ConfigureApplicationServices();
 builder.Services.AddIdentityServices<AppDbContext>();
 builder.Services.AddJwtAuthentication(builder.Configuration);

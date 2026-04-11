@@ -1,10 +1,8 @@
 using AutoMapper;
 using MediatR;
-using SMIS.Application.Common.Response;
 using SMIS.Application.Common;
 using SMIS.Application.Common.Response;
 using SMIS.Application.DTO.UnitOfMeasures;
-using SMIS.Application.Extensions;
 using SMIS.Application.Repositories.UnitOfMeasures;
 
 namespace SMIS.Application.Features.UnitOfMeasures.Queries
