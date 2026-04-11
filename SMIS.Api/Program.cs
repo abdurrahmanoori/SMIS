@@ -12,6 +12,14 @@ using SMIS.Domain.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Load shared configuration first, then project-specific appsettings override it
+// SetBasePath ensures files are resolved from the output directory where MSBuild copies linked files
+builder.Configuration
+    .SetBasePath(AppContext.BaseDirectory)
+    .AddJsonFile("appsettings.shared.json", optional: false, reloadOnChange: true)
+    .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+    .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", optional: true, reloadOnChange: true);
+
 DateTimeService.UseUtc = builder.Configuration.GetValue<bool>("UseUtcTime");
 
 // Add services to the container.

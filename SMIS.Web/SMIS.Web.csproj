@@ -13,6 +13,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <!-- Shared configuration — single source of truth across all projects -->
+    <Content Include="..\appsettings.shared.json" Link="appsettings.shared.json" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\SMIS.Application\SMIS.Application.csproj" />
     <ProjectReference Include="..\SMIS.Infrastructure.Server\SMIS.Infrastructure.Server.csproj" />
     <!--<ProjectReference Include="..\SMIS.Infrastructure.Server\SMIS.Infrastructure.Server.csproj" />
