@@ -40,8 +40,11 @@ public class EntityPKInterceptor : SaveChangesInterceptor
                 if (string.IsNullOrEmpty(entry.Entity.Id))
 #endif
         {
-                    await AssignSequenceNumber(entry.Entity, context);
-                    entry.Entity.Id = _publicIdGenerator.Generate();
+                    var generated = _publicIdGenerator.Generate();
+                    if (!string.IsNullOrEmpty(generated))
+                        entry.Entity.Id = generated;
+                    else
+                        await AssignSequenceNumber(entry.Entity, context);
                 }
             }
 
