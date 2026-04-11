@@ -44,7 +44,7 @@ namespace SMIS.UI
                 builder.Configuration.AddConfiguration(config);
             }
 
-            // Load secrets (git-ignored) — overrides appsettings.json values if present
+            // Load secrets (git-ignored) — solution-level shared secrets override project-specific values
             using var secretsStream = assembly.GetManifestResourceStream("SMIS.UI.appsettings.secrets.json");
             if (secretsStream != null)
             {
