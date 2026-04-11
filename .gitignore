@@ -363,7 +363,5 @@ MigrationBackup/
 FodyWeavers.xsd
 
 # Environment-specific settings containing secrets (API keys, connection strings)
-appsettings.Development.json
-appsettings.Staging.json
 appsettings.Production.json
 appsettings.secrets.json
