@@ -20,7 +20,7 @@ builder.Configuration
     .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", optional: true, reloadOnChange: true)
     .AddJsonFile("appsettings.secrets.json", optional: true, reloadOnChange: true);
 
-// Syncfusion license key is stored in appsettings.Development.json (git-ignored) or as an environment variable
+// Syncfusion license key loaded from solution-level appsettings.secrets.json (git-ignored)
 SyncfusionLicenseProvider.RegisterLicense(builder.Configuration["SyncfusionLicenseKey"]);
 
 // Add Blazor Server with interactive server components

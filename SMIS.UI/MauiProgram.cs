@@ -44,7 +44,8 @@ namespace SMIS.UI
                 builder.Configuration.AddConfiguration(config);
             }
 
-            // Load secrets (git-ignored) — solution-level shared secrets override project-specific values
+            // Solution-level appsettings.secrets.json (git-ignored) — embedded from solution root via LogicalName
+            // Contains SyncfusionLicenseKey and any other shared secrets; overrides all previous config
             using var secretsStream = assembly.GetManifestResourceStream("SMIS.UI.appsettings.secrets.json");
             if (secretsStream != null)
             {
@@ -54,7 +55,7 @@ namespace SMIS.UI
                 builder.Configuration.AddConfiguration(secretsConfig);
             }
 
-            // Syncfusion license key loaded from appsettings.secrets.json (git-ignored)
+            // Syncfusion license key loaded from solution-level appsettings.secrets.json (git-ignored)
             SyncfusionLicenseProvider.RegisterLicense(builder.Configuration["SyncfusionLicenseKey"]);
 
             // Register application services (includes Mobile Infrastructure)
