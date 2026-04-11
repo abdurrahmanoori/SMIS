@@ -51,7 +51,7 @@ public static class AuthEndpoints
             return Results.Redirect("/login?error=1");
 
         var user = await userManager.FindByIdAsync(result.Response.UserId);
-        await signInManager.SignInAsync(user!, isPersistent: false);
+        await signInManager.SignInAsync(user!, isPersistent: true);
         return Results.Redirect(returnUrl);
     }
 }
