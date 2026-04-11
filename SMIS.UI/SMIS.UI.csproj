@@ -92,10 +92,10 @@
 
     <ItemGroup>
         <EmbeddedResource Include="appsettings.json" />
-        <!-- appsettings.secrets.json is git-ignored and contains sensitive keys like SyncfusionLicenseKey -->
-        <EmbeddedResource Include="appsettings.secrets.json" Condition="Exists('appsettings.secrets.json')" />
         <!-- Shared configuration — single source of truth across all projects -->
         <EmbeddedResource Include="..\appsettings.shared.json" LogicalName="SMIS.UI.appsettings.shared.json" />
+        <!-- Shared secrets (git-ignored) — Syncfusion license key and other sensitive values -->
+        <EmbeddedResource Include="..\appsettings.secrets.json" LogicalName="SMIS.UI.appsettings.secrets.json" Condition="Exists('..\appsettings.secrets.json')" />
     </ItemGroup>
 
 </Project>

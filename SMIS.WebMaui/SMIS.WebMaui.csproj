@@ -24,6 +24,8 @@
   <ItemGroup>
     <!-- Shared configuration — single source of truth across all projects -->
     <Content Include="..\appsettings.shared.json" Link="appsettings.shared.json" CopyToOutputDirectory="PreserveNewest" />
+    <!-- Shared secrets (git-ignored) — Syncfusion license key and other sensitive values -->
+    <Content Include="..\appsettings.secrets.json" Link="appsettings.secrets.json" CopyToOutputDirectory="PreserveNewest" Condition="Exists('..\appsettings.secrets.json')" />
   </ItemGroup>
 
   <ItemGroup>
