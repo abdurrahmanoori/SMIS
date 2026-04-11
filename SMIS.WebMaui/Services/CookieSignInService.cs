@@ -24,6 +24,7 @@ public class CookieSignInService : ISignInService
 
     public async Task SignInAsync(string userId)
     {
+
         var user = await _userManager.FindByIdAsync(userId);
         await _signInManager.SignInAsync(user!, isPersistent: false);
     }
