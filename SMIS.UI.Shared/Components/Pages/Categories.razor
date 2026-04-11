@@ -332,7 +332,10 @@
         {
             validationErrors = ValidationHelper.ExtractValidationErrors(result);
             if (!validationErrors.Any())
-                await ToastHelper.ShowErrorAsync(ToastObj!, result.Message ?? "Operation failed", "Error");
+            {
+                var errorMessage = result.Errors?.FirstOrDefault()?.Description ?? result.Message ?? "Operation failed";
+                await ToastHelper.ShowErrorAsync(ToastObj!, errorMessage, "Error");
+            }
             StateHasChanged();
         }
     }
