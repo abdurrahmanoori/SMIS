@@ -97,8 +97,8 @@ public static class ProductPriceSeed
         if (isActive) productPrice.Activate(); else productPrice.Deactivate();
 
         typeof(ProductPrice).GetProperty(nameof(ProductPrice.Id))!.SetValue(productPrice, id);
-        typeof(ProductPrice).GetProperty(nameof(ProductPrice.CreatedDate))!.SetValue(productPrice, DateTimeService.Now);
-        typeof(ProductPrice).GetProperty(nameof(ProductPrice.UpdatedDate))!.SetValue(productPrice, DateTimeService.Now);
+        typeof(ProductPrice).GetProperty(nameof(ProductPrice.CreatedDate))!.SetValue(productPrice, DateTimeService.UtcNow);
+        typeof(ProductPrice).GetProperty(nameof(ProductPrice.UpdatedDate))!.SetValue(productPrice, DateTimeService.UtcNow);
         typeof(ProductPrice).GetProperty(nameof(ProductPrice.LastModifiedUtc))!.SetValue(productPrice, DateTimeService.UtcNow);
 
         return productPrice;

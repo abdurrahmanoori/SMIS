@@ -22,8 +22,8 @@ public static class CategorySeed
     {
         var category = Category.Create(name, shopId, code, description, true);
         category.Id = id;
-        category.CreatedDate = DateTimeService.Now;
-        category.UpdatedDate = DateTimeService.Now;
+        category.CreatedDate = DateTimeService.UtcNow;
+        category.UpdatedDate = DateTimeService.UtcNow;
         category.LastModifiedUtc = DateTimeService.UtcNow;
         return category;
 

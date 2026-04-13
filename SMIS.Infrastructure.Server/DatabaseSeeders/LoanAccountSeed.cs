@@ -8,7 +8,7 @@ public static class LoanAccountSeed
 {
     public static void DataSeed(ModelBuilder modelBuilder)
     {
-        var now = DateTimeService.Now;
+        var now = DateTimeService.UtcNow;
         modelBuilder.Entity<LoanAccount>().HasData(
             // Main Store loans
             CreateLoanAccount("1", "1", "1", "1", 10, "2", 5000, 50000, now.AddDays(-30), now.AddDays(30), "Coca Cola loan for John", true),
@@ -43,8 +43,8 @@ public static class LoanAccountSeed
         {
             loanDateProp.SetValue(loanAccount, loanDate);
         }
-        typeof(LoanAccount).GetProperty(nameof(LoanAccount.CreatedDate))!.SetValue(loanAccount, DateTimeService.Now);
-        typeof(LoanAccount).GetProperty(nameof(LoanAccount.UpdatedDate))!.SetValue(loanAccount, DateTimeService.Now);
+        typeof(LoanAccount).GetProperty(nameof(LoanAccount.CreatedDate))!.SetValue(loanAccount, DateTimeService.UtcNow);
+        typeof(LoanAccount).GetProperty(nameof(LoanAccount.UpdatedDate))!.SetValue(loanAccount, DateTimeService.UtcNow);
         typeof(LoanAccount).GetProperty(nameof(LoanAccount.LastModifiedUtc))!.SetValue(loanAccount, DateTimeService.UtcNow);
         if (!isActive) loanAccount.Deactivate();
 
