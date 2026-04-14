@@ -20,12 +20,6 @@ namespace SMIS.Api.Extensions
                     Period = TimeSpan.FromSeconds(10)
                 });
 
-                // In production, only errors are persisted to the database to reduce noise and storage.
-                // In development, warnings and above are also captured for easier debugging.
-                var dbMinLevel = ctx.HostingEnvironment.IsProduction()
-                    ? LogEventLevel.Error
-                    : LogEventLevel.Warning;
-
                 config
                     .MinimumLevel.Information()
                     .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
@@ -37,8 +31,14 @@ namespace SMIS.Api.Extensions
                     .MinimumLevel.Override("Microsoft.EntityFrameworkCore.Model.Validation", LogEventLevel.Error)
                     .Enrich.FromLogContext()
                     .WriteTo.Console()
-                    .WriteTo.Seq("http://localhost:5341")
-                    .WriteTo.Sink(periodicSink, restrictedToMinimumLevel: dbMinLevel);
+                    .WriteTo.Seq("http://localhost:5341");
+
+                // Only persist errors to the database in production.
+                // In development, Console and Seq are sufficient.
+                if (ctx.HostingEnvironment.IsProduction())
+                {
+                    config.WriteTo.Sink(periodicSink, restrictedToMinimumLevel: LogEventLevel.Error);
+                }
             });
 
             return builder;
