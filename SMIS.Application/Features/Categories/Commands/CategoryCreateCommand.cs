@@ -31,7 +31,7 @@ namespace SMIS.Application.Features.Categories.Commands
         public async Task<Result<CategoryDto>> Handle(CategoryCreateCommand request, CancellationToken cancellationToken)
         {
             //await _translationKeyRepository.AddTranslationKeysForEntity(request.CategoryCreateDto, _unitOfWork);
-
+            throw new Exception("This is test exception to test global exception handling. Remove this line after testing.");
             // Get ShopId from authenticated user (secure)
             var shopId = _currentUser.GetShopId();
 

@@ -7,7 +7,7 @@ namespace SMIS.Api.Controllers.Base
 {
     //[Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+    //[Authorize]
 
     public class BaseApiController : ControllerBase
     {

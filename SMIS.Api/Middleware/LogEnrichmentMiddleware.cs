@@ -34,21 +34,24 @@ namespace SMIS.Api.Middleware
                     using (LogContext.PushProperty("Endpoint", endpoint))
                     using (LogContext.PushProperty("StatusCode", context.Response.StatusCode))
                     {
-                        if (context.Items.TryGetValue("RequestBody", out var requestBody) && 
+                        if (context.Items.TryGetValue("RequestBody", out var requestBody) &&
                             !string.IsNullOrEmpty(requestBody?.ToString()))
                         {
-                            LogContext.PushProperty("RequestBody", FormatJson(requestBody.ToString()));
+                            using (LogContext.PushProperty("RequestBody", FormatJson(requestBody.ToString())))
+                            { }
                         }
 
-                        if (context.Items.TryGetValue("ResponseBody", out var responseBody) && 
+                        if (context.Items.TryGetValue("ResponseBody", out var responseBody) &&
                             !string.IsNullOrEmpty(responseBody?.ToString()))
                         {
-                            LogContext.PushProperty("ResponseBody", FormatJson(responseBody.ToString()));
+                            using (LogContext.PushProperty("ResponseBody", FormatJson(responseBody.ToString())))
+                            { }
                         }
 
                         if (context.Items.TryGetValue(nameof(ExceptionLog), out var exceptionLog))
                         {
-                            LogContext.PushProperty("ExceptionId", ((ExceptionLog)exceptionLog!).Id);
+                            using (LogContext.PushProperty("ExceptionId", ((ExceptionLog)exceptionLog!).Id))
+                            { }
                         }
                     }
                 }

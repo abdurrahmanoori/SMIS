@@ -7,21 +7,23 @@ namespace SMIS.Infrastructure.Server.Repositories
 {
     public class LogRepository : GenericRepository<AppLog>, ILogRepository
     {
-        private readonly AppDbContext _context;
+        private readonly AppDbContext _db;
+
         public LogRepository(AppDbContext context) : base(context)
         {
+            _db = context;
         }
 
         public async Task SaveLogAsync(AppLog log)
         {
             await AddAsync(log);
-            await _context.SaveChangesAsync();
+            await _db.SaveChangesAsync();
         }
 
         public async Task SaveLogsAsync(List<AppLog> logs)
         {
             await AddRangeAsync(logs);
-            await _context.SaveChangesAsync();
+            await _db.SaveChangesAsync();
         }
     }
 }
