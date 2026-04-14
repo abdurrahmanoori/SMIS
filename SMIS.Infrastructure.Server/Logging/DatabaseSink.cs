@@ -4,7 +4,7 @@ using SMIS.Domain.Entities;
 using SMIS.Domain.Services;
 using System.Text.Json;
 using Microsoft.Extensions.DependencyInjection;
-using SMIS.Infrastructure.Server.Repositories;
+using SMIS.Application.Repositories;
 
 namespace SMIS.Infrastructure.Server.Logging
 {
@@ -20,7 +20,7 @@ namespace SMIS.Infrastructure.Server.Logging
         public async Task EmitBatchAsync(IEnumerable<LogEvent> batch)
         {
             using var scope = _serviceProvider.CreateScope();
-            var logRepository = scope.ServiceProvider.GetRequiredService<LogRepository>();
+            var logRepository = scope.ServiceProvider.GetRequiredService<ILogRepository>();
 
             var logs = batch.Select(MapLogEvent).ToList();
             await logRepository.SaveLogsAsync(logs);
@@ -37,6 +37,7 @@ namespace SMIS.Infrastructure.Server.Logging
 
             return new AppLog
             {
+                Name = logEvent.Level.ToString(),
                 Level = logEvent.Level.ToString(),
                 Message = logEvent.RenderMessage(),
                 Exception = logEvent.Exception?.ToString(),

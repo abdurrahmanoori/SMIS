@@ -55,10 +55,6 @@ builder.Services.AddJwtAuthentication(builder.Configuration);
 
 builder.Services.AddScoped<ICurrentUser, CurrentUser>();
 
-var enf = builder.Environment.EnvironmentName;
-// Add database logging
-builder.Services.AddDatabaseLogging();
-
 // MiniProfiler registration
 builder.Services.AddMiniProfilerServices();
 
