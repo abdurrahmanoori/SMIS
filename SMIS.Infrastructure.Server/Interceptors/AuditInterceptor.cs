@@ -34,7 +34,7 @@ namespace SMIS.Infrastructure.Server.Interceptors
                 {
                     if (entry.Entity.CreatedDate == default)
                     {
-                        entry.Entity.CreatedDate = DateTimeService.Now;
+                        entry.Entity.CreatedDate = DateTimeService.UtcNow;
                     }
                     if (string.IsNullOrEmpty(entry.Entity.CreatedBy))
                     {
