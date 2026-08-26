@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="com.oleksiy.quicktodo.TaskService">
+    <tasks>
+      <task id="477a90fb-2d75-4517-8342-3bdd14f8ec6a" text="Task" createdAt="1787734391593" lastModified="1787734391593">
+        <subtasks>
+          <task id="51456965-56d5-4ff9-9e5a-c2abbfb63eae" text="mdular monolithc" level="1" createdAt="1787734923919" lastModified="1787734923920">
+            <description>Make the project structure as modular monolithic archetecure.</description>
+          </task>
+          <task id="628e19a5-c750-487b-b125-9f38a250e7d7" text="Generic get" level="1" createdAt="1787743488430" lastModified="1787743488431">
+            <description>make sure to create get opreation like sigtas</description>
+          </task>
+          <task id="0bb5669c-58c2-4a43-af91-f1b909381bc2" text="Generic CRUD" level="1" createdAt="1787743530393" lastModified="1787743530393">
+            <description>For common enity with common properties like Id and Name. make user to create a kind of generic crud</description>
+          </task>
+          <task id="e506a1f0-406e-4871-8508-979b8fdb6d9d" text="Fix the Result" level="1" createdAt="1787743567241" lastModified="1787743567241">
+            <description>Make sure to create some new Result method</description>
+          </task>
+          <task id="ff8b1ea3-8f7d-4a16-9771-ed39ded02495" text="Make the offline first" level="1" createdAt="1787743619671" lastModified="1787743619671">
+            <description>the app should be completly offline fitrt and then using backgourd job should sync data api</description>
+          </task>
+        </subtasks>
+      </task>
+      <task id="61717d38-5990-4d6a-ab45-b493b9279fcd" text="In Progress" createdAt="1787734367661" lastModified="1787734367661" />
+      <task id="923330e7-c226-4228-87c2-11147434c074" text="Ready" createdAt="1787734360436" lastModified="1787734394961" />
+    </tasks>
+    <expandedTaskIds>
+      <id value="923330e7-c226-4228-87c2-11147434c074" />
+      <id value="477a90fb-2d75-4517-8342-3bdd14f8ec6a" />
+    </expandedTaskIds>
+  </component>
+</project>
