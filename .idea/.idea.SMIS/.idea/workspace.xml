@@ -71,23 +71,23 @@
   <component name="MetaFilesCheckinStateConfiguration" checkMetaFiles="true" />
   <component name="NextEditCompletionFeaturesState">
     <decayedCancelled>
-      <entry key="MS100" value="1.0259635549227548" />
-      <entry key="MS500" value="1.7049446775711923" />
-      <entry key="S2" value="2.5552557323482223" />
-      <entry key="S5" value="4.114436442490489" />
-      <entry key="S10" value="7.67369758574217" />
-      <entry key="S30" value="14.477467681754327" />
-      <entry key="S60" value="17.368759091489718" />
-      <entry key="M2" value="19.080707404111575" />
-      <entry key="M5" value="20.205810453981822" />
-      <entry key="M10" value="20.598353217616797" />
-      <entry key="M15" value="20.731213282496515" />
-      <entry key="M30" value="20.865092856814183" />
-      <entry key="H1" value="20.93241747603859" />
-      <entry key="H2" value="20.96617643642092" />
-      <entry key="H4" value="20.983080134858547" />
-      <entry key="D1" value="20.997178899113045" />
-      <entry key="W1" value="20.999596958067826" />
+      <entry key="MS100" value="1.0240137294431042" />
+      <entry key="MS500" value="1.5513848726095176" />
+      <entry key="S2" value="3.714675547161631" />
+      <entry key="S5" value="6.492756513770237" />
+      <entry key="S10" value="10.46501961175214" />
+      <entry key="S30" value="18.165715317742603" />
+      <entry key="S60" value="21.587718684206664" />
+      <entry key="M2" value="23.65276353782974" />
+      <entry key="M5" value="25.02473904729674" />
+      <entry key="M10" value="25.50608653659773" />
+      <entry key="M15" value="25.66931119918666" />
+      <entry key="M30" value="25.833944736134857" />
+      <entry key="H1" value="25.916793844239635" />
+      <entry key="H2" value="25.95835218975599" />
+      <entry key="H4" value="25.97916489908535" />
+      <entry key="D1" value="25.996525927130417" />
+      <entry key="W1" value="25.999503665754336" />
     </decayedCancelled>
     <decayedSelected>
       <entry key="MS100" value="0.0" />
@@ -109,23 +109,23 @@
       <entry key="W1" value="0.0" />
     </decayedSelected>
     <decayedShown>
-      <entry key="MS100" value="0.9773456679803929" />
-      <entry key="MS500" value="1.6863249483718217" />
-      <entry key="S2" value="2.5473911007334586" />
-      <entry key="S5" value="4.108671001141088" />
-      <entry key="S10" value="7.66673037394562" />
-      <entry key="S30" value="14.47193924809796" />
-      <entry key="S60" value="17.365242312109263" />
-      <entry key="M2" value="19.07871872057681" />
-      <entry key="M5" value="20.20495335255973" />
-      <entry key="M10" value="20.59791382009834" />
-      <entry key="M15" value="20.730917896049704" />
-      <entry key="M30" value="20.8649439249426" />
-      <entry key="H1" value="20.93234269831231" />
-      <entry key="H2" value="20.96613896934265" />
-      <entry key="H4" value="20.983061381732107" />
-      <entry key="D1" value="20.997175770868655" />
-      <entry key="W1" value="20.999596511109043" />
+      <entry key="MS100" value="0.9690931527187656" />
+      <entry key="MS500" value="1.5352727246581446" />
+      <entry key="S2" value="3.703724942487019" />
+      <entry key="S5" value="6.484389750490152" />
+      <entry key="S10" value="10.456807861661643" />
+      <entry key="S30" value="18.15961621669454" />
+      <entry key="S60" value="21.583830879850062" />
+      <entry key="M2" value="23.650557022447906" />
+      <entry key="M5" value="25.023785236465617" />
+      <entry key="M10" value="25.505597015238322" />
+      <entry key="M15" value="25.66898199005263" />
+      <entry key="M30" value="25.83377868602598" />
+      <entry key="H1" value="25.916710455007557" />
+      <entry key="H2" value="25.958310403744363" />
+      <entry key="H4" value="25.979143983186606" />
+      <entry key="D1" value="25.99652243796397" />
+      <entry key="W1" value="25.99950316722399" />
     </decayedShown>
   </component>
   <component name="ProjectColorInfo">{
@@ -137,39 +137,42 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;.NET Launch Settings Profile.SMIS.Api: http.executor&quot;: &quot;Run&quot;,
-    &quot;.NET Launch Settings Profile.SMIS.Api: https.executor&quot;: &quot;Run&quot;,
-    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.MCP Project settings loaded&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.cidr.known.project.marker&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.readMode.enableVisualFormatting&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
-    &quot;cidr.known.project.marker&quot;: &quot;true&quot;,
-    &quot;codeWithMe.voiceChat.enabledByDefault&quot;: &quot;false&quot;,
-    &quot;com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;Modrenize-api&quot;,
-    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
-    &quot;junie.onboarding.icon.badge.shown&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;to.speed.mode.migration.done&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    ".NET Launch Settings Profile.SMIS.Api: http.executor": "Run",
+    ".NET Launch Settings Profile.SMIS.Api: https.executor": "Run",
+    ".NET Launch Settings Profile.SMIS.UI: Windows Machine.executor": "Run",
+    "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.MCP Project settings loaded": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.cidr.known.project.marker": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "RunOnceActivity.readMode.enableVisualFormatting": "true",
+    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
+    "cidr.known.project.marker": "true",
+    "codeWithMe.voiceChat.enabledByDefault": "false",
+    "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
+    "git-widget-placeholder": "Modrenize-api",
+    "ignore.virus.scanning.warn.message": "true",
+    "junie.onboarding.icon.badge.shown": "true",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "preferences.lookFeel",
+    "to.speed.mode.migration.done": "true"
   },
-  &quot;keyToStringList&quot;: {
-    &quot;GitStage.ChangesTree.GroupingKeys&quot;: [
-      &quot;directory&quot;,
-      &quot;module&quot;,
-      &quot;repository&quot;
+  "keyToStringList": {
+    "GitStage.ChangesTree.GroupingKeys": [
+      "directory",
+      "module",
+      "repository"
     ]
   }
-}</component>
-  <component name="RunManager" selected=".NET Launch Settings Profile.SMIS.Api: http">
+}]]></component>
+  <component name="RunManager" selected=".NET Launch Settings Profile.SMIS.UI: Windows Machine">
     <configuration name="SMIS.Api: Production" type="LaunchSettings" factoryName=".NET Launch Settings Profile">
       <option name="LAUNCH_PROFILE_PROJECT_FILE_PATH" value="$PROJECT_DIR$/SMIS.Api/SMIS.Api.csproj" />
       <option name="LAUNCH_PROFILE_TFM" value="net9.0" />
@@ -338,7 +341,15 @@
       <option name="project" value="LOCAL" />
       <updated>1787743691358</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="some ide realted upate">
+      <option name="closed" value="true" />
+      <created>1787743845871</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1787743845871</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <option name="createChangelist" value="false" />
     <option name="createBranch" value="false" />
     <servers />
@@ -351,6 +362,7 @@
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
     <MESSAGE value="just some task" />
+    <MESSAGE value="some ide realted upate" />
     <option name="LAST_COMMIT_MESSAGE" value="" />
   </component>
   <component name="XDebuggerManager">
@@ -360,5 +372,9 @@
         <breakpoint type="CMakeExceptionBreakpoint" />
       </default-breakpoints>
     </breakpoint-manager>
+  </component>
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <expand />
+    <select />
   </component>
 </project>
