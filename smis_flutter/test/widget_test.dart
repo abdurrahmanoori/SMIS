@@ -1,30 +1,47 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility in the flutter_test package. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
-
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-
-import 'package:smis_flutter/main.dart';
+import 'package:smis_flutter/app/app.dart';
+import 'package:smis_flutter/features/category/domain/entities/category.dart';
+import 'package:smis_flutter/features/category/domain/repositories/category_repository.dart';
+import 'package:smis_flutter/features/category/presentation/providers/category_providers.dart';
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp());
-
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
-
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
+  testWidgets('renders the offline Category screen', (tester) async {
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          categoryRepositoryProvider.overrideWithValue(_EmptyRepository()),
+        ],
+        child: const SmisApp(),
+      ),
+    );
     await tester.pump();
+    await tester.pump(const Duration(milliseconds: 100));
 
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+    expect(find.text('Categories'), findsOneWidget);
+    expect(find.text('No categories yet'), findsOneWidget);
+    expect(
+      find.widgetWithText(FloatingActionButton, 'Add category'),
+      findsOneWidget,
+    );
   });
+}
+
+class _EmptyRepository implements CategoryRepository {
+  @override
+  Future<Category> create(CategoryDraft draft) => throw UnimplementedError();
+
+  @override
+  Future<void> delete(String id) => throw UnimplementedError();
+
+  @override
+  Future<List<Category>> getAll() async => const [];
+
+  @override
+  Future<int> getPendingCount() async => 0;
+
+  @override
+  Future<Category> update(String id, CategoryDraft draft) =>
+      throw UnimplementedError();
 }

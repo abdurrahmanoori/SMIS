@@ -3,15 +3,15 @@
   <component name="com.oleksiy.quicktodo.TaskService">
     <option name="focusTimeByDate">
       <map>
-        <entry key="2026-08-26" value="2072016" />
+        <entry key="2026-08-26" value="4601516" />
       </map>
     </option>
     <tasks>
       <task id="61717d38-5990-4d6a-ab45-b493b9279fcd" text="In Progress" createdAt="1787734367661" lastModified="1787744850557">
-        <option name="accumulatedHierarchyTimeMs" value="2072016" />
-        <option name="lastAccumulatedFocusStartedAt" value="1787747328701" />
+        <option name="accumulatedHierarchyTimeMs" value="4601516" />
+        <option name="lastAccumulatedFocusStartedAt" value="1787751182822" />
         <subtasks>
-          <task id="628e19a5-c750-487b-b125-9f38a250e7d7" text="Generic get" level="1" ownTimeSpentMs="2072016" lastFocusStartedAt="1787747328701" createdAt="1787743488430" lastModified="1787744852483">
+          <task id="628e19a5-c750-487b-b125-9f38a250e7d7" text="Generic get" level="1" ownTimeSpentMs="4601516" lastFocusStartedAt="1787751182822" createdAt="1787743488430" lastModified="1787744852483">
             <description>make sure to create get opreation like sigtas</description>
           </task>
         </subtasks>
