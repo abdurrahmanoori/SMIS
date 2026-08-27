@@ -106,6 +106,9 @@ class CategorySyncService {
           failed++;
           transientFailure = true;
           break;
+        } on RemotePermanentException catch (error) {
+          await _markFailure(localRecord, error.message);
+          failed++;
         } catch (error) {
           await _markFailure(localRecord, error.toString());
           failed++;
@@ -165,7 +168,7 @@ class CategorySyncService {
     }
 
     // Last-write-wins; server wins exact ties for deterministic convergence.
-    if (localRecord.lastModifiedUtc.isAfter(remote.lastModifiedUtc)) {
+    if (localRecord.lastModifiedUtc.isAfter(remote.conflictModifiedUtc)) {
       return const _MergeOutcome();
     }
 
@@ -187,27 +190,35 @@ class CategorySyncService {
         await _local.deletePermanently(localRecord.id);
         return const _PushOutcome(pushed: true);
       }
-      if (!localRecord.lastModifiedUtc.isAfter(server.lastModifiedUtc)) {
+      if (!localRecord.lastModifiedUtc.isAfter(server.conflictModifiedUtc)) {
         await _local.put(_recordFromRemote(server, existing: localRecord));
         return const _PushOutcome(conflictResolved: true);
       }
-      await _remote.delete(localRecord.id);
+      await _remote.delete(localRecord);
       await _local.deletePermanently(localRecord.id);
       return const _PushOutcome(pushed: true);
     }
 
     if (server == null) {
       final created = await _remote.create(localRecord);
+      if (created.isDeleted) {
+        await _local.deletePermanently(localRecord.id);
+        return const _PushOutcome(conflictResolved: true);
+      }
       await _local.put(_recordFromRemote(created, existing: localRecord));
       return const _PushOutcome(pushed: true);
     }
 
-    if (!localRecord.lastModifiedUtc.isAfter(server.lastModifiedUtc)) {
+    if (!localRecord.lastModifiedUtc.isAfter(server.conflictModifiedUtc)) {
       await _local.put(_recordFromRemote(server, existing: localRecord));
       return const _PushOutcome(conflictResolved: true);
     }
 
     final updated = await _remote.update(localRecord);
+    if (updated.isDeleted) {
+      await _local.deletePermanently(localRecord.id);
+      return const _PushOutcome(conflictResolved: true);
+    }
     await _local.put(_recordFromRemote(updated, existing: localRecord));
     return const _PushOutcome(pushed: true);
   }
@@ -216,7 +227,7 @@ class CategorySyncService {
     CategoryRemoteModel remote, {
     CategoryLocalRecord? existing,
   }) {
-    final timestamp = remote.lastModifiedUtc.toUtc();
+    final conflictTimestamp = remote.conflictModifiedUtc.toUtc();
     return CategoryLocalRecord(
       id: remote.id,
       name: remote.name,
@@ -224,13 +235,22 @@ class CategorySyncService {
       description: remote.description,
       isActive: remote.isActive,
       shopId: remote.shopId,
-      createdAt: existing?.createdAt ?? timestamp,
-      updatedAt: timestamp,
-      lastModifiedUtc: timestamp,
+      createdAt:
+          existing?.createdAt ??
+          remote.clientCreatedDate ??
+          remote.createdDate ??
+          conflictTimestamp,
+      updatedAt: conflictTimestamp,
+      lastModifiedUtc: conflictTimestamp,
       isDeleted: false,
       pendingOperation: CategoryPendingOperation.none,
       syncStatus: CategorySyncStatus.synced,
       retryCount: 0,
+      serverCreatedDate: remote.createdDate,
+      serverUpdatedDate: remote.updatedDate,
+      serverCreatedBy: remote.createdBy,
+      serverUpdatedBy: remote.updatedBy,
+      serverLastModifiedUtc: remote.lastModifiedUtc,
     );
   }
 

@@ -185,13 +185,16 @@ contains all domain data plus offline state:
 - retry count and next retry time;
 - deletion flag;
 - last synchronization error;
-- local UTC creation, update, and modification timestamps.
+- local UTC creation, update, and conflict timestamps;
+- the trusted server create/update audit and server pull timestamp returned by
+  the API.
 
 ### Remote model
 
 [`category_remote_model.dart`](../lib/features/category/data/models/category_remote_model.dart)
-matches `CategoryDto`, `CategoryCreateDto`, and `CategoryUpdateDto` from the
-ASP.NET backend. It converts JSON responses and builds create/update payloads.
+matches `CategoryDto`, `CategorySyncCreateDto`, `CategorySyncUpdateDto`, and
+`CategorySyncDeleteDto` from the ASP.NET backend. It converts JSON responses
+and builds synchronization payloads.
 
 Keeping these models separate prevents SQLite-specific fields such as
 `retry_count` from accidentally being sent to the API.
@@ -199,14 +202,16 @@ Keeping these models separate prevents SQLite-specific fields such as
 ## 7. SQLite database
 
 [`app_database.dart`](../lib/core/database/app_database.dart) creates the
-`smis_offline.db` database. Schema version 1 has two tables.
+`smis_offline.db` database. Schema version 2 has two tables. The v1-to-v2
+migration adds nullable server-audit columns without deleting existing rows.
 
 ### `categories`
 
 | Column group | Purpose |
 | --- | --- |
 | `id`, `name`, `code`, `description`, `is_active`, `shop_id` | Category data |
-| `created_at`, `updated_at`, `last_modified_utc` | UTC audit/conflict data |
+| `created_at`, `updated_at`, `last_modified_utc` | Client-originated UTC conflict data |
+| `server_created_date`, `server_updated_date`, `server_created_by`, `server_updated_by`, `server_last_modified_utc` | Trusted server audit and incremental-pull data |
 | `is_deleted` | Hides a local tombstone from the UI |
 | `pending_operation` | `none`, `create`, `update`, or `delete` |
 | `sync_status` | UI-facing synchronization status |
@@ -378,8 +383,11 @@ and remaining-pending counts. A failed network operation leaves the row queued.
 
 ## 13. Last-write-wins conflict handling
 
-Every local edit receives a UTC `lastModifiedUtc`. The backend DTOs accept and
-preserve this value. When two copies differ:
+Every local edit receives a UTC `lastModifiedUtc`. Sync-specific backend DTOs
+receive it as `ClientModifiedDate`; they never accept trusted server audit
+fields. The response exposes `ConflictModifiedUtc` for last-write-wins and a
+separate server-owned `LastModifiedUtc` for the pull cursor. When two copies
+differ:
 
 ```text
 local timestamp > server timestamp  → local wins and is pushed
@@ -442,27 +450,22 @@ the DTOs under `SMIS.Application/DTO/Categories`.
 
 | Method | Endpoint | Flutter use |
 | --- | --- | --- |
-| `POST` | `/api/Category` | Push a local create |
+| `POST` | `/api/Category/sync` | Push a local create with client metadata |
 | `GET` | `/api/Category` | Available but not used for incremental sync |
-| `GET` | `/api/Category/{id}` | Read current server timestamp before push |
-| `PUT` | `/api/Category/{id}` | Push a newer local update |
-| `DELETE` | `/api/Category/{id}` | Push a local tombstone |
+| `GET` | `/api/Category/{id}` | Read the current server conflict version before push |
+| `PUT` | `/api/Category/{id}/sync` | Push a newer local update with client metadata |
+| `DELETE` | `/api/Category/{id}/sync` | Push a local tombstone with client metadata |
 | `GET` | `/api/Category/pull?changedSince=...` | Pull incremental updates/deletions |
 
 The backend derives `ShopId` from the authenticated user. Flutter does not let
 the Category form choose or send a shop ID.
 
-The deliberate test exception that previously stopped Category creation was
-removed from `CategoryCreateCommand` so offline creates can reach the server.
-
-### Current backend edge case
-
-The server uses soft deletion and its normal `GET` hides deleted rows. If a
-newer offline client edit is intended to resurrect a server-deleted Category,
-the current API has no explicit restore/upsert operation. Such a request remains
-failed and queued instead of silently discarding the local data. Supporting
-resurrection fully requires a backend restore endpoint or update command that
-can include deleted rows.
+Normal `POST /api/Category` and `PUT /api/Category/{id}` accept business fields
+only. The server stamps `CreatedDate`, `CreatedBy`, `UpdatedDate`, `UpdatedBy`,
+and `LastModifiedUtc` in UTC. Sync routes validate client GUIDs, keep
+client-origin metadata in separate columns, include soft-deleted rows during
+conflict checks, and allow a genuinely newer offline write to resurrect a
+tombstone.
 
 ## 17. Configuration
 
@@ -495,6 +498,9 @@ The current tests cover:
 - a newer local write winning and being pushed;
 - a newer server write winning and replacing local pending data;
 - transient failure retry metadata;
+- trusted server audit/client metadata separation;
+- sync payloads excluding server-owned fields;
+- additive SQLite v1-to-v2 migration with row preservation;
 - rendering the empty Category screen.
 
 Run them with:

@@ -122,7 +122,7 @@ class _FakeRemote implements CategoryRemoteDataSource {
       _fromLocal(category);
 
   @override
-  Future<void> delete(String id) async => server = null;
+  Future<void> delete(CategoryLocalRecord category) async => server = null;
 
   @override
   Future<CategoryRemoteModel?> getById(String id) async {

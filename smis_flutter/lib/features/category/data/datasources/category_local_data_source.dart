@@ -2,6 +2,7 @@ import 'package:sqflite/sqflite.dart';
 
 import '../../../../core/database/app_database.dart';
 import '../../../../core/error/app_exception.dart';
+import '../../../../core/utils/date_time_service.dart';
 import '../models/category_local_record.dart';
 
 /// Handles SQLite operations.
@@ -62,7 +63,7 @@ class CategoryLocalDataSource {
 
   Future<List<CategoryLocalRecord>> getPending({required bool force}) async {
     final database = await _appDatabase.instance;
-    final now = DateTime.now().toUtc().toIso8601String();
+    final now = DateTimeService.nowUtc.toIso8601String();
     final retryFilter = force
         ? ''
         : ' AND retry_count < 5 AND '
@@ -107,14 +108,14 @@ class CategoryLocalDataSource {
         final parts = (rows.first['value']! as String).split('|');
         final lockedAt = DateTime.tryParse(parts.last)?.toUtc();
         if (lockedAt != null &&
-            DateTime.now().toUtc().difference(lockedAt) <
+            DateTimeService.nowUtc.difference(lockedAt) <
                 const Duration(minutes: 10)) {
           return false;
         }
       }
       await transaction.insert('sync_metadata', {
         'key': _syncLockKey,
-        'value': '$owner|${DateTime.now().toUtc().toIso8601String()}',
+        'value': '$owner|${DateTimeService.nowUtc.toIso8601String()}',
       }, conflictAlgorithm: ConflictAlgorithm.replace);
       return true;
     });

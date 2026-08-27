@@ -16,7 +16,7 @@ abstract interface class CategoryRemoteDataSource {
 
   Future<CategoryRemoteModel> update(CategoryLocalRecord category);
 
-  Future<void> delete(String id);
+  Future<void> delete(CategoryLocalRecord category);
 }
 
 /// Implementation using Dio (a powerful HTTP client for Dart).
@@ -66,7 +66,7 @@ class CategoryRemoteDataSourceImpl implements CategoryRemoteDataSource {
   Future<CategoryRemoteModel> create(CategoryLocalRecord category) async {
     try {
       final response = await _client.dio.post<Map<String, dynamic>>(
-        AppConfig.categoryEndpoint,
+        '${AppConfig.categoryEndpoint}/sync',
         data: CategoryRemoteModel.createPayload(category),
       );
       return CategoryRemoteModel.fromJson(response.data!);
@@ -79,7 +79,7 @@ class CategoryRemoteDataSourceImpl implements CategoryRemoteDataSource {
   Future<CategoryRemoteModel> update(CategoryLocalRecord category) async {
     try {
       final response = await _client.dio.put<Map<String, dynamic>>(
-        '${AppConfig.categoryEndpoint}/${category.id}',
+        '${AppConfig.categoryEndpoint}/${category.id}/sync',
         data: CategoryRemoteModel.updatePayload(category),
       );
       return CategoryRemoteModel.fromJson(response.data!);
@@ -89,9 +89,12 @@ class CategoryRemoteDataSourceImpl implements CategoryRemoteDataSource {
   }
 
   @override
-  Future<void> delete(String id) async {
+  Future<void> delete(CategoryLocalRecord category) async {
     try {
-      await _client.dio.delete<void>('${AppConfig.categoryEndpoint}/$id');
+      await _client.dio.delete<void>(
+        '${AppConfig.categoryEndpoint}/${category.id}/sync',
+        data: CategoryRemoteModel.deletePayload(category),
+      );
     } on DioException catch (error) {
       if (error.response?.statusCode == 404) return;
       _client.mapAndThrow(error);

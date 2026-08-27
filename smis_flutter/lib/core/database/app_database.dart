@@ -21,12 +21,13 @@ class AppDatabase {
     _database = await _factory.openDatabase(
       path,
       options: OpenDatabaseOptions(
-        version: 1,
+        version: 2,
         onConfigure: (database) async {
           await database.execute('PRAGMA foreign_keys = ON');
           await database.execute('PRAGMA journal_mode = WAL');
         },
         onCreate: _createSchema,
+        onUpgrade: _upgradeSchema,
       ),
     );
     return _database!;
@@ -54,7 +55,12 @@ class AppDatabase {
         sync_status TEXT NOT NULL DEFAULT 'synced',
         retry_count INTEGER NOT NULL DEFAULT 0,
         next_retry_at TEXT,
-        last_sync_error TEXT
+        last_sync_error TEXT,
+        server_created_date TEXT,
+        server_updated_date TEXT,
+        server_created_by TEXT,
+        server_updated_by TEXT,
+        server_last_modified_utc TEXT
       )
     ''');
     await database.execute('''
@@ -71,5 +77,29 @@ class AppDatabase {
         value TEXT NOT NULL
       )
     ''');
+  }
+
+  static Future<void> _upgradeSchema(
+    Database database,
+    int oldVersion,
+    int newVersion,
+  ) async {
+    if (oldVersion < 2) {
+      await database.execute(
+        'ALTER TABLE categories ADD COLUMN server_created_date TEXT',
+      );
+      await database.execute(
+        'ALTER TABLE categories ADD COLUMN server_updated_date TEXT',
+      );
+      await database.execute(
+        'ALTER TABLE categories ADD COLUMN server_created_by TEXT',
+      );
+      await database.execute(
+        'ALTER TABLE categories ADD COLUMN server_updated_by TEXT',
+      );
+      await database.execute(
+        'ALTER TABLE categories ADD COLUMN server_last_modified_utc TEXT',
+      );
+    }
   }
 }

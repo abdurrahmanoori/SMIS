@@ -1,6 +1,7 @@
 import 'package:uuid/uuid.dart';
 
 import '../../../../core/error/app_exception.dart';
+import '../../../../core/utils/date_time_service.dart';
 import '../../domain/entities/category.dart';
 import '../../domain/repositories/category_repository.dart';
 import '../datasources/category_local_data_source.dart';
@@ -18,7 +19,7 @@ class CategoryRepositoryImpl implements CategoryRepository {
     this._local, {
     UtcNow? utcNow,
     IdGenerator? idGenerator,
-  }) : _utcNow = utcNow ?? (() => DateTime.now().toUtc()),
+  }) : _utcNow = utcNow ?? (() => DateTimeService.nowUtc),
        _idGenerator = idGenerator ?? const Uuid().v4;
 
   final CategoryLocalDataSource _local;
