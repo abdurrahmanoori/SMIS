@@ -8,6 +8,8 @@ import '../datasources/category_remote_data_source.dart';
 import '../models/category_local_record.dart';
 import '../models/category_remote_model.dart';
 
+/// Represents the result of a sync operation.
+/// Similar to a 'SyncResult' or 'CommandResult' DTO in .NET.
 class CategorySyncResult {
   const CategorySyncResult({
     required this.success,
@@ -32,6 +34,9 @@ class CategorySyncResult {
   final bool skippedOffline;
 }
 
+/// Orchestrates synchronization between local storage and remote API.
+/// This implements an 'Offline-First' pattern: data is saved locally first, 
+/// then synced to the server whenever connectivity is available.
 class CategorySyncService {
   CategorySyncService(this._local, this._remote, this._connectivity);
 
@@ -41,6 +46,7 @@ class CategorySyncService {
 
   Future<CategorySyncResult> synchronize({bool force = false}) async {
     final owner = const Uuid().v4();
+    // Using a simple 'Sync Lock' in the database to prevent concurrent sync operations.
     if (!await _local.tryAcquireSyncLock(owner)) {
       return CategorySyncResult(
         success: true,
@@ -66,6 +72,7 @@ class CategorySyncService {
         );
       }
 
+      // 1. PULL PHASE: Get changes from the server.
       final cursor = await _local.getPullCursor();
       final remoteChanges = await _remote.pull(cursor);
       DateTime? newestRemoteWrite;
@@ -75,9 +82,9 @@ class CategorySyncService {
         pulled += outcome.applied ? 1 : 0;
         conflicts += outcome.conflictResolved ? 1 : 0;
       }
+      
+      // Update our cursor so next time we only pull NEW records.
       if (newestRemoteWrite != null) {
-        // Keep a tiny overlap because the API uses a strict `>` cursor. Replaying
-        // one boundary record is harmless and prevents equal-timestamp misses.
         final overlapped = newestRemoteWrite.subtract(
           const Duration(milliseconds: 1),
         );
@@ -86,6 +93,7 @@ class CategorySyncService {
         );
       }
 
+      // 2. PUSH PHASE: Send local changes to the server.
       final pending = await _local.getPending(force: force);
       for (final localRecord in pending) {
         try {
@@ -93,13 +101,11 @@ class CategorySyncService {
           pushed += outcome.pushed ? 1 : 0;
           conflicts += outcome.conflictResolved ? 1 : 0;
         } on RemoteTransientException catch (error) {
+          // If it's a temporary network error, we track it for retry.
           await _markFailure(localRecord, error.message);
           failed++;
           transientFailure = true;
           break;
-        } on RemotePermanentException catch (error) {
-          await _markFailure(localRecord, error.message);
-          failed++;
         } catch (error) {
           await _markFailure(localRecord, error.toString());
           failed++;

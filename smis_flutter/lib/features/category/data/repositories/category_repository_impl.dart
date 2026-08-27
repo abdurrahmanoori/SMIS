@@ -6,9 +6,13 @@ import '../../domain/repositories/category_repository.dart';
 import '../datasources/category_local_data_source.dart';
 import '../models/category_local_record.dart';
 
+/// Function types for dependency injection. 
+/// These allow us to mock time and ID generation in unit tests.
 typedef UtcNow = DateTime Function();
 typedef IdGenerator = String Function();
 
+/// Implementation of the repository.
+/// In Flutter/Riverpod, we use constructor injection just like in .NET Core.
 class CategoryRepositoryImpl implements CategoryRepository {
   CategoryRepositoryImpl(
     this._local, {
@@ -29,6 +33,8 @@ class CategoryRepositoryImpl implements CategoryRepository {
   Future<Category> create(CategoryDraft draft) async {
     final normalized = draft.normalized();
     final now = _utcNow();
+    
+    // Create a Persistence Model (LocalRecord) from the Draft.
     final record = CategoryLocalRecord(
       id: _idGenerator(),
       name: normalized.name,
@@ -39,10 +45,12 @@ class CategoryRepositoryImpl implements CategoryRepository {
       updatedAt: now,
       lastModifiedUtc: now,
       isDeleted: false,
+      // Mark as 'pendingCreate' so the background sync knows to push it.
       pendingOperation: CategoryPendingOperation.create,
       syncStatus: CategorySyncStatus.pendingCreate,
       retryCount: 0,
     );
+    
     await _local.put(record);
     return record.toDomain();
   }
@@ -53,10 +61,15 @@ class CategoryRepositoryImpl implements CategoryRepository {
     if (existing == null || existing.isDeleted) {
       throw const LocalStorageException('Category was not found.');
     }
+    
     final normalized = draft.normalized();
+    
+    // We ensure the timestamp is always strictly increasing.
     final now = _monotonicNow(existing.lastModifiedUtc);
+    
     final remainsCreate =
         existing.pendingOperation == CategoryPendingOperation.create;
+        
     final updated = existing.copyWith(
       name: normalized.name,
       code: normalized.code,
@@ -66,6 +79,7 @@ class CategoryRepositoryImpl implements CategoryRepository {
       isActive: normalized.isActive,
       updatedAt: now,
       lastModifiedUtc: now,
+      // If it hasn't been synced to the server yet, it's still a 'create' operation.
       pendingOperation: remainsCreate
           ? CategoryPendingOperation.create
           : CategoryPendingOperation.update,
@@ -76,6 +90,7 @@ class CategoryRepositoryImpl implements CategoryRepository {
       clearNextRetryAt: true,
       clearLastSyncError: true,
     );
+    
     await _local.put(updated);
     return updated.toDomain();
   }

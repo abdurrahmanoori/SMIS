@@ -4,6 +4,8 @@ import '../../../../core/database/app_database.dart';
 import '../../../../core/error/app_exception.dart';
 import '../models/category_local_record.dart';
 
+/// Handles SQLite operations.
+/// Think of this as your Data Access Layer (DAL) or a repository that uses Dapper.
 class CategoryLocalDataSource {
   CategoryLocalDataSource(this._appDatabase);
 
@@ -16,11 +18,13 @@ class CategoryLocalDataSource {
   Future<List<CategoryLocalRecord>> getVisible() async {
     try {
       final database = await _appDatabase.instance;
+      // .query() is a helper that generates a SELECT statement.
       final rows = await database.query(
         _table,
         where: 'is_deleted = 0',
         orderBy: 'name COLLATE NOCASE ASC',
       );
+      // We map the raw Map<String, Object?> from SQLite to our LocalRecord objects.
       return rows.map(CategoryLocalRecord.fromMap).toList(growable: false);
     } catch (error) {
       throw LocalStorageException(
@@ -34,7 +38,7 @@ class CategoryLocalDataSource {
     final database = await _appDatabase.instance;
     final rows = await database.query(
       _table,
-      where: 'id = ?',
+      where: 'id = ?', // Use '?' for parameter injection to prevent SQL injection.
       whereArgs: [id],
       limit: 1,
     );
@@ -46,6 +50,7 @@ class CategoryLocalDataSource {
     await database.insert(
       _table,
       record.toMap(),
+      // 'replace' means if the ID exists, it will overwrite the row.
       conflictAlgorithm: ConflictAlgorithm.replace,
     );
   }

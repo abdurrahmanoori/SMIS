@@ -1,5 +1,8 @@
 import 'category_local_record.dart';
 
+/// Represents the data structure returned by the external API.
+/// In Flutter, manual JSON parsing using `fromJson` is common for smaller projects.
+/// For larger projects, tools like `json_serializable` are often used.
 class CategoryRemoteModel {
   const CategoryRemoteModel({
     required this.id,
@@ -21,6 +24,7 @@ class CategoryRemoteModel {
   final DateTime lastModifiedUtc;
   final bool isDeleted;
 
+  /// Creates a model from a JSON map (e.g., from a Dio response).
   factory CategoryRemoteModel.fromJson(Map<String, dynamic> json) =>
       CategoryRemoteModel(
         id: json['id'] as String,
@@ -35,6 +39,7 @@ class CategoryRemoteModel {
         isDeleted: json['isDeleted'] as bool? ?? false,
       );
 
+  /// Helper to create the payload for a POST request.
   static Map<String, Object?> createPayload(CategoryLocalRecord record) => {
     'id': record.id,
     'name': record.name,
@@ -45,6 +50,7 @@ class CategoryRemoteModel {
     'lastModifiedUtc': record.lastModifiedUtc.toUtc().toIso8601String(),
   };
 
+  /// Helper to create the payload for a PUT request.
   static Map<String, Object?> updatePayload(CategoryLocalRecord record) => {
     'name': record.name,
     'code': record.code,

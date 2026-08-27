@@ -12,7 +12,12 @@ class CategoryFormDialog extends StatefulWidget {
 }
 
 class _CategoryFormDialogState extends State<CategoryFormDialog> {
+  // GlobalKey is used to access the FormState from outside the build method.
+  // It's how we trigger validation manually.
   final _formKey = GlobalKey<FormState>();
+  
+  // TextEditingController is like a Binding to the Text property in WinForms/WPF.
+  // It manages the current text value and selection state.
   late final TextEditingController _name;
   late final TextEditingController _code;
   late final TextEditingController _description;
@@ -21,6 +26,7 @@ class _CategoryFormDialogState extends State<CategoryFormDialog> {
   @override
   void initState() {
     super.initState();
+    // Initialize controllers with existing data if editing.
     _name = TextEditingController(text: widget.category?.name);
     _code = TextEditingController(text: widget.category?.code);
     _description = TextEditingController(text: widget.category?.description);
@@ -29,6 +35,7 @@ class _CategoryFormDialogState extends State<CategoryFormDialog> {
 
   @override
   void dispose() {
+    // CRITICAL: Always dispose controllers to prevent memory leaks.
     _name.dispose();
     _code.dispose();
     _description.dispose();
@@ -51,6 +58,7 @@ class _CategoryFormDialogState extends State<CategoryFormDialog> {
                 autofocus: true,
                 maxLength: 200,
                 decoration: const InputDecoration(labelText: 'Name *'),
+                // Simple validation logic.
                 validator: (value) => value == null || value.trim().isEmpty
                     ? 'Name is required.'
                     : null,
@@ -73,6 +81,7 @@ class _CategoryFormDialogState extends State<CategoryFormDialog> {
                 contentPadding: EdgeInsets.zero,
                 title: const Text('Active'),
                 value: _isActive,
+                // setState() tells Flutter to rebuild this widget with the new value.
                 onChanged: (value) => setState(() => _isActive = value),
               ),
             ],
@@ -87,7 +96,10 @@ class _CategoryFormDialogState extends State<CategoryFormDialog> {
       ),
       FilledButton(
         onPressed: () {
+          // Trigger validation via the GlobalKey.
           if (!_formKey.currentState!.validate()) return;
+          
+          // Close the dialog and return the Draft object to the caller.
           Navigator.pop(
             context,
             CategoryDraft(

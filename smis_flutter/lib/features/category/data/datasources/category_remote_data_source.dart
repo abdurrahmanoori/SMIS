@@ -5,6 +5,8 @@ import '../../../../core/network/api_client.dart';
 import '../models/category_local_record.dart';
 import '../models/category_remote_model.dart';
 
+/// Interface for the remote API.
+/// In Flutter, we use 'abstract interface class' for pure interfaces (similar to C# interface).
 abstract interface class CategoryRemoteDataSource {
   Future<List<CategoryRemoteModel>> pull(DateTime changedSince);
 
@@ -17,6 +19,7 @@ abstract interface class CategoryRemoteDataSource {
   Future<void> delete(String id);
 }
 
+/// Implementation using Dio (a powerful HTTP client for Dart).
 class CategoryRemoteDataSourceImpl implements CategoryRemoteDataSource {
   CategoryRemoteDataSourceImpl(this._client);
 
@@ -25,12 +28,15 @@ class CategoryRemoteDataSourceImpl implements CategoryRemoteDataSource {
   @override
   Future<List<CategoryRemoteModel>> pull(DateTime changedSince) async {
     try {
+      // Dio makes it easy to send GET requests with query parameters.
       final response = await _client.dio.get<List<dynamic>>(
         '${AppConfig.categoryEndpoint}/pull',
         queryParameters: {
           'changedSince': changedSince.toUtc().toIso8601String(),
         },
       );
+      
+      // Dart is very expressive with collections. .map().toList() is very common.
       return (response.data ?? const <dynamic>[])
           .map(
             (item) => CategoryRemoteModel.fromJson(
