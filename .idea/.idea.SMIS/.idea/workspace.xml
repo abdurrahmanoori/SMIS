@@ -71,23 +71,23 @@
   <component name="MetaFilesCheckinStateConfiguration" checkMetaFiles="true" />
   <component name="NextEditCompletionFeaturesState">
     <decayedCancelled>
-      <entry key="MS100" value="1.0468153592743836" />
-      <entry key="MS500" value="1.978101434267711" />
-      <entry key="S2" value="3.6347924831236216" />
-      <entry key="S5" value="4.752503020501081" />
-      <entry key="S10" value="5.307723636587716" />
-      <entry key="S30" value="5.751721141977082" />
-      <entry key="S60" value="5.873508191746699" />
-      <entry key="M2" value="5.936153078832611" />
-      <entry key="M5" value="5.983263370641594" />
-      <entry key="M10" value="6.469441607090858" />
-      <entry key="M15" value="7.813360174410576" />
-      <entry key="M30" value="12.878282512174648" />
-      <entry key="H1" value="19.374935916489495" />
-      <entry key="H2" value="24.648426509777085" />
-      <entry key="H4" value="28.019610715937482" />
-      <entry key="D1" value="31.289851799109655" />
-      <entry key="W1" value="31.897342530598717" />
+      <entry key="MS100" value="1.0000377152432165" />
+      <entry key="MS500" value="1.2352998140335905" />
+      <entry key="S2" value="4.075712698967657" />
+      <entry key="S5" value="8.886565788232714" />
+      <entry key="S10" value="12.870012545324728" />
+      <entry key="S30" value="17.125543338523684" />
+      <entry key="S60" value="18.48775578678483" />
+      <entry key="M2" value="19.22398808305927" />
+      <entry key="M5" value="19.69341624047391" />
+      <entry key="M10" value="20.31840022453774" />
+      <entry key="M15" value="21.702446154830977" />
+      <entry key="M30" value="26.803737767600747" />
+      <entry key="H1" value="33.325435672782035" />
+      <entry key="H2" value="38.61871316635627" />
+      <entry key="H4" value="42.003167406938594" />
+      <entry key="D1" value="45.28685469780792" />
+      <entry key="W1" value="45.896907564617486" />
     </decayedCancelled>
     <decayedSelected>
       <entry key="MS100" value="0.0" />
@@ -109,23 +109,23 @@
       <entry key="W1" value="0.0" />
     </decayedSelected>
     <decayedShown>
-      <entry key="MS100" value="0.9653932117578471" />
-      <entry key="MS500" value="1.6290184942866055" />
-      <entry key="S2" value="3.348634726323554" />
-      <entry key="S5" value="4.600676726717931" />
-      <entry key="S10" value="5.223901216744011" />
-      <entry key="S30" value="5.721826213496799" />
-      <entry key="S60" value="5.8583029438897505" />
-      <entry key="M2" value="5.928484944483968" />
-      <entry key="M5" value="5.980179914874079" />
-      <entry key="M10" value="6.467888137979873" />
-      <entry key="M15" value="7.812306742085238" />
-      <entry key="M30" value="12.877722945158753" />
-      <entry key="H1" value="19.374635136457613" />
-      <entry key="H2" value="24.648267601439855" />
-      <entry key="H4" value="28.01952853901839" />
-      <entry key="D1" value="31.289837662730296" />
-      <entry key="W1" value="31.89734049943296" />
+      <entry key="MS100" value="0.0019621646339498546" />
+      <entry key="MS500" value="0.5193032025094961" />
+      <entry key="S2" value="3.766666930244036" />
+      <entry key="S5" value="8.683604463863647" />
+      <entry key="S10" value="12.730285623203311" />
+      <entry key="S30" value="17.064484567802943" />
+      <entry key="S60" value="18.45484933757235" />
+      <entry key="M2" value="19.206887977979157" />
+      <entry key="M5" value="19.686413374316007" />
+      <entry key="M10" value="20.31486209797311" />
+      <entry key="M15" value="21.7000641098709" />
+      <entry key="M30" value="26.802511154347428" />
+      <entry key="H1" value="33.32480066067474" />
+      <entry key="H2" value="38.618386952799746" />
+      <entry key="H4" value="42.00300152736231" />
+      <entry key="D1" value="45.28682660371109" />
+      <entry key="W1" value="45.89690353930896" />
     </decayedShown>
   </component>
   <component name="ProjectColorInfo">{
@@ -357,7 +357,15 @@
       <option name="project" value="LOCAL" />
       <updated>1787747343449</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="Flutter project added with crud operation for category&#10;&#10;fix(Category): update accumulated hierarchy time and last focus timestamps">
+      <option name="closed" value="true" />
+      <created>1787807722371</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1787807722371</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <option name="createChangelist" value="false" />
     <option name="createBranch" value="false" />
     <servers />
@@ -372,6 +380,7 @@
     <MESSAGE value="just some task" />
     <MESSAGE value="some ide realted upate" />
     <MESSAGE value="flutte project createed" />
+    <MESSAGE value="Flutter project added with crud operation for category&#10;&#10;fix(Category): update accumulated hierarchy time and last focus timestamps" />
     <option name="LAST_COMMIT_MESSAGE" value="" />
   </component>
   <component name="XDebuggerManager">
