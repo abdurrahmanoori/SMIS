@@ -23,17 +23,17 @@ public static class CategorySeed
         var category = Category.Create(name, shopId, code, description, true);
         category.Id = id;
         category.IsSyncedToServer = true;
-        category.LastSyncedAt = DateTimeService.UtcNow;
-        category.CreatedDate = DateTimeService.UtcNow;
-        category.UpdatedDate = DateTimeService.UtcNow;
-        category.LastModifiedUtc = DateTimeService.UtcNow;
+        category.LastSyncedAt = DateTimeService.NowUtc;
+        category.CreatedDate = DateTimeService.NowUtc;
+        category.UpdatedDate = DateTimeService.NowUtc;
+        category.LastModifiedUtc = DateTimeService.NowUtc;
         return category;
 
         //typeof(Category).GetProperty(nameof(Category.Id))!.SetValue(category, id);
         //typeof(Category).GetProperty(nameof(Category.IsSyncedToServer))!.SetValue(category, true);
-        //typeof(Category).GetProperty(nameof(Category.LastSyncedAt))!.SetValue(category, DateTimeService.UtcNow);
-        //typeof(Category).GetProperty(nameof(Category.CreatedDate))!.SetValue(category, DateTimeService.UtcNow);
-        //typeof(Category).GetProperty(nameof(Category.UpdatedDate))!.SetValue(category, DateTimeService.UtcNow);
-        //typeof(Category).GetProperty(nameof(Category.LastModifiedUtc))!.SetValue(category, DateTimeService.UtcNowOffSet);
+        //typeof(Category).GetProperty(nameof(Category.LastSyncedAt))!.SetValue(category, DateTimeService.NowUtc);
+        //typeof(Category).GetProperty(nameof(Category.CreatedDate))!.SetValue(category, DateTimeService.NowUtc);
+        //typeof(Category).GetProperty(nameof(Category.UpdatedDate))!.SetValue(category, DateTimeService.NowUtc);
+        //typeof(Category).GetProperty(nameof(Category.LastModifiedUtc))!.SetValue(category, DateTimeService.NowUtcOffSet);
     }
 }

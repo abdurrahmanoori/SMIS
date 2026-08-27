@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore.Diagnostics;
 using SMIS.Application.Identity.IServices;
 using SMIS.Application.Services;
 using SMIS.Domain.Common.Interfaces;
+using SMIS.Domain.Entities;
 namespace SMIS.Infrastructure.Server.Interceptors;
 
 public class EntityPKInterceptor : SaveChangesInterceptor
@@ -30,6 +31,11 @@ public class EntityPKInterceptor : SaveChangesInterceptor
         {
             if (entry.State == EntityState.Added)
             {
+                // Category sync IDs are validated GUIDs and form the stable key
+                // shared by offline clients and the server. Never replace them.
+                if (entry.Entity is Category && Guid.TryParse(entry.Entity.Id, out _))
+                    continue;
+
 // In DEBUG mode, we also replace auto-generated GUIDs (from EntityPK base class default)
                 // with sequential numeric IDs for easier testing and readability.
                 // In Release (production), we only generate an ID when it is truly empty,

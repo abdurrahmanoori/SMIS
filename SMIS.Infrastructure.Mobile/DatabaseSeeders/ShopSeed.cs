@@ -21,10 +21,10 @@ public static class ShopSeed
         var shop = Shop.Create(name, shopType, address, phoneNumber, email, taxNumber, isActive);
         shop.Id = id;
         shop.IsSyncedToServer = true;
-        shop.LastSyncedAt = DateTimeService.UtcNow;
-        shop.CreatedDate = DateTimeService.UtcNow;
-        shop.UpdatedDate = DateTimeService.UtcNow;
-        shop.LastModifiedUtc = DateTimeService.UtcNow;
+        shop.LastSyncedAt = DateTimeService.NowUtc;
+        shop.CreatedDate = DateTimeService.NowUtc;
+        shop.UpdatedDate = DateTimeService.NowUtc;
+        shop.LastModifiedUtc = DateTimeService.NowUtc;
         return shop;
     }
 }

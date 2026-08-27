@@ -82,20 +82,19 @@ public class SyncService : ISyncService
 
                 if (existsOnServer.Success && existsOnServer.Response != null)
                 {
-                    var serverDto = existsOnServer.Response as dynamic;
-                    var serverTimestamp = (DateTime)serverDto.LastModifiedUtc;
+                    var serverTimestamp = config.GetConflictModifiedUtc(existsOnServer.Response);
 
                     if (entity.LastModifiedUtc > serverTimestamp)
                     {
                         // Local is newer — push local version to server.
                         var updateDto = config.MapToUpdateDto(entity);
                         var result = await _apiClient.PutAsync<TUpdateDto, TDto>(
-                            $"{config.ApiEndpoint}/{entity.Id}", updateDto);
+                            config.UpdateEndpoint(entity.Id), updateDto);
 
                         if (result.Success)
                         {
                             entity.IsSyncedToServer = true;
-                            entity.LastSyncedAt = DateTimeService.UtcNow;
+                            entity.LastSyncedAt = DateTimeService.NowUtc;
                             await _localDb.SaveChangesAsync();
                             synced++;
                         }
@@ -108,7 +107,7 @@ public class SyncService : ISyncService
                         // without pushing to avoid overwriting a more recent server version.
                         // Pull will have already applied the server version in the same sync cycle.
                         entity.IsSyncedToServer = true;
-                        entity.LastSyncedAt = DateTimeService.UtcNow;
+                        entity.LastSyncedAt = DateTimeService.NowUtc;
                         await _localDb.SaveChangesAsync();
                         synced++;
                     }
@@ -116,12 +115,12 @@ public class SyncService : ISyncService
                 else
                 {
                     var createDto = config.MapToCreateDto(entity);
-                    var result = await _apiClient.PostAsync<TCreateDto, TDto>(config.ApiEndpoint, createDto);
+                    var result = await _apiClient.PostAsync<TCreateDto, TDto>(config.CreateEndpoint, createDto);
 
                     if (result.Success)
                     {
                         entity.IsSyncedToServer = true;
-                        entity.LastSyncedAt = DateTimeService.UtcNow;
+                        entity.LastSyncedAt = DateTimeService.NowUtc;
                         await _localDb.SaveChangesAsync();
                         synced++;
                     }

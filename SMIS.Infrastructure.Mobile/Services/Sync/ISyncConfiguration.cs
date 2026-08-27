@@ -7,6 +7,9 @@ public interface ISyncConfiguration<TEntity, TCreateDto, TUpdateDto, TDto>
 {
     string EntityName { get; }
     string ApiEndpoint { get; }
+    string CreateEndpoint => ApiEndpoint;
+    string UpdateEndpoint(string id) => $"{ApiEndpoint}/{id}";
+    DateTime GetConflictModifiedUtc(TDto dto) => ((dynamic)dto!).LastModifiedUtc;
     TCreateDto MapToCreateDto(TEntity entity);
     TUpdateDto MapToUpdateDto(TEntity entity);
 }

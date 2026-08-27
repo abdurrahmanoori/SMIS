@@ -53,13 +53,8 @@ namespace SMIS.Application.Features.Categories.Commands
             entity.SetDescription(request.CategoryUpdateDto.Description);
             if (request.CategoryUpdateDto.IsActive) entity.Activate(); else entity.Deactivate();
             
-            // Preserve original timestamps from mobile sync
-            if (request.CategoryUpdateDto.UpdatedDate.HasValue)
-                entity.UpdatedDate = request.CategoryUpdateDto.UpdatedDate;
-            if (!string.IsNullOrEmpty(request.CategoryUpdateDto.UpdatedBy))
-                entity.UpdatedBy = request.CategoryUpdateDto.UpdatedBy;
-            if (request.CategoryUpdateDto.LastModifiedUtc.HasValue)
-                entity.LastModifiedUtc = request.CategoryUpdateDto.LastModifiedUtc.Value;
+            // A direct API edit becomes the current server-originated version.
+            entity.ClearClientModificationMetadata();
             
             await _unitOfWork.SaveChanges(cancellationToken);
 

@@ -33,7 +33,7 @@ internal sealed class ProductGetLoanInfoQueryHandler : IRequestHandler<ProductGe
         var activePrice = product.ProductPrices
             .Where(p => p.IsActive && 
                        p.ProductUnit != null &&
-                       (p.EndDate == null || p.EndDate >= DateTimeService.Now))
+                       (p.EndDate == null || p.EndDate >= DateTimeService.NowLocal))
             .OrderBy(p => p.ProductUnit.ConversionFactor) // Prefer base unit (ConversionFactor=1)
             .ThenByDescending(p => p.EffectiveDate)
             .FirstOrDefault();

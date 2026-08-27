@@ -98,14 +98,14 @@ public class CategorySyncService : ICategorySyncService
                 // user on the same shop. Use the domain factory to respect all validation rules.
                 var newCategory = Category.Create(dto.Name, dto.ShopId, dto.Code, dto.Description, dto.IsActive);
                 newCategory.Id = dto.Id;
-                newCategory.LastModifiedUtc = dto.LastModifiedUtc;
+                newCategory.LastModifiedUtc = ConflictTime(dto);
                 newCategory.IsSyncedToServer = true;
-                newCategory.LastSyncedAt = DateTimeService.UtcNow;
+                newCategory.LastSyncedAt = DateTimeService.NowUtc;
 
                 await _localDb.Categories.AddAsync(newCategory);
                 upserted++;
             }
-            else if (dto.LastModifiedUtc > local.LastModifiedUtc)
+            else if (ConflictTime(dto) > local.LastModifiedUtc)
             {
                 // The record exists locally but the server version is newer.
                 // This happens when another user on the same shop edited this category
@@ -115,9 +115,9 @@ public class CategorySyncService : ICategorySyncService
                 local.SetDescription(dto.Description);
                 if (dto.IsActive) local.Activate(); else local.Deactivate();
 
-                local.LastModifiedUtc = dto.LastModifiedUtc;
+                local.LastModifiedUtc = ConflictTime(dto);
                 local.IsSyncedToServer = true;
-                local.LastSyncedAt = DateTimeService.UtcNow;
+                local.LastSyncedAt = DateTimeService.NowUtc;
                 upserted++;
             }
             // Local is newer than server — local wins, nothing to do here.
@@ -129,7 +129,7 @@ public class CategorySyncService : ICategorySyncService
         await _localDb.SaveChangesAsync();
 
         // Advance the pull cursor so the next pull only fetches changes after this moment.
-        _preferences.Set(timestampKey, DateTimeService.UtcNow.ToString("o"));
+        _preferences.Set(timestampKey, DateTimeService.NowUtc.ToString("o"));
 
         return new SyncResult
         {
@@ -138,5 +138,8 @@ public class CategorySyncService : ICategorySyncService
             SyncedCount = upserted
         };
     }
+
+    private static DateTime ConflictTime(CategoryDto dto) =>
+        dto.ConflictModifiedUtc == default ? dto.LastModifiedUtc : dto.ConflictModifiedUtc;
 
 }

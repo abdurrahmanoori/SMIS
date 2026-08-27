@@ -43,7 +43,7 @@ namespace SMIS.Infrastructure.Server.Logging
                 Exception = logEvent.Exception?.ToString(),
                 Properties = JsonSerializer.Serialize(properties),
                 UserId = ExtractUserId(properties),
-                CreatedAt = DateTimeService.Now
+                CreatedAt = DateTimeService.NowLocal
             };
         }
 

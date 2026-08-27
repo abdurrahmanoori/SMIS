@@ -22,15 +22,15 @@ public static class CategorySeed
     {
         var category = Category.Create(name, shopId, code, description, true);
         category.Id = id;
-        category.CreatedDate = DateTimeService.UtcNow;
-        category.UpdatedDate = DateTimeService.UtcNow;
-        category.LastModifiedUtc = DateTimeService.UtcNow;
+        category.CreatedDate = DateTimeService.NowUtc;
+        category.UpdatedDate = DateTimeService.NowUtc;
+        category.LastModifiedUtc = DateTimeService.NowUtc;
         return category;
 
 
         //typeof(Category).GetProperty(nameof(Category.Id))!.SetValue(category, id);
         //typeof(Category).GetProperty(nameof(Category.CreatedDate))!.SetValue(category, DateTimeService.Now);
         //typeof(Category).GetProperty(nameof(Category.UpdatedDate))!.SetValue(category, DateTimeService.Now);
-        //typeof(Category).GetProperty(nameof(Category.LastModifiedUtc))!.SetValue(category, DateTimeService.UtcNow);
+        //typeof(Category).GetProperty(nameof(Category.LastModifiedUtc))!.SetValue(category, DateTimeService.NowUtc);
     }
 }

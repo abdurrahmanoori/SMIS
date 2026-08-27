@@ -10,7 +10,7 @@ public static class StockBatchSeed
 {
     public static void DataSeed(ModelBuilder modelBuilder)
     {
-        var now = DateTimeService.UtcNow;
+        var now = DateTimeService.NowUtc;
         var stockBatches = new[]
         {
             CreateStockBatch("1", "1", "2", 100m, 40000, now.AddDays(-10), "CC-001", now.AddMonths(6)),
@@ -30,9 +30,9 @@ public static class StockBatchSeed
         typeof(StockBatch).GetProperty(nameof(StockBatch.Id))!.SetValue(batch, id);
         typeof(StockBatch).GetProperty(nameof(StockBatch.ProductName))!.SetValue(batch, GetProductName(productId));
         typeof(StockBatch).GetProperty(nameof(StockBatch.UnitName))!.SetValue(batch, GetUnitName(unitId));
-        typeof(StockBatch).GetProperty(nameof(StockBatch.CreatedDate))!.SetValue(batch, DateTimeService.UtcNow);
-        typeof(StockBatch).GetProperty(nameof(StockBatch.UpdatedDate))!.SetValue(batch, DateTimeService.UtcNow);
-        typeof(StockBatch).GetProperty(nameof(StockBatch.LastModifiedUtc))!.SetValue(batch, DateTimeService.UtcNow);
+        typeof(StockBatch).GetProperty(nameof(StockBatch.CreatedDate))!.SetValue(batch, DateTimeService.NowUtc);
+        typeof(StockBatch).GetProperty(nameof(StockBatch.UpdatedDate))!.SetValue(batch, DateTimeService.NowUtc);
+        typeof(StockBatch).GetProperty(nameof(StockBatch.LastModifiedUtc))!.SetValue(batch, DateTimeService.NowUtc);
         
         return batch;
     }

@@ -42,25 +42,6 @@ namespace SMIS.Application.Features.Categories.Commands
                 request.CategoryCreateDto.IsActive
             );
 
-            // Use client-provided Id if available (offline sync scenario)
-            if (!string.IsNullOrEmpty(request.CategoryCreateDto.Id))
-            {
-                // Check if already exists (idempotent)
-                var existing = await _categoryRepository.GetByIdAsync(request.CategoryCreateDto.Id);
-                if (existing != null)
-                    return Result<CategoryDto>.SuccessResult(_mapper.Map<CategoryDto>(existing));
-
-                entity.Id = request.CategoryCreateDto.Id;
-
-                // Preserve original timestamps from mobile sync
-                if (request.CategoryCreateDto.CreatedDate.HasValue)
-                    entity.CreatedDate = request.CategoryCreateDto.CreatedDate.Value;
-                if (!string.IsNullOrEmpty(request.CategoryCreateDto.CreatedBy))
-                    entity.CreatedBy = request.CategoryCreateDto.CreatedBy;
-                if (request.CategoryCreateDto.LastModifiedUtc.HasValue)
-                    entity.LastModifiedUtc = request.CategoryCreateDto.LastModifiedUtc.Value;
-            }
-
             await _categoryRepository.AddAsync(entity);
             await _unitOfWork.SaveChanges(cancellationToken);
 

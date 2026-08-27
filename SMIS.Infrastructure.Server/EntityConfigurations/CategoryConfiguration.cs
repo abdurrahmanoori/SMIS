@@ -29,6 +29,9 @@ namespace SMIS.Infrastructure.Server.EntityConfigurations
             builder.Property(c => c.IsActive)
                 .IsRequired();
 
+            builder.Property(c => c.ClientCreatedBy).HasMaxLength(450);
+            builder.Property(c => c.ClientModifiedBy).HasMaxLength(450);
+
             // Backend-specific: Relationships
             builder.HasOne(c => c.Shop)
                 .WithMany()

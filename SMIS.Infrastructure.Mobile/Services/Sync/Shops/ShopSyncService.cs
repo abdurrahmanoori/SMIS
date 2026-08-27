@@ -80,7 +80,7 @@ public class ShopSyncService : IShopSyncService
                 newShop.Id = dto.Id;
                 newShop.LastModifiedUtc = dto.LastModifiedUtc;
                 newShop.IsSyncedToServer = true;
-                newShop.LastSyncedAt = DateTimeService.UtcNow;
+                newShop.LastSyncedAt = DateTimeService.NowUtc;
 
                 await _localDb.Shops.AddAsync(newShop);
                 upserted++;
@@ -97,14 +97,14 @@ public class ShopSyncService : IShopSyncService
 
                 local.LastModifiedUtc = dto.LastModifiedUtc;
                 local.IsSyncedToServer = true;
-                local.LastSyncedAt = DateTimeService.UtcNow;
+                local.LastSyncedAt = DateTimeService.NowUtc;
                 upserted++;
             }
         }
 
         await _localDb.SaveChangesAsync();
 
-        _preferences.Set(timestampKey, DateTimeService.UtcNow.ToString("o"));
+        _preferences.Set(timestampKey, DateTimeService.NowUtc.ToString("o"));
 
         return new SyncResult
         {

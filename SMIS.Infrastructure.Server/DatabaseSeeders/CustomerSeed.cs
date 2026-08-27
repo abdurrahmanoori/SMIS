@@ -35,9 +35,9 @@ public static class CustomerSeed
         // Set ID and ShopName for seeding
         typeof(Customer).GetProperty(nameof(Customer.Id))!.SetValue(customer, id);
         typeof(Customer).GetProperty(nameof(Customer.ShopName))!.SetValue(customer, GetShopName(shopId));
-        typeof(Customer).GetProperty(nameof(Customer.CreatedDate))!.SetValue(customer, DateTimeService.UtcNow);
-        typeof(Customer).GetProperty(nameof(Customer.UpdatedDate))!.SetValue(customer, DateTimeService.UtcNow);
-        typeof(Customer).GetProperty(nameof(Customer.LastModifiedUtc))!.SetValue(customer, DateTimeService.UtcNow);
+        typeof(Customer).GetProperty(nameof(Customer.CreatedDate))!.SetValue(customer, DateTimeService.NowUtc);
+        typeof(Customer).GetProperty(nameof(Customer.UpdatedDate))!.SetValue(customer, DateTimeService.NowUtc);
+        typeof(Customer).GetProperty(nameof(Customer.LastModifiedUtc))!.SetValue(customer, DateTimeService.NowUtc);
 
         return customer;
     }

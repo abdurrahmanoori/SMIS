@@ -13,7 +13,10 @@ namespace SMIS.Infrastructure.Server.Interceptors
         private readonly ICurrentUser _currentUser;
         private readonly IPublicIdGenerator _publicIdGenerator;
 
-        public AuditInterceptor(ICurrentUser currentUser, IPublicIdGenerator publicIdGenerator)
+        public AuditInterceptor(
+            ICurrentUser currentUser,
+            IPublicIdGenerator publicIdGenerator
+        )
         {
             _currentUser = currentUser;
             _publicIdGenerator = publicIdGenerator;
@@ -22,7 +25,8 @@ namespace SMIS.Infrastructure.Server.Interceptors
         public override async ValueTask<InterceptionResult<int>> SavingChangesAsync(
             DbContextEventData eventData,
             InterceptionResult<int> result,
-            CancellationToken cancellationToken = default)
+            CancellationToken cancellationToken = default
+        )
         {
             var context = eventData.Context;
 
@@ -32,19 +36,17 @@ namespace SMIS.Infrastructure.Server.Interceptors
             {
                 if (entry.State == EntityState.Added)
                 {
-                    if (entry.Entity.CreatedDate == default)
-                    {
-                        entry.Entity.CreatedDate = DateTimeService.UtcNow;
-                    }
-                    if (string.IsNullOrEmpty(entry.Entity.CreatedBy))
-                    {
-                        entry.Entity.CreatedBy = _currentUser.GetId();
-                    }
+                    entry.Entity.CreatedDate ??= DateTimeService.NowUtc;
+                    entry.Entity.CreatedBy ??= _currentUser.GetId();
+
+                    entry.Entity.UpdatedDate = null;
+                    entry.Entity.UpdatedBy = null;
+
                     // Respect client-provided LastModifiedUtc (offline sync scenario).
                     // Only stamp server time when the entity was created directly on the server.
                     if (entry.Entity.LastModifiedUtc == default)
                     {
-                        entry.Entity.LastModifiedUtc = DateTimeService.UtcNow;
+                        entry.Entity.LastModifiedUtc = DateTimeService.NowUtc;
                     }
                 }
                 else if (entry.State == EntityState.Deleted && entry.Entity is ISoftDeletable softDeletable)
@@ -56,40 +58,50 @@ namespace SMIS.Infrastructure.Server.Interceptors
                     entry.State = EntityState.Modified;
 
                     softDeletable.IsDeleted = true;
-                    softDeletable.DeletedAt = DateTimeService.UtcNow;
+                    softDeletable.DeletedAt = DateTimeService.NowUtc;
 
-                    entry.Entity.UpdatedDate = DateTimeService.UtcNow;
+                    entry.Entity.UpdatedDate = DateTimeService.NowUtc;
                     entry.Entity.UpdatedBy = _currentUser.GetId();
-                    entry.Entity.LastModifiedUtc = DateTimeService.UtcNow;
+                    entry.Entity.LastModifiedUtc = DateTimeService.NowUtc;
 
                     entry.Property(e => e.CreatedDate).IsModified = false; // Ensure CreatedDate is not updated
+                    entry.Property(e => e.CreatedBy).IsModified = false; // Ensure CreatedBy is not updated
+                    entry.Property(e => e.LastModifiedUtc).IsModified = false; // Ensure LastModifiedUtc is not updated
                 }
                 else if (entry.State == EntityState.Modified)
                 {
                     // For server-side updates (non-sync), UpdatedDate/UpdatedBy are not pre-set by the command,
                     // so they retain their old tracked value. We must always stamp them here for direct API calls.
                     // For sync pushes, the command pre-sets them from the DTO before SaveChanges, so we skip.
-                    if (!entry.Property(e => e.UpdatedDate).IsModified || entry.Entity.UpdatedDate == null)
-                    {
-                        entry.Entity.UpdatedDate = DateTimeService.UtcNow;
-                    }
-                    if (!entry.Property(e => e.UpdatedBy).IsModified || string.IsNullOrEmpty(entry.Entity.UpdatedBy))
-                    {
-                        entry.Entity.UpdatedBy = _currentUser.GetId();
-                    }
+                    // if (!entry.Property(e => e.UpdatedDate).IsModified || entry.Entity.UpdatedDate == null)
+                    // {
+                    entry.Entity.UpdatedDate = DateTimeService.NowUtc;
+                    // }
+                    //
+                    // if (!entry.Property(e => e.UpdatedBy).IsModified || string.IsNullOrEmpty(entry.Entity.UpdatedBy))
+                    // {
+                    entry.Entity.UpdatedBy = _currentUser.GetId();
+                    // }
+
                     // Respect client-provided LastModifiedUtc (offline sync scenario).
                     // Only stamp server time when the update originated directly on the server.
                     if (!entry.Property(e => e.LastModifiedUtc).IsModified || entry.Entity.LastModifiedUtc == default)
                     {
-                        entry.Entity.LastModifiedUtc = DateTimeService.UtcNow;
+                        entry.Entity.LastModifiedUtc = DateTimeService.NowUtc;
                     }
+
                     entry.Property(e => e.CreatedDate).IsModified = false; // Ensure CreatedDate is not updated
+                    entry.Property(e => e.CreatedBy).IsModified = false; // Ensure CreatedBy is not updated
                 }
             }
 
             return await base.SavingChangesAsync(eventData, result, cancellationToken);
         }
-        private async Task AssignSequenceNumber(BaseAuditableEntity entity, DbContext context)
+
+        private async Task AssignSequenceNumber(
+            BaseAuditableEntity entity,
+            DbContext context
+        )
         {
             var entityType = entity.GetType();
             var setMethod = typeof(DbContext).GetMethod("Set", new Type[0])?.MakeGenericMethod(entityType);
@@ -116,8 +128,8 @@ namespace SMIS.Infrastructure.Server.Interceptors
                 // Get max ID from pending entities in change tracker
                 var pendingEntities = context.ChangeTracker.Entries<BaseAuditableEntity>()
                     .Where(e => e.State == EntityState.Added &&
-                               e.Entity.GetType() == entityType &&
-                               !string.IsNullOrEmpty(e.Entity.Id))
+                                e.Entity.GetType() == entityType &&
+                                !string.IsNullOrEmpty(e.Entity.Id))
                     .Select(e => e.Entity.Id)
                     .Where(id => int.TryParse(id, out _))
                     .Select(id => int.Parse(id))

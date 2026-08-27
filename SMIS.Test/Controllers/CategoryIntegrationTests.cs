@@ -177,6 +177,11 @@ public class CategoryIntegrationTests : BaseIntegrationTest
         updated.Should().NotBeNull();
         updated!.Id.Should().Be(created.Id);
         AssertCategoryMatches(updated, updateDto);
+        updated.CreatedDate.Should().Be(created.CreatedDate);
+        updated.CreatedBy.Should().Be(created.CreatedBy);
+        updated.UpdatedDate.Should().NotBeNull();
+        updated.UpdatedBy.Should().NotBeNullOrWhiteSpace();
+        updated.LastModifiedUtc.Should().BeOnOrAfter(created.LastModifiedUtc);
     }
 
     [Fact]
@@ -316,6 +321,163 @@ public class CategoryIntegrationTests : BaseIntegrationTest
         var updated = await updateResponse.Content.ReadFromJsonAsync<CategoryDto>();
         updated.Should().NotBeNull();
         updated!.Code.Should().Be("NEW-CODE");
+    }
+
+    [Fact]
+    public async Task Post_NormalCreate_IgnoresClientAttemptsToSetTrustedAuditAndId()
+    {
+        var forgedId = Guid.NewGuid().ToString("D");
+        var forgedDate = new DateTime(2000, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+        var requestStartedUtc = DateTime.UtcNow;
+        var response = await Client.PostAsJsonAsync(ApiEndpoints.Category, new
+        {
+            id = forgedId,
+            name = $"Trusted Audit {Guid.NewGuid():N}",
+            code = "AUDIT",
+            isActive = true,
+            createdDate = forgedDate,
+            createdBy = "forged-user",
+            updatedDate = forgedDate,
+            updatedBy = "forged-user",
+            lastModifiedUtc = forgedDate
+        });
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+        var created = await response.Content.ReadFromJsonAsync<CategoryDto>();
+        created.Should().NotBeNull();
+        created!.Id.Should().NotBe(forgedId);
+        created.CreatedDate.Should().BeOnOrAfter(requestStartedUtc);
+        created.CreatedBy.Should().NotBe("forged-user");
+        created.UpdatedDate.Should().BeNull();
+        created.ClientCreatedDate.Should().BeNull();
+        created.LastModifiedUtc.Should().BeOnOrAfter(requestStartedUtc);
+    }
+
+    [Fact]
+    public async Task Post_SyncCreate_PreservesClientMetadataButServerOwnsAudit()
+    {
+        var id = Guid.NewGuid().ToString("D");
+        var clientCreated = DateTime.UtcNow.AddHours(-2);
+        var clientModified = clientCreated.AddMinutes(30);
+        var requestStartedUtc = DateTime.UtcNow;
+        var response = await Client.PostAsJsonAsync($"{ApiEndpoints.Category}/sync", new CategorySyncCreateDto
+        {
+            Id = id,
+            Name = $"Offline {Guid.NewGuid():N}",
+            Code = "OFFLINE",
+            IsActive = true,
+            ClientCreatedDate = clientCreated,
+            ClientModifiedDate = clientModified
+        });
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+        var created = await response.Content.ReadFromJsonAsync<CategoryDto>();
+        created.Should().NotBeNull();
+        created!.Id.Should().Be(id);
+        created.CreatedDate.Should().BeOnOrAfter(requestStartedUtc);
+        created.LastModifiedUtc.Should().BeOnOrAfter(requestStartedUtc);
+        created.ClientCreatedDate.Should().BeCloseTo(clientCreated, TimeSpan.FromMilliseconds(1));
+        created.ClientModifiedDate.Should().BeCloseTo(clientModified, TimeSpan.FromMilliseconds(1));
+        created.ConflictModifiedUtc.Should().BeCloseTo(clientModified, TimeSpan.FromMilliseconds(1));
+    }
+
+    [Fact]
+    public async Task Put_SyncUpdate_UsesLastWriteWinsAndServerWinsTies()
+    {
+        var id = Guid.NewGuid().ToString("D");
+        var createdAt = DateTime.UtcNow.AddHours(-3);
+        var createResponse = await Client.PostAsJsonAsync($"{ApiEndpoints.Category}/sync", new CategorySyncCreateDto
+        {
+            Id = id,
+            Name = "Initial",
+            IsActive = true,
+            ClientCreatedDate = createdAt,
+            ClientModifiedDate = createdAt
+        });
+        createResponse.EnsureSuccessStatusCode();
+
+        var winningTime = createdAt.AddHours(2);
+        var winningResponse = await Client.PutAsJsonAsync($"{ApiEndpoints.Category}/{id}/sync", new CategorySyncUpdateDto
+        {
+            Name = "Winning update",
+            IsActive = true,
+            ClientModifiedDate = winningTime
+        });
+        winningResponse.EnsureSuccessStatusCode();
+        var winner = await winningResponse.Content.ReadFromJsonAsync<CategoryDto>();
+
+        var tieResponse = await Client.PutAsJsonAsync($"{ApiEndpoints.Category}/{id}/sync", new CategorySyncUpdateDto
+        {
+            Name = "Must not overwrite",
+            IsActive = true,
+            ClientModifiedDate = winningTime
+        });
+        tieResponse.EnsureSuccessStatusCode();
+        var afterTie = await tieResponse.Content.ReadFromJsonAsync<CategoryDto>();
+
+        afterTie!.Name.Should().Be("Winning update");
+        afterTie.ConflictModifiedUtc.Should().BeCloseTo(winningTime, TimeSpan.FromMilliseconds(1));
+        afterTie.LastModifiedUtc.Should().BeCloseTo(
+            winner!.LastModifiedUtc,
+            TimeSpan.FromMicroseconds(1));
+    }
+
+    [Fact]
+    public async Task Post_SyncCreate_WithInvalidGuid_ReturnsBadRequest()
+    {
+        var response = await Client.PostAsJsonAsync($"{ApiEndpoints.Category}/sync", new CategorySyncCreateDto
+        {
+            Id = "not-a-guid",
+            Name = "Invalid",
+            IsActive = true,
+            ClientCreatedDate = DateTime.UtcNow.AddMinutes(-2),
+            ClientModifiedDate = DateTime.UtcNow.AddMinutes(-1)
+        });
+
+        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+    }
+
+    [Fact]
+    public async Task Post_SyncCreate_WithDifferentClientUser_ReturnsBadRequest()
+    {
+        var timestamp = DateTime.UtcNow.AddMinutes(-1);
+        var response = await Client.PostAsJsonAsync($"{ApiEndpoints.Category}/sync", new CategorySyncCreateDto
+        {
+            Id = Guid.NewGuid().ToString("D"),
+            Name = "Forged client user",
+            IsActive = true,
+            ClientCreatedDate = timestamp,
+            ClientModifiedDate = timestamp,
+            ClientCreatedBy = "different-user",
+            ClientModifiedBy = "different-user"
+        });
+
+        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+    }
+
+    [Fact]
+    public async Task Delete_SoftDelete_PreservesCreateAuditAndStampsServerUpdateAudit()
+    {
+        var created = await CreateCategoryAsync(
+            _dataHelper.CreateCategoryBuilder().WithName($"Delete audit {Guid.NewGuid():N}").Build(),
+            "Delete_SoftDelete_Audit_Seed");
+        var beforeDeleteUtc = DateTime.UtcNow.AddSeconds(-1);
+
+        var deleteResponse = await Client.DeleteAsync($"{ApiEndpoints.Category}/{created.Id}");
+        deleteResponse.EnsureSuccessStatusCode();
+
+        var cursor = Uri.EscapeDataString(beforeDeleteUtc.ToString("O"));
+        var pullResponse = await Client.GetAsync($"{ApiEndpoints.Category}/pull?changedSince={cursor}");
+        pullResponse.EnsureSuccessStatusCode();
+        var changes = await pullResponse.Content.ReadFromJsonAsync<List<CategoryDto>>();
+        var tombstone = changes!.Single(category => category.Id == created.Id);
+
+        tombstone.IsDeleted.Should().BeTrue();
+        tombstone.CreatedDate.Should().Be(created.CreatedDate);
+        tombstone.CreatedBy.Should().Be(created.CreatedBy);
+        tombstone.UpdatedDate.Should().NotBeNull();
+        tombstone.UpdatedBy.Should().NotBeNullOrWhiteSpace();
+        tombstone.LastModifiedUtc.Should().BeOnOrAfter(beforeDeleteUtc);
     }
 
     //[Fact]

@@ -130,7 +130,19 @@ public class MappingProfile : Profile
             ));
 
         // Category mapping
-        CreateMap<Category, CategoryDto>().ReverseMap();
+        CreateMap<Category, CategoryDto>()
+            .ForMember(dest => dest.CreatedDate,
+                opt => opt.MapFrom(src => AsUtc(src.CreatedDate)))
+            .ForMember(dest => dest.UpdatedDate,
+                opt => opt.MapFrom(src => AsUtc(src.UpdatedDate)))
+            .ForMember(dest => dest.ClientCreatedDate,
+                opt => opt.MapFrom(src => AsUtc(src.ClientCreatedDate)))
+            .ForMember(dest => dest.ClientModifiedDate,
+                opt => opt.MapFrom(src => AsUtc(src.ClientModifiedDate)))
+            .ForMember(dest => dest.LastModifiedUtc,
+                opt => opt.MapFrom(src => AsUtc(src.LastModifiedUtc)))
+            .ForMember(dest => dest.ConflictModifiedUtc,
+                opt => opt.MapFrom(src => src.GetConflictModifiedUtc()));
         // CategoryCreateDto mapping removed - use Category.Create() in handler with ICurrentUser.GetShopId()
 
 
@@ -266,4 +278,14 @@ public class MappingProfile : Profile
         }
         return src.Name ?? string.Empty;
     }
+
+    private static DateTime AsUtc(DateTime value) => value.Kind switch
+    {
+        DateTimeKind.Utc => value,
+        DateTimeKind.Local => value.ToUniversalTime(),
+        _ => DateTime.SpecifyKind(value, DateTimeKind.Utc)
+    };
+
+    private static DateTime? AsUtc(DateTime? value) =>
+        value.HasValue ? AsUtc(value.Value) : null;
 }
