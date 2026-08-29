@@ -16,11 +16,10 @@ class CategoryListPage extends ConsumerStatefulWidget {
   ConsumerState<CategoryListPage> createState() => _CategoryListPageState();
 }
 
-/// WidgetsBindingObserver allows this class to listen to app-level events 
+/// WidgetsBindingObserver allows this class to listen to app-level events
 /// like the app going to background or coming back to foreground.
 class _CategoryListPageState extends ConsumerState<CategoryListPage>
     with WidgetsBindingObserver {
-  
   @override
   void initState() {
     super.initState();
@@ -75,6 +74,7 @@ class _CategoryListPageState extends ConsumerState<CategoryListPage>
           const SizedBox(width: 12),
         ],
       ),
+
       /// SafeArea ensures the UI doesn't overlap with system notches or home indicators.
       body: SafeArea(
         child: Center(
@@ -105,7 +105,7 @@ class _CategoryListPageState extends ConsumerState<CategoryListPage>
   }
 
   Future<void> _create() async {
-    /// showDialog is how you push a modal in Flutter. 
+    /// showDialog is how you push a modal in Flutter.
     /// It returns a Future that completes when the dialog is closed.
     final draft = await showDialog<CategoryDraft>(
       context: context,
@@ -142,11 +142,13 @@ class _CategoryListPageState extends ConsumerState<CategoryListPage>
         ),
         actions: [
           TextButton(
-            onPressed: () => Navigator.pop(context, false), // Closes dialog, returns false.
+            onPressed: () => Navigator.pop(context, false),
+            // Closes dialog, returns false.
             child: const Text('Cancel'),
           ),
           FilledButton.tonal(
-            onPressed: () => Navigator.pop(context, true), // Closes dialog, returns true.
+            onPressed: () => Navigator.pop(context, true),
+            // Closes dialog, returns true.
             child: const Text('Delete offline'),
           ),
         ],
@@ -164,7 +166,7 @@ class _CategoryListPageState extends ConsumerState<CategoryListPage>
       final result = await ref
           .read(categoryControllerProvider.notifier)
           .syncNow();
-      
+
       /// IMPORTANT: Always check 'mounted' before using 'context' after an 'await'.
       /// If the user navigated away while we were waiting, 'context' is no longer valid.
       if (!mounted) return;
