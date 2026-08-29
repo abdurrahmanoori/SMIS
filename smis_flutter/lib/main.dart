@@ -1,13 +1,9 @@
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
-import 'dart:io';
-
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:path/path.dart' as p;
-import 'package:path_provider/path_provider.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
 import 'app/app.dart';
@@ -26,9 +22,9 @@ Future<void> main() async {
     databaseFactory = databaseFactoryFfi;
 
     if (Platform.isWindows) {
-      // Set up a custom path in the User's Documents folder for easy access.
-      final documentsDir = await getApplicationDocumentsDirectory();
-      final databaseFolder = Directory(p.join(documentsDir.path, 'SMIS_Database'));
+      // Set the path directly to a 'database' folder inside your project directory.
+      final projectDir = Directory.current.path;
+      final databaseFolder = Directory(p.join(projectDir, 'database'));
 
       // Ensure the directory exists
       if (!await databaseFolder.exists()) {
@@ -38,7 +34,7 @@ Future<void> main() async {
       customDatabasePath = p.join(databaseFolder.path, AppConfig.databaseName);
 
       // ignore: avoid_print
-      print('WINDOWS_DATABASE_PATH: $customDatabasePath');
+      print('PROJECT_DATABASE_PATH: $customDatabasePath');
     }
   }
 
