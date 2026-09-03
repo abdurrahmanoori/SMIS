@@ -1,13 +1,15 @@
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:smis_flutter/core/database/app_database.dart';
+import 'package:smis_flutter/data/database.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
 void main() {
   test('v1 database upgrades additively and keeps Category rows', () async {
     sqfliteFfiInit();
-    final directory = await Directory.systemTemp.createTemp('smis-category-db-');
+    final directory = await Directory.systemTemp.createTemp(
+      'smis-category-db-',
+    );
     addTearDown(() => directory.delete(recursive: true));
     final path = '${directory.path}${Platform.pathSeparator}category.db';
     final v1 = await databaseFactoryFfi.openDatabase(

@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:smis_flutter/features/category/data/models/category_local_record.dart';
-import 'package:smis_flutter/features/category/data/models/category_remote_model.dart';
-import 'package:smis_flutter/features/category/domain/entities/category.dart';
+import 'package:smis_flutter/models/category.dart';
+import 'package:smis_flutter/models/category_local_record.dart';
+import 'package:smis_flutter/models/category_remote_model.dart';
 
 void main() {
   test('sync payloads never send trusted server audit fields', () {

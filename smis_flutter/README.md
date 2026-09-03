@@ -14,25 +14,19 @@ Codex to implement the same pattern for one other entity, use the reusable
 
 ```text
 lib/
-├── app/                         # App shell and theme
-├── core/
-│   ├── config/                  # API/build configuration
-│   ├── database/                # SQLite schema and migrations
-│   ├── error/                   # Local/remote error types
-│   ├── network/                 # Dio client and connectivity hint
-│   └── sync/                    # Workmanager background entry point
-└── features/category/
-    ├── domain/                  # Entity, repository contract, use cases
-    ├── data/
-    │   ├── datasources/         # SQLite and SMIS API adapters
-    │   ├── models/              # Local and remote representations
-    │   ├── repositories/        # Offline CRUD implementation
-    │   └── sync/                # Pull/push, conflicts, retry policy
-    └── presentation/            # Riverpod state, page, dialogs, widgets
+├── config/          # API and database settings
+├── controllers/     # Riverpod state and providers
+├── data/            # SQLite repository and Category API
+├── models/          # Category, local record, and API model
+├── screens/         # Full application screens
+├── services/        # Sync, connectivity, and background work
+├── widgets/         # Reusable UI pieces
+└── main.dart        # Startup, theme, and root widget
 ```
 
-Dependencies are assembled with Riverpod providers. The layers remain
-independently replaceable in tests; the sync tests use an in-memory SQLite
+The structure is intentionally shallow. `CategoryRepository` owns local CRUD
+and SQLite sync state, while `CategoryApi` owns server requests. Riverpod joins
+them in `category_controller.dart`. Sync tests still use an in-memory SQLite
 database and a fake Category API.
 
 ## Backend contract

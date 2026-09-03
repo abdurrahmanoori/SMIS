@@ -1,12 +1,12 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:smis_flutter/core/error/app_exception.dart';
-import 'package:smis_flutter/core/network/connectivity_service.dart';
-import 'package:smis_flutter/features/category/data/datasources/category_local_data_source.dart';
-import 'package:smis_flutter/features/category/data/datasources/category_remote_data_source.dart';
-import 'package:smis_flutter/features/category/data/models/category_local_record.dart';
-import 'package:smis_flutter/features/category/data/models/category_remote_model.dart';
-import 'package:smis_flutter/features/category/data/sync/category_sync_service.dart';
-import 'package:smis_flutter/features/category/domain/entities/category.dart';
+import 'package:smis_flutter/data/category_api.dart';
+import 'package:smis_flutter/data/category_repository.dart';
+import 'package:smis_flutter/data/data_exception.dart';
+import 'package:smis_flutter/models/category.dart';
+import 'package:smis_flutter/models/category_local_record.dart';
+import 'package:smis_flutter/models/category_remote_model.dart';
+import 'package:smis_flutter/services/category_sync_service.dart';
+import 'package:smis_flutter/services/connectivity_service.dart';
 
 import 'support/test_database.dart';
 
@@ -14,14 +14,16 @@ void main() {
   test('last-write-wins pushes the newer local update', () async {
     final database = await createTestDatabase();
     addTearDown(database.close);
-    final local = CategoryLocalDataSource(database);
+    final repository = CategoryRepository(database);
     final older = DateTime.utc(2026, 1, 1);
     final newer = older.add(const Duration(minutes: 5));
-    await local.put(_pendingRecord(name: 'Local', timestamp: newer));
+    await repository.saveRecord(
+      _pendingRecord(name: 'Local', timestamp: newer),
+    );
     final remote = _FakeRemote(
       server: _remoteModel(name: 'Server', timestamp: older),
     );
-    final service = CategorySyncService(local, remote, _Online());
+    final service = CategorySyncService(repository, remote, _Online());
 
     final result = await service.synchronize(force: true);
 
@@ -29,7 +31,7 @@ void main() {
     expect(result.pushed, 1);
     expect(remote.updatedName, 'Local');
     expect(
-      (await local.getById('category-1'))!.syncStatus,
+      (await repository.getRecord('category-1'))!.syncStatus,
       CategorySyncStatus.synced,
     );
   });
@@ -37,19 +39,21 @@ void main() {
   test('last-write-wins applies the newer server update', () async {
     final database = await createTestDatabase();
     addTearDown(database.close);
-    final local = CategoryLocalDataSource(database);
+    final repository = CategoryRepository(database);
     final older = DateTime.utc(2026, 1, 1);
     final newer = older.add(const Duration(minutes: 5));
-    await local.put(_pendingRecord(name: 'Local', timestamp: older));
+    await repository.saveRecord(
+      _pendingRecord(name: 'Local', timestamp: older),
+    );
     final server = _remoteModel(name: 'Server', timestamp: newer);
     final remote = _FakeRemote(server: server, pullChanges: [server]);
-    final service = CategorySyncService(local, remote, _Online());
+    final service = CategorySyncService(repository, remote, _Online());
 
     final result = await service.synchronize(force: true);
 
     expect(result.success, isTrue);
     expect(result.conflictsResolved, 1);
-    final merged = await local.getById('category-1');
+    final merged = await repository.getRecord('category-1');
     expect(merged!.name, 'Server');
     expect(merged.pendingOperation, CategoryPendingOperation.none);
   });
@@ -57,12 +61,12 @@ void main() {
   test('transient failures remain queued with retry metadata', () async {
     final database = await createTestDatabase();
     addTearDown(database.close);
-    final local = CategoryLocalDataSource(database);
-    await local.put(
+    final repository = CategoryRepository(database);
+    await repository.saveRecord(
       _pendingRecord(name: 'Local', timestamp: DateTime.utc(2026, 1, 1)),
     );
     final remote = _FakeRemote(failGet: true);
-    final service = CategorySyncService(local, remote, _Online());
+    final service = CategorySyncService(repository, remote, _Online());
 
     final result = await service.synchronize(force: true);
 
@@ -81,35 +85,42 @@ void main() {
     expect(diagnostics, contains('Connection lost.'));
     expect(diagnostics, contains('Socket refused'));
     expect(diagnostics, contains('Stack trace:'));
-    final failed = await local.getById('category-1');
+    final failed = await repository.getRecord('category-1');
     expect(failed!.syncStatus, CategorySyncStatus.failed);
     expect(failed.retryCount, 1);
     expect(failed.nextRetryAt, isNotNull);
   });
 
-  test('unexpected connectivity errors retain diagnostics only on request', () async {
-    final database = await createTestDatabase();
-    addTearDown(database.close);
-    final local = CategoryLocalDataSource(database);
-    final service = CategorySyncService(local, _FakeRemote(), _BrokenConnectivity());
+  test(
+    'unexpected connectivity errors retain diagnostics only on request',
+    () async {
+      final database = await createTestDatabase();
+      addTearDown(database.close);
+      final repository = CategoryRepository(database);
+      final service = CategorySyncService(
+        repository,
+        _FakeRemote(),
+        _BrokenConnectivity(),
+      );
 
-    final result = await service.synchronize(force: true);
+      final result = await service.synchronize(force: true);
 
-    expect(result.success, isFalse);
-    expect(result.message, 'Category sync failed unexpectedly.');
-    expect(
-      result.messageFor(includeDiagnostics: false),
-      'Category sync failed unexpectedly.',
-    );
-    expect(
-      result.messageFor(includeDiagnostics: true),
-      allOf(
-        contains('Phase: connectivity check'),
-        contains('Connectivity plugin failed'),
-        contains('Stack trace:'),
-      ),
-    );
-  });
+      expect(result.success, isFalse);
+      expect(result.message, 'Category sync failed unexpectedly.');
+      expect(
+        result.messageFor(includeDiagnostics: false),
+        'Category sync failed unexpectedly.',
+      );
+      expect(
+        result.messageFor(includeDiagnostics: true),
+        allOf(
+          contains('Phase: connectivity check'),
+          contains('Connectivity plugin failed'),
+          contains('Stack trace:'),
+        ),
+      );
+    },
+  );
 }
 
 CategoryLocalRecord _pendingRecord({
@@ -151,7 +162,7 @@ class _BrokenConnectivity implements NetworkConnectivity {
       throw StateError('Connectivity plugin failed');
 }
 
-class _FakeRemote implements CategoryRemoteDataSource {
+class _FakeRemote implements CategoryApi {
   _FakeRemote({this.server, this.pullChanges = const [], this.failGet = false});
 
   CategoryRemoteModel? server;

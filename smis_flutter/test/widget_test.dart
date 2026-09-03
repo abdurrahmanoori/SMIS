@@ -1,17 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:smis_flutter/app/app.dart';
-import 'package:smis_flutter/features/category/domain/entities/category.dart';
-import 'package:smis_flutter/features/category/domain/repositories/category_repository.dart';
-import 'package:smis_flutter/features/category/presentation/providers/category_providers.dart';
+import 'package:smis_flutter/controllers/category_controller.dart';
+import 'package:smis_flutter/main.dart';
 
 void main() {
   testWidgets('renders the offline Category screen', (tester) async {
     await tester.pumpWidget(
       ProviderScope(
         overrides: [
-          categoryRepositoryProvider.overrideWithValue(_EmptyRepository()),
+          categoryControllerProvider.overrideWith(_EmptyCategoryController.new),
         ],
         child: const SmisApp(),
       ),
@@ -28,20 +26,8 @@ void main() {
   });
 }
 
-class _EmptyRepository implements CategoryRepository {
+class _EmptyCategoryController extends CategoryController {
   @override
-  Future<Category> create(CategoryDraft draft) => throw UnimplementedError();
-
-  @override
-  Future<void> delete(String id) => throw UnimplementedError();
-
-  @override
-  Future<List<Category>> getAll() async => const [];
-
-  @override
-  Future<int> getPendingCount() async => 0;
-
-  @override
-  Future<Category> update(String id, CategoryDraft draft) =>
-      throw UnimplementedError();
+  Future<CategoryScreenState> build() async =>
+      const CategoryScreenState(categories: [], pendingCount: 0);
 }

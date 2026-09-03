@@ -6,11 +6,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:path/path.dart' as p;
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
-import 'app/app.dart';
-import 'core/config/app_config.dart';
-import 'core/database/app_database.dart';
-import 'core/sync/background_sync.dart';
-import 'features/category/presentation/providers/category_providers.dart';
+import 'config/app_config.dart';
+import 'controllers/category_controller.dart';
+import 'data/database.dart';
+import 'screens/categories_screen.dart';
+import 'services/background_sync.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -22,19 +22,16 @@ Future<void> main() async {
     databaseFactory = databaseFactoryFfi;
 
     if (Platform.isWindows) {
-      // Set the path directly to a 'database' folder inside your project directory.
       final projectDir = Directory.current.path;
       final databaseFolder = Directory(p.join(projectDir, 'database'));
 
-      // Ensure the directory exists
       if (!await databaseFolder.exists()) {
         await databaseFolder.create(recursive: true);
       }
 
       customDatabasePath = p.join(databaseFolder.path, AppConfig.databaseName);
 
-      // ignore: avoid_print
-      print('PROJECT_DATABASE_PATH: $customDatabasePath');
+      debugPrint('PROJECT_DATABASE_PATH: $customDatabasePath');
     }
   }
 
@@ -61,3 +58,28 @@ Future<void> main() async {
   );
 }
 
+class SmisApp extends StatelessWidget {
+  const SmisApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = ColorScheme.fromSeed(
+      seedColor: const Color(0xFF315C49),
+      brightness: Brightness.light,
+    );
+    return MaterialApp(
+      title: 'SMIS Categories',
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        colorScheme: colorScheme,
+        useMaterial3: true,
+        scaffoldBackgroundColor: const Color(0xFFF7F8F5),
+        cardTheme: const CardThemeData(elevation: 0, margin: EdgeInsets.zero),
+        inputDecorationTheme: const InputDecorationTheme(
+          border: OutlineInputBorder(),
+        ),
+      ),
+      home: const CategoriesScreen(),
+    );
+  }
+}

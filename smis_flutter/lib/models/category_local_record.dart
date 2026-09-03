@@ -1,8 +1,5 @@
-import '../../domain/entities/category.dart';
+import 'category.dart';
 
-/// Represents the database schema for the 'categories' table.
-/// In Flutter, we often separate the Domain Entity (Category) from the
-/// Persistence Model (CategoryLocalRecord) to keep domain logic clean.
 enum CategoryPendingOperation { none, create, update, delete }
 
 class CategoryLocalRecord {
@@ -50,8 +47,7 @@ class CategoryLocalRecord {
   final String? serverUpdatedBy;
   final DateTime? serverLastModifiedUtc;
 
-  /// Map this record back to the Domain Entity used by the UI.
-  Category toDomain() => Category(
+  Category toCategory() => Category(
     id: id,
     name: name,
     code: code,
@@ -65,9 +61,6 @@ class CategoryLocalRecord {
     lastSyncError: lastSyncError,
   );
 
-  /// Standard 'copyWith' for immutability.
-  /// Note the 'clear' flags: since Dart 3, this is how we explicitly set
-  /// optional fields to null (because a null argument would mean "don't change").
   CategoryLocalRecord copyWith({
     String? name,
     String? code,
@@ -113,18 +106,14 @@ class CategoryLocalRecord {
     serverUpdatedDate: serverUpdatedDate ?? this.serverUpdatedDate,
     serverCreatedBy: serverCreatedBy ?? this.serverCreatedBy,
     serverUpdatedBy: serverUpdatedBy ?? this.serverUpdatedBy,
-    serverLastModifiedUtc:
-        serverLastModifiedUtc ?? this.serverLastModifiedUtc,
+    serverLastModifiedUtc: serverLastModifiedUtc ?? this.serverLastModifiedUtc,
   );
 
-  /// Converts the record to a Map for sqflite.
-  /// Similar to how you might use DTOs with Dapper in .NET.
   Map<String, Object?> toMap() => {
     'id': id,
     'name': name,
     'code': code,
     'description': description,
-    // sqflite stores booleans as integer 0/1 values.
     'is_active': isActive ? 1 : 0,
     'shop_id': shopId,
     'created_at': createdAt.toUtc().toIso8601String(),
@@ -145,7 +134,6 @@ class CategoryLocalRecord {
         .toIso8601String(),
   };
 
-  /// Factory constructor to create a record from a database row.
   factory CategoryLocalRecord.fromMap(Map<String, Object?> map) =>
       CategoryLocalRecord(
         id: map['id']! as String,
@@ -160,7 +148,6 @@ class CategoryLocalRecord {
           map['last_modified_utc']! as String,
         ).toUtc(),
         isDeleted: map['is_deleted'] == 1,
-        // Enums can be easily parsed from strings using .byName()
         pendingOperation: CategoryPendingOperation.values.byName(
           map['pending_operation']! as String,
         ),

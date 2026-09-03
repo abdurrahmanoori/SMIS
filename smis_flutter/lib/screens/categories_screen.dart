@@ -2,43 +2,34 @@ import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../data/sync/category_sync_service.dart';
-import '../../domain/entities/category.dart';
-import '../providers/category_providers.dart';
-import '../state/category_controller.dart';
+import '../controllers/category_controller.dart';
+import '../models/category.dart';
+import '../services/category_sync_service.dart';
 import '../widgets/category_form_dialog.dart';
 
-/// ConsumerStatefulWidget is a Riverpod-aware StatefulWidget.
-/// It gives you access to 'ref' to watch or read providers within the state.
-class CategoryListPage extends ConsumerStatefulWidget {
-  const CategoryListPage({super.key});
+class CategoriesScreen extends ConsumerStatefulWidget {
+  const CategoriesScreen({super.key});
 
   @override
-  ConsumerState<CategoryListPage> createState() => _CategoryListPageState();
+  ConsumerState<CategoriesScreen> createState() => _CategoriesScreenState();
 }
 
-/// WidgetsBindingObserver allows this class to listen to app-level events
-/// like the app going to background or coming back to foreground.
-class _CategoryListPageState extends ConsumerState<CategoryListPage>
+class _CategoriesScreenState extends ConsumerState<CategoriesScreen>
     with WidgetsBindingObserver {
   @override
   void initState() {
     super.initState();
-    // Register this class to observe lifecycle changes.
     WidgetsBinding.instance.addObserver(this);
   }
 
   @override
   void dispose() {
-    // Unregister to avoid memory leaks.
     WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
 
-  /// Triggered when the app lifecycle changes (e.g., user minimizes the app).
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    // When the app comes back to the front, we might want to refresh data.
     if (state == AppLifecycleState.resumed) {
       ref.read(categoryControllerProvider.notifier).reload();
     }
@@ -46,11 +37,8 @@ class _CategoryListPageState extends ConsumerState<CategoryListPage>
 
   @override
   Widget build(BuildContext context) {
-    /// ref.watch(provider) makes the widget rebuild whenever the provider's state changes.
-    /// Since categoryControllerProvider is an AsyncNotifier, it returns an [AsyncValue].
     final categories = ref.watch(categoryControllerProvider);
 
-    /// Scaffold provides the basic Material Design layout structure (AppBar, Body, FAB, etc.)
     return Scaffold(
       appBar: AppBar(
         title: const Column(
@@ -64,19 +52,16 @@ class _CategoryListPageState extends ConsumerState<CategoryListPage>
           ],
         ),
         actions: [
-          /// .maybeWhen is an extension on AsyncValue to handle different states (Loading, Error, Data).
           categories.maybeWhen(
             data: (value) => _SyncButton(
               state: value,
               onPressed: value.isSyncing ? null : _sync,
             ),
-            orElse: () => const SizedBox.shrink(), // shrink() is a 0x0 widget.
+            orElse: () => const SizedBox.shrink(),
           ),
           const SizedBox(width: 12),
         ],
       ),
-
-      /// SafeArea ensures the UI doesn't overlap with system notches or home indicators.
       body: SafeArea(
         child: Center(
           child: ConstrainedBox(
@@ -106,8 +91,6 @@ class _CategoryListPageState extends ConsumerState<CategoryListPage>
   }
 
   Future<void> _create() async {
-    /// showDialog is how you push a modal in Flutter.
-    /// It returns a Future that completes when the dialog is closed.
     final draft = await showDialog<CategoryDraft>(
       context: context,
       builder: (context) => const CategoryFormDialog(),
@@ -144,12 +127,10 @@ class _CategoryListPageState extends ConsumerState<CategoryListPage>
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
-            // Closes dialog, returns false.
             child: const Text('Cancel'),
           ),
           FilledButton.tonal(
             onPressed: () => Navigator.pop(context, true),
-            // Closes dialog, returns true.
             child: const Text('Delete offline'),
           ),
         ],
@@ -168,13 +149,8 @@ class _CategoryListPageState extends ConsumerState<CategoryListPage>
           .read(categoryControllerProvider.notifier)
           .syncNow();
 
-      /// IMPORTANT: Always check 'mounted' before using 'context' after an 'await'.
-      /// If the user navigated away while we were waiting, 'context' is no longer valid.
       if (!mounted) return;
 
-      // Failed sync details already appear in the persistent summary at the
-      // top of the page. Avoid showing the same exception and stack trace a
-      // second time in a bottom SnackBar.
       if (result.success) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -219,8 +195,6 @@ class _CategoryListPageState extends ConsumerState<CategoryListPage>
   }
 }
 
-/// StatelessWidget is a widget that doesn't hold any internal mutable state.
-/// It only depends on the configuration passed to it.
 class _SyncButton extends StatelessWidget {
   const _SyncButton({required this.state, required this.onPressed});
 
@@ -258,7 +232,6 @@ class _CategoryContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Column(
     children: [
-      /// Using the 'if case' syntax (Dart 3+) for pattern matching.
       if (state.lastSyncResult case final result?) _SyncSummary(result: result),
       Expanded(
         child: state.categories.isEmpty
@@ -288,7 +261,6 @@ class _SyncSummary extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    /// Theme.of(context) allows you to access the app's global styling.
     final colors = Theme.of(context).colorScheme;
     final successful = result.success;
     final summary =

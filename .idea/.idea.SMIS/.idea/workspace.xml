@@ -40,7 +40,7 @@
     <option name="firstShow" value="false" />
   </component>
   <component name="EmbeddingIndexingInfo">
-    <option name="cachedIndexableFilesCount" value="28" />
+    <option name="cachedIndexableFilesCount" value="29" />
     <option name="fileBasedEmbeddingIndicesEnabled" value="true" />
   </component>
   <component name="Git.Settings">
@@ -79,61 +79,61 @@
   <component name="MetaFilesCheckinStateConfiguration" checkMetaFiles="true" />
   <component name="NextEditCompletionFeaturesState">
     <decayedCancelled>
-      <entry key="MS100" value="1.0000037008688134" />
-      <entry key="MS500" value="1.115186316691282" />
-      <entry key="S2" value="1.9622746328886087" />
-      <entry key="S5" value="2.4903444725671005" />
-      <entry key="S10" value="2.7261289632167394" />
-      <entry key="S30" value="2.976265854726427" />
-      <entry key="S60" value="3.3314529447870305" />
-      <entry key="M2" value="3.848476507885066" />
-      <entry key="M5" value="5.368601170295114" />
-      <entry key="M10" value="13.928271051106853" />
-      <entry key="M15" value="24.743117114064912" />
-      <entry key="M30" value="49.098363878594306" />
-      <entry key="H1" value="75.97110758373849" />
-      <entry key="H2" value="103.6400402548165" />
-      <entry key="H4" value="127.25042689791265" />
-      <entry key="D1" value="156.60633369720588" />
-      <entry key="W1" value="162.90651005557223" />
+      <entry key="MS100" value="1.7872205985531228E-4" />
+      <entry key="MS500" value="0.1985101615514248" />
+      <entry key="S2" value="1.2745844544854847" />
+      <entry key="S5" value="2.0955737774880228" />
+      <entry key="S10" value="2.500737821083581" />
+      <entry key="S30" value="2.8918714060202375" />
+      <entry key="S60" value="3.283880244560931" />
+      <entry key="M2" value="3.820899842525737" />
+      <entry key="M5" value="5.353180252858229" />
+      <entry key="M10" value="13.908252691311047" />
+      <entry key="M15" value="24.719403457929584" />
+      <entry key="M30" value="49.07483044884951" />
+      <entry key="H1" value="75.95289847381312" />
+      <entry key="H2" value="103.62761904600403" />
+      <entry key="H4" value="127.24280121829314" />
+      <entry key="D1" value="156.6047695118215" />
+      <entry key="W1" value="162.90627761006306" />
     </decayedCancelled>
     <decayedSelected>
-      <entry key="MS100" value="0.003472041723306915" />
-      <entry key="MS500" value="0.32219365762125385" />
-      <entry key="S2" value="0.7534063097739937" />
-      <entry key="S5" value="0.8938959406009932" />
-      <entry key="S10" value="0.9956608824024238" />
-      <entry key="S30" value="1.7755936068236513" />
-      <entry key="S60" value="2.6876481283669205" />
-      <entry key="M2" value="3.5578971609610597" />
-      <entry key="M5" value="4.410828389623066" />
-      <entry key="M10" value="5.5762459842422825" />
-      <entry key="M15" value="6.963985895640589" />
-      <entry key="M30" value="10.865791176602091" />
-      <entry key="H1" value="16.88639708167566" />
-      <entry key="H2" value="23.834735559272787" />
-      <entry key="H4" value="29.599101643657086" />
-      <entry key="D1" value="36.36385740910292" />
-      <entry key="W1" value="37.75962934226516" />
+      <entry key="MS100" value="1.0000006205281522" />
+      <entry key="MS500" value="1.0573524926444604" />
+      <entry key="S2" value="1.4893708323261596" />
+      <entry key="S5" value="1.752195093313927" />
+      <entry key="S10" value="1.9133415400345593" />
+      <entry key="S30" value="2.725245200166313" />
+      <entry key="S60" value="3.6492688743768236" />
+      <entry key="M2" value="4.53240267263829" />
+      <entry key="M5" value="5.398158605024239" />
+      <entry key="M10" value="6.568231543827324" />
+      <entry key="M15" value="7.957311653017915" />
+      <entry key="M30" value="11.86058307366187" />
+      <entry key="H1" value="17.882349671147065" />
+      <entry key="H2" value="24.83187897771759" />
+      <entry key="H4" value="30.59732787148467" />
+      <entry key="D1" value="37.36349420658782" />
+      <entry key="W1" value="38.75957546439211" />
     </decayedSelected>
     <decayedShown>
-      <entry key="MS100" value="0.10153845208624125" />
-      <entry key="MS500" value="0.7899313677922915" />
-      <entry key="S2" value="2.2485979629926716" />
-      <entry key="S5" value="3.12768873381387" />
-      <entry key="S10" value="3.5752233952337753" />
-      <entry key="S30" value="4.683626259586247" />
-      <entry key="S60" value="5.973406904203" />
-      <entry key="M2" value="7.37740927743578" />
-      <entry key="M5" value="9.76487675956703" />
-      <entry key="M10" value="19.49304664778406" />
-      <entry key="M15" value="31.695515201978157" />
-      <entry key="M30" value="59.952986066460625" />
-      <entry key="H1" value="92.84819879841997" />
-      <entry key="H2" value="127.4680867803517" />
-      <entry key="H4" value="156.8453498570807" />
-      <entry key="D1" value="192.96933168606745" />
-      <entry key="W1" value="200.6660118141971" />
+      <entry key="MS100" value="1.968684925822207E-4" />
+      <entry key="MS500" value="0.3186190143012434" />
+      <entry key="S2" value="2.110108540927522" />
+      <entry key="S5" value="3.473365378764893" />
+      <entry key="S10" value="4.19695265291743" />
+      <entry key="S30" value="5.522462395790924" />
+      <entry key="S60" value="6.8738275910005235" />
+      <entry key="M2" value="8.317380065421975" />
+      <entry key="M5" value="10.733955431932182" />
+      <entry key="M10" value="20.463593086778367" />
+      <entry key="M15" value="32.66418001485953" />
+      <entry key="M30" value="60.92377057531152" />
+      <entry key="H1" value="93.8257048237687" />
+      <entry key="H2" value="128.45268994214408" />
+      <entry key="H4" value="157.83589072914862" />
+      <entry key="D1" value="193.96739431874343" />
+      <entry key="W1" value="201.6657240641325" />
     </decayedShown>
   </component>
   <component name="ProjectColorInfo">{
@@ -145,45 +145,45 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;.NET Launch Settings Profile.SMIS.Api: http.executor&quot;: &quot;Run&quot;,
-    &quot;.NET Launch Settings Profile.SMIS.Api: https.executor&quot;: &quot;Run&quot;,
-    &quot;.NET Launch Settings Profile.SMIS.UI: Windows Machine.executor&quot;: &quot;Run&quot;,
-    &quot;ASKED_SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.MCP Project settings loaded&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.cidr.known.project.marker&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.readMode.enableVisualFormatting&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
-    &quot;cidr.known.project.marker&quot;: &quot;true&quot;,
-    &quot;codeWithMe.voiceChat.enabledByDefault&quot;: &quot;false&quot;,
-    &quot;com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;flutter-and-api-only&quot;,
-    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
-    &quot;junie.onboarding.icon.badge.shown&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.lookFeel&quot;,
-    &quot;to.speed.mode.migration.done&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    ".NET Launch Settings Profile.SMIS.Api: http.executor": "Run",
+    ".NET Launch Settings Profile.SMIS.Api: https.executor": "Run",
+    ".NET Launch Settings Profile.SMIS.UI: Windows Machine.executor": "Run",
+    "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.MCP Project settings loaded": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.cidr.known.project.marker": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "RunOnceActivity.readMode.enableVisualFormatting": "true",
+    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
+    "cidr.known.project.marker": "true",
+    "codeWithMe.voiceChat.enabledByDefault": "false",
+    "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
+    "git-widget-placeholder": "flutter-and-api-only",
+    "ignore.virus.scanning.warn.message": "true",
+    "junie.onboarding.icon.badge.shown": "true",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "ml.llm.AcpAgentsConfigurable",
+    "to.speed.mode.migration.done": "true"
   },
-  &quot;keyToStringList&quot;: {
-    &quot;DatabaseDriversLRU&quot;: [
-      &quot;sqlite&quot;,
-      &quot;postgresql&quot;
+  "keyToStringList": {
+    "DatabaseDriversLRU": [
+      "sqlite",
+      "postgresql"
     ],
-    &quot;GitStage.ChangesTree.GroupingKeys&quot;: [
-      &quot;directory&quot;,
-      &quot;module&quot;,
-      &quot;repository&quot;
+    "GitStage.ChangesTree.GroupingKeys": [
+      "directory",
+      "module",
+      "repository"
     ]
   }
-}</component>
+}]]></component>
   <component name="RunManager" selected=".NET Launch Settings Profile.SMIS.Api: http">
     <configuration name="SMIS.Api: Production" type="LaunchSettings" factoryName=".NET Launch Settings Profile">
       <option name="LAUNCH_PROFILE_PROJECT_FILE_PATH" value="$PROJECT_DIR$/SMIS.Api/SMIS.Api.csproj" />

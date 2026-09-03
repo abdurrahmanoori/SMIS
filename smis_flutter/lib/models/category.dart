@@ -1,5 +1,3 @@
-/// Enums in Dart 2.17+ can have fields, methods, and getters, 
-/// similar to Java or C# classes.
 enum CategorySyncStatus {
   synced,
   pendingCreate,
@@ -10,9 +8,6 @@ enum CategorySyncStatus {
   bool get isPending => this != synced;
 }
 
-/// A Domain Entity representing a Category.
-/// We use 'final' for all fields to enforce immutability, 
-/// which is a core principle in Flutter's reactive UI model.
 class Category {
   const Category({
     required this.id,
@@ -41,7 +36,6 @@ class Category {
   final String? lastSyncError;
 }
 
-/// A data transfer object (DTO) used when creating or editing a category.
 class CategoryDraft {
   const CategoryDraft({
     required this.name,
@@ -55,8 +49,6 @@ class CategoryDraft {
   final String? description;
   final bool isActive;
 
-  /// Performs basic validation and returns a clean version of the draft.
-  /// Similar to FluentValidation or DataAnnotations in .NET.
   CategoryDraft normalized() {
     final normalizedName = name.trim();
     final normalizedCode = code?.trim();
@@ -65,7 +57,6 @@ class CategoryDraft {
     if (normalizedName.isEmpty) {
       throw const CategoryValidationException('Name is required.');
     }
-    // ... validation logic
     if (normalizedName.length > 200) {
       throw const CategoryValidationException(
         'Name cannot exceed 200 characters.',

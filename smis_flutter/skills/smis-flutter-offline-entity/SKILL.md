@@ -21,8 +21,8 @@ authoritative.
   internet and must never wait for a remote request.
 - Save a local mutation and its pending operation atomically before attempting
   synchronization.
-- Keep presentation, domain, repository, local storage, remote API, and sync
-  logic separate.
+- Keep models, local repository, remote API, synchronization, controller, and
+  UI responsibilities separate without adding pass-through layers.
 - Use UTC timestamps and deterministic last-write-wins conflict handling. The
   newer write wins; the server wins exact ties unless the backend defines a
   different deterministic rule.
@@ -64,36 +64,32 @@ full workflow and the change is a necessary, scoped part of it.
 
 ## Design the entity feature
 
-Use the feature-first shape established by Category:
+Follow the shallow structure established by Category:
 
 ```text
-lib/features/<entity>/
-├── domain/
-│   ├── entities/
-│   ├── repositories/
-│   └── usecases/
-├── data/
-│   ├── datasources/
-│   ├── models/
-│   ├── repositories/
-│   └── sync/
-└── presentation/
-    ├── pages/
-    ├── providers/
-    ├── state/
-    └── widgets/
+lib/
+├── models/<entity>.dart
+├── models/<entity>_local_record.dart
+├── models/<entity>_remote_model.dart
+├── data/<entity>_repository.dart
+├── data/<entity>_api.dart
+├── services/<entity>_sync_service.dart
+├── controllers/<entity>_controller.dart
+├── screens/<entities>_screen.dart
+└── widgets/<entity>_form_dialog.dart
 ```
 
-Reuse general services from `lib/core` when their behavior is truly shared.
-Extend shared code without coupling entity-specific columns or payloads into a
-generic abstraction prematurely.
+Reuse `lib/config`, `lib/data/database.dart`, and general services when their
+behavior is truly shared. Keep file and identifier names in Dart's standard
+snake_case and UpperCamelCase conventions. Do not add repository
+interface/implementation pairs or use-case facades unless they perform real
+work needed by the requested feature.
 
-### Domain
+### Models
 
-Create a UI-independent entity, validated draft/input, repository interface,
-and small use-case facade. Match backend validation limits and required fields.
-Expose synchronization status in the domain only when the UI needs to display
-it.
+Create a UI-facing entity and validated draft/input. Match backend validation
+limits and required fields. Expose synchronization status only when the UI
+needs to display it.
 
 ### Local storage
 
@@ -108,14 +104,14 @@ plus the state needed to resume synchronization after process death:
 - retry count, next retry time, and last error;
 - tenant/shop scope when required by the API.
 
-Provide local methods for visible reads, ID lookup including tombstones,
-upsert, permanent delete, eligible pending selection, pending count, pull cursor,
-and synchronization locking. Scope cursors by account/shop if multiple sessions
-can use the same database.
+Put local CRUD and sync-state methods in the entity repository: visible reads,
+ID lookup including tombstones, upsert, permanent delete, eligible pending
+selection, pending count, pull cursor, and synchronization locking. Scope
+cursors by account/shop if multiple sessions can use the same database.
 
 ### Offline repository
 
-Implement CRUD only against the local data source:
+Implement CRUD only against SQLite through the entity repository:
 
 - Create: normalize/validate, generate a client ID only if supported, timestamp,
   mark pending create, and insert.
@@ -126,7 +122,7 @@ Implement CRUD only against the local data source:
   delete.
 - Read/list: return visible local rows only.
 
-After every mutation, refresh state from local storage. Do not make CRUD methods
+After every mutation, refresh state from the repository. Do not make CRUD methods
 conditionally remote when connectivity happens to exist; that creates two
 different correctness paths.
 
@@ -202,7 +198,8 @@ identifiers and deployment settings.
 
 ## Presentation and state
 
-Follow existing Riverpod conventions. The UI must:
+Keep the Riverpod providers and controller together in the entity controller
+file unless they become large enough to justify separation. The UI must:
 
 - load local data on startup;
 - provide create, edit, delete, and manual Sync actions;
@@ -212,7 +209,7 @@ Follow existing Riverpod conventions. The UI must:
 - refresh local state after returning from a possible background run;
 - avoid CRUD controls for any entity outside the user's requested scope.
 
-Keep validation in the domain/repository even if the form also validates for a
+Keep validation in the model/repository even if the form also validates for a
 better user experience.
 
 ## Verification

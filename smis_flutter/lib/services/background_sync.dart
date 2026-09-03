@@ -4,13 +4,12 @@ import 'dart:ui';
 import 'package:flutter/widgets.dart';
 import 'package:workmanager/workmanager.dart';
 
-import '../../features/category/data/datasources/category_local_data_source.dart';
-import '../../features/category/data/datasources/category_remote_data_source.dart';
-import '../../features/category/data/sync/category_sync_service.dart';
 import '../config/app_config.dart';
-import '../database/app_database.dart';
-import '../network/api_client.dart';
-import '../network/connectivity_service.dart';
+import '../data/category_api.dart';
+import '../data/category_repository.dart';
+import '../data/database.dart';
+import 'category_sync_service.dart';
+import 'connectivity_service.dart';
 
 @pragma('vm:entry-point')
 void callbackDispatcher() {
@@ -24,10 +23,9 @@ void callbackDispatcher() {
 
     final database = AppDatabase();
     try {
-      final local = CategoryLocalDataSource(database);
       final syncService = CategorySyncService(
-        local,
-        CategoryRemoteDataSourceImpl(ApiClient()),
+        CategoryRepository(database),
+        DioCategoryApi(),
         ConnectivityService(),
       );
       final result = await syncService.synchronize();

@@ -1,8 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:smis_flutter/features/category/data/datasources/category_local_data_source.dart';
-import 'package:smis_flutter/features/category/data/models/category_local_record.dart';
-import 'package:smis_flutter/features/category/data/repositories/category_repository_impl.dart';
-import 'package:smis_flutter/features/category/domain/entities/category.dart';
+import 'package:smis_flutter/data/category_repository.dart';
+import 'package:smis_flutter/models/category.dart';
+import 'package:smis_flutter/models/category_local_record.dart';
 
 import 'support/test_database.dart';
 
@@ -12,10 +11,9 @@ void main() {
     () async {
       final database = await createTestDatabase();
       addTearDown(database.close);
-      final local = CategoryLocalDataSource(database);
       var now = DateTime.utc(2026, 1, 1);
-      final repository = CategoryRepositoryImpl(
-        local,
+      final repository = CategoryRepository(
+        database,
         utcNow: () => now,
         idGenerator: () => 'local-id',
       );
@@ -46,9 +44,12 @@ void main() {
   test('deleting a server-backed category retains a local tombstone', () async {
     final database = await createTestDatabase();
     addTearDown(database.close);
-    final local = CategoryLocalDataSource(database);
     final timestamp = DateTime.utc(2026, 1, 1);
-    await local.put(
+    final repository = CategoryRepository(
+      database,
+      utcNow: () => timestamp.add(const Duration(hours: 1)),
+    );
+    await repository.saveRecord(
       CategoryLocalRecord(
         id: 'server-id',
         name: 'Food',
@@ -62,16 +63,12 @@ void main() {
         retryCount: 0,
       ),
     );
-    final repository = CategoryRepositoryImpl(
-      local,
-      utcNow: () => timestamp.add(const Duration(hours: 1)),
-    );
 
     await repository.delete('server-id');
 
     expect(await repository.getAll(), isEmpty);
     expect(await repository.getPendingCount(), 1);
-    final tombstone = await local.getById('server-id');
+    final tombstone = await repository.getRecord('server-id');
     expect(tombstone!.isDeleted, isTrue);
     expect(tombstone.pendingOperation, CategoryPendingOperation.delete);
   });

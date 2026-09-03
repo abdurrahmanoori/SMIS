@@ -1,13 +1,13 @@
 import 'package:dio/dio.dart';
 import 'package:uuid/uuid.dart';
 
-import '../../../../core/error/app_exception.dart';
-import '../../../../core/network/connectivity_service.dart';
-import '../../domain/entities/category.dart';
-import '../datasources/category_local_data_source.dart';
-import '../datasources/category_remote_data_source.dart';
+import '../data/category_api.dart';
+import '../data/category_repository.dart';
+import '../data/data_exception.dart';
+import '../models/category.dart';
 import '../models/category_local_record.dart';
 import '../models/category_remote_model.dart';
+import 'connectivity_service.dart';
 
 class CategorySyncFailure {
   const CategorySyncFailure({
@@ -34,7 +34,9 @@ class CategorySyncFailure {
       buffer.writeln('Cause: ${cause.runtimeType}: $cause');
       if (cause is DioException) {
         buffer
-          ..writeln('Request: ${cause.requestOptions.method} ${cause.requestOptions.uri}')
+          ..writeln(
+            'Request: ${cause.requestOptions.method} ${cause.requestOptions.uri}',
+          )
           ..writeln('Dio type: ${cause.type}')
           ..writeln('HTTP status: ${cause.response?.statusCode ?? '(none)'}')
           ..writeln('Response body: ${cause.response?.data ?? '(none)'}');
@@ -48,8 +50,6 @@ class CategorySyncFailure {
   }
 }
 
-/// Represents the result of a sync operation.
-/// Similar to a 'SyncResult' or 'CommandResult' DTO in .NET.
 class CategorySyncResult {
   const CategorySyncResult({
     required this.success,
@@ -81,24 +81,20 @@ class CategorySyncResult {
   }
 }
 
-/// Orchestrates synchronization between local storage and remote API.
-/// This implements an 'Offline-First' pattern: data is saved locally first, 
-/// then synced to the server whenever connectivity is available.
 class CategorySyncService {
-  CategorySyncService(this._local, this._remote, this._connectivity);
+  CategorySyncService(this._repository, this._api, this._connectivity);
 
-  final CategoryLocalDataSource _local;
-  final CategoryRemoteDataSource _remote;
+  final CategoryRepository _repository;
+  final CategoryApi _api;
   final NetworkConnectivity _connectivity;
 
   Future<CategorySyncResult> synchronize({bool force = false}) async {
     final owner = const Uuid().v4();
-    // Using a simple 'Sync Lock' in the database to prevent concurrent sync operations.
-    if (!await _local.tryAcquireSyncLock(owner)) {
+    if (!await _repository.tryAcquireSyncLock(owner)) {
       return CategorySyncResult(
         success: true,
         message: 'A Category sync is already running.',
-        pending: await _local.getPendingCount(),
+        pending: await _repository.getPendingCount(),
       );
     }
 
@@ -115,16 +111,15 @@ class CategorySyncService {
         return CategorySyncResult(
           success: false,
           message: 'Offline. Local changes are safe and will retry later.',
-          pending: await _local.getPendingCount(),
+          pending: await _repository.getPendingCount(),
           transientFailure: true,
           skippedOffline: true,
         );
       }
 
       phase = 'pull';
-      // 1. PULL PHASE: Get changes from the server.
-      final cursor = await _local.getPullCursor();
-      final remoteChanges = await _remote.pull(cursor);
+      final cursor = await _repository.getPullCursor();
+      final remoteChanges = await _api.pull(cursor);
       DateTime? newestRemoteWrite;
       for (final remote in remoteChanges) {
         newestRemoteWrite = _later(newestRemoteWrite, remote.lastModifiedUtc);
@@ -132,27 +127,24 @@ class CategorySyncService {
         pulled += outcome.applied ? 1 : 0;
         conflicts += outcome.conflictResolved ? 1 : 0;
       }
-      
-      // Update our cursor so next time we only pull NEW records.
+
       if (newestRemoteWrite != null) {
         final overlapped = newestRemoteWrite.subtract(
           const Duration(milliseconds: 1),
         );
-        await _local.setPullCursor(
+        await _repository.setPullCursor(
           overlapped.isAfter(cursor) ? overlapped : cursor,
         );
       }
 
       phase = 'push';
-      // 2. PUSH PHASE: Send local changes to the server.
-      final pending = await _local.getPending(force: force);
+      final pending = await _repository.getPendingRecords(force: force);
       for (final localRecord in pending) {
         try {
           final outcome = await _push(localRecord);
           pushed += outcome.pushed ? 1 : 0;
           conflicts += outcome.conflictResolved ? 1 : 0;
         } on RemoteTransientException catch (error, stackTrace) {
-          // If it's a temporary network error, we track it for retry.
           failures.add(
             CategorySyncFailure(
               phase: 'push ${localRecord.pendingOperation.name}',
@@ -192,7 +184,7 @@ class CategorySyncService {
         }
       }
 
-      final remaining = await _local.getPendingCount();
+      final remaining = await _repository.getPendingCount();
       final success = failed == 0;
       return CategorySyncResult(
         success: success,
@@ -215,7 +207,7 @@ class CategorySyncService {
         pushed: pushed,
         failed: failed + 1,
         conflictsResolved: conflicts,
-        pending: await _local.getPendingCount(),
+        pending: await _repository.getPendingCount(),
         transientFailure: true,
         failures: [
           ...failures,
@@ -234,7 +226,7 @@ class CategorySyncService {
         pushed: pushed,
         failed: failed + 1,
         conflictsResolved: conflicts,
-        pending: await _local.getPendingCount(),
+        pending: await _repository.getPendingCount(),
         failures: [
           ...failures,
           CategorySyncFailure(
@@ -252,7 +244,7 @@ class CategorySyncService {
         pushed: pushed,
         failed: failed + 1,
         conflictsResolved: conflicts,
-        pending: await _local.getPendingCount(),
+        pending: await _repository.getPendingCount(),
         transientFailure: true,
         failures: [
           ...failures,
@@ -264,15 +256,15 @@ class CategorySyncService {
         ],
       );
     } finally {
-      await _local.releaseSyncLock(owner);
+      await _repository.releaseSyncLock(owner);
     }
   }
 
   Future<_MergeOutcome> _mergeRemote(CategoryRemoteModel remote) async {
-    final localRecord = await _local.getById(remote.id);
+    final localRecord = await _repository.getRecord(remote.id);
     if (localRecord == null) {
       if (!remote.isDeleted) {
-        await _local.put(_recordFromRemote(remote));
+        await _repository.saveRecord(_recordFromRemote(remote));
         return const _MergeOutcome(applied: true);
       }
       return const _MergeOutcome();
@@ -286,51 +278,61 @@ class CategorySyncService {
     final conflict =
         localRecord.pendingOperation != CategoryPendingOperation.none;
     if (remote.isDeleted) {
-      await _local.deletePermanently(remote.id);
+      await _repository.removeRecord(remote.id);
     } else {
-      await _local.put(_recordFromRemote(remote, existing: localRecord));
+      await _repository.saveRecord(
+        _recordFromRemote(remote, existing: localRecord),
+      );
     }
     return _MergeOutcome(applied: true, conflictResolved: conflict);
   }
 
   Future<_PushOutcome> _push(CategoryLocalRecord localRecord) async {
-    final server = await _remote.getById(localRecord.id);
+    final server = await _api.getById(localRecord.id);
 
     if (localRecord.pendingOperation == CategoryPendingOperation.delete) {
       if (server == null) {
-        await _local.deletePermanently(localRecord.id);
+        await _repository.removeRecord(localRecord.id);
         return const _PushOutcome(pushed: true);
       }
       if (!localRecord.lastModifiedUtc.isAfter(server.conflictModifiedUtc)) {
-        await _local.put(_recordFromRemote(server, existing: localRecord));
+        await _repository.saveRecord(
+          _recordFromRemote(server, existing: localRecord),
+        );
         return const _PushOutcome(conflictResolved: true);
       }
-      await _remote.delete(localRecord);
-      await _local.deletePermanently(localRecord.id);
+      await _api.delete(localRecord);
+      await _repository.removeRecord(localRecord.id);
       return const _PushOutcome(pushed: true);
     }
 
     if (server == null) {
-      final created = await _remote.create(localRecord);
+      final created = await _api.create(localRecord);
       if (created.isDeleted) {
-        await _local.deletePermanently(localRecord.id);
+        await _repository.removeRecord(localRecord.id);
         return const _PushOutcome(conflictResolved: true);
       }
-      await _local.put(_recordFromRemote(created, existing: localRecord));
+      await _repository.saveRecord(
+        _recordFromRemote(created, existing: localRecord),
+      );
       return const _PushOutcome(pushed: true);
     }
 
     if (!localRecord.lastModifiedUtc.isAfter(server.conflictModifiedUtc)) {
-      await _local.put(_recordFromRemote(server, existing: localRecord));
+      await _repository.saveRecord(
+        _recordFromRemote(server, existing: localRecord),
+      );
       return const _PushOutcome(conflictResolved: true);
     }
 
-    final updated = await _remote.update(localRecord);
+    final updated = await _api.update(localRecord);
     if (updated.isDeleted) {
-      await _local.deletePermanently(localRecord.id);
+      await _repository.removeRecord(localRecord.id);
       return const _PushOutcome(conflictResolved: true);
     }
-    await _local.put(_recordFromRemote(updated, existing: localRecord));
+    await _repository.saveRecord(
+      _recordFromRemote(updated, existing: localRecord),
+    );
     return const _PushOutcome(pushed: true);
   }
 
@@ -369,7 +371,7 @@ class CategorySyncService {
     final retryCount = record.retryCount + 1;
     final exponent = retryCount.clamp(1, 6);
     final delay = Duration(minutes: 1 << (exponent - 1));
-    await _local.put(
+    await _repository.saveRecord(
       record.copyWith(
         syncStatus: CategorySyncStatus.failed,
         retryCount: retryCount,

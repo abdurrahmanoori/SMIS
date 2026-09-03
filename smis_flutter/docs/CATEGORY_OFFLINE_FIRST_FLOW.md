@@ -25,15 +25,9 @@ User interface
 Riverpod CategoryController
       │
       ▼
-Domain use cases and repository contract
-      │
-      ▼
-CategoryRepositoryImpl
-      │
-      ▼
-CategoryLocalDataSource ─────────► SQLite
+CategoryRepository ──────────────► SQLite
 
-The remote API is used only by CategorySyncService.
+CategorySyncService uses CategoryRepository + CategoryApi.
 ```
 
 The UI never calls the Category API directly. This separation is what allows
@@ -48,8 +42,8 @@ normal operation without an internet connection.
 | Controller | Presentation state and actions used by the UI. |
 | Entity | The business representation of a Category. |
 | Draft | Name, code, description, and active state entered in the form. |
-| Repository | The domain-facing interface for Category operations. |
-| Data source | Code that communicates with SQLite or the HTTP API. |
+| Repository | Code that saves and reads Categories in SQLite. |
+| API | Code that communicates with the SMIS HTTP API. |
 | Sync queue | Durable state stored on Category rows that records unsent work. |
 | Tombstone | A locally deleted row retained until its server deletion succeeds. |
 | Pull cursor | The latest server-change time already processed by this device. |
@@ -59,47 +53,40 @@ normal operation without an internet connection.
 
 ```text
 lib/
-├── main.dart
-├── app/
-│   └── app.dart
-├── core/
-│   ├── config/app_config.dart
-│   ├── database/app_database.dart
-│   ├── error/app_exception.dart
-│   ├── network/
-│   │   ├── api_client.dart
-│   │   └── connectivity_service.dart
-│   └── sync/background_sync.dart
-└── features/category/
-    ├── domain/
-    │   ├── entities/category.dart
-    │   ├── repositories/category_repository.dart
-    │   └── usecases/category_use_cases.dart
-    ├── data/
-    │   ├── datasources/
-    │   │   ├── category_local_data_source.dart
-    │   │   └── category_remote_data_source.dart
-    │   ├── models/
-    │   │   ├── category_local_record.dart
-    │   │   └── category_remote_model.dart
-    │   ├── repositories/category_repository_impl.dart
-    │   └── sync/category_sync_service.dart
-    └── presentation/
-        ├── pages/category_list_page.dart
-        ├── providers/category_providers.dart
-        ├── state/category_controller.dart
-        └── widgets/category_form_dialog.dart
+├── config/
+│   └── app_config.dart
+├── controllers/
+│   └── category_controller.dart
+├── data/
+│   ├── category_api.dart
+│   ├── category_repository.dart
+│   ├── data_exception.dart
+│   └── database.dart
+├── models/
+│   ├── category.dart
+│   ├── category_local_record.dart
+│   └── category_remote_model.dart
+├── screens/
+│   └── categories_screen.dart
+├── services/
+│   ├── background_sync.dart
+│   ├── category_sync_service.dart
+│   └── connectivity_service.dart
+├── widgets/
+│   └── category_form_dialog.dart
+└── main.dart
 ```
 
 Each folder has one responsibility:
 
-- `presentation` displays data and accepts user actions.
-- `domain` describes what the feature can do without depending on Flutter,
-  SQLite, or HTTP.
-- `data` implements the domain contracts.
-- `core/database` owns database creation and migrations.
-- `core/network` owns general HTTP and connectivity behavior.
-- `core/sync` provides the operating-system background entry point.
+- `models` holds Category data shapes.
+- `data` reads and writes SQLite or the HTTP API.
+- `services` performs synchronization and background work.
+- `controllers` manages screen state and Riverpod providers.
+- `screens` and `widgets` contain the UI.
+
+This shallow layout avoids pass-through layers while keeping database, network,
+state, and UI responsibilities separate.
 
 ## 4. Application startup
 
@@ -114,20 +101,18 @@ main()
   5. Render SmisApp.
 ```
 
-[`app.dart`](../lib/app/app.dart) creates `MaterialApp`, applies the theme, and
-opens `CategoryListPage` as the home page.
+`main.dart` also creates `MaterialApp`, applies the theme, and opens
+`CategoriesScreen` as the home screen.
 
-When `CategoryListPage` watches `categoryControllerProvider`, Riverpod creates
+When `CategoriesScreen` watches `categoryControllerProvider`, Riverpod creates
 `CategoryController`. Its `build()` method calls `_load()`:
 
 ```text
 CategoryController._load()
-  ├── CategoryUseCases.getAll()
-  │     └── CategoryRepository.getAll()
-  │           └── CategoryLocalDataSource.getVisible()
-  │                 └── SELECT from SQLite
-  └── CategoryUseCases.getPendingCount()
-        └── COUNT pending SQLite rows
+  ├── CategoryRepository.getAll()
+  │     └── SELECT visible Categories from SQLite
+  └── CategoryRepository.getPendingCount()
+        └── COUNT pending Category rows
 ```
 
 There is no startup API request. Opening the Category page while offline works
@@ -135,37 +120,29 @@ because its first read is entirely local.
 
 ## 5. Dependency creation with Riverpod
 
-[`category_providers.dart`](../lib/features/category/presentation/providers/category_providers.dart)
-assembles the layers:
+[`category_controller.dart`](../lib/controllers/category_controller.dart)
+contains the small set of providers that assembles the app:
 
 ```text
 AppDatabase
-   └── CategoryLocalDataSource
+   └── CategoryRepository
+         └── CategoryController
 
-ApiClient
-   └── CategoryRemoteDataSource
-
-CategoryLocalDataSource
-   └── CategoryRepositoryImpl
-         └── CategoryUseCases
-               └── CategoryController
-
-Local + Remote + Connectivity
+CategoryRepository + CategoryApi + Connectivity
    └── CategorySyncService
 ```
 
-This is dependency injection: a class receives what it needs instead of
-creating every dependency internally. Tests can therefore replace SQLite,
-network connectivity, or the remote API with controlled implementations.
+Each class receives what it needs through its constructor. Tests can therefore
+use an in-memory database, controlled connectivity, or a fake Category API.
 
 ## 6. Category representations
 
 The feature uses separate representations because the UI, SQLite, and backend
 do not need exactly the same fields.
 
-### Domain entity
+### Category model
 
-[`category.dart`](../lib/features/category/domain/entities/category.dart)
+[`category.dart`](../lib/models/category.dart)
 contains:
 
 - `Category`: data displayed by the application.
@@ -178,7 +155,7 @@ the backend: name 200, code 50, and description 500 characters.
 
 ### Local record
 
-[`category_local_record.dart`](../lib/features/category/data/models/category_local_record.dart)
+[`category_local_record.dart`](../lib/models/category_local_record.dart)
 contains all domain data plus offline state:
 
 - pending operation;
@@ -191,7 +168,7 @@ contains all domain data plus offline state:
 
 ### Remote model
 
-[`category_remote_model.dart`](../lib/features/category/data/models/category_remote_model.dart)
+[`category_remote_model.dart`](../lib/models/category_remote_model.dart)
 matches `CategoryDto`, `CategorySyncCreateDto`, `CategorySyncUpdateDto`, and
 `CategorySyncDeleteDto` from the ASP.NET backend. It converts JSON responses
 and builds synchronization payloads.
@@ -201,7 +178,7 @@ Keeping these models separate prevents SQLite-specific fields such as
 
 ## 7. SQLite database
 
-[`app_database.dart`](../lib/core/database/app_database.dart) creates the
+[`database.dart`](../lib/data/database.dart) creates the
 `smis_offline.db` database. Schema version 2 has two tables. The v1-to-v2
 migration adds nullable server-audit columns without deleting existing rows.
 
@@ -236,13 +213,11 @@ that would discard offline work.
 When the page loads or refreshes its state:
 
 ```text
-CategoryListPage
+CategoriesScreen
   → CategoryController.reload()
-  → CategoryUseCases.getAll()
-  → CategoryRepositoryImpl.getAll()
-  → CategoryLocalDataSource.getVisible()
+  → CategoryRepository.getAll()
   → SQLite: WHERE is_deleted = 0 ORDER BY name
-  → CategoryLocalRecord.toDomain()
+  → CategoryLocalRecord.toCategory()
   → Riverpod publishes CategoryScreenState
   → Flutter rebuilds the list
 ```
@@ -258,33 +233,31 @@ The cloud icon on a Category card is based on `CategorySyncStatus`:
 The user presses **Add category** and submits `CategoryFormDialog`.
 
 ```text
-CategoryListPage._create()
+CategoriesScreen._create()
   → CategoryController.create(draft)
-  → CategoryUseCases.create(draft)
-  → CategoryRepositoryImpl.create(draft)
+  → CategoryRepository.create(draft)
       1. Validate and trim the draft.
       2. Generate a UUID on the device.
       3. Set UTC timestamps.
       4. Set pending_operation = create.
       5. Set sync_status = pendingCreate.
-  → CategoryLocalDataSource.put(record)
+  → CategoryRepository.saveRecord(record)
   → SQLite INSERT
   → Controller reloads local data
   → New Category appears immediately
 ```
 
 No API call occurs in this flow. The backend supports client-provided IDs, so
-the same UUID can later be sent in `POST /api/Category`.
+the same UUID can later be sent in `POST /api/Category/sync`.
 
 ## 10. Update flow
 
 The user selects **Edit**, changes the form, and saves.
 
 ```text
-CategoryListPage._edit()
+CategoriesScreen._edit()
   → CategoryController.updateCategory(id, draft)
-  → CategoryUseCases.update(id, draft)
-  → CategoryRepositoryImpl.update(id, draft)
+  → CategoryRepository.update(id, draft)
       1. Read the existing local row.
       2. Validate and normalize the draft.
       3. Generate a UTC modification time newer than the previous one.
@@ -327,7 +300,7 @@ app restarts and connection loss.
 The user presses the Sync icon in the page's app bar.
 
 ```text
-CategoryListPage._sync()
+CategoriesScreen._sync()
   → CategoryController.syncNow()
   → CategorySyncService.synchronize(force: true)
 ```
@@ -404,7 +377,7 @@ environments where device clocks cannot be trusted.
 
 ## 14. Failure and retry behavior
 
-The API client separates failures into two categories:
+The Category API separates failures into two categories:
 
 | Type | Examples | Behavior |
 | --- | --- | --- |
@@ -429,7 +402,7 @@ builds continue to show only the short production-safe message.
 
 ## 15. Background synchronization
 
-[`background_sync.dart`](../lib/core/sync/background_sync.dart) contains the
+[`background_sync.dart`](../lib/services/background_sync.dart) contains the
 top-level Workmanager callback. The operating system runs this callback in a
 separate Dart isolate.
 
@@ -438,7 +411,7 @@ Operating system starts scheduled task
   → callbackDispatcher()
   → initialize Flutter/plugin registration in background isolate
   → open the same SQLite database
-  → recreate local, remote, connectivity, and sync services
+  → recreate repository, API, connectivity, and sync services
   → CategorySyncService.synchronize(force: false)
   → close the background database handle
 ```
@@ -477,7 +450,7 @@ tombstone.
 
 ## 17. Configuration
 
-[`app_config.dart`](../lib/core/config/app_config.dart) reads build definitions:
+[`app_config.dart`](../lib/config/app_config.dart) reads build definitions:
 
 - `SMIS_API_BASE_URL` overrides the API address;
 - `SMIS_AUTH_TOKEN` supplies a development token when required.
