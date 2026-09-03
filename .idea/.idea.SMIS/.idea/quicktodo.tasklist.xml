@@ -11,7 +11,8 @@
         <option name="accumulatedHierarchyTimeMs" value="4601516" />
         <option name="lastAccumulatedFocusStartedAt" value="1787751182822" />
         <subtasks>
-          <task id="628e19a5-c750-487b-b125-9f38a250e7d7" text="Generic get" level="1" ownTimeSpentMs="4601516" lastFocusStartedAt="1787751182822" createdAt="1787743488430" lastModified="1787744852483">
+          <task id="628e19a5-c750-487b-b125-9f38a250e7d7" text="Generic get" completed="true" level="1" ownTimeSpentMs="4601516" lastFocusStartedAt="1787751182822" createdAt="1787743488430" completedAt="1788438403915" lastModified="1788438403915">
+            <option name="completed" value="true" />
             <description>make sure to create get opreation like sigtas</description>
           </task>
         </subtasks>
