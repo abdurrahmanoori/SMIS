@@ -11,20 +11,20 @@ public static class LoanAccountSeed
         var now = DateTimeService.NowUtc;
         modelBuilder.Entity<LoanAccount>().HasData(
             // Main Store loans
-            CreateLoanAccount("1", "1", "1", "1", 10, "2", 5000, 50000, now.AddDays(-30), now.AddDays(30), "Coca Cola loan for John", true),
-            CreateLoanAccount("2", "2", "1", "4", 5, "3", 4000, 20000, now.AddDays(-15), now.AddDays(15), "Oreo biscuits for Jane", true),
-            CreateLoanAccount("3", "3", "1", "7", 20, "1", 3000, 60000, now.AddDays(-10), now.AddDays(20), "Notebooks for Michael", true),
-            CreateLoanAccount("4", "1", "1", "10", 15, "2", 8000, 120000, now.AddDays(-5), now.AddDays(45), "Cooking oil bulk order", true),
-            
+            CreateLoanAccount(SeedIds.Loan1,  SeedIds.Cust1,  SeedIds.Shop1, SeedIds.ProdCocaCola,   10,  SeedIds.UnitBottle,   5000, 50000,  now.AddDays(-30), now.AddDays(30),  "Coca Cola loan for John",    true),
+            CreateLoanAccount(SeedIds.Loan2,  SeedIds.Cust2,  SeedIds.Shop1, SeedIds.ProdOreo,        5,  SeedIds.UnitPack,     4000, 20000,  now.AddDays(-15), now.AddDays(15),  "Oreo biscuits for Jane",     true),
+            CreateLoanAccount(SeedIds.Loan3,  SeedIds.Cust3,  SeedIds.Shop1, SeedIds.ProdNotebook,   20,  SeedIds.UnitPiece,    3000, 60000,  now.AddDays(-10), now.AddDays(20),  "Notebooks for Michael",      true),
+            CreateLoanAccount(SeedIds.Loan4,  SeedIds.Cust1,  SeedIds.Shop1, SeedIds.ProdCookingOil, 15,  SeedIds.UnitBottle,   8000, 120000, now.AddDays(-5),  now.AddDays(45),  "Cooking oil bulk order",     true),
+
             // Branch Store loans
-            CreateLoanAccount("5", "4", "2", "2", 24, "2", 4500, 108000, now.AddDays(-20), now.AddDays(10), "Pepsi for Sarah", true),
-            CreateLoanAccount("6", "5", "2", "8", 50, "1", 500, 25000, now.AddDays(-12), now.AddDays(18), "Blue pens for David", true),
-            CreateLoanAccount("7", "6", "2", "11", 100, "7", 2000, 200000, now.AddDays(-25), null, "Rice bulk purchase", true),
-            
+            CreateLoanAccount(SeedIds.Loan5,  SeedIds.Cust4,  SeedIds.Shop2, SeedIds.ProdPepsi,      24,  SeedIds.UnitBottle,   4500, 108000, now.AddDays(-20), now.AddDays(10),  "Pepsi for Sarah",            true),
+            CreateLoanAccount(SeedIds.Loan6,  SeedIds.Cust5,  SeedIds.Shop2, SeedIds.ProdBluePen,    50,  SeedIds.UnitPiece,    500,  25000,  now.AddDays(-12), now.AddDays(18),  "Blue pens for David",        true),
+            CreateLoanAccount(SeedIds.Loan7,  SeedIds.Cust6,  SeedIds.Shop2, SeedIds.ProdRice,       100, SeedIds.UnitKilogram, 2000, 200000, now.AddDays(-25), null,             "Rice bulk purchase",         true),
+
             // Warehouse loans
-            CreateLoanAccount("8", "7", "3", "3", 48, "2", 3000, 144000, now.AddDays(-18), now.AddDays(12), "Mineral water for Robert", true),
-            CreateLoanAccount("9", "8", "3", "6", 30, "3", 1500, 45000, now.AddDays(-8), now.AddDays(22), "Instant noodles for Emily", true),
-            CreateLoanAccount("10", "9", "3", "15", 100, "1", 1000, 100000, now.AddDays(-3), now.AddDays(27), "USB cables for James", true)
+            CreateLoanAccount(SeedIds.Loan8,  SeedIds.Cust7,  SeedIds.Shop3, SeedIds.ProdMineralWater,48, SeedIds.UnitBottle,   3000, 144000, now.AddDays(-18), now.AddDays(12),  "Mineral water for Robert",   true),
+            CreateLoanAccount(SeedIds.Loan9,  SeedIds.Cust8,  SeedIds.Shop3, SeedIds.ProdNoodles,    30,  SeedIds.UnitPack,     1500, 45000,  now.AddDays(-8),  now.AddDays(22),  "Instant noodles for Emily",  true),
+            CreateLoanAccount(SeedIds.Loan10, SeedIds.Cust9,  SeedIds.Shop3, SeedIds.ProdUsbCable,   100, SeedIds.UnitPiece,    1000, 100000, now.AddDays(-3),  now.AddDays(27),  "USB cables for James",       true)
         );
     }
 
@@ -37,7 +37,7 @@ public static class LoanAccountSeed
         typeof(LoanAccount).GetProperty(nameof(LoanAccount.ShopName))!.SetValue(loanAccount, GetShopName(shopId));
         typeof(LoanAccount).GetProperty(nameof(LoanAccount.ProductName))!.SetValue(loanAccount, GetProductName(productId));
         typeof(LoanAccount).GetProperty(nameof(LoanAccount.UnitName))!.SetValue(loanAccount, GetUnitName(unitId));
-        
+
         var loanDateProp = typeof(LoanAccount).GetProperty(nameof(LoanAccount.LoanDate));
         if (loanDateProp != null)
         {
@@ -53,47 +53,47 @@ public static class LoanAccountSeed
 
     private static string? GetCustomerName(string customerId) => customerId switch
     {
-        "1" => "John",
-        "2" => "Jane",
-        "3" => "Michael",
-        "4" => "Sarah",
-        "5" => "David",
-        "6" => "Lisa",
-        "7" => "Robert",
-        "8" => "Emily",
-        "9" => "James",
+        SeedIds.Cust1 => "John",
+        SeedIds.Cust2 => "Jane",
+        SeedIds.Cust3 => "Michael",
+        SeedIds.Cust4 => "Sarah",
+        SeedIds.Cust5 => "David",
+        SeedIds.Cust6 => "Lisa",
+        SeedIds.Cust7 => "Robert",
+        SeedIds.Cust8 => "Emily",
+        SeedIds.Cust9 => "James",
         _ => null
     };
 
     private static string? GetShopName(string shopId) => shopId switch
     {
-        "1" => "Main Store",
-        "2" => "Branch Store",
-        "3" => "Warehouse",
+        SeedIds.Shop1 => "Main Store",
+        SeedIds.Shop2 => "Branch Store",
+        SeedIds.Shop3 => "Warehouse",
         _ => null
     };
 
     private static string? GetProductName(string productId) => productId switch
     {
-        "1" => "Coca Cola 500ml",
-        "2" => "Pepsi 500ml",
-        "3" => "Mineral Water 1L",
-        "4" => "Oreo Biscuits",
-        "6" => "Instant Noodles",
-        "7" => "A4 Notebook",
-        "8" => "Blue Pen",
-        "10" => "Cooking Oil 1L",
-        "11" => "Rice 1kg",
-        "15" => "USB Cable",
+        SeedIds.ProdCocaCola     => "Coca Cola 500ml",
+        SeedIds.ProdPepsi        => "Pepsi 500ml",
+        SeedIds.ProdMineralWater => "Mineral Water 1L",
+        SeedIds.ProdOreo         => "Oreo Biscuits",
+        SeedIds.ProdNoodles      => "Instant Noodles",
+        SeedIds.ProdNotebook     => "A4 Notebook",
+        SeedIds.ProdBluePen      => "Blue Pen",
+        SeedIds.ProdCookingOil   => "Cooking Oil 1L",
+        SeedIds.ProdRice         => "Rice 1kg",
+        SeedIds.ProdUsbCable     => "USB Cable",
         _ => null
     };
 
     private static string? GetUnitName(string unitId) => unitId switch
     {
-        "1" => "Piece",
-        "2" => "Bottle",
-        "3" => "Pack",
-        "7" => "Kilogram",
+        SeedIds.UnitPiece    => "Piece",
+        SeedIds.UnitBottle   => "Bottle",
+        SeedIds.UnitPack     => "Pack",
+        SeedIds.UnitKilogram => "Kilogram",
         _ => null
     };
 }

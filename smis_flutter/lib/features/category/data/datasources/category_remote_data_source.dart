@@ -44,8 +44,8 @@ class CategoryRemoteDataSourceImpl implements CategoryRemoteDataSource {
             ),
           )
           .toList(growable: false);
-    } catch (error) {
-      _client.mapAndThrow(error);
+    } catch (error, stackTrace) {
+      _client.mapAndThrow(error, stackTrace);
     }
   }
 
@@ -56,9 +56,9 @@ class CategoryRemoteDataSourceImpl implements CategoryRemoteDataSource {
         '${AppConfig.categoryEndpoint}/$id',
       );
       return CategoryRemoteModel.fromJson(response.data!);
-    } on DioException catch (error) {
+    } on DioException catch (error, stackTrace) {
       if (error.response?.statusCode == 404) return null;
-      _client.mapAndThrow(error);
+      _client.mapAndThrow(error, stackTrace);
     }
   }
 
@@ -70,8 +70,8 @@ class CategoryRemoteDataSourceImpl implements CategoryRemoteDataSource {
         data: CategoryRemoteModel.createPayload(category),
       );
       return CategoryRemoteModel.fromJson(response.data!);
-    } catch (error) {
-      _client.mapAndThrow(error);
+    } catch (error, stackTrace) {
+      _client.mapAndThrow(error, stackTrace);
     }
   }
 
@@ -83,8 +83,8 @@ class CategoryRemoteDataSourceImpl implements CategoryRemoteDataSource {
         data: CategoryRemoteModel.updatePayload(category),
       );
       return CategoryRemoteModel.fromJson(response.data!);
-    } catch (error) {
-      _client.mapAndThrow(error);
+    } catch (error, stackTrace) {
+      _client.mapAndThrow(error, stackTrace);
     }
   }
 
@@ -95,9 +95,9 @@ class CategoryRemoteDataSourceImpl implements CategoryRemoteDataSource {
         '${AppConfig.categoryEndpoint}/${category.id}/sync',
         data: CategoryRemoteModel.deletePayload(category),
       );
-    } on DioException catch (error) {
+    } on DioException catch (error, stackTrace) {
       if (error.response?.statusCode == 404) return;
-      _client.mapAndThrow(error);
+      _client.mapAndThrow(error, stackTrace);
     }
   }
 }

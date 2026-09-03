@@ -76,14 +76,7 @@ public partial class AppDbContext : IdentityDbContext<ApplicationUser, Applicati
             }
         }
 
-        #region Seed Database
-        ProductUnitSeed.DataSeed(modelBuilder);
-        ProductPriceSeed.DataSeed(modelBuilder);
-        StockBatchSeed.DataSeed(modelBuilder);
-        StockTransactionSeed.DataSeed(modelBuilder);
-        ShopOwnerSeed.DataSeed(modelBuilder);
-        LoanAccountSeed.DataSeed(modelBuilder);
-        #endregion
+
 
         // Allow extension from other layers via partial method
         OnModelCreatingPartial(modelBuilder);

@@ -17,7 +17,7 @@
         </introspection-scope>
       </schema-mapping>
     </data-source>
-    <data-source name="smis_offline.db" uuid="c23083d1-ad9e-4a55-b047-06addaa567c3">
+    <data-source name="flutter.db" uuid="c23083d1-ad9e-4a55-b047-06addaa567c3">
       <database-info product="SQLite" version="3.51.1" jdbc-version="4.2" driver-name="SQLite JDBC" driver-version="3.51.1.0" dbms="SQLITE" exact-version="3.51.1" exact-driver-version="3.51">
         <identifier-quote-string>&quot;</identifier-quote-string>
       </database-info>

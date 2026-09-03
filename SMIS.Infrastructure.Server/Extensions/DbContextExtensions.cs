@@ -30,7 +30,7 @@ namespace SMIS.Infrastructure.Server.Extensions
                 {
                     // Development/Staging: SQL Server LocalDB
                     options.UseSqlServer(connectionString)
-                           .AddInterceptors(interceptor, pkEntityInterceptor);
+                           .AddInterceptors(interceptor, pkEntityInterceptor).EnableSensitiveDataLogging();
                 }
 
                 options.EnableSensitiveDataLogging(true);

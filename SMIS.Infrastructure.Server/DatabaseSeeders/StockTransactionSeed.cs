@@ -10,21 +10,21 @@ public static class StockTransactionSeed
     public static void DataSeed(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<StockTransaction>().HasData(
-            // Product 1 (Coca Cola) transactions - StockBatch 1 & 2 - Unit: Bottle (2)
-            CreateStockTransaction("1", "1", "1", "1", 100m, "2", TransactionType.In, new DateTime(2024, 1, 1), "Purchase Order #001"),
-            CreateStockTransaction("2", "1", "1", "1", 20m, "2", TransactionType.Out, new DateTime(2024, 1, 2), "Sale #001"),
-            CreateStockTransaction("3", "1", "1", "2", 80m, "2", TransactionType.In, new DateTime(2024, 1, 3), "Purchase Order #002"),
-            CreateStockTransaction("4", "1", "1", "2", 15m, "2", TransactionType.Out, new DateTime(2024, 1, 4), "Sale #002"),
-            
-            // Product 4 (Oreo Biscuits) transactions - StockBatch 3 - Unit: Pack (3)
-            CreateStockTransaction("5", "1", "4", "3", 50m, "3", TransactionType.In, new DateTime(2024, 1, 5), "Purchase Order #003"),
-            CreateStockTransaction("6", "1", "4", "3", 10m, "3", TransactionType.Out, new DateTime(2024, 1, 6), "Sale #003"),
-            CreateStockTransaction("7", "1", "4", "3", 2m, "3", TransactionType.Adujstment, new DateTime(2024, 1, 7), "Damage - Expired"),
-            
-            // Product 7 (A4 Notebook) transactions - StockBatch 4 - Unit: Piece (1)
-            CreateStockTransaction("8", "1", "7", "4", 200m, "1", TransactionType.In, new DateTime(2024, 1, 8), "Purchase Order #004"),
-            CreateStockTransaction("9", "1", "7", "4", 25m, "1", TransactionType.Out, new DateTime(2024, 1, 9), "Sale #004"),
-            CreateStockTransaction("10", "1", "7", "4", 5m, "1", TransactionType.Out, new DateTime(2024, 1, 10), "Sale #005")
+            // Product CocaCola transactions - Batch1 & Batch2 - Unit: Bottle
+            CreateStockTransaction(SeedIds.STrans1,  SeedIds.Shop1, SeedIds.ProdCocaCola, SeedIds.Batch1, 100m, SeedIds.UnitBottle, TransactionType.In,         new DateTime(2024, 1, 1),  "Purchase Order #001"),
+            CreateStockTransaction(SeedIds.STrans2,  SeedIds.Shop1, SeedIds.ProdCocaCola, SeedIds.Batch1, 20m,  SeedIds.UnitBottle, TransactionType.Out,        new DateTime(2024, 1, 2),  "Sale #001"),
+            CreateStockTransaction(SeedIds.STrans3,  SeedIds.Shop1, SeedIds.ProdCocaCola, SeedIds.Batch2, 80m,  SeedIds.UnitBottle, TransactionType.In,         new DateTime(2024, 1, 3),  "Purchase Order #002"),
+            CreateStockTransaction(SeedIds.STrans4,  SeedIds.Shop1, SeedIds.ProdCocaCola, SeedIds.Batch2, 15m,  SeedIds.UnitBottle, TransactionType.Out,        new DateTime(2024, 1, 4),  "Sale #002"),
+
+            // Product Oreo transactions - Batch3 - Unit: Pack
+            CreateStockTransaction(SeedIds.STrans5,  SeedIds.Shop1, SeedIds.ProdOreo,     SeedIds.Batch3, 50m,  SeedIds.UnitPack,   TransactionType.In,         new DateTime(2024, 1, 5),  "Purchase Order #003"),
+            CreateStockTransaction(SeedIds.STrans6,  SeedIds.Shop1, SeedIds.ProdOreo,     SeedIds.Batch3, 10m,  SeedIds.UnitPack,   TransactionType.Out,        new DateTime(2024, 1, 6),  "Sale #003"),
+            CreateStockTransaction(SeedIds.STrans7,  SeedIds.Shop1, SeedIds.ProdOreo,     SeedIds.Batch3, 2m,   SeedIds.UnitPack,   TransactionType.Adujstment, new DateTime(2024, 1, 7),  "Damage - Expired"),
+
+            // Product Notebook transactions - Batch4 - Unit: Piece
+            CreateStockTransaction(SeedIds.STrans8,  SeedIds.Shop1, SeedIds.ProdNotebook, SeedIds.Batch4, 200m, SeedIds.UnitPiece,  TransactionType.In,         new DateTime(2024, 1, 8),  "Purchase Order #004"),
+            CreateStockTransaction(SeedIds.STrans9,  SeedIds.Shop1, SeedIds.ProdNotebook, SeedIds.Batch4, 25m,  SeedIds.UnitPiece,  TransactionType.Out,        new DateTime(2024, 1, 9),  "Sale #004"),
+            CreateStockTransaction(SeedIds.STrans10, SeedIds.Shop1, SeedIds.ProdNotebook, SeedIds.Batch4, 5m,   SeedIds.UnitPiece,  TransactionType.Out,        new DateTime(2024, 1, 10), "Sale #005")
         );
     }
 
@@ -46,27 +46,27 @@ public static class StockTransactionSeed
 
     private static string? GetShopName(string shopId) => shopId switch
     {
-        "1" => "Main Store",
-        "2" => "Branch Store",
-        "3" => "Warehouse",
+        SeedIds.Shop1 => "Main Store",
+        SeedIds.Shop2 => "Branch Store",
+        SeedIds.Shop3 => "Warehouse",
         _ => null
     };
 
     private static string? GetProductName(string productId) => productId switch
     {
-        "1" => "Coca Cola 500ml",
-        "4" => "Oreo Biscuits", 
-        "7" => "A4 Notebook",
+        SeedIds.ProdCocaCola => "Coca Cola 500ml",
+        SeedIds.ProdOreo     => "Oreo Biscuits",
+        SeedIds.ProdNotebook => "A4 Notebook",
         _ => null
     };
 
     private static string? GetUnitName(string unitId) => unitId switch
     {
-        "1" => "Piece",
-        "2" => "Bottle",
-        "3" => "Pack",
-        "4" => "Box",
-        "7" => "Kilogram",
+        SeedIds.UnitPiece    => "Piece",
+        SeedIds.UnitBottle   => "Bottle",
+        SeedIds.UnitPack     => "Pack",
+        SeedIds.UnitBox      => "Box",
+        SeedIds.UnitKilogram => "Kilogram",
         _ => null
     };
 }

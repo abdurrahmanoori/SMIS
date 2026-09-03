@@ -1,7 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using SMIS.Domain.Entities;
 using SMIS.Domain.Services;
-using System.Reflection;
 
 namespace SMIS.Infrastructure.Server.DatabaseSeeders;
 
@@ -11,16 +10,16 @@ public static class UnitOfMeasureSeed
     {
         var units = new[]
         {
-            CreateUnit("1", "Piece", "pcs", "1", "Individual items"),
-            CreateUnit("2", "Bottle", "btl", "1", "Liquid containers"),
-            CreateUnit("3", "Pack", "pk", "1", "Small packages"),
-            CreateUnit("4", "Box", "box", "1", "Medium containers"),
-            CreateUnit("5", "Carton", "ctn", "1", "Large containers"),
-            CreateUnit("6", "Liter", "L", "1", "Volume measurement"),
-            CreateUnit("7", "Kilogram", "kg", "1", "Weight measurement"),
-            CreateUnit("8", "Gram", "g", "1", "Small weight measurement"),
-            CreateUnit("9", "Milliliter", "ml", "1", "Small volume measurement"),
-            CreateUnit("10", "Dozen", "dz", "1", "12 pieces")
+            CreateUnit(SeedIds.UnitPiece,      "Piece",      "pcs", SeedIds.Shop1, "Individual items"),
+            CreateUnit(SeedIds.UnitBottle,     "Bottle",     "btl", SeedIds.Shop1, "Liquid containers"),
+            CreateUnit(SeedIds.UnitPack,       "Pack",       "pk",  SeedIds.Shop1, "Small packages"),
+            CreateUnit(SeedIds.UnitBox,        "Box",        "box", SeedIds.Shop1, "Medium containers"),
+            CreateUnit(SeedIds.UnitCarton,     "Carton",     "ctn", SeedIds.Shop1, "Large containers"),
+            CreateUnit(SeedIds.UnitLiter,      "Liter",      "L",   SeedIds.Shop1, "Volume measurement"),
+            CreateUnit(SeedIds.UnitKilogram,   "Kilogram",   "kg",  SeedIds.Shop1, "Weight measurement"),
+            CreateUnit(SeedIds.UnitGram,       "Gram",       "g",   SeedIds.Shop1, "Small weight measurement"),
+            CreateUnit(SeedIds.UnitMilliliter, "Milliliter", "ml",  SeedIds.Shop1, "Small volume measurement"),
+            CreateUnit(SeedIds.UnitDozen,      "Dozen",      "dz",  SeedIds.Shop1, "12 pieces")
         };
 
         modelBuilder.Entity<UnitOfMeasure>().HasData(units);
@@ -29,11 +28,11 @@ public static class UnitOfMeasureSeed
     private static UnitOfMeasure CreateUnit(string id, string name, string? symbol, string shopId, string description)
     {
         var unit = UnitOfMeasure.Create(name, symbol, shopId, description);
-        
+
         // Set ID for seeding (bypass domain validation for infrastructure concerns)
         typeof(UnitOfMeasure).GetProperty(nameof(UnitOfMeasure.Id))!.SetValue(unit, id);
         typeof(UnitOfMeasure).GetProperty(nameof(UnitOfMeasure.LastModifiedUtc))!.SetValue(unit, DateTimeService.NowUtc);
-        
+
         return unit;
     }
 }

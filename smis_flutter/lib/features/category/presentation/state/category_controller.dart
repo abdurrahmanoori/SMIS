@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart' show debugPrint, kDebugMode;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../data/sync/category_sync_service.dart';
@@ -84,6 +85,10 @@ class CategoryController extends AsyncNotifier<CategoryScreenState> {
     state = AsyncData(current.copyWith(isSyncing: true));
     
     final result = await _syncService.synchronize(force: true);
+
+    if (kDebugMode && !result.success) {
+      debugPrint(result.messageFor(includeDiagnostics: true));
+    }
     
     // Refresh fully after sync completes.
     state = AsyncData(await _load(lastSyncResult: result));

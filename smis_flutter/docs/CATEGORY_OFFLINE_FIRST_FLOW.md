@@ -419,6 +419,14 @@ another attempt.
 Local CRUD is not rolled back because synchronization failed. The device copy
 remains useful and the pending badge remains visible.
 
+In a Flutter debug build, failed manual syncs display and print diagnostic
+details: sync phase, Category ID, exception and underlying cause, HTTP request
+and response information when Dio is involved, and the full stack trace. The
+details are shown once in the scrollable/selectable sync summary at the top of
+the page, so they can be copied without also appearing in a duplicate bottom
+snackbar. Successful syncs still show a short snackbar confirmation. Release
+builds continue to show only the short production-safe message.
+
 ## 15. Background synchronization
 
 [`background_sync.dart`](../lib/core/sync/background_sync.dart) contains the

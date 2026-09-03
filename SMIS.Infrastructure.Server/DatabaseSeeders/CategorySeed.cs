@@ -9,12 +9,12 @@ public static class CategorySeed
     public static void DataSeed(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Category>().HasData(
-            CreateCategory("1", "Beverages", "1", "BEV", "Drinks and beverages"),
-            CreateCategory("2", "Food Items", "1", "FOOD", "Edible products and snacks"),
-            CreateCategory("3", "Stationery", "2", "STAT", "Office and school supplies"),
-            CreateCategory("4", "Grocery", "2", "GROC", "Daily household items"),
-            CreateCategory("5", "Personal Care", "3", "CARE", "Health and hygiene products"),
-            CreateCategory("6", "Electronics", "3", "ELEC", "Electronic devices and accessories")
+            CreateCategory(SeedIds.CatBeverages,    "Beverages",     SeedIds.Shop1, "BEV",  "Drinks and beverages"),
+            CreateCategory(SeedIds.CatFood,         "Food Items",    SeedIds.Shop1, "FOOD", "Edible products and snacks"),
+            CreateCategory(SeedIds.CatStationery,   "Stationery",    SeedIds.Shop2, "STAT", "Office and school supplies"),
+            CreateCategory(SeedIds.CatGrocery,      "Grocery",       SeedIds.Shop2, "GROC", "Daily household items"),
+            CreateCategory(SeedIds.CatPersonalCare, "Personal Care", SeedIds.Shop3, "CARE", "Health and hygiene products"),
+            CreateCategory(SeedIds.CatElectronics,  "Electronics",   SeedIds.Shop3, "ELEC", "Electronic devices and accessories")
         );
     }
 

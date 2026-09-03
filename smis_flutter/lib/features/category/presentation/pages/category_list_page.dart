@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -171,18 +172,21 @@ class _CategoryListPageState extends ConsumerState<CategoryListPage>
       /// If the user navigated away while we were waiting, 'context' is no longer valid.
       if (!mounted) return;
 
-      /// ScaffoldMessenger is the service used to show SnackBars (notifications).
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(result.message),
-          backgroundColor: result.success
-              ? Theme.of(context).colorScheme.primary
-              : Theme.of(context).colorScheme.error,
-        ),
-      );
-    } catch (error) {
+      // Failed sync details already appear in the persistent summary at the
+      // top of the page. Avoid showing the same exception and stack trace a
+      // second time in a bottom SnackBar.
+      if (result.success) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(result.message),
+            duration: const Duration(seconds: 4),
+            backgroundColor: Theme.of(context).colorScheme.primary,
+          ),
+        );
+      }
+    } catch (error, stackTrace) {
       if (!mounted) return;
-      _showError(error);
+      _showError(error, stackTrace);
       await ref.read(categoryControllerProvider.notifier).reload();
     }
   }
@@ -197,15 +201,18 @@ class _CategoryListPageState extends ConsumerState<CategoryListPage>
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(SnackBar(content: Text(successMessage)));
-    } catch (error) {
-      if (mounted) _showError(error);
+    } catch (error, stackTrace) {
+      if (mounted) _showError(error, stackTrace);
     }
   }
 
-  void _showError(Object error) {
+  void _showError(Object error, [StackTrace? stackTrace]) {
+    final message = kDebugMode && stackTrace != null
+        ? '${error.runtimeType}: $error\n\nStack trace:\n$stackTrace'
+        : error.toString();
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text(error.toString()),
+        content: SelectableText(message),
         backgroundColor: Theme.of(context).colorScheme.error,
       ),
     );
@@ -284,6 +291,12 @@ class _SyncSummary extends StatelessWidget {
     /// Theme.of(context) allows you to access the app's global styling.
     final colors = Theme.of(context).colorScheme;
     final successful = result.success;
+    final summary =
+        '${result.message} Pulled ${result.pulled}, pushed ${result.pushed}, '
+        'conflicts resolved ${result.conflictsResolved}, pending ${result.pending}.';
+    final displayMessage = kDebugMode && result.failures.isNotEmpty
+        ? '$summary\n\n${result.failures.map((failure) => failure.toDevelopmentString()).join('\n\n')}'
+        : summary;
     return Container(
       width: double.infinity,
       margin: const EdgeInsets.fromLTRB(16, 12, 16, 0),
@@ -292,13 +305,19 @@ class _SyncSummary extends StatelessWidget {
         color: successful ? colors.primaryContainer : colors.errorContainer,
         borderRadius: BorderRadius.circular(12),
       ),
-      child: Text(
-        '${result.message} Pulled ${result.pulled}, pushed ${result.pushed}, '
-        'conflicts resolved ${result.conflictsResolved}, pending ${result.pending}.',
-        style: TextStyle(
-          color: successful
-              ? colors.onPrimaryContainer
-              : colors.onErrorContainer,
+      child: ConstrainedBox(
+        constraints: BoxConstraints(
+          maxHeight: kDebugMode && !successful ? 280 : double.infinity,
+        ),
+        child: SingleChildScrollView(
+          child: SelectableText(
+            displayMessage,
+            style: TextStyle(
+              color: successful
+                  ? colors.onPrimaryContainer
+                  : colors.onErrorContainer,
+            ),
+          ),
         ),
       ),
     );

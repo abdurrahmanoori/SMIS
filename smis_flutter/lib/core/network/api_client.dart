@@ -23,11 +23,14 @@ class ApiClient {
 
   final Dio dio;
 
-  Never mapAndThrow(Object error) {
+  Never mapAndThrow(Object error, [StackTrace? stackTrace]) {
     if (error is! DioException) {
-      throw RemoteTransientException(
-        'The server request failed unexpectedly.',
-        cause: error,
+      return _throwMapped(
+        RemoteTransientException(
+          'The server request failed unexpectedly.',
+          cause: error,
+        ),
+        stackTrace,
       );
     }
 
@@ -47,9 +50,20 @@ class ApiClient {
         error.type == DioExceptionType.sendTimeout;
 
     if (transient) {
-      throw RemoteTransientException(message, cause: error);
+      return _throwMapped(
+        RemoteTransientException(message, cause: error),
+        stackTrace,
+      );
     }
-    throw RemotePermanentException(message, cause: error);
+    return _throwMapped(
+      RemotePermanentException(message, cause: error),
+      stackTrace,
+    );
+  }
+
+  Never _throwMapped(AppException error, StackTrace? stackTrace) {
+    if (stackTrace != null) Error.throwWithStackTrace(error, stackTrace);
+    throw error;
   }
 
   String? _messageFrom(Object? data) {

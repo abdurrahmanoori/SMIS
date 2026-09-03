@@ -16,10 +16,16 @@ public partial class AppDbContext
         TranslationSeed.DataSeed(modelBuilder);
         ProvinceSeed.DataSeed(modelBuilder);
         DistrictSeed.DataSeed(modelBuilder);
-        UnitOfMeasureSeed.DataSeed(modelBuilder);
         ShopSeed.DataSeed(modelBuilder);
-        ProductSeed.DataSeed(modelBuilder);
+        UnitOfMeasureSeed.DataSeed(modelBuilder);
         CategorySeed.DataSeed(modelBuilder);
+        ProductSeed.DataSeed(modelBuilder);
+        ProductUnitSeed.DataSeed(modelBuilder);
+        ProductPriceSeed.DataSeed(modelBuilder);
         CustomerSeed.DataSeed(modelBuilder);
+        ShopOwnerSeed.DataSeed(modelBuilder);
+        StockBatchSeed.DataSeed(modelBuilder);
+        StockTransactionSeed.DataSeed(modelBuilder);
+        LoanAccountSeed.DataSeed(modelBuilder);
     }
 }

@@ -69,10 +69,46 @@ void main() {
     expect(result.success, isFalse);
     expect(result.transientFailure, isTrue);
     expect(result.pending, 1);
+    expect(result.failures, hasLength(1));
+    expect(result.failures.single.categoryId, 'category-1');
+    expect(
+      result.messageFor(includeDiagnostics: false),
+      'Category sync completed with 1 failed request(s).',
+    );
+    final diagnostics = result.messageFor(includeDiagnostics: true);
+    expect(diagnostics, contains('Phase: push update'));
+    expect(diagnostics, contains('RemoteTransientException'));
+    expect(diagnostics, contains('Connection lost.'));
+    expect(diagnostics, contains('Socket refused'));
+    expect(diagnostics, contains('Stack trace:'));
     final failed = await local.getById('category-1');
     expect(failed!.syncStatus, CategorySyncStatus.failed);
     expect(failed.retryCount, 1);
     expect(failed.nextRetryAt, isNotNull);
+  });
+
+  test('unexpected connectivity errors retain diagnostics only on request', () async {
+    final database = await createTestDatabase();
+    addTearDown(database.close);
+    final local = CategoryLocalDataSource(database);
+    final service = CategorySyncService(local, _FakeRemote(), _BrokenConnectivity());
+
+    final result = await service.synchronize(force: true);
+
+    expect(result.success, isFalse);
+    expect(result.message, 'Category sync failed unexpectedly.');
+    expect(
+      result.messageFor(includeDiagnostics: false),
+      'Category sync failed unexpectedly.',
+    );
+    expect(
+      result.messageFor(includeDiagnostics: true),
+      allOf(
+        contains('Phase: connectivity check'),
+        contains('Connectivity plugin failed'),
+        contains('Stack trace:'),
+      ),
+    );
   });
 }
 
@@ -109,6 +145,12 @@ class _Online implements NetworkConnectivity {
   Future<bool> get hasConnection async => true;
 }
 
+class _BrokenConnectivity implements NetworkConnectivity {
+  @override
+  Future<bool> get hasConnection async =>
+      throw StateError('Connectivity plugin failed');
+}
+
 class _FakeRemote implements CategoryRemoteDataSource {
   _FakeRemote({this.server, this.pullChanges = const [], this.failGet = false});
 
@@ -127,7 +169,10 @@ class _FakeRemote implements CategoryRemoteDataSource {
   @override
   Future<CategoryRemoteModel?> getById(String id) async {
     if (failGet) {
-      throw const RemoteTransientException('Connection lost.');
+      throw RemoteTransientException(
+        'Connection lost.',
+        cause: StateError('Socket refused'),
+      );
     }
     return server;
   }

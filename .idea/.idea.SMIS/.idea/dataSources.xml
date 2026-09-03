@@ -14,7 +14,7 @@
       </jdbc-additional-properties>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
-    <data-source source="LOCAL" name="smis_offline.db" uuid="c23083d1-ad9e-4a55-b047-06addaa567c3">
+    <data-source source="LOCAL" name="flutter.db" uuid="c23083d1-ad9e-4a55-b047-06addaa567c3">
       <driver-ref>sqlite.xerial</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>org.sqlite.JDBC</jdbc-driver>

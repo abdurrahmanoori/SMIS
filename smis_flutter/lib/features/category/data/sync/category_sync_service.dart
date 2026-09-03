@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:uuid/uuid.dart';
 
 import '../../../../core/error/app_exception.dart';
@@ -7,6 +8,45 @@ import '../datasources/category_local_data_source.dart';
 import '../datasources/category_remote_data_source.dart';
 import '../models/category_local_record.dart';
 import '../models/category_remote_model.dart';
+
+class CategorySyncFailure {
+  const CategorySyncFailure({
+    required this.phase,
+    required this.error,
+    required this.stackTrace,
+    this.categoryId,
+  });
+
+  final String phase;
+  final String? categoryId;
+  final Object error;
+  final StackTrace stackTrace;
+
+  String toDevelopmentString() {
+    final buffer = StringBuffer()
+      ..writeln('Phase: $phase')
+      ..writeln('Category ID: ${categoryId ?? '(not available)'}')
+      ..writeln('Exception: ${error.runtimeType}: $error');
+
+    if (error case final AppException appException
+        when appException.cause != null) {
+      final cause = appException.cause!;
+      buffer.writeln('Cause: ${cause.runtimeType}: $cause');
+      if (cause is DioException) {
+        buffer
+          ..writeln('Request: ${cause.requestOptions.method} ${cause.requestOptions.uri}')
+          ..writeln('Dio type: ${cause.type}')
+          ..writeln('HTTP status: ${cause.response?.statusCode ?? '(none)'}')
+          ..writeln('Response body: ${cause.response?.data ?? '(none)'}');
+      }
+    }
+
+    buffer
+      ..writeln('Stack trace:')
+      ..write(stackTrace);
+    return buffer.toString();
+  }
+}
 
 /// Represents the result of a sync operation.
 /// Similar to a 'SyncResult' or 'CommandResult' DTO in .NET.
@@ -21,6 +61,7 @@ class CategorySyncResult {
     this.pending = 0,
     this.transientFailure = false,
     this.skippedOffline = false,
+    this.failures = const [],
   });
 
   final bool success;
@@ -32,6 +73,12 @@ class CategorySyncResult {
   final int pending;
   final bool transientFailure;
   final bool skippedOffline;
+  final List<CategorySyncFailure> failures;
+
+  String messageFor({required bool includeDiagnostics}) {
+    if (!includeDiagnostics || failures.isEmpty) return message;
+    return '$message\n\n${failures.map((failure) => failure.toDevelopmentString()).join('\n\n')}';
+  }
 }
 
 /// Orchestrates synchronization between local storage and remote API.
@@ -60,6 +107,8 @@ class CategorySyncService {
     var failed = 0;
     var conflicts = 0;
     var transientFailure = false;
+    var phase = 'connectivity check';
+    final failures = <CategorySyncFailure>[];
 
     try {
       if (!await _isConnected()) {
@@ -72,6 +121,7 @@ class CategorySyncService {
         );
       }
 
+      phase = 'pull';
       // 1. PULL PHASE: Get changes from the server.
       final cursor = await _local.getPullCursor();
       final remoteChanges = await _remote.pull(cursor);
@@ -93,6 +143,7 @@ class CategorySyncService {
         );
       }
 
+      phase = 'push';
       // 2. PUSH PHASE: Send local changes to the server.
       final pending = await _local.getPending(force: force);
       for (final localRecord in pending) {
@@ -100,16 +151,40 @@ class CategorySyncService {
           final outcome = await _push(localRecord);
           pushed += outcome.pushed ? 1 : 0;
           conflicts += outcome.conflictResolved ? 1 : 0;
-        } on RemoteTransientException catch (error) {
+        } on RemoteTransientException catch (error, stackTrace) {
           // If it's a temporary network error, we track it for retry.
+          failures.add(
+            CategorySyncFailure(
+              phase: 'push ${localRecord.pendingOperation.name}',
+              categoryId: localRecord.id,
+              error: error,
+              stackTrace: stackTrace,
+            ),
+          );
           await _markFailure(localRecord, error.message);
           failed++;
           transientFailure = true;
           break;
-        } on RemotePermanentException catch (error) {
+        } on RemotePermanentException catch (error, stackTrace) {
+          failures.add(
+            CategorySyncFailure(
+              phase: 'push ${localRecord.pendingOperation.name}',
+              categoryId: localRecord.id,
+              error: error,
+              stackTrace: stackTrace,
+            ),
+          );
           await _markFailure(localRecord, error.message);
           failed++;
-        } catch (error) {
+        } catch (error, stackTrace) {
+          failures.add(
+            CategorySyncFailure(
+              phase: 'push ${localRecord.pendingOperation.name}',
+              categoryId: localRecord.id,
+              error: error,
+              stackTrace: stackTrace,
+            ),
+          );
           await _markFailure(localRecord, error.toString());
           failed++;
           transientFailure = true;
@@ -130,8 +205,9 @@ class CategorySyncService {
         conflictsResolved: conflicts,
         pending: remaining,
         transientFailure: transientFailure,
+        failures: failures,
       );
-    } on RemoteTransientException catch (error) {
+    } on RemoteTransientException catch (error, stackTrace) {
       return CategorySyncResult(
         success: false,
         message: '${error.message} Local changes will retry later.',
@@ -141,8 +217,16 @@ class CategorySyncService {
         conflictsResolved: conflicts,
         pending: await _local.getPendingCount(),
         transientFailure: true,
+        failures: [
+          ...failures,
+          CategorySyncFailure(
+            phase: phase,
+            error: error,
+            stackTrace: stackTrace,
+          ),
+        ],
       );
-    } on RemotePermanentException catch (error) {
+    } on RemotePermanentException catch (error, stackTrace) {
       return CategorySyncResult(
         success: false,
         message: error.message,
@@ -151,6 +235,33 @@ class CategorySyncService {
         failed: failed + 1,
         conflictsResolved: conflicts,
         pending: await _local.getPendingCount(),
+        failures: [
+          ...failures,
+          CategorySyncFailure(
+            phase: phase,
+            error: error,
+            stackTrace: stackTrace,
+          ),
+        ],
+      );
+    } catch (error, stackTrace) {
+      return CategorySyncResult(
+        success: false,
+        message: 'Category sync failed unexpectedly.',
+        pulled: pulled,
+        pushed: pushed,
+        failed: failed + 1,
+        conflictsResolved: conflicts,
+        pending: await _local.getPendingCount(),
+        transientFailure: true,
+        failures: [
+          ...failures,
+          CategorySyncFailure(
+            phase: phase,
+            error: error,
+            stackTrace: stackTrace,
+          ),
+        ],
       );
     } finally {
       await _local.releaseSyncLock(owner);
@@ -268,13 +379,7 @@ class CategorySyncService {
     );
   }
 
-  Future<bool> _isConnected() async {
-    try {
-      return await _connectivity.hasConnection;
-    } catch (_) {
-      return false;
-    }
-  }
+  Future<bool> _isConnected() => _connectivity.hasConnection;
 
   DateTime _later(DateTime? current, DateTime candidate) =>
       current == null || candidate.isAfter(current) ? candidate : current;

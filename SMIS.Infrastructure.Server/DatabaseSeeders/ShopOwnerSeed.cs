@@ -9,13 +9,13 @@ public static class ShopOwnerSeed
     public static void DataSeed(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<ShopOwner>().HasData(
-            CreateShopOwner("1", "1", "1", "John", "Doe", "123456789", "+1234567890", "john.doe@example.com", "123 Main St", 100.0m, true),
-            CreateShopOwner("2", "2", "2", "Jane", "Smith", "987654321", "+0987654321", "jane.smith@example.com", "456 Oak Ave", 75.0m, true),
-            CreateShopOwner("3", "3", "3", "Bob", "Johnson", "555666777", "+1555666777", "bob.johnson@example.com", "789 Pine Rd", 50.0m, true)
+            CreateShopOwner(SeedIds.ShopOwner1, SeedIds.UserSuperAdmin, SeedIds.Shop1, "John", "Doe",     "123456789", "+1234567890", "john.doe@example.com",     "123 Main St", 100.0m, true),
+            CreateShopOwner(SeedIds.ShopOwner2, SeedIds.UserWAdmin,     SeedIds.Shop2, "Jane", "Smith",   "987654321", "+0987654321", "jane.smith@example.com",   "456 Oak Ave", 75.0m,  true),
+            CreateShopOwner(SeedIds.ShopOwner3, SeedIds.UserWManager,   SeedIds.Shop3, "Bob",  "Johnson", "555666777", "+1555666777", "bob.johnson@example.com",  "789 Pine Rd", 50.0m,  true)
         );
     }
 
-    private static ShopOwner CreateShopOwner(string id, string userId, string shopId, string firstName, string? lastName, 
+    private static ShopOwner CreateShopOwner(string id, string userId, string shopId, string firstName, string? lastName,
         string? nationalId, string? phoneNumber, string? email, string? address, decimal ownershipPercentage, bool isActive)
     {
         var owner = ShopOwner.Create(userId, shopId, firstName, lastName, phoneNumber, email, address, ownershipPercentage);
@@ -34,9 +34,9 @@ public static class ShopOwnerSeed
 
     private static string GetShopName(string shopId) => shopId switch
     {
-        "1" => "Main Store",
-        "2" => "Branch Store", 
-        "3" => "Warehouse",
+        SeedIds.Shop1 => "Main Store",
+        SeedIds.Shop2 => "Branch Store",
+        SeedIds.Shop3 => "Warehouse",
         _ => "Unknown Shop"
     };
 }

@@ -31,7 +31,8 @@ internal sealed class CategorySyncCreateCommandHandler
         ICategoryRepository repository,
         IUnitOfWork unitOfWork,
         ICurrentUser currentUser,
-        IMapper mapper)
+        IMapper mapper
+    )
     {
         _repository = repository;
         _unitOfWork = unitOfWork;
@@ -41,7 +42,8 @@ internal sealed class CategorySyncCreateCommandHandler
 
     public async Task<Result<CategoryDto>> Handle(
         CategorySyncCreateCommand request,
-        CancellationToken cancellationToken)
+        CancellationToken cancellationToken
+    )
     {
         if (!CategorySyncGuard.TryCanonicalGuid(request.Dto.Id, out var id))
             return CategorySyncGuard.InvalidId();
@@ -132,7 +134,8 @@ internal sealed class CategorySyncUpdateCommandHandler
         ICategoryRepository repository,
         IUnitOfWork unitOfWork,
         ICurrentUser currentUser,
-        IMapper mapper)
+        IMapper mapper
+    )
     {
         _repository = repository;
         _unitOfWork = unitOfWork;
@@ -142,7 +145,8 @@ internal sealed class CategorySyncUpdateCommandHandler
 
     public async Task<Result<CategoryDto>> Handle(
         CategorySyncUpdateCommand request,
-        CancellationToken cancellationToken)
+        CancellationToken cancellationToken
+    )
     {
         if (!CategorySyncGuard.TryCanonicalGuid(request.Id, out var id))
             return CategorySyncGuard.InvalidId();
@@ -200,7 +204,8 @@ internal sealed class CategorySyncDeleteCommandHandler
         ICategoryRepository repository,
         IUnitOfWork unitOfWork,
         ICurrentUser currentUser,
-        IMapper mapper)
+        IMapper mapper
+    )
     {
         _repository = repository;
         _unitOfWork = unitOfWork;
@@ -210,7 +215,8 @@ internal sealed class CategorySyncDeleteCommandHandler
 
     public async Task<Result<CategoryDto>> Handle(
         CategorySyncDeleteCommand request,
-        CancellationToken cancellationToken)
+        CancellationToken cancellationToken
+    )
     {
         if (!CategorySyncGuard.TryCanonicalGuid(request.Id, out var id))
             return CategorySyncGuard.InvalidId();
@@ -257,7 +263,8 @@ internal static class CategorySyncGuard
 {
     public static bool TryCanonicalGuid(
         string value,
-        out string canonical)
+        out string canonical
+    )
     {
         if (Guid.TryParse(value, out var parsed))
         {
@@ -271,7 +278,8 @@ internal static class CategorySyncGuard
 
     public static bool UserMetadataMatches(
         string? clientUserId,
-        ICurrentUser currentUser)
+        ICurrentUser currentUser
+    )
     {
         return string.IsNullOrWhiteSpace(clientUserId) ||
                string.Equals(
@@ -282,7 +290,8 @@ internal static class CategorySyncGuard
 
     public static bool CanAccess(
         Category category,
-        ICurrentUser currentUser)
+        ICurrentUser currentUser
+    )
     {
         return currentUser.IsSuperAdmin() ||
                category.ShopId == currentUser.GetShopId();
@@ -290,7 +299,8 @@ internal static class CategorySyncGuard
 
     public static void Apply(
         Category category,
-        CategoryCreateDto dto)
+        CategoryCreateDto dto
+    )
     {
         category.SetName(dto.Name);
         category.SetCode(dto.Code);
@@ -304,7 +314,8 @@ internal static class CategorySyncGuard
 
     public static void Apply(
         Category category,
-        CategoryUpdateDto dto)
+        CategoryUpdateDto dto
+    )
     {
         category.SetName(dto.Name);
         category.SetCode(dto.Code);

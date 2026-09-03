@@ -31,7 +31,6 @@
   </component>
   <component name="DatabaseLocalColorSettings">
     <colors>
-      <entry key="1a622562-8095-4c91-b137-648984598510" value="@72" />
       <entry key="217c9ab8-3f82-4012-9b1f-829d2efba1cc" value="@0" />
       <entry key="ac5415fe-1e2d-4654-8634-a9fa83f2c4ba" value="yellow" />
       <entry key="c23083d1-ad9e-4a55-b047-06addaa567c3" value="green" />
@@ -47,7 +46,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="main" />
+        <entry key="$PROJECT_DIR$" value="Modrenize-api" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -80,61 +79,61 @@
   <component name="MetaFilesCheckinStateConfiguration" checkMetaFiles="true" />
   <component name="NextEditCompletionFeaturesState">
     <decayedCancelled>
-      <entry key="MS100" value="2.1625167114556824E-157" />
-      <entry key="MS500" value="4.8700193593364874E-32" />
-      <entry key="S2" value="2.1567631745828292E-8" />
-      <entry key="S5" value="0.0012792095273093905" />
-      <entry key="S10" value="0.05043709209551236" />
-      <entry key="S30" value="0.5884163861671158" />
-      <entry key="S60" value="1.153585965782524" />
-      <entry key="M2" value="1.9730495008698414" />
-      <entry key="M5" value="4.285177371096895" />
-      <entry key="M10" value="6.835508796748632" />
-      <entry key="M15" value="8.390164463095427" />
-      <entry key="M30" value="12.237906745626542" />
-      <entry key="H1" value="21.85889014400288" />
-      <entry key="H2" value="37.42534025047497" />
-      <entry key="H4" value="52.55899591508795" />
-      <entry key="D1" value="72.05818842009818" />
-      <entry key="W1" value="76.26905486094215" />
+      <entry key="MS100" value="1.0000037008688134" />
+      <entry key="MS500" value="1.115186316691282" />
+      <entry key="S2" value="1.9622746328886087" />
+      <entry key="S5" value="2.4903444725671005" />
+      <entry key="S10" value="2.7261289632167394" />
+      <entry key="S30" value="2.976265854726427" />
+      <entry key="S60" value="3.3314529447870305" />
+      <entry key="M2" value="3.848476507885066" />
+      <entry key="M5" value="5.368601170295114" />
+      <entry key="M10" value="13.928271051106853" />
+      <entry key="M15" value="24.743117114064912" />
+      <entry key="M30" value="49.098363878594306" />
+      <entry key="H1" value="75.97110758373849" />
+      <entry key="H2" value="103.6400402548165" />
+      <entry key="H4" value="127.25042689791265" />
+      <entry key="D1" value="156.60633369720588" />
+      <entry key="W1" value="162.90651005557223" />
     </decayedCancelled>
     <decayedSelected>
-      <entry key="MS100" value="1.0000000000018832" />
-      <entry key="MS500" value="1.00451831321838" />
-      <entry key="S2" value="1.2592651959639134" />
-      <entry key="S5" value="1.5849844767647217" />
-      <entry key="S10" value="1.8399441048628091" />
-      <entry key="S30" value="2.825909327535197" />
-      <entry key="S60" value="3.7751974234986196" />
-      <entry key="M2" value="4.652384470459323" />
-      <entry key="M5" value="5.704247252061028" />
-      <entry key="M10" value="6.684205866882259" />
-      <entry key="M15" value="7.527007912869076" />
-      <entry key="M30" value="10.104936737867755" />
-      <entry key="H1" value="14.687749196395524" />
-      <entry key="H2" value="19.95920159702917" />
-      <entry key="H4" value="24.15562229274134" />
-      <entry key="D1" value="28.884512761823512" />
-      <entry key="W1" value="29.836761241521916" />
+      <entry key="MS100" value="0.003472041723306915" />
+      <entry key="MS500" value="0.32219365762125385" />
+      <entry key="S2" value="0.7534063097739937" />
+      <entry key="S5" value="0.8938959406009932" />
+      <entry key="S10" value="0.9956608824024238" />
+      <entry key="S30" value="1.7755936068236513" />
+      <entry key="S60" value="2.6876481283669205" />
+      <entry key="M2" value="3.5578971609610597" />
+      <entry key="M5" value="4.410828389623066" />
+      <entry key="M10" value="5.5762459842422825" />
+      <entry key="M15" value="6.963985895640589" />
+      <entry key="M30" value="10.865791176602091" />
+      <entry key="H1" value="16.88639708167566" />
+      <entry key="H2" value="23.834735559272787" />
+      <entry key="H4" value="29.599101643657086" />
+      <entry key="D1" value="36.36385740910292" />
+      <entry key="W1" value="37.75962934226516" />
     </decayedSelected>
     <decayedShown>
-      <entry key="MS100" value="8.06440766027853E-6" />
-      <entry key="MS500" value="0.09695816031046585" />
-      <entry key="S2" value="0.7412485593513015" />
-      <entry key="S5" value="1.302874675844891" />
-      <entry key="S10" value="1.7182400097966046" />
-      <entry key="S30" value="3.3095159448283664" />
-      <entry key="S60" value="4.852315335648756" />
-      <entry key="M2" value="6.5726423202350714" />
-      <entry key="M5" value="9.954198181570693" />
-      <entry key="M10" value="13.494300955789756" />
-      <entry key="M15" value="15.897063988793644" />
-      <entry key="M30" value="22.329573686620748" />
-      <entry key="H1" value="36.53755155330551" />
-      <entry key="H2" value="57.378576527964796" />
-      <entry key="H4" value="76.71105891063901" />
-      <entry key="D1" value="100.94199799630927" />
-      <entry key="W1" value="106.10571245695441" />
+      <entry key="MS100" value="0.10153845208624125" />
+      <entry key="MS500" value="0.7899313677922915" />
+      <entry key="S2" value="2.2485979629926716" />
+      <entry key="S5" value="3.12768873381387" />
+      <entry key="S10" value="3.5752233952337753" />
+      <entry key="S30" value="4.683626259586247" />
+      <entry key="S60" value="5.973406904203" />
+      <entry key="M2" value="7.37740927743578" />
+      <entry key="M5" value="9.76487675956703" />
+      <entry key="M10" value="19.49304664778406" />
+      <entry key="M15" value="31.695515201978157" />
+      <entry key="M30" value="59.952986066460625" />
+      <entry key="H1" value="92.84819879841997" />
+      <entry key="H2" value="127.4680867803517" />
+      <entry key="H4" value="156.8453498570807" />
+      <entry key="D1" value="192.96933168606745" />
+      <entry key="W1" value="200.6660118141971" />
     </decayedShown>
   </component>
   <component name="ProjectColorInfo">{
@@ -162,7 +161,7 @@
     &quot;cidr.known.project.marker&quot;: &quot;true&quot;,
     &quot;codeWithMe.voiceChat.enabledByDefault&quot;: &quot;false&quot;,
     &quot;com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;Modrenize-api&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;flutter-and-api-only&quot;,
     &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
     &quot;junie.onboarding.icon.badge.shown&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
@@ -418,7 +417,23 @@
       <option name="project" value="LOCAL" />
       <updated>1787997595467</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="feat(Configuration): add devtools options and update database source configurations">
+      <option name="closed" value="true" />
+      <created>1788004263990</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1788004263990</updated>
+    </task>
+    <task id="LOCAL-00012" summary="refactor(CategoryListPage): improve comments and formatting for clarity">
+      <option name="closed" value="true" />
+      <created>1788006051330</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1788006051330</updated>
+    </task>
+    <option name="localTasksCounter" value="13" />
     <option name="createChangelist" value="false" />
     <option name="createBranch" value="false" />
     <servers />
@@ -440,6 +455,8 @@
     <MESSAGE value="feat(Category): add client sync metadata and update related DTOs and commands" />
     <MESSAGE value="feat(Category): implement client metadata synchronization and update database schema" />
     <MESSAGE value="feat(Database): add custom database path setup for Windows and include new data source configurations" />
+    <MESSAGE value="feat(Configuration): add devtools options and update database source configurations" />
+    <MESSAGE value="refactor(CategoryListPage): improve comments and formatting for clarity" />
     <option name="LAST_COMMIT_MESSAGE" value="" />
   </component>
   <component name="XDebuggerManager">

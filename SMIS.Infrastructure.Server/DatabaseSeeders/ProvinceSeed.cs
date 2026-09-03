@@ -7,30 +7,29 @@ public static class ProvinceSeed
 {
     public static void DataSeed(ModelBuilder modelBuilder)
     {
-        // Seed provinces
         modelBuilder.Entity<Province>().HasData(
-            new Province { Id = "1", Name = "Kabul" },
-            new Province { Id = "2", Name = "Herat" },
-            new Province { Id = "3", Name = "Kandahar" },
-            new Province { Id = "4", Name = "Balkh" }
+            new Province { Id = SeedIds.ProvinceKabul,    Name = "Kabul" },
+            new Province { Id = SeedIds.ProvinceHerat,    Name = "Herat" },
+            new Province { Id = SeedIds.ProvinceKandahar, Name = "Kandahar" },
+            new Province { Id = SeedIds.ProvinceBalkh,    Name = "Balkh" }
         );
 
         modelBuilder.Entity<ProvinceTranslation>().HasData(
-            new ProvinceTranslation { Id = "1", ProvinceId = "1", LanguageId = "1", LanguageCode = "en", Name = "Kabul", IsDefault = true },
-            new ProvinceTranslation { Id = "2", ProvinceId = "1", LanguageId = "2", LanguageCode = "ps", Name = "کابل", IsDefault = false },
-            new ProvinceTranslation { Id = "3", ProvinceId = "1", LanguageId = "3", LanguageCode = "fa", Name = "کابل", IsDefault = false },
+            new ProvinceTranslation { Id = SeedIds.PTrans1,  ProvinceId = SeedIds.ProvinceKabul,    LanguageId = SeedIds.LangEn, LanguageCode = "en", Name = "Kabul",    IsDefault = true  },
+            new ProvinceTranslation { Id = SeedIds.PTrans2,  ProvinceId = SeedIds.ProvinceKabul,    LanguageId = SeedIds.LangPs, LanguageCode = "ps", Name = "کابل",    IsDefault = false },
+            new ProvinceTranslation { Id = SeedIds.PTrans3,  ProvinceId = SeedIds.ProvinceKabul,    LanguageId = SeedIds.LangFa, LanguageCode = "fa", Name = "کابل",    IsDefault = false },
 
-            new ProvinceTranslation { Id = "4", ProvinceId = "2", LanguageId = "1", LanguageCode = "en", Name = "Herat", IsDefault = true },
-            new ProvinceTranslation { Id = "5", ProvinceId = "2", LanguageId = "2", LanguageCode = "ps", Name = "هرات", IsDefault = false },
-            new ProvinceTranslation { Id = "6", ProvinceId = "2", LanguageId = "3", LanguageCode = "fa", Name = "هرات", IsDefault = false },
+            new ProvinceTranslation { Id = SeedIds.PTrans4,  ProvinceId = SeedIds.ProvinceHerat,    LanguageId = SeedIds.LangEn, LanguageCode = "en", Name = "Herat",    IsDefault = true  },
+            new ProvinceTranslation { Id = SeedIds.PTrans5,  ProvinceId = SeedIds.ProvinceHerat,    LanguageId = SeedIds.LangPs, LanguageCode = "ps", Name = "هرات",    IsDefault = false },
+            new ProvinceTranslation { Id = SeedIds.PTrans6,  ProvinceId = SeedIds.ProvinceHerat,    LanguageId = SeedIds.LangFa, LanguageCode = "fa", Name = "هرات",    IsDefault = false },
 
-            new ProvinceTranslation { Id = "7", ProvinceId = "3", LanguageId = "1", LanguageCode = "en", Name = "Kandahar", IsDefault = true },
-            new ProvinceTranslation { Id = "8", ProvinceId = "3", LanguageId = "2", LanguageCode = "ps", Name = "کندهار", IsDefault = false },
-            new ProvinceTranslation { Id = "9", ProvinceId = "3", LanguageId = "3", LanguageCode = "fa", Name = "قندهار", IsDefault = false },
+            new ProvinceTranslation { Id = SeedIds.PTrans7,  ProvinceId = SeedIds.ProvinceKandahar, LanguageId = SeedIds.LangEn, LanguageCode = "en", Name = "Kandahar", IsDefault = true  },
+            new ProvinceTranslation { Id = SeedIds.PTrans8,  ProvinceId = SeedIds.ProvinceKandahar, LanguageId = SeedIds.LangPs, LanguageCode = "ps", Name = "کندهار",  IsDefault = false },
+            new ProvinceTranslation { Id = SeedIds.PTrans9,  ProvinceId = SeedIds.ProvinceKandahar, LanguageId = SeedIds.LangFa, LanguageCode = "fa", Name = "قندهار",  IsDefault = false },
 
-            new ProvinceTranslation { Id = "10", ProvinceId = "4", LanguageId = "1", LanguageCode = "en", Name = "Balkh", IsDefault = true },
-            new ProvinceTranslation { Id = "11", ProvinceId = "4", LanguageId = "2", LanguageCode = "ps", Name = "بلخ", IsDefault = false },
-            new ProvinceTranslation { Id = "12", ProvinceId = "4", LanguageId = "3", LanguageCode = "fa", Name = "بلخ", IsDefault = false }
+            new ProvinceTranslation { Id = SeedIds.PTrans10, ProvinceId = SeedIds.ProvinceBalkh,    LanguageId = SeedIds.LangEn, LanguageCode = "en", Name = "Balkh",    IsDefault = true  },
+            new ProvinceTranslation { Id = SeedIds.PTrans11, ProvinceId = SeedIds.ProvinceBalkh,    LanguageId = SeedIds.LangPs, LanguageCode = "ps", Name = "بلخ",     IsDefault = false },
+            new ProvinceTranslation { Id = SeedIds.PTrans12, ProvinceId = SeedIds.ProvinceBalkh,    LanguageId = SeedIds.LangFa, LanguageCode = "fa", Name = "بلخ",     IsDefault = false }
         );
     }
 }
