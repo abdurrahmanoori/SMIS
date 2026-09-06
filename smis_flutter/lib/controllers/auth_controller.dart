@@ -7,17 +7,35 @@ import '../services/auth_session_store.dart';
 class AuthState {
   const AuthState({
     this.session,
+    this.savedSessions = const [],
     this.isRestoring = false,
     this.isSigningIn = false,
     this.errorMessage,
   });
 
   final AuthSession? session;
+  final List<AuthSession> savedSessions;
   final bool isRestoring;
   final bool isSigningIn;
   final String? errorMessage;
 
   bool get isAuthenticated => session != null;
+
+  AuthState copyWith({
+    AuthSession? session,
+    List<AuthSession>? savedSessions,
+    bool? isRestoring,
+    bool? isSigningIn,
+    String? errorMessage,
+    bool clearError = false,
+    bool clearSession = false,
+  }) => AuthState(
+    session: clearSession ? null : (session ?? this.session),
+    savedSessions: savedSessions ?? this.savedSessions,
+    isRestoring: isRestoring ?? this.isRestoring,
+    isSigningIn: isSigningIn ?? this.isSigningIn,
+    errorMessage: clearError ? null : (errorMessage ?? this.errorMessage),
+  );
 }
 
 class AuthController extends Notifier<AuthState> {
@@ -33,7 +51,8 @@ class AuthController extends Notifier<AuthState> {
   Future<void> _restoreSession() async {
     try {
       final session = await _sessionStore.read();
-      state = AuthState(session: session);
+      final savedSessions = await _sessionStore.readAll();
+      state = AuthState(session: session, savedSessions: savedSessions);
     } catch (_) {
       state = const AuthState(
         errorMessage: 'Unable to restore the saved login. Please sign in again.',
@@ -42,25 +61,48 @@ class AuthController extends Notifier<AuthState> {
   }
 
   Future<void> login({required String email, required String password}) async {
-    state = AuthState(session: state.session, isSigningIn: true);
+    state = state.copyWith(isSigningIn: true, clearError: true);
     try {
       final session = await _api.login(email: email, password: password);
       await _sessionStore.save(session);
-      state = AuthState(session: session);
+      final savedSessions = await _sessionStore.readAll();
+      state = state.copyWith(
+        session: session,
+        savedSessions: savedSessions,
+        isSigningIn: false,
+      );
     } on LoginException catch (error) {
-      state = AuthState(errorMessage: error.message);
+      state = state.copyWith(errorMessage: error.message, isSigningIn: false);
     } on AuthFormatException catch (error) {
-      state = AuthState(errorMessage: error.message);
+      state = state.copyWith(errorMessage: error.message, isSigningIn: false);
     } catch (_) {
-      state = const AuthState(
+      state = state.copyWith(
         errorMessage: 'Unable to sign in. Please try again.',
+        isSigningIn: false,
       );
     }
   }
 
+  Future<void> switchAccount(String userId) async {
+    final session = state.savedSessions.firstWhere((s) => s.userId == userId);
+    await _sessionStore.save(session);
+    state = state.copyWith(session: session);
+  }
+
+  Future<void> removeAccount(String userId) async {
+    await _sessionStore.deleteSession(userId);
+    final savedSessions = await _sessionStore.readAll();
+    final activeSession = state.session?.userId == userId ? null : state.session;
+    state = state.copyWith(
+      session: activeSession,
+      savedSessions: savedSessions,
+      clearSession: activeSession == null,
+    );
+  }
+
   Future<void> logout() async {
     await _sessionStore.clear();
-    state = const AuthState();
+    state = state.copyWith(clearSession: true);
   }
 
   Future<void> updateSessionProfile({String? userName, String? email}) async {
@@ -72,7 +114,8 @@ class AuthController extends Notifier<AuthState> {
       email: email,
     );
     await _sessionStore.save(updatedSession);
-    state = AuthState(session: updatedSession);
+    final savedSessions = await _sessionStore.readAll();
+    state = state.copyWith(session: updatedSession, savedSessions: savedSessions);
   }
 }
 

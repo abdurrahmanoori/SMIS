@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../controllers/auth_controller.dart';
+import '../models/auth_session.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key});
@@ -71,6 +72,30 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         if (auth.errorMessage case final error?) ...[
                           _LoginError(message: error),
                           const SizedBox(height: 16),
+                        ],
+                        if (auth.savedSessions.isNotEmpty) ...[
+                          _SavedAccountsList(
+                            sessions: auth.savedSessions,
+                            activeUserId: auth.session?.userId,
+                            onSwitch: (userId) => ref
+                                .read(authControllerProvider.notifier)
+                                .switchAccount(userId),
+                            onRemove: (userId) => ref
+                                .read(authControllerProvider.notifier)
+                                .removeAccount(userId),
+                          ),
+                          const SizedBox(height: 24),
+                          const Row(
+                            children: [
+                              Expanded(child: Divider()),
+                              Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 16),
+                                child: Text('OR LOGIN WITH ANOTHER ACCOUNT'),
+                              ),
+                              Expanded(child: Divider()),
+                            ],
+                          ),
+                          const SizedBox(height: 24),
                         ],
                         TextFormField(
                           controller: _emailController,
@@ -170,6 +195,58 @@ class _LoginError extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+}
+
+class _SavedAccountsList extends StatelessWidget {
+  const _SavedAccountsList({
+    required this.sessions,
+    this.activeUserId,
+    required this.onSwitch,
+    required this.onRemove,
+  });
+
+  final List<AuthSession> sessions;
+  final String? activeUserId;
+  final ValueChanged<String> onSwitch;
+  final ValueChanged<String> onRemove;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Text(
+          'Saved Accounts',
+          style: Theme.of(context).textTheme.titleSmall,
+        ),
+        const SizedBox(height: 8),
+        ...sessions.map((session) {
+          final isSelected = session.userId == activeUserId;
+          return Card(
+            elevation: isSelected ? 2 : 0,
+            color: isSelected
+                ? Theme.of(context).colorScheme.primaryContainer
+                : Theme.of(context).colorScheme.surfaceContainerHighest.withOpacity(0.5),
+            margin: const EdgeInsets.only(bottom: 8),
+            child: ListTile(
+              leading: CircleAvatar(
+                child: Text(session.userName[0].toUpperCase()),
+              ),
+              title: Text(session.userName),
+              subtitle: Text(session.email),
+              trailing: isSelected
+                  ? const Icon(Icons.check_circle, color: Colors.green)
+                  : IconButton(
+                      icon: const Icon(Icons.close, size: 20),
+                      onPressed: () => onRemove(session.userId),
+                    ),
+              onTap: isSelected ? null : () => onSwitch(session.userId),
+            ),
+          );
+        }),
+      ],
     );
   }
 }
