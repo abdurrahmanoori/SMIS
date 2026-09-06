@@ -127,21 +127,39 @@ class UserShop {
 
 class ProfileUpdateDraft {
   const ProfileUpdateDraft({
+    required this.userName,
     required this.email,
+    required this.languageId,
+    required this.shopId,
     this.phoneNumber,
     this.firstName,
     this.lastName,
   });
 
+  final String userName;
   final String email;
+  final String languageId;
+  final String shopId;
   final String? phoneNumber;
   final String? firstName;
   final String? lastName;
 
   ProfileUpdateDraft normalized() {
+    final normalizedUserName = userName.trim();
+    if (normalizedUserName.isEmpty || normalizedUserName.length > 256) {
+      throw const ProfileValidationException('Username must be between 1 and 256 characters.');
+    }
     final normalizedEmail = email.trim();
     if (normalizedEmail.isEmpty || !normalizedEmail.contains('@')) {
       throw const ProfileValidationException('Enter a valid email address.');
+    }
+    final normalizedLanguageId = languageId.trim();
+    if (normalizedLanguageId.isEmpty) {
+      throw const ProfileValidationException('Select a language.');
+    }
+    final normalizedShopId = shopId.trim();
+    if (normalizedShopId.isEmpty) {
+      throw const ProfileValidationException('Your account does not have a shop assigned.');
     }
     if (firstName != null && firstName!.trim().length > 100) {
       throw const ProfileValidationException('First name must not exceed 100 characters.');
@@ -158,7 +176,10 @@ class ProfileUpdateDraft {
       }
     }
     return ProfileUpdateDraft(
+      userName: normalizedUserName,
       email: normalizedEmail,
+      languageId: normalizedLanguageId,
+      shopId: normalizedShopId,
       phoneNumber: normalizedPhone,
       firstName: firstName?.trim(),
       lastName: lastName?.trim(),
@@ -166,11 +187,38 @@ class ProfileUpdateDraft {
   }
 
   Map<String, dynamic> toJson() => {
+    'userName': userName,
     'email': email,
+    'languageId': languageId,
+    'shopId': shopId,
     if (phoneNumber?.isNotEmpty ?? false) 'phoneNumber': phoneNumber,
     if (firstName?.isNotEmpty ?? false) 'firstName': firstName,
     if (lastName?.isNotEmpty ?? false) 'lastName': lastName,
   };
+}
+
+class ProfileLanguage {
+  const ProfileLanguage({required this.id, required this.name, this.code});
+
+  final String id;
+  final String name;
+  final String? code;
+
+  String get label => code == null || code!.isEmpty ? name : '$name ($code)';
+
+  factory ProfileLanguage.fromJson(Map<String, dynamic> json) {
+    String value(String camelCase, String pascalCase) {
+      final raw = json[camelCase] ?? json[pascalCase];
+      return raw is String ? raw : '';
+    }
+
+    final code = value('code', 'Code');
+    return ProfileLanguage(
+      id: value('id', 'Id'),
+      name: value('name', 'Name'),
+      code: code.isEmpty ? null : code,
+    );
+  }
 }
 
 class ChangePasswordDraft {

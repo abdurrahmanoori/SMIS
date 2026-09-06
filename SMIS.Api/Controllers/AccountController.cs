@@ -53,7 +53,7 @@ namespace SMIS.Api.Controllers
         [HttpPut("{id}")]
         public async Task<ActionResult<UserDto>> Update(
             string id,
-            UserCreateDto dto
+            UserUpdateDto dto
         ) =>
             HandleResultResponse(await Mediator.Send(new UserUpdateCommand(id, dto)));
 

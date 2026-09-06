@@ -11,7 +11,7 @@ using SMIS.Domain.Entities.Identity.Entity;
 
 namespace SMIS.Application.Features.Identity.Users.Commands
 {
-    public record UserUpdateCommand(string UserId, UserCreateDto UserCreateDto) : IRequest<Result<UserDto>>;
+    public record UserUpdateCommand(string UserId, UserUpdateDto UserUpdateDto) : IRequest<Result<UserDto>>;
 
     public class UserUpdateCommandHandler : IRequestHandler<UserUpdateCommand, Result<UserDto>>
     {
@@ -43,13 +43,15 @@ namespace SMIS.Application.Features.Identity.Users.Commands
             var user = await _userManager.FindByIdAsync(request.UserId);
             if (user == null) return Result<UserDto>.NotFoundResult(request.UserId);
 
-            await _translationKeyRepository.AddTranslationKeysForEntity(request.UserCreateDto, _unitOfWork);
+            await _translationKeyRepository.AddTranslationKeysForEntity(request.UserUpdateDto, _unitOfWork);
 
-            if (!string.IsNullOrWhiteSpace(request.UserCreateDto.Email)) user.SetEmail(request.UserCreateDto.Email);
-            if (!string.IsNullOrWhiteSpace(request.UserCreateDto.PhoneNumber)) user.SetPhoneNumber(request.UserCreateDto.PhoneNumber);
-            if (!string.IsNullOrWhiteSpace(request.UserCreateDto.FirstName)) user.SetFirstName(request.UserCreateDto.FirstName);
-            if (!string.IsNullOrWhiteSpace(request.UserCreateDto.LastName)) user.SetLastName(request.UserCreateDto.LastName);
-            if (!string.IsNullOrWhiteSpace(request.UserCreateDto.ShopId)) user.SetShopId(request.UserCreateDto.ShopId);
+            if (!string.IsNullOrWhiteSpace(request.UserUpdateDto.UserName)) user.SetUserName(request.UserUpdateDto.UserName);
+            if (!string.IsNullOrWhiteSpace(request.UserUpdateDto.Email)) user.SetEmail(request.UserUpdateDto.Email);
+            if (!string.IsNullOrWhiteSpace(request.UserUpdateDto.PhoneNumber)) user.SetPhoneNumber(request.UserUpdateDto.PhoneNumber);
+            if (!string.IsNullOrWhiteSpace(request.UserUpdateDto.FirstName)) user.SetFirstName(request.UserUpdateDto.FirstName);
+            if (!string.IsNullOrWhiteSpace(request.UserUpdateDto.LastName)) user.SetLastName(request.UserUpdateDto.LastName);
+            if (!string.IsNullOrWhiteSpace(request.UserUpdateDto.ShopId)) user.SetShopId(request.UserUpdateDto.ShopId);
+            if (!string.IsNullOrWhiteSpace(request.UserUpdateDto.LanguageId)) user.SetLanguageId(request.UserUpdateDto.LanguageId);
 
             // Update shop name
             var shop = await _shopRepository.GetByIdAsync(user.ShopId);
@@ -65,11 +67,11 @@ namespace SMIS.Application.Features.Identity.Users.Commands
                 }).ToList());
             }
 
-            if (request.UserCreateDto.Roles != null)
+            if (request.UserUpdateDto.Roles != null)
             {
                 var currentRoles = await _userManager.GetRolesAsync(user);
-                var toRemove = currentRoles.Except(request.UserCreateDto.Roles).ToArray();
-                var toAdd = request.UserCreateDto.Roles.Except(currentRoles).ToArray();
+                var toRemove = currentRoles.Except(request.UserUpdateDto.Roles).ToArray();
+                var toAdd = request.UserUpdateDto.Roles.Except(currentRoles).ToArray();
                 
                 if (toRemove.Length > 0)
                 {

@@ -8,6 +8,8 @@ import '../services/bearer_token_interceptor.dart';
 abstract interface class ProfileApi {
   Future<UserProfile> getCurrentUser();
 
+  Future<List<ProfileLanguage>> getLanguages();
+
   Future<UserProfile> updateProfile(String userId, ProfileUpdateDraft draft);
 
   Future<void> changePassword(String userId, ChangePasswordDraft draft);
@@ -49,6 +51,26 @@ class DioProfileApi implements ProfileApi {
         throw const ProfileApiException('The profile response did not contain a user ID.');
       }
       return profile;
+    } on DioException catch (error) {
+      throw ProfileApiException(_messageFrom(error.response?.data) ?? _fallback(error));
+    }
+  }
+
+  @override
+  Future<List<ProfileLanguage>> getLanguages() async {
+    try {
+      final response = await _dio.get<Map<String, dynamic>>(
+        AppConfig.languageEndpoint,
+        queryParameters: const {'pageNumber': 1, 'pageSize': 100},
+      );
+      final data = response.data;
+      final items = data?['items'] ?? data?['Items'];
+      if (items is! List) return const <ProfileLanguage>[];
+      return items
+          .whereType<Map>()
+          .map((item) => ProfileLanguage.fromJson(Map<String, dynamic>.from(item)))
+          .where((language) => language.id.isNotEmpty && language.name.isNotEmpty)
+          .toList(growable: false);
     } on DioException catch (error) {
       throw ProfileApiException(_messageFrom(error.response?.data) ?? _fallback(error));
     }
@@ -104,13 +126,41 @@ class DioProfileApi implements ProfileApi {
 
   String? _messageFrom(Object? data) {
     if (data is String && data.trim().isNotEmpty) return data;
-    if (data is List && data.isNotEmpty) return _messageFrom(data.first);
+    if (data is List) return _firstMessage(data);
     if (data is Map) {
+      // ASP.NET Core validation responses usually put a generic title such as
+      // "One or more validation errors occurred." beside field-specific
+      // messages in `errors`. Prefer the useful field message for the user.
+      final validationMessage = _firstMessage(data['errors'] ?? data['Errors']);
+      if (validationMessage != null) return validationMessage;
+
       final message = data['message'] ?? data['Message'] ?? data['title'];
       if (message is String && message.trim().isNotEmpty) return message;
       final description = data['description'] ?? data['Description'];
       if (description is String && description.trim().isNotEmpty) {
         return description;
+      }
+    }
+    return null;
+  }
+
+  String? _firstMessage(Object? value) {
+    if (value is String && value.trim().isNotEmpty) return value;
+    if (value is List) {
+      for (final item in value) {
+        final message = _firstMessage(item);
+        if (message != null) return message;
+      }
+    }
+    if (value is Map) {
+      final directMessage =
+          value['message'] ?? value['Message'] ?? value['description'] ?? value['Description'];
+      if (directMessage is String && directMessage.trim().isNotEmpty) {
+        return directMessage;
+      }
+      for (final item in value.values) {
+        final message = _firstMessage(item);
+        if (message != null) return message;
       }
     }
     return null;

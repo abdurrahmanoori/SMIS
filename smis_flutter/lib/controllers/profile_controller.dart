@@ -40,5 +40,9 @@ final profileApiProvider = Provider<ProfileApi>(
   (ref) => DioProfileApi(sessionStore: ref.watch(authSessionStoreProvider)),
 );
 
+final profileLanguagesProvider = FutureProvider<List<ProfileLanguage>>(
+  (ref) => ref.watch(profileApiProvider).getLanguages(),
+);
+
 final profileControllerProvider =
     AsyncNotifierProvider<ProfileController, UserProfile>(ProfileController.new);

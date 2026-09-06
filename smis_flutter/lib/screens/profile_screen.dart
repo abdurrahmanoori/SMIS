@@ -134,34 +134,41 @@ class _ProfileEditCard extends ConsumerStatefulWidget {
 
 class _ProfileEditCardState extends ConsumerState<_ProfileEditCard> {
   final _formKey = GlobalKey<FormState>();
+  late final TextEditingController _userName;
   late final TextEditingController _email;
   late final TextEditingController _firstName;
   late final TextEditingController _lastName;
   late final TextEditingController _phoneNumber;
+  late String _languageId;
   bool _isSaving = false;
 
   @override
   void initState() {
     super.initState();
+    _userName = TextEditingController(text: widget.user.userName ?? '');
     _email = TextEditingController(text: widget.user.email ?? '');
     _firstName = TextEditingController(text: widget.user.firstName ?? '');
     _lastName = TextEditingController(text: widget.user.lastName ?? '');
     _phoneNumber = TextEditingController(text: widget.user.phoneNumber ?? '');
+    _languageId = widget.user.languageId;
   }
 
   @override
   void didUpdateWidget(covariant _ProfileEditCard oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.user != widget.user) {
+      _userName.text = widget.user.userName ?? '';
       _email.text = widget.user.email ?? '';
       _firstName.text = widget.user.firstName ?? '';
       _lastName.text = widget.user.lastName ?? '';
       _phoneNumber.text = widget.user.phoneNumber ?? '';
+      _languageId = widget.user.languageId;
     }
   }
 
   @override
   void dispose() {
+    _userName.dispose();
     _email.dispose();
     _firstName.dispose();
     _lastName.dispose();
@@ -177,7 +184,10 @@ class _ProfileEditCardState extends ConsumerState<_ProfileEditCard> {
           .read(profileControllerProvider.notifier)
           .updateProfile(
             ProfileUpdateDraft(
+              userName: _userName.text,
               email: _email.text,
+              languageId: _languageId,
+              shopId: widget.user.shopId,
               firstName: _firstName.text,
               lastName: _lastName.text,
               phoneNumber: _phoneNumber.text,
@@ -206,14 +216,21 @@ class _ProfileEditCardState extends ConsumerState<_ProfileEditCard> {
   );
 
   @override
-  Widget build(BuildContext context) => Card(
-    child: Padding(
-      padding: const EdgeInsets.all(20),
-      child: Form(
-        key: _formKey,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
+  Widget build(BuildContext context) {
+    final languageState = ref.watch(profileLanguagesProvider);
+    final languages = [...?languageState.value];
+    if (!languages.any((language) => language.id == _languageId)) {
+      languages.add(ProfileLanguage(id: _languageId, name: 'Current language'));
+    }
+
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(20),
+        child: Form(
+          key: _formKey,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
             Text('Personal details', style: Theme.of(context).textTheme.titleLarge),
             const SizedBox(height: 4),
             Text(
@@ -250,6 +267,51 @@ class _ProfileEditCardState extends ConsumerState<_ProfileEditCard> {
                         ],
                       );
               },
+            ),
+            const SizedBox(height: 16),
+            TextFormField(
+              controller: _userName,
+              enabled: !_isSaving,
+              autofillHints: const [AutofillHints.username],
+              decoration: const InputDecoration(
+                labelText: 'Username',
+                prefixIcon: Icon(Icons.account_circle_outlined),
+              ),
+              validator: (value) {
+                final userName = value?.trim() ?? '';
+                if (userName.isEmpty || userName.length > 256) {
+                  return 'Username must be between 1 and 256 characters.';
+                }
+                return null;
+              },
+            ),
+            const SizedBox(height: 16),
+            DropdownButtonFormField<String>(
+              value: _languageId,
+              isExpanded: true,
+              decoration: InputDecoration(
+                labelText: 'Language',
+                prefixIcon: const Icon(Icons.language_outlined),
+                helperText: languageState.hasError
+                    ? 'Unable to load languages. Your current selection will be kept.'
+                    : null,
+              ),
+              items: languages
+                  .map(
+                    (language) => DropdownMenuItem<String>(
+                      value: language.id,
+                      child: Text(language.label),
+                    ),
+                  )
+                  .toList(growable: false),
+              onChanged: _isSaving || languageState.isLoading
+                  ? null
+                  : (value) {
+                      if (value != null) setState(() => _languageId = value);
+                    },
+              validator: (value) => value == null || value.isEmpty
+                  ? 'Select a language.'
+                  : null,
             ),
             const SizedBox(height: 16),
             TextFormField(
@@ -295,11 +357,12 @@ class _ProfileEditCardState extends ConsumerState<_ProfileEditCard> {
                 label: const Text('Save changes'),
               ),
             ),
-          ],
+            ],
+          ),
         ),
       ),
-    ),
-  );
+    );
+  }
 }
 
 class _NameField extends StatelessWidget {

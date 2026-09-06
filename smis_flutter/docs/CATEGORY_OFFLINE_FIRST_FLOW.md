@@ -488,15 +488,20 @@ ProfileScreen
   → display account, roles, verification status, and shop information
 ```
 
-The personal-details form updates only the signed-in user's first name, last
-name, email, and phone number through `PUT /api/Account/{currentUserId}`. The
-app sends only those editable fields; it never sends roles or a shop ID from
-this form. After a successful update it reloads `/me` and refreshes the email
-shown in the stored login session.
+The personal-details form updates the signed-in user's username, language,
+first name, last name, email, and phone number through
+`PUT /api/Account/{currentUserId}`. Available languages are loaded from
+`GET /api/Language` and shown as a selector. The app never sends roles, but it
+does include the current read-only shop ID required by the backend in the update
+payload. After a successful update it reloads `/me` and refreshes the username
+and email shown in the stored login session.
 
-Username, roles, language, shop membership, and verification flags are shown
-as account information but are not editable from the profile page. The separate
-**Change password** action sends the current and new password to
+The update route uses a password-free `UserUpdateDto`; a profile save never
+sends, validates, or changes a password.
+
+Roles, shop membership, and verification flags are shown as account information
+but are not editable from the profile page. The separate **Change password**
+action sends the current and new password to
 `POST /api/Account/{currentUserId}/change-password`.
 
 Profile viewing and updates require a server connection. Category CRUD remains

@@ -108,61 +108,61 @@
   <component name="MetaFilesCheckinStateConfiguration" checkMetaFiles="true" />
   <component name="NextEditCompletionFeaturesState">
     <decayedCancelled>
-      <entry key="MS100" value="1.0236830713517249" />
-      <entry key="MS500" value="1.473028823362798" />
-      <entry key="S2" value="1.8293195458144416" />
-      <entry key="S5" value="1.9278734764712826" />
-      <entry key="S10" value="1.9632618940201478" />
-      <entry key="S30" value="1.9876008614453724" />
-      <entry key="S60" value="1.9937810953908415" />
-      <entry key="M2" value="1.9969311756406203" />
-      <entry key="M5" value="2.017081414220665" />
-      <entry key="M10" value="2.1349048825606722" />
-      <entry key="M15" value="2.268801586121813" />
-      <entry key="M30" value="2.7379729297228153" />
-      <entry key="H1" value="5.4921631761857554" />
-      <entry key="H2" value="23.99443477929821" />
-      <entry key="H4" value="74.93089219809292" />
-      <entry key="D1" value="221.28996196589725" />
-      <entry key="W1" value="269.0268202735028" />
-    </decayedCancelled>
-    <decayedSelected>
       <entry key="MS100" value="0.0" />
       <entry key="MS500" value="0.0" />
-      <entry key="S2" value="1.2297453181604121E-259" />
-      <entry key="S5" value="3.4758922617004475E-104" />
-      <entry key="S10" value="2.5299124263578468E-52" />
-      <entry key="S30" value="9.94040968881234E-18" />
-      <entry key="S60" value="4.453149071231443E-9" />
-      <entry key="M2" value="9.434324994238114E-5" />
-      <entry key="M5" value="0.037193688014205584" />
-      <entry key="M10" value="0.27273702870472155" />
-      <entry key="M15" value="0.529873538315247" />
-      <entry key="M30" value="1.0352624471046339" />
-      <entry key="H1" value="2.020236100237772" />
-      <entry key="H2" value="8.301418402607812" />
-      <entry key="H4" value="25.23623415162228" />
-      <entry key="D1" value="71.59725091606172" />
-      <entry key="W1" value="86.26214601912945" />
+      <entry key="S2" value="6.044074068254364E-150" />
+      <entry key="S5" value="3.109528986829897E-60" />
+      <entry key="S10" value="2.4933674053143746E-30" />
+      <entry key="S30" value="2.1524439764489218E-10" />
+      <entry key="S60" value="2.07481229982533E-5" />
+      <entry key="M2" value="0.006441896860915761" />
+      <entry key="M5" value="0.20332168291617536" />
+      <entry key="M10" value="0.6778110809599569" />
+      <entry key="M15" value="1.055884966360702" />
+      <entry key="M30" value="1.8678379484881549" />
+      <entry key="H1" value="4.536265386596878" />
+      <entry key="H2" value="21.80660390740931" />
+      <entry key="H4" value="71.43312658248838" />
+      <entry key="D1" value="219.53385656421344" />
+      <entry key="W1" value="268.7207872986498" />
+    </decayedCancelled>
+    <decayedSelected>
+      <entry key="MS100" value="1.0000000000000002" />
+      <entry key="MS500" value="1.000652379921089" />
+      <entry key="S2" value="1.1598177994319119" />
+      <entry key="S5" value="1.4802308532295712" />
+      <entry key="S10" value="1.6929869069683576" />
+      <entry key="S30" value="1.8849288278250707" />
+      <entry key="S60" value="1.9407065577666385" />
+      <entry key="M2" value="1.9699005867247126" />
+      <entry key="M5" value="1.991598735072857" />
+      <entry key="M10" value="2.0804975356690383" />
+      <entry key="M15" value="2.2425329293860004" />
+      <entry key="M30" value="2.7042179315881762" />
+      <entry key="H1" value="3.6676006515245483" />
+      <entry key="H2" value="9.543979501142118" />
+      <entry key="H4" value="26.0579549303106" />
+      <entry key="D1" value="73.02902942552679" />
+      <entry key="W1" value="88.16401196513003" />
     </decayedSelected>
     <decayedShown>
-      <entry key="MS100" value="0.933746460031264" />
-      <entry key="MS500" value="1.4390553203780916" />
-      <entry key="S2" value="1.8176697562978126" />
-      <entry key="S5" value="1.9228627184003297" />
-      <entry key="S10" value="1.960693448302821" />
-      <entry key="S30" value="1.9867302468683945" />
-      <entry key="S60" value="1.9933439553686527" />
-      <entry key="M2" value="1.9968057170419262" />
-      <entry key="M5" value="2.0540647307279905" />
-      <entry key="M10" value="2.407146494441592" />
-      <entry key="M15" value="2.7980602025528034" />
-      <entry key="M30" value="3.772642796227719" />
-      <entry key="H1" value="7.511630326841953" />
-      <entry key="H2" value="32.29363028542664" />
-      <entry key="H4" value="100.16353654793114" />
-      <entry key="D1" value="292.8854920799107" />
-      <entry key="W1" value="355.28866990861775" />
+      <entry key="MS100" value="0.003773188784862677" />
+      <entry key="MS500" value="0.32769241482059164" />
+      <entry key="S2" value="0.855027887883943" />
+      <entry key="S5" value="1.2900832424988584" />
+      <entry key="S10" value="1.5747595068448303" />
+      <entry key="S30" value="1.8383940006317085" />
+      <entry key="S60" value="1.9164106840266788" />
+      <entry key="M2" value="1.9639076967270355" />
+      <entry key="M5" value="2.1898575997258103" />
+      <entry key="M10" value="2.755619037101396" />
+      <entry key="M15" value="3.2964409589106265" />
+      <entry key="M30" value="4.57080496047569" />
+      <entry key="H1" value="8.20280726936461" />
+      <entry key="H2" value="31.348351290485297" />
+      <entry key="H4" value="97.4875533089369" />
+      <entry key="D1" value="292.56116117850803" />
+      <entry key="W1" value="356.88450069326916" />
     </decayedShown>
   </component>
   <component name="ProblemsViewState">
@@ -585,7 +585,15 @@
       <option name="project" value="LOCAL" />
       <updated>1788698558116</updated>
     </task>
-    <option name="localTasksCounter" value="28" />
+    <task id="LOCAL-00028" summary="feat: add client modification metadata clearing in delete commands for Product, ProductUnit, Shop, and ProductPrice">
+      <option name="closed" value="true" />
+      <created>1788699633771</created>
+      <option name="number" value="00028" />
+      <option name="presentableId" value="LOCAL-00028" />
+      <option name="project" value="LOCAL" />
+      <updated>1788699633771</updated>
+    </task>
+    <option name="localTasksCounter" value="29" />
     <option name="createChangelist" value="false" />
     <option name="createBranch" value="false" />
     <servers />
@@ -597,7 +605,6 @@
   <component name="UnityProjectConfiguration" hasMinimizedUI="false" />
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
-    <MESSAGE value="flutte project createed" />
     <MESSAGE value="Flutter project added with crud operation for category&#10;&#10;fix(Category): update accumulated hierarchy time and last focus timestamps" />
     <MESSAGE value="refactor(category): update category-related classes and improve documentation" />
     <MESSAGE value="refactor(Category): update category-related classes and improve documentation" />
@@ -622,6 +629,7 @@
     <MESSAGE value="feat: implement authentication flow with login screen and secure session management" />
     <MESSAGE value="feat: add profile management with user details and update functionality" />
     <MESSAGE value="migrstion only" />
+    <MESSAGE value="feat: add client modification metadata clearing in delete commands for Product, ProductUnit, Shop, and ProductPrice" />
     <option name="LAST_COMMIT_MESSAGE" value="" />
   </component>
   <component name="XDebuggerManager">
