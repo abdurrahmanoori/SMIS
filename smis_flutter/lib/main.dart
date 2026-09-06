@@ -10,7 +10,7 @@ import 'config/app_config.dart';
 import 'controllers/auth_controller.dart';
 import 'controllers/category_controller.dart';
 import 'data/database.dart';
-import 'screens/categories_screen.dart';
+import 'screens/home_screen.dart';
 import 'screens/login_screen.dart';
 import 'services/background_sync.dart';
 
@@ -97,6 +97,6 @@ class _AuthenticationGate extends ConsumerWidget {
         body: Center(child: CircularProgressIndicator()),
       );
     }
-    return auth.isAuthenticated ? const CategoriesScreen() : const LoginScreen();
+    return auth.isAuthenticated ? const HomeScreen() : const LoginScreen();
   }
 }

@@ -13,6 +13,14 @@ class AuthSession {
   final String email;
   final List<String> roles;
 
+  AuthSession copyWith({String? userName, String? email}) => AuthSession(
+    token: token,
+    userId: userId,
+    userName: userName ?? this.userName,
+    email: email ?? this.email,
+    roles: roles,
+  );
+
   factory AuthSession.fromJson(Map<String, dynamic> json) {
     String requiredString(String camelCase, String pascalCase) {
       final value = json[camelCase] ?? json[pascalCase];

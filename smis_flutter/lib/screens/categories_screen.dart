@@ -4,9 +4,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../controllers/auth_controller.dart';
 import '../controllers/category_controller.dart';
+import '../controllers/profile_controller.dart';
 import '../models/category.dart';
 import '../services/category_sync_service.dart';
 import '../widgets/category_form_dialog.dart';
+import 'profile_screen.dart';
 
 class CategoriesScreen extends ConsumerStatefulWidget {
   const CategoriesScreen({super.key});
@@ -65,8 +67,16 @@ class _CategoriesScreenState extends ConsumerState<CategoriesScreen>
             PopupMenuButton<String>(
               tooltip: 'Account',
               onSelected: (value) {
-                if (value == 'logout') {
-                  ref.read(authControllerProvider.notifier).logout();
+                switch (value) {
+                  case 'profile':
+                    Navigator.of(context).push(
+                      MaterialPageRoute<void>(
+                        builder: (context) => const ProfileScreen(),
+                      ),
+                    );
+                  case 'logout':
+                    ref.invalidate(profileControllerProvider);
+                    ref.read(authControllerProvider.notifier).logout();
                 }
               },
               itemBuilder: (context) => [
@@ -75,6 +85,10 @@ class _CategoriesScreenState extends ConsumerState<CategoriesScreen>
                   child: Text(user.email),
                 ),
                 const PopupMenuDivider(),
+                const PopupMenuItem<String>(
+                  value: 'profile',
+                  child: Text('My profile'),
+                ),
                 const PopupMenuItem<String>(
                   value: 'logout',
                   child: Text('Sign out'),

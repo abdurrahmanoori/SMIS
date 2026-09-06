@@ -101,8 +101,10 @@ main()
   5. Render SmisApp.
 ```
 
-`main.dart` also creates `MaterialApp`, applies the theme, and opens
-`CategoriesScreen` as the home screen.
+`main.dart` also creates `MaterialApp`, applies the theme, and uses an
+authentication gate. After a saved session is restored,
+[`home_screen.dart`](../lib/screens/home_screen.dart) opens first and provides
+entry points to Categories and My profile.
 
 When `CategoriesScreen` watches `categoryControllerProvider`, Riverpod creates
 `CategoryController`. Its `build()` method calls `_load()`:
@@ -460,7 +462,7 @@ LoginScreen
   → POST /api/Account/login
   → LoginResponseDto (token, user ID, name, email, roles)
   → FlutterSecureStorage
-  → Category screen
+  → Home screen
 ```
 
 The JWT and user details are stored as one secure-device value, not in SQLite
@@ -474,7 +476,33 @@ session has been stored, the user can open the app and continue local Category
 CRUD while offline. A later synchronization still requires a valid token and a
 connection.
 
-## 18. Configuration
+## 18. Current-user profile
+
+The account menu on the Category page opens **My profile**. The profile is
+always read from the authenticated backend user rather than from the short
+login response:
+
+```text
+ProfileScreen
+  → GET /api/Account/me?includeShop=true
+  → display account, roles, verification status, and shop information
+```
+
+The personal-details form updates only the signed-in user's first name, last
+name, email, and phone number through `PUT /api/Account/{currentUserId}`. The
+app sends only those editable fields; it never sends roles or a shop ID from
+this form. After a successful update it reloads `/me` and refreshes the email
+shown in the stored login session.
+
+Username, roles, language, shop membership, and verification flags are shown
+as account information but are not editable from the profile page. The separate
+**Change password** action sends the current and new password to
+`POST /api/Account/{currentUserId}/change-password`.
+
+Profile viewing and updates require a server connection. Category CRUD remains
+local-first and continues to work offline once a login session has been stored.
+
+## 19. Configuration
 
 [`app_config.dart`](../lib/config/app_config.dart) reads build definitions:
 
@@ -493,7 +521,7 @@ flutter run `
 Do not compile a long-lived production token into the application. The regular
 login flow stores the token in secure device storage instead.
 
-## 19. Tests
+## 20. Tests
 
 The current tests cover:
 
@@ -515,7 +543,7 @@ flutter analyze
 flutter test
 ```
 
-## 20. Following one Category through its lifetime
+## 21. Following one Category through its lifetime
 
 ```text
 1. User creates “Beverages” offline.
@@ -541,7 +569,7 @@ flutter test
    SQLite: tombstone is physically removed.
 ```
 
-## 21. Adding another entity
+## 22. Adding another entity
 
 Do not copy files mechanically before inspecting that entity's backend
 contract. IDs, tenant fields, DTOs, deletion behavior, pull endpoints, and

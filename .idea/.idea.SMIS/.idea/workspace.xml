@@ -560,7 +560,15 @@
       <option name="project" value="LOCAL" />
       <updated>1788696612467</updated>
     </task>
-    <option name="localTasksCounter" value="25" />
+    <task id="LOCAL-00025" summary="feat: implement authentication flow with login screen and secure session management">
+      <option name="closed" value="true" />
+      <created>1788697917589</created>
+      <option name="number" value="00025" />
+      <option name="presentableId" value="LOCAL-00025" />
+      <option name="project" value="LOCAL" />
+      <updated>1788697917589</updated>
+    </task>
+    <option name="localTasksCounter" value="26" />
     <option name="createChangelist" value="false" />
     <option name="createBranch" value="false" />
     <servers />
@@ -596,6 +604,7 @@
     <MESSAGE value="feat: add sync endpoints for Customer, Product, ProductPrice, ProductUnit, Shop, and UnitOfMeasure controllers" />
     <MESSAGE value="feat: implement synchronization support for Product, Customer, Shop, and UnitOfMeasure entities" />
     <MESSAGE value="feat: add validation rules and command validators for Customer, Product, ProductPrice, ProductUnit, and UnitOfMeasure synchronization" />
+    <MESSAGE value="feat: implement authentication flow with login screen and secure session management" />
     <option name="LAST_COMMIT_MESSAGE" value="" />
   </component>
   <component name="XDebuggerManager">

@@ -62,6 +62,18 @@ class AuthController extends Notifier<AuthState> {
     await _sessionStore.clear();
     state = const AuthState();
   }
+
+  Future<void> updateSessionProfile({String? userName, String? email}) async {
+    final currentSession = state.session;
+    if (currentSession == null) return;
+
+    final updatedSession = currentSession.copyWith(
+      userName: userName,
+      email: email,
+    );
+    await _sessionStore.save(updatedSession);
+    state = AuthState(session: updatedSession);
+  }
 }
 
 final authSessionStoreProvider = Provider<AuthSessionStore>(

@@ -17,6 +17,7 @@ class AppConfig {
   static const authToken = String.fromEnvironment('SMIS_AUTH_TOKEN');
 
   static const databaseName = 'smis_offline.db';
+  static const accountEndpoint = '/api/Account';
   static const loginEndpoint = '/api/Account/login';
   static const categoryEndpoint = '/api/Category';
   static const backgroundTaskIdentifier =
