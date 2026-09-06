@@ -1,11 +1,10 @@
 using SMIS.Domain.Common.BaseAbstract;
-using SMIS.Domain.Common.Interfaces;
 using SMIS.Domain.Exceptions;
-using SMIS.Domain.Services;
+using SMIS.Domain.Common.Interfaces;
 
 namespace SMIS.Domain.Entities;
 
-public class Product : BaseAuditableEntity, IEntity, IShopEntity, ISyncableEntity
+public class Product : BaseSyncableAuditableEntity, IEntity, IShopEntity
 {
     public string Name { get; set; } = string.Empty;
 
@@ -22,12 +21,6 @@ public class Product : BaseAuditableEntity, IEntity, IShopEntity, ISyncableEntit
     public string ShopId { get; private set; } = string.Empty;
 
     public string? ShopName { get; set; }
-
-    // Client sync metadata stays separate from the trusted server audit fields.
-    public DateTime? ClientCreatedDate { get; private set; }
-    public DateTime? ClientModifiedDate { get; private set; }
-    public string? ClientCreatedBy { get; private set; }
-    public string? ClientModifiedBy { get; private set; }
 
     // Navigation Properties
     public Shop Shop { get; set; } = null!;
@@ -138,39 +131,6 @@ public class Product : BaseAuditableEntity, IEntity, IShopEntity, ISyncableEntit
     public void Activate() => IsActive = true;
     public void Deactivate() => IsActive = false;
 
-    public void SetClientCreationMetadata(DateTime createdDateUtc, string? createdBy)
-    {
-        ClientCreatedDate = DateTimeService.NormalizeUtc(createdDateUtc);
-        ClientCreatedBy = NormalizeUserId(createdBy);
-    }
-
-    public void SetClientModificationMetadata(DateTime modifiedDateUtc, string? modifiedBy)
-    {
-        ClientModifiedDate = DateTimeService.NormalizeUtc(modifiedDateUtc);
-        ClientModifiedBy = NormalizeUserId(modifiedBy);
-    }
-
-    public void ClearClientModificationMetadata()
-    {
-        ClientModifiedDate = null;
-        ClientModifiedBy = null;
-    }
-
-    public void Restore()
-    {
-        IsDeleted = false;
-        DeletedAt = null;
-    }
-
-    public DateTime GetConflictModifiedUtc() => DateTimeService.NormalizeUtc(
-        ClientModifiedDate
-        ?? UpdatedDate
-        ?? ClientCreatedDate
-        ?? CreatedDate
-        ?? LastModifiedUtc);
-
-    private static string? NormalizeUserId(string? value) =>
-        string.IsNullOrWhiteSpace(value) ? null : value.Trim();
 }
 
 

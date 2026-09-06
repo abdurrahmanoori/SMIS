@@ -1,12 +1,11 @@
 using SMIS.Domain.Common.BaseAbstract;
-using SMIS.Domain.Common.Interfaces;
 using SMIS.Domain.Exceptions;
+using SMIS.Domain.Common.Interfaces;
 using SMIS.Domain.ValueObjects;
-using SMIS.Domain.Services;
 
 namespace SMIS.Domain.Entities;
 
-public class Category : BaseAuditableEntity, IShopEntity, ISyncableEntity
+public class Category : BaseSyncableAuditableEntity, IShopEntity
 {
     public string Name { get; private set; } = string.Empty;
     
@@ -18,13 +17,6 @@ public class Category : BaseAuditableEntity, IShopEntity, ISyncableEntity
     public bool IsActive { get; private set; } = true;
     
     public string ShopId { get; private set; } = string.Empty;
-
-    // Client-originated sync metadata. These fields are intentionally separate
-    // from the trusted server audit fields inherited from BaseAuditableEntity.
-    public DateTime? ClientCreatedDate { get; private set; }
-    public DateTime? ClientModifiedDate { get; private set; }
-    public string? ClientCreatedBy { get; private set; }
-    public string? ClientModifiedBy { get; private set; }
 
     // Navigation Properties
     public virtual Shop Shop { get; set; } = null!;
@@ -70,46 +62,6 @@ public class Category : BaseAuditableEntity, IShopEntity, ISyncableEntity
     public void Activate() => IsActive = true;
     public void Deactivate() => IsActive = false;
 
-    public void SetClientCreationMetadata(DateTime createdDateUtc, string? createdBy)
-    {
-        ClientCreatedDate = DateTimeService.NormalizeUtc(createdDateUtc);
-        ClientCreatedBy = NormalizeUserId(createdBy);
-    }
-
-    public void SetClientModificationMetadata(DateTime modifiedDateUtc, string? modifiedBy)
-    {
-        ClientModifiedDate = DateTimeService.NormalizeUtc(modifiedDateUtc);
-        ClientModifiedBy = NormalizeUserId(modifiedBy);
-    }
-
-    public void ClearClientModificationMetadata()
-    {
-        ClientModifiedDate = null;
-        ClientModifiedBy = null;
-    }
-
-    public void Restore()
-    {
-        IsDeleted = false;
-        DeletedAt = null;
-    }
-
-    public DateTime GetConflictModifiedUtc() => DateTimeService.NormalizeUtc(
-        ClientModifiedDate
-        ?? UpdatedDate
-        ?? ClientCreatedDate
-        ?? CreatedDate
-        ?? LastModifiedUtc);
-
-    // private static DateTime NormalizeUtc(DateTime value) => value.Kind switch
-    // {
-    //     DateTimeKind.Utc => value,
-    //     DateTimeKind.Local => value.ToUniversalTime(),
-    //     _ => DateTime.SpecifyKind(value, DateTimeKind.Utc)
-    // };
-
-    private static string? NormalizeUserId(string? value) =>
-        string.IsNullOrWhiteSpace(value) ? null : value.Trim();
 }
 
 /*

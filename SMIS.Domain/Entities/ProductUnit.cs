@@ -1,7 +1,5 @@
 ﻿using SMIS.Domain.Common.BaseAbstract;
-using SMIS.Domain.Common.Interfaces;
 using SMIS.Domain.Exceptions;
-using SMIS.Domain.Services;
 using SMIS.Domain.ValueObjects;
 
 namespace SMIS.Domain.Entities;
@@ -11,7 +9,7 @@ namespace SMIS.Domain.Entities;
 /// This entity exists because the same Unit (e.g. Box, Carton)
 /// can represent different quantities for different products.
 /// </summary>
-public class ProductUnit : BaseAuditableEntity, ISyncableEntity
+public class ProductUnit : BaseSyncableAuditableEntity
 {
     /// <summary>
     /// Foreign key to the Product.
@@ -37,10 +35,6 @@ public class ProductUnit : BaseAuditableEntity, ISyncableEntity
     /// </summary>
     public decimal ConversionFactor { get; private set; }
 
-    public DateTime? ClientCreatedDate { get; private set; }
-    public DateTime? ClientModifiedDate { get; private set; }
-    public string? ClientCreatedBy { get; private set; }
-    public string? ClientModifiedBy { get; private set; }
     public DateTime ConflictModifiedUtc => GetConflictModifiedUtc();
 
     /// <summary>
@@ -89,39 +83,6 @@ public class ProductUnit : BaseAuditableEntity, ISyncableEntity
     public void SetProductName(string? productName) => ProductName = productName?.Trim();
     public void SetUnitName(string? unitName) => UnitName = unitName?.Trim();
 
-    public void SetClientCreationMetadata(DateTime createdDateUtc, string? createdBy)
-    {
-        ClientCreatedDate = DateTimeService.NormalizeUtc(createdDateUtc);
-        ClientCreatedBy = NormalizeUserId(createdBy);
-    }
-
-    public void SetClientModificationMetadata(DateTime modifiedDateUtc, string? modifiedBy)
-    {
-        ClientModifiedDate = DateTimeService.NormalizeUtc(modifiedDateUtc);
-        ClientModifiedBy = NormalizeUserId(modifiedBy);
-    }
-
-    public void ClearClientModificationMetadata()
-    {
-        ClientModifiedDate = null;
-        ClientModifiedBy = null;
-    }
-
-    public void Restore()
-    {
-        IsDeleted = false;
-        DeletedAt = null;
-    }
-
-    public DateTime GetConflictModifiedUtc() => DateTimeService.NormalizeUtc(
-        ClientModifiedDate
-        ?? UpdatedDate
-        ?? ClientCreatedDate
-        ?? CreatedDate
-        ?? LastModifiedUtc);
-
-    private static string? NormalizeUserId(string? value) =>
-        string.IsNullOrWhiteSpace(value) ? null : value.Trim();
 }
 
 

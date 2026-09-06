@@ -1,13 +1,11 @@
 using SMIS.Domain.Common.BaseAbstract;
-using SMIS.Domain.Common.Interfaces;
 using SMIS.Domain.Enums;
 using SMIS.Domain.Exceptions;
 using SMIS.Domain.ValueObjects;
-using SMIS.Domain.Services;
 
 namespace SMIS.Domain.Entities;
 
-public class Shop : BaseAuditableEntity, ISyncableEntity
+public class Shop : BaseSyncableAuditableEntity
 {
     public string Name { get; private set; } = string.Empty;
     public ShopType ShopType { get; private set; }
@@ -17,18 +15,6 @@ public class Shop : BaseAuditableEntity, ISyncableEntity
     public string? TaxNumber { get; private set; } = string.Empty;
     public bool IsActive { get; private set; } = true;
 
-    // ISyncableEntity properties (mobile sync)
-    public bool IsSyncedToServer { get; set; }
-    public DateTime? LastSyncedAt { get; set; }
-    public DateTime LastModifiedUtc { get; set; }
-
-    // Client-originated sync metadata stays separate from the trusted server
-    // audit fields inherited from BaseAuditableEntity.
-    public DateTime? ClientCreatedDate { get; private set; }
-    public DateTime? ClientModifiedDate { get; private set; }
-    public string? ClientCreatedBy { get; private set; }
-    public string? ClientModifiedBy { get; private set; }
-
     // Navigation Properties
     //public virtual ICollection<Product> Products { get; set; } = new List<Product>();
     //public virtual ICollection<Invoice> IssuedInvoices { get; set; } = new List<Invoice>();
@@ -37,7 +23,10 @@ public class Shop : BaseAuditableEntity, ISyncableEntity
     //public virtual ICollection<ShopCreditAccount> CreditAccountsAsCreditor { get; set; } = new List<ShopCreditAccount>();
     //public virtual ICollection<ShopCreditAccount> CreditAccountsAsDebtor { get; set; } = new List<ShopCreditAccount>();
 
-    internal Shop() { } // EF Core & Seeding
+    internal Shop()
+    {
+        IsSyncedToServer = false;
+    } // EF Core & Seeding
 
     public static Shop Create(string name, ShopType shopType, string? address = null, string? phoneNumber = null, string? email = null, string? taxNumber = null, bool isActive = true)
     {
@@ -106,37 +95,4 @@ public class Shop : BaseAuditableEntity, ISyncableEntity
     public void Activate() => IsActive = true;
     public void Deactivate() => IsActive = false;
 
-    public void SetClientCreationMetadata(DateTime createdDateUtc, string? createdBy)
-    {
-        ClientCreatedDate = DateTimeService.NormalizeUtc(createdDateUtc);
-        ClientCreatedBy = NormalizeUserId(createdBy);
-    }
-
-    public void SetClientModificationMetadata(DateTime modifiedDateUtc, string? modifiedBy)
-    {
-        ClientModifiedDate = DateTimeService.NormalizeUtc(modifiedDateUtc);
-        ClientModifiedBy = NormalizeUserId(modifiedBy);
-    }
-
-    public void ClearClientModificationMetadata()
-    {
-        ClientModifiedDate = null;
-        ClientModifiedBy = null;
-    }
-
-    public void Restore()
-    {
-        IsDeleted = false;
-        DeletedAt = null;
-    }
-
-    public DateTime GetConflictModifiedUtc() => DateTimeService.NormalizeUtc(
-        ClientModifiedDate
-        ?? UpdatedDate
-        ?? ClientCreatedDate
-        ?? CreatedDate
-        ?? LastModifiedUtc);
-
-    private static string? NormalizeUserId(string? value) =>
-        string.IsNullOrWhiteSpace(value) ? null : value.Trim();
 }
