@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../controllers/auth_controller.dart';
 import '../controllers/category_controller.dart';
 import '../controllers/profile_controller.dart';
+import '../widgets/app_drawer.dart';
 import 'categories_screen.dart';
 import 'profile_screen.dart';
 
@@ -23,43 +24,8 @@ class HomeScreen extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('SMIS'),
-        actions: [
-          PopupMenuButton<String>(
-            tooltip: 'Account',
-            onSelected: (value) {
-              switch (value) {
-                case 'profile':
-                  _openProfile(context);
-                case 'logout':
-                  ref.invalidate(profileControllerProvider);
-                  ref.read(authControllerProvider.notifier).logout();
-              }
-            },
-            itemBuilder: (context) => [
-              PopupMenuItem<String>(
-                enabled: false,
-                child: Text(session.email),
-              ),
-              const PopupMenuDivider(),
-              const PopupMenuItem<String>(
-                value: 'profile',
-                child: Text('My profile'),
-              ),
-              const PopupMenuItem<String>(
-                value: 'logout',
-                child: Text('Sign out'),
-              ),
-            ],
-            child: Padding(
-              padding: const EdgeInsets.all(8),
-              child: CircleAvatar(
-                child: Text(session.userName.characters.first.toUpperCase()),
-              ),
-            ),
-          ),
-          const SizedBox(width: 8),
-        ],
       ),
+      drawer: const AppDrawer(),
       body: SafeArea(
         child: Center(
           child: ConstrainedBox(

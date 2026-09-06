@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../controllers/profile_controller.dart';
 import '../data/profile_api.dart';
 import '../models/user_profile.dart';
+import '../widgets/app_drawer.dart';
 
 class ProfileScreen extends ConsumerWidget {
   const ProfileScreen({super.key});
@@ -24,6 +25,7 @@ class ProfileScreen extends ConsumerWidget {
           const SizedBox(width: 8),
         ],
       ),
+      drawer: const AppDrawer(),
       body: SafeArea(
         child: profile.when(
           loading: () => const Center(child: CircularProgressIndicator()),

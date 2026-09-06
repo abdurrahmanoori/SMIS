@@ -1,0 +1,89 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import '../controllers/auth_controller.dart';
+import '../controllers/category_controller.dart';
+import '../controllers/profile_controller.dart';
+import '../screens/categories_screen.dart';
+import '../screens/home_screen.dart';
+import '../screens/profile_screen.dart';
+
+class AppDrawer extends ConsumerWidget {
+  const AppDrawer({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final session = ref.watch(authControllerProvider).session;
+    final categoryState = ref.watch(categoryControllerProvider);
+    final pendingCount = categoryState.value?.pendingCount ?? 0;
+
+    if (session == null) return const SizedBox.shrink();
+
+    return Drawer(
+      child: Column(
+        children: [
+          UserAccountsDrawerHeader(
+            accountName: Text(session.userName),
+            accountEmail: Text(session.email),
+            currentAccountPicture: CircleAvatar(
+              backgroundColor: Theme.of(context).colorScheme.primaryContainer,
+              child: Text(
+                session.userName.characters.first.toUpperCase(),
+                style: TextStyle(
+                  fontSize: 24,
+                  color: Theme.of(context).colorScheme.onPrimaryContainer,
+                ),
+              ),
+            ),
+          ),
+          ListTile(
+            leading: const Icon(Icons.home_outlined),
+            title: const Text('Home'),
+            onTap: () {
+              Navigator.of(context).pop();
+              Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute<void>(builder: (context) => HomeScreen()),
+                (route) => false,
+              );
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.category_outlined),
+            title: const Text('Categories'),
+            trailing: pendingCount > 0
+                ? Badge(label: Text('$pendingCount'))
+                : null,
+            onTap: () {
+              Navigator.of(context).pop();
+              Navigator.of(context).pushReplacement(
+                MaterialPageRoute<void>(builder: (context) => CategoriesScreen()),
+              );
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.person_outline),
+            title: const Text('My Profile'),
+            onTap: () {
+              Navigator.of(context).pop();
+              Navigator.of(context).pushReplacement(
+                MaterialPageRoute<void>(builder: (context) => ProfileScreen()),
+              );
+            },
+          ),
+          const Spacer(),
+          const Divider(),
+          ListTile(
+            leading: const Icon(Icons.logout),
+            title: const Text('Sign Out'),
+            onTap: () {
+              Navigator.of(context).pop();
+              ref.invalidate(profileControllerProvider);
+              ref.read(authControllerProvider.notifier).logout();
+            },
+          ),
+          const SizedBox(height: 16),
+        ],
+      ),
+    );
+  }
+}

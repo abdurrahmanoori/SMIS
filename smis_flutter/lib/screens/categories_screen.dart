@@ -7,6 +7,7 @@ import '../controllers/category_controller.dart';
 import '../controllers/profile_controller.dart';
 import '../models/category.dart';
 import '../services/category_sync_service.dart';
+import '../widgets/app_drawer.dart';
 import '../widgets/category_form_dialog.dart';
 import 'profile_screen.dart';
 
@@ -63,47 +64,10 @@ class _CategoriesScreenState extends ConsumerState<CategoriesScreen>
             ),
             orElse: () => const SizedBox.shrink(),
           ),
-          if (authenticatedUser case final user?)
-            PopupMenuButton<String>(
-              tooltip: 'Account',
-              onSelected: (value) {
-                switch (value) {
-                  case 'profile':
-                    Navigator.of(context).push(
-                      MaterialPageRoute<void>(
-                        builder: (context) => const ProfileScreen(),
-                      ),
-                    );
-                  case 'logout':
-                    ref.invalidate(profileControllerProvider);
-                    ref.read(authControllerProvider.notifier).logout();
-                }
-              },
-              itemBuilder: (context) => [
-                PopupMenuItem<String>(
-                  enabled: false,
-                  child: Text(user.email),
-                ),
-                const PopupMenuDivider(),
-                const PopupMenuItem<String>(
-                  value: 'profile',
-                  child: Text('My profile'),
-                ),
-                const PopupMenuItem<String>(
-                  value: 'logout',
-                  child: Text('Sign out'),
-                ),
-              ],
-              child: Padding(
-                padding: const EdgeInsets.all(8),
-                child: CircleAvatar(
-                  child: Text(user.userName.characters.first.toUpperCase()),
-                ),
-              ),
-            ),
           const SizedBox(width: 12),
         ],
       ),
+      drawer: const AppDrawer(),
       body: SafeArea(
         child: Center(
           child: ConstrainedBox(

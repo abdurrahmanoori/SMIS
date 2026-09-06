@@ -593,7 +593,15 @@
       <option name="project" value="LOCAL" />
       <updated>1788699633771</updated>
     </task>
-    <option name="localTasksCounter" value="29" />
+    <task id="LOCAL-00029" summary="feat: update user profile management to include username and language selection">
+      <option name="closed" value="true" />
+      <created>1788700855080</created>
+      <option name="number" value="00029" />
+      <option name="presentableId" value="LOCAL-00029" />
+      <option name="project" value="LOCAL" />
+      <updated>1788700855080</updated>
+    </task>
+    <option name="localTasksCounter" value="30" />
     <option name="createChangelist" value="false" />
     <option name="createBranch" value="false" />
     <servers />
@@ -605,7 +613,6 @@
   <component name="UnityProjectConfiguration" hasMinimizedUI="false" />
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
-    <MESSAGE value="Flutter project added with crud operation for category&#10;&#10;fix(Category): update accumulated hierarchy time and last focus timestamps" />
     <MESSAGE value="refactor(category): update category-related classes and improve documentation" />
     <MESSAGE value="refactor(Category): update category-related classes and improve documentation" />
     <MESSAGE value="refactor(Category): enhance documentation and comments across data source and model files" />
@@ -630,6 +637,7 @@
     <MESSAGE value="feat: add profile management with user details and update functionality" />
     <MESSAGE value="migrstion only" />
     <MESSAGE value="feat: add client modification metadata clearing in delete commands for Product, ProductUnit, Shop, and ProductPrice" />
+    <MESSAGE value="feat: update user profile management to include username and language selection" />
     <option name="LAST_COMMIT_MESSAGE" value="" />
   </component>
   <component name="XDebuggerManager">
