@@ -94,6 +94,7 @@
     <setting file="file://$PROJECT_DIR$/SMIS.Application/Services/IApplicationDbContext.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="gitIndexFs://ce9ec9ff:E\:/Repo/SMIS:E\:/Repo/SMIS/SMIS.Application/Common/Validation/SyncValidationRules.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="gitIndexFs://ce9ec9ff:E\:/Repo/SMIS:E\:/Repo/SMIS/SMIS.Application/Features/ProductPrices/Validators/ProductPriceSyncCommandValidators.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="gitIndexFs://ce9ec9ff:E\:/Repo/SMIS:E\:/Repo/SMIS/SMIS.Infrastructure.Server/Migrations/20260906123656_clinetRelatedFiledAdd.cs" root0="SKIP_HIGHLIGHTING" />
   </component>
   <component name="InvalidFacetManager">
     <ignored-facets>
@@ -107,61 +108,61 @@
   <component name="MetaFilesCheckinStateConfiguration" checkMetaFiles="true" />
   <component name="NextEditCompletionFeaturesState">
     <decayedCancelled>
-      <entry key="MS100" value="9.603944931673909E-33" />
-      <entry key="MS500" value="3.9490254465796756E-7" />
-      <entry key="S2" value="0.0250681614485152" />
-      <entry key="S5" value="0.22890168689312076" />
-      <entry key="S10" value="0.47843671148138367" />
-      <entry key="S30" value="0.7821225943820193" />
-      <entry key="S60" value="0.8843769526519896" />
-      <entry key="M2" value="0.9404131818791087" />
-      <entry key="M5" value="0.9757252564668024" />
-      <entry key="M10" value="0.988856709965116" />
-      <entry key="M15" value="1.0127561394483051" />
-      <entry key="M30" value="1.4317383731136077" />
-      <entry key="H1" value="4.863600590087656" />
-      <entry key="H2" value="25.95607704320792" />
-      <entry key="H4" value="79.22719723281963" />
-      <entry key="D1" value="222.33740337568116" />
-      <entry key="W1" value="267.5538088575867" />
+      <entry key="MS100" value="1.0236830713517249" />
+      <entry key="MS500" value="1.473028823362798" />
+      <entry key="S2" value="1.8293195458144416" />
+      <entry key="S5" value="1.9278734764712826" />
+      <entry key="S10" value="1.9632618940201478" />
+      <entry key="S30" value="1.9876008614453724" />
+      <entry key="S60" value="1.9937810953908415" />
+      <entry key="M2" value="1.9969311756406203" />
+      <entry key="M5" value="2.017081414220665" />
+      <entry key="M10" value="2.1349048825606722" />
+      <entry key="M15" value="2.268801586121813" />
+      <entry key="M30" value="2.7379729297228153" />
+      <entry key="H1" value="5.4921631761857554" />
+      <entry key="H2" value="23.99443477929821" />
+      <entry key="H4" value="74.93089219809292" />
+      <entry key="D1" value="221.28996196589725" />
+      <entry key="W1" value="269.0268202735028" />
     </decayedCancelled>
     <decayedSelected>
-      <entry key="MS100" value="1.0" />
-      <entry key="MS500" value="1.000005585043701" />
-      <entry key="S2" value="1.0486134724691256" />
-      <entry key="S5" value="1.2983339357579304" />
-      <entry key="S10" value="1.546199538408749" />
-      <entry key="S30" value="1.8174297562222903" />
-      <entry key="S60" value="1.9041182202689482" />
-      <entry key="M2" value="1.9508513134391456" />
-      <entry key="M5" value="1.9800428042146787" />
-      <entry key="M10" value="1.989971114088052" />
-      <entry key="M15" value="1.993306164676521" />
-      <entry key="M30" value="2.0079428601122244" />
-      <entry key="H1" value="2.813536618848671" />
-      <entry key="H2" value="9.796648493694965" />
-      <entry key="H4" value="27.414931145034135" />
-      <entry key="D1" value="72.59222629400927" />
-      <entry key="W1" value="86.4323877673281" />
+      <entry key="MS100" value="0.0" />
+      <entry key="MS500" value="0.0" />
+      <entry key="S2" value="1.2297453181604121E-259" />
+      <entry key="S5" value="3.4758922617004475E-104" />
+      <entry key="S10" value="2.5299124263578468E-52" />
+      <entry key="S30" value="9.94040968881234E-18" />
+      <entry key="S60" value="4.453149071231443E-9" />
+      <entry key="M2" value="9.434324994238114E-5" />
+      <entry key="M5" value="0.037193688014205584" />
+      <entry key="M10" value="0.27273702870472155" />
+      <entry key="M15" value="0.529873538315247" />
+      <entry key="M30" value="1.0352624471046339" />
+      <entry key="H1" value="2.020236100237772" />
+      <entry key="H2" value="8.301418402607812" />
+      <entry key="H4" value="25.23623415162228" />
+      <entry key="D1" value="71.59725091606172" />
+      <entry key="W1" value="86.26214601912945" />
     </decayedSelected>
     <decayedShown>
-      <entry key="MS100" value="0.014278616409834377" />
-      <entry key="MS500" value="0.4275019085762963" />
-      <entry key="S2" value="0.8566708578324128" />
-      <entry key="S5" value="1.3666231175577312" />
-      <entry key="S10" value="1.9043383261539453" />
-      <entry key="S30" value="2.5439318403618563" />
-      <entry key="S60" value="2.758122243698931" />
-      <entry key="M2" value="2.8753799514502294" />
-      <entry key="M5" value="2.949238825987038" />
-      <entry key="M10" value="2.975533281733738" />
-      <entry key="M15" value="3.0038591227988745" />
-      <entry key="M30" value="3.438560271404077" />
-      <entry key="H1" value="7.676076499317493" />
-      <entry key="H2" value="35.75010657508191" />
-      <entry key="H4" value="106.63823064797367" />
-      <entry key="D1" value="294.92788526302735" />
-      <entry key="W1" value="353.98589969961165" />
+      <entry key="MS100" value="0.933746460031264" />
+      <entry key="MS500" value="1.4390553203780916" />
+      <entry key="S2" value="1.8176697562978126" />
+      <entry key="S5" value="1.9228627184003297" />
+      <entry key="S10" value="1.960693448302821" />
+      <entry key="S30" value="1.9867302468683945" />
+      <entry key="S60" value="1.9933439553686527" />
+      <entry key="M2" value="1.9968057170419262" />
+      <entry key="M5" value="2.0540647307279905" />
+      <entry key="M10" value="2.407146494441592" />
+      <entry key="M15" value="2.7980602025528034" />
+      <entry key="M30" value="3.772642796227719" />
+      <entry key="H1" value="7.511630326841953" />
+      <entry key="H2" value="32.29363028542664" />
+      <entry key="H4" value="100.16353654793114" />
+      <entry key="D1" value="292.8854920799107" />
+      <entry key="W1" value="355.28866990861775" />
     </decayedShown>
   </component>
   <component name="ProblemsViewState">
@@ -568,7 +569,23 @@
       <option name="project" value="LOCAL" />
       <updated>1788697917589</updated>
     </task>
-    <option name="localTasksCounter" value="26" />
+    <task id="LOCAL-00026" summary="feat: add profile management with user details and update functionality">
+      <option name="closed" value="true" />
+      <created>1788698543905</created>
+      <option name="number" value="00026" />
+      <option name="presentableId" value="LOCAL-00026" />
+      <option name="project" value="LOCAL" />
+      <updated>1788698543907</updated>
+    </task>
+    <task id="LOCAL-00027" summary="migrstion only">
+      <option name="closed" value="true" />
+      <created>1788698558116</created>
+      <option name="number" value="00027" />
+      <option name="presentableId" value="LOCAL-00027" />
+      <option name="project" value="LOCAL" />
+      <updated>1788698558116</updated>
+    </task>
+    <option name="localTasksCounter" value="28" />
     <option name="createChangelist" value="false" />
     <option name="createBranch" value="false" />
     <servers />
@@ -580,8 +597,6 @@
   <component name="UnityProjectConfiguration" hasMinimizedUI="false" />
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
-    <MESSAGE value="just some task" />
-    <MESSAGE value="some ide realted upate" />
     <MESSAGE value="flutte project createed" />
     <MESSAGE value="Flutter project added with crud operation for category&#10;&#10;fix(Category): update accumulated hierarchy time and last focus timestamps" />
     <MESSAGE value="refactor(category): update category-related classes and improve documentation" />
@@ -605,6 +620,8 @@
     <MESSAGE value="feat: implement synchronization support for Product, Customer, Shop, and UnitOfMeasure entities" />
     <MESSAGE value="feat: add validation rules and command validators for Customer, Product, ProductPrice, ProductUnit, and UnitOfMeasure synchronization" />
     <MESSAGE value="feat: implement authentication flow with login screen and secure session management" />
+    <MESSAGE value="feat: add profile management with user details and update functionality" />
+    <MESSAGE value="migrstion only" />
     <option name="LAST_COMMIT_MESSAGE" value="" />
   </component>
   <component name="XDebuggerManager">

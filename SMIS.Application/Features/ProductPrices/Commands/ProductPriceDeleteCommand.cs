@@ -26,6 +26,7 @@ internal sealed class ProductPriceDeleteCommandHandler : IRequestHandler<Product
             return Result<Unit>.NotFoundResult(request?.Id);
         }
 
+        entity.ClearClientModificationMetadata();
         await _productPriceRepository.RemoveAsync(entity);
         await _unitOfWork.SaveChanges(cancellationToken);
         return Result<Unit>.SuccessResult(Unit.Value);

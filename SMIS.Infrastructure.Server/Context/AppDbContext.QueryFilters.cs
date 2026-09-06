@@ -15,4 +15,10 @@ public partial class AppDbContext
             !e.IsDeleted &&
             (_currentUser.IsSuperAdmin() || e.ShopId == _currentUser.GetShopId()));
     }
+
+    private void SetSoftDeleteFilter<TEntity>(ModelBuilder modelBuilder)
+        where TEntity : class, ISoftDeletable
+    {
+        modelBuilder.Entity<TEntity>().HasQueryFilter(e => !e.IsDeleted);
+    }
 }

@@ -26,6 +26,7 @@ namespace SMIS.Application.Features.UnitOfMeasures.Commands
                 return Result<Unit>.NotFoundResult(request.Id);
             }
 
+            entity.ClearClientModificationMetadata();
             await _unitOfMeasureRepository.RemoveAsync(entity);
             await _unitOfWork.SaveChanges(cancellationToken);
             return Result<Unit>.SuccessResult(Unit.Value);

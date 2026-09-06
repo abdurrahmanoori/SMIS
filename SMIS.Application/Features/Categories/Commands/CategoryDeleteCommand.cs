@@ -34,6 +34,7 @@ namespace SMIS.Application.Features.Categories.Commands
 
             // Physical remove — SoftDeleteInterceptor converts this to a soft delete
             // transparently before EF Core hits the database.
+            entity.ClearClientModificationMetadata();
             await _categoryRepository.RemoveAsync(entity);
             await _unitOfWork.SaveChanges(cancellationToken);
             return Result<Unit>.SuccessResult(Unit.Value);

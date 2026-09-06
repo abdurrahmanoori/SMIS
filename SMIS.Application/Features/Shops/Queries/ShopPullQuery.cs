@@ -5,6 +5,7 @@ using SMIS.Application.Common.Response;
 using SMIS.Application.DTO.Shops;
 using SMIS.Application.Identity.IServices;
 using SMIS.Application.Repositories.Shops;
+using SMIS.Domain.Services;
 
 namespace SMIS.Application.Features.Shops.Queries
 {
@@ -30,10 +31,11 @@ namespace SMIS.Application.Features.Shops.Queries
         {
         var userShopId = _currentUser.GetShopId();
         var isSuperAdmin = _currentUser.IsSuperAdmin();
+        var changedSinceUtc = DateTimeService.NormalizeUtc(request.ChangedSince);
 
         var shops = await _shopRepository.GetAllQueryable()
                 .IgnoreQueryFilters() // Include soft-deleted records
-                .Where(e => e.LastModifiedUtc > request.ChangedSince &&
+                .Where(e => e.LastModifiedUtc > changedSinceUtc &&
                             (isSuperAdmin || e.Id == userShopId))
                 .ToListAsync(cancellationToken);
 

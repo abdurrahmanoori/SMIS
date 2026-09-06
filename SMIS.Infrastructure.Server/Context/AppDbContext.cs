@@ -70,8 +70,9 @@ public partial class AppDbContext : IdentityDbContext<ApplicationUser, Applicati
             }
         }
 
-        // Apply global query filters: shop-scope + soft-delete combined.
-        // Only entities implementing both IShopEntity and ISoftDeletable get this filter.
+        // Hide tombstones from normal queries. Shop-owned entities also receive
+        // the current-shop restriction. Sync pull queries explicitly bypass
+        // these filters so deletions can still be propagated to clients.
         foreach (var entityType in modelBuilder.Model.GetEntityTypes())
         {
             var clrType = entityType.ClrType;
@@ -80,6 +81,13 @@ public partial class AppDbContext : IdentityDbContext<ApplicationUser, Applicati
             {
                 var method = typeof(AppDbContext)
                     .GetMethod(nameof(SetShopEntityFilter), BindingFlags.NonPublic | BindingFlags.Instance)!
+                    .MakeGenericMethod(clrType);
+                method.Invoke(this, new object[] { modelBuilder });
+            }
+            else if (typeof(ISoftDeletable).IsAssignableFrom(clrType))
+            {
+                var method = typeof(AppDbContext)
+                    .GetMethod(nameof(SetSoftDeleteFilter), BindingFlags.NonPublic | BindingFlags.Instance)!
                     .MakeGenericMethod(clrType);
                 method.Invoke(this, new object[] { modelBuilder });
             }

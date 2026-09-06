@@ -4,6 +4,7 @@ using SMIS.Application.Repositories.Base;
 using SMIS.Infrastructure.Server.Context;
 
 namespace SMIS.Infrastructure.Server.Repositories.Base;
+
 /// <summary>
 /// Unit of work is deprecated and will be removed in future versions. Use the DbContext directly instead. or using dbContext from the repository
 /// which is basically in the Generic Repository. The Unit of Work pattern is not necessary
@@ -21,7 +22,7 @@ public sealed class UnitOfWork : IUnitOfWork
         _context = context;
     }
 
-    public Task SaveChanges(
+    public async Task SaveChanges(
         CancellationToken cancellationToken
     )
     {
@@ -90,8 +91,7 @@ public sealed class UnitOfWork : IUnitOfWork
             .ToList();
 
 
-        _context.SaveChangesAsync(cancellationToken);
-        return Task.CompletedTask;
+        await _context.SaveChangesAsync(cancellationToken);
     }
 
     public async Task StartTransactionAsync(
