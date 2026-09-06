@@ -114,8 +114,6 @@ public class LoanAccount : BaseAuditableEntity, IShopEntity
 
     public void SetNotes(string? notes)
     {
-        if (!string.IsNullOrWhiteSpace(notes) && notes.Length > 500)
-            throw new DomainValidationException("Notes cannot exceed 500 characters");
         Notes = string.IsNullOrWhiteSpace(notes) ? null : notes.Trim();
     }
 

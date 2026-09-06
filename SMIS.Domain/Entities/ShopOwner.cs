@@ -65,28 +65,16 @@ public class ShopOwner : BaseAuditableEntity, IShopEntity
 
     public void SetFirstName(string? firstName)
     {
-        if (string.IsNullOrEmpty(firstName))
-        {
-            throw new DomainValidationException("First name cannot be empty");
-        }
-        if (firstName?.Length > 100)
-            throw new DomainValidationException("First name cannot exceed 100 characters");
-
         FirstName = firstName?.Trim();
     }
 
     public void SetLastName(string? lastName)
     {
-        if (lastName?.Length > 100)
-            throw new DomainValidationException("Last name cannot exceed 100 characters");
-
         LastName = lastName?.Trim();
     }
 
     public void SetNationalIdCardNumber(string? idCardNumber)
     {
-        if (idCardNumber?.Length > 50)
-            throw new DomainValidationException("National ID Card Number cannot exceed 50 characters");
         NationalIdCardNumber = idCardNumber?.Trim();
     }
 
@@ -118,9 +106,6 @@ public class ShopOwner : BaseAuditableEntity, IShopEntity
 
     public void SetAddress(string? address)
     {
-        if (address?.Length > 500)
-            throw new DomainValidationException("Address cannot exceed 500 characters");
-
         Address = address?.Trim();
     }
 

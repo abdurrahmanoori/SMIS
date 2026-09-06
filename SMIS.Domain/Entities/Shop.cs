@@ -46,12 +46,6 @@ public class Shop : BaseAuditableEntity, ISyncableEntity
 
     public void SetName(string name)
     {
-        if (string.IsNullOrWhiteSpace(name))
-            throw new DomainValidationException("Shop name cannot be empty");
-
-        if (name.Length > 200)
-            throw new DomainValidationException("Shop name cannot exceed 200 characters");
-
         Name = name.Trim();
     }
 
@@ -65,9 +59,6 @@ public class Shop : BaseAuditableEntity, ISyncableEntity
 
     public void SetAddress(string? address)
     {
-        if (!string.IsNullOrWhiteSpace(address) && address.Length > 500)
-            throw new DomainValidationException("Address cannot exceed 500 characters");
-
         Address = address?.Trim();
     }
 

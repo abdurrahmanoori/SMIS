@@ -69,8 +69,6 @@ public class StockBatch : BaseAuditableEntityWithoutName
 
     public void SetBatchNumber(string? batchNumber)
     {
-        if (!string.IsNullOrWhiteSpace(batchNumber) && batchNumber.Length > 50)
-            throw new DomainValidationException("Batch number cannot exceed 50 characters");
         BatchNumber = string.IsNullOrWhiteSpace(batchNumber) ? null : batchNumber.Trim();
     }
 

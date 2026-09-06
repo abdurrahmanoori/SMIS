@@ -509,7 +509,15 @@
       <option name="project" value="LOCAL" />
       <updated>1788677945936</updated>
     </task>
-    <option name="localTasksCounter" value="19" />
+    <task id="LOCAL-00019" summary="refactor: update CategorySync command handlers and validators to use CategorySyncRules">
+      <option name="closed" value="true" />
+      <created>1788685170402</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1788685170402</updated>
+    </task>
+    <option name="localTasksCounter" value="20" />
     <option name="createChangelist" value="false" />
     <option name="createBranch" value="false" />
     <servers />
@@ -539,6 +547,7 @@
     <MESSAGE value="db data" />
     <MESSAGE value="back project a bit simpliyed with some breadking changes" />
     <MESSAGE value="feat: implement IApplicationDbContext interface and update AppDbContext to use it" />
+    <MESSAGE value="refactor: update CategorySync command handlers and validators to use CategorySyncRules" />
     <option name="LAST_COMMIT_MESSAGE" value="" />
   </component>
   <component name="XDebuggerManager">

@@ -53,12 +53,6 @@ public class Customer : BaseAuditableEntity, IShopEntity
 
     public void SetFirstName(string firstName)
     {
-        if (string.IsNullOrWhiteSpace(firstName))
-            throw new DomainValidationException("First name cannot be empty");
-
-        if (firstName.Length > 100)
-            throw new DomainValidationException("First name cannot exceed 100 characters");
-
         FirstName = firstName.Trim();
     }
 
@@ -77,17 +71,11 @@ public class Customer : BaseAuditableEntity, IShopEntity
 
     public void SetLastName(string? lastName)
     {
-        if (!string.IsNullOrWhiteSpace(lastName) && lastName.Length > 100)
-            throw new DomainValidationException("Last name cannot exceed 100 characters");
-
         LastName = string.IsNullOrWhiteSpace(lastName) ? null : lastName.Trim();
     }
 
     public void SetFatherName(string? fatherName)
     {
-        if (!string.IsNullOrWhiteSpace(fatherName) && fatherName.Length > 100)
-            throw new DomainValidationException("Father name cannot exceed 100 characters");
-
         FatherName = string.IsNullOrWhiteSpace(fatherName) ? null : fatherName.Trim();
     }
 
@@ -117,9 +105,6 @@ public class Customer : BaseAuditableEntity, IShopEntity
 
     public void SetAddress(string? address)
     {
-        if (!string.IsNullOrWhiteSpace(address) && address.Length > 500)
-            throw new DomainValidationException("Address cannot exceed 500 characters");
-
         Address = string.IsNullOrWhiteSpace(address) ? null : address.Trim();
     }
 

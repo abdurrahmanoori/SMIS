@@ -45,12 +45,6 @@ public class Product : BaseAuditableEntity, IEntity, IShopEntity
 
     public void SetName(string name)
     {
-        if (string.IsNullOrWhiteSpace(name))
-            throw new DomainValidationException("Product name cannot be empty");
-
-        if (name.Length > 200)
-            throw new DomainValidationException("Product name cannot exceed 200 characters");
-
         Name = name.Trim();
     }
 
@@ -78,9 +72,6 @@ public class Product : BaseAuditableEntity, IEntity, IShopEntity
 
     public void SetDescription(string? description)
     {
-        if (description?.Length > 1000)
-            throw new DomainValidationException("Description cannot exceed 1000 characters");
-
         Description = description?.Trim();
     }
 
@@ -92,9 +83,6 @@ public class Product : BaseAuditableEntity, IEntity, IShopEntity
 
     public void SetImageUrl(string? imageUrl)
     {
-        if (imageUrl?.Length > 500)
-            throw new DomainValidationException("Image URL cannot exceed 500 characters");
-
         ImageUrl = imageUrl?.Trim();
     }
 

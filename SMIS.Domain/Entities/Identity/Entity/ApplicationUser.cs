@@ -41,12 +41,6 @@ public class ApplicationUser : IdentityUser<string>, IEntityPK
 
     public void SetUserName(string userName)
     {
-        if (string.IsNullOrWhiteSpace(userName))
-            throw new DomainValidationException("Username cannot be empty");
-
-        if (userName.Length > 256)
-            throw new DomainValidationException("Username cannot exceed 256 characters");
-
         UserName = userName.Trim();
     }
 
@@ -66,17 +60,11 @@ public class ApplicationUser : IdentityUser<string>, IEntityPK
 
     public void SetFirstName(string? firstName)
     {
-        if (firstName?.Length > 100)
-            throw new DomainValidationException("First name cannot exceed 100 characters");
-
         FirstName = firstName?.Trim();
     }
 
     public void SetLastName(string? lastName)
     {
-        if (lastName?.Length > 100)
-            throw new DomainValidationException("Last name cannot exceed 100 characters");
-
         LastName = lastName?.Trim();
     }
 

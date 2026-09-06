@@ -44,9 +44,6 @@ public class UnitOfMeasure : EntityPK
 
     public void SetDescription(string? description)
     {
-        if (description?.Length > 500)
-            throw new DomainValidationException("Description cannot exceed 500 characters");
-
         Description = description?.Trim();
     }
 
