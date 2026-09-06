@@ -12,10 +12,14 @@ using SMIS.Domain.Entities.Localization;
 using SMIS.Domain.Entities.LocationEntities;
 using SMIS.Infrastructure.Server.DatabaseSeeders;
 using System.Reflection;
+using SMIS.Application.Services;
 
 namespace SMIS.Infrastructure.Server.Context;
 
-public partial class AppDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, string, IdentityUserClaim<string>, ApplicationUserRole, IdentityUserLogin<string>, IdentityRoleClaim<string>, IdentityUserToken<string>>
+public partial class AppDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, string,
+        IdentityUserClaim<string>, ApplicationUserRole, IdentityUserLogin<string>, IdentityRoleClaim<string>,
+        IdentityUserToken<string>>,
+    IApplicationDbContext
 {
     private readonly ICurrentUser _currentUser;
 
@@ -23,12 +27,17 @@ public partial class AppDbContext : IdentityDbContext<ApplicationUser, Applicati
     //{
     //}
 
-    public AppDbContext(DbContextOptions options, ICurrentUser currentUser) : base(options)
+    public AppDbContext(
+        DbContextOptions options,
+        ICurrentUser currentUser
+    ) : base(options)
     {
         _currentUser = currentUser;
     }
 
-    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    protected override void OnModelCreating(
+        ModelBuilder modelBuilder
+    )
     {
         base.OnModelCreating(modelBuilder);
 
@@ -77,20 +86,24 @@ public partial class AppDbContext : IdentityDbContext<ApplicationUser, Applicati
         }
 
 
-
         // Allow extension from other layers via partial method
         OnModelCreatingPartial(modelBuilder);
     }
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+
+    protected override void OnConfiguring(
+        DbContextOptionsBuilder optionsBuilder
+    )
     {
         base.OnConfiguring(optionsBuilder);
 
 
         optionsBuilder.ConfigureWarnings(warnings =>
-   warnings.Ignore(RelationalEventId.PendingModelChangesWarning));
+            warnings.Ignore(RelationalEventId.PendingModelChangesWarning));
     }
 
-    partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
+    partial void OnModelCreatingPartial(
+        ModelBuilder modelBuilder
+    );
 
     public DbSet<Province> Provinces { get; set; }
     public DbSet<ProvinceTranslation> ProvinceTranslations { get; set; }

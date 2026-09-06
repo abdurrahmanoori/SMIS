@@ -90,6 +90,7 @@
   <component name="HighlightingSettingsPerFile">
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/0b7856b364e04283a10bb924825b197f28f228/bc/87b86347/EntityFrameworkQueryableExtensions.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/9c31640fb7734f77994409ff691e2328239728/07/f64c2950/LocalhostListenOptions.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/SMIS.Application/Services/IApplicationDbContext.cs" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="InvalidFacetManager">
     <ignored-facets>
@@ -104,60 +105,60 @@
   <component name="NextEditCompletionFeaturesState">
     <decayedCancelled>
       <entry key="MS100" value="1.0" />
-      <entry key="MS500" value="1.0004898077871103" />
-      <entry key="S2" value="1.2685477726888146" />
-      <entry key="S5" value="2.7275848453426104" />
-      <entry key="S10" value="5.698425249063405" />
-      <entry key="S30" value="11.410120674279428" />
-      <entry key="S60" value="13.875260755193693" />
-      <entry key="M2" value="15.345751862732303" />
-      <entry key="M5" value="16.600800612656087" />
-      <entry key="M10" value="19.571057897125982" />
-      <entry key="M15" value="24.4541717606682" />
-      <entry key="M30" value="43.80909197821963" />
-      <entry key="H1" value="80.91949161126213" />
-      <entry key="H2" value="128.9750788376034" />
-      <entry key="H4" value="174.01640227546199" />
-      <entry key="D1" value="234.16441988059137" />
-      <entry key="W1" value="247.64096572442048" />
+      <entry key="MS500" value="1.0" />
+      <entry key="S2" value="1.0" />
+      <entry key="S5" value="1.0" />
+      <entry key="S10" value="1.0000000018778428" />
+      <entry key="S30" value="1.011491785778958" />
+      <entry key="S60" value="1.6068797459054673" />
+      <entry key="M2" value="5.458590827874964" />
+      <entry key="M5" value="15.934262426171275" />
+      <entry key="M10" value="25.06399927138458" />
+      <entry key="M15" value="32.16269848327494" />
+      <entry key="M30" value="53.4683938285691" />
+      <entry key="H1" value="91.7600017569726" />
+      <entry key="H2" value="141.28562925637388" />
+      <entry key="H4" value="187.91570199225603" />
+      <entry key="D1" value="250.4789940202144" />
+      <entry key="W1" value="264.53764202924805" />
     </decayedCancelled>
     <decayedSelected>
-      <entry key="MS100" value="7.968165380027306E-80" />
-      <entry key="MS500" value="1.5145083352756144E-16" />
-      <entry key="S2" value="1.1093482866803226E-4" />
-      <entry key="S5" value="0.026183467907371787" />
-      <entry key="S10" value="0.16181306469927517" />
-      <entry key="S30" value="0.544926415674023" />
-      <entry key="S60" value="0.7381916523251156" />
-      <entry key="M2" value="0.8611245950667701" />
-      <entry key="M5" value="1.3461640562432409" />
-      <entry key="M10" value="3.872260748513578" />
-      <entry key="M15" value="7.211882742863379" />
-      <entry key="M30" value="16.765965062993438" />
-      <entry key="H1" value="30.416412813089675" />
-      <entry key="H2" value="45.61457815635413" />
-      <entry key="H4" value="58.67033282963808" />
-      <entry key="D1" value="74.90606556890926" />
-      <entry key="W1" value="78.39432858009246" />
+      <entry key="MS100" value="2.5167616095979584E-6" />
+      <entry key="MS500" value="0.0758871802990284" />
+      <entry key="S2" value="0.5270797439941174" />
+      <entry key="S5" value="0.8633746921186723" />
+      <entry key="S10" value="1.294378912569108" />
+      <entry key="S30" value="3.024118873730186" />
+      <entry key="S60" value="4.489543416504384" />
+      <entry key="M2" value="5.8543791033588635" />
+      <entry key="M5" value="7.504733333245532" />
+      <entry key="M10" value="10.009315178456834" />
+      <entry key="M15" value="13.13005971979736" />
+      <entry key="M30" value="22.483255310840406" />
+      <entry key="H1" value="36.36797311272311" />
+      <entry key="H2" value="52.0808608634778" />
+      <entry key="H4" value="65.6837333453964" />
+      <entry key="D1" value="82.69595406603746" />
+      <entry key="W1" value="86.36290830424608" />
     </decayedSelected>
     <decayedShown>
-      <entry key="MS100" value="8.276979523011451E-15" />
-      <entry key="MS500" value="0.0019418682808376739" />
-      <entry key="S2" value="0.45347978454672144" />
-      <entry key="S5" value="2.219363533324734" />
-      <entry key="S10" value="5.4797947761390144" />
-      <entry key="S30" value="11.760737107244994" />
-      <entry key="S60" value="14.501449078881468" />
-      <entry key="M2" value="16.146372791537633" />
-      <entry key="M5" value="17.919861707428133" />
-      <entry key="M10" value="23.42302472523674" />
-      <entry key="M15" value="31.645819845069745" />
-      <entry key="M30" value="60.554715830614995" />
-      <entry key="H1" value="111.31823614394905" />
-      <entry key="H2" value="174.57661016718217" />
-      <entry key="H4" value="232.67839178653583" />
-      <entry key="D1" value="309.0687156111117" />
-      <entry key="W1" value="326.0350297879053" />
+      <entry key="MS100" value="1.0278576483655475E-5" />
+      <entry key="MS500" value="0.1005510464145172" />
+      <entry key="S2" value="0.5672602706992242" />
+      <entry key="S5" value="0.9654960024944583" />
+      <entry key="S10" value="1.5710599356609463" />
+      <entry key="S30" value="3.6169049641990165" />
+      <entry key="S60" value="5.831265839534538" />
+      <entry key="M2" value="11.15312371997466" />
+      <entry key="M5" value="23.359764127235152" />
+      <entry key="M10" value="35.02491269121794" />
+      <entry key="M15" value="45.253754423359624" />
+      <entry key="M30" value="75.92193481612453" />
+      <entry key="H1" value="128.1054506557458" />
+      <entry key="H2" value="193.35086448938054" />
+      <entry key="H4" value="253.58972486398653" />
+      <entry key="D1" value="333.17293214429606" />
+      <entry key="W1" value="350.9002500603093" />
     </decayedShown>
   </component>
   <component name="ProblemsViewState">
@@ -492,7 +493,15 @@
       <option name="project" value="LOCAL" />
       <updated>1788438915928</updated>
     </task>
-    <option name="localTasksCounter" value="17" />
+    <task id="LOCAL-00017" summary="back project a bit simpliyed with some breadking changes">
+      <option name="closed" value="true" />
+      <created>1788676791131</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1788676791131</updated>
+    </task>
+    <option name="localTasksCounter" value="18" />
     <option name="createChangelist" value="false" />
     <option name="createBranch" value="false" />
     <servers />
@@ -520,6 +529,7 @@
     <MESSAGE value="ref folder removed" />
     <MESSAGE value="feat(Category): add query endpoint for filtered category retrieval and implement pagination" />
     <MESSAGE value="db data" />
+    <MESSAGE value="back project a bit simpliyed with some breadking changes" />
     <option name="LAST_COMMIT_MESSAGE" value="" />
   </component>
   <component name="XDebuggerManager">
@@ -553,13 +563,13 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/SMIS.Application/Features/Categories/Commands/CategorySyncCommands.cs</url>
-          <line>160</line>
+          <line>164</line>
           <properties documentPath="E:\Repo\SMIS\SMIS.Application\Features\Categories\Commands\CategorySyncCommands.cs" containingFunctionPresentation="Method 'Handle'">
             <startOffsets>
-              <option value="5004" />
+              <option value="5142" />
             </startOffsets>
             <endOffsets>
-              <option value="5114" />
+              <option value="5252" />
             </endOffsets>
           </properties>
           <option name="timeStamp" value="6" />
