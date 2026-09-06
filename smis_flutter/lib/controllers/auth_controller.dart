@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../data/auth_api.dart';
+import '../data/data_exception.dart';
 import '../models/auth_session.dart';
 import '../services/auth_session_store.dart';
 
@@ -10,23 +11,25 @@ class AuthState {
     this.savedSessions = const [],
     this.isRestoring = false,
     this.isSigningIn = false,
-    this.errorMessage,
+    this.error,
   });
 
   final AuthSession? session;
   final List<AuthSession> savedSessions;
   final bool isRestoring;
   final bool isSigningIn;
-  final String? errorMessage;
+  final Object? error;
 
   bool get isAuthenticated => session != null;
+
+  String? get errorMessage => error is AppException ? (error as AppException).message : error?.toString();
 
   AuthState copyWith({
     AuthSession? session,
     List<AuthSession>? savedSessions,
     bool? isRestoring,
     bool? isSigningIn,
-    String? errorMessage,
+    Object? error,
     bool clearError = false,
     bool clearSession = false,
   }) => AuthState(
@@ -34,7 +37,7 @@ class AuthState {
     savedSessions: savedSessions ?? this.savedSessions,
     isRestoring: isRestoring ?? this.isRestoring,
     isSigningIn: isSigningIn ?? this.isSigningIn,
-    errorMessage: clearError ? null : (errorMessage ?? this.errorMessage),
+    error: clearError ? null : (error ?? this.error),
   );
 }
 
@@ -53,9 +56,11 @@ class AuthController extends Notifier<AuthState> {
       final session = await _sessionStore.read();
       final savedSessions = await _sessionStore.readAll();
       state = AuthState(session: session, savedSessions: savedSessions);
-    } catch (_) {
-      state = const AuthState(
-        errorMessage: 'Unable to restore the saved login. Please sign in again.',
+    } catch (error) {
+      state = AuthState(
+        error: error is AppException 
+            ? error 
+            : RemotePermanentException('Unable to restore the saved login. Please sign in again.', cause: error),
       );
     }
   }
@@ -71,13 +76,11 @@ class AuthController extends Notifier<AuthState> {
         savedSessions: savedSessions,
         isSigningIn: false,
       );
-    } on LoginException catch (error) {
-      state = state.copyWith(errorMessage: error.message, isSigningIn: false);
-    } on AuthFormatException catch (error) {
-      state = state.copyWith(errorMessage: error.message, isSigningIn: false);
-    } catch (_) {
+    } on AppException catch (error) {
+      state = state.copyWith(error: error, isSigningIn: false);
+    } catch (error) {
       state = state.copyWith(
-        errorMessage: 'Unable to sign in. Please try again.',
+        error: RemoteTransientException('Unable to sign in. Please try again.', cause: error),
         isSigningIn: false,
       );
     }

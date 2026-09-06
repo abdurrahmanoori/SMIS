@@ -4,6 +4,7 @@ import '../config/app_config.dart';
 import '../models/user_profile.dart';
 import '../services/auth_session_store.dart';
 import '../services/bearer_token_interceptor.dart';
+import 'data_exception.dart';
 
 abstract interface class ProfileApi {
   Future<UserProfile> getCurrentUser();
@@ -44,15 +45,15 @@ class DioProfileApi implements ProfileApi {
       );
       final data = response.data;
       if (data == null) {
-        throw const ProfileApiException('The profile response was empty.');
+        throw const RemotePermanentException('The profile response was empty.');
       }
       final profile = UserProfile.fromJson(data);
       if (profile.id.isEmpty) {
-        throw const ProfileApiException('The profile response did not contain a user ID.');
+        throw const RemotePermanentException('The profile response did not contain a user ID.');
       }
       return profile;
-    } on DioException catch (error) {
-      throw ProfileApiException(_messageFrom(error.response?.data) ?? _fallback(error));
+    } catch (error, stackTrace) {
+      ApiErrorParser.mapAndThrow(error, stackTrace);
     }
   }
 
@@ -71,8 +72,8 @@ class DioProfileApi implements ProfileApi {
           .map((item) => ProfileLanguage.fromJson(Map<String, dynamic>.from(item)))
           .where((language) => language.id.isNotEmpty && language.name.isNotEmpty)
           .toList(growable: false);
-    } on DioException catch (error) {
-      throw ProfileApiException(_messageFrom(error.response?.data) ?? _fallback(error));
+    } catch (error, stackTrace) {
+      ApiErrorParser.mapAndThrow(error, stackTrace);
     }
   }
 
@@ -88,11 +89,11 @@ class DioProfileApi implements ProfileApi {
       );
       final data = response.data;
       if (data == null) {
-        throw const ProfileApiException('The profile update response was empty.');
+        throw const RemotePermanentException('The profile update response was empty.');
       }
       return UserProfile.fromJson(data);
-    } on DioException catch (error) {
-      throw ProfileApiException(_messageFrom(error.response?.data) ?? _fallback(error));
+    } catch (error, stackTrace) {
+      ApiErrorParser.mapAndThrow(error, stackTrace);
     }
   }
 
@@ -106,72 +107,8 @@ class DioProfileApi implements ProfileApi {
         '${AppConfig.accountEndpoint}/$userId/change-password',
         data: draft.normalized().toJson(),
       );
-    } on DioException catch (error) {
-      throw ProfileApiException(_messageFrom(error.response?.data) ?? _fallback(error));
+    } catch (error, stackTrace) {
+      ApiErrorParser.mapAndThrow(error, stackTrace);
     }
   }
-
-  String _fallback(DioException error) {
-    if (error.type == DioExceptionType.connectionError ||
-        error.type == DioExceptionType.connectionTimeout ||
-        error.type == DioExceptionType.receiveTimeout ||
-        error.type == DioExceptionType.sendTimeout) {
-      return 'Unable to reach the server. Check your connection and try again.';
-    }
-    if (error.response?.statusCode == 401) {
-      return 'Your login session has expired. Please sign in again.';
-    }
-    return 'Unable to update your profile. Please try again.';
-  }
-
-  String? _messageFrom(Object? data) {
-    if (data is String && data.trim().isNotEmpty) return data;
-    if (data is List) return _firstMessage(data);
-    if (data is Map) {
-      // ASP.NET Core validation responses usually put a generic title such as
-      // "One or more validation errors occurred." beside field-specific
-      // messages in `errors`. Prefer the useful field message for the user.
-      final validationMessage = _firstMessage(data['errors'] ?? data['Errors']);
-      if (validationMessage != null) return validationMessage;
-
-      final message = data['message'] ?? data['Message'] ?? data['title'];
-      if (message is String && message.trim().isNotEmpty) return message;
-      final description = data['description'] ?? data['Description'];
-      if (description is String && description.trim().isNotEmpty) {
-        return description;
-      }
-    }
-    return null;
-  }
-
-  String? _firstMessage(Object? value) {
-    if (value is String && value.trim().isNotEmpty) return value;
-    if (value is List) {
-      for (final item in value) {
-        final message = _firstMessage(item);
-        if (message != null) return message;
-      }
-    }
-    if (value is Map) {
-      final directMessage =
-          value['message'] ?? value['Message'] ?? value['description'] ?? value['Description'];
-      if (directMessage is String && directMessage.trim().isNotEmpty) {
-        return directMessage;
-      }
-      for (final item in value.values) {
-        final message = _firstMessage(item);
-        if (message != null) return message;
-      }
-    }
-    return null;
-  }
-}
-
-class ProfileApiException implements Exception {
-  const ProfileApiException(this.message);
-
-  final String message;
-
-  @override
-  String toString() => message;
 }

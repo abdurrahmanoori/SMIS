@@ -5,9 +5,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../controllers/auth_controller.dart';
 import '../controllers/category_controller.dart';
 import '../controllers/profile_controller.dart';
+import '../data/data_exception.dart';
 import '../models/category.dart';
 import '../services/category_sync_service.dart';
 import '../widgets/app_drawer.dart';
+import '../widgets/app_error_view.dart';
 import '../widgets/theme_mode_action.dart';
 import '../widgets/category_form_dialog.dart';
 import 'profile_screen.dart';
@@ -76,8 +78,9 @@ class _CategoriesScreenState extends ConsumerState<CategoriesScreen>
             constraints: const BoxConstraints(maxWidth: 900),
             child: categories.when(
               loading: () => const Center(child: CircularProgressIndicator()),
-              error: (error, stackTrace) => _ErrorView(
-                message: error.toString(),
+              error: (error, stackTrace) => AppErrorView(
+                error: error,
+                stackTrace: stackTrace,
                 onRetry: () =>
                     ref.read(categoryControllerProvider.notifier).reload(),
               ),
@@ -170,7 +173,7 @@ class _CategoriesScreenState extends ConsumerState<CategoriesScreen>
       }
     } catch (error, stackTrace) {
       if (!mounted) return;
-      _showError(error, stackTrace);
+      AppErrorNotification.show(context, error, stackTrace);
       await ref.read(categoryControllerProvider.notifier).reload();
     }
   }
@@ -186,20 +189,8 @@ class _CategoriesScreenState extends ConsumerState<CategoriesScreen>
         context,
       ).showSnackBar(SnackBar(content: Text(successMessage)));
     } catch (error, stackTrace) {
-      if (mounted) _showError(error, stackTrace);
+      if (mounted) AppErrorNotification.show(context, error, stackTrace);
     }
-  }
-
-  void _showError(Object error, [StackTrace? stackTrace]) {
-    final message = kDebugMode && stackTrace != null
-        ? '${error.runtimeType}: $error\n\nStack trace:\n$stackTrace'
-        : error.toString();
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: SelectableText(message),
-        backgroundColor: Theme.of(context).colorScheme.error,
-      ),
-    );
   }
 }
 
@@ -431,30 +422,6 @@ class _EmptyView extends StatelessWidget {
           Text('No categories yet'),
           SizedBox(height: 4),
           Text('Add one now—even while completely offline.'),
-        ],
-      ),
-    ),
-  );
-}
-
-class _ErrorView extends StatelessWidget {
-  const _ErrorView({required this.message, required this.onRetry});
-
-  final String message;
-  final VoidCallback onRetry;
-
-  @override
-  Widget build(BuildContext context) => Center(
-    child: Padding(
-      padding: const EdgeInsets.all(24),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          const Icon(Icons.storage_outlined, size: 48),
-          const SizedBox(height: 12),
-          Text(message, textAlign: TextAlign.center),
-          const SizedBox(height: 12),
-          FilledButton.tonal(onPressed: onRetry, child: const Text('Retry')),
         ],
       ),
     ),

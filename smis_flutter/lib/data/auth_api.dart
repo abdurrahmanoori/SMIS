@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 
 import '../config/app_config.dart';
 import '../models/auth_session.dart';
+import 'data_exception.dart';
 
 abstract interface class AuthApi {
   Future<AuthSession> login({required String email, required String password});
@@ -35,61 +36,15 @@ class DioAuthApi implements AuthApi {
       );
       final data = response.data;
       if (data == null) {
-        throw const AuthFormatException('The login response was empty.');
+        throw const AuthenticationException('The login response was empty.');
       }
       return AuthSession.fromJson(data);
-    } on DioException catch (error) {
-      throw LoginException(_messageFrom(error.response?.data) ?? _fallback(error));
+    } catch (error, stackTrace) {
+      ApiErrorParser.mapAndThrow(
+        error,
+        stackTrace,
+        fallbackMessage: 'Unable to sign in. Please try again.',
+      );
     }
   }
-
-  String _fallback(DioException error) {
-    if (error.type == DioExceptionType.connectionError ||
-        error.type == DioExceptionType.connectionTimeout ||
-        error.type == DioExceptionType.receiveTimeout ||
-        error.type == DioExceptionType.sendTimeout) {
-      return 'Unable to reach the server. Check your connection and try again.';
-    }
-    if (error.response?.statusCode == 401 || error.response?.statusCode == 403) {
-      return 'Invalid email or password.';
-    }
-    return 'Unable to sign in. Please try again.';
-  }
-
-  String? _messageFrom(Object? data) {
-    if (data is String && data.trim().isNotEmpty) return data;
-    if (data is List && data.isNotEmpty) {
-      return _messageFrom(data.first);
-    }
-    if (data is Map) {
-      final message = data['message'] ?? data['Message'] ?? data['title'];
-      if (message is String && message.trim().isNotEmpty) return message;
-      final errors = data['errors'] ?? data['Errors'];
-      if (errors is List && errors.isNotEmpty) {
-        final first = errors.first;
-        if (first is String && first.trim().isNotEmpty) return first;
-        if (first is Map) {
-          final errorMessage =
-              first['message'] ?? first['Message'] ?? first['description'];
-          if (errorMessage is String && errorMessage.trim().isNotEmpty) {
-            return errorMessage;
-          }
-        }
-      }
-      final description = data['description'] ?? data['Description'];
-      if (description is String && description.trim().isNotEmpty) {
-        return description;
-      }
-    }
-    return null;
-  }
-}
-
-class LoginException implements Exception {
-  const LoginException(this.message);
-
-  final String message;
-
-  @override
-  String toString() => message;
 }

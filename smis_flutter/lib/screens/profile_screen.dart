@@ -3,8 +3,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../controllers/profile_controller.dart';
 import '../data/profile_api.dart';
+import '../data/data_exception.dart';
 import '../models/user_profile.dart';
 import '../widgets/app_drawer.dart';
+import '../widgets/app_error_view.dart';
 import '../widgets/theme_mode_action.dart';
 
 class ProfileScreen extends ConsumerWidget {
@@ -31,8 +33,9 @@ class ProfileScreen extends ConsumerWidget {
       body: SafeArea(
         child: profile.when(
           loading: () => const Center(child: CircularProgressIndicator()),
-          error: (error, _) => _ProfileError(
-            message: error.toString(),
+          error: (error, stackTrace) => AppErrorView(
+            error: error,
+            stackTrace: stackTrace,
             onRetry: () => ref.read(profileControllerProvider.notifier).reload(),
           ),
           data: (user) => _ProfileContent(user: user),
@@ -201,23 +204,12 @@ class _ProfileEditCardState extends ConsumerState<_ProfileEditCard> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Profile updated.')),
       );
-    } on ProfileValidationException catch (error) {
-      if (mounted) _showError(error.message);
-    } on ProfileApiException catch (error) {
-      if (mounted) _showError(error.message);
-    } catch (_) {
-      if (mounted) _showError('Unable to update your profile. Please try again.');
+    } catch (error, stackTrace) {
+      if (mounted) AppErrorNotification.show(context, error, stackTrace);
     } finally {
       if (mounted) setState(() => _isSaving = false);
     }
   }
-
-  void _showError(String message) => ScaffoldMessenger.of(context).showSnackBar(
-    SnackBar(
-      content: Text(message),
-      backgroundColor: Theme.of(context).colorScheme.error,
-    ),
-  );
 
   @override
   Widget build(BuildContext context) {
@@ -455,25 +447,11 @@ class _ChangePasswordDialogState extends ConsumerState<_ChangePasswordDialog> {
       messenger.showSnackBar(
         const SnackBar(content: Text('Password changed.')),
       );
-    } on ProfileValidationException catch (error) {
-      _showError(error.message);
-    } on ProfileApiException catch (error) {
-      _showError(error.message);
-    } catch (_) {
-      _showError('Unable to change your password. Please try again.');
+    } catch (error, stackTrace) {
+      if (mounted) AppErrorNotification.show(context, error, stackTrace);
     } finally {
       if (mounted) setState(() => _isSaving = false);
     }
-  }
-
-  void _showError(String message) {
-    if (!mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        backgroundColor: Theme.of(context).colorScheme.error,
-      ),
-    );
   }
 
   @override
@@ -653,30 +631,6 @@ class _DetailRow extends StatelessWidget {
           ),
         ),
       ],
-    ),
-  );
-}
-
-class _ProfileError extends StatelessWidget {
-  const _ProfileError({required this.message, required this.onRetry});
-
-  final String message;
-  final VoidCallback onRetry;
-
-  @override
-  Widget build(BuildContext context) => Center(
-    child: Padding(
-      padding: const EdgeInsets.all(24),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          const Icon(Icons.person_off_outlined, size: 48),
-          const SizedBox(height: 12),
-          Text(message, textAlign: TextAlign.center),
-          const SizedBox(height: 12),
-          FilledButton.tonal(onPressed: onRetry, child: const Text('Retry')),
-        ],
-      ),
     ),
   );
 }

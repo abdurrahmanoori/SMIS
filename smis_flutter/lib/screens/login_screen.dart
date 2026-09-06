@@ -1,7 +1,9 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../controllers/auth_controller.dart';
+import '../data/data_exception.dart';
 import '../models/auth_session.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
@@ -69,8 +71,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                           style: Theme.of(context).textTheme.bodyMedium,
                         ),
                         const SizedBox(height: 24),
-                        if (auth.errorMessage case final error?) ...[
-                          _LoginError(message: error),
+                        if (auth.error case final error?) ...[
+                          _LoginError(error: error),
                           const SizedBox(height: 16),
                         ],
                         if (auth.savedSessions.isNotEmpty) ...[
@@ -171,13 +173,15 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 }
 
 class _LoginError extends StatelessWidget {
-  const _LoginError({required this.message});
+  const _LoginError({required this.error});
 
-  final String message;
+  final Object error;
 
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
+    final message = error is AppException ? (error as AppException).message : error.toString();
+
     return DecoratedBox(
       decoration: BoxDecoration(
         color: colors.errorContainer,
@@ -185,13 +189,37 @@ class _LoginError extends StatelessWidget {
       ),
       child: Padding(
         padding: const EdgeInsets.all(12),
-        child: Row(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Icon(Icons.error_outline, color: colors.onErrorContainer),
-            const SizedBox(width: 10),
-            Expanded(
-              child: Text(message, style: TextStyle(color: colors.onErrorContainer)),
+            Row(
+              children: [
+                Icon(Icons.error_outline, color: colors.onErrorContainer),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: Text(message, style: TextStyle(color: colors.onErrorContainer)),
+                ),
+              ],
             ),
+            if (kDebugMode) ...[
+              const SizedBox(height: 8),
+              Text(
+                'Debug: ${error.runtimeType}',
+                style: TextStyle(
+                  color: colors.onErrorContainer.withOpacity(0.7),
+                  fontSize: 10,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              if (error is AppException && (error as AppException).cause != null)
+                Text(
+                  'Cause: ${(error as AppException).cause}',
+                  style: TextStyle(
+                    color: colors.onErrorContainer.withOpacity(0.7),
+                    fontSize: 10,
+                  ),
+                ),
+            ],
           ],
         ),
       ),

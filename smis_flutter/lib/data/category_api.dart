@@ -58,7 +58,7 @@ class DioCategoryApi implements CategoryApi {
           )
           .toList(growable: false);
     } catch (error, stackTrace) {
-      _mapAndThrow(error, stackTrace);
+      ApiErrorParser.mapAndThrow(error, stackTrace);
     }
   }
 
@@ -71,7 +71,9 @@ class DioCategoryApi implements CategoryApi {
       return CategoryRemoteModel.fromJson(response.data!);
     } on DioException catch (error, stackTrace) {
       if (error.response?.statusCode == 404) return null;
-      _mapAndThrow(error, stackTrace);
+      ApiErrorParser.mapAndThrow(error, stackTrace);
+    } catch (error, stackTrace) {
+      ApiErrorParser.mapAndThrow(error, stackTrace);
     }
   }
 
@@ -84,7 +86,7 @@ class DioCategoryApi implements CategoryApi {
       );
       return CategoryRemoteModel.fromJson(response.data!);
     } catch (error, stackTrace) {
-      _mapAndThrow(error, stackTrace);
+      ApiErrorParser.mapAndThrow(error, stackTrace);
     }
   }
 
@@ -97,7 +99,7 @@ class DioCategoryApi implements CategoryApi {
       );
       return CategoryRemoteModel.fromJson(response.data!);
     } catch (error, stackTrace) {
-      _mapAndThrow(error, stackTrace);
+      ApiErrorParser.mapAndThrow(error, stackTrace);
     }
   }
 
@@ -110,54 +112,9 @@ class DioCategoryApi implements CategoryApi {
       );
     } on DioException catch (error, stackTrace) {
       if (error.response?.statusCode == 404) return;
-      _mapAndThrow(error, stackTrace);
+      ApiErrorParser.mapAndThrow(error, stackTrace);
+    } catch (error, stackTrace) {
+      ApiErrorParser.mapAndThrow(error, stackTrace);
     }
-  }
-
-  Never _mapAndThrow(Object error, StackTrace stackTrace) {
-    if (error is! DioException) {
-      Error.throwWithStackTrace(
-        RemoteTransientException(
-          'The server request failed unexpectedly.',
-          cause: error,
-        ),
-        stackTrace,
-      );
-    }
-
-    final status = error.response?.statusCode;
-    final message =
-        _messageFrom(error.response?.data) ??
-        error.message ??
-        'The server request failed.';
-    final isTransient =
-        status == null ||
-        status == 408 ||
-        status == 429 ||
-        status >= 500 ||
-        error.type == DioExceptionType.connectionError ||
-        error.type == DioExceptionType.connectionTimeout ||
-        error.type == DioExceptionType.receiveTimeout ||
-        error.type == DioExceptionType.sendTimeout;
-    final mapped = isTransient
-        ? RemoteTransientException(message, cause: error)
-        : RemotePermanentException(message, cause: error);
-    Error.throwWithStackTrace(mapped, stackTrace);
-  }
-
-  String? _messageFrom(Object? data) {
-    if (data is String && data.trim().isNotEmpty) return data;
-    if (data is Map<String, dynamic>) {
-      final message = data['message'] ?? data['title'];
-      if (message is String) return message;
-    }
-    if (data is List && data.isNotEmpty) {
-      final first = data.first;
-      if (first is Map<String, dynamic>) {
-        final message = first['message'] ?? first['description'];
-        if (message is String) return message;
-      }
-    }
-    return null;
   }
 }
