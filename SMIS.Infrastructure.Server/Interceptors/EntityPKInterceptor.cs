@@ -31,9 +31,17 @@ public class EntityPKInterceptor : SaveChangesInterceptor
         {
             if (entry.State == EntityState.Added)
             {
-                // Category sync IDs are validated GUIDs and form the stable key
-                // shared by offline clients and the server. Never replace them.
-                if (entry.Entity is Category && Guid.TryParse(entry.Entity.Id, out _))
+                // Sync IDs are validated GUIDs and form the stable key shared by
+                // offline clients and the server. Never replace them.
+                var preservesClientSyncId = entry.Entity is Category
+                    or Shop
+                    or Customer
+                    or Product
+                    or UnitOfMeasure
+                    or ProductUnit
+                    or ProductPrice;
+
+                if (preservesClientSyncId && Guid.TryParse(entry.Entity.Id, out _))
                     continue;
 
 // In DEBUG mode, we also replace auto-generated GUIDs (from EntityPK base class default)

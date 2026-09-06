@@ -35,25 +35,6 @@ namespace SMIS.Application.Features.Shops.Commands
                 request.ShopCreateDto.IsActive
             );
 
-            // Use client-provided Id if available (offline sync scenario)
-            if (!string.IsNullOrEmpty(request.ShopCreateDto.Id))
-            {
-                // Check if already exists (idempotent)
-                var existing = await _shopRepository.GetByIdAsync(request.ShopCreateDto.Id);
-                if (existing != null)
-                    return Result<ShopDto>.SuccessResult(_mapper.Map<ShopDto>(existing));
-
-                entity.Id = request.ShopCreateDto.Id;
-
-                // Preserve original timestamps from mobile sync
-                if (request.ShopCreateDto.CreatedDate.HasValue)
-                    entity.CreatedDate = request.ShopCreateDto.CreatedDate.Value;
-                if (!string.IsNullOrEmpty(request.ShopCreateDto.CreatedBy))
-                    entity.CreatedBy = request.ShopCreateDto.CreatedBy;
-                if (request.ShopCreateDto.LastModifiedUtc.HasValue)
-                    entity.LastModifiedUtc = request.ShopCreateDto.LastModifiedUtc.Value;
-            }
-
             await _shopRepository.AddAsync(entity);
             await _unitOfWork.SaveChanges(cancellationToken);
 

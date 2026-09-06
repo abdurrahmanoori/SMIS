@@ -19,6 +19,12 @@ namespace SMIS.Api.Controllers
         ) =>
             HandleResultResponse(await Mediator.Send(new CustomerCreateCommand(dto)));
 
+        [HttpPost("sync")]
+        public async Task<ActionResult<CustomerDto>> SyncCreate(
+            CustomerSyncCreateDto dto
+        ) =>
+            HandleResultResponse(await Mediator.Send(new CustomerSyncCreateCommand(dto)));
+
         [HttpGet]
         public async Task<ActionResult<PagedList<CustomerDto>>> GetAll(
             [FromQuery] int pageNumber = 1,
@@ -44,10 +50,30 @@ namespace SMIS.Api.Controllers
         ) =>
             HandleResultResponse(await Mediator.Send(new CustomerUpdateCommand(id, dto)));
 
+        [HttpPut("{id}/sync")]
+        public async Task<ActionResult<CustomerDto>> SyncUpdate(
+            string id,
+            CustomerSyncUpdateDto dto
+        ) =>
+            HandleResultResponse(await Mediator.Send(new CustomerSyncUpdateCommand(id, dto)));
+
         [HttpDelete("{id}")]
         public async Task<ActionResult<Unit>> Delete(
             string id
         ) =>
             HandleResultResponse(await Mediator.Send(new CustomerDeleteCommand(id)));
+
+        [HttpDelete("{id}/sync")]
+        public async Task<ActionResult<CustomerDto>> SyncDelete(
+            string id,
+            CustomerSyncDeleteDto dto
+        ) =>
+            HandleResultResponse(await Mediator.Send(new CustomerSyncDeleteCommand(id, dto)));
+
+        [HttpGet("pull")]
+        public async Task<ActionResult<List<CustomerDto>>> Pull(
+            [FromQuery] DateTime changedSince
+        ) =>
+            HandleResultResponse(await Mediator.Send(new CustomerPullQuery(changedSince)));
     }
 }

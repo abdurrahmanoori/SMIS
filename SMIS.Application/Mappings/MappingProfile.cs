@@ -101,11 +101,31 @@ public class MappingProfile : Profile
         CreateMap<District, DistrictCreateDto>().ReverseMap();
 
         // Shop mapping
-        CreateMap<Shop, ShopDto>().ReverseMap();
+        CreateMap<Shop, ShopDto>()
+            .ForMember(dest => dest.ClientCreatedDate,
+                opt => opt.MapFrom(src => AsUtc(src.ClientCreatedDate)))
+            .ForMember(dest => dest.ClientModifiedDate,
+                opt => opt.MapFrom(src => AsUtc(src.ClientModifiedDate)))
+            .ForMember(dest => dest.LastModifiedUtc,
+                opt => opt.MapFrom(src => AsUtc(src.LastModifiedUtc)))
+            .ForMember(dest => dest.ConflictModifiedUtc,
+                opt => opt.MapFrom(src => src.GetConflictModifiedUtc()));
         // ShopCreateDto mapping removed - use Shop.Create() in handler
 
         // Product mapping
-        CreateMap<Product, ProductDto>().ReverseMap();
+        CreateMap<Product, ProductDto>()
+            .ForMember(dest => dest.CreatedDate,
+                opt => opt.MapFrom(src => AsUtc(src.CreatedDate)))
+            .ForMember(dest => dest.UpdatedDate,
+                opt => opt.MapFrom(src => AsUtc(src.UpdatedDate)))
+            .ForMember(dest => dest.ClientCreatedDate,
+                opt => opt.MapFrom(src => AsUtc(src.ClientCreatedDate)))
+            .ForMember(dest => dest.ClientModifiedDate,
+                opt => opt.MapFrom(src => AsUtc(src.ClientModifiedDate)))
+            .ForMember(dest => dest.LastModifiedUtc,
+                opt => opt.MapFrom(src => AsUtc(src.LastModifiedUtc)))
+            .ForMember(dest => dest.ConflictModifiedUtc,
+                opt => opt.MapFrom(src => src.GetConflictModifiedUtc()));
         CreateMap<ProductCreateDto, Product>()
             .ConstructUsing(src => Product.Create(
                 src.Name,
@@ -120,7 +140,11 @@ public class MappingProfile : Profile
             ));
 
         // UnitOfMeasure mapping
-        CreateMap<UnitOfMeasure, UnitOfMeasureDto>().ReverseMap();
+        CreateMap<UnitOfMeasure, UnitOfMeasureDto>()
+            .ForMember(dest => dest.ClientCreatedDate, opt => opt.MapFrom(src => AsUtc(src.ClientCreatedDate)))
+            .ForMember(dest => dest.ClientModifiedDate, opt => opt.MapFrom(src => AsUtc(src.ClientModifiedDate)))
+            .ForMember(dest => dest.LastModifiedUtc, opt => opt.MapFrom(src => AsUtc(src.LastModifiedUtc)))
+            .ForMember(dest => dest.ConflictModifiedUtc, opt => opt.MapFrom(src => src.GetConflictModifiedUtc()));
         CreateMap<UnitOfMeasureCreateDto, UnitOfMeasure>()
             .ConstructUsing(src => UnitOfMeasure.Create(
                 src.Name,
@@ -147,7 +171,11 @@ public class MappingProfile : Profile
 
 
         // ProductUnit mapping
-        CreateMap<ProductUnit, ProductUnitDto>().ReverseMap();
+        CreateMap<ProductUnit, ProductUnitDto>()
+            .ForMember(dest => dest.ClientCreatedDate, opt => opt.MapFrom(src => AsUtc(src.ClientCreatedDate)))
+            .ForMember(dest => dest.ClientModifiedDate, opt => opt.MapFrom(src => AsUtc(src.ClientModifiedDate)))
+            .ForMember(dest => dest.LastModifiedUtc, opt => opt.MapFrom(src => AsUtc(src.LastModifiedUtc)))
+            .ForMember(dest => dest.ConflictModifiedUtc, opt => opt.MapFrom(src => src.GetConflictModifiedUtc()));
         CreateMap<ProductUnitCreateDto, ProductUnit>()
             .ConstructUsing(src => ProductUnit.Create(
                 src.ProductId,
@@ -156,7 +184,11 @@ public class MappingProfile : Profile
             ));
 
         // ProductPrice mapping
-        CreateMap<ProductPrice, ProductPriceDto>().ReverseMap();
+        CreateMap<ProductPrice, ProductPriceDto>()
+            .ForMember(dest => dest.ClientCreatedDate, opt => opt.MapFrom(src => AsUtc(src.ClientCreatedDate)))
+            .ForMember(dest => dest.ClientModifiedDate, opt => opt.MapFrom(src => AsUtc(src.ClientModifiedDate)))
+            .ForMember(dest => dest.LastModifiedUtc, opt => opt.MapFrom(src => AsUtc(src.LastModifiedUtc)))
+            .ForMember(dest => dest.ConflictModifiedUtc, opt => opt.MapFrom(src => src.GetConflictModifiedUtc()));
         CreateMap<ProductPriceCreateDto, ProductPrice>()
             .ConstructUsing(src => ProductPrice.Create(
                 src.ProductId,
@@ -208,7 +240,19 @@ public class MappingProfile : Profile
             ));
 
         // Customer mapping
-        CreateMap<Customer, CustomerDto>().ReverseMap();
+        CreateMap<Customer, CustomerDto>()
+            .ForMember(dest => dest.CreatedDate,
+                opt => opt.MapFrom(src => AsUtc(src.CreatedDate)))
+            .ForMember(dest => dest.UpdatedDate,
+                opt => opt.MapFrom(src => AsUtc(src.UpdatedDate)))
+            .ForMember(dest => dest.ClientCreatedDate,
+                opt => opt.MapFrom(src => AsUtc(src.ClientCreatedDate)))
+            .ForMember(dest => dest.ClientModifiedDate,
+                opt => opt.MapFrom(src => AsUtc(src.ClientModifiedDate)))
+            .ForMember(dest => dest.LastModifiedUtc,
+                opt => opt.MapFrom(src => AsUtc(src.LastModifiedUtc)))
+            .ForMember(dest => dest.ConflictModifiedUtc,
+                opt => opt.MapFrom(src => src.GetConflictModifiedUtc()));
         CreateMap<CustomerCreateDto, Customer>()
             .ConstructUsing(src => Customer.Create(
                 src.FirstName,

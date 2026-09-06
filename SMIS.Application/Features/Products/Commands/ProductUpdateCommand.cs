@@ -51,7 +51,7 @@ namespace SMIS.Application.Features.Products.Commands
             entity.SetBaseUnitId(request.ProductCreateDto.BaseUnitId);
             entity.SetSKU(request.ProductCreateDto.SKU);
             entity.SetDescription(request.ProductCreateDto.Description);
-            if (!string.IsNullOrWhiteSpace(request.ProductCreateDto.Barcode)) entity.SetBarcode(request.ProductCreateDto.Barcode);
+            entity.SetBarcode(request.ProductCreateDto.Barcode);
             entity.SetImageUrl(request.ProductCreateDto.ImageUrl);
             entity.SetCategoryId(request.ProductCreateDto.CategoryId);
             if (request.ProductCreateDto.IsActive) entity.Activate(); else entity.Deactivate();
@@ -72,6 +72,9 @@ namespace SMIS.Application.Features.Products.Commands
             {
                 entity.CategoryName = null;
             }
+
+            // A direct API edit becomes the current server-originated version.
+            entity.ClearClientModificationMetadata();
             
             await _unitOfWork.SaveChanges(cancellationToken);
 

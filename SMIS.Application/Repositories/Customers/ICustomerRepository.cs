@@ -5,5 +5,8 @@ namespace SMIS.Application.Repositories.Customers
 {
     public interface ICustomerRepository : IGenericRepository<Customer>
     {
+        Task<Customer?> GetByIdIncludingDeletedAsync(
+            string id,
+            CancellationToken cancellationToken = default);
     }
 }

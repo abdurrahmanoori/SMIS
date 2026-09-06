@@ -1,10 +1,11 @@
 using SMIS.Domain.Common.BaseAbstract;
 using SMIS.Domain.Common.Interfaces;
 using SMIS.Domain.Exceptions;
+using SMIS.Domain.Services;
 
 namespace SMIS.Domain.Entities;
 
-public class Product : BaseAuditableEntity, IEntity, IShopEntity
+public class Product : BaseAuditableEntity, IEntity, IShopEntity, ISyncableEntity
 {
     public string Name { get; set; } = string.Empty;
 
@@ -21,6 +22,12 @@ public class Product : BaseAuditableEntity, IEntity, IShopEntity
     public string ShopId { get; private set; } = string.Empty;
 
     public string? ShopName { get; set; }
+
+    // Client sync metadata stays separate from the trusted server audit fields.
+    public DateTime? ClientCreatedDate { get; private set; }
+    public DateTime? ClientModifiedDate { get; private set; }
+    public string? ClientCreatedBy { get; private set; }
+    public string? ClientModifiedBy { get; private set; }
 
     // Navigation Properties
     public Shop Shop { get; set; } = null!;
@@ -51,7 +58,7 @@ public class Product : BaseAuditableEntity, IEntity, IShopEntity
         product.SetBaseUnitId(baseUnitId);
         product.SetSKU(sku);
         product.SetDescription(description);
-        if (!string.IsNullOrWhiteSpace(barcode)) product.SetBarcode(barcode);
+        product.SetBarcode(barcode);
         product.SetImageUrl(imageUrl);
         product.SetCategoryId(categoryId);
         if (!isActive) product.Deactivate();
@@ -101,9 +108,15 @@ public class Product : BaseAuditableEntity, IEntity, IShopEntity
     }
 
     public void SetBarcode(
-        string barcode
+        string? barcode
     )
     {
+        if (string.IsNullOrWhiteSpace(barcode))
+        {
+            Barcode = null;
+            return;
+        }
+
         var barcodeVO = ValueObjects.Barcode.Create(barcode);
         Barcode = barcodeVO;
     }
@@ -124,6 +137,40 @@ public class Product : BaseAuditableEntity, IEntity, IShopEntity
 
     public void Activate() => IsActive = true;
     public void Deactivate() => IsActive = false;
+
+    public void SetClientCreationMetadata(DateTime createdDateUtc, string? createdBy)
+    {
+        ClientCreatedDate = DateTimeService.NormalizeUtc(createdDateUtc);
+        ClientCreatedBy = NormalizeUserId(createdBy);
+    }
+
+    public void SetClientModificationMetadata(DateTime modifiedDateUtc, string? modifiedBy)
+    {
+        ClientModifiedDate = DateTimeService.NormalizeUtc(modifiedDateUtc);
+        ClientModifiedBy = NormalizeUserId(modifiedBy);
+    }
+
+    public void ClearClientModificationMetadata()
+    {
+        ClientModifiedDate = null;
+        ClientModifiedBy = null;
+    }
+
+    public void Restore()
+    {
+        IsDeleted = false;
+        DeletedAt = null;
+    }
+
+    public DateTime GetConflictModifiedUtc() => DateTimeService.NormalizeUtc(
+        ClientModifiedDate
+        ?? UpdatedDate
+        ?? ClientCreatedDate
+        ?? CreatedDate
+        ?? LastModifiedUtc);
+
+    private static string? NormalizeUserId(string? value) =>
+        string.IsNullOrWhiteSpace(value) ? null : value.Trim();
 }
 
 

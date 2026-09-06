@@ -23,6 +23,8 @@ namespace SMIS.Infrastructure.Server.EntityConfigurations
             builder.Property(e => e.TaxNumber).HasMaxLength(20);
             builder.Property(e => e.ProvinceId).HasMaxLength(450);
             builder.Property(e => e.DistrictId).HasMaxLength(450);
+            builder.Property(e => e.ClientCreatedBy).HasMaxLength(450);
+            builder.Property(e => e.ClientModifiedBy).HasMaxLength(450);
 
             builder.HasIndex(e => e.Email);
             builder.HasIndex(e => e.PhoneNumber);
@@ -30,6 +32,10 @@ namespace SMIS.Infrastructure.Server.EntityConfigurations
             builder.HasIndex(e => e.ShopId);
             builder.HasIndex(e => e.IsActive);
             builder.HasIndex(e => e.IsDeleted);
+
+            // These properties belong only to an offline client and are not server sync state.
+            builder.Ignore(e => e.IsSyncedToServer);
+            builder.Ignore(e => e.LastSyncedAt);
 
             builder.HasOne(e => e.Shop)
                 .WithMany()

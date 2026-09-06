@@ -52,6 +52,12 @@ namespace SMIS.Infrastructure.Server.EntityConfigurations
             builder.Property(p => p.CategoryName)
                 .HasMaxLength(200);
 
+            builder.Property(p => p.ClientCreatedBy)
+                .HasMaxLength(450);
+
+            builder.Property(p => p.ClientModifiedBy)
+                .HasMaxLength(450);
+
             // Foreign keys
             builder.HasOne(p => p.Shop)
                 .WithMany() // Shop has commented navigation to Products

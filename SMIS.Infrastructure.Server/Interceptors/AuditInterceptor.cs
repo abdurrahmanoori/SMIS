@@ -66,7 +66,6 @@ namespace SMIS.Infrastructure.Server.Interceptors
 
                     entry.Property(e => e.CreatedDate).IsModified = false; // Ensure CreatedDate is not updated
                     entry.Property(e => e.CreatedBy).IsModified = false; // Ensure CreatedBy is not updated
-                    entry.Property(e => e.LastModifiedUtc).IsModified = false; // Ensure LastModifiedUtc is not updated
                 }
                 else if (entry.State == EntityState.Modified)
                 {

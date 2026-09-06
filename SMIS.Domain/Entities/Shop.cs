@@ -3,6 +3,7 @@ using SMIS.Domain.Common.Interfaces;
 using SMIS.Domain.Enums;
 using SMIS.Domain.Exceptions;
 using SMIS.Domain.ValueObjects;
+using SMIS.Domain.Services;
 
 namespace SMIS.Domain.Entities;
 
@@ -20,6 +21,13 @@ public class Shop : BaseAuditableEntity, ISyncableEntity
     public bool IsSyncedToServer { get; set; }
     public DateTime? LastSyncedAt { get; set; }
     public DateTime LastModifiedUtc { get; set; }
+
+    // Client-originated sync metadata stays separate from the trusted server
+    // audit fields inherited from BaseAuditableEntity.
+    public DateTime? ClientCreatedDate { get; private set; }
+    public DateTime? ClientModifiedDate { get; private set; }
+    public string? ClientCreatedBy { get; private set; }
+    public string? ClientModifiedBy { get; private set; }
 
     // Navigation Properties
     //public virtual ICollection<Product> Products { get; set; } = new List<Product>();
@@ -97,4 +105,38 @@ public class Shop : BaseAuditableEntity, ISyncableEntity
 
     public void Activate() => IsActive = true;
     public void Deactivate() => IsActive = false;
+
+    public void SetClientCreationMetadata(DateTime createdDateUtc, string? createdBy)
+    {
+        ClientCreatedDate = DateTimeService.NormalizeUtc(createdDateUtc);
+        ClientCreatedBy = NormalizeUserId(createdBy);
+    }
+
+    public void SetClientModificationMetadata(DateTime modifiedDateUtc, string? modifiedBy)
+    {
+        ClientModifiedDate = DateTimeService.NormalizeUtc(modifiedDateUtc);
+        ClientModifiedBy = NormalizeUserId(modifiedBy);
+    }
+
+    public void ClearClientModificationMetadata()
+    {
+        ClientModifiedDate = null;
+        ClientModifiedBy = null;
+    }
+
+    public void Restore()
+    {
+        IsDeleted = false;
+        DeletedAt = null;
+    }
+
+    public DateTime GetConflictModifiedUtc() => DateTimeService.NormalizeUtc(
+        ClientModifiedDate
+        ?? UpdatedDate
+        ?? ClientCreatedDate
+        ?? CreatedDate
+        ?? LastModifiedUtc);
+
+    private static string? NormalizeUserId(string? value) =>
+        string.IsNullOrWhiteSpace(value) ? null : value.Trim();
 }

@@ -48,6 +48,7 @@ namespace SMIS.Application.Features.ProductUnits.Commands
             
             var unit = await _unitOfMeasureRepository.GetByIdAsync(request.ProductUnitCreateDto.UnitOfMeasureId);
             entity.SetUnitName(unit?.Name);
+            entity.ClearClientModificationMetadata();
             
             await _unitOfWork.SaveChanges(cancellationToken);
 

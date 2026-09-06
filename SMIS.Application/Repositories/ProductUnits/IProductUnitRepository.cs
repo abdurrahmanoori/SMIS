@@ -5,5 +5,6 @@ namespace SMIS.Application.Repositories.ProductUnits
 {
     public interface IProductUnitRepository : IGenericRepository<ProductUnit>
     {
+        Task<ProductUnit?> GetByIdIncludingDeletedAsync(string id, CancellationToken cancellationToken = default);
     }
 }

@@ -39,13 +39,7 @@ namespace SMIS.Application.Features.Shops.Commands
             entity.SetTaxNumber(request.ShopUpdateDto.TaxNumber);
             if (request.ShopUpdateDto.IsActive) entity.Activate(); else entity.Deactivate();
 
-            // Preserve timestamps from mobile sync if provided
-            if (request.ShopUpdateDto.UpdatedDate.HasValue)
-                entity.UpdatedDate = request.ShopUpdateDto.UpdatedDate.Value;
-            if (!string.IsNullOrEmpty(request.ShopUpdateDto.UpdatedBy))
-                entity.UpdatedBy = request.ShopUpdateDto.UpdatedBy;
-            if (request.ShopUpdateDto.LastModifiedUtc.HasValue)
-                entity.LastModifiedUtc = request.ShopUpdateDto.LastModifiedUtc.Value;
+            entity.ClearClientModificationMetadata();
 
             await _unitOfWork.SaveChanges(cancellationToken);
 

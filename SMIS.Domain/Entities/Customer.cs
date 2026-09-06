@@ -3,6 +3,7 @@ using SMIS.Domain.Common.Interfaces;
 using SMIS.Domain.Entities.LocationEntities;
 using SMIS.Domain.Enums;
 using SMIS.Domain.Exceptions;
+using SMIS.Domain.Services;
 
 namespace SMIS.Domain.Entities;
 
@@ -19,11 +20,15 @@ public class Customer : BaseAuditableEntity, IShopEntity
     public string? Address { get; private set; }
     public string? TaxNumber { get; private set; }
     public bool IsActive { get; private set; } = true;
-    public bool IsDeleted { get; private set; } = false;
-    public DateTime? DeletedAt { get; private set; }
     public string? DeletedBy { get; private set; }
     public string? ProvinceId { get; private set; }
     public string? DistrictId { get; private set; }
+
+    // Client timestamps are separate from the trusted server audit fields.
+    public DateTime? ClientCreatedDate { get; private set; }
+    public DateTime? ClientModifiedDate { get; private set; }
+    public string? ClientCreatedBy { get; private set; }
+    public string? ClientModifiedBy { get; private set; }
 
     public Shop? Shop { get; set; }
     public Province? Province { get; set; }
@@ -138,6 +143,24 @@ public class Customer : BaseAuditableEntity, IShopEntity
     public void Activate() => IsActive = true;
     public void Deactivate() => IsActive = false;
 
+    public void SetClientCreationMetadata(DateTime createdDateUtc, string? createdBy)
+    {
+        ClientCreatedDate = DateTimeService.NormalizeUtc(createdDateUtc);
+        ClientCreatedBy = NormalizeUserId(createdBy);
+    }
+
+    public void SetClientModificationMetadata(DateTime modifiedDateUtc, string? modifiedBy)
+    {
+        ClientModifiedDate = DateTimeService.NormalizeUtc(modifiedDateUtc);
+        ClientModifiedBy = NormalizeUserId(modifiedBy);
+    }
+
+    public void ClearClientModificationMetadata()
+    {
+        ClientModifiedDate = null;
+        ClientModifiedBy = null;
+    }
+
     public void Delete(string deletedBy)
     {
         IsDeleted = true;
@@ -153,4 +176,14 @@ public class Customer : BaseAuditableEntity, IShopEntity
         DeletedBy = null;
         Activate();
     }
+
+    public DateTime GetConflictModifiedUtc() => DateTimeService.NormalizeUtc(
+        ClientModifiedDate
+        ?? UpdatedDate
+        ?? ClientCreatedDate
+        ?? CreatedDate
+        ?? LastModifiedUtc);
+
+    private static string? NormalizeUserId(string? value) =>
+        string.IsNullOrWhiteSpace(value) ? null : value.Trim();
 }

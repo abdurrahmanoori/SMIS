@@ -40,6 +40,7 @@ internal sealed class ProductPriceUpdateCommandHandler : IRequestHandler<Product
         entity.SetEffectiveDate(request.ProductPriceCreateDto.EffectiveDate);
         entity.SetEndDate(request.ProductPriceCreateDto.EndDate);
         if (request.ProductPriceCreateDto.IsActive) entity.Activate(); else entity.Deactivate();
+        entity.ClearClientModificationMetadata();
 
         await _unitOfWork.SaveChanges(cancellationToken);
 

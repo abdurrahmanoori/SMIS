@@ -3,7 +3,8 @@ using SMIS.Domain.Entities;
 
 namespace SMIS.Application.Repositories.Shops
 {
-    public interface IShopRepository : IGenericRepository<Shop>
-    {
-    }
+public interface IShopRepository : IGenericRepository<Shop>
+{
+    Task<Shop?> GetByIdIncludingDeletedAsync(string id, CancellationToken cancellationToken = default);
+}
 }

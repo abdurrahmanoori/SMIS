@@ -19,5 +19,16 @@ namespace SMIS.Application.DTO.Products
         public string? ImageUrl { get; set; }
         public string? CategoryId { get; set; }
         public CategoryDto? Category { get; set; }
+        public DateTime? CreatedDate { get; set; }
+        public string? CreatedBy { get; set; }
+        public DateTime? UpdatedDate { get; set; }
+        public string? UpdatedBy { get; set; }
+        public DateTime? ClientCreatedDate { get; set; }
+        public string? ClientCreatedBy { get; set; }
+        public DateTime? ClientModifiedDate { get; set; }
+        public string? ClientModifiedBy { get; set; }
+        public DateTime ConflictModifiedUtc { get; set; }
+        public DateTime LastModifiedUtc { get; set; }
+        public bool IsDeleted { get; set; }
     }
 }

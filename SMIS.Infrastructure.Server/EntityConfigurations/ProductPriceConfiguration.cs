@@ -33,6 +33,9 @@ public class ProductPriceConfiguration : IEntityTypeConfiguration<ProductPrice>
         builder.Property(p => p.IsActive)
             .IsRequired();
 
+        builder.Property(p => p.ClientCreatedBy).HasMaxLength(450);
+        builder.Property(p => p.ClientModifiedBy).HasMaxLength(450);
+
         builder.HasOne(p => p.Product)
             .WithMany(p => p.ProductPrices)
             .HasForeignKey(p => p.ProductId)
