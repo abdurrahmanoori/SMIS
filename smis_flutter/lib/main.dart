@@ -13,6 +13,7 @@ import 'data/database.dart';
 import 'screens/home_screen.dart';
 import 'screens/login_screen.dart';
 import 'services/background_sync.dart';
+import 'controllers/theme_controller.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -60,22 +61,39 @@ Future<void> main() async {
   );
 }
 
-class SmisApp extends StatelessWidget {
+class SmisApp extends ConsumerWidget {
   const SmisApp({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final colorScheme = ColorScheme.fromSeed(
+  Widget build(BuildContext context, WidgetRef ref) {
+    final themeMode = ref.watch(themeControllerProvider);
+    
+    final lightColorScheme = ColorScheme.fromSeed(
       seedColor: const Color(0xFF315C49),
       brightness: Brightness.light,
     );
+    
+    final darkColorScheme = ColorScheme.fromSeed(
+      seedColor: const Color(0xFF315C49),
+      brightness: Brightness.dark,
+    );
+
     return MaterialApp(
       title: 'SMIS',
       debugShowCheckedModeBanner: false,
+      themeMode: themeMode,
       theme: ThemeData(
-        colorScheme: colorScheme,
+        colorScheme: lightColorScheme,
         useMaterial3: true,
         scaffoldBackgroundColor: const Color(0xFFF7F8F5),
+        cardTheme: const CardThemeData(elevation: 0, margin: EdgeInsets.zero),
+        inputDecorationTheme: const InputDecorationTheme(
+          border: OutlineInputBorder(),
+        ),
+      ),
+      darkTheme: ThemeData(
+        colorScheme: darkColorScheme,
+        useMaterial3: true,
         cardTheme: const CardThemeData(elevation: 0, margin: EdgeInsets.zero),
         inputDecorationTheme: const InputDecorationTheme(
           border: OutlineInputBorder(),

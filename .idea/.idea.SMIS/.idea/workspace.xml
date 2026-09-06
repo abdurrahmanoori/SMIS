@@ -601,7 +601,23 @@
       <option name="project" value="LOCAL" />
       <updated>1788700855080</updated>
     </task>
-    <option name="localTasksCounter" value="30" />
+    <task id="LOCAL-00030" summary="feat: implement multiple account switching functionality in authentication">
+      <option name="closed" value="true" />
+      <created>1788701144939</created>
+      <option name="number" value="00030" />
+      <option name="presentableId" value="LOCAL-00030" />
+      <option name="project" value="LOCAL" />
+      <updated>1788701144939</updated>
+    </task>
+    <task id="LOCAL-00031" summary="feat: add AppDrawer widget for improved navigation and user account management">
+      <option name="closed" value="true" />
+      <created>1788701412260</created>
+      <option name="number" value="00031" />
+      <option name="presentableId" value="LOCAL-00031" />
+      <option name="project" value="LOCAL" />
+      <updated>1788701412260</updated>
+    </task>
+    <option name="localTasksCounter" value="32" />
     <option name="createChangelist" value="false" />
     <option name="createBranch" value="false" />
     <servers />
@@ -613,8 +629,6 @@
   <component name="UnityProjectConfiguration" hasMinimizedUI="false" />
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
-    <MESSAGE value="refactor(category): update category-related classes and improve documentation" />
-    <MESSAGE value="refactor(Category): update category-related classes and improve documentation" />
     <MESSAGE value="refactor(Category): enhance documentation and comments across data source and model files" />
     <MESSAGE value="feat(Category): add client sync metadata and update related DTOs and commands" />
     <MESSAGE value="feat(Category): implement client metadata synchronization and update database schema" />
@@ -638,6 +652,8 @@
     <MESSAGE value="migrstion only" />
     <MESSAGE value="feat: add client modification metadata clearing in delete commands for Product, ProductUnit, Shop, and ProductPrice" />
     <MESSAGE value="feat: update user profile management to include username and language selection" />
+    <MESSAGE value="feat: implement multiple account switching functionality in authentication" />
+    <MESSAGE value="feat: add AppDrawer widget for improved navigation and user account management" />
     <option name="LAST_COMMIT_MESSAGE" value="" />
   </component>
   <component name="XDebuggerManager">

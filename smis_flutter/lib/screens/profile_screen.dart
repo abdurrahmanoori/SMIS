@@ -5,6 +5,7 @@ import '../controllers/profile_controller.dart';
 import '../data/profile_api.dart';
 import '../models/user_profile.dart';
 import '../widgets/app_drawer.dart';
+import '../widgets/theme_mode_action.dart';
 
 class ProfileScreen extends ConsumerWidget {
   const ProfileScreen({super.key});
@@ -22,6 +23,7 @@ class ProfileScreen extends ConsumerWidget {
             onPressed: () => ref.read(profileControllerProvider.notifier).reload(),
             icon: const Icon(Icons.refresh),
           ),
+          const ThemeModeAction(),
           const SizedBox(width: 8),
         ],
       ),

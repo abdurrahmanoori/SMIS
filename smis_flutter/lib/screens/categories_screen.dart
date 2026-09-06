@@ -8,6 +8,7 @@ import '../controllers/profile_controller.dart';
 import '../models/category.dart';
 import '../services/category_sync_service.dart';
 import '../widgets/app_drawer.dart';
+import '../widgets/theme_mode_action.dart';
 import '../widgets/category_form_dialog.dart';
 import 'profile_screen.dart';
 
@@ -64,7 +65,8 @@ class _CategoriesScreenState extends ConsumerState<CategoriesScreen>
             ),
             orElse: () => const SizedBox.shrink(),
           ),
-          const SizedBox(width: 12),
+          const ThemeModeAction(),
+          const SizedBox(width: 8),
         ],
       ),
       drawer: const AppDrawer(),

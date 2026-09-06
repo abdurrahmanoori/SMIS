@@ -5,6 +5,7 @@ import '../controllers/auth_controller.dart';
 import '../controllers/category_controller.dart';
 import '../controllers/profile_controller.dart';
 import '../widgets/app_drawer.dart';
+import '../widgets/theme_mode_action.dart';
 import 'categories_screen.dart';
 import 'profile_screen.dart';
 
@@ -24,6 +25,10 @@ class HomeScreen extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('SMIS'),
+        actions: const [
+          ThemeModeAction(),
+          SizedBox(width: 8),
+        ],
       ),
       drawer: const AppDrawer(),
       body: SafeArea(
