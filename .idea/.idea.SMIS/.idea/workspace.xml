@@ -542,7 +542,15 @@
       <option name="project" value="LOCAL" />
       <updated>1788693997494</updated>
     </task>
-    <option name="localTasksCounter" value="23" />
+    <task id="LOCAL-00023" summary="feat: implement synchronization support for Product, Customer, Shop, and UnitOfMeasure entities">
+      <option name="closed" value="true" />
+      <created>1788695259935</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1788695259935</updated>
+    </task>
+    <option name="localTasksCounter" value="24" />
     <option name="createChangelist" value="false" />
     <option name="createBranch" value="false" />
     <servers />
@@ -577,7 +585,7 @@
     <MESSAGE value="just format the code" />
     <MESSAGE value="feat: add sync endpoints for Customer, Product, ProductPrice, ProductUnit, Shop, and UnitOfMeasure controllers" />
     <MESSAGE value="feat: implement synchronization support for Product, Customer, Shop, and UnitOfMeasure entities" />
-    <option name="LAST_COMMIT_MESSAGE" value="feat: implement synchronization support for Product, Customer, Shop, and UnitOfMeasure entities" />
+    <option name="LAST_COMMIT_MESSAGE" value="" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

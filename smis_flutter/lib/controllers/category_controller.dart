@@ -36,6 +36,7 @@ class CategoryScreenState {
 
 class CategoryController extends AsyncNotifier<CategoryScreenState> {
   CategoryRepository get _repository => ref.read(categoryRepositoryProvider);
+
   CategorySyncService get _syncService => ref.read(categorySyncServiceProvider);
 
   @override
