@@ -1,22 +1,18 @@
-import 'dart:io';
+import 'flavor_config.dart';
 
 class AppConfig {
   const AppConfig._();
 
-  static const _configuredBaseUrl = String.fromEnvironment('SMIS_API_BASE_URL');
+  static String get apiBaseUrl => FlavorConfig.instance.apiBaseUrl;
 
-  static String get apiBaseUrl {
-    if (_configuredBaseUrl.isNotEmpty) return _configuredBaseUrl;
-    return Platform.isAndroid
-        ? 'http://10.0.2.2:5238'
-        : 'http://127.0.0.1:5238';
-  }
+  static String get appTitle => FlavorConfig.instance.appTitle;
 
   // A development token remains available as a fallback for non-interactive
   // background tooling. Normal app requests use the securely stored login token.
   static const authToken = String.fromEnvironment('SMIS_AUTH_TOKEN');
 
-  static const databaseName = 'smis_offline.db';
+  static String get databaseName => FlavorConfig.instance.databaseName;
+
   static const accountEndpoint = '/api/Account';
   static const languageEndpoint = '/api/Language';
   static const loginEndpoint = '/api/Account/login';

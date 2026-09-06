@@ -15,7 +15,20 @@ import 'screens/login_screen.dart';
 import 'services/background_sync.dart';
 import 'controllers/theme_controller.dart';
 
+import 'config/flavor_config.dart';
+
 Future<void> main() async {
+  FlavorConfig.initialize(
+    flavor: Flavor.production,
+    apiBaseUrl: 'http://api-smis.runasp.net',
+    appTitle: 'SMIS',
+    databaseName: 'smis_prod.db',
+  );
+  
+  await mainEntryPoint();
+}
+
+Future<void> mainEntryPoint() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   String? customDatabasePath;
@@ -79,8 +92,8 @@ class SmisApp extends ConsumerWidget {
     );
 
     return MaterialApp(
-      title: 'SMIS',
-      debugShowCheckedModeBanner: false,
+      title: AppConfig.appTitle,
+      debugShowCheckedModeBanner: FlavorConfig.isDevelopment,
       themeMode: themeMode,
       theme: ThemeData(
         colorScheme: lightColorScheme,
