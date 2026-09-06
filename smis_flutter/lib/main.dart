@@ -7,9 +7,11 @@ import 'package:path/path.dart' as p;
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
 import 'config/app_config.dart';
+import 'controllers/auth_controller.dart';
 import 'controllers/category_controller.dart';
 import 'data/database.dart';
 import 'screens/categories_screen.dart';
+import 'screens/login_screen.dart';
 import 'services/background_sync.dart';
 
 Future<void> main() async {
@@ -68,7 +70,7 @@ class SmisApp extends StatelessWidget {
       brightness: Brightness.light,
     );
     return MaterialApp(
-      title: 'SMIS Categories',
+      title: 'SMIS',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         colorScheme: colorScheme,
@@ -79,7 +81,22 @@ class SmisApp extends StatelessWidget {
           border: OutlineInputBorder(),
         ),
       ),
-      home: const CategoriesScreen(),
+      home: const _AuthenticationGate(),
     );
+  }
+}
+
+class _AuthenticationGate extends ConsumerWidget {
+  const _AuthenticationGate();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final auth = ref.watch(authControllerProvider);
+    if (auth.isRestoring) {
+      return const Scaffold(
+        body: Center(child: CircularProgressIndicator()),
+      );
+    }
+    return auth.isAuthenticated ? const CategoriesScreen() : const LoginScreen();
   }
 }

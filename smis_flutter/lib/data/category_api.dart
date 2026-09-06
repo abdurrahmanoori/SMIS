@@ -3,6 +3,8 @@ import 'package:dio/dio.dart';
 import '../config/app_config.dart';
 import '../models/category_local_record.dart';
 import '../models/category_remote_model.dart';
+import '../services/auth_session_store.dart';
+import '../services/bearer_token_interceptor.dart';
 import 'data_exception.dart';
 
 abstract interface class CategoryApi {
@@ -18,8 +20,9 @@ abstract interface class CategoryApi {
 }
 
 class DioCategoryApi implements CategoryApi {
-  DioCategoryApi({Dio? dio})
-    : _dio =
+  DioCategoryApi({Dio? dio, AuthSessionStore? sessionStore})
+    : _sessionStore = sessionStore ?? SecureAuthSessionStore(),
+      _dio =
           dio ??
           Dio(
             BaseOptions(
@@ -29,13 +32,14 @@ class DioCategoryApi implements CategoryApi {
               sendTimeout: const Duration(seconds: 20),
               headers: {
                 'Accept': 'application/json',
-                if (AppConfig.authToken.isNotEmpty)
-                  'Authorization': 'Bearer ${AppConfig.authToken}',
               },
             ),
-          );
+          ) {
+    _dio.interceptors.add(BearerTokenInterceptor(_sessionStore));
+  }
 
   final Dio _dio;
+  final AuthSessionStore _sessionStore;
 
   @override
   Future<List<CategoryRemoteModel>> pull(DateTime changedSince) async {

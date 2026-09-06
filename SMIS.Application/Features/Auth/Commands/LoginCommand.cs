@@ -14,13 +14,19 @@ namespace SMIS.Application.Features.Auth.Commands
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly ITokenGenerator _tokenGenerator;
 
-        public LoginCommandHandler(UserManager<ApplicationUser> userManager, ITokenGenerator tokenGenerator)
+        public LoginCommandHandler(
+            UserManager<ApplicationUser> userManager,
+            ITokenGenerator tokenGenerator
+        )
         {
             _userManager = userManager;
             _tokenGenerator = tokenGenerator;
         }
 
-        public async Task<Result<LoginResponseDto>> Handle(LoginCommand request, CancellationToken cancellationToken)
+        public async Task<Result<LoginResponseDto>> Handle(
+            LoginCommand request,
+            CancellationToken cancellationToken
+        )
         {
             var user = await _userManager.FindByEmailAsync(request.LoginDto.Email);
             if (user == null || !await _userManager.CheckPasswordAsync(user, request.LoginDto.Password))
@@ -36,6 +42,7 @@ namespace SMIS.Application.Features.Auth.Commands
             {
                 Token = token,
                 UserId = user.Id,
+                UserName = user.UserName!,
                 Email = user.Email!,
                 Roles = roles
             }, "Login successful");

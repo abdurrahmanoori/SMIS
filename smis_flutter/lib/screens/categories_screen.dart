@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../controllers/auth_controller.dart';
 import '../controllers/category_controller.dart';
 import '../models/category.dart';
 import '../services/category_sync_service.dart';
@@ -38,6 +39,7 @@ class _CategoriesScreenState extends ConsumerState<CategoriesScreen>
   @override
   Widget build(BuildContext context) {
     final categories = ref.watch(categoryControllerProvider);
+    final authenticatedUser = ref.watch(authControllerProvider).session;
 
     return Scaffold(
       appBar: AppBar(
@@ -59,6 +61,32 @@ class _CategoriesScreenState extends ConsumerState<CategoriesScreen>
             ),
             orElse: () => const SizedBox.shrink(),
           ),
+          if (authenticatedUser case final user?)
+            PopupMenuButton<String>(
+              tooltip: 'Account',
+              onSelected: (value) {
+                if (value == 'logout') {
+                  ref.read(authControllerProvider.notifier).logout();
+                }
+              },
+              itemBuilder: (context) => [
+                PopupMenuItem<String>(
+                  enabled: false,
+                  child: Text(user.email),
+                ),
+                const PopupMenuDivider(),
+                const PopupMenuItem<String>(
+                  value: 'logout',
+                  child: Text('Sign out'),
+                ),
+              ],
+              child: Padding(
+                padding: const EdgeInsets.all(8),
+                child: CircleAvatar(
+                  child: Text(user.userName.characters.first.toUpperCase()),
+                ),
+              ),
+            ),
           const SizedBox(width: 12),
         ],
       ),

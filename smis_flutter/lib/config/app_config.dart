@@ -12,11 +12,12 @@ class AppConfig {
         : 'http://127.0.0.1:5238';
   }
 
-  // Authentication CRUD is intentionally outside this Category-only scope.
-  // Production builds should inject a short-lived token from the auth module.
+  // A development token remains available as a fallback for non-interactive
+  // background tooling. Normal app requests use the securely stored login token.
   static const authToken = String.fromEnvironment('SMIS_AUTH_TOKEN');
 
   static const databaseName = 'smis_offline.db';
+  static const loginEndpoint = '/api/Account/login';
   static const categoryEndpoint = '/api/Category';
   static const backgroundTaskIdentifier =
       'com.example.smisFlutter.categorySync';

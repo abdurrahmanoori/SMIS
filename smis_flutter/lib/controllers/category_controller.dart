@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart' show debugPrint, kDebugMode;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'auth_controller.dart';
 import '../data/category_api.dart';
 import '../data/category_repository.dart';
 import '../data/database.dart';
@@ -100,7 +101,9 @@ final categoryRepositoryProvider = Provider<CategoryRepository>(
   (ref) => CategoryRepository(ref.watch(appDatabaseProvider)),
 );
 
-final categoryApiProvider = Provider<CategoryApi>((ref) => DioCategoryApi());
+final categoryApiProvider = Provider<CategoryApi>(
+  (ref) => DioCategoryApi(sessionStore: ref.watch(authSessionStoreProvider)),
+);
 
 final connectivityProvider = Provider<NetworkConnectivity>(
   (ref) => ConnectivityService(),

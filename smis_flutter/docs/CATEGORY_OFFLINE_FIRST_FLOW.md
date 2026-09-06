@@ -448,28 +448,52 @@ client-origin metadata in separate columns, include soft-deleted rows during
 conflict checks, and allow a genuinely newer offline write to resurrect a
 tombstone.
 
-## 17. Configuration
+## 17. Login and secure session
+
+The app starts on a login screen unless it can restore a previously saved
+session. The login form sends the email and password only to the backend's
+anonymous endpoint:
+
+```text
+LoginScreen
+  → AuthController.login()
+  → POST /api/Account/login
+  → LoginResponseDto (token, user ID, name, email, roles)
+  → FlutterSecureStorage
+  → Category screen
+```
+
+The JWT and user details are stored as one secure-device value, not in SQLite
+or a Dart build definition. `DioCategoryApi` reads that session just before
+each request and adds `Authorization: Bearer {token}`. This applies to manual
+and background Category synchronization. Signing out removes the secure session
+and returns to the login screen; local Category data is not deleted.
+
+An internet connection is required to sign in for the first time. Once a
+session has been stored, the user can open the app and continue local Category
+CRUD while offline. A later synchronization still requires a valid token and a
+connection.
+
+## 18. Configuration
 
 [`app_config.dart`](../lib/config/app_config.dart) reads build definitions:
 
 - `SMIS_API_BASE_URL` overrides the API address;
-- `SMIS_AUTH_TOKEN` supplies a development token when required.
+- `SMIS_AUTH_TOKEN` is an optional development fallback for non-interactive
+  background tooling. Normal application requests use the secure login session.
 
 Android emulator defaults to `http://10.0.2.2:5238`. Other supported native
 platforms default to `http://127.0.0.1:5238`.
 
 ```powershell
 flutter run `
-  --dart-define=SMIS_API_BASE_URL=https://api.example.com `
-  --dart-define=SMIS_AUTH_TOKEN=development-token
+  --dart-define=SMIS_API_BASE_URL=https://api.example.com
 ```
 
-Do not compile a long-lived production token into the application. When an
-authentication feature is added, it should provide short-lived tokens from
-secure device storage. Category CRUD will remain local and independent of that
-online session.
+Do not compile a long-lived production token into the application. The regular
+login flow stores the token in secure device storage instead.
 
-## 18. Tests
+## 19. Tests
 
 The current tests cover:
 
@@ -491,7 +515,7 @@ flutter analyze
 flutter test
 ```
 
-## 19. Following one Category through its lifetime
+## 20. Following one Category through its lifetime
 
 ```text
 1. User creates “Beverages” offline.
@@ -517,7 +541,7 @@ flutter test
    SQLite: tombstone is physically removed.
 ```
 
-## 20. Adding another entity
+## 21. Adding another entity
 
 Do not copy files mechanically before inspecting that entity's backend
 contract. IDs, tenant fields, DTOs, deletion behavior, pull endpoints, and
