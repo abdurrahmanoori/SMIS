@@ -10,6 +10,10 @@ using SMIS.Domain.Services;
 
 namespace SMIS.Application.Features.Categories.Commands;
 
+// ------------------------------------------------------------
+// Commands
+// ------------------------------------------------------------
+
 public record CategorySyncCreateCommand(CategorySyncCreateDto Dto)
     : IRequest<Result<CategoryDto>>;
 
@@ -18,6 +22,10 @@ public record CategorySyncUpdateCommand(string Id, CategorySyncUpdateDto Dto)
 
 public record CategorySyncDeleteCommand(string Id, CategorySyncDeleteDto Dto)
     : IRequest<Result<CategoryDto>>;
+
+// ------------------------------------------------------------
+// Create Handler
+// ------------------------------------------------------------
 
 internal sealed class CategorySyncCreateCommandHandler
     : IRequestHandler<CategorySyncCreateCommand, Result<CategoryDto>>
@@ -45,41 +53,39 @@ internal sealed class CategorySyncCreateCommandHandler
         CancellationToken cancellationToken
     )
     {
-        if (!CategorySyncGuard.TryCanonicalGuid(request.Dto.Id, out var id))
-            return CategorySyncGuard.InvalidId();
+        // FluentValidation has already guaranteed a valid GUID.
+        var id = CategorySyncRules.NormalizeGuid(request.Dto.Id);
 
-        if (!CategorySyncGuard.UserMetadataMatches(
-                request.Dto.ClientCreatedBy,
-                _currentUser) ||
-            !CategorySyncGuard.UserMetadataMatches(
-                request.Dto.ClientModifiedBy,
-                _currentUser))
+        if (!CategorySyncRules.UserMetadataMatches(
+                request.Dto.ClientCreatedBy, _currentUser) ||
+            !CategorySyncRules.UserMetadataMatches(request.Dto.ClientModifiedBy, _currentUser))
         {
-            return CategorySyncGuard.InvalidUser();
+            return CategorySyncRules.InvalidUser();
         }
 
-        var clientCreated = DateTimeService.NormalizeUtc(
-            request.Dto.ClientCreatedDate);
+        var clientCreated =
+            DateTimeService.NormalizeUtc(request.Dto.ClientCreatedDate);
 
-        var clientModified = DateTimeService.NormalizeUtc(
-            request.Dto.ClientModifiedDate);
+        var clientModified =
+            DateTimeService.NormalizeUtc(request.Dto.ClientModifiedDate);
 
         var existing = await _repository.GetByIdIncludingDeletedAsync(
             id,
             cancellationToken);
 
-        if (existing != null)
+        if (existing is not null)
         {
-            if (!CategorySyncGuard.CanAccess(existing, _currentUser))
-                return CategorySyncGuard.Forbidden();
+            if (!CategorySyncRules.CanAccess(existing, _currentUser))
+                return CategorySyncRules.Forbidden();
 
+            // Stale sync request. The request itself is valid.
             if (clientModified <= existing.GetConflictModifiedUtc())
             {
                 return Result<CategoryDto>.SuccessResult(
                     _mapper.Map<CategoryDto>(existing));
             }
 
-            CategorySyncGuard.Apply(existing, request.Dto);
+            CategorySyncRules.Apply(existing, request.Dto);
 
             existing.SetClientCreationMetadata(
                 clientCreated,
@@ -115,12 +121,17 @@ internal sealed class CategorySyncCreateCommandHandler
             request.Dto.ClientModifiedBy);
 
         await _repository.AddAsync(category);
+
         await _unitOfWork.SaveChanges(cancellationToken);
 
         return Result<CategoryDto>.SuccessResult(
             _mapper.Map<CategoryDto>(category));
     }
 }
+
+// ------------------------------------------------------------
+// Update Handler
+// ------------------------------------------------------------
 
 internal sealed class CategorySyncUpdateCommandHandler
     : IRequestHandler<CategorySyncUpdateCommand, Result<CategoryDto>>
@@ -148,28 +159,27 @@ internal sealed class CategorySyncUpdateCommandHandler
         CancellationToken cancellationToken
     )
     {
-        if (!CategorySyncGuard.TryCanonicalGuid(request.Id, out var id))
-            return CategorySyncGuard.InvalidId();
+        var id = CategorySyncRules.NormalizeGuid(request.Id);
 
-        if (!CategorySyncGuard.UserMetadataMatches(
+        if (!CategorySyncRules.UserMetadataMatches(
                 request.Dto.ClientModifiedBy,
                 _currentUser))
         {
-            return CategorySyncGuard.InvalidUser();
+            return CategorySyncRules.InvalidUser();
         }
 
         var category = await _repository.GetByIdIncludingDeletedAsync(
             id,
             cancellationToken);
 
-        if (category == null)
+        if (category is null)
             return Result<CategoryDto>.NotFoundResult(id);
 
-        if (!CategorySyncGuard.CanAccess(category, _currentUser))
-            return CategorySyncGuard.Forbidden();
+        if (!CategorySyncRules.CanAccess(category, _currentUser))
+            return CategorySyncRules.Forbidden();
 
-        var clientModified = DateTimeService.NormalizeUtc(
-            request.Dto.ClientModifiedDate);
+        var clientModified =
+            DateTimeService.NormalizeUtc(request.Dto.ClientModifiedDate);
 
         if (clientModified <= category.GetConflictModifiedUtc())
         {
@@ -177,7 +187,7 @@ internal sealed class CategorySyncUpdateCommandHandler
                 _mapper.Map<CategoryDto>(category));
         }
 
-        CategorySyncGuard.Apply(category, request.Dto);
+        CategorySyncRules.Apply(category, request.Dto);
 
         category.SetClientModificationMetadata(
             clientModified,
@@ -191,6 +201,10 @@ internal sealed class CategorySyncUpdateCommandHandler
             _mapper.Map<CategoryDto>(category));
     }
 }
+
+// ------------------------------------------------------------
+// Delete Handler
+// ------------------------------------------------------------
 
 internal sealed class CategorySyncDeleteCommandHandler
     : IRequestHandler<CategorySyncDeleteCommand, Result<CategoryDto>>
@@ -218,28 +232,27 @@ internal sealed class CategorySyncDeleteCommandHandler
         CancellationToken cancellationToken
     )
     {
-        if (!CategorySyncGuard.TryCanonicalGuid(request.Id, out var id))
-            return CategorySyncGuard.InvalidId();
+        var id = CategorySyncRules.NormalizeGuid(request.Id);
 
-        if (!CategorySyncGuard.UserMetadataMatches(
+        if (!CategorySyncRules.UserMetadataMatches(
                 request.Dto.ClientModifiedBy,
                 _currentUser))
         {
-            return CategorySyncGuard.InvalidUser();
+            return CategorySyncRules.InvalidUser();
         }
 
         var category = await _repository.GetByIdIncludingDeletedAsync(
             id,
             cancellationToken);
 
-        if (category == null)
+        if (category is null)
             return Result<CategoryDto>.NotFoundResult(id);
 
-        if (!CategorySyncGuard.CanAccess(category, _currentUser))
-            return CategorySyncGuard.Forbidden();
+        if (!CategorySyncRules.CanAccess(category, _currentUser))
+            return CategorySyncRules.Forbidden();
 
-        var clientModified = DateTimeService.NormalizeUtc(
-            request.Dto.ClientModifiedDate);
+        var clientModified =
+            DateTimeService.NormalizeUtc(request.Dto.ClientModifiedDate);
 
         if (clientModified <= category.GetConflictModifiedUtc())
         {
@@ -252,6 +265,7 @@ internal sealed class CategorySyncDeleteCommandHandler
             request.Dto.ClientModifiedBy);
 
         await _repository.RemoveAsync(category);
+
         await _unitOfWork.SaveChanges(cancellationToken);
 
         return Result<CategoryDto>.SuccessResult(
@@ -259,22 +273,16 @@ internal sealed class CategorySyncDeleteCommandHandler
     }
 }
 
-internal static class CategorySyncGuard
-{
-    public static bool TryCanonicalGuid(
-        string value,
-        out string canonical
-    )
-    {
-        if (Guid.TryParse(value, out var parsed))
-        {
-            canonical = parsed.ToString("D");
-            return true;
-        }
+// ------------------------------------------------------------
+// Command-specific application rules/helpers
+// ------------------------------------------------------------
 
-        canonical = string.Empty;
-        return false;
-    }
+internal static class CategorySyncRules
+{
+    public static string NormalizeGuid(
+        string value
+    ) =>
+        Guid.Parse(value).ToString("D");
 
     public static bool UserMetadataMatches(
         string? clientUserId,
@@ -326,11 +334,6 @@ internal static class CategorySyncGuard
         else
             category.Deactivate();
     }
-
-    public static Result<CategoryDto> InvalidId() =>
-        Result<CategoryDto>.FailureResult(
-            "InvalidClientId",
-            "Category sync IDs must be valid GUIDs.");
 
     public static Result<CategoryDto> InvalidUser() =>
         Result<CategoryDto>.FailureResult(
