@@ -33,9 +33,21 @@ public class LoanAccount : BaseAuditableEntity, IShopEntity
     public long PaidAmount => Payments?.Sum(p => p.Amount) ?? 0;
     public long RemainingAmount => TotalAmount - PaidAmount;
 
-    internal LoanAccount() { }
+    internal LoanAccount()
+    {
+    }
 
-    public static LoanAccount Create(string customerId, string shopId, string productId, decimal quantity, string unitId, decimal priceAtLoanTime, long totalAmount, DateTime? dueDate = null, string? notes = null)
+    public static LoanAccount Create(
+        string customerId,
+        string shopId,
+        string productId,
+        decimal quantity,
+        string unitId,
+        decimal priceAtLoanTime,
+        long totalAmount,
+        DateTime? dueDate = null,
+        string? notes = null
+    )
     {
         var loan = new LoanAccount();
         loan.SetCustomerId(customerId);
@@ -51,68 +63,88 @@ public class LoanAccount : BaseAuditableEntity, IShopEntity
         return loan;
     }
 
-    public void SetCustomerId(string customerId)
+    public void SetCustomerId(
+        string customerId
+    )
     {
         if (string.IsNullOrWhiteSpace(customerId))
             throw new DomainValidationException("Customer ID cannot be empty");
         CustomerId = customerId.Trim();
     }
 
-    public void SetShopId(string shopId)
+    public void SetShopId(
+        string shopId
+    )
     {
         if (string.IsNullOrWhiteSpace(shopId))
             throw new DomainValidationException("Shop ID cannot be empty");
         ShopId = shopId.Trim();
     }
 
-    public void SetProductId(string productId)
+    public void SetProductId(
+        string productId
+    )
     {
         if (string.IsNullOrWhiteSpace(productId))
             throw new DomainValidationException("Product ID cannot be empty");
         ProductId = productId.Trim();
     }
 
-    public void SetQuantity(decimal quantity)
+    public void SetQuantity(
+        decimal quantity
+    )
     {
         if (quantity <= 0)
             throw new DomainValidationException("Quantity must be greater than zero");
         Quantity = quantity;
     }
 
-    public void SetUnitId(string unitId)
+    public void SetUnitId(
+        string unitId
+    )
     {
         if (string.IsNullOrWhiteSpace(unitId))
             throw new DomainValidationException("Unit ID cannot be empty");
         UnitId = unitId.Trim();
     }
 
-    public void SetPriceAtLoanTime(decimal priceAtLoanTime)
+    public void SetPriceAtLoanTime(
+        decimal priceAtLoanTime
+    )
     {
         if (priceAtLoanTime <= 0)
             throw new DomainValidationException("Price at loan time must be greater than zero");
         PriceAtLoanTime = priceAtLoanTime;
     }
 
-    public void SetTotalAmount(long totalAmount)
+    public void SetTotalAmount(
+        long totalAmount
+    )
     {
         if (totalAmount <= 0)
             throw new DomainValidationException("Total amount must be greater than zero");
         TotalAmount = totalAmount;
     }
 
-    public void SetLoanDate(DateTime loanDate)
+    public void SetLoanDate(
+        DateTime loanDate
+    )
     {
         LoanDate = loanDate;
     }
 
-    public void SetDueDate(DateTime? dueDate)
+    public void SetDueDate(
+        DateTime? dueDate
+    )
     {
         if (dueDate.HasValue && dueDate.Value <= LoanDate)
             throw new DomainValidationException("Due date must be after loan date");
         DueDate = dueDate;
     }
 
-    public void SetNotes(string? notes)
+    public void SetNotes(
+        string? notes
+    )
     {
         Notes = string.IsNullOrWhiteSpace(notes) ? null : notes.Trim();
     }
@@ -121,7 +153,9 @@ public class LoanAccount : BaseAuditableEntity, IShopEntity
     /// Records a payment and updates loan status. Call this AFTER adding payment to Payments collection.
     /// The status is automatically calculated based on PaidAmount vs TotalAmount.
     /// </summary>
-    public void RecordPayment(long amount)
+    public void RecordPayment(
+        long amount
+    )
     {
         if (amount <= 0)
             throw new DomainValidationException("Payment amount must be greater than zero");

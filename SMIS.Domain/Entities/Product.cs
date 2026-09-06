@@ -7,7 +7,7 @@ namespace SMIS.Domain.Entities;
 public class Product : BaseAuditableEntity, IEntity, IShopEntity
 {
     public string Name { get; set; } = string.Empty;
- 
+
     public string BaseUnitId { get; private set; } = string.Empty;
     public string? BaseUnitName { get; set; }
     public string? Description { get; private set; }
@@ -15,20 +15,35 @@ public class Product : BaseAuditableEntity, IEntity, IShopEntity
     public string? SKU { get; private set; } = string.Empty;
     public string? Barcode { get; private set; }
     public string? ImageUrl { get; private set; }
+
     public string? CategoryId { get; private set; }
     public string? CategoryName { get; set; }
     public string ShopId { get; private set; } = string.Empty;
+
     public string? ShopName { get; set; }
+
     // Navigation Properties
-    public virtual Shop Shop { get; set; } = null!;
+    public Shop Shop { get; set; } = null!;
     public UnitOfMeasure UnitOfMeasure { get; set; } = null!;
-    public virtual Category? Category { get; set; }
-    public virtual ICollection<ProductUnit> ProductUnits { get; set; } = new List<ProductUnit>();
-    public virtual ICollection<ProductPrice> ProductPrices { get; set; } = new List<ProductPrice>();
+    public Category? Category { get; set; }
+    public ICollection<ProductUnit> ProductUnits { get; set; } = new List<ProductUnit>();
+    public ICollection<ProductPrice> ProductPrices { get; set; } = new List<ProductPrice>();
 
-    internal Product() { } // EF Core & Seeding
+    internal Product()
+    {
+    } // EF Core & Seeding
 
-    public static Product Create(string name, string shopId, string baseUnitId, string sku, bool isActive = true, string? description = null, string? barcode = null, string? imageUrl = null, string? categoryId = null)
+    public static Product Create(
+        string name,
+        string shopId,
+        string baseUnitId,
+        string sku,
+        bool isActive = true,
+        string? description = null,
+        string? barcode = null,
+        string? imageUrl = null,
+        string? categoryId = null
+    )
     {
         var product = new Product();
         product.SetName(name);
@@ -43,12 +58,16 @@ public class Product : BaseAuditableEntity, IEntity, IShopEntity
         return product;
     }
 
-    public void SetName(string name)
+    public void SetName(
+        string name
+    )
     {
         Name = name.Trim();
     }
 
-    public void SetShopId(string shopId)
+    public void SetShopId(
+        string shopId
+    )
     {
         if (string.IsNullOrWhiteSpace(shopId))
             throw new DomainValidationException("Shop ID cannot be empty");
@@ -56,7 +75,9 @@ public class Product : BaseAuditableEntity, IEntity, IShopEntity
         ShopId = shopId;
     }
 
-    public void SetBaseUnitId(string baseUnitId)
+    public void SetBaseUnitId(
+        string baseUnitId
+    )
     {
         if (string.IsNullOrWhiteSpace(baseUnitId))
             throw new DomainValidationException("Base unit ID cannot be empty");
@@ -64,29 +85,39 @@ public class Product : BaseAuditableEntity, IEntity, IShopEntity
         BaseUnitId = baseUnitId;
     }
 
-    public void SetSKU(string? sku)
+    public void SetSKU(
+        string? sku
+    )
     {
         var skuVO = ValueObjects.SKU.Create(sku);
         SKU = skuVO;
     }
 
-    public void SetDescription(string? description)
+    public void SetDescription(
+        string? description
+    )
     {
         Description = description?.Trim();
     }
 
-    public void SetBarcode(string barcode)
+    public void SetBarcode(
+        string barcode
+    )
     {
         var barcodeVO = ValueObjects.Barcode.Create(barcode);
         Barcode = barcodeVO;
     }
 
-    public void SetImageUrl(string? imageUrl)
+    public void SetImageUrl(
+        string? imageUrl
+    )
     {
         ImageUrl = imageUrl?.Trim();
     }
 
-    public void SetCategoryId(string? categoryId)
+    public void SetCategoryId(
+        string? categoryId
+    )
     {
         CategoryId = categoryId;
     }

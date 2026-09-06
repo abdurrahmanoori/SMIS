@@ -14,25 +14,40 @@ namespace SMIS.Api.Controllers
     public class CustomerController : BaseApiController
     {
         [HttpPost]
-        public async Task<ActionResult<CustomerDto>> Create(CustomerCreateDto dto) =>
+        public async Task<ActionResult<CustomerDto>> Create(
+            CustomerCreateDto dto
+        ) =>
             HandleResultResponse(await Mediator.Send(new CustomerCreateCommand(dto)));
 
         [HttpGet]
-        public async Task<ActionResult<PagedList<CustomerDto>>> GetAll([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 25, [FromQuery] bool includeShop = false)
+        public async Task<ActionResult<PagedList<CustomerDto>>> GetAll(
+            [FromQuery] int pageNumber = 1,
+            [FromQuery] int pageSize = 25,
+            [FromQuery] bool includeShop = false
+        )
         {
-            return HandleResultResponse(await Mediator.Send(new CustomerGetListQuery(pageNumber, pageSize, includeShop)));
+            return HandleResultResponse(
+                await Mediator.Send(new CustomerGetListQuery(pageNumber, pageSize, includeShop)));
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<CustomerDto>> GetById(string id, [FromQuery] bool includeShop = false) =>
+        public async Task<ActionResult<CustomerDto>> GetById(
+            string id,
+            [FromQuery] bool includeShop = false
+        ) =>
             HandleResultResponse(await Mediator.Send(new CustomerGetByIdQuery(id, includeShop)));
 
         [HttpPut("{id}")]
-        public async Task<ActionResult<CustomerDto>> Update(string id, CustomerCreateDto dto) =>
+        public async Task<ActionResult<CustomerDto>> Update(
+            string id,
+            CustomerCreateDto dto
+        ) =>
             HandleResultResponse(await Mediator.Send(new CustomerUpdateCommand(id, dto)));
 
         [HttpDelete("{id}")]
-        public async Task<ActionResult<Unit>> Delete(string id) =>
+        public async Task<ActionResult<Unit>> Delete(
+            string id
+        ) =>
             HandleResultResponse(await Mediator.Send(new CustomerDeleteCommand(id)));
     }
 }
