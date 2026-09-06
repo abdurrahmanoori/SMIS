@@ -4,7 +4,7 @@ namespace SMIS.Infrastructure.Server.DatabaseSeeders;
 /// Centralized deterministic GUIDs for all seed data.
 /// Using fixed GUIDs ensures stable migrations and referential integrity.
 /// </summary>
-internal static class SeedIds
+public static class SeedIds
 {
     // Shops
     public const string Shop1 = "11111111-0000-0000-0000-000000000001";

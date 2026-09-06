@@ -1,82 +1,50 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace SMIS.Application.Repositories.Base
+namespace SMIS.Application.Repositories.Base;
+
+public interface IGenericRepository<TEntity> where TEntity : class
 {
+    Task<TEntity> AddAsync(TEntity entity);
+    Task AddRangeAsync(List<TEntity> entities);
+    Task<TEntity> UpdateAsync(TEntity entity);
+    Task RemoveAsync(TEntity entity);
 
-    public interface IGenericRepository<T> where T : class
-    {
-        Task<T> AddAsync(T entity);
+    Task<bool> AnyAsync(
+        Expression<Func<TEntity, bool>> filter,
+        CancellationToken cancellationToken = default);
 
-        Task<T> UpdateAsync(T entity);
-        Task<bool> ExistsAsync(string id);
-        Task<bool> AnyAsync(Expression<Func<T, bool>> filter, CancellationToken cancellationToken = default);
+    Task<TEntity?> GetByIdAsync(string id);
 
-        Task<IReadOnlyList<T>> ExecuteRawQueryAsync(string sqlQuery);
+    Task<TEntity?> GetFirstOrDefaultAsync(
+        Expression<Func<TEntity, bool>> filter,
+        string? includeProperties = null,
+        bool tracked = true);
 
-        IQueryable<T> ExecuteRawQueryQueryable(string sqlQuery);
-        Task<T?> GetFirstOrDefaultAsync(
-            Expression<Func<T, bool>> filter,
-            string? includeProperties = null,
-            bool tracked = true);
+    Task<TEntity?> GetFirstOrDefaultAsync(
+        Expression<Func<TEntity, bool>> filter,
+        bool tracked = true,
+        params Expression<Func<TEntity, object>>[] includeProperties);
 
-        public Task<T?> GetFirstOrDefaultAsync(
-            Expression<Func<T, bool>> filter,
-            bool tracked = true,
-            params Expression<Func<T, object>>[] includeProperties);
+    Task<TEntity?> GetFirstOrDefaultAsyncWithInclude(
+        Expression<Func<TEntity, bool>> filter,
+        Func<IQueryable<TEntity>, IQueryable<TEntity>>? include = null,
+        bool tracked = true);
 
-        public Task<T> GetLastOrDefaultAsync(
-            Expression<Func<T, bool>> filter,
-            bool tracked = true,
-            Expression<Func<T, object>>[]? includeProperties = null,
-            params Expression<Func<T, object>>[] orderByProperties);
+    Task<IEnumerable<TEntity>> GetAllAsync(
+        Expression<Func<TEntity, bool>>? filter = null,
+        string? includeProperties = null,
+        bool tracked = false,
+        bool ignoreQueryFilters = false);
 
-        Task<T?> GetByIdAsync(string Id);
-
-        public Task<List<T>> GetWhenAsync(Expression<Func<T, bool>> condition);
-        public Task<List<T>> GetWhenContainsAsync<TProperty>(Expression<Func<T, TProperty>> property, List<TProperty> ids);
-        Task<IEnumerable<T>> GetAllAsync(Expression<Func<T, bool>>? filter = null, string? includeProperties = null, bool tracked = false, bool ignoreQueryFilters = false);
-
-        Task<List<T>> GetListAsync<T>(IQueryable<T> query);
-
-        IQueryable<T> GetAllQueryable(Expression<Func<T, bool>>? filter = null, string? includeProperties = null, bool tracked = false);
-        Task RemoveAsync(T entity);
-
-        // Task RemoveRange(IEnumerable<T> entity);
-
-        // Task AddRanges(List<T> entity);
-
-        /*
-         public class GenericDb1Repository<T, TContext>
-    where T : class
-    where TContext : DbContext, new()
-{
-    internal TContext context;
-    internal DbSet<T> dbSet;
-
-    public GenericRepository(TContext context) {
-        this.context = context;
-        this.dbSet = context.set<T>();
-    }
-         */
-
-        // Task<T> Get(int id);
-
-        // Task<IReadOnlyList<T>> GetAll();
-
-        // List<T> GetAllCourses();
-        // Task Delete(T entity);
-        // Task Add(T entity);
-        // Task Update(T entity);
-
-        Task<bool> RecordExistsAsync<T>(Expression<Func<T, bool>> predicate) where T : class;
-        Task<int> ExecuteDeleteAsync(Expression<Func<T, bool>> predicate);
-        Task<T?> GetFirstOrDefaultAsyncWithInclude(Expression<Func<T, bool>> filter, Func<IQueryable<T>, IQueryable<T>>? include = null, bool tracked = true);
-        Task AddRangeAsync(List<T> entities);
-    }
-
+    /// <summary>
+    /// This method is deprecated and will be removed in future versions. Use GetAllAsync instead.
+    /// </summary>
+    /// <param name="filter"></param>
+    /// <param name="includeProperties"></param>
+    /// <param name="tracked"></param>
+    /// <returns></returns>
+    IQueryable<TEntity> GetAllQueryable(
+        Expression<Func<TEntity, bool>>? filter = null,
+        string? includeProperties = null,
+        bool tracked = false);
 }

@@ -12,12 +12,6 @@ namespace SMIS.Api.Controllers
     [ApiController]
     public class ProvinceController : BaseApiController
     {
-        private readonly IMediator _mediator;
-        public ProvinceController(IMediator mediator)
-        {
-            _mediator = mediator;
-        }
-
         [HttpGet("test")]
         public IActionResult Get()
             {
@@ -26,24 +20,24 @@ namespace SMIS.Api.Controllers
             }
         [HttpPost]
         public async Task<ActionResult<ProvinceDto>> Create(ProvinceCreateDto dto) =>
-            HandleResultResponse(await _mediator.Send(new ProvinceCreateCommand(dto)));
+            HandleResultResponse(await Mediator.Send(new ProvinceCreateCommand(dto)));
 
         [HttpGet]
         public async Task<ActionResult<PagedList<ProvinceDto>>> GetAll([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 25)
         {
-            return HandleResultResponse(await _mediator.Send(new ProvinceGetListQuery(pageNumber, pageSize)));
+            return HandleResultResponse(await Mediator.Send(new ProvinceGetListQuery(pageNumber, pageSize)));
         }
 
         [HttpGet("{id}")]
         public async Task<ActionResult<ProvinceDto>> GetById(string id) =>
-            HandleResultResponse(await _mediator.Send(new ProvinceGetByIdQuery(id)));
+            HandleResultResponse(await Mediator.Send(new ProvinceGetByIdQuery(id)));
 
         [HttpPut("{id}")]
         public async Task<ActionResult<ProvinceDto>> Update(string id, ProvinceCreateDto dto) =>
-            HandleResultResponse(await _mediator.Send(new ProvinceUpdateCommand(id, dto)));
+            HandleResultResponse(await Mediator.Send(new ProvinceUpdateCommand(id, dto)));
 
         [HttpDelete("{id}")]
         public async Task<ActionResult<Unit>> Delete(string id) =>
-            HandleResultResponse(await _mediator.Send(new ProvinceDeleteCommand(id)));
+            HandleResultResponse(await Mediator.Send(new ProvinceDeleteCommand(id)));
     }
 }

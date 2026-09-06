@@ -1,79 +1,40 @@
-﻿using MediatR;
-using Microsoft.AspNetCore.Authorization;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using SMIS.Application.Common.Response;
 
-namespace SMIS.Api.Controllers.Base
+namespace SMIS.Api.Controllers.Base;
+
+[ApiController]
+public abstract class BaseApiController : ControllerBase
 {
-    //[Route("api/[controller]")]
-    [ApiController]
-    //[Authorize]
+    private IMediator? _mediator;
 
-    public class BaseApiController : ControllerBase
+    protected IMediator Mediator =>
+        _mediator ??= HttpContext.RequestServices.GetRequiredService<IMediator>();
+
+    protected ActionResult<T> HandleResultResponse<T>(Result<T> result)
     {
-        private IMediator? _mediator;
-        protected IMediator Mediator => _mediator ??= HttpContext.RequestServices.GetService<IMediator>()!;
-   
-        public ActionResult<T> HandleResultResponse<T>(Result<T> response)
+        try
         {
-            try
+            if (result.Success)
             {
-                if (response.Success && response.Response == null)
-                {
-                    return NotFound(response.Errors);
-                }
-                else if (!response.Success && response.Errors != null && response.Errors.Any(x => x.Code == DeclareMessage.Duplicate.Code))
-                {
-                    return Conflict(response.Errors);
-                }
-                else if (response.Success && response.Response != null)
-                {
-                    return Ok(response.Response);
-                }
-                else if (!response.Success && response.Errors != null)
-                {
-                    return BadRequest(response.Errors);
-                }
-
-                else
-                {
-                    return NotFound(response);
-                }
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
+                return result.Response is null
+                    ? NotFound(result.Errors)
+                    : Ok(result.Response);
             }
 
+            if (result.Errors?.Any(error => error.Code == DeclareMessage.Duplicate.Code) == true)
+            {
+                return Conflict(result.Errors);
+            }
+
+            return result.Errors is not null
+                ? BadRequest(result.Errors)
+                : NotFound(result);
         }
-        public IActionResult HandleResult<T>(Result<T> response)
+        catch (Exception exception)
         {
-            try
-            {
-                if (response.Success && response.Response == null)
-                {
-                    return NotFound();
-                }
-                else if (response.Success && response.Response != null)
-                {
-                    return Ok(response.Response);
-                }
-                else if (!response.Success && response.Errors != null)
-                {
-                    return BadRequest(response.Errors);
-                }
-                else
-                {
-                    return NotFound();
-                }
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-
+            return BadRequest(exception.Message);
         }
-
-
     }
 }

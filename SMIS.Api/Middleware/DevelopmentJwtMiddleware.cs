@@ -2,6 +2,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using SMIS.Infrastructure.Server.DatabaseSeeders;
 
 namespace SMIS.Api.Middleware;
 
@@ -36,11 +37,11 @@ public class DevelopmentJwtMiddleware
 
         var claims = new[]
         {
-            new Claim(ClaimTypes.NameIdentifier, "1"),
+            new Claim(ClaimTypes.NameIdentifier, SeedIds.UserSuperAdmin),
             new Claim(ClaimTypes.Name, "superadmin"),
             new Claim(ClaimTypes.Email, "superadmin@smis.com"),
             new Claim(ClaimTypes.Role, "SuperAdmin"),
-            new Claim("ShopId", "1")
+            new Claim("ShopId", SeedIds.Shop1.ToString())
         };
 
         var token = new JwtSecurityToken(

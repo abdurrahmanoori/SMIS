@@ -4,7 +4,7 @@ using SMIS.Application.Identity.IServices;
 using SMIS.Domain.Entities.Identity.Entity;
 using System.Security.Claims;
 
-namespace SMIS.Application.Services;
+namespace SMIS.Infrastructure.Server.Services.Identity;
 
 public class CurrentUser : ICurrentUser
 {
@@ -18,13 +18,13 @@ public class CurrentUser : ICurrentUser
     public string GetId()
     {
         var user = _httpContextAccessor.HttpContext?.User;
-        return user?.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "1";
+        return user?.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? string.Empty;
     }
 
     public string GetLangId()
     {
         var user = _httpContextAccessor.HttpContext?.User;
-        return user?.FindFirst(nameof(ApplicationUser.LanguageId))?.Value ?? "1";
+        return user?.FindFirst(nameof(ApplicationUser.LanguageId))?.Value ?? string.Empty;
     }
 
     public string GetShopId()
@@ -33,24 +33,25 @@ public class CurrentUser : ICurrentUser
         return user?.FindFirst(nameof(ApplicationUser.ShopId))?.Value ?? string.Empty;
     }
 
-    public bool IsRetailAdmin( )
+    public bool IsRetailAdmin()
     {
         var user = _httpContextAccessor.HttpContext?.User;
         return user?.IsInRole(SD.Role_RShop_Admin) ?? false;
     }
-    public bool IsWholesaleAdmin( )
+
+    public bool IsWholesaleAdmin()
     {
         var user = _httpContextAccessor.HttpContext?.User;
         return user?.IsInRole(SD.Role_WShop_Admin) ?? false;
     }
 
-    public bool IsSuperAdmin( )
+    public bool IsSuperAdmin()
     {
         var user = _httpContextAccessor.HttpContext?.User;
         return user?.IsInRole(SD.Role_Super_Admin) ?? false;
     }
 
-    public List<string> Roles( )
+    public List<string> Roles()
     {
         var user = _httpContextAccessor.HttpContext?.User;
         return user?.FindAll(ClaimTypes.Role).Select(c => c.Value).ToList() ?? new List<string>();

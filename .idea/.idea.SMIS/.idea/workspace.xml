@@ -23,7 +23,31 @@
     <configurations />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c1539008-1193-464d-b486-40cdba8ba5f6" name="Changes" comment="" />
+    <list default="true" id="c1539008-1193-464d-b486-40cdba8ba5f6" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.SMIS/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.SMIS/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SMIS.Api/Controllers/Base/BaseApiController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/SMIS.Api/Controllers/Base/BaseApiController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SMIS.Api/Controllers/DistrictController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/SMIS.Api/Controllers/DistrictController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SMIS.Api/Controllers/ProductController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/SMIS.Api/Controllers/ProductController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SMIS.Api/Controllers/ProvinceController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/SMIS.Api/Controllers/ProvinceController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SMIS.Api/Extentions/ApiBehaviorOptionsExtensions.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/SMIS.Api/Extentions/ApplicationBuilderExtensions.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/SMIS.Api/Extentions/CorsServiceExtensions.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/SMIS.Api/Extentions/MiniProfilerExtension.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/SMIS.Api/Extentions/SerilogExtension.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/SMIS.Api/Extentions/SwaggerServiceCollectionExtensions.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/SMIS.Api/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/SMIS.Api/Program.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SMIS.Application/Repositories/Base/IGenericRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/SMIS.Application/Repositories/Base/IGenericRepository.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SMIS.Application/Repositories/Base/IUnitOfWork.cs" beforeDir="false" afterPath="$PROJECT_DIR$/SMIS.Application/Repositories/Base/IUnitOfWork.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SMIS.Infrastructure.Server/Configurations/RegisterRepositories.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/SMIS.Infrastructure.Server/Extensions/InfrastructureServicesRegistration.cs" beforeDir="false" afterPath="$PROJECT_DIR$/SMIS.Infrastructure.Server/Extensions/InfrastructureServicesRegistration.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SMIS.Infrastructure.Server/Repositories/Base/GenericRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/SMIS.Infrastructure.Server/Repositories/Base/GenericRepository.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SMIS.Infrastructure.Server/Repositories/Base/UnitOfWork.cs" beforeDir="false" afterPath="$PROJECT_DIR$/SMIS.Infrastructure.Server/Repositories/Base/UnitOfWork.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SMIS.Infrastructure.Server/RepositoryStores/RepositoriesStore.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/smis_flutter/database/smis_offline.db" beforeDir="false" afterPath="$PROJECT_DIR$/smis_flutter/database/smis_offline.db" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/smis_flutter/database/smis_offline.db-shm" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/smis_flutter/database/smis_offline.db-wal" beforeDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -40,7 +64,7 @@
     <option name="firstShow" value="false" />
   </component>
   <component name="EmbeddingIndexingInfo">
-    <option name="cachedIndexableFilesCount" value="296" />
+    <option name="cachedIndexableFilesCount" value="67" />
     <option name="fileBasedEmbeddingIndicesEnabled" value="true" />
   </component>
   <component name="Git.Settings">
@@ -64,8 +88,8 @@
   }
 }</component>
   <component name="HighlightingSettingsPerFile">
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/0b7856b364e04283a10bb924825b197f28f228/bc/87b86347/EntityFrameworkQueryableExtensions.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/9c31640fb7734f77994409ff691e2328239728/07/f64c2950/LocalhostListenOptions.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="gitIndexFs://ce9ec9ff:E\:/Repo/SMIS:E\:/Repo/SMIS/SMIS.Application/Common/Queries/PagedQuery.cs" root0="SKIP_HIGHLIGHTING" />
   </component>
   <component name="InvalidFacetManager">
     <ignored-facets>
@@ -79,62 +103,65 @@
   <component name="MetaFilesCheckinStateConfiguration" checkMetaFiles="true" />
   <component name="NextEditCompletionFeaturesState">
     <decayedCancelled>
-      <entry key="MS100" value="1.0753944739376153" />
-      <entry key="MS500" value="2.1141093601469225" />
-      <entry key="S2" value="3.9014053921154366" />
-      <entry key="S5" value="4.9348454938878525" />
-      <entry key="S10" value="5.418224030626725" />
-      <entry key="S30" value="5.795108136733285" />
-      <entry key="S60" value="6.0205877947486615" />
-      <entry key="M2" value="7.19170189350981" />
-      <entry key="M5" value="11.400363198111014" />
-      <entry key="M10" value="19.9309300202863" />
-      <entry key="M15" value="30.189082283991375" />
-      <entry key="M30" value="55.068174275558235" />
-      <entry key="H1" value="83.83968837657241" />
-      <entry key="H2" value="113.4857717032357" />
-      <entry key="H4" value="138.70977133359526" />
-      <entry key="D1" value="170.08683645308454" />
-      <entry key="W1" value="176.82934957407505" />
+      <entry key="MS100" value="1.0" />
+      <entry key="MS500" value="1.0004898077871103" />
+      <entry key="S2" value="1.2685477726888146" />
+      <entry key="S5" value="2.7275848453426104" />
+      <entry key="S10" value="5.698425249063405" />
+      <entry key="S30" value="11.410120674279428" />
+      <entry key="S60" value="13.875260755193693" />
+      <entry key="M2" value="15.345751862732303" />
+      <entry key="M5" value="16.600800612656087" />
+      <entry key="M10" value="19.571057897125982" />
+      <entry key="M15" value="24.4541717606682" />
+      <entry key="M30" value="43.80909197821963" />
+      <entry key="H1" value="80.91949161126213" />
+      <entry key="H2" value="128.9750788376034" />
+      <entry key="H4" value="174.01640227546199" />
+      <entry key="D1" value="234.16441988059137" />
+      <entry key="W1" value="247.64096572442048" />
     </decayedCancelled>
     <decayedSelected>
-      <entry key="MS100" value="0.0" />
-      <entry key="MS500" value="2.576504122060612E-237" />
-      <entry key="S2" value="1.0464189755411024E-59" />
-      <entry key="S5" value="3.821761355489737E-24" />
-      <entry key="S10" value="2.825745553393395E-12" />
-      <entry key="S30" value="3.103504891469689E-4" />
-      <entry key="S60" value="0.03894298956941312" />
-      <entry key="M2" value="0.46820947666548723" />
-      <entry key="M5" value="2.177159894804347" />
-      <entry key="M10" value="4.1712939611605835" />
-      <entry key="M15" value="5.879150748506553" />
-      <entry key="M30" value="10.194833888738167" />
-      <entry key="H1" value="16.579126295535403" />
-      <entry key="H2" value="23.909919367207117" />
-      <entry key="H4" value="30.023945603683575" />
-      <entry key="D1" value="37.24587617174813" />
-      <entry key="W1" value="38.74212150070134" />
+      <entry key="MS100" value="7.968165380027306E-80" />
+      <entry key="MS500" value="1.5145083352756144E-16" />
+      <entry key="S2" value="1.1093482866803226E-4" />
+      <entry key="S5" value="0.026183467907371787" />
+      <entry key="S10" value="0.16181306469927517" />
+      <entry key="S30" value="0.544926415674023" />
+      <entry key="S60" value="0.7381916523251156" />
+      <entry key="M2" value="0.8611245950667701" />
+      <entry key="M5" value="1.3461640562432409" />
+      <entry key="M10" value="3.872260748513578" />
+      <entry key="M15" value="7.211882742863379" />
+      <entry key="M30" value="16.765965062993438" />
+      <entry key="H1" value="30.416412813089675" />
+      <entry key="H2" value="45.61457815635413" />
+      <entry key="H4" value="58.67033282963808" />
+      <entry key="D1" value="74.90606556890926" />
+      <entry key="W1" value="78.39432858009246" />
     </decayedSelected>
     <decayedShown>
-      <entry key="MS100" value="1.009361447702862" />
-      <entry key="MS500" value="2.0854092041869627" />
-      <entry key="S2" value="3.8883115236617525" />
-      <entry key="S5" value="4.928290558131131" />
-      <entry key="S10" value="5.414640483107047" />
-      <entry key="S30" value="5.7941323063748955" />
-      <entry key="S60" value="6.058167163840521" />
-      <entry key="M2" value="7.655474855825409" />
-      <entry key="M5" value="13.569760263257791" />
-      <entry key="M10" value="24.093483580827698" />
-      <entry key="M15" value="36.05854959673527" />
-      <entry key="M30" value="65.25275857246595" />
-      <entry key="H1" value="100.40983731499948" />
-      <entry key="H2" value="137.3890687153951" />
-      <entry key="H4" value="168.72952389365147" />
-      <entry key="D1" value="207.33184019445608" />
-      <entry key="W1" value="215.57134129656916" />
+      <entry key="MS100" value="8.276979523011451E-15" />
+      <entry key="MS500" value="0.0019418682808376739" />
+      <entry key="S2" value="0.45347978454672144" />
+      <entry key="S5" value="2.219363533324734" />
+      <entry key="S10" value="5.4797947761390144" />
+      <entry key="S30" value="11.760737107244994" />
+      <entry key="S60" value="14.501449078881468" />
+      <entry key="M2" value="16.146372791537633" />
+      <entry key="M5" value="17.919861707428133" />
+      <entry key="M10" value="23.42302472523674" />
+      <entry key="M15" value="31.645819845069745" />
+      <entry key="M30" value="60.554715830614995" />
+      <entry key="H1" value="111.31823614394905" />
+      <entry key="H2" value="174.57661016718217" />
+      <entry key="H4" value="232.67839178653583" />
+      <entry key="D1" value="309.0687156111117" />
+      <entry key="W1" value="326.0350297879053" />
     </decayedShown>
+  </component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="Toolset" />
   </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 2,
@@ -147,7 +174,7 @@
   </component>
   <component name="PropertiesComponent">{
   &quot;keyToString&quot;: {
-    &quot;.NET Launch Settings Profile.SMIS.Api: http.executor&quot;: &quot;Run&quot;,
+    &quot;.NET Launch Settings Profile.SMIS.Api: http.executor&quot;: &quot;Debug&quot;,
     &quot;.NET Launch Settings Profile.SMIS.Api: https.executor&quot;: &quot;Run&quot;,
     &quot;.NET Launch Settings Profile.SMIS.UI: Windows Machine.executor&quot;: &quot;Run&quot;,
     &quot;ASKED_SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
@@ -457,7 +484,15 @@
       <option name="project" value="LOCAL" />
       <updated>1788438193927</updated>
     </task>
-    <option name="localTasksCounter" value="16" />
+    <task id="LOCAL-00016" summary="db data">
+      <option name="closed" value="true" />
+      <created>1788438915928</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1788438915928</updated>
+    </task>
+    <option name="localTasksCounter" value="17" />
     <option name="createChangelist" value="false" />
     <option name="createBranch" value="false" />
     <servers />
@@ -484,10 +519,52 @@
     <MESSAGE value="other layer remove and jsut we have api, flutter project and test if api layer" />
     <MESSAGE value="ref folder removed" />
     <MESSAGE value="feat(Category): add query endpoint for filtered category retrieval and implement pagination" />
+    <MESSAGE value="db data" />
     <option name="LAST_COMMIT_MESSAGE" value="" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/SMIS.Infrastructure.Server/Services/Identity/JwtTokenGenerator.cs</url>
+          <line>24</line>
+          <properties documentPath="E:\Repo\SMIS\SMIS.Infrastructure.Server\Services\Identity\JwtTokenGenerator.cs" containingFunctionPresentation="Method 'Generate'">
+            <startOffsets>
+              <option value="755" />
+            </startOffsets>
+            <endOffsets>
+              <option value="756" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="3" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/SMIS.Application/Features/Identity/Users/Queries/UserGetCurrentQuery.cs</url>
+          <line>27</line>
+          <properties documentPath="E:\Repo\SMIS\SMIS.Application\Features\Identity\Users\Queries\UserGetCurrentQuery.cs" containingFunctionPresentation="Method 'Handle'">
+            <startOffsets>
+              <option value="1018" />
+            </startOffsets>
+            <endOffsets>
+              <option value="1019" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="5" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/SMIS.Application/Features/Categories/Commands/CategorySyncCommands.cs</url>
+          <line>160</line>
+          <properties documentPath="E:\Repo\SMIS\SMIS.Application\Features\Categories\Commands\CategorySyncCommands.cs" containingFunctionPresentation="Method 'Handle'">
+            <startOffsets>
+              <option value="5004" />
+            </startOffsets>
+            <endOffsets>
+              <option value="5114" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="6" />
+        </line-breakpoint>
+      </breakpoints>
       <default-breakpoints>
         <breakpoint type="DotNet_Exception_Breakpoints" />
         <breakpoint type="CMakeExceptionBreakpoint" />
