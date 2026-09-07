@@ -21,7 +21,7 @@ class AppDatabase {
     _database = await _factory.openDatabase(
       path,
       options: OpenDatabaseOptions(
-        version: 2,
+        version: 3,
         onConfigure: (database) async {
           await database.execute('PRAGMA foreign_keys = ON');
           await database.execute('PRAGMA journal_mode = WAL');
@@ -77,6 +77,7 @@ class AppDatabase {
         value TEXT NOT NULL
       )
     ''');
+    await _createUnitOfMeasuresSchema(database);
   }
 
   static Future<void> _upgradeSchema(
@@ -101,5 +102,42 @@ class AppDatabase {
         'ALTER TABLE categories ADD COLUMN server_last_modified_utc TEXT',
       );
     }
+    if (oldVersion < 3) {
+      await _createUnitOfMeasuresSchema(database);
+    }
+  }
+
+  static Future<void> _createUnitOfMeasuresSchema(Database database) async {
+    await database.execute('''
+      CREATE TABLE unit_of_measures (
+        id TEXT PRIMARY KEY,
+        name TEXT NOT NULL,
+        symbol TEXT NOT NULL,
+        description TEXT,
+        shop_id TEXT,
+        created_at TEXT NOT NULL,
+        updated_at TEXT NOT NULL,
+        last_modified_utc TEXT NOT NULL,
+        is_deleted INTEGER NOT NULL DEFAULT 0,
+        pending_operation TEXT NOT NULL DEFAULT 'none',
+        sync_status TEXT NOT NULL DEFAULT 'synced',
+        retry_count INTEGER NOT NULL DEFAULT 0,
+        next_retry_at TEXT,
+        last_sync_error TEXT,
+        server_created_date TEXT,
+        server_updated_date TEXT,
+        server_created_by TEXT,
+        server_updated_by TEXT,
+        server_last_modified_utc TEXT
+      )
+    ''');
+    await database.execute('''
+      CREATE INDEX idx_unit_of_measures_visible
+      ON unit_of_measures(is_deleted, name COLLATE NOCASE)
+    ''');
+    await database.execute('''
+      CREATE INDEX idx_unit_of_measures_pending
+      ON unit_of_measures(pending_operation, next_retry_at)
+    ''');
   }
 }

@@ -57,5 +57,9 @@ void main() {
     expect(names, contains('server_created_date'));
     expect(names, contains('server_last_modified_utc'));
     expect((await upgraded.query('categories')).single['name'], 'Existing');
+    final unitColumns = await upgraded.rawQuery(
+      'PRAGMA table_info(unit_of_measures)',
+    );
+    expect(unitColumns.map((column) => column['name']), contains('symbol'));
   });
 }

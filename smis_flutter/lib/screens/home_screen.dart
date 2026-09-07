@@ -3,11 +3,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../controllers/auth_controller.dart';
 import '../controllers/category_controller.dart';
-import '../controllers/profile_controller.dart';
+import '../controllers/unit_of_measure_controller.dart';
 import '../widgets/app_drawer.dart';
 import '../widgets/theme_mode_action.dart';
 import 'categories_screen.dart';
 import 'profile_screen.dart';
+import 'unit_of_measures_screen.dart';
 
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
@@ -17,6 +18,8 @@ class HomeScreen extends ConsumerWidget {
     final session = ref.watch(authControllerProvider).session;
     final categoryState = ref.watch(categoryControllerProvider);
     final pendingCount = categoryState.value?.pendingCount ?? 0;
+    final unitState = ref.watch(unitOfMeasureControllerProvider);
+    final unitPendingCount = unitState.value?.pendingCount ?? 0;
 
     // HomeScreen is only shown by the authentication gate after a session is
     // restored or created, but keep this defensive fallback for state changes.
@@ -66,17 +69,32 @@ class HomeScreen extends ConsumerWidget {
                       description: 'View your account, shop details, and profile settings.',
                       onTap: () => _openProfile(context),
                     );
+                    final unitsCard = _HomeActionCard(
+                      icon: Icons.straighten_outlined,
+                      title: 'Units of measurement',
+                      description: unitPendingCount == 0
+                          ? 'Manage your local measurement units.'
+                          : '$unitPendingCount local change${unitPendingCount == 1 ? '' : 's'} waiting to sync.',
+                      badgeLabel: unitPendingCount == 0
+                          ? null
+                          : '$unitPendingCount pending',
+                      onTap: () => _openUnits(context),
+                    );
                     return wideLayout
-                        ? Row(
+                        ? Wrap(
+                            spacing: 16,
+                            runSpacing: 16,
                             children: [
-                              Expanded(child: categoriesCard),
-                              const SizedBox(width: 16),
-                              Expanded(child: profileCard),
+                              SizedBox(width: (constraints.maxWidth - 16) / 2, child: categoriesCard),
+                              SizedBox(width: (constraints.maxWidth - 16) / 2, child: unitsCard),
+                              SizedBox(width: (constraints.maxWidth - 16) / 2, child: profileCard),
                             ],
                           )
                         : Column(
                             children: [
                               categoriesCard,
+                              const SizedBox(height: 16),
+                              unitsCard,
                               const SizedBox(height: 16),
                               profileCard,
                             ],
@@ -102,6 +120,14 @@ class HomeScreen extends ConsumerWidget {
   void _openProfile(BuildContext context) {
     Navigator.of(context).push(
       MaterialPageRoute<void>(builder: (context) => const ProfileScreen()),
+    );
+  }
+
+  void _openUnits(BuildContext context) {
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (context) => const UnitOfMeasuresScreen(),
+      ),
     );
   }
 }

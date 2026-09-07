@@ -2,12 +2,13 @@ import 'package:flutter/foundation.dart' show debugPrint, kDebugMode;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'auth_controller.dart';
+import 'app_dependencies.dart';
 import '../data/category_api.dart';
 import '../data/category_repository.dart';
-import '../data/database.dart';
 import '../models/category.dart';
 import '../services/category_sync_service.dart';
-import '../services/connectivity_service.dart';
+
+export 'app_dependencies.dart';
 
 class CategoryScreenState {
   const CategoryScreenState({
@@ -93,20 +94,12 @@ class CategoryController extends AsyncNotifier<CategoryScreenState> {
   );
 }
 
-final appDatabaseProvider = Provider<AppDatabase>(
-  (ref) => throw StateError('AppDatabase must be initialized in main.dart.'),
-);
-
 final categoryRepositoryProvider = Provider<CategoryRepository>(
   (ref) => CategoryRepository(ref.watch(appDatabaseProvider)),
 );
 
 final categoryApiProvider = Provider<CategoryApi>(
   (ref) => DioCategoryApi(sessionStore: ref.watch(authSessionStoreProvider)),
-);
-
-final connectivityProvider = Provider<NetworkConnectivity>(
-  (ref) => ConnectivityService(),
 );
 
 final categorySyncServiceProvider = Provider<CategorySyncService>(

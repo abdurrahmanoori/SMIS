@@ -8,8 +8,11 @@ import '../config/app_config.dart';
 import '../data/category_api.dart';
 import '../data/category_repository.dart';
 import '../data/database.dart';
+import '../data/unit_of_measure_api.dart';
+import '../data/unit_of_measure_repository.dart';
 import 'category_sync_service.dart';
 import 'connectivity_service.dart';
+import 'unit_of_measure_sync_service.dart';
 
 @pragma('vm:entry-point')
 void callbackDispatcher() {
@@ -23,13 +26,20 @@ void callbackDispatcher() {
 
     final database = AppDatabase();
     try {
-      final syncService = CategorySyncService(
+      final categorySyncService = CategorySyncService(
         CategoryRepository(database),
         DioCategoryApi(),
         ConnectivityService(),
       );
-      final result = await syncService.synchronize();
-      return !result.transientFailure;
+      final unitOfMeasureSyncService = UnitOfMeasureSyncService(
+        UnitOfMeasureRepository(database),
+        DioUnitOfMeasureApi(),
+        ConnectivityService(),
+      );
+      final categoryResult = await categorySyncService.synchronize();
+      final unitOfMeasureResult = await unitOfMeasureSyncService.synchronize();
+      return !categoryResult.transientFailure &&
+          !unitOfMeasureResult.transientFailure;
     } finally {
       await database.close();
     }

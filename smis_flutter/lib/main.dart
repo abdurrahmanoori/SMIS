@@ -8,7 +8,7 @@ import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
 import 'config/app_config.dart';
 import 'controllers/auth_controller.dart';
-import 'controllers/category_controller.dart';
+import 'controllers/app_dependencies.dart';
 import 'data/database.dart';
 import 'screens/home_screen.dart';
 import 'screens/login_screen.dart';

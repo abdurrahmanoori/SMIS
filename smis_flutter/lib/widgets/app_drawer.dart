@@ -4,9 +4,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../controllers/auth_controller.dart';
 import '../controllers/category_controller.dart';
 import '../controllers/profile_controller.dart';
+import '../controllers/unit_of_measure_controller.dart';
 import '../screens/categories_screen.dart';
 import '../screens/home_screen.dart';
 import '../screens/profile_screen.dart';
+import '../screens/unit_of_measures_screen.dart';
 
 class AppDrawer extends ConsumerWidget {
   const AppDrawer({super.key});
@@ -16,6 +18,8 @@ class AppDrawer extends ConsumerWidget {
     final session = ref.watch(authControllerProvider).session;
     final categoryState = ref.watch(categoryControllerProvider);
     final pendingCount = categoryState.value?.pendingCount ?? 0;
+    final unitState = ref.watch(unitOfMeasureControllerProvider);
+    final unitPendingCount = unitState.value?.pendingCount ?? 0;
 
     if (session == null) return const SizedBox.shrink();
 
@@ -44,6 +48,21 @@ class AppDrawer extends ConsumerWidget {
               Navigator.of(context).pushAndRemoveUntil(
                 MaterialPageRoute<void>(builder: (context) => HomeScreen()),
                 (route) => false,
+              );
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.straighten_outlined),
+            title: const Text('Units of Measurement'),
+            trailing: unitPendingCount > 0
+                ? Badge(label: Text('$unitPendingCount'))
+                : null,
+            onTap: () {
+              Navigator.of(context).pop();
+              Navigator.of(context).pushReplacement(
+                MaterialPageRoute<void>(
+                  builder: (context) => const UnitOfMeasuresScreen(),
+                ),
               );
             },
           ),
