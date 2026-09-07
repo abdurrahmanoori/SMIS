@@ -104,8 +104,21 @@ class AuthController extends Notifier<AuthState> {
   }
 
   Future<void> logout() async {
-    await _sessionStore.clear();
-    state = state.copyWith(clearSession: true);
+    try {
+      await _sessionStore.clear();
+      state = state.copyWith(clearSession: true, clearError: true);
+    } catch (error) {
+      // Do not leave the user on an authenticated screen if secure-storage
+      // cleanup fails. The login page exposes the storage problem so it can be
+      // resolved, while the active in-memory session is still removed.
+      state = state.copyWith(
+        clearSession: true,
+        error: LocalStorageException(
+          'Signed out of this app, but the saved session could not be removed.',
+          cause: error,
+        ),
+      );
+    }
   }
 
   Future<void> updateSessionProfile({String? userName, String? email}) async {

@@ -651,7 +651,15 @@
       <option name="project" value="LOCAL" />
       <updated>1788702761468</updated>
     </task>
-    <option name="localTasksCounter" value="35" />
+    <task id="LOCAL-00035" summary="feat: implement offline-first flow for Unit of Measurement with local storage and synchronization">
+      <option name="closed" value="true" />
+      <created>1788751902800</created>
+      <option name="number" value="00035" />
+      <option name="presentableId" value="LOCAL-00035" />
+      <option name="project" value="LOCAL" />
+      <updated>1788751902801</updated>
+    </task>
+    <option name="localTasksCounter" value="36" />
     <option name="createChangelist" value="false" />
     <option name="createBranch" value="false" />
     <servers />
@@ -663,7 +671,6 @@
   <component name="UnityProjectConfiguration" hasMinimizedUI="false" />
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
-    <MESSAGE value="feat(Database): add custom database path setup for Windows and include new data source configurations" />
     <MESSAGE value="feat(Configuration): add devtools options and update database source configurations" />
     <MESSAGE value="refactor(CategoryListPage): improve comments and formatting for clarity" />
     <MESSAGE value="other layer remove and jsut we have api, flutter project and test if api layer" />
@@ -688,6 +695,7 @@
     <MESSAGE value="feat: implement theme management with ThemeController and integrate into main app" />
     <MESSAGE value="feat: enhance error handling with AppErrorView and refactor error management in authentication and profile APIs" />
     <MESSAGE value="feat: add WebDeploy configurations for site48297 and site62669 in workspace settings" />
+    <MESSAGE value="feat: implement offline-first flow for Unit of Measurement with local storage and synchronization" />
     <option name="LAST_COMMIT_MESSAGE" value="" />
   </component>
   <component name="XDebuggerManager">

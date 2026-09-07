@@ -6,7 +6,7 @@ import '../controllers/category_controller.dart';
 import '../controllers/profile_controller.dart';
 import '../controllers/unit_of_measure_controller.dart';
 import '../screens/categories_screen.dart';
-import '../screens/home_screen.dart';
+import '../screens/authentication_gate.dart';
 import '../screens/profile_screen.dart';
 import '../screens/unit_of_measures_screen.dart';
 
@@ -45,10 +45,7 @@ class AppDrawer extends ConsumerWidget {
             title: const Text('Home'),
             onTap: () {
               Navigator.of(context).pop();
-              Navigator.of(context).pushAndRemoveUntil(
-                MaterialPageRoute<void>(builder: (context) => HomeScreen()),
-                (route) => false,
-              );
+              Navigator.of(context).popUntil((route) => route.isFirst);
             },
           ),
           ListTile(
@@ -94,10 +91,18 @@ class AppDrawer extends ConsumerWidget {
           ListTile(
             leading: const Icon(Icons.logout),
             title: const Text('Sign Out'),
-            onTap: () {
-              Navigator.of(context).pop();
+            onTap: () async {
+              final navigator = Navigator.of(context);
+              navigator.pop();
               ref.invalidate(profileControllerProvider);
-              ref.read(authControllerProvider.notifier).logout();
+              await ref.read(authControllerProvider.notifier).logout();
+              if (!navigator.mounted) return;
+              navigator.pushAndRemoveUntil(
+                MaterialPageRoute<void>(
+                  builder: (context) => const AuthenticationGate(),
+                ),
+                (route) => false,
+              );
             },
           ),
           const SizedBox(height: 16),

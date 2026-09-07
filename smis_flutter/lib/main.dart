@@ -7,11 +7,9 @@ import 'package:path/path.dart' as p;
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
 import 'config/app_config.dart';
-import 'controllers/auth_controller.dart';
 import 'controllers/app_dependencies.dart';
 import 'data/database.dart';
-import 'screens/home_screen.dart';
-import 'screens/login_screen.dart';
+import 'screens/authentication_gate.dart';
 import 'services/background_sync.dart';
 import 'controllers/theme_controller.dart';
 
@@ -27,7 +25,6 @@ Future<void> main() async {
   
   await mainEntryPoint();
 }
-
 Future<void> mainEntryPoint() async {
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -73,7 +70,6 @@ Future<void> mainEntryPoint() async {
     ),
   );
 }
-
 class SmisApp extends ConsumerWidget {
   const SmisApp({super.key});
 
@@ -112,22 +108,7 @@ class SmisApp extends ConsumerWidget {
           border: OutlineInputBorder(),
         ),
       ),
-      home: const _AuthenticationGate(),
+      home: const AuthenticationGate(),
     );
-  }
-}
-
-class _AuthenticationGate extends ConsumerWidget {
-  const _AuthenticationGate();
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final auth = ref.watch(authControllerProvider);
-    if (auth.isRestoring) {
-      return const Scaffold(
-        body: Center(child: CircularProgressIndicator()),
-      );
-    }
-    return auth.isAuthenticated ? const HomeScreen() : const LoginScreen();
   }
 }
