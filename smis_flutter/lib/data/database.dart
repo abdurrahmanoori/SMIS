@@ -21,7 +21,7 @@ class AppDatabase {
     _database = await _factory.openDatabase(
       path,
       options: OpenDatabaseOptions(
-        version: 3,
+        version: 5,
         onConfigure: (database) async {
           await database.execute('PRAGMA foreign_keys = ON');
           await database.execute('PRAGMA journal_mode = WAL');
@@ -78,6 +78,8 @@ class AppDatabase {
       )
     ''');
     await _createUnitOfMeasuresSchema(database);
+    await _createShopsSchema(database);
+    await _createProductsSchema(database);
   }
 
   static Future<void> _upgradeSchema(
@@ -104,6 +106,12 @@ class AppDatabase {
     }
     if (oldVersion < 3) {
       await _createUnitOfMeasuresSchema(database);
+    }
+    if (oldVersion < 4) {
+      await _createShopsSchema(database);
+    }
+    if (oldVersion < 5) {
+      await _createProductsSchema(database);
     }
   }
 
@@ -138,6 +146,78 @@ class AppDatabase {
     await database.execute('''
       CREATE INDEX idx_unit_of_measures_pending
       ON unit_of_measures(pending_operation, next_retry_at)
+    ''');
+  }
+
+  static Future<void> _createShopsSchema(Database database) async {
+    await database.execute('''
+      CREATE TABLE shops (
+        id TEXT PRIMARY KEY,
+        name TEXT NOT NULL,
+        shop_type TEXT NOT NULL,
+        address TEXT,
+        phone_number TEXT,
+        email TEXT,
+        tax_number TEXT,
+        is_active INTEGER NOT NULL DEFAULT 1,
+        created_at TEXT NOT NULL,
+        updated_at TEXT NOT NULL,
+        last_modified_utc TEXT NOT NULL,
+        is_deleted INTEGER NOT NULL DEFAULT 0,
+        pending_operation TEXT NOT NULL DEFAULT 'none',
+        sync_status TEXT NOT NULL DEFAULT 'synced',
+        retry_count INTEGER NOT NULL DEFAULT 0,
+        next_retry_at TEXT,
+        last_sync_error TEXT,
+        server_last_modified_utc TEXT
+      )
+    ''');
+    await database.execute('''
+      CREATE INDEX idx_shops_visible
+      ON shops(is_deleted, name COLLATE NOCASE)
+    ''');
+    await database.execute('''
+      CREATE INDEX idx_shops_pending
+      ON shops(pending_operation, next_retry_at)
+    ''');
+  }
+
+  static Future<void> _createProductsSchema(Database database) async {
+    await database.execute('''
+      CREATE TABLE products (
+        id TEXT PRIMARY KEY,
+        name TEXT NOT NULL,
+        base_unit_id TEXT NOT NULL,
+        description TEXT,
+        is_active INTEGER NOT NULL DEFAULT 1,
+        sku TEXT,
+        barcode TEXT,
+        image_url TEXT,
+        category_id TEXT,
+        shop_id TEXT,
+        created_at TEXT NOT NULL,
+        updated_at TEXT NOT NULL,
+        last_modified_utc TEXT NOT NULL,
+        is_deleted INTEGER NOT NULL DEFAULT 0,
+        pending_operation TEXT NOT NULL DEFAULT 'none',
+        sync_status TEXT NOT NULL DEFAULT 'synced',
+        retry_count INTEGER NOT NULL DEFAULT 0,
+        next_retry_at TEXT,
+        last_sync_error TEXT,
+        server_created_date TEXT,
+        server_updated_date TEXT,
+        server_created_by TEXT,
+        server_updated_by TEXT,
+        server_last_modified_utc TEXT
+      )
+    ''');
+    await database.execute('''
+      CREATE INDEX idx_products_visible
+      ON products(is_deleted, name COLLATE NOCASE)
+    ''');
+    await database.execute('''
+      CREATE INDEX idx_products_pending
+      ON products(pending_operation, next_retry_at)
     ''');
   }
 }

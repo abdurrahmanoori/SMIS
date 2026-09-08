@@ -10,9 +10,12 @@ import '../data/category_repository.dart';
 import '../data/database.dart';
 import '../data/unit_of_measure_api.dart';
 import '../data/unit_of_measure_repository.dart';
+import '../data/product_api.dart';
+import '../data/product_repository.dart';
 import 'category_sync_service.dart';
 import 'connectivity_service.dart';
 import 'unit_of_measure_sync_service.dart';
+import 'product_sync_service.dart';
 
 @pragma('vm:entry-point')
 void callbackDispatcher() {
@@ -36,10 +39,17 @@ void callbackDispatcher() {
         DioUnitOfMeasureApi(),
         ConnectivityService(),
       );
+      final productSyncService = ProductSyncService(
+        ProductRepository(database),
+        DioProductApi(),
+        ConnectivityService(),
+      );
       final categoryResult = await categorySyncService.synchronize();
       final unitOfMeasureResult = await unitOfMeasureSyncService.synchronize();
+      final productResult = await productSyncService.synchronize();
       return !categoryResult.transientFailure &&
-          !unitOfMeasureResult.transientFailure;
+          !unitOfMeasureResult.transientFailure &&
+          !productResult.transientFailure;
     } finally {
       await database.close();
     }

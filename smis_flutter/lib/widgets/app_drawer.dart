@@ -4,10 +4,14 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../controllers/auth_controller.dart';
 import '../controllers/category_controller.dart';
 import '../controllers/profile_controller.dart';
+import '../controllers/product_controller.dart';
+import '../controllers/shop_controller.dart';
 import '../controllers/unit_of_measure_controller.dart';
 import '../screens/categories_screen.dart';
 import '../screens/authentication_gate.dart';
 import '../screens/profile_screen.dart';
+import '../screens/products_screen.dart';
+import '../screens/shops_screen.dart';
 import '../screens/unit_of_measures_screen.dart';
 
 class AppDrawer extends ConsumerWidget {
@@ -20,11 +24,16 @@ class AppDrawer extends ConsumerWidget {
     final pendingCount = categoryState.value?.pendingCount ?? 0;
     final unitState = ref.watch(unitOfMeasureControllerProvider);
     final unitPendingCount = unitState.value?.pendingCount ?? 0;
+    final shopState = ref.watch(shopControllerProvider);
+    final shopPendingCount = shopState.value?.pendingCount ?? 0;
+    final productState = ref.watch(productControllerProvider);
+    final productPendingCount = productState.value?.pendingCount ?? 0;
 
     if (session == null) return const SizedBox.shrink();
 
     return Drawer(
-      child: Column(
+      child: ListView(
+        padding: EdgeInsets.zero,
         children: [
           UserAccountsDrawerHeader(
             accountName: Text(session.userName),
@@ -46,6 +55,21 @@ class AppDrawer extends ConsumerWidget {
             onTap: () {
               Navigator.of(context).pop();
               Navigator.of(context).popUntil((route) => route.isFirst);
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.storefront_outlined),
+            title: const Text('Shops'),
+            trailing: shopPendingCount > 0
+                ? Badge(label: Text('$shopPendingCount'))
+                : null,
+            onTap: () {
+              Navigator.of(context).pop();
+              Navigator.of(context).pushReplacement(
+                MaterialPageRoute<void>(
+                  builder: (context) => const ShopsScreen(),
+                ),
+              );
             },
           ),
           ListTile(
@@ -77,6 +101,21 @@ class AppDrawer extends ConsumerWidget {
             },
           ),
           ListTile(
+            leading: const Icon(Icons.inventory_2_outlined),
+            title: const Text('Products'),
+            trailing: productPendingCount > 0
+                ? Badge(label: Text('$productPendingCount'))
+                : null,
+            onTap: () {
+              Navigator.of(context).pop();
+              Navigator.of(context).pushReplacement(
+                MaterialPageRoute<void>(
+                  builder: (context) => const ProductsScreen(),
+                ),
+              );
+            },
+          ),
+          ListTile(
             leading: const Icon(Icons.person_outline),
             title: const Text('My Profile'),
             onTap: () {
@@ -86,7 +125,6 @@ class AppDrawer extends ConsumerWidget {
               );
             },
           ),
-          const Spacer(),
           const Divider(),
           ListTile(
             leading: const Icon(Icons.logout),

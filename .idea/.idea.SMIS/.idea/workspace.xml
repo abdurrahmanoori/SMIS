@@ -67,7 +67,6 @@
   </component>
   <component name="EmbeddingIndexingInfo">
     <option name="cachedIndexableFilesCount" value="68" />
-    <option name="fileBasedEmbeddingIndicesEnabled" value="true" />
   </component>
   <component name="Git.Settings">
     <option name="PREVIEW_PUSH_PROTECTED_ONLY" value="true" />
@@ -92,11 +91,12 @@
 }</component>
   <component name="HighlightingSettingsPerFile">
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/0b7856b364e04283a10bb924825b197f28f228/bc/87b86347/EntityFrameworkQueryableExtensions.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/1c1723e034ca465b81243e017417127623020/3b/99e4da88/JsonWebTokenHandler.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/4db36763b7d04376a4837b0568a664df50620/3f/95c73b6d/SecurityTokenDescriptor.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/4db36763b7d04376a4837b0568a664df50620/4b/63722296/SecurityTokenHandler.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/9c31640fb7734f77994409ff691e2328239728/07/f64c2950/LocalhostListenOptions.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/SMIS.Application/Services/IApplicationDbContext.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="gitIndexFs://ce9ec9ff:E\:/Repo/SMIS:E\:/Repo/SMIS/SMIS.Application/Common/Validation/SyncValidationRules.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="gitIndexFs://ce9ec9ff:E\:/Repo/SMIS:E\:/Repo/SMIS/SMIS.Application/Features/ProductPrices/Validators/ProductPriceSyncCommandValidators.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="gitIndexFs://ce9ec9ff:E\:/Repo/SMIS:E\:/Repo/SMIS/SMIS.Infrastructure.Server/Migrations/20260906123656_clinetRelatedFiledAdd.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Immediate Window" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="InvalidFacetManager">
     <ignored-facets>
@@ -110,61 +110,61 @@
   <component name="MetaFilesCheckinStateConfiguration" checkMetaFiles="true" />
   <component name="NextEditCompletionFeaturesState">
     <decayedCancelled>
-      <entry key="MS100" value="0.0" />
-      <entry key="MS500" value="0.0" />
-      <entry key="S2" value="6.044074068254364E-150" />
-      <entry key="S5" value="3.109528986829897E-60" />
-      <entry key="S10" value="2.4933674053143746E-30" />
-      <entry key="S30" value="2.1524439764489218E-10" />
-      <entry key="S60" value="2.07481229982533E-5" />
-      <entry key="M2" value="0.006441896860915761" />
-      <entry key="M5" value="0.20332168291617536" />
-      <entry key="M10" value="0.6778110809599569" />
-      <entry key="M15" value="1.055884966360702" />
-      <entry key="M30" value="1.8678379484881549" />
-      <entry key="H1" value="4.536265386596878" />
-      <entry key="H2" value="21.80660390740931" />
-      <entry key="H4" value="71.43312658248838" />
-      <entry key="D1" value="219.53385656421344" />
-      <entry key="W1" value="268.7207872986498" />
+      <entry key="MS100" value="1.0" />
+      <entry key="MS500" value="1.0" />
+      <entry key="S2" value="1.0" />
+      <entry key="S5" value="1.0" />
+      <entry key="S10" value="1.0000000000001559" />
+      <entry key="S30" value="1.000090861860094" />
+      <entry key="S60" value="1.0174175470768585" />
+      <entry key="M2" value="1.3094262081651147" />
+      <entry key="M5" value="3.102677509917652" />
+      <entry key="M10" value="5.319496314615102" />
+      <entry key="M15" value="6.654527035785913" />
+      <entry key="M30" value="8.761204415760185" />
+      <entry key="H1" value="12.066760058761384" />
+      <entry key="H2" value="28.872841844437804" />
+      <entry key="H4" value="77.73122242707797" />
+      <entry key="D1" value="227.2095878176796" />
+      <entry key="W1" value="277.48987383707873" />
     </decayedCancelled>
     <decayedSelected>
-      <entry key="MS100" value="1.0000000000000002" />
-      <entry key="MS500" value="1.000652379921089" />
-      <entry key="S2" value="1.1598177994319119" />
-      <entry key="S5" value="1.4802308532295712" />
-      <entry key="S10" value="1.6929869069683576" />
-      <entry key="S30" value="1.8849288278250707" />
-      <entry key="S60" value="1.9407065577666385" />
-      <entry key="M2" value="1.9699005867247126" />
-      <entry key="M5" value="1.991598735072857" />
-      <entry key="M10" value="2.0804975356690383" />
-      <entry key="M15" value="2.2425329293860004" />
-      <entry key="M30" value="2.7042179315881762" />
-      <entry key="H1" value="3.6676006515245483" />
-      <entry key="H2" value="9.543979501142118" />
-      <entry key="H4" value="26.0579549303106" />
-      <entry key="D1" value="73.02902942552679" />
-      <entry key="W1" value="88.16401196513003" />
+      <entry key="MS100" value="0.0" />
+      <entry key="MS500" value="0.0" />
+      <entry key="S2" value="7.267504050999912E-84" />
+      <entry key="S5" value="5.553338073178571E-34" />
+      <entry key="S10" value="2.356577708101967E-17" />
+      <entry key="S30" value="2.9984057026516433E-6" />
+      <entry key="S60" value="0.0023207621849499513" />
+      <entry key="M2" value="0.084531863240861" />
+      <entry key="M5" value="0.8308233535664723" />
+      <entry key="M10" value="1.8511868869521875" />
+      <entry key="M15" value="2.499139384273934" />
+      <entry key="M30" value="3.6029797244007833" />
+      <entry key="H1" value="4.953228795649227" />
+      <entry key="H2" value="10.774697236578529" />
+      <entry key="H4" value="27.09476597452486" />
+      <entry key="D1" value="74.5910470604905" />
+      <entry key="W1" value="90.08859069687105" />
     </decayedSelected>
     <decayedShown>
-      <entry key="MS100" value="0.003773188784862677" />
-      <entry key="MS500" value="0.32769241482059164" />
-      <entry key="S2" value="0.855027887883943" />
-      <entry key="S5" value="1.2900832424988584" />
-      <entry key="S10" value="1.5747595068448303" />
-      <entry key="S30" value="1.8383940006317085" />
-      <entry key="S60" value="1.9164106840266788" />
-      <entry key="M2" value="1.9639076967270355" />
-      <entry key="M5" value="2.1898575997258103" />
-      <entry key="M10" value="2.755619037101396" />
-      <entry key="M15" value="3.2964409589106265" />
-      <entry key="M30" value="4.57080496047569" />
-      <entry key="H1" value="8.20280726936461" />
-      <entry key="H2" value="31.348351290485297" />
-      <entry key="H4" value="97.4875533089369" />
-      <entry key="D1" value="292.56116117850803" />
-      <entry key="W1" value="356.88450069326916" />
+      <entry key="MS100" value="0.46009382531243753" />
+      <entry key="MS500" value="0.8561882845464569" />
+      <entry key="S2" value="0.9619274546647747" />
+      <entry key="S5" value="0.984593417787368" />
+      <entry key="S10" value="0.9922668077627459" />
+      <entry key="S30" value="0.9975085438982433" />
+      <entry key="S60" value="1.0182862594667426" />
+      <entry key="M2" value="1.3908806072690216" />
+      <entry key="M5" value="3.924257755209905" />
+      <entry key="M10" value="7.160849577837361" />
+      <entry key="M15" value="9.145112875111423" />
+      <entry key="M30" value="12.358463527041158" />
+      <entry key="H1" value="17.016358977308652" />
+      <entry key="H2" value="39.64401511421505" />
+      <entry key="H4" value="104.82183724450758" />
+      <entry key="D1" value="301.79879265287366" />
+      <entry key="W1" value="367.5781479145503" />
     </decayedShown>
   </component>
   <component name="ProblemsViewState">
@@ -179,45 +179,45 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;.NET Launch Settings Profile.SMIS.Api: http.executor&quot;: &quot;Run&quot;,
-    &quot;.NET Launch Settings Profile.SMIS.Api: https.executor&quot;: &quot;Run&quot;,
-    &quot;.NET Launch Settings Profile.SMIS.UI: Windows Machine.executor&quot;: &quot;Run&quot;,
-    &quot;ASKED_SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.MCP Project settings loaded&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.cidr.known.project.marker&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.readMode.enableVisualFormatting&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
-    &quot;cidr.known.project.marker&quot;: &quot;true&quot;,
-    &quot;codeWithMe.voiceChat.enabledByDefault&quot;: &quot;false&quot;,
-    &quot;com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;flutter-and-api-only&quot;,
-    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
-    &quot;junie.onboarding.icon.badge.shown&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.lookFeel&quot;,
-    &quot;to.speed.mode.migration.done&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    ".NET Launch Settings Profile.SMIS.Api: http.executor": "Debug",
+    ".NET Launch Settings Profile.SMIS.Api: https.executor": "Run",
+    ".NET Launch Settings Profile.SMIS.UI: Windows Machine.executor": "Run",
+    "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.MCP Project settings loaded": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.cidr.known.project.marker": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "RunOnceActivity.readMode.enableVisualFormatting": "true",
+    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
+    "cidr.known.project.marker": "true",
+    "codeWithMe.voiceChat.enabledByDefault": "false",
+    "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
+    "git-widget-placeholder": "flutter-and-api-only",
+    "ignore.virus.scanning.warn.message": "true",
+    "junie.onboarding.icon.badge.shown": "true",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "preferences.lookFeel",
+    "to.speed.mode.migration.done": "true"
   },
-  &quot;keyToStringList&quot;: {
-    &quot;DatabaseDriversLRU&quot;: [
-      &quot;sqlite&quot;,
-      &quot;postgresql&quot;
+  "keyToStringList": {
+    "DatabaseDriversLRU": [
+      "sqlite",
+      "postgresql"
     ],
-    &quot;GitStage.ChangesTree.GroupingKeys&quot;: [
-      &quot;directory&quot;,
-      &quot;module&quot;,
-      &quot;repository&quot;
+    "GitStage.ChangesTree.GroupingKeys": [
+      "directory",
+      "module",
+      "repository"
     ]
   }
-}</component>
+}]]></component>
   <component name="RunManager" selected=".NET Launch Settings Profile.SMIS.Api: http">
     <configuration name="SMIS.Api: site48297-WebDeploy" type="DotNetMsBuildPublish" factoryName="Publish to IIS">
       <riderPublish configuration="Release" platform="Any CPU" publish_profile="site48297-WebDeploy.pubxml" pubxml_path="$PROJECT_DIR$/SMIS.Api/Properties/PublishProfiles/site48297-WebDeploy.pubxml" user_name="site48297" uuid_high="6959429607722075224" uuid_low="-6423334993005118021" />
@@ -372,20 +372,20 @@
     </configuration>
   </component>
   <component name="TaskManager">
-    <task id="Default" summary="Default task">
+    <task active="true" id="Default" summary="Default task">
       <changelist id="c1539008-1193-464d-b486-40cdba8ba5f6" name="Changes" comment="" />
       <created>1787405183096</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
-      <updated>1787743440609</updated>
+      <updated>1788873767067</updated>
     </task>
-    <task active="true" id="LOCAL-00001" summary="new-task">
+    <task id="LOCAL-00001" summary="new-task">
       <changelist id="c1539008-1193-464d-b486-40cdba8ba5f6" name="Changes" comment="" />
       <created>1787743432546</created>
       <option name="number" value="00001" />
       <option name="presentableId" value="LOCAL-00001" />
       <option name="project" value="LOCAL" />
-      <updated>1787743440609</updated>
+      <updated>1788873767067</updated>
     </task>
     <task id="LOCAL-00002" summary="just some task">
       <option name="closed" value="true" />
@@ -659,7 +659,15 @@
       <option name="project" value="LOCAL" />
       <updated>1788751902801</updated>
     </task>
-    <option name="localTasksCounter" value="36" />
+    <task id="LOCAL-00036" summary="feat: enhance authentication flow with AuthenticationGate and improve logout handling">
+      <option name="closed" value="true" />
+      <created>1788752130275</created>
+      <option name="number" value="00036" />
+      <option name="presentableId" value="LOCAL-00036" />
+      <option name="project" value="LOCAL" />
+      <updated>1788752130275</updated>
+    </task>
+    <option name="localTasksCounter" value="37" />
     <option name="createChangelist" value="false" />
     <option name="createBranch" value="false" />
     <servers />
@@ -671,7 +679,6 @@
   <component name="UnityProjectConfiguration" hasMinimizedUI="false" />
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
-    <MESSAGE value="feat(Configuration): add devtools options and update database source configurations" />
     <MESSAGE value="refactor(CategoryListPage): improve comments and formatting for clarity" />
     <MESSAGE value="other layer remove and jsut we have api, flutter project and test if api layer" />
     <MESSAGE value="ref folder removed" />
@@ -696,42 +703,25 @@
     <MESSAGE value="feat: enhance error handling with AppErrorView and refactor error management in authentication and profile APIs" />
     <MESSAGE value="feat: add WebDeploy configurations for site48297 and site62669 in workspace settings" />
     <MESSAGE value="feat: implement offline-first flow for Unit of Measurement with local storage and synchronization" />
+    <MESSAGE value="feat: enhance authentication flow with AuthenticationGate and improve logout handling" />
     <option name="LAST_COMMIT_MESSAGE" value="" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/SMIS.Infrastructure.Server/Services/Identity/JwtTokenGenerator.cs</url>
-          <line>24</line>
-          <properties documentPath="E:\Repo\SMIS\SMIS.Infrastructure.Server\Services\Identity\JwtTokenGenerator.cs" containingFunctionPresentation="Method 'Generate'">
-            <startOffsets>
-              <option value="755" />
-            </startOffsets>
-            <endOffsets>
-              <option value="756" />
-            </endOffsets>
-          </properties>
+        <breakpoint enabled="true" type="DotNet_Exception_Breakpoints">
+          <properties exception="System.OperationCanceledException" breakIfHandledByOtherCode="false" displayValue="System.OperationCanceledException" />
+          <option name="timeStamp" value="1" />
+        </breakpoint>
+        <breakpoint enabled="true" type="DotNet_Exception_Breakpoints">
+          <properties exception="System.Threading.Tasks.TaskCanceledException" breakIfHandledByOtherCode="false" displayValue="System.Threading.Tasks.TaskCanceledException" />
+          <option name="timeStamp" value="2" />
+        </breakpoint>
+        <breakpoint enabled="true" type="DotNet_Exception_Breakpoints">
+          <properties exception="System.Threading.ThreadAbortException" breakIfHandledByOtherCode="false" displayValue="System.Threading.ThreadAbortException" />
           <option name="timeStamp" value="3" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/SMIS.Application/Features/Identity/Users/Queries/UserGetCurrentQuery.cs</url>
-          <line>27</line>
-          <properties documentPath="E:\Repo\SMIS\SMIS.Application\Features\Identity\Users\Queries\UserGetCurrentQuery.cs" containingFunctionPresentation="Method 'Handle'">
-            <startOffsets>
-              <option value="1018" />
-            </startOffsets>
-            <endOffsets>
-              <option value="1019" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="5" />
-        </line-breakpoint>
+        </breakpoint>
       </breakpoints>
-      <default-breakpoints>
-        <breakpoint type="DotNet_Exception_Breakpoints" />
-        <breakpoint type="CMakeExceptionBreakpoint" />
-      </default-breakpoints>
     </breakpoint-manager>
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">

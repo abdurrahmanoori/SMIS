@@ -18,6 +18,8 @@ class AppConfig {
   static const loginEndpoint = '/api/Account/login';
   static const categoryEndpoint = '/api/Category';
   static const unitOfMeasureEndpoint = '/api/UnitOfMeasure';
+  static const shopEndpoint = '/api/Shop';
+  static const productEndpoint = '/api/Product';
   static const backgroundTaskIdentifier =
       'com.example.smisFlutter.categorySync';
 }
