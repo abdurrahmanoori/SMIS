@@ -58,4 +58,20 @@ class _SyncSummary extends StatelessWidget { const _SyncSummary({required this.r
 class _ShopCard extends StatelessWidget { const _ShopCard({required this.shop, required this.onEdit, required this.onDelete}); final Shop shop; final VoidCallback onEdit; final VoidCallback onDelete; @override Widget build(BuildContext context) => Card(child: ListTile(leading: CircleAvatar(child: Text(shop.name.characters.first.toUpperCase())), title: Row(children: [Flexible(child: Text(shop.name)), const SizedBox(width: 8), _SyncStateIcon(shop: shop)]), subtitle: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [Text(shop.shopType == ShopType.retailShop ? 'Retail shop' : 'Wholesale shop'), if (shop.address case final address?) Text(address, maxLines: 1, overflow: TextOverflow.ellipsis), Text(shop.isActive ? 'Active' : 'Inactive')]), isThreeLine: true, trailing: PopupMenuButton<String>(onSelected: (value) => value == 'edit' ? onEdit() : onDelete(), itemBuilder: (context) => const [PopupMenuItem(value: 'edit', child: Text('Edit')), PopupMenuItem(value: 'delete', child: Text('Delete'))]))); }
 class _SyncStateIcon extends StatelessWidget { const _SyncStateIcon({required this.shop}); final Shop shop; @override Widget build(BuildContext context) { final failed = shop.syncStatus == ShopSyncStatus.failed; final synced = shop.syncStatus == ShopSyncStatus.synced; return Tooltip(message: shop.lastSyncError ?? (synced ? 'Synced' : failed ? 'Sync failed' : 'Waiting to sync'), child: Icon(failed ? Icons.cloud_off_outlined : synced ? Icons.cloud_done_outlined : Icons.cloud_upload_outlined, size: 18, color: failed ? Theme.of(context).colorScheme.error : Theme.of(context).colorScheme.outline)); } }
 class _EmptyView extends StatelessWidget { const _EmptyView(); @override Widget build(BuildContext context) => const Center(child: Padding(padding: EdgeInsets.all(32), child: Column(mainAxisSize: MainAxisSize.min, children: [Icon(Icons.storefront_outlined, size: 56), SizedBox(height: 12), Text('No shops available offline'), SizedBox(height: 4), Text('Press Sync to pull your assigned shop.')]))) ; }
-class _ShopPermissionNotice extends StatelessWidget { const _ShopPermissionNotice(); @override Widget build(BuildContext context) => Padding(padding: const EdgeInsets.fromLTRB(16, 12, 16, 0), child: MaterialBanner(content: const Text('Your account can edit its assigned shop. Creating additional shops requires a SuperAdmin account.'), leading: const Icon(Icons.admin_panel_settings_outlined), actions: const [])); }
+class _ShopPermissionNotice extends StatelessWidget {
+  const _ShopPermissionNotice();
+  @override
+  Widget build(BuildContext context) => Padding(
+    padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
+    child: MaterialBanner(
+      content: const Text('Your account can edit its assigned shop. Creating additional shops requires a SuperAdmin account.'),
+      leading: const Icon(Icons.admin_panel_settings_outlined),
+      actions: [
+        TextButton(
+          onPressed: () => ScaffoldMessenger.of(context).clearMaterialBanners(),
+          child: const Text('OK'),
+        ),
+      ],
+    ),
+  );
+}

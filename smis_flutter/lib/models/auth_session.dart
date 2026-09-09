@@ -5,6 +5,7 @@ class AuthSession {
     required this.userName,
     required this.email,
     required this.roles,
+    required this.shopId,
   });
 
   final String token;
@@ -12,6 +13,7 @@ class AuthSession {
   final String userName;
   final String email;
   final List<String> roles;
+  final String shopId;
 
   AuthSession copyWith({String? userName, String? email}) => AuthSession(
     token: token,
@@ -19,6 +21,7 @@ class AuthSession {
     userName: userName ?? this.userName,
     email: email ?? this.email,
     roles: roles,
+    shopId: shopId,
   );
 
   factory AuthSession.fromJson(Map<String, dynamic> json) {
@@ -36,6 +39,7 @@ class AuthSession {
       userId: requiredString('userId', 'UserId'),
       userName: requiredString('userName', 'UserName'),
       email: requiredString('email', 'Email'),
+      shopId: requiredString('shopId', 'ShopId'),
       roles: rawRoles is List
           ? rawRoles.whereType<String>().toList(growable: false)
           : const <String>[],
@@ -48,6 +52,7 @@ class AuthSession {
     'userName': userName,
     'email': email,
     'roles': roles,
+    'shopId': shopId,
   };
 }
 

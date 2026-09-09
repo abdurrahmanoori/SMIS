@@ -41,8 +41,18 @@ class CategoryController extends AsyncNotifier<CategoryScreenState> {
 
   CategorySyncService get _syncService => ref.read(categorySyncServiceProvider);
 
+  String get _shopId {
+    final session = ref.watch(authControllerProvider.select((s) => s.session));
+    if (session == null) throw StateError('User is not authenticated.');
+    return session.shopId;
+  }
+
   @override
-  Future<CategoryScreenState> build() => _load();
+  Future<CategoryScreenState> build() {
+    // Watch shopId to rebuild when switching accounts
+    _shopId;
+    return _load();
+  }
 
   Future<void> reload() async {
     final previous = state.value;
@@ -55,7 +65,7 @@ class CategoryController extends AsyncNotifier<CategoryScreenState> {
   }
 
   Future<void> create(CategoryDraft draft) async {
-    await _repository.create(draft);
+    await _repository.create(draft, _shopId);
     await reload();
   }
 
@@ -73,7 +83,7 @@ class CategoryController extends AsyncNotifier<CategoryScreenState> {
     final current = state.value ?? await _load();
     state = AsyncData(current.copyWith(isSyncing: true));
 
-    final result = await _syncService.synchronize(force: true);
+    final result = await _syncService.synchronize(shopId: _shopId, force: true);
 
     if (kDebugMode && !result.success) {
       debugPrint(result.messageFor(includeDiagnostics: true));
@@ -86,12 +96,15 @@ class CategoryController extends AsyncNotifier<CategoryScreenState> {
   Future<CategoryScreenState> _load({
     CategorySyncResult? lastSyncResult,
     bool isSyncing = false,
-  }) async => CategoryScreenState(
-    categories: await _repository.getAll(),
-    pendingCount: await _repository.getPendingCount(),
-    isSyncing: isSyncing,
-    lastSyncResult: lastSyncResult,
-  );
+  }) async {
+    final shopId = _shopId;
+    return CategoryScreenState(
+      categories: await _repository.getAll(shopId),
+      pendingCount: await _repository.getPendingCount(shopId),
+      isSyncing: isSyncing,
+      lastSyncResult: lastSyncResult,
+    );
+  }
 }
 
 final categoryRepositoryProvider = Provider<CategoryRepository>(

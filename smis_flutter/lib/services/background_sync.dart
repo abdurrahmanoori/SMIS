@@ -12,6 +12,7 @@ import '../data/unit_of_measure_api.dart';
 import '../data/unit_of_measure_repository.dart';
 import '../data/product_api.dart';
 import '../data/product_repository.dart';
+import 'auth_session_store.dart';
 import 'category_sync_service.dart';
 import 'connectivity_service.dart';
 import 'unit_of_measure_sync_service.dart';
@@ -28,25 +29,30 @@ void callbackDispatcher() {
     }
 
     final database = AppDatabase();
+    final sessionStore = SecureAuthSessionStore();
     try {
+      final session = await sessionStore.read();
+      if (session == null) return true;
+
       final categorySyncService = CategorySyncService(
         CategoryRepository(database),
-        DioCategoryApi(),
+        DioCategoryApi(sessionStore: sessionStore),
         ConnectivityService(),
       );
       final unitOfMeasureSyncService = UnitOfMeasureSyncService(
         UnitOfMeasureRepository(database),
-        DioUnitOfMeasureApi(),
+        DioUnitOfMeasureApi(sessionStore: sessionStore),
         ConnectivityService(),
       );
       final productSyncService = ProductSyncService(
         ProductRepository(database),
-        DioProductApi(),
+        DioProductApi(sessionStore: sessionStore),
         ConnectivityService(),
       );
-      final categoryResult = await categorySyncService.synchronize();
-      final unitOfMeasureResult = await unitOfMeasureSyncService.synchronize();
-      final productResult = await productSyncService.synchronize();
+      
+      final categoryResult = await categorySyncService.synchronize(shopId: session.shopId);
+      final unitOfMeasureResult = await unitOfMeasureSyncService.synchronize(shopId: session.shopId);
+      final productResult = await productSyncService.synchronize(shopId: session.shopId);
       return !categoryResult.transientFailure &&
           !unitOfMeasureResult.transientFailure &&
           !productResult.transientFailure;

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<dataSource name="flutter.db">
+<dataSource name="flutterDev.db">
   <database-model serializer="dbm" dbms="SQLITE" family-id="SQLITE" format-version="4.55">
     <root id="1">
       <ServerVersion>3.51.1</ServerVersion>
@@ -568,7 +568,7 @@
     </routine>
     <schema id="214" parent="1" name="main">
       <Current>1</Current>
-      <LastIntrospectionLocalTimestamp>2026-09-09.11:55:05</LastIntrospectionLocalTimestamp>
+      <LastIntrospectionLocalTimestamp>2026-09-09.11:57:28</LastIntrospectionLocalTimestamp>
     </schema>
     <argument id="215" parent="14">
       <ArgumentDirection>R</ArgumentDirection>
@@ -1807,162 +1807,512 @@
       <Position>1</Position>
     </argument>
     <table id="627" parent="214" name="categories"/>
-    <table id="628" parent="214" name="sqlite_master">
+    <table id="628" parent="214" name="products"/>
+    <table id="629" parent="214" name="shops"/>
+    <table id="630" parent="214" name="sqlite_master">
       <System>1</System>
     </table>
-    <table id="629" parent="214" name="sync_metadata"/>
-    <column id="630" parent="627" name="id">
+    <table id="631" parent="214" name="sync_metadata"/>
+    <table id="632" parent="214" name="unit_of_measures"/>
+    <column id="633" parent="627" name="id">
       <Position>1</Position>
       <StoredType>TEXT|0s</StoredType>
     </column>
-    <column id="631" parent="627" name="name">
+    <column id="634" parent="627" name="name">
       <NotNull>1</NotNull>
       <Position>2</Position>
       <StoredType>TEXT|0s</StoredType>
     </column>
-    <column id="632" parent="627" name="code">
+    <column id="635" parent="627" name="code">
       <Position>3</Position>
       <StoredType>TEXT|0s</StoredType>
     </column>
-    <column id="633" parent="627" name="description">
+    <column id="636" parent="627" name="description">
       <Position>4</Position>
       <StoredType>TEXT|0s</StoredType>
     </column>
-    <column id="634" parent="627" name="is_active">
+    <column id="637" parent="627" name="is_active">
       <DefaultExpression>1</DefaultExpression>
       <NotNull>1</NotNull>
       <Position>5</Position>
       <StoredType>INTEGER|0s</StoredType>
     </column>
-    <column id="635" parent="627" name="shop_id">
+    <column id="638" parent="627" name="shop_id">
       <Position>6</Position>
       <StoredType>TEXT|0s</StoredType>
     </column>
-    <column id="636" parent="627" name="created_at">
+    <column id="639" parent="627" name="created_at">
       <NotNull>1</NotNull>
       <Position>7</Position>
       <StoredType>TEXT|0s</StoredType>
     </column>
-    <column id="637" parent="627" name="updated_at">
+    <column id="640" parent="627" name="updated_at">
       <NotNull>1</NotNull>
       <Position>8</Position>
       <StoredType>TEXT|0s</StoredType>
     </column>
-    <column id="638" parent="627" name="last_modified_utc">
+    <column id="641" parent="627" name="last_modified_utc">
       <NotNull>1</NotNull>
       <Position>9</Position>
       <StoredType>TEXT|0s</StoredType>
     </column>
-    <column id="639" parent="627" name="is_deleted">
+    <column id="642" parent="627" name="is_deleted">
       <DefaultExpression>0</DefaultExpression>
       <NotNull>1</NotNull>
       <Position>10</Position>
       <StoredType>INTEGER|0s</StoredType>
     </column>
-    <column id="640" parent="627" name="pending_operation">
+    <column id="643" parent="627" name="pending_operation">
       <DefaultExpression>&apos;none&apos;</DefaultExpression>
       <NotNull>1</NotNull>
       <Position>11</Position>
       <StoredType>TEXT|0s</StoredType>
     </column>
-    <column id="641" parent="627" name="sync_status">
+    <column id="644" parent="627" name="sync_status">
       <DefaultExpression>&apos;synced&apos;</DefaultExpression>
       <NotNull>1</NotNull>
       <Position>12</Position>
       <StoredType>TEXT|0s</StoredType>
     </column>
-    <column id="642" parent="627" name="retry_count">
+    <column id="645" parent="627" name="retry_count">
       <DefaultExpression>0</DefaultExpression>
       <NotNull>1</NotNull>
       <Position>13</Position>
       <StoredType>INTEGER|0s</StoredType>
     </column>
-    <column id="643" parent="627" name="next_retry_at">
+    <column id="646" parent="627" name="next_retry_at">
       <Position>14</Position>
       <StoredType>TEXT|0s</StoredType>
     </column>
-    <column id="644" parent="627" name="last_sync_error">
+    <column id="647" parent="627" name="last_sync_error">
       <Position>15</Position>
       <StoredType>TEXT|0s</StoredType>
     </column>
-    <column id="645" parent="627" name="server_created_date">
+    <column id="648" parent="627" name="server_created_date">
       <Position>16</Position>
       <StoredType>TEXT|0s</StoredType>
     </column>
-    <column id="646" parent="627" name="server_updated_date">
+    <column id="649" parent="627" name="server_updated_date">
       <Position>17</Position>
       <StoredType>TEXT|0s</StoredType>
     </column>
-    <column id="647" parent="627" name="server_created_by">
+    <column id="650" parent="627" name="server_created_by">
       <Position>18</Position>
       <StoredType>TEXT|0s</StoredType>
     </column>
-    <column id="648" parent="627" name="server_updated_by">
+    <column id="651" parent="627" name="server_updated_by">
       <Position>19</Position>
       <StoredType>TEXT|0s</StoredType>
     </column>
-    <column id="649" parent="627" name="server_last_modified_utc">
+    <column id="652" parent="627" name="server_last_modified_utc">
       <Position>20</Position>
       <StoredType>TEXT|0s</StoredType>
     </column>
-    <index id="650" parent="627" name="sqlite_autoindex_categories_1">
+    <index id="653" parent="627" name="sqlite_autoindex_categories_1">
       <ColNames>id</ColNames>
       <NameSurrogate>1</NameSurrogate>
       <Unique>1</Unique>
     </index>
-    <index id="651" parent="627" name="idx_categories_visible">
+    <index id="654" parent="627" name="idx_categories_visible">
       <ColNames>is_deleted
 name</ColNames>
       <ColumnCollationNames>
 NOCASE</ColumnCollationNames>
     </index>
-    <index id="652" parent="627" name="idx_categories_pending">
+    <index id="655" parent="627" name="idx_categories_pending">
       <ColNames>pending_operation
 next_retry_at</ColNames>
     </index>
-    <key id="653" parent="627">
+    <key id="656" parent="627">
       <ColNames>id</ColNames>
       <Primary>1</Primary>
       <UnderlyingIndexName>sqlite_autoindex_categories_1</UnderlyingIndexName>
     </key>
-    <column id="654" parent="628" name="type">
+    <column id="657" parent="628" name="id">
       <Position>1</Position>
       <StoredType>TEXT|0s</StoredType>
     </column>
-    <column id="655" parent="628" name="name">
-      <Position>2</Position>
-      <StoredType>TEXT|0s</StoredType>
-    </column>
-    <column id="656" parent="628" name="tbl_name">
-      <Position>3</Position>
-      <StoredType>TEXT|0s</StoredType>
-    </column>
-    <column id="657" parent="628" name="rootpage">
-      <Position>4</Position>
-      <StoredType>INT|0s</StoredType>
-    </column>
-    <column id="658" parent="628" name="sql">
-      <Position>5</Position>
-      <StoredType>TEXT|0s</StoredType>
-    </column>
-    <column id="659" parent="629" name="key">
-      <Position>1</Position>
-      <StoredType>TEXT|0s</StoredType>
-    </column>
-    <column id="660" parent="629" name="value">
+    <column id="658" parent="628" name="name">
       <NotNull>1</NotNull>
       <Position>2</Position>
       <StoredType>TEXT|0s</StoredType>
     </column>
-    <index id="661" parent="629" name="sqlite_autoindex_sync_metadata_1">
+    <column id="659" parent="628" name="base_unit_id">
+      <NotNull>1</NotNull>
+      <Position>3</Position>
+      <StoredType>TEXT|0s</StoredType>
+    </column>
+    <column id="660" parent="628" name="description">
+      <Position>4</Position>
+      <StoredType>TEXT|0s</StoredType>
+    </column>
+    <column id="661" parent="628" name="is_active">
+      <DefaultExpression>1</DefaultExpression>
+      <NotNull>1</NotNull>
+      <Position>5</Position>
+      <StoredType>INTEGER|0s</StoredType>
+    </column>
+    <column id="662" parent="628" name="sku">
+      <Position>6</Position>
+      <StoredType>TEXT|0s</StoredType>
+    </column>
+    <column id="663" parent="628" name="barcode">
+      <Position>7</Position>
+      <StoredType>TEXT|0s</StoredType>
+    </column>
+    <column id="664" parent="628" name="image_url">
+      <Position>8</Position>
+      <StoredType>TEXT|0s</StoredType>
+    </column>
+    <column id="665" parent="628" name="category_id">
+      <Position>9</Position>
+      <StoredType>TEXT|0s</StoredType>
+    </column>
+    <column id="666" parent="628" name="shop_id">
+      <Position>10</Position>
+      <StoredType>TEXT|0s</StoredType>
+    </column>
+    <column id="667" parent="628" name="created_at">
+      <NotNull>1</NotNull>
+      <Position>11</Position>
+      <StoredType>TEXT|0s</StoredType>
+    </column>
+    <column id="668" parent="628" name="updated_at">
+      <NotNull>1</NotNull>
+      <Position>12</Position>
+      <StoredType>TEXT|0s</StoredType>
+    </column>
+    <column id="669" parent="628" name="last_modified_utc">
+      <NotNull>1</NotNull>
+      <Position>13</Position>
+      <StoredType>TEXT|0s</StoredType>
+    </column>
+    <column id="670" parent="628" name="is_deleted">
+      <DefaultExpression>0</DefaultExpression>
+      <NotNull>1</NotNull>
+      <Position>14</Position>
+      <StoredType>INTEGER|0s</StoredType>
+    </column>
+    <column id="671" parent="628" name="pending_operation">
+      <DefaultExpression>&apos;none&apos;</DefaultExpression>
+      <NotNull>1</NotNull>
+      <Position>15</Position>
+      <StoredType>TEXT|0s</StoredType>
+    </column>
+    <column id="672" parent="628" name="sync_status">
+      <DefaultExpression>&apos;synced&apos;</DefaultExpression>
+      <NotNull>1</NotNull>
+      <Position>16</Position>
+      <StoredType>TEXT|0s</StoredType>
+    </column>
+    <column id="673" parent="628" name="retry_count">
+      <DefaultExpression>0</DefaultExpression>
+      <NotNull>1</NotNull>
+      <Position>17</Position>
+      <StoredType>INTEGER|0s</StoredType>
+    </column>
+    <column id="674" parent="628" name="next_retry_at">
+      <Position>18</Position>
+      <StoredType>TEXT|0s</StoredType>
+    </column>
+    <column id="675" parent="628" name="last_sync_error">
+      <Position>19</Position>
+      <StoredType>TEXT|0s</StoredType>
+    </column>
+    <column id="676" parent="628" name="server_created_date">
+      <Position>20</Position>
+      <StoredType>TEXT|0s</StoredType>
+    </column>
+    <column id="677" parent="628" name="server_updated_date">
+      <Position>21</Position>
+      <StoredType>TEXT|0s</StoredType>
+    </column>
+    <column id="678" parent="628" name="server_created_by">
+      <Position>22</Position>
+      <StoredType>TEXT|0s</StoredType>
+    </column>
+    <column id="679" parent="628" name="server_updated_by">
+      <Position>23</Position>
+      <StoredType>TEXT|0s</StoredType>
+    </column>
+    <column id="680" parent="628" name="server_last_modified_utc">
+      <Position>24</Position>
+      <StoredType>TEXT|0s</StoredType>
+    </column>
+    <index id="681" parent="628" name="sqlite_autoindex_products_1">
+      <ColNames>id</ColNames>
+      <NameSurrogate>1</NameSurrogate>
+      <Unique>1</Unique>
+    </index>
+    <index id="682" parent="628" name="idx_products_visible">
+      <ColNames>is_deleted
+name</ColNames>
+      <ColumnCollationNames>
+NOCASE</ColumnCollationNames>
+    </index>
+    <index id="683" parent="628" name="idx_products_pending">
+      <ColNames>pending_operation
+next_retry_at</ColNames>
+    </index>
+    <key id="684" parent="628">
+      <ColNames>id</ColNames>
+      <Primary>1</Primary>
+      <UnderlyingIndexName>sqlite_autoindex_products_1</UnderlyingIndexName>
+    </key>
+    <column id="685" parent="629" name="id">
+      <Position>1</Position>
+      <StoredType>TEXT|0s</StoredType>
+    </column>
+    <column id="686" parent="629" name="name">
+      <NotNull>1</NotNull>
+      <Position>2</Position>
+      <StoredType>TEXT|0s</StoredType>
+    </column>
+    <column id="687" parent="629" name="shop_type">
+      <NotNull>1</NotNull>
+      <Position>3</Position>
+      <StoredType>TEXT|0s</StoredType>
+    </column>
+    <column id="688" parent="629" name="address">
+      <Position>4</Position>
+      <StoredType>TEXT|0s</StoredType>
+    </column>
+    <column id="689" parent="629" name="phone_number">
+      <Position>5</Position>
+      <StoredType>TEXT|0s</StoredType>
+    </column>
+    <column id="690" parent="629" name="email">
+      <Position>6</Position>
+      <StoredType>TEXT|0s</StoredType>
+    </column>
+    <column id="691" parent="629" name="tax_number">
+      <Position>7</Position>
+      <StoredType>TEXT|0s</StoredType>
+    </column>
+    <column id="692" parent="629" name="is_active">
+      <DefaultExpression>1</DefaultExpression>
+      <NotNull>1</NotNull>
+      <Position>8</Position>
+      <StoredType>INTEGER|0s</StoredType>
+    </column>
+    <column id="693" parent="629" name="created_at">
+      <NotNull>1</NotNull>
+      <Position>9</Position>
+      <StoredType>TEXT|0s</StoredType>
+    </column>
+    <column id="694" parent="629" name="updated_at">
+      <NotNull>1</NotNull>
+      <Position>10</Position>
+      <StoredType>TEXT|0s</StoredType>
+    </column>
+    <column id="695" parent="629" name="last_modified_utc">
+      <NotNull>1</NotNull>
+      <Position>11</Position>
+      <StoredType>TEXT|0s</StoredType>
+    </column>
+    <column id="696" parent="629" name="is_deleted">
+      <DefaultExpression>0</DefaultExpression>
+      <NotNull>1</NotNull>
+      <Position>12</Position>
+      <StoredType>INTEGER|0s</StoredType>
+    </column>
+    <column id="697" parent="629" name="pending_operation">
+      <DefaultExpression>&apos;none&apos;</DefaultExpression>
+      <NotNull>1</NotNull>
+      <Position>13</Position>
+      <StoredType>TEXT|0s</StoredType>
+    </column>
+    <column id="698" parent="629" name="sync_status">
+      <DefaultExpression>&apos;synced&apos;</DefaultExpression>
+      <NotNull>1</NotNull>
+      <Position>14</Position>
+      <StoredType>TEXT|0s</StoredType>
+    </column>
+    <column id="699" parent="629" name="retry_count">
+      <DefaultExpression>0</DefaultExpression>
+      <NotNull>1</NotNull>
+      <Position>15</Position>
+      <StoredType>INTEGER|0s</StoredType>
+    </column>
+    <column id="700" parent="629" name="next_retry_at">
+      <Position>16</Position>
+      <StoredType>TEXT|0s</StoredType>
+    </column>
+    <column id="701" parent="629" name="last_sync_error">
+      <Position>17</Position>
+      <StoredType>TEXT|0s</StoredType>
+    </column>
+    <column id="702" parent="629" name="server_last_modified_utc">
+      <Position>18</Position>
+      <StoredType>TEXT|0s</StoredType>
+    </column>
+    <index id="703" parent="629" name="sqlite_autoindex_shops_1">
+      <ColNames>id</ColNames>
+      <NameSurrogate>1</NameSurrogate>
+      <Unique>1</Unique>
+    </index>
+    <index id="704" parent="629" name="idx_shops_visible">
+      <ColNames>is_deleted
+name</ColNames>
+      <ColumnCollationNames>
+NOCASE</ColumnCollationNames>
+    </index>
+    <index id="705" parent="629" name="idx_shops_pending">
+      <ColNames>pending_operation
+next_retry_at</ColNames>
+    </index>
+    <key id="706" parent="629">
+      <ColNames>id</ColNames>
+      <Primary>1</Primary>
+      <UnderlyingIndexName>sqlite_autoindex_shops_1</UnderlyingIndexName>
+    </key>
+    <column id="707" parent="630" name="type">
+      <Position>1</Position>
+      <StoredType>TEXT|0s</StoredType>
+    </column>
+    <column id="708" parent="630" name="name">
+      <Position>2</Position>
+      <StoredType>TEXT|0s</StoredType>
+    </column>
+    <column id="709" parent="630" name="tbl_name">
+      <Position>3</Position>
+      <StoredType>TEXT|0s</StoredType>
+    </column>
+    <column id="710" parent="630" name="rootpage">
+      <Position>4</Position>
+      <StoredType>INT|0s</StoredType>
+    </column>
+    <column id="711" parent="630" name="sql">
+      <Position>5</Position>
+      <StoredType>TEXT|0s</StoredType>
+    </column>
+    <column id="712" parent="631" name="key">
+      <Position>1</Position>
+      <StoredType>TEXT|0s</StoredType>
+    </column>
+    <column id="713" parent="631" name="value">
+      <NotNull>1</NotNull>
+      <Position>2</Position>
+      <StoredType>TEXT|0s</StoredType>
+    </column>
+    <index id="714" parent="631" name="sqlite_autoindex_sync_metadata_1">
       <ColNames>key</ColNames>
       <NameSurrogate>1</NameSurrogate>
       <Unique>1</Unique>
     </index>
-    <key id="662" parent="629">
+    <key id="715" parent="631">
       <ColNames>key</ColNames>
       <Primary>1</Primary>
       <UnderlyingIndexName>sqlite_autoindex_sync_metadata_1</UnderlyingIndexName>
+    </key>
+    <column id="716" parent="632" name="id">
+      <Position>1</Position>
+      <StoredType>TEXT|0s</StoredType>
+    </column>
+    <column id="717" parent="632" name="name">
+      <NotNull>1</NotNull>
+      <Position>2</Position>
+      <StoredType>TEXT|0s</StoredType>
+    </column>
+    <column id="718" parent="632" name="symbol">
+      <NotNull>1</NotNull>
+      <Position>3</Position>
+      <StoredType>TEXT|0s</StoredType>
+    </column>
+    <column id="719" parent="632" name="description">
+      <Position>4</Position>
+      <StoredType>TEXT|0s</StoredType>
+    </column>
+    <column id="720" parent="632" name="shop_id">
+      <Position>5</Position>
+      <StoredType>TEXT|0s</StoredType>
+    </column>
+    <column id="721" parent="632" name="created_at">
+      <NotNull>1</NotNull>
+      <Position>6</Position>
+      <StoredType>TEXT|0s</StoredType>
+    </column>
+    <column id="722" parent="632" name="updated_at">
+      <NotNull>1</NotNull>
+      <Position>7</Position>
+      <StoredType>TEXT|0s</StoredType>
+    </column>
+    <column id="723" parent="632" name="last_modified_utc">
+      <NotNull>1</NotNull>
+      <Position>8</Position>
+      <StoredType>TEXT|0s</StoredType>
+    </column>
+    <column id="724" parent="632" name="is_deleted">
+      <DefaultExpression>0</DefaultExpression>
+      <NotNull>1</NotNull>
+      <Position>9</Position>
+      <StoredType>INTEGER|0s</StoredType>
+    </column>
+    <column id="725" parent="632" name="pending_operation">
+      <DefaultExpression>&apos;none&apos;</DefaultExpression>
+      <NotNull>1</NotNull>
+      <Position>10</Position>
+      <StoredType>TEXT|0s</StoredType>
+    </column>
+    <column id="726" parent="632" name="sync_status">
+      <DefaultExpression>&apos;synced&apos;</DefaultExpression>
+      <NotNull>1</NotNull>
+      <Position>11</Position>
+      <StoredType>TEXT|0s</StoredType>
+    </column>
+    <column id="727" parent="632" name="retry_count">
+      <DefaultExpression>0</DefaultExpression>
+      <NotNull>1</NotNull>
+      <Position>12</Position>
+      <StoredType>INTEGER|0s</StoredType>
+    </column>
+    <column id="728" parent="632" name="next_retry_at">
+      <Position>13</Position>
+      <StoredType>TEXT|0s</StoredType>
+    </column>
+    <column id="729" parent="632" name="last_sync_error">
+      <Position>14</Position>
+      <StoredType>TEXT|0s</StoredType>
+    </column>
+    <column id="730" parent="632" name="server_created_date">
+      <Position>15</Position>
+      <StoredType>TEXT|0s</StoredType>
+    </column>
+    <column id="731" parent="632" name="server_updated_date">
+      <Position>16</Position>
+      <StoredType>TEXT|0s</StoredType>
+    </column>
+    <column id="732" parent="632" name="server_created_by">
+      <Position>17</Position>
+      <StoredType>TEXT|0s</StoredType>
+    </column>
+    <column id="733" parent="632" name="server_updated_by">
+      <Position>18</Position>
+      <StoredType>TEXT|0s</StoredType>
+    </column>
+    <column id="734" parent="632" name="server_last_modified_utc">
+      <Position>19</Position>
+      <StoredType>TEXT|0s</StoredType>
+    </column>
+    <index id="735" parent="632" name="sqlite_autoindex_unit_of_measures_1">
+      <ColNames>id</ColNames>
+      <NameSurrogate>1</NameSurrogate>
+      <Unique>1</Unique>
+    </index>
+    <index id="736" parent="632" name="idx_unit_of_measures_visible">
+      <ColNames>is_deleted
+name</ColNames>
+      <ColumnCollationNames>
+NOCASE</ColumnCollationNames>
+    </index>
+    <index id="737" parent="632" name="idx_unit_of_measures_pending">
+      <ColNames>pending_operation
+next_retry_at</ColNames>
+    </index>
+    <key id="738" parent="632">
+      <ColNames>id</ColNames>
+      <Primary>1</Primary>
+      <UnderlyingIndexName>sqlite_autoindex_unit_of_measures_1</UnderlyingIndexName>
     </key>
   </database-model>
 </dataSource>

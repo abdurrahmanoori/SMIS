@@ -79,13 +79,16 @@ class UnitOfMeasureSyncService {
   final UnitOfMeasureApi _api;
   final NetworkConnectivity _connectivity;
 
-  Future<UnitOfMeasureSyncResult> synchronize({bool force = false}) async {
+  Future<UnitOfMeasureSyncResult> synchronize({
+    required String shopId,
+    bool force = false,
+  }) async {
     final owner = const Uuid().v4();
-    if (!await _repository.tryAcquireSyncLock(owner)) {
+    if (!await _repository.tryAcquireSyncLock(owner, shopId)) {
       return UnitOfMeasureSyncResult(
         success: true,
         message: 'A unit of measurement sync is already running.',
-        pending: await _repository.getPendingCount(),
+        pending: await _repository.getPendingCount(shopId),
       );
     }
 
@@ -101,14 +104,14 @@ class UnitOfMeasureSyncService {
         return UnitOfMeasureSyncResult(
           success: false,
           message: 'Offline. Local changes are safe and will retry later.',
-          pending: await _repository.getPendingCount(),
+          pending: await _repository.getPendingCount(shopId),
           transientFailure: true,
           skippedOffline: true,
         );
       }
 
       phase = 'pull';
-      final cursor = await _repository.getPullCursor();
+      final cursor = await _repository.getPullCursor(shopId);
       final remoteChanges = await _api.pull(cursor);
       DateTime? newestRemoteWrite;
       for (final remote in remoteChanges) {
@@ -122,12 +125,16 @@ class UnitOfMeasureSyncService {
           const Duration(milliseconds: 1),
         );
         await _repository.setPullCursor(
+          shopId,
           overlapped.isAfter(cursor) ? overlapped : cursor,
         );
       }
 
       phase = 'push';
-      for (final localRecord in await _repository.getPendingRecords(force: force)) {
+      for (final localRecord in await _repository.getPendingRecords(
+        shopId: shopId,
+        force: force,
+      )) {
         try {
           final outcome = await _push(localRecord);
           pushed += outcome.pushed ? 1 : 0;
@@ -150,7 +157,7 @@ class UnitOfMeasureSyncService {
           break;
         }
       }
-      final remaining = await _repository.getPendingCount();
+      final remaining = await _repository.getPendingCount(shopId);
       return UnitOfMeasureSyncResult(
         success: failed == 0,
         message: failed == 0
@@ -166,6 +173,7 @@ class UnitOfMeasureSyncService {
       );
     } on RemoteTransientException catch (error, stackTrace) {
       return await _failedResult(
+        shopId: shopId,
         error: error,
         stackTrace: stackTrace,
         phase: phase,
@@ -178,6 +186,7 @@ class UnitOfMeasureSyncService {
       );
     } on RemotePermanentException catch (error, stackTrace) {
       return await _failedResult(
+        shopId: shopId,
         error: error,
         stackTrace: stackTrace,
         phase: phase,
@@ -190,6 +199,7 @@ class UnitOfMeasureSyncService {
       );
     } catch (error, stackTrace) {
       return await _failedResult(
+        shopId: shopId,
         error: error,
         stackTrace: stackTrace,
         phase: phase,
@@ -201,11 +211,12 @@ class UnitOfMeasureSyncService {
         failures: failures,
       );
     } finally {
-      await _repository.releaseSyncLock(owner);
+      await _repository.releaseSyncLock(owner, shopId);
     }
   }
 
   Future<UnitOfMeasureSyncResult> _failedResult({
+    required String shopId,
     required Object error,
     required StackTrace stackTrace,
     required String phase,
@@ -224,7 +235,7 @@ class UnitOfMeasureSyncService {
     pushed: pushed,
     failed: failed + 1,
     conflictsResolved: conflicts,
-    pending: await _repository.getPendingCount(),
+    pending: await _repository.getPendingCount(shopId),
     transientFailure: transient,
     failures: [
       ...failures,

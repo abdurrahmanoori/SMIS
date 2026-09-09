@@ -40,8 +40,17 @@ class UnitOfMeasureController extends AsyncNotifier<UnitOfMeasureScreenState> {
   UnitOfMeasureSyncService get _syncService =>
       ref.read(unitOfMeasureSyncServiceProvider);
 
+  String get _shopId {
+    final session = ref.watch(authControllerProvider.select((s) => s.session));
+    if (session == null) throw StateError('User is not authenticated.');
+    return session.shopId;
+  }
+
   @override
-  Future<UnitOfMeasureScreenState> build() => _load();
+  Future<UnitOfMeasureScreenState> build() {
+    _shopId;
+    return _load();
+  }
 
   Future<void> reload() async {
     final previous = state.value;
@@ -53,7 +62,7 @@ class UnitOfMeasureController extends AsyncNotifier<UnitOfMeasureScreenState> {
   }
 
   Future<void> create(UnitOfMeasureDraft draft) async {
-    await _repository.create(draft);
+    await _repository.create(draft, _shopId);
     await reload();
   }
 
@@ -70,7 +79,7 @@ class UnitOfMeasureController extends AsyncNotifier<UnitOfMeasureScreenState> {
   Future<UnitOfMeasureSyncResult> syncNow() async {
     final current = state.value ?? await _load();
     state = AsyncData(current.copyWith(isSyncing: true));
-    final result = await _syncService.synchronize(force: true);
+    final result = await _syncService.synchronize(shopId: _shopId, force: true);
     if (kDebugMode && !result.success) {
       final details = result.failures
           .map((failure) => failure.toDevelopmentString())
@@ -83,11 +92,14 @@ class UnitOfMeasureController extends AsyncNotifier<UnitOfMeasureScreenState> {
 
   Future<UnitOfMeasureScreenState> _load({
     UnitOfMeasureSyncResult? lastSyncResult,
-  }) async => UnitOfMeasureScreenState(
-    units: await _repository.getAll(),
-    pendingCount: await _repository.getPendingCount(),
-    lastSyncResult: lastSyncResult,
-  );
+  }) async {
+    final shopId = _shopId;
+    return UnitOfMeasureScreenState(
+      units: await _repository.getAll(shopId),
+      pendingCount: await _repository.getPendingCount(shopId),
+      lastSyncResult: lastSyncResult,
+    );
+  }
 }
 
 final unitOfMeasureRepositoryProvider = Provider<UnitOfMeasureRepository>(

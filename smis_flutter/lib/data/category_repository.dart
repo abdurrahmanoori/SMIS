@@ -22,12 +22,13 @@ class CategoryRepository {
   final UtcNow _utcNow;
   final IdGenerator _idGenerator;
 
-  Future<List<Category>> getAll() async {
+  Future<List<Category>> getAll(String shopId) async {
     try {
       final database = await _database.instance;
       final rows = await database.query(
         _categoryTable,
-        where: 'is_deleted = 0',
+        where: 'is_deleted = 0 AND shop_id = ?',
+        whereArgs: [shopId],
         orderBy: 'name COLLATE NOCASE ASC',
       );
       return rows
@@ -42,7 +43,7 @@ class CategoryRepository {
     }
   }
 
-  Future<Category> create(CategoryDraft draft) async {
+  Future<Category> create(CategoryDraft draft, String shopId) async {
     final normalized = draft.normalized();
     final now = _utcNow();
     final record = CategoryLocalRecord(
@@ -51,6 +52,7 @@ class CategoryRepository {
       code: normalized.code,
       description: normalized.description,
       isActive: normalized.isActive,
+      shopId: shopId,
       createdAt: now,
       updatedAt: now,
       lastModifiedUtc: now,
@@ -146,6 +148,7 @@ class CategoryRepository {
   }
 
   Future<List<CategoryLocalRecord>> getPendingRecords({
+    required String shopId,
     required bool force,
   }) async {
     final database = await _database.instance;
@@ -156,39 +159,40 @@ class CategoryRepository {
               '(next_retry_at IS NULL OR next_retry_at <= ?)';
     final rows = await database.query(
       _categoryTable,
-      where: "pending_operation != 'none'$retryFilter",
-      whereArgs: force ? null : [now],
+      where: "pending_operation != 'none' AND shop_id = ?$retryFilter",
+      whereArgs: force ? [shopId] : [shopId, now],
       orderBy: 'last_modified_utc ASC',
     );
     return rows.map(CategoryLocalRecord.fromMap).toList(growable: false);
   }
 
-  Future<int> getPendingCount() async {
+  Future<int> getPendingCount(String shopId) async {
     final database = await _database.instance;
     final result = await database.rawQuery(
       "SELECT COUNT(*) AS count FROM $_categoryTable "
-      "WHERE pending_operation != 'none'",
+      "WHERE pending_operation != 'none' AND shop_id = ?",
+      [shopId],
     );
     return Sqflite.firstIntValue(result) ?? 0;
   }
 
-  Future<DateTime> getPullCursor() async {
-    final value = await _getMetadata(_pullCursorKey);
+  Future<DateTime> getPullCursor(String shopId) async {
+    final value = await _getMetadata('${_pullCursorKey}_$shopId');
     return value == null
         ? DateTime.fromMillisecondsSinceEpoch(0, isUtc: true)
         : DateTime.parse(value).toUtc();
   }
 
-  Future<void> setPullCursor(DateTime value) =>
-      _setMetadata(_pullCursorKey, value.toUtc().toIso8601String());
+  Future<void> setPullCursor(String shopId, DateTime value) =>
+      _setMetadata('${_pullCursorKey}_$shopId', value.toUtc().toIso8601String());
 
-  Future<bool> tryAcquireSyncLock(String owner) async {
+  Future<bool> tryAcquireSyncLock(String owner, String shopId) async {
     final database = await _database.instance;
     return database.transaction((transaction) async {
       final rows = await transaction.query(
         'sync_metadata',
         where: 'key = ?',
-        whereArgs: [_syncLockKey],
+        whereArgs: ['${_syncLockKey}_$shopId'],
         limit: 1,
       );
       if (rows.isNotEmpty) {
@@ -202,19 +206,19 @@ class CategoryRepository {
       }
 
       await transaction.insert('sync_metadata', {
-        'key': _syncLockKey,
+        'key': '${_syncLockKey}_$shopId',
         'value': '$owner|${DateTime.now().toUtc().toIso8601String()}',
       }, conflictAlgorithm: ConflictAlgorithm.replace);
       return true;
     });
   }
 
-  Future<void> releaseSyncLock(String owner) async {
+  Future<void> releaseSyncLock(String owner, String shopId) async {
     final database = await _database.instance;
     await database.delete(
       'sync_metadata',
       where: 'key = ? AND value LIKE ?',
-      whereArgs: [_syncLockKey, '$owner|%'],
+      whereArgs: ['${_syncLockKey}_$shopId', '$owner|%'],
     );
   }
 

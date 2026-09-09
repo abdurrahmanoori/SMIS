@@ -14,6 +14,7 @@ import '../widgets/app_drawer.dart';
 import '../widgets/app_error_view.dart';
 import '../widgets/product_form_dialog.dart';
 import '../widgets/theme_mode_action.dart';
+import 'unit_of_measures_screen.dart';
 
 class ProductsScreen extends ConsumerStatefulWidget {
   const ProductsScreen({super.key});
@@ -167,4 +168,22 @@ class _ProductCard extends StatelessWidget {
 }
 class _SyncStateIcon extends StatelessWidget { const _SyncStateIcon({required this.product}); final Product product; @override Widget build(BuildContext context) { final failed = product.syncStatus == ProductSyncStatus.failed; final synced = product.syncStatus == ProductSyncStatus.synced; return Tooltip(message: product.lastSyncError ?? (synced ? 'Synced' : failed ? 'Sync failed' : 'Waiting to sync'), child: Icon(failed ? Icons.cloud_off_outlined : synced ? Icons.cloud_done_outlined : Icons.cloud_upload_outlined, size: 18, color: failed ? Theme.of(context).colorScheme.error : Theme.of(context).colorScheme.outline)); } }
 class _EmptyView extends StatelessWidget { const _EmptyView(); @override Widget build(BuildContext context) => const Center(child: Padding(padding: EdgeInsets.all(32), child: Column(mainAxisSize: MainAxisSize.min, children: [Icon(Icons.inventory_2_outlined, size: 56), SizedBox(height: 12), Text('No products yet'), SizedBox(height: 4), Text('Add one now—even while completely offline.')]))) ; }
-class _MissingUnitNotice extends StatelessWidget { const _MissingUnitNotice(); @override Widget build(BuildContext context) => Padding(padding: const EdgeInsets.fromLTRB(16, 12, 16, 0), child: MaterialBanner(content: const Text('Create or sync a unit of measurement before adding a product.'), leading: const Icon(Icons.info_outline), actions: const [])); }
+class _MissingUnitNotice extends StatelessWidget {
+  const _MissingUnitNotice();
+  @override
+  Widget build(BuildContext context) => Padding(
+    padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
+    child: MaterialBanner(
+      content: const Text('Create or sync a unit of measurement before adding a product.'),
+      leading: const Icon(Icons.info_outline),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.of(context).push(
+            MaterialPageRoute<void>(builder: (context) => const UnitOfMeasuresScreen()),
+          ),
+          child: const Text('MANAGE UNITS'),
+        ),
+      ],
+    ),
+  );
+}

@@ -73,10 +73,10 @@ class ProductSyncService {
   final ProductApi _api;
   final NetworkConnectivity _connectivity;
 
-  Future<ProductSyncResult> synchronize({bool force = false}) async {
+  Future<ProductSyncResult> synchronize({required String shopId, bool force = false}) async {
     final owner = const Uuid().v4();
-    if (!await _repository.tryAcquireSyncLock(owner)) {
-      return ProductSyncResult(success: true, message: 'A product sync is already running.', pending: await _repository.getPendingCount());
+    if (!await _repository.tryAcquireSyncLock(owner, shopId)) {
+      return ProductSyncResult(success: true, message: 'A product sync is already running.', pending: await _repository.getPendingCount(shopId));
     }
     var pulled = 0;
     var pushed = 0;
@@ -90,13 +90,13 @@ class ProductSyncService {
         return ProductSyncResult(
           success: false,
           message: 'Offline. Local changes are safe and will retry later.',
-          pending: await _repository.getPendingCount(),
+          pending: await _repository.getPendingCount(shopId),
           transientFailure: true,
           skippedOffline: true,
         );
       }
       phase = 'pull';
-      final cursor = await _repository.getPullCursor();
+      final cursor = await _repository.getPullCursor(shopId);
       final remoteChanges = await _api.pull(cursor);
       DateTime? newest;
       for (final remote in remoteChanges) {
@@ -107,10 +107,10 @@ class ProductSyncService {
       }
       if (newest != null) {
         final overlap = newest.subtract(const Duration(milliseconds: 1));
-        await _repository.setPullCursor(overlap.isAfter(cursor) ? overlap : cursor);
+        await _repository.setPullCursor(shopId, overlap.isAfter(cursor) ? overlap : cursor);
       }
       phase = 'push';
-      for (final record in await _repository.getPendingRecords(force: force)) {
+      for (final record in await _repository.getPendingRecords(shopId: shopId, force: force)) {
         try {
           final outcome = await _push(record);
           pushed += outcome.pushed ? 1 : 0;
@@ -140,22 +140,22 @@ class ProductSyncService {
         pushed: pushed,
         failed: failed,
         conflictsResolved: conflicts,
-        pending: await _repository.getPendingCount(),
+        pending: await _repository.getPendingCount(shopId),
         transientFailure: transient,
         failures: failures,
       );
     } on RemoteTransientException catch (error, stackTrace) {
-      return _failureResult(error, stackTrace, phase, pulled, pushed, failed, conflicts, true, failures);
+      return _failureResult(shopId, error, stackTrace, phase, pulled, pushed, failed, conflicts, true, failures);
     } on RemotePermanentException catch (error, stackTrace) {
-      return _failureResult(error, stackTrace, phase, pulled, pushed, failed, conflicts, false, failures);
+      return _failureResult(shopId, error, stackTrace, phase, pulled, pushed, failed, conflicts, false, failures);
     } catch (error, stackTrace) {
-      return _failureResult(error, stackTrace, phase, pulled, pushed, failed, conflicts, true, failures);
+      return _failureResult(shopId, error, stackTrace, phase, pulled, pushed, failed, conflicts, true, failures);
     } finally {
-      await _repository.releaseSyncLock(owner);
+      await _repository.releaseSyncLock(owner, shopId);
     }
   }
 
-  Future<ProductSyncResult> _failureResult(Object error, StackTrace stackTrace, String phase, int pulled, int pushed, int failed, int conflicts, bool transient, List<ProductSyncFailure> failures) async => ProductSyncResult(
+  Future<ProductSyncResult> _failureResult(String shopId, Object error, StackTrace stackTrace, String phase, int pulled, int pushed, int failed, int conflicts, bool transient, List<ProductSyncFailure> failures) async => ProductSyncResult(
     success: false,
     message: error is AppException
         ? '${error.message}${transient ? ' Local changes will retry later.' : ''}'
@@ -164,7 +164,7 @@ class ProductSyncService {
     pushed: pushed,
     failed: failed + 1,
     conflictsResolved: conflicts,
-    pending: await _repository.getPendingCount(),
+    pending: await _repository.getPendingCount(shopId),
     transientFailure: transient,
     failures: [...failures, ProductSyncFailure(phase: phase, error: error, stackTrace: stackTrace)],
   );

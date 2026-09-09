@@ -88,13 +88,16 @@ class CategorySyncService {
   final CategoryApi _api;
   final NetworkConnectivity _connectivity;
 
-  Future<CategorySyncResult> synchronize({bool force = false}) async {
+  Future<CategorySyncResult> synchronize({
+    required String shopId,
+    bool force = false,
+  }) async {
     final owner = const Uuid().v4();
-    if (!await _repository.tryAcquireSyncLock(owner)) {
+    if (!await _repository.tryAcquireSyncLock(owner, shopId)) {
       return CategorySyncResult(
         success: true,
         message: 'A Category sync is already running.',
-        pending: await _repository.getPendingCount(),
+        pending: await _repository.getPendingCount(shopId),
       );
     }
 
@@ -111,14 +114,14 @@ class CategorySyncService {
         return CategorySyncResult(
           success: false,
           message: 'Offline. Local changes are safe and will retry later.',
-          pending: await _repository.getPendingCount(),
+          pending: await _repository.getPendingCount(shopId),
           transientFailure: true,
           skippedOffline: true,
         );
       }
 
       phase = 'pull';
-      final cursor = await _repository.getPullCursor();
+      final cursor = await _repository.getPullCursor(shopId);
       final remoteChanges = await _api.pull(cursor);
       DateTime? newestRemoteWrite;
       for (final remote in remoteChanges) {
@@ -133,12 +136,16 @@ class CategorySyncService {
           const Duration(milliseconds: 1),
         );
         await _repository.setPullCursor(
+          shopId,
           overlapped.isAfter(cursor) ? overlapped : cursor,
         );
       }
 
       phase = 'push';
-      final pending = await _repository.getPendingRecords(force: force);
+      final pending = await _repository.getPendingRecords(
+        shopId: shopId,
+        force: force,
+      );
       for (final localRecord in pending) {
         try {
           final outcome = await _push(localRecord);
@@ -184,7 +191,7 @@ class CategorySyncService {
         }
       }
 
-      final remaining = await _repository.getPendingCount();
+      final remaining = await _repository.getPendingCount(shopId);
       final success = failed == 0;
       return CategorySyncResult(
         success: success,
@@ -207,7 +214,7 @@ class CategorySyncService {
         pushed: pushed,
         failed: failed + 1,
         conflictsResolved: conflicts,
-        pending: await _repository.getPendingCount(),
+        pending: await _repository.getPendingCount(shopId),
         transientFailure: true,
         failures: [
           ...failures,
@@ -226,7 +233,7 @@ class CategorySyncService {
         pushed: pushed,
         failed: failed + 1,
         conflictsResolved: conflicts,
-        pending: await _repository.getPendingCount(),
+        pending: await _repository.getPendingCount(shopId),
         failures: [
           ...failures,
           CategorySyncFailure(
@@ -244,7 +251,7 @@ class CategorySyncService {
         pushed: pushed,
         failed: failed + 1,
         conflictsResolved: conflicts,
-        pending: await _repository.getPendingCount(),
+        pending: await _repository.getPendingCount(shopId),
         transientFailure: true,
         failures: [
           ...failures,
@@ -256,7 +263,7 @@ class CategorySyncService {
         ],
       );
     } finally {
-      await _repository.releaseSyncLock(owner);
+      await _repository.releaseSyncLock(owner, shopId);
     }
   }
 

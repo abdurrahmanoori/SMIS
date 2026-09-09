@@ -21,12 +21,13 @@ class ProductRepository {
   final ProductUtcNow _utcNow;
   final ProductIdGenerator _idGenerator;
 
-  Future<List<Product>> getAll() async {
+  Future<List<Product>> getAll(String shopId) async {
     try {
       final database = await _database.instance;
       final rows = await database.query(
         _table,
-        where: 'is_deleted = 0',
+        where: 'is_deleted = 0 AND shop_id = ?',
+        whereArgs: [shopId],
         orderBy: 'name COLLATE NOCASE ASC',
       );
       return rows.map(ProductLocalRecord.fromMap).map((record) => record.toProduct()).toList(growable: false);
@@ -35,7 +36,7 @@ class ProductRepository {
     }
   }
 
-  Future<Product> create(ProductDraft draft) async {
+  Future<Product> create(ProductDraft draft, String shopId) async {
     final normalized = draft.normalized();
     final now = _utcNow();
     final record = ProductLocalRecord(
@@ -48,6 +49,7 @@ class ProductRepository {
       barcode: normalized.barcode,
       imageUrl: normalized.imageUrl,
       categoryId: normalized.categoryId,
+      shopId: shopId,
       createdAt: now,
       updatedAt: now,
       lastModifiedUtc: now,
@@ -130,50 +132,53 @@ class ProductRepository {
     await database.delete(_table, where: 'id = ?', whereArgs: [id]);
   }
 
-  Future<List<ProductLocalRecord>> getPendingRecords({required bool force}) async {
+  Future<List<ProductLocalRecord>> getPendingRecords({required String shopId, required bool force}) async {
     final database = await _database.instance;
     final now = DateTime.now().toUtc().toIso8601String();
     final retryFilter = force ? '' : ' AND retry_count < 5 AND (next_retry_at IS NULL OR next_retry_at <= ?)';
     final rows = await database.query(
       _table,
-      where: "pending_operation != 'none'$retryFilter",
-      whereArgs: force ? null : [now],
+      where: "pending_operation != 'none' AND shop_id = ?$retryFilter",
+      whereArgs: force ? [shopId] : [shopId, now],
       orderBy: 'last_modified_utc ASC',
     );
     return rows.map(ProductLocalRecord.fromMap).toList(growable: false);
   }
 
-  Future<int> getPendingCount() async {
+  Future<int> getPendingCount(String shopId) async {
     final database = await _database.instance;
-    final rows = await database.rawQuery("SELECT COUNT(*) AS count FROM $_table WHERE pending_operation != 'none'");
+    final rows = await database.rawQuery(
+        "SELECT COUNT(*) AS count FROM $_table WHERE pending_operation != 'none' AND shop_id = ?",
+        [shopId],
+    );
     return Sqflite.firstIntValue(rows) ?? 0;
   }
 
-  Future<DateTime> getPullCursor() async {
-    final value = await _getMetadata(_pullCursorKey);
+  Future<DateTime> getPullCursor(String shopId) async {
+    final value = await _getMetadata('${_pullCursorKey}_$shopId');
     return value == null ? DateTime.fromMillisecondsSinceEpoch(0, isUtc: true) : DateTime.parse(value).toUtc();
   }
-  Future<void> setPullCursor(DateTime value) => _setMetadata(_pullCursorKey, value.toUtc().toIso8601String());
+  Future<void> setPullCursor(String shopId, DateTime value) => _setMetadata('${_pullCursorKey}_$shopId', value.toUtc().toIso8601String());
 
-  Future<bool> tryAcquireSyncLock(String owner) async {
+  Future<bool> tryAcquireSyncLock(String owner, String shopId) async {
     final database = await _database.instance;
     return database.transaction((transaction) async {
-      final rows = await transaction.query('sync_metadata', where: 'key = ?', whereArgs: [_syncLockKey], limit: 1);
+      final rows = await transaction.query('sync_metadata', where: 'key = ?', whereArgs: ['${_syncLockKey}_$shopId'], limit: 1);
       if (rows.isNotEmpty) {
         final lockedAt = DateTime.tryParse((rows.first['value']! as String).split('|').last)?.toUtc();
         if (lockedAt != null && DateTime.now().toUtc().difference(lockedAt) < const Duration(minutes: 10)) return false;
       }
       await transaction.insert('sync_metadata', {
-        'key': _syncLockKey,
+        'key': '${_syncLockKey}_$shopId',
         'value': '$owner|${DateTime.now().toUtc().toIso8601String()}',
       }, conflictAlgorithm: ConflictAlgorithm.replace);
       return true;
     });
   }
 
-  Future<void> releaseSyncLock(String owner) async {
+  Future<void> releaseSyncLock(String owner, String shopId) async {
     final database = await _database.instance;
-    await database.delete('sync_metadata', where: 'key = ? AND value LIKE ?', whereArgs: [_syncLockKey, '$owner|%']);
+    await database.delete('sync_metadata', where: 'key = ? AND value LIKE ?', whereArgs: ['${_syncLockKey}_$shopId', '$owner|%']);
   }
 
   Future<String?> _getMetadata(String key) async {
