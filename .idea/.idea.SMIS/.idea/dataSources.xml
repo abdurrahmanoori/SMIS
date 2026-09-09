@@ -18,7 +18,7 @@
       <driver-ref>sqlite.xerial</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
-      <jdbc-url>jdbc:sqlite:E:\Repo\SMIS\smis_flutter\database\smis_offline.db</jdbc-url>
+      <jdbc-url>jdbc:sqlite:E:\Repo\SMIS\smis_flutter\database\smis_app.db</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
     <data-source source="LOCAL" name="localServer" uuid="ac5415fe-1e2d-4654-8634-a9fa83f2c4ba">
@@ -32,6 +32,13 @@
         <property name="com.intellij.clouds.kubernetes.db.enabled" value="false" />
         <property name="com.intellij.clouds.kubernetes.db.container.port" />
       </jdbc-additional-properties>
+      <working-dir>$ProjectFileDir$</working-dir>
+    </data-source>
+    <data-source source="LOCAL" name="flutterDev.db" uuid="8953dd4c-a13f-45bd-aa39-4b486bc39f97">
+      <driver-ref>sqlite.xerial</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
+      <jdbc-url>jdbc:sqlite:E:\Repo\SMIS\smis_flutter\database\smis_dev.db</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
   </component>

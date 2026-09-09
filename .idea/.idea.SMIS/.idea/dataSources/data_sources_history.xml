@@ -127,7 +127,7 @@
       <driver-ref>sqlite.xerial</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
-      <jdbc-url>jdbc:sqlite:E:\Repo\SMIS\smis_flutter\database\smis_offline.db</jdbc-url>
+      <jdbc-url>jdbc:sqlite:E:\Repo\SMIS\smis_flutter\database\smis_app.db</jdbc-url>
       <auth-provider>no-auth</auth-provider>
       <schema-mapping>
         <introspection-scope>

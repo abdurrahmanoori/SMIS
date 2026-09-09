@@ -58,6 +58,7 @@
   <component name="DatabaseLocalColorSettings">
     <colors>
       <entry key="217c9ab8-3f82-4012-9b1f-829d2efba1cc" value="@0" />
+      <entry key="8953dd4c-a13f-45bd-aa39-4b486bc39f97" value="" />
       <entry key="ac5415fe-1e2d-4654-8634-a9fa83f2c4ba" value="yellow" />
       <entry key="c23083d1-ad9e-4a55-b047-06addaa567c3" value="green" />
     </colors>
@@ -109,61 +110,61 @@
   <component name="MetaFilesCheckinStateConfiguration" checkMetaFiles="true" />
   <component name="NextEditCompletionFeaturesState">
     <decayedCancelled>
-      <entry key="MS100" value="1.2840720880456231" />
-      <entry key="MS500" value="2.3675527665740006" />
-      <entry key="S2" value="3.8658657350259253" />
-      <entry key="S5" value="4.479113942289009" />
-      <entry key="S10" value="4.726547076235761" />
-      <entry key="S30" value="4.905851405602595" />
-      <entry key="S60" value="4.969492572757009" />
-      <entry key="M2" value="5.281912905823081" />
-      <entry key="M5" value="7.083140183621222" />
-      <entry key="M10" value="9.30445601370962" />
-      <entry key="M15" value="10.642383243498957" />
-      <entry key="M30" value="12.753462229720219" />
-      <entry key="H1" value="16.06157931654734" />
-      <entry key="H2" value="32.866923477892826" />
-      <entry key="H4" value="81.72342566863577" />
-      <entry key="D1" value="231.20582157954274" />
-      <entry key="W1" value="281.48921726464744" />
+      <entry key="MS100" value="3.1517232219574816E-304" />
+      <entry key="MS500" value="1.9939286532219806E-61" />
+      <entry key="S2" value="6.682322069156578E-16" />
+      <entry key="S5" value="8.510811298043829E-7" />
+      <entry key="S10" value="9.225405843671199E-4" />
+      <entry key="S30" value="0.09735557772963906" />
+      <entry key="S60" value="0.317920597329488" />
+      <entry key="M2" value="0.7325464158264424" />
+      <entry key="M5" value="2.5343377867761703" />
+      <entry key="M10" value="5.9608313384244225" />
+      <entry key="M15" value="8.740340768441019" />
+      <entry key="M30" value="14.407567570354454" />
+      <entry key="H1" value="21.563809436332125" />
+      <entry key="H2" value="37.016219512121765" />
+      <entry key="H4" value="80.93167602925189" />
+      <entry key="D1" value="241.09800546978116" />
+      <entry key="W1" value="300.5243395059019" />
     </decayedCancelled>
     <decayedSelected>
-      <entry key="MS100" value="0.0" />
-      <entry key="MS500" value="0.0" />
-      <entry key="S2" value="3.562672750038427E-84" />
-      <entry key="S5" value="4.175518121251112E-34" />
-      <entry key="S10" value="2.0434306117684137E-17" />
-      <entry key="S30" value="2.859234476026766E-6" />
-      <entry key="S60" value="0.0022662631007605944" />
-      <entry key="M2" value="0.08353342449714925" />
-      <entry key="M5" value="0.8268840851760645" />
-      <entry key="M10" value="1.8467930609542844" />
-      <entry key="M15" value="2.4951833161918415" />
-      <entry key="M30" value="3.600126886655321" />
-      <entry key="H1" value="4.951267425139094" />
-      <entry key="H2" value="10.77256375286815" />
-      <entry key="H4" value="27.092083342131957" />
-      <entry key="D1" value="74.5898161424683" />
-      <entry key="W1" value="90.08837831509351" />
+      <entry key="MS100" value="1.0" />
+      <entry key="MS500" value="1.0" />
+      <entry key="S2" value="1.0000105127526622" />
+      <entry key="S5" value="1.010202029586632" />
+      <entry key="S10" value="1.101005096834923" />
+      <entry key="S30" value="1.4657087843148526" />
+      <entry key="S60" value="1.682428637705991" />
+      <entry key="M2" value="1.826391858248238" />
+      <entry key="M5" value="1.9861275984975033" />
+      <entry key="M10" value="2.352393061444904" />
+      <entry key="M15" value="2.7982924094358776" />
+      <entry key="M30" value="4.191199771580301" />
+      <entry key="H1" value="6.526548839583601" />
+      <entry key="H2" value="11.872378213777315" />
+      <entry key="H4" value="26.654424629478363" />
+      <entry key="D1" value="77.96419931979773" />
+      <entry key="W1" value="96.45331962485157" />
     </decayedSelected>
     <decayedShown>
-      <entry key="MS100" value="1.004553618750697" />
-      <entry key="MS500" value="2.062063695176617" />
-      <entry key="S2" value="3.5944051991523307" />
-      <entry key="S5" value="4.333300163480434" />
-      <entry key="S10" value="4.645915441363498" />
-      <entry key="S30" value="4.877091305453845" />
-      <entry key="S60" value="4.956975606147658" />
-      <entry key="M2" value="5.355667723478416" />
-      <entry key="M5" value="7.898116728992535" />
-      <entry key="M10" value="11.14008244478254" />
-      <entry key="M15" value="13.128121830319374" />
-      <entry key="M30" value="16.347420423718475" />
-      <entry key="H1" value="21.008991935627368" />
-      <entry key="H2" value="43.63585076313987" />
-      <entry key="H4" value="108.81130166151671" />
-      <entry key="D1" value="305.7937860927194" />
-      <entry key="W1" value="371.57727761330386" />
+      <entry key="MS100" value="0.007812500000000002" />
+      <entry key="MS500" value="0.3789291416275995" />
+      <entry key="S2" value="0.7845898738880513" />
+      <entry key="S5" value="0.9155479834971831" />
+      <entry key="S10" value="1.0424109405634927" />
+      <entry key="S30" value="1.486772642450378" />
+      <entry key="S60" value="1.9015488362598123" />
+      <entry key="M2" value="2.466652204371629" />
+      <entry key="M5" value="4.450692174841305" />
+      <entry key="M10" value="8.261398472174239" />
+      <entry key="M15" value="11.496966766654424" />
+      <entry key="M30" value="18.571970035178804" />
+      <entry key="H1" value="28.074089854613778" />
+      <entry key="H2" value="48.87842190573696" />
+      <entry key="H4" value="107.5787109861316" />
+      <entry key="D1" value="319.0597080982692" />
+      <entry key="W1" value="396.97723808047203" />
     </decayedShown>
   </component>
   <component name="ProblemsViewState">
@@ -184,6 +185,7 @@
     ".NET Launch Settings Profile.SMIS.Api: https.executor": "Run",
     ".NET Launch Settings Profile.SMIS.UI: Windows Machine.executor": "Run",
     "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "DataGrid.QuickDoc.View": "TRANSPOSED",
     "ModuleVcsDetector.initialDetectionPerformed": "true",
     "RunOnceActivity.MCP Project settings loaded": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
@@ -202,7 +204,7 @@
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "preferences.lookFeel",
+    "settings.editor.selected.configurable": "preferences.pluginManager",
     "sqlserver_backup_path_localServer": "E:",
     "to.speed.mode.migration.done": "true"
   },
@@ -691,7 +693,23 @@
       <option name="project" value="LOCAL" />
       <updated>1788949250698</updated>
     </task>
-    <option name="localTasksCounter" value="40" />
+    <task id="LOCAL-00040" summary="feat: add ShopId to LoginResponseDto and update LoginCommand for shop association">
+      <option name="closed" value="true" />
+      <created>1788952322410</created>
+      <option name="number" value="00040" />
+      <option name="presentableId" value="LOCAL-00040" />
+      <option name="project" value="LOCAL" />
+      <updated>1788952322410</updated>
+    </task>
+    <task id="LOCAL-00041" summary="feat: associate shopId with authentication and synchronization processes across various services">
+      <option name="closed" value="true" />
+      <created>1788955295374</created>
+      <option name="number" value="00041" />
+      <option name="presentableId" value="LOCAL-00041" />
+      <option name="project" value="LOCAL" />
+      <updated>1788955295374</updated>
+    </task>
+    <option name="localTasksCounter" value="42" />
     <option name="clearContext" value="false" />
     <option name="createChangelist" value="false" />
     <option name="createBranch" value="false" />
@@ -704,8 +722,6 @@
   <component name="UnityProjectConfiguration" hasMinimizedUI="false" />
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
-    <MESSAGE value="ref folder removed" />
-    <MESSAGE value="feat(Category): add query endpoint for filtered category retrieval and implement pagination" />
     <MESSAGE value="db data" />
     <MESSAGE value="back project a bit simpliyed with some breadking changes" />
     <MESSAGE value="feat: implement IApplicationDbContext interface and update AppDbContext to use it" />
@@ -729,6 +745,8 @@
     <MESSAGE value="feat: enhance authentication flow with AuthenticationGate and improve logout handling" />
     <MESSAGE value="feat: implement shop and product management with corresponding APIs, controllers, and UI components" />
     <MESSAGE value="feat: update email domains for user accounts and adjust database configurations" />
+    <MESSAGE value="feat: add ShopId to LoginResponseDto and update LoginCommand for shop association" />
+    <MESSAGE value="feat: associate shopId with authentication and synchronization processes across various services" />
     <option name="LAST_COMMIT_MESSAGE" value="" />
   </component>
   <component name="XDebuggerManager">

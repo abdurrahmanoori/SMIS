@@ -21,7 +21,7 @@ class AppDatabase {
     _database = await _factory.openDatabase(
       path,
       options: OpenDatabaseOptions(
-        version: 5,
+        version: 6,
         onConfigure: (database) async {
           await database.execute('PRAGMA foreign_keys = ON');
           await database.execute('PRAGMA journal_mode = WAL');
@@ -40,7 +40,7 @@ class AppDatabase {
 
   static Future<void> _createSchema(Database database, int version) async {
     await database.execute('''
-      CREATE TABLE categories (
+      CREATE TABLE IF NOT EXISTS categories (
         id TEXT PRIMARY KEY,
         name TEXT NOT NULL,
         code TEXT,
@@ -64,11 +64,11 @@ class AppDatabase {
       )
     ''');
     await database.execute('''
-      CREATE INDEX idx_categories_visible
+      CREATE INDEX IF NOT EXISTS idx_categories_visible
       ON categories(is_deleted, name COLLATE NOCASE)
     ''');
     await database.execute('''
-      CREATE INDEX idx_categories_pending
+      CREATE INDEX IF NOT EXISTS idx_categories_pending
       ON categories(pending_operation, next_retry_at)
     ''');
     await database.execute('''
@@ -113,11 +113,25 @@ class AppDatabase {
     if (oldVersion < 5) {
       await _createProductsSchema(database);
     }
+    if (oldVersion < 6) {
+      // Ensure shop_id exists in categories for multi-tenancy filtering
+      try {
+        await database.execute('ALTER TABLE categories ADD COLUMN shop_id TEXT');
+      } catch (_) {
+        // Column might already exist if created with v5 schema
+      }
+      
+      // Ensure all major tables exist (in case of interrupted creation)
+      await database.execute('CREATE TABLE IF NOT EXISTS sync_metadata (key TEXT PRIMARY KEY, value TEXT NOT NULL)');
+      await _createUnitOfMeasuresSchema(database);
+      await _createShopsSchema(database);
+      await _createProductsSchema(database);
+    }
   }
 
   static Future<void> _createUnitOfMeasuresSchema(Database database) async {
     await database.execute('''
-      CREATE TABLE unit_of_measures (
+      CREATE TABLE IF NOT EXISTS unit_of_measures (
         id TEXT PRIMARY KEY,
         name TEXT NOT NULL,
         symbol TEXT NOT NULL,
@@ -140,18 +154,18 @@ class AppDatabase {
       )
     ''');
     await database.execute('''
-      CREATE INDEX idx_unit_of_measures_visible
+      CREATE INDEX IF NOT EXISTS idx_unit_of_measures_visible
       ON unit_of_measures(is_deleted, name COLLATE NOCASE)
     ''');
     await database.execute('''
-      CREATE INDEX idx_unit_of_measures_pending
+      CREATE INDEX IF NOT EXISTS idx_unit_of_measures_pending
       ON unit_of_measures(pending_operation, next_retry_at)
     ''');
   }
 
   static Future<void> _createShopsSchema(Database database) async {
     await database.execute('''
-      CREATE TABLE shops (
+      CREATE TABLE IF NOT EXISTS shops (
         id TEXT PRIMARY KEY,
         name TEXT NOT NULL,
         shop_type TEXT NOT NULL,
@@ -173,18 +187,18 @@ class AppDatabase {
       )
     ''');
     await database.execute('''
-      CREATE INDEX idx_shops_visible
+      CREATE INDEX IF NOT EXISTS idx_shops_visible
       ON shops(is_deleted, name COLLATE NOCASE)
     ''');
     await database.execute('''
-      CREATE INDEX idx_shops_pending
+      CREATE INDEX IF NOT EXISTS idx_shops_pending
       ON shops(pending_operation, next_retry_at)
     ''');
   }
 
   static Future<void> _createProductsSchema(Database database) async {
     await database.execute('''
-      CREATE TABLE products (
+      CREATE TABLE IF NOT EXISTS products (
         id TEXT PRIMARY KEY,
         name TEXT NOT NULL,
         base_unit_id TEXT NOT NULL,
@@ -212,11 +226,11 @@ class AppDatabase {
       )
     ''');
     await database.execute('''
-      CREATE INDEX idx_products_visible
+      CREATE INDEX IF NOT EXISTS idx_products_visible
       ON products(is_deleted, name COLLATE NOCASE)
     ''');
     await database.execute('''
-      CREATE INDEX idx_products_pending
+      CREATE INDEX IF NOT EXISTS idx_products_pending
       ON products(pending_operation, next_retry_at)
     ''');
   }

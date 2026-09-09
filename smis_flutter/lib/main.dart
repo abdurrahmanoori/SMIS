@@ -20,7 +20,6 @@ Future<void> main() async {
     flavor: Flavor.production,
     apiBaseUrl: 'http://api-smis.runasp.net',
     appTitle: 'SMIS',
-    databaseName: 'smis_prod.db',
   );
   
   await mainEntryPoint();

@@ -10,7 +10,6 @@ void main() {
         ? 'http://localhost:5238' 
         : (Platform.isAndroid ? 'http://10.0.2.2:5238' : 'http://localhost:5238'),
     appTitle: 'SMIS (Dev)',
-    databaseName: 'smis_dev.db',
   );
   
   app.mainEntryPoint();

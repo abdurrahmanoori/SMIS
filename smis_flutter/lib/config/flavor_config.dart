@@ -7,19 +7,17 @@ class FlavorConfig {
   final Flavor flavor;
   final String apiBaseUrl;
   final String appTitle;
-  final String databaseName;
 
   static FlavorConfig? _instance;
 
-  FlavorConfig._internal(this.flavor, this.apiBaseUrl, this.appTitle, this.databaseName);
+  FlavorConfig._internal(this.flavor, this.apiBaseUrl, this.appTitle);
 
   static void initialize({
     required Flavor flavor,
     required String apiBaseUrl,
     required String appTitle,
-    required String databaseName,
   }) {
-    _instance = FlavorConfig._internal(flavor, apiBaseUrl, appTitle, databaseName);
+    _instance = FlavorConfig._internal(flavor, apiBaseUrl, appTitle);
   }
 
   static FlavorConfig get instance {

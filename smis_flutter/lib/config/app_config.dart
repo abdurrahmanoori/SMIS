@@ -11,7 +11,7 @@ class AppConfig {
   // background tooling. Normal app requests use the securely stored login token.
   static const authToken = String.fromEnvironment('SMIS_AUTH_TOKEN');
 
-  static String get databaseName => FlavorConfig.instance.databaseName;
+  static const databaseName = 'smis_app.db';
 
   static const accountEndpoint = '/api/Account';
   static const languageEndpoint = '/api/Language';
