@@ -44,6 +44,7 @@ namespace SMIS.Application.Features.Auth.Commands
                 UserId = user.Id,
                 UserName = user.UserName!,
                 Email = user.Email!,
+                ShopId = user.ShopId!,
                 Roles = roles
             }, "Login successful");
         }
