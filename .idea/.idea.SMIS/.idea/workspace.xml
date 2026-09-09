@@ -96,7 +96,6 @@
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/4db36763b7d04376a4837b0568a664df50620/4b/63722296/SecurityTokenHandler.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/9c31640fb7734f77994409ff691e2328239728/07/f64c2950/LocalhostListenOptions.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/SMIS.Application/Services/IApplicationDbContext.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="mock:///Immediate Window" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="InvalidFacetManager">
     <ignored-facets>
@@ -181,7 +180,7 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
-    ".NET Launch Settings Profile.SMIS.Api: http.executor": "Debug",
+    ".NET Launch Settings Profile.SMIS.Api: http.executor": "Run",
     ".NET Launch Settings Profile.SMIS.Api: https.executor": "Run",
     ".NET Launch Settings Profile.SMIS.UI: Windows Machine.executor": "Run",
     "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
@@ -204,6 +203,7 @@
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
     "settings.editor.selected.configurable": "preferences.lookFeel",
+    "sqlserver_backup_path_localServer": "E:",
     "to.speed.mode.migration.done": "true"
   },
   "keyToStringList": {
@@ -372,12 +372,12 @@
     </configuration>
   </component>
   <component name="TaskManager">
-    <task active="true" id="Default" summary="Default task">
+    <task id="Default" summary="Default task">
       <changelist id="c1539008-1193-464d-b486-40cdba8ba5f6" name="Changes" comment="" />
       <created>1787405183096</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
-      <updated>1788873767067</updated>
+      <updated>1788948019842</updated>
     </task>
     <task id="LOCAL-00001" summary="new-task">
       <changelist id="c1539008-1193-464d-b486-40cdba8ba5f6" name="Changes" comment="" />
@@ -667,7 +667,24 @@
       <option name="project" value="LOCAL" />
       <updated>1788752130275</updated>
     </task>
-    <option name="localTasksCounter" value="37" />
+    <task id="LOCAL-00037" summary="feat: implement shop and product management with corresponding APIs, controllers, and UI components">
+      <option name="closed" value="true" />
+      <created>1788874966242</created>
+      <option name="number" value="00037" />
+      <option name="presentableId" value="LOCAL-00037" />
+      <option name="project" value="LOCAL" />
+      <updated>1788874966242</updated>
+    </task>
+    <task active="true" id="LOCAL-00038" summary="remote-db-update">
+      <changelist id="c1539008-1193-464d-b486-40cdba8ba5f6" name="Changes" comment="" />
+      <created>1788948016431</created>
+      <option name="number" value="00038" />
+      <option name="presentableId" value="LOCAL-00038" />
+      <option name="project" value="LOCAL" />
+      <updated>1788948019843</updated>
+    </task>
+    <option name="localTasksCounter" value="39" />
+    <option name="clearContext" value="false" />
     <option name="createChangelist" value="false" />
     <option name="createBranch" value="false" />
     <servers />
@@ -679,7 +696,6 @@
   <component name="UnityProjectConfiguration" hasMinimizedUI="false" />
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
-    <MESSAGE value="refactor(CategoryListPage): improve comments and formatting for clarity" />
     <MESSAGE value="other layer remove and jsut we have api, flutter project and test if api layer" />
     <MESSAGE value="ref folder removed" />
     <MESSAGE value="feat(Category): add query endpoint for filtered category retrieval and implement pagination" />
@@ -704,6 +720,7 @@
     <MESSAGE value="feat: add WebDeploy configurations for site48297 and site62669 in workspace settings" />
     <MESSAGE value="feat: implement offline-first flow for Unit of Measurement with local storage and synchronization" />
     <MESSAGE value="feat: enhance authentication flow with AuthenticationGate and improve logout handling" />
+    <MESSAGE value="feat: implement shop and product management with corresponding APIs, controllers, and UI components" />
     <option name="LAST_COMMIT_MESSAGE" value="" />
   </component>
   <component name="XDebuggerManager">

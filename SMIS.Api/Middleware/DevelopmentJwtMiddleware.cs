@@ -39,7 +39,7 @@ public class DevelopmentJwtMiddleware
         {
             new Claim(ClaimTypes.NameIdentifier, SeedIds.UserSuperAdmin),
             new Claim(ClaimTypes.Name, "superadmin"),
-            new Claim(ClaimTypes.Email, "superadmin@smis.com"),
+            new Claim(ClaimTypes.Email, "superadmin@mainstore.com"),
             new Claim(ClaimTypes.Role, "SuperAdmin"),
             new Claim("ShopId", SeedIds.Shop1.ToString())
         };

@@ -14,7 +14,7 @@ public class JwtTokenHelper
         _client = client;
     }
 
-    public async Task<string> GetTokenAsync(string email = "wadmin@smis.com", string password = "Pass123!")
+    public async Task<string> GetTokenAsync(string email = "wadmin@mainstore.com", string password = "Pass123!")
     {
         var loginDto = new LoginDto
         {
@@ -31,7 +31,7 @@ public class JwtTokenHelper
         return loginResult?.Token ?? throw new InvalidOperationException("Token is null");
     }
 
-    public async Task SetAuthorizationHeaderAsync(string email = "superadmin@smis.com", string password = "Pass123!")
+    public async Task SetAuthorizationHeaderAsync(string email = "superadmin@mainstore.com", string password = "Pass123!")
     {
         var token = await GetTokenAsync(email, password);
         _client.DefaultRequestHeaders.Clear();
