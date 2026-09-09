@@ -13,6 +13,7 @@ import '../screens/profile_screen.dart';
 import '../screens/products_screen.dart';
 import '../screens/shops_screen.dart';
 import '../screens/unit_of_measures_screen.dart';
+import '../l10n/app_localizations.dart';
 
 class AppDrawer extends ConsumerWidget {
   const AppDrawer({super.key});
@@ -20,6 +21,7 @@ class AppDrawer extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final session = ref.watch(authControllerProvider).session;
+    final l10n = context.l10n;
     final categoryState = ref.watch(categoryControllerProvider);
     final pendingCount = categoryState.value?.pendingCount ?? 0;
     final unitState = ref.watch(unitOfMeasureControllerProvider);
@@ -51,7 +53,7 @@ class AppDrawer extends ConsumerWidget {
           ),
           ListTile(
             leading: const Icon(Icons.home_outlined),
-            title: const Text('Home'),
+            title: Text(l10n.text('Home')),
             onTap: () {
               Navigator.of(context).pop();
               Navigator.of(context).popUntil((route) => route.isFirst);
@@ -59,7 +61,7 @@ class AppDrawer extends ConsumerWidget {
           ),
           ListTile(
             leading: const Icon(Icons.storefront_outlined),
-            title: const Text('Shops'),
+            title: Text(l10n.text('Shops')),
             trailing: shopPendingCount > 0
                 ? Badge(label: Text('$shopPendingCount'))
                 : null,
@@ -74,7 +76,7 @@ class AppDrawer extends ConsumerWidget {
           ),
           ListTile(
             leading: const Icon(Icons.straighten_outlined),
-            title: const Text('Units of Measurement'),
+            title: Text(l10n.text('Units of measurement')),
             trailing: unitPendingCount > 0
                 ? Badge(label: Text('$unitPendingCount'))
                 : null,
@@ -89,7 +91,7 @@ class AppDrawer extends ConsumerWidget {
           ),
           ListTile(
             leading: const Icon(Icons.category_outlined),
-            title: const Text('Categories'),
+            title: Text(l10n.text('Categories')),
             trailing: pendingCount > 0
                 ? Badge(label: Text('$pendingCount'))
                 : null,
@@ -102,7 +104,7 @@ class AppDrawer extends ConsumerWidget {
           ),
           ListTile(
             leading: const Icon(Icons.inventory_2_outlined),
-            title: const Text('Products'),
+            title: Text(l10n.text('Products')),
             trailing: productPendingCount > 0
                 ? Badge(label: Text('$productPendingCount'))
                 : null,
@@ -117,7 +119,7 @@ class AppDrawer extends ConsumerWidget {
           ),
           ListTile(
             leading: const Icon(Icons.person_outline),
-            title: const Text('My Profile'),
+            title: Text(l10n.text('My profile')),
             onTap: () {
               Navigator.of(context).pop();
               Navigator.of(context).pushReplacement(
@@ -128,7 +130,7 @@ class AppDrawer extends ConsumerWidget {
           const Divider(),
           ListTile(
             leading: const Icon(Icons.logout),
-            title: const Text('Sign Out'),
+            title: Text(l10n.text('Sign out')),
             onTap: () async {
               final navigator = Navigator.of(context);
               navigator.pop();

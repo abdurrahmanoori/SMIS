@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../controllers/theme_controller.dart';
+import '../l10n/app_localizations.dart';
 
 class ThemeModeAction extends ConsumerWidget {
   const ThemeModeAction({super.key});
@@ -8,6 +9,7 @@ class ThemeModeAction extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final themeMode = ref.watch(themeControllerProvider);
+    final l10n = context.l10n;
     
     IconData icon;
     switch (themeMode) {
@@ -21,37 +23,37 @@ class ThemeModeAction extends ConsumerWidget {
 
     return PopupMenuButton<ThemeMode>(
       icon: Icon(icon),
-      tooltip: 'Appearance',
+      tooltip: l10n.text('Appearance'),
       initialValue: themeMode,
       onSelected: (mode) => ref.read(themeControllerProvider.notifier).setThemeMode(mode),
       itemBuilder: (context) => [
-        const PopupMenuItem(
+        PopupMenuItem(
           value: ThemeMode.system,
           child: Row(
             children: [
-              Icon(Icons.settings_brightness_outlined),
-              SizedBox(width: 12),
-              Text('System default'),
+              const Icon(Icons.settings_brightness_outlined),
+              const SizedBox(width: 12),
+              Text(l10n.text('System default')),
             ],
           ),
         ),
-        const PopupMenuItem(
+        PopupMenuItem(
           value: ThemeMode.light,
           child: Row(
             children: [
-              Icon(Icons.light_mode_outlined),
-              SizedBox(width: 12),
-              Text('Light mode'),
+              const Icon(Icons.light_mode_outlined),
+              const SizedBox(width: 12),
+              Text(l10n.text('Light mode')),
             ],
           ),
         ),
-        const PopupMenuItem(
+        PopupMenuItem(
           value: ThemeMode.dark,
           child: Row(
             children: [
-              Icon(Icons.dark_mode_outlined),
-              SizedBox(width: 12),
-              Text('Dark mode'),
+              const Icon(Icons.dark_mode_outlined),
+              const SizedBox(width: 12),
+              Text(l10n.text('Dark mode')),
             ],
           ),
         ),

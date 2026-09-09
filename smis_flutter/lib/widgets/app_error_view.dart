@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import '../data/data_exception.dart';
+import '../l10n/app_localizations.dart';
 
 class AppErrorView extends StatelessWidget {
   const AppErrorView({
@@ -20,7 +21,10 @@ class AppErrorView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
-    final message = error is AppException ? (error as AppException).message : error.toString();
+    final rawMessage = error is AppException
+        ? (error as AppException).message
+        : error.toString();
+    final message = context.l10n.errorMessage(rawMessage);
     
     return Center(
       child: Padding(
@@ -35,7 +39,7 @@ class AppErrorView extends StatelessWidget {
             ),
             const SizedBox(height: 16),
             Text(
-              title ?? 'Something went wrong',
+              title ?? context.l10n.text('Something went wrong'),
               style: Theme.of(context).textTheme.titleLarge,
               textAlign: TextAlign.center,
             ),
@@ -54,7 +58,7 @@ class AppErrorView extends StatelessWidget {
               FilledButton.tonalIcon(
                 onPressed: onRetry,
                 icon: const Icon(Icons.refresh),
-                label: const Text('Try again'),
+                label: Text(context.l10n.text('Try again')),
               ),
             ],
           ],
@@ -103,32 +107,32 @@ class _DebugErrorDetailsState extends State<_DebugErrorDetails> {
         children: [
           ExpansionPanel(
             backgroundColor: Colors.transparent,
-            headerBuilder: (context, isExpanded) => const ListTile(
+            headerBuilder: (context, isExpanded) => ListTile(
               dense: true,
-              title: Text('Development Details', style: TextStyle(fontWeight: FontWeight.bold)),
-              leading: Icon(Icons.bug_report_outlined),
+              title: Text(context.l10n.text('Development details'), style: const TextStyle(fontWeight: FontWeight.bold)),
+              leading: const Icon(Icons.bug_report_outlined),
             ),
             body: Padding(
               padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  _DetailItem(label: 'Type', value: widget.error.runtimeType.toString()),
+                  _DetailItem(label: context.l10n.text('Type'), value: widget.error.runtimeType.toString()),
                   if (widget.error is AppException) ...[
-                    _DetailItem(label: 'Cause Type', value: (widget.error as AppException).cause?.runtimeType.toString() ?? 'None'),
+                    _DetailItem(label: context.l10n.text('Cause type'), value: (widget.error as AppException).cause?.runtimeType.toString() ?? context.l10n.text('None')),
                     if ((widget.error as AppException).cause case final cause?)
-                      _DetailItem(label: 'Cause Message', value: cause.toString()),
+                      _DetailItem(label: context.l10n.text('Cause message'), value: cause.toString()),
                   ],
                   if (_extractDioException(widget.error) case final dioError?) ...[
                     const Divider(),
-                    const Text('Network Details:', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 11)),
-                    _DetailItem(label: 'Method', value: dioError.requestOptions.method),
-                    _DetailItem(label: 'Path', value: dioError.requestOptions.path),
-                    _DetailItem(label: 'Status', value: dioError.response?.statusCode?.toString() ?? 'N/A'),
+                    Text('${context.l10n.text('Network details')}:', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 11)),
+                    _DetailItem(label: context.l10n.text('Method'), value: dioError.requestOptions.method),
+                    _DetailItem(label: context.l10n.text('Path'), value: dioError.requestOptions.path),
+                    _DetailItem(label: context.l10n.text('Status'), value: dioError.response?.statusCode?.toString() ?? 'N/A'),
                   ],
                   if (widget.stackTrace != null) ...[
                     const SizedBox(height: 8),
-                    const Text('Stack Trace:', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
+                    Text('${context.l10n.text('Stack trace')}:', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
                     const SizedBox(height: 4),
                     Container(
                       padding: const EdgeInsets.all(8),

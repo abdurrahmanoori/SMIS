@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../models/category.dart';
 import '../models/product.dart';
 import '../models/unit_of_measure.dart';
+import '../l10n/app_localizations.dart';
 
 class ProductFormDialog extends StatefulWidget {
   const ProductFormDialog({
@@ -54,7 +55,7 @@ class _ProductFormDialogState extends State<ProductFormDialog> {
 
   @override
   Widget build(BuildContext context) => AlertDialog(
-    title: Text(widget.product == null ? 'New product' : 'Edit product'),
+    title: Text(context.l10n.text(widget.product == null ? 'New product' : 'Edit product')),
     content: SizedBox(
       width: 520,
       child: Form(
@@ -63,41 +64,41 @@ class _ProductFormDialogState extends State<ProductFormDialog> {
           child: Column(mainAxisSize: MainAxisSize.min, children: [
             TextFormField(
               controller: _name, autofocus: true, maxLength: 200,
-              decoration: const InputDecoration(labelText: 'Name *'),
-              validator: (value) => value == null || value.trim().isEmpty ? 'Name is required.' : null,
+              decoration: InputDecoration(labelText: context.l10n.text('Name *')),
+              validator: (value) => value == null || value.trim().isEmpty ? context.l10n.text('Name is required.') : null,
             ),
             const SizedBox(height: 12),
             DropdownButtonFormField<String>(
               value: _baseUnitId,
               isExpanded: true,
-              decoration: const InputDecoration(labelText: 'Base unit *'),
+              decoration: InputDecoration(labelText: context.l10n.text('Base unit *')),
               items: widget.units.map((unit) => DropdownMenuItem(value: unit.id, child: Text('${unit.name} (${unit.symbol})'))).toList(growable: false),
               onChanged: (value) => setState(() => _baseUnitId = value),
-              validator: (value) => value == null ? 'Select a base unit.' : null,
+              validator: (value) => value == null ? context.l10n.text('Select a base unit.') : null,
             ),
             const SizedBox(height: 12),
             DropdownButtonFormField<String>(
               value: _categoryId,
               isExpanded: true,
-              decoration: const InputDecoration(labelText: 'Category'),
-              items: [const DropdownMenuItem<String>(value: '', child: Text('No category')), ...widget.categories.map((category) => DropdownMenuItem(value: category.id, child: Text(category.name)))],
+              decoration: InputDecoration(labelText: context.l10n.text('Category')),
+              items: [DropdownMenuItem<String>(value: '', child: Text(context.l10n.text('No category'))), ...widget.categories.map((category) => DropdownMenuItem(value: category.id, child: Text(category.name)))],
               onChanged: (value) => setState(() => _categoryId = value?.isEmpty ?? true ? null : value),
             ),
             const SizedBox(height: 12),
-            TextFormField(controller: _sku, maxLength: 100, decoration: const InputDecoration(labelText: 'SKU')),
+            TextFormField(controller: _sku, maxLength: 100, decoration: InputDecoration(labelText: context.l10n.text('SKU'))),
             const SizedBox(height: 12),
-            TextFormField(controller: _barcode, maxLength: 100, decoration: const InputDecoration(labelText: 'Barcode')),
+            TextFormField(controller: _barcode, maxLength: 100, decoration: InputDecoration(labelText: context.l10n.text('Barcode'))),
             const SizedBox(height: 12),
-            TextFormField(controller: _imageUrl, maxLength: 500, keyboardType: TextInputType.url, decoration: const InputDecoration(labelText: 'Image URL')),
+            TextFormField(controller: _imageUrl, maxLength: 500, keyboardType: TextInputType.url, decoration: InputDecoration(labelText: context.l10n.text('Image URL'))),
             const SizedBox(height: 12),
-            TextFormField(controller: _description, maxLength: 500, minLines: 2, maxLines: 4, decoration: const InputDecoration(labelText: 'Description')),
-            SwitchListTile.adaptive(contentPadding: EdgeInsets.zero, title: const Text('Active'), value: _isActive, onChanged: (value) => setState(() => _isActive = value)),
+            TextFormField(controller: _description, maxLength: 500, minLines: 2, maxLines: 4, decoration: InputDecoration(labelText: context.l10n.text('Description'))),
+            SwitchListTile.adaptive(contentPadding: EdgeInsets.zero, title: Text(context.l10n.text('Active')), value: _isActive, onChanged: (value) => setState(() => _isActive = value)),
           ]),
         ),
       ),
     ),
     actions: [
-      TextButton(onPressed: () => Navigator.pop(context), child: const Text('Cancel')),
+      TextButton(onPressed: () => Navigator.pop(context), child: Text(context.l10n.text('Cancel'))),
       FilledButton(
         onPressed: () {
           if (!(_formKey.currentState?.validate() ?? false)) return;
@@ -107,7 +108,7 @@ class _ProductFormDialogState extends State<ProductFormDialog> {
             barcode: _barcode.text, imageUrl: _imageUrl.text,
           ));
         },
-        child: const Text('Save offline'),
+        child: Text(context.l10n.text('Save offline')),
       ),
     ],
   );

@@ -709,7 +709,15 @@
       <option name="project" value="LOCAL" />
       <updated>1788955295374</updated>
     </task>
-    <option name="localTasksCounter" value="42" />
+    <task id="LOCAL-00042" summary="feat: update database schema for multi-tenancy support and adjust database configurations">
+      <option name="closed" value="true" />
+      <created>1788956734295</created>
+      <option name="number" value="00042" />
+      <option name="presentableId" value="LOCAL-00042" />
+      <option name="project" value="LOCAL" />
+      <updated>1788956734295</updated>
+    </task>
+    <option name="localTasksCounter" value="43" />
     <option name="clearContext" value="false" />
     <option name="createChangelist" value="false" />
     <option name="createBranch" value="false" />
@@ -722,7 +730,6 @@
   <component name="UnityProjectConfiguration" hasMinimizedUI="false" />
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
-    <MESSAGE value="db data" />
     <MESSAGE value="back project a bit simpliyed with some breadking changes" />
     <MESSAGE value="feat: implement IApplicationDbContext interface and update AppDbContext to use it" />
     <MESSAGE value="refactor: update CategorySync command handlers and validators to use CategorySyncRules" />
@@ -747,6 +754,7 @@
     <MESSAGE value="feat: update email domains for user accounts and adjust database configurations" />
     <MESSAGE value="feat: add ShopId to LoginResponseDto and update LoginCommand for shop association" />
     <MESSAGE value="feat: associate shopId with authentication and synchronization processes across various services" />
+    <MESSAGE value="feat: update database schema for multi-tenancy support and adjust database configurations" />
     <option name="LAST_COMMIT_MESSAGE" value="" />
   </component>
   <component name="XDebuggerManager">

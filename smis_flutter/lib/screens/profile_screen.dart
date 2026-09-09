@@ -5,9 +5,11 @@ import '../controllers/profile_controller.dart';
 import '../data/profile_api.dart';
 import '../data/data_exception.dart';
 import '../models/user_profile.dart';
+import '../l10n/app_localizations.dart';
 import '../widgets/app_drawer.dart';
 import '../widgets/app_error_view.dart';
 import '../widgets/theme_mode_action.dart';
+import '../widgets/locale_action.dart';
 
 class ProfileScreen extends ConsumerWidget {
   const ProfileScreen({super.key});
@@ -18,13 +20,14 @@ class ProfileScreen extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('My profile'),
+        title: Text(context.l10n.text('My profile')),
         actions: [
           IconButton(
-            tooltip: 'Refresh profile',
+            tooltip: context.l10n.text('Refresh profile'),
             onPressed: () => ref.read(profileControllerProvider.notifier).reload(),
             icon: const Icon(Icons.refresh),
           ),
+          const LocaleAction(),
           const ThemeModeAction(),
           const SizedBox(width: 8),
         ],
@@ -202,7 +205,7 @@ class _ProfileEditCardState extends ConsumerState<_ProfileEditCard> {
           );
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Profile updated.')),
+        SnackBar(content: Text(context.l10n.text('Profile updated.'))),
       );
     } catch (error, stackTrace) {
       if (mounted) AppErrorNotification.show(context, error, stackTrace);
@@ -216,7 +219,10 @@ class _ProfileEditCardState extends ConsumerState<_ProfileEditCard> {
     final languageState = ref.watch(profileLanguagesProvider);
     final languages = [...?languageState.value];
     if (!languages.any((language) => language.id == _languageId)) {
-      languages.add(ProfileLanguage(id: _languageId, name: 'Current language'));
+      languages.add(ProfileLanguage(
+        id: _languageId,
+        name: context.l10n.text('Current language'),
+      ));
     }
 
     return Card(
@@ -227,10 +233,10 @@ class _ProfileEditCardState extends ConsumerState<_ProfileEditCard> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-            Text('Personal details', style: Theme.of(context).textTheme.titleLarge),
+            Text(context.l10n.text('Personal details'), style: Theme.of(context).textTheme.titleLarge),
             const SizedBox(height: 4),
             Text(
-              'Update the contact information associated with your account.',
+              context.l10n.text('Update the contact information associated with your account.'),
               style: Theme.of(context).textTheme.bodyMedium,
             ),
             const SizedBox(height: 20),
@@ -239,12 +245,12 @@ class _ProfileEditCardState extends ConsumerState<_ProfileEditCard> {
                 final twoColumns = constraints.maxWidth >= 600;
                 final firstNameField = _NameField(
                   controller: _firstName,
-                  label: 'First name',
+                  label: context.l10n.text('First name'),
                   enabled: !_isSaving,
                 );
                 final lastNameField = _NameField(
                   controller: _lastName,
-                  label: 'Last name',
+                  label: context.l10n.text('Last name'),
                   enabled: !_isSaving,
                 );
                 return twoColumns
@@ -269,14 +275,14 @@ class _ProfileEditCardState extends ConsumerState<_ProfileEditCard> {
               controller: _userName,
               enabled: !_isSaving,
               autofillHints: const [AutofillHints.username],
-              decoration: const InputDecoration(
-                labelText: 'Username',
-                prefixIcon: Icon(Icons.account_circle_outlined),
+              decoration: InputDecoration(
+                labelText: context.l10n.text('Username'),
+                prefixIcon: const Icon(Icons.account_circle_outlined),
               ),
               validator: (value) {
                 final userName = value?.trim() ?? '';
                 if (userName.isEmpty || userName.length > 256) {
-                  return 'Username must be between 1 and 256 characters.';
+                  return context.l10n.text('Username must be between 1 and 256 characters.');
                 }
                 return null;
               },
@@ -286,17 +292,17 @@ class _ProfileEditCardState extends ConsumerState<_ProfileEditCard> {
               value: _languageId,
               isExpanded: true,
               decoration: InputDecoration(
-                labelText: 'Language',
+                labelText: context.l10n.text('Language'),
                 prefixIcon: const Icon(Icons.language_outlined),
                 helperText: languageState.hasError
-                    ? 'Unable to load languages. Your current selection will be kept.'
+                    ? context.l10n.text('Unable to load languages. Your current selection will be kept.')
                     : null,
               ),
               items: languages
                   .map(
                     (language) => DropdownMenuItem<String>(
                       value: language.id,
-                      child: Text(language.label),
+                      child: Text(context.l10n.text(language.label)),
                     ),
                   )
                   .toList(growable: false),
@@ -306,7 +312,7 @@ class _ProfileEditCardState extends ConsumerState<_ProfileEditCard> {
                       if (value != null) setState(() => _languageId = value);
                     },
               validator: (value) => value == null || value.isEmpty
-                  ? 'Select a language.'
+                  ? context.l10n.text('Select a language.')
                   : null,
             ),
             const SizedBox(height: 16),
@@ -315,14 +321,14 @@ class _ProfileEditCardState extends ConsumerState<_ProfileEditCard> {
               enabled: !_isSaving,
               keyboardType: TextInputType.emailAddress,
               autofillHints: const [AutofillHints.email],
-              decoration: const InputDecoration(
-                labelText: 'Email',
-                prefixIcon: Icon(Icons.email_outlined),
+              decoration: InputDecoration(
+                labelText: context.l10n.text('Email'),
+                prefixIcon: const Icon(Icons.email_outlined),
               ),
               validator: (value) {
                 final email = value?.trim() ?? '';
                 if (email.isEmpty || !email.contains('@')) {
-                  return 'Enter a valid email address.';
+                  return context.l10n.text('Enter a valid email address.');
                 }
                 return null;
               },
@@ -333,15 +339,15 @@ class _ProfileEditCardState extends ConsumerState<_ProfileEditCard> {
               enabled: !_isSaving,
               keyboardType: TextInputType.phone,
               autofillHints: const [AutofillHints.telephoneNumber],
-              decoration: const InputDecoration(
-                labelText: 'Phone number',
-                prefixIcon: Icon(Icons.phone_outlined),
-                helperText: 'Optional. The server keeps the current value when left blank.',
+              decoration: InputDecoration(
+                labelText: context.l10n.text('Phone number'),
+                prefixIcon: const Icon(Icons.phone_outlined),
+                helperText: context.l10n.text('Optional. The server keeps the current value when left blank.'),
               ),
             ),
             const SizedBox(height: 20),
             Align(
-              alignment: Alignment.centerRight,
+              alignment: AlignmentDirectional.centerEnd,
               child: FilledButton.icon(
                 onPressed: _isSaving ? null : _save,
                 icon: _isSaving
@@ -350,7 +356,7 @@ class _ProfileEditCardState extends ConsumerState<_ProfileEditCard> {
                         child: CircularProgressIndicator(strokeWidth: 2),
                       )
                     : const Icon(Icons.save_outlined),
-                label: const Text('Save changes'),
+                label: Text(context.l10n.text('Save changes')),
               ),
             ),
             ],
@@ -379,7 +385,10 @@ class _NameField extends StatelessWidget {
     textCapitalization: TextCapitalization.words,
     decoration: InputDecoration(labelText: label),
     validator: (value) => (value?.trim().length ?? 0) > 100
-        ? '$label must not exceed 100 characters.'
+        ? context.l10n.text(
+            '{field} must not exceed 100 characters.',
+            {'field': label},
+          )
         : null,
   );
 }
@@ -391,11 +400,11 @@ class _PasswordCard extends StatelessWidget {
   Widget build(BuildContext context) => Card(
     child: ListTile(
       leading: const Icon(Icons.password_outlined),
-      title: const Text('Password'),
-      subtitle: const Text('Change your account password.'),
+      title: Text(context.l10n.text('Password')),
+      subtitle: Text(context.l10n.text('Change your account password.')),
       trailing: FilledButton.tonal(
         onPressed: () => _showChangePasswordDialog(context),
-        child: const Text('Change password'),
+        child: Text(context.l10n.text('Change password')),
       ),
     ),
   );
@@ -445,7 +454,7 @@ class _ChangePasswordDialogState extends ConsumerState<_ChangePasswordDialog> {
       final messenger = ScaffoldMessenger.of(context);
       Navigator.pop(context);
       messenger.showSnackBar(
-        const SnackBar(content: Text('Password changed.')),
+        SnackBar(content: Text(context.l10n.text('Password changed.'))),
       );
     } catch (error, stackTrace) {
       if (mounted) AppErrorNotification.show(context, error, stackTrace);
@@ -456,7 +465,7 @@ class _ChangePasswordDialogState extends ConsumerState<_ChangePasswordDialog> {
 
   @override
   Widget build(BuildContext context) => AlertDialog(
-    title: const Text('Change password'),
+    title: Text(context.l10n.text('Change password')),
     content: Form(
       key: _formKey,
       child: SingleChildScrollView(
@@ -465,25 +474,25 @@ class _ChangePasswordDialogState extends ConsumerState<_ChangePasswordDialog> {
           children: [
             _PasswordField(
               controller: _currentPassword,
-              label: 'Current password',
+              label: context.l10n.text('Current password'),
               enabled: !_isSaving,
             ),
             const SizedBox(height: 16),
             _PasswordField(
               controller: _newPassword,
-              label: 'New password',
+              label: context.l10n.text('New password'),
               enabled: !_isSaving,
               validator: (value) => (value?.length ?? 0) < 6
-                  ? 'New password must be at least 6 characters.'
+                  ? context.l10n.text('New password must be at least 6 characters.')
                   : null,
             ),
             const SizedBox(height: 16),
             _PasswordField(
               controller: _confirmation,
-              label: 'Confirm new password',
+              label: context.l10n.text('Confirm new password'),
               enabled: !_isSaving,
               validator: (value) => value != _newPassword.text
-                  ? 'Passwords do not match.'
+                  ? context.l10n.text('Passwords do not match.')
                   : null,
             ),
           ],
@@ -493,11 +502,11 @@ class _ChangePasswordDialogState extends ConsumerState<_ChangePasswordDialog> {
     actions: [
       TextButton(
         onPressed: _isSaving ? null : () => Navigator.pop(context),
-        child: const Text('Cancel'),
+        child: Text(context.l10n.text('Cancel')),
       ),
       FilledButton(
         onPressed: _isSaving ? null : _save,
-        child: _isSaving ? const Text('Saving…') : const Text('Change password'),
+        child: Text(context.l10n.text(_isSaving ? 'Saving…' : 'Change password')),
       ),
     ],
   );
@@ -523,7 +532,9 @@ class _PasswordField extends StatelessWidget {
     obscureText: true,
     decoration: InputDecoration(labelText: label),
     validator: validator ??
-        (value) => (value?.isEmpty ?? true) ? '$label is required.' : null,
+        (value) => (value?.isEmpty ?? true)
+            ? context.l10n.text('{field} is required.', {'field': label})
+            : null,
   );
 }
 
@@ -539,26 +550,26 @@ class _AccountDetailsCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Account information', style: Theme.of(context).textTheme.titleLarge),
+          Text(context.l10n.text('Account information'), style: Theme.of(context).textTheme.titleLarge),
           const SizedBox(height: 12),
-          _DetailRow(label: 'User ID', value: user.id, selectable: true),
-          _DetailRow(label: 'Username', value: user.userName ?? 'Not set'),
-          _DetailRow(label: 'Language ID', value: user.languageId),
+          _DetailRow(label: context.l10n.text('User ID'), value: user.id, selectable: true),
+          _DetailRow(label: context.l10n.text('Username'), value: user.userName ?? context.l10n.text('Not set')),
+          _DetailRow(label: context.l10n.text('Language ID'), value: user.languageId),
           _DetailRow(
-            label: 'Email verification',
-            value: user.emailConfirmed ? 'Confirmed' : 'Not confirmed',
+            label: context.l10n.text('Email verification'),
+            value: context.l10n.text(user.emailConfirmed ? 'Confirmed' : 'Not confirmed'),
             icon: user.emailConfirmed ? Icons.verified_outlined : Icons.pending_outlined,
           ),
           _DetailRow(
-            label: 'Phone verification',
-            value: user.phoneNumberConfirmed ? 'Confirmed' : 'Not confirmed',
+            label: context.l10n.text('Phone verification'),
+            value: context.l10n.text(user.phoneNumberConfirmed ? 'Confirmed' : 'Not confirmed'),
             icon: user.phoneNumberConfirmed ? Icons.verified_outlined : Icons.pending_outlined,
           ),
           _DetailRow(
-            label: 'Roles',
-            value: user.roles.isEmpty ? 'No assigned roles' : user.roles.join(', '),
+            label: context.l10n.text('Roles'),
+            value: user.roles.isEmpty ? context.l10n.text('No assigned roles') : user.roles.join(', '),
           ),
-          _DetailRow(label: 'Shop ID', value: user.shopId, selectable: true),
+          _DetailRow(label: context.l10n.text('Shop ID'), value: user.shopId, selectable: true),
         ],
       ),
     ),
@@ -577,21 +588,38 @@ class _ShopDetailsCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Shop', style: Theme.of(context).textTheme.titleLarge),
+          Text(context.l10n.text('Shop'), style: Theme.of(context).textTheme.titleLarge),
           const SizedBox(height: 12),
-          _DetailRow(label: 'Name', value: shop.name),
-          _DetailRow(label: 'Shop ID', value: shop.id, selectable: true),
-          if (shop.shopType case final value?) _DetailRow(label: 'Type', value: value),
-          if (shop.address case final value?) _DetailRow(label: 'Address', value: value),
-          if (shop.phoneNumber case final value?) _DetailRow(label: 'Phone', value: value),
-          if (shop.email case final value?) _DetailRow(label: 'Email', value: value),
-          if (shop.taxNumber case final value?) _DetailRow(label: 'Tax number', value: value),
+          _DetailRow(label: context.l10n.text('Name'), value: shop.name),
+          _DetailRow(label: context.l10n.text('Shop ID'), value: shop.id, selectable: true),
+          if (shop.shopType case final value?)
+            _DetailRow(
+              label: context.l10n.text('Type'),
+              value: _localizedShopType(context, value),
+            ),
+          if (shop.address case final value?) _DetailRow(label: context.l10n.text('Address'), value: value),
+          if (shop.phoneNumber case final value?) _DetailRow(label: context.l10n.text('Phone'), value: value),
+          if (shop.email case final value?) _DetailRow(label: context.l10n.text('Email'), value: value),
+          if (shop.taxNumber case final value?)
+            _DetailRow(label: context.l10n.text('Tax number'), value: value),
           if (shop.isActive case final value?)
-            _DetailRow(label: 'Status', value: value ? 'Active' : 'Inactive'),
+            _DetailRow(
+              label: context.l10n.text('Status'),
+              value: context.l10n.text(value ? 'Active' : 'Inactive'),
+            ),
         ],
       ),
     ),
   );
+}
+
+String _localizedShopType(BuildContext context, String value) {
+  final normalized = value.replaceAll(RegExp(r'[ _-]'), '').toLowerCase();
+  return switch (normalized) {
+    'retailshop' => context.l10n.text('Retail shop'),
+    'wholesaleshop' => context.l10n.text('Wholesale shop'),
+    _ => value,
+  };
 }
 
 class _DetailRow extends StatelessWidget {

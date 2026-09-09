@@ -7,7 +7,9 @@ import '../controllers/product_controller.dart';
 import '../controllers/shop_controller.dart';
 import '../controllers/unit_of_measure_controller.dart';
 import '../widgets/app_drawer.dart';
+import '../widgets/locale_action.dart';
 import '../widgets/theme_mode_action.dart';
+import '../l10n/app_localizations.dart';
 import 'categories_screen.dart';
 import 'profile_screen.dart';
 import 'products_screen.dart';
@@ -20,6 +22,7 @@ class HomeScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final session = ref.watch(authControllerProvider).session;
+    final l10n = context.l10n;
     final categoryState = ref.watch(categoryControllerProvider);
     final pendingCount = categoryState.value?.pendingCount ?? 0;
     final unitState = ref.watch(unitOfMeasureControllerProvider);
@@ -41,6 +44,7 @@ class HomeScreen extends ConsumerWidget {
       appBar: AppBar(
         title: const Text('SMIS'),
         actions: const [
+          LocaleAction(),
           ThemeModeAction(),
           SizedBox(width: 8),
         ],
@@ -54,12 +58,12 @@ class HomeScreen extends ConsumerWidget {
               padding: const EdgeInsets.fromLTRB(20, 24, 20, 32),
               children: [
                 Text(
-                  'Welcome back, ${session.userName}',
+                  l10n.text('Welcome back, {name}', {'name': session.userName}),
                   style: Theme.of(context).textTheme.headlineMedium,
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  'Choose an area to continue managing your shop.',
+                  l10n.text('Choose an area to continue managing your shop.'),
                   style: Theme.of(context).textTheme.bodyLarge,
                 ),
                 const SizedBox(height: 28),
@@ -68,50 +72,83 @@ class HomeScreen extends ConsumerWidget {
                     final wideLayout = constraints.maxWidth >= 620;
                     final categoriesCard = _HomeActionCard(
                       icon: Icons.category_outlined,
-                      title: 'Categories',
+                      title: l10n.text('Categories'),
                       description: pendingCount == 0
-                          ? 'Manage your local category list.'
-                          : '$pendingCount local change${pendingCount == 1 ? '' : 's'} waiting to sync.',
-                      badgeLabel: pendingCount == 0 ? null : '$pendingCount pending',
+                          ? l10n.text('Manage your local category list.')
+                          : l10n.text(
+                              pendingCount == 1
+                                  ? '{count} local change waiting to sync.'
+                                  : '{count} local changes waiting to sync.',
+                              {'count': pendingCount},
+                            ),
+                      badgeLabel: pendingCount == 0
+                          ? null
+                          : l10n.text('{count} pending', {'count': pendingCount}),
                       onTap: () => _openCategories(context),
                     );
                     final profileCard = _HomeActionCard(
                       icon: Icons.person_outline,
-                      title: 'My profile',
-                      description: 'View your account, shop details, and profile settings.',
+                      title: l10n.text('My profile'),
+                      description: l10n.text(
+                        'View your account, shop details, and profile settings.',
+                      ),
                       onTap: () => _openProfile(context),
                     );
                     final unitsCard = _HomeActionCard(
                       icon: Icons.straighten_outlined,
-                      title: 'Units of measurement',
+                      title: l10n.text('Units of measurement'),
                       description: unitPendingCount == 0
-                          ? 'Manage your local measurement units.'
-                          : '$unitPendingCount local change${unitPendingCount == 1 ? '' : 's'} waiting to sync.',
+                          ? l10n.text('Manage your local measurement units.')
+                          : l10n.text(
+                              unitPendingCount == 1
+                                  ? '{count} local change waiting to sync.'
+                                  : '{count} local changes waiting to sync.',
+                              {'count': unitPendingCount},
+                            ),
                       badgeLabel: unitPendingCount == 0
                           ? null
-                          : '$unitPendingCount pending',
+                          : l10n.text(
+                              '{count} pending',
+                              {'count': unitPendingCount},
+                            ),
                       onTap: () => _openUnits(context),
                     );
                     final shopsCard = _HomeActionCard(
                       icon: Icons.storefront_outlined,
-                      title: 'Shops',
+                      title: l10n.text('Shops'),
                       description: shopPendingCount == 0
-                          ? 'Manage locally available shops.'
-                          : '$shopPendingCount local change${shopPendingCount == 1 ? '' : 's'} waiting to sync.',
+                          ? l10n.text('Manage locally available shops.')
+                          : l10n.text(
+                              shopPendingCount == 1
+                                  ? '{count} local change waiting to sync.'
+                                  : '{count} local changes waiting to sync.',
+                              {'count': shopPendingCount},
+                            ),
                       badgeLabel: shopPendingCount == 0
                           ? null
-                          : '$shopPendingCount pending',
+                          : l10n.text(
+                              '{count} pending',
+                              {'count': shopPendingCount},
+                            ),
                       onTap: () => _openShops(context),
                     );
                     final productsCard = _HomeActionCard(
                       icon: Icons.inventory_2_outlined,
-                      title: 'Products',
+                      title: l10n.text('Products'),
                       description: productPendingCount == 0
-                          ? 'Manage your local product catalog.'
-                          : '$productPendingCount local change${productPendingCount == 1 ? '' : 's'} waiting to sync.',
+                          ? l10n.text('Manage your local product catalog.')
+                          : l10n.text(
+                              productPendingCount == 1
+                                  ? '{count} local change waiting to sync.'
+                                  : '{count} local changes waiting to sync.',
+                              {'count': productPendingCount},
+                            ),
                       badgeLabel: productPendingCount == 0
                           ? null
-                          : '$productPendingCount pending',
+                          : l10n.text(
+                              '{count} pending',
+                              {'count': productPendingCount},
+                            ),
                       onTap: () => _openProducts(context),
                     );
                     return wideLayout
@@ -264,7 +301,7 @@ class _OfflineFirstNotice extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Offline-first data',
+                    context.l10n.text('Offline-first data'),
                     style: Theme.of(context).textTheme.titleSmall?.copyWith(
                       color: colors.onSecondaryContainer,
                     ),
@@ -272,8 +309,13 @@ class _OfflineFirstNotice extends StatelessWidget {
                   const SizedBox(height: 4),
                   Text(
                     pendingCount == 0
-                        ? 'Your local changes are synchronized.'
-                        : '$pendingCount local change${pendingCount == 1 ? '' : 's'} safely stored and waiting to synchronize.',
+                        ? context.l10n.text('Your local changes are synchronized.')
+                        : context.l10n.text(
+                            pendingCount == 1
+                                ? '{count} local change is safely stored and waiting to synchronize.'
+                                : '{count} local changes are safely stored and waiting to synchronize.',
+                            {'count': pendingCount},
+                          ),
                     style: TextStyle(color: colors.onSecondaryContainer),
                   ),
                 ],

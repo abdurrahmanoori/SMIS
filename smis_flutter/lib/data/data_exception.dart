@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import '../l10n/app_localizations.dart';
 
 sealed class AppException implements Exception {
   const AppException(this.message, {this.cause});
@@ -123,7 +124,8 @@ class ApiErrorParser {
 class AppErrorNotification {
   static void show(BuildContext context, Object error, [StackTrace? stackTrace]) {
     final colors = Theme.of(context).colorScheme;
-    final message = error is AppException ? error.message : error.toString();
+    final rawMessage = error is AppException ? error.message : error.toString();
+    final message = context.l10n.errorMessage(rawMessage);
     
     final content = Column(
       mainAxisSize: MainAxisSize.min,
@@ -133,12 +135,12 @@ class AppErrorNotification {
         if (kDebugMode) ...[
           const SizedBox(height: 8),
           Text(
-            'Debug: ${error.runtimeType}',
+            '${context.l10n.text('Debug')}: ${error.runtimeType}',
             style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold),
           ),
           if (error is AppException && error.cause != null)
             Text(
-              'Cause: ${error.cause}',
+              '${context.l10n.text('Cause')}: ${error.cause}',
               style: const TextStyle(fontSize: 10),
             ),
         ],
@@ -152,7 +154,7 @@ class AppErrorNotification {
         behavior: SnackBarBehavior.floating,
         action: kDebugMode && stackTrace != null
             ? SnackBarAction(
-                label: 'LOG',
+                label: context.l10n.text('Log').toUpperCase(),
                 textColor: colors.onError,
                 onPressed: () => debugPrint('Error: $error\n$stackTrace'),
               )

@@ -12,6 +12,8 @@ import 'data/database.dart';
 import 'screens/authentication_gate.dart';
 import 'services/background_sync.dart';
 import 'controllers/theme_controller.dart';
+import 'controllers/locale_controller.dart';
+import 'l10n/app_localizations.dart';
 
 import 'config/flavor_config.dart';
 
@@ -75,6 +77,7 @@ class SmisApp extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final themeMode = ref.watch(themeControllerProvider);
+    final locale = ref.watch(localeControllerProvider);
     
     final lightColorScheme = ColorScheme.fromSeed(
       seedColor: const Color(0xFF315C49),
@@ -88,6 +91,15 @@ class SmisApp extends ConsumerWidget {
 
     return MaterialApp(
       title: AppConfig.appTitle,
+      locale: locale,
+      supportedLocales: AppLocalizations.supportedLocales,
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      builder: (context, child) => Directionality(
+        textDirection: locale.languageCode == 'fa' || locale.languageCode == 'ps'
+            ? TextDirection.rtl
+            : TextDirection.ltr,
+        child: child ?? const SizedBox.shrink(),
+      ),
       debugShowCheckedModeBanner: FlavorConfig.isDevelopment,
       themeMode: themeMode,
       theme: ThemeData(

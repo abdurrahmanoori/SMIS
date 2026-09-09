@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../models/unit_of_measure.dart';
+import '../l10n/app_localizations.dart';
 
 class UnitOfMeasureFormDialog extends StatefulWidget {
   const UnitOfMeasureFormDialog({super.key, this.unit});
@@ -36,7 +37,13 @@ class _UnitOfMeasureFormDialogState extends State<UnitOfMeasureFormDialog> {
 
   @override
   Widget build(BuildContext context) => AlertDialog(
-    title: Text(widget.unit == null ? 'New unit of measurement' : 'Edit unit of measurement'),
+    title: Text(
+      context.l10n.text(
+        widget.unit == null
+            ? 'New unit of measurement'
+            : 'Edit unit of measurement',
+      ),
+    ),
     content: SizedBox(
       width: 480,
       child: Form(
@@ -49,21 +56,23 @@ class _UnitOfMeasureFormDialogState extends State<UnitOfMeasureFormDialog> {
                 controller: _name,
                 autofocus: true,
                 maxLength: 100,
-                decoration: const InputDecoration(labelText: 'Name *'),
+                decoration: InputDecoration(
+                  labelText: context.l10n.text('Name *'),
+                ),
                 validator: (value) => value == null || value.trim().isEmpty
-                    ? 'Name is required.'
+                    ? context.l10n.text('Name is required.')
                     : null,
               ),
               const SizedBox(height: 12),
               TextFormField(
                 controller: _symbol,
                 maxLength: 20,
-                decoration: const InputDecoration(
-                  labelText: 'Symbol *',
-                  hintText: 'Example: kg, pcs, L',
+                decoration: InputDecoration(
+                  labelText: context.l10n.text('Symbol *'),
+                  hintText: context.l10n.text('Example: kg, pcs, L'),
                 ),
                 validator: (value) => value == null || value.trim().isEmpty
-                    ? 'Symbol is required.'
+                    ? context.l10n.text('Symbol is required.')
                     : null,
               ),
               const SizedBox(height: 12),
@@ -72,7 +81,9 @@ class _UnitOfMeasureFormDialogState extends State<UnitOfMeasureFormDialog> {
                 maxLength: 500,
                 minLines: 2,
                 maxLines: 4,
-                decoration: const InputDecoration(labelText: 'Description'),
+                decoration: InputDecoration(
+                  labelText: context.l10n.text('Description'),
+                ),
               ),
             ],
           ),
@@ -82,7 +93,7 @@ class _UnitOfMeasureFormDialogState extends State<UnitOfMeasureFormDialog> {
     actions: [
       TextButton(
         onPressed: () => Navigator.pop(context),
-        child: const Text('Cancel'),
+        child: Text(context.l10n.text('Cancel')),
       ),
       FilledButton(
         onPressed: () {
@@ -96,7 +107,7 @@ class _UnitOfMeasureFormDialogState extends State<UnitOfMeasureFormDialog> {
             ),
           );
         },
-        child: const Text('Save offline'),
+        child: Text(context.l10n.text('Save offline')),
       ),
     ],
   );

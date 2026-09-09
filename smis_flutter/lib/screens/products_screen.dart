@@ -9,11 +9,13 @@ import '../data/data_exception.dart';
 import '../models/category.dart';
 import '../models/product.dart';
 import '../models/unit_of_measure.dart';
+import '../l10n/app_localizations.dart';
 import '../services/product_sync_service.dart';
 import '../widgets/app_drawer.dart';
 import '../widgets/app_error_view.dart';
 import '../widgets/product_form_dialog.dart';
 import '../widgets/theme_mode_action.dart';
+import '../widgets/locale_action.dart';
 import 'unit_of_measures_screen.dart';
 
 class ProductsScreen extends ConsumerStatefulWidget {
@@ -40,20 +42,21 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen> with WidgetsBin
     final hasUnits = units.isNotEmpty;
     return Scaffold(
       appBar: AppBar(
-        title: const Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Text('Products'), Text('Local-first inventory setup', style: TextStyle(fontSize: 12, fontWeight: FontWeight.normal)),
+        title: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Text(context.l10n.text('Products')), Text(context.l10n.text('Local-first inventory setup'), style: const TextStyle(fontSize: 12, fontWeight: FontWeight.normal)),
         ]),
         actions: [
           productState.maybeWhen(
             data: (state) => Badge(
               isLabelVisible: state.pendingCount > 0, label: Text('${state.pendingCount}'),
               child: IconButton.filledTonal(
-                tooltip: 'Sync products', onPressed: state.isSyncing ? null : _sync,
+                tooltip: context.l10n.text('Sync products'), onPressed: state.isSyncing ? null : _sync,
                 icon: state.isSyncing ? const SizedBox.square(dimension: 18, child: CircularProgressIndicator(strokeWidth: 2)) : const Icon(Icons.sync),
               ),
             ),
             orElse: () => const SizedBox.shrink(),
           ),
+          const LocaleAction(),
           const ThemeModeAction(), const SizedBox(width: 8),
         ],
       ),
@@ -68,7 +71,7 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen> with WidgetsBin
       ))),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: hasUnits ? () => _create(units, categories) : null,
-        icon: const Icon(Icons.add), label: const Text('Add product'),
+        icon: const Icon(Icons.add), label: Text(context.l10n.text('Add product')),
       ),
     );
   }
@@ -76,28 +79,28 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen> with WidgetsBin
   Future<void> _create(List<UnitOfMeasure> units, List<Category> categories) async {
     final draft = await showDialog<ProductDraft>(context: context, builder: (context) => ProductFormDialog(units: units, categories: categories));
     if (draft == null) return;
-    await _runMutation(() => ref.read(productControllerProvider.notifier).create(draft), 'Product saved locally.');
+    await _runMutation(() => ref.read(productControllerProvider.notifier).create(draft), context.l10n.text('Product saved locally.'));
   }
   Future<void> _edit(Product product) async {
     final units = ref.read(unitOfMeasureControllerProvider).value?.units ?? const <UnitOfMeasure>[];
     final categories = ref.read(categoryControllerProvider).value?.categories ?? const <Category>[];
     final draft = await showDialog<ProductDraft>(context: context, builder: (context) => ProductFormDialog(product: product, units: units, categories: categories));
     if (draft == null) return;
-    await _runMutation(() => ref.read(productControllerProvider.notifier).updateProduct(product.id, draft), 'Product updated locally.');
+    await _runMutation(() => ref.read(productControllerProvider.notifier).updateProduct(product.id, draft), context.l10n.text('Product updated locally.'));
   }
   Future<void> _delete(Product product) async {
     final confirmed = await showDialog<bool>(context: context, builder: (context) => AlertDialog(
-      title: const Text('Delete product?'), content: Text('“${product.name}” will disappear now and its deletion will sync later.'),
-      actions: [TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('Cancel')), FilledButton.tonal(onPressed: () => Navigator.pop(context, true), child: const Text('Delete offline'))],
+      title: Text(context.l10n.text('Delete product?')), content: Text(context.l10n.text('“{name}” will disappear now and its deletion will sync later.', {'name': product.name})),
+      actions: [TextButton(onPressed: () => Navigator.pop(context, false), child: Text(context.l10n.text('Cancel'))), FilledButton.tonal(onPressed: () => Navigator.pop(context, true), child: Text(context.l10n.text('Delete offline')))],
     ));
     if (confirmed != true) return;
-    await _runMutation(() => ref.read(productControllerProvider.notifier).delete(product.id), 'Product deleted locally.');
+    await _runMutation(() => ref.read(productControllerProvider.notifier).delete(product.id), context.l10n.text('Product deleted locally.'));
   }
   Future<void> _sync() async {
     try {
       final result = await ref.read(productControllerProvider.notifier).syncNow();
       if (!mounted || !result.success) return;
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(result.message), backgroundColor: Theme.of(context).colorScheme.primary));
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(context.l10n.syncMessage(result.message)), backgroundColor: Theme.of(context).colorScheme.primary));
     } catch (error, stackTrace) {
       if (!mounted) return;
       AppErrorNotification.show(context, error, stackTrace);
@@ -148,7 +151,7 @@ class _SyncSummary extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
-    final summary = '${result.message} Pulled ${result.pulled}, pushed ${result.pushed}, conflicts resolved ${result.conflictsResolved}, pending ${result.pending}.';
+    final summary = '${context.l10n.syncMessage(result.message)} ${context.l10n.text('Pulled {pulled}, pushed {pushed}, conflicts resolved {conflicts}, pending {pending}.', {'pulled': result.pulled, 'pushed': result.pushed, 'conflicts': result.conflictsResolved, 'pending': result.pending})}';
     final message = kDebugMode && result.failures.isNotEmpty ? '$summary\n\n${result.failures.map((failure) => failure.toDevelopmentString()).join('\n\n')}' : summary;
     return Container(width: double.infinity, margin: const EdgeInsets.fromLTRB(16, 12, 16, 0), padding: const EdgeInsets.all(12), decoration: BoxDecoration(color: result.success ? colors.primaryContainer : colors.errorContainer, borderRadius: BorderRadius.circular(12)), child: ConstrainedBox(constraints: BoxConstraints(maxHeight: kDebugMode && !result.success ? 280 : double.infinity), child: SingleChildScrollView(child: SelectableText(message, style: TextStyle(color: result.success ? colors.onPrimaryContainer : colors.onErrorContainer)))));
   }
@@ -161,27 +164,27 @@ class _ProductCard extends StatelessWidget {
   Widget build(BuildContext context) => Card(child: ListTile(
     leading: CircleAvatar(child: Text(product.name.characters.first.toUpperCase())),
     title: Row(children: [Flexible(child: Text(product.name)), const SizedBox(width: 8), _SyncStateIcon(product: product)]),
-    subtitle: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [Text('Base unit: $unitName'), if (categoryName != null) Text('Category: $categoryName'), if (product.sku case final sku?) Text('SKU: $sku'), if (product.description case final description?) Text(description, maxLines: 2, overflow: TextOverflow.ellipsis)]),
+    subtitle: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [Text(context.l10n.text('Base unit: {name}', {'name': unitName})), if (categoryName != null) Text(context.l10n.text('Category: {name}', {'name': categoryName!})), if (product.sku case final sku?) Text(context.l10n.text('SKU: {value}', {'value': sku})), if (product.description case final description?) Text(description, maxLines: 2, overflow: TextOverflow.ellipsis)]),
     isThreeLine: true,
-    trailing: PopupMenuButton<String>(onSelected: (value) => value == 'edit' ? onEdit() : onDelete(), itemBuilder: (context) => const [PopupMenuItem(value: 'edit', child: Text('Edit')), PopupMenuItem(value: 'delete', child: Text('Delete'))]),
+    trailing: PopupMenuButton<String>(onSelected: (value) => value == 'edit' ? onEdit() : onDelete(), itemBuilder: (context) => [PopupMenuItem(value: 'edit', child: Text(context.l10n.text('Edit'))), PopupMenuItem(value: 'delete', child: Text(context.l10n.text('Delete')))]),
   ));
 }
-class _SyncStateIcon extends StatelessWidget { const _SyncStateIcon({required this.product}); final Product product; @override Widget build(BuildContext context) { final failed = product.syncStatus == ProductSyncStatus.failed; final synced = product.syncStatus == ProductSyncStatus.synced; return Tooltip(message: product.lastSyncError ?? (synced ? 'Synced' : failed ? 'Sync failed' : 'Waiting to sync'), child: Icon(failed ? Icons.cloud_off_outlined : synced ? Icons.cloud_done_outlined : Icons.cloud_upload_outlined, size: 18, color: failed ? Theme.of(context).colorScheme.error : Theme.of(context).colorScheme.outline)); } }
-class _EmptyView extends StatelessWidget { const _EmptyView(); @override Widget build(BuildContext context) => const Center(child: Padding(padding: EdgeInsets.all(32), child: Column(mainAxisSize: MainAxisSize.min, children: [Icon(Icons.inventory_2_outlined, size: 56), SizedBox(height: 12), Text('No products yet'), SizedBox(height: 4), Text('Add one now—even while completely offline.')]))) ; }
+class _SyncStateIcon extends StatelessWidget { const _SyncStateIcon({required this.product}); final Product product; @override Widget build(BuildContext context) { final failed = product.syncStatus == ProductSyncStatus.failed; final synced = product.syncStatus == ProductSyncStatus.synced; return Tooltip(message: product.lastSyncError ?? context.l10n.text(synced ? 'Synced' : failed ? 'Sync failed' : 'Waiting to sync'), child: Icon(failed ? Icons.cloud_off_outlined : synced ? Icons.cloud_done_outlined : Icons.cloud_upload_outlined, size: 18, color: failed ? Theme.of(context).colorScheme.error : Theme.of(context).colorScheme.outline)); } }
+class _EmptyView extends StatelessWidget { const _EmptyView(); @override Widget build(BuildContext context) => Center(child: Padding(padding: const EdgeInsets.all(32), child: Column(mainAxisSize: MainAxisSize.min, children: [const Icon(Icons.inventory_2_outlined, size: 56), const SizedBox(height: 12), Text(context.l10n.text('No products yet')), const SizedBox(height: 4), Text(context.l10n.text('Add one now—even while completely offline.'))]))) ; }
 class _MissingUnitNotice extends StatelessWidget {
   const _MissingUnitNotice();
   @override
   Widget build(BuildContext context) => Padding(
     padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
     child: MaterialBanner(
-      content: const Text('Create or sync a unit of measurement before adding a product.'),
+      content: Text(context.l10n.text('Create or sync a unit of measurement before adding a product.')),
       leading: const Icon(Icons.info_outline),
       actions: [
         TextButton(
           onPressed: () => Navigator.of(context).push(
             MaterialPageRoute<void>(builder: (context) => const UnitOfMeasuresScreen()),
           ),
-          child: const Text('MANAGE UNITS'),
+          child: Text(context.l10n.text('Manage units').toUpperCase()),
         ),
       ],
     ),

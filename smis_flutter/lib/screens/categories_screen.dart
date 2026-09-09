@@ -7,11 +7,13 @@ import '../controllers/category_controller.dart';
 import '../controllers/profile_controller.dart';
 import '../data/data_exception.dart';
 import '../models/category.dart';
+import '../l10n/app_localizations.dart';
 import '../services/category_sync_service.dart';
 import '../widgets/app_drawer.dart';
 import '../widgets/app_error_view.dart';
 import '../widgets/theme_mode_action.dart';
 import '../widgets/category_form_dialog.dart';
+import '../widgets/locale_action.dart';
 import 'profile_screen.dart';
 
 class CategoriesScreen extends ConsumerStatefulWidget {
@@ -49,13 +51,13 @@ class _CategoriesScreenState extends ConsumerState<CategoriesScreen>
 
     return Scaffold(
       appBar: AppBar(
-        title: const Column(
+        title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Categories'),
+            Text(context.l10n.text('Categories')),
             Text(
-              'Local-first inventory setup',
-              style: TextStyle(fontSize: 12, fontWeight: FontWeight.normal),
+              context.l10n.text('Local-first inventory setup'),
+              style: const TextStyle(fontSize: 12, fontWeight: FontWeight.normal),
             ),
           ],
         ),
@@ -67,6 +69,7 @@ class _CategoriesScreenState extends ConsumerState<CategoriesScreen>
             ),
             orElse: () => const SizedBox.shrink(),
           ),
+          const LocaleAction(),
           const ThemeModeAction(),
           const SizedBox(width: 8),
         ],
@@ -96,7 +99,7 @@ class _CategoriesScreenState extends ConsumerState<CategoriesScreen>
       floatingActionButton: FloatingActionButton.extended(
         onPressed: _create,
         icon: const Icon(Icons.add),
-        label: const Text('Add category'),
+        label: Text(context.l10n.text('Add category')),
       ),
     );
   }
@@ -109,7 +112,7 @@ class _CategoriesScreenState extends ConsumerState<CategoriesScreen>
     if (draft == null) return;
     await _runMutation(
       () => ref.read(categoryControllerProvider.notifier).create(draft),
-      'Category saved locally.',
+      context.l10n.text('Category saved locally.'),
     );
   }
 
@@ -123,7 +126,7 @@ class _CategoriesScreenState extends ConsumerState<CategoriesScreen>
       () => ref
           .read(categoryControllerProvider.notifier)
           .updateCategory(category.id, draft),
-      'Category updated locally.',
+      context.l10n.text('Category updated locally.'),
     );
   }
 
@@ -131,18 +134,21 @@ class _CategoriesScreenState extends ConsumerState<CategoriesScreen>
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Delete category?'),
+        title: Text(context.l10n.text('Delete category?')),
         content: Text(
-          '“${category.name}” will disappear now and its deletion will sync later.',
+          context.l10n.text(
+            '“{name}” will disappear now and its deletion will sync later.',
+            {'name': category.name},
+          ),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
-            child: const Text('Cancel'),
+            child: Text(context.l10n.text('Cancel')),
           ),
           FilledButton.tonal(
             onPressed: () => Navigator.pop(context, true),
-            child: const Text('Delete offline'),
+            child: Text(context.l10n.text('Delete offline')),
           ),
         ],
       ),
@@ -150,7 +156,7 @@ class _CategoriesScreenState extends ConsumerState<CategoriesScreen>
     if (confirmed != true) return;
     await _runMutation(
       () => ref.read(categoryControllerProvider.notifier).delete(category.id),
-      'Category deleted locally.',
+      context.l10n.text('Category deleted locally.'),
     );
   }
 
@@ -165,7 +171,7 @@ class _CategoriesScreenState extends ConsumerState<CategoriesScreen>
       if (result.success) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(result.message),
+            content: Text(context.l10n.syncMessage(result.message)),
             duration: const Duration(seconds: 4),
             backgroundColor: Theme.of(context).colorScheme.primary,
           ),
@@ -205,7 +211,7 @@ class _SyncButton extends StatelessWidget {
     isLabelVisible: state.pendingCount > 0,
     label: Text('${state.pendingCount}'),
     child: IconButton.filledTonal(
-      tooltip: 'Sync Categories',
+      tooltip: context.l10n.text('Sync categories'),
       onPressed: onPressed,
       icon: state.isSyncing
           ? const SizedBox.square(
@@ -263,8 +269,16 @@ class _SyncSummary extends StatelessWidget {
     final colors = Theme.of(context).colorScheme;
     final successful = result.success;
     final summary =
-        '${result.message} Pulled ${result.pulled}, pushed ${result.pushed}, '
-        'conflicts resolved ${result.conflictsResolved}, pending ${result.pending}.';
+        '${context.l10n.syncMessage(result.message)} '
+        '${context.l10n.text(
+          'Pulled {pulled}, pushed {pushed}, conflicts resolved {conflicts}, pending {pending}.',
+          {
+            'pulled': result.pulled,
+            'pushed': result.pushed,
+            'conflicts': result.conflictsResolved,
+            'pending': result.pending,
+          },
+        )}';
     final displayMessage = kDebugMode && result.failures.isNotEmpty
         ? '$summary\n\n${result.failures.map((failure) => failure.toDevelopmentString()).join('\n\n')}'
         : summary;
@@ -312,7 +326,7 @@ class _CategoryCard extends StatelessWidget {
     return Card(
       color: colors.surface,
       child: Padding(
-        padding: const EdgeInsets.fromLTRB(16, 12, 8, 12),
+        padding: const EdgeInsetsDirectional.fromSTEB(16, 12, 8, 12),
         child: Row(
           children: [
             CircleAvatar(
@@ -351,7 +365,7 @@ class _CategoryCard extends StatelessWidget {
                     ),
                   const SizedBox(height: 4),
                   Text(
-                    category.isActive ? 'Active' : 'Inactive',
+                    context.l10n.text(category.isActive ? 'Active' : 'Inactive'),
                     style: TextStyle(
                       color: category.isActive
                           ? colors.primary
@@ -363,9 +377,15 @@ class _CategoryCard extends StatelessWidget {
             ),
             PopupMenuButton<String>(
               onSelected: (value) => value == 'edit' ? onEdit() : onDelete(),
-              itemBuilder: (context) => const [
-                PopupMenuItem(value: 'edit', child: Text('Edit')),
-                PopupMenuItem(value: 'delete', child: Text('Delete')),
+              itemBuilder: (context) => [
+                PopupMenuItem(
+                  value: 'edit',
+                  child: Text(context.l10n.text('Edit')),
+                ),
+                PopupMenuItem(
+                  value: 'delete',
+                  child: Text(context.l10n.text('Delete')),
+                ),
               ],
             ),
           ],
@@ -388,10 +408,10 @@ class _SyncStateIcon extends StatelessWidget {
       message:
           category.lastSyncError ??
           (synced
-              ? 'Synced'
+              ? context.l10n.text('Synced')
               : failed
-              ? 'Sync failed'
-              : 'Waiting to sync'),
+              ? context.l10n.text('Sync failed')
+              : context.l10n.text('Waiting to sync')),
       child: Icon(
         failed
             ? Icons.cloud_off_outlined
@@ -411,17 +431,17 @@ class _EmptyView extends StatelessWidget {
   const _EmptyView();
 
   @override
-  Widget build(BuildContext context) => const Center(
+  Widget build(BuildContext context) => Center(
     child: Padding(
-      padding: EdgeInsets.all(32),
+      padding: const EdgeInsets.all(32),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(Icons.category_outlined, size: 56),
-          SizedBox(height: 12),
-          Text('No categories yet'),
-          SizedBox(height: 4),
-          Text('Add one now—even while completely offline.'),
+          const Icon(Icons.category_outlined, size: 56),
+          const SizedBox(height: 12),
+          Text(context.l10n.text('No categories yet')),
+          const SizedBox(height: 4),
+          Text(context.l10n.text('Add one now—even while completely offline.')),
         ],
       ),
     ),

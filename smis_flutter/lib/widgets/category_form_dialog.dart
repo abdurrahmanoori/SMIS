@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../models/category.dart';
+import '../l10n/app_localizations.dart';
 
 class CategoryFormDialog extends StatefulWidget {
   const CategoryFormDialog({super.key, this.category});
@@ -38,7 +39,11 @@ class _CategoryFormDialogState extends State<CategoryFormDialog> {
 
   @override
   Widget build(BuildContext context) => AlertDialog(
-    title: Text(widget.category == null ? 'New category' : 'Edit category'),
+    title: Text(
+      context.l10n.text(
+        widget.category == null ? 'New category' : 'Edit category',
+      ),
+    ),
     content: SizedBox(
       width: 480,
       child: Form(
@@ -51,16 +56,20 @@ class _CategoryFormDialogState extends State<CategoryFormDialog> {
                 controller: _name,
                 autofocus: true,
                 maxLength: 200,
-                decoration: const InputDecoration(labelText: 'Name *'),
+                decoration: InputDecoration(
+                  labelText: context.l10n.text('Name *'),
+                ),
                 validator: (value) => value == null || value.trim().isEmpty
-                    ? 'Name is required.'
+                    ? context.l10n.text('Name is required.')
                     : null,
               ),
               const SizedBox(height: 12),
               TextFormField(
                 controller: _code,
                 maxLength: 50,
-                decoration: const InputDecoration(labelText: 'Code'),
+                decoration: InputDecoration(
+                  labelText: context.l10n.text('Code'),
+                ),
               ),
               const SizedBox(height: 12),
               TextFormField(
@@ -68,11 +77,13 @@ class _CategoryFormDialogState extends State<CategoryFormDialog> {
                 maxLength: 500,
                 minLines: 2,
                 maxLines: 4,
-                decoration: const InputDecoration(labelText: 'Description'),
+                decoration: InputDecoration(
+                  labelText: context.l10n.text('Description'),
+                ),
               ),
               SwitchListTile.adaptive(
                 contentPadding: EdgeInsets.zero,
-                title: const Text('Active'),
+                title: Text(context.l10n.text('Active')),
                 value: _isActive,
                 onChanged: (value) => setState(() => _isActive = value),
               ),
@@ -84,7 +95,7 @@ class _CategoryFormDialogState extends State<CategoryFormDialog> {
     actions: [
       TextButton(
         onPressed: () => Navigator.pop(context),
-        child: const Text('Cancel'),
+        child: Text(context.l10n.text('Cancel')),
       ),
       FilledButton(
         onPressed: () {
@@ -100,7 +111,7 @@ class _CategoryFormDialogState extends State<CategoryFormDialog> {
             ),
           );
         },
-        child: const Text('Save offline'),
+        child: Text(context.l10n.text('Save offline')),
       ),
     ],
   );

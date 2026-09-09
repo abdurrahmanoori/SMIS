@@ -5,6 +5,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../controllers/auth_controller.dart';
 import '../data/data_exception.dart';
 import '../models/auth_session.dart';
+import '../l10n/app_localizations.dart';
+import '../widgets/locale_action.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key});
@@ -40,6 +42,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   Widget build(BuildContext context) {
     final auth = ref.watch(authControllerProvider);
     final colors = Theme.of(context).colorScheme;
+    final l10n = context.l10n;
 
     return Scaffold(
       body: SafeArea(
@@ -57,16 +60,22 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
+                        const Align(
+                          alignment: AlignmentDirectional.centerEnd,
+                          child: LocaleAction(showLabel: true),
+                        ),
                         Icon(Icons.storefront_outlined, size: 48, color: colors.primary),
                         const SizedBox(height: 16),
                         Text(
-                          'Sign in to SMIS',
+                          l10n.text('Sign in to SMIS'),
                           textAlign: TextAlign.center,
                           style: Theme.of(context).textTheme.headlineSmall,
                         ),
                         const SizedBox(height: 8),
                         Text(
-                          'Use your SMIS account to synchronize your local Category changes.',
+                          l10n.text(
+                            'Use your SMIS account to synchronize your local changes.',
+                          ),
                           textAlign: TextAlign.center,
                           style: Theme.of(context).textTheme.bodyMedium,
                         ),
@@ -87,14 +96,16 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                 .removeAccount(userId),
                           ),
                           const SizedBox(height: 24),
-                          const Row(
+                          Row(
                             children: [
-                              Expanded(child: Divider()),
+                              const Expanded(child: Divider()),
                               Padding(
-                                padding: EdgeInsets.symmetric(horizontal: 16),
-                                child: Text('OR LOGIN WITH ANOTHER ACCOUNT'),
+                                padding: const EdgeInsets.symmetric(horizontal: 16),
+                                child: Text(
+                                  l10n.text('OR SIGN IN WITH ANOTHER ACCOUNT'),
+                                ),
                               ),
-                              Expanded(child: Divider()),
+                              const Expanded(child: Divider()),
                             ],
                           ),
                           const SizedBox(height: 24),
@@ -105,14 +116,18 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                           keyboardType: TextInputType.emailAddress,
                           textInputAction: TextInputAction.next,
                           autofillHints: const [AutofillHints.username],
-                          decoration: const InputDecoration(
-                            labelText: 'Email',
-                            prefixIcon: Icon(Icons.email_outlined),
+                          decoration: InputDecoration(
+                            labelText: l10n.text('Email'),
+                            prefixIcon: const Icon(Icons.email_outlined),
                           ),
                           validator: (value) {
                             final email = value?.trim() ?? '';
-                            if (email.isEmpty) return 'Email is required.';
-                            if (!email.contains('@')) return 'Enter a valid email address.';
+                            if (email.isEmpty) {
+                              return l10n.text('Email is required.');
+                            }
+                            if (!email.contains('@')) {
+                              return l10n.text('Enter a valid email address.');
+                            }
                             return null;
                           },
                         ),
@@ -125,10 +140,14 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                           autofillHints: const [AutofillHints.password],
                           onFieldSubmitted: (_) => _submit(),
                           decoration: InputDecoration(
-                            labelText: 'Password',
+                            labelText: l10n.text('Password'),
                             prefixIcon: const Icon(Icons.lock_outline),
                             suffixIcon: IconButton(
-                              tooltip: _obscurePassword ? 'Show password' : 'Hide password',
+                              tooltip: l10n.text(
+                                _obscurePassword
+                                    ? 'Show password'
+                                    : 'Hide password',
+                              ),
                               onPressed: auth.isSigningIn
                                   ? null
                                   : () => setState(() => _obscurePassword = !_obscurePassword),
@@ -140,7 +159,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                             ),
                           ),
                           validator: (value) => (value?.isEmpty ?? true)
-                              ? 'Password is required.'
+                              ? l10n.text('Password is required.')
                               : null,
                         ),
                         const SizedBox(height: 24),
@@ -151,11 +170,13 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                   dimension: 20,
                                   child: CircularProgressIndicator(strokeWidth: 2),
                                 )
-                              : const Text('Sign in'),
+                              : Text(l10n.text('Sign in')),
                         ),
                         const SizedBox(height: 16),
                         Text(
-                          'After signing in once, local Category work remains available without an internet connection.',
+                          l10n.text(
+                            'After signing in once, your local work remains available offline.',
+                          ),
                           textAlign: TextAlign.center,
                           style: Theme.of(context).textTheme.bodySmall,
                         ),
@@ -180,7 +201,10 @@ class _LoginError extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
-    final message = error is AppException ? (error as AppException).message : error.toString();
+    final rawMessage = error is AppException
+        ? (error as AppException).message
+        : error.toString();
+    final message = context.l10n.errorMessage(rawMessage);
 
     return DecoratedBox(
       decoration: BoxDecoration(
@@ -204,7 +228,7 @@ class _LoginError extends StatelessWidget {
             if (kDebugMode) ...[
               const SizedBox(height: 8),
               Text(
-                'Debug: ${error.runtimeType}',
+                '${context.l10n.text('Debug')}: ${error.runtimeType}',
                 style: TextStyle(
                   color: colors.onErrorContainer.withOpacity(0.7),
                   fontSize: 10,
@@ -213,7 +237,7 @@ class _LoginError extends StatelessWidget {
               ),
               if (error is AppException && (error as AppException).cause != null)
                 Text(
-                  'Cause: ${(error as AppException).cause}',
+                  '${context.l10n.text('Cause')}: ${(error as AppException).cause}',
                   style: TextStyle(
                     color: colors.onErrorContainer.withOpacity(0.7),
                     fontSize: 10,
@@ -246,7 +270,7 @@ class _SavedAccountsList extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         Text(
-          'Saved Accounts',
+          context.l10n.text('Saved accounts'),
           style: Theme.of(context).textTheme.titleSmall,
         ),
         const SizedBox(height: 8),
