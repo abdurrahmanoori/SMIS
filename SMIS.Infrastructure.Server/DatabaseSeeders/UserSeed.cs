@@ -35,7 +35,10 @@ public static class UserSeed
             CreateUser(SeedIds.UserRStaff,          "rstaff",          SeedIds.Shop2, "Retail",    "Staff",          hasher),
             CreateUser(SeedIds.UserRViewer,         "rviewer",         SeedIds.Shop2, "Retail",    "Viewer",         hasher),
             CreateUser(SeedIds.UserREditor,         "reditor",         SeedIds.Shop2, "Retail",    "Editor",         hasher),
-            CreateUser(SeedIds.UserRUser,           "ruser",           SeedIds.Shop2, "Retail",    "User",           hasher)
+            CreateUser(SeedIds.UserRUser,           "ruser",           SeedIds.Shop2, "Retail",    "User",           hasher),
+
+            // Wasil Shop (ShopWasil) — Wasil's Admin
+            CreateUser(SeedIds.UserWasil,           "wasil",           SeedIds.ShopWasil, "Wasil", "Admin",          hasher)
         );
     }
 
@@ -64,6 +67,7 @@ public static class UserSeed
         SeedIds.Shop1 => "mainstore",
         SeedIds.Shop2 => "branchstore",
         SeedIds.Shop3 => "warehouse",
+        SeedIds.ShopWasil => "wasilshop",
         _ => "smis"
     };
 
@@ -72,6 +76,7 @@ public static class UserSeed
         SeedIds.Shop1 => "Main Store",
         SeedIds.Shop2 => "Branch Store",
         SeedIds.Shop3 => "Warehouse",
+        SeedIds.ShopWasil => "Wasil Shop",
         _ => null
     };
 }

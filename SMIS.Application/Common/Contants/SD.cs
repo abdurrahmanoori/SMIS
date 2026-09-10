@@ -18,6 +18,9 @@ public static class SD
 
 
     public const string Role_RShop_Admin = "RShopAdmin";
+
+
+    public const string Role_WasilShop_Admin = "WasilShopAdmin";
     public const string Role_RShop_Administration = "RShopAdministration";
     public const string Role_RShop_Manager = "RShopManager";
     public const string Role_RShop_Staff = "RShopStaff";

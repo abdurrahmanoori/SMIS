@@ -28,7 +28,10 @@ namespace SMIS.Infrastructure.Server.DatabaseSeeders
                 new ApplicationUserRole { UserId = SeedIds.UserRStaff,          RoleId = SeedIds.RoleRShopStaff,          UserName = "rstaff",          RoleName = SD.Role_RShop_Staff },
                 new ApplicationUserRole { UserId = SeedIds.UserRViewer,         RoleId = SeedIds.RoleRShopViewer,         UserName = "rviewer",         RoleName = SD.Role_RShop_Viewer },
                 new ApplicationUserRole { UserId = SeedIds.UserREditor,         RoleId = SeedIds.RoleRShopEditor,         UserName = "reditor",         RoleName = SD.Role_RShop_Editor },
-                new ApplicationUserRole { UserId = SeedIds.UserRUser,           RoleId = SeedIds.RoleRShopUser,           UserName = "ruser",           RoleName = SD.Role_RShop_User }
+                new ApplicationUserRole { UserId = SeedIds.UserRUser,           RoleId = SeedIds.RoleRShopUser,           UserName = "ruser",           RoleName = SD.Role_RShop_User },
+
+                // Wasil Shop Users
+                new ApplicationUserRole { UserId = SeedIds.UserWasil,          RoleId = SeedIds.RoleWasilShopAdmin,     UserName = "wasil",          RoleName = SD.Role_WasilShop_Admin }
             );
         }
     }

@@ -27,7 +27,10 @@ namespace SMIS.Infrastructure.Server.DatabaseSeeders
                 new ApplicationRole { Id = SeedIds.RoleRShopStaff,          Name = SD.Role_RShop_Staff,        NormalizedName = SD.Role_RShop_Staff.ToUpper() },
                 new ApplicationRole { Id = SeedIds.RoleRShopViewer,         Name = SD.Role_RShop_Viewer,       NormalizedName = SD.Role_RShop_Viewer.ToUpper() },
                 new ApplicationRole { Id = SeedIds.RoleRShopEditor,         Name = SD.Role_RShop_Editor,       NormalizedName = SD.Role_RShop_Editor.ToUpper() },
-                new ApplicationRole { Id = SeedIds.RoleRShopUser,           Name = SD.Role_RShop_User,         NormalizedName = SD.Role_RShop_User.ToUpper() }
+                new ApplicationRole { Id = SeedIds.RoleRShopUser,           Name = SD.Role_RShop_User,         NormalizedName = SD.Role_RShop_User.ToUpper() },
+
+                // Wasil Shop Roles
+                new ApplicationRole { Id = SeedIds.RoleWasilShopAdmin,      Name = SD.Role_WasilShop_Admin,    NormalizedName = SD.Role_WasilShop_Admin.ToUpper() }
             );
         }
     }

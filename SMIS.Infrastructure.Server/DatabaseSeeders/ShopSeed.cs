@@ -13,7 +13,8 @@ public static class ShopSeed
         {
             CreateShop(SeedIds.Shop1, "Main Store",    ShopType.RetailShop,    "Kabul Center",    "0700000001", "main@store.local",      "TAX001", true),
             CreateShop(SeedIds.Shop2, "Branch Store",  ShopType.WholesaleShop, "Herat Center",    "0700000002", "branch@store.local",    "TAX002", true),
-            CreateShop(SeedIds.Shop3, "Warehouse",     ShopType.RetailShop,    "Kandahar Center", "0700000003", "warehouse@store.local", "TAX003", true)
+            CreateShop(SeedIds.Shop3, "Warehouse",     ShopType.RetailShop,    "Kandahar Center", "0700000003", "warehouse@store.local", "TAX003", true),
+            CreateShop(SeedIds.ShopWasil, "Wasil Shop", ShopType.RetailShop,   "Kabul Center",    "0700000004", "wasil@wasilshop.com",  "TAX004", true)
         };
 
         modelBuilder.Entity<Shop>().HasData(shops);

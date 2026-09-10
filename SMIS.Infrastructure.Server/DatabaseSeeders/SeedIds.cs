@@ -10,6 +10,7 @@ public static class SeedIds
     public const string Shop1 = "11111111-0000-0000-0000-000000000001";
     public const string Shop2 = "11111111-0000-0000-0000-000000000002";
     public const string Shop3 = "11111111-0000-0000-0000-000000000003";
+    public const string ShopWasil = "11111111-0000-0000-0000-000000000004";
 
     // Languages
     public const string LangEn = "22222222-0000-0000-0000-000000000001";
@@ -32,6 +33,7 @@ public static class SeedIds
     public const string RoleRShopViewer       = "33333333-0000-0000-0000-000000000013";
     public const string RoleRShopEditor       = "33333333-0000-0000-0000-000000000014";
     public const string RoleRShopUser         = "33333333-0000-0000-0000-000000000015";
+    public const string RoleWasilShopAdmin    = "33333333-0000-0000-0000-000000000016";
 
     // Users
     public const string UserSuperAdmin      = "44444444-0000-0000-0000-000000000001";
@@ -49,6 +51,7 @@ public static class SeedIds
     public const string UserRViewer         = "44444444-0000-0000-0000-000000000013";
     public const string UserREditor         = "44444444-0000-0000-0000-000000000014";
     public const string UserRUser           = "44444444-0000-0000-0000-000000000015";
+    public const string UserWasil           = "44444444-0000-0000-0000-000000000016";
 
     // TranslationKeys
     public const string TKey1 = "55555555-0000-0000-0000-000000000001";
@@ -202,6 +205,7 @@ public static class SeedIds
     public const string ShopOwner1 = "ffffffff-0000-0000-0000-000000000001";
     public const string ShopOwner2 = "ffffffff-0000-0000-0000-000000000002";
     public const string ShopOwner3 = "ffffffff-0000-0000-0000-000000000003";
+    public const string ShopOwnerWasil = "ffffffff-0000-0000-0000-000000000004";
 
     // StockBatches
     public const string Batch1 = "11111111-1111-0000-0000-000000000001";
