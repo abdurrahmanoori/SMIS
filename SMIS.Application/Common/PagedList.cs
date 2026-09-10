@@ -37,18 +37,5 @@ namespace SMIS.Application.Common
             return (int)Math.Ceiling((double)totalCount / pageSize);
         }
     }
-
-    public static class PagedListExtensions
-    {
-        public static async Task<PagedList<TEntity>> ToPagedList<TEntity>(this IQueryable<TEntity> queryable, int pageNumber,
-            int pageSize)
-        {
-            return await PagedList<TEntity>.CreateList(queryable, pageNumber, pageSize);
-        }
-
-        public static async Task<PagedList<TEntity>> ToPagedList<TEntity>(this IQueryable<TEntity> queryable, int pageNumber)
-        {
-            return await PagedList<TEntity>.CreateList(queryable, pageNumber);
-        }
-    }
+    
 }
