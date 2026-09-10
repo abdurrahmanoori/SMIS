@@ -1,8 +1,7 @@
-using System.Data;
 using System.Linq.Expressions;
 using System.Reflection;
 
-namespace SMIS.Application;
+namespace SMIS.Application.Common;
 
 
 public static class QueryExtensions

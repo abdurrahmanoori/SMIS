@@ -19,21 +19,21 @@ namespace SMIS.Api.Controllers
         public async Task<ActionResult<UserDto>> GetCurrentUser(
             [FromQuery] bool includeShop = false
         ) =>
-            HandleResultResponse(await Mediator.Send(new UserGetCurrentQuery(includeShop)));
+            HandleResultResponseOld(await Mediator.Send(new UserGetCurrentQuery(includeShop)));
 
         [HttpPost("login")]
         [AllowAnonymous]
         public async Task<ActionResult<LoginResponseDto>> Login(
             LoginDto dto
         ) =>
-            HandleResultResponse(await Mediator.Send(new LoginCommand(dto)));
+            HandleResultResponseOld(await Mediator.Send(new LoginCommand(dto)));
 
         [HttpPost("register")]
         [AllowAnonymous]
         public async Task<ActionResult<UserDto>> Create(
             UserCreateDto dto
         ) =>
-            HandleResultResponse(await Mediator.Send(new UserCreateCommand(dto)));
+            HandleResultResponseOld(await Mediator.Send(new UserCreateCommand(dto)));
 
         [HttpGet]
         public async Task<ActionResult<PagedList<UserDto>>> GetAll(
@@ -41,53 +41,53 @@ namespace SMIS.Api.Controllers
             [FromQuery] int pageSize = 25,
             [FromQuery] bool includeShop = false
         ) =>
-            HandleResultResponse(await Mediator.Send(new UserGetListQuery(pageNumber, pageSize, includeShop)));
+            HandleResultResponseOld(await Mediator.Send(new UserGetListQuery(pageNumber, pageSize, includeShop)));
 
         [HttpGet("{id}")]
         public async Task<ActionResult<UserDto>> GetById(
             string id,
             [FromQuery] bool includeShop = false
         ) =>
-            HandleResultResponse(await Mediator.Send(new UserGetByIdQuery(id, includeShop)));
+            HandleResultResponseOld(await Mediator.Send(new UserGetByIdQuery(id, includeShop)));
 
         [HttpPut("{id}")]
         public async Task<ActionResult<UserDto>> Update(
             string id,
             UserUpdateDto dto
         ) =>
-            HandleResultResponse(await Mediator.Send(new UserUpdateCommand(id, dto)));
+            HandleResultResponseOld(await Mediator.Send(new UserUpdateCommand(id, dto)));
 
         [HttpDelete("{id}")]
         public async Task<ActionResult<Unit>> Delete(
             string id
         ) =>
-            HandleResultResponse(await Mediator.Send(new UserDeleteCommand(id)));
+            HandleResultResponseOld(await Mediator.Send(new UserDeleteCommand(id)));
 
         [HttpPost("{id}/change-password")]
         public async Task<ActionResult<Unit>> ChangePassword(
             string id,
             ChangePasswordDto dto
         ) =>
-            HandleResultResponse(await Mediator.Send(new UserChangePasswordCommand(id, dto)));
+            HandleResultResponseOld(await Mediator.Send(new UserChangePasswordCommand(id, dto)));
 
         [HttpPost("{id}/roles")]
         public async Task<ActionResult<Unit>> AssignRoles(
             string id,
             [FromBody] IEnumerable<string> roles
         ) =>
-            HandleResultResponse(await Mediator.Send(new UserAssignRolesCommand(id, roles)));
+            HandleResultResponseOld(await Mediator.Send(new UserAssignRolesCommand(id, roles)));
 
         [HttpGet("{id}/roles")]
         public async Task<ActionResult<IList<string>>> GetUserRoles(
             string id
         ) =>
-            HandleResultResponse(await Mediator.Send(new UserGetRolesQuery(id)));
+            HandleResultResponseOld(await Mediator.Send(new UserGetRolesQuery(id)));
 
         [HttpDelete("{id}/roles/{role}")]
         public async Task<ActionResult<Unit>> RemoveRole(
             string id,
             string role
         ) =>
-            HandleResultResponse(await Mediator.Send(new UserRemoveRoleCommand(id, role)));
+            HandleResultResponseOld(await Mediator.Send(new UserRemoveRoleCommand(id, role)));
     }
 }

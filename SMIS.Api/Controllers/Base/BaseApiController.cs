@@ -12,7 +12,54 @@ public abstract class BaseApiController : ControllerBase
     protected IMediator Mediator =>
         _mediator ??= HttpContext.RequestServices.GetRequiredService<IMediator>();
 
-    protected ActionResult<T> HandleResultResponse<T>(Result<T> result)
+
+    private ActionResult<T> HandleResultResponse<T>(
+        Result<T> response
+    )
+    {
+        if (response.Success && response.Response == null)
+        {
+            return NotFound();
+        }
+
+        if (response.Success && response.Response != null)
+        {
+            // if (response.HasMessages)
+            // {
+            //     response.Messages.ForEach(x => x.SetType(MessageTypeEnum.Warning));
+            //     return Ok(new { response.Response, response.Messages });
+            // }
+
+            return Ok(response.Response);
+        }
+
+        if (!response.Success)
+        {
+            return BadRequest(new { response.Message });
+        }
+
+        return NotFound();
+    }
+
+    public async Task<ActionResult<T>> HandleRequest<T>(
+        IRequest<Result<T>> result
+    )
+    {
+        return HandleResultResponse(await Mediator.Send(result));
+    }
+
+    public async Task<ActionResult<T>> HandleRequest<T>(
+        IRequest<Result<T>> result,
+        CancellationToken cancellationToken
+    )
+    {
+        return HandleResultResponse(await Mediator.Send(result, cancellationToken));
+    }
+
+
+    protected ActionResult<T> HandleResultResponseOld<T>(
+        Result<T> result
+    )
     {
         try
         {

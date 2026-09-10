@@ -14,22 +14,22 @@ namespace SMIS.Api.Controllers
     {
         [HttpPost]
         public async Task<ActionResult<StockBatchDto>> Create(StockBatchCreateDto dto) =>
-            HandleResultResponse(await Mediator.Send(new StockBatchCreateCommand(dto)));
+            HandleResultResponseOld(await Mediator.Send(new StockBatchCreateCommand(dto)));
 
         [HttpGet]
         public async Task<ActionResult<PagedList<StockBatchDto>>> GetAll([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 25) =>
-            HandleResultResponse(await Mediator.Send(new StockBatchGetListQuery(pageNumber, pageSize)));
+            HandleResultResponseOld(await Mediator.Send(new StockBatchGetListQuery(pageNumber, pageSize)));
 
         [HttpGet("{id}")]
         public async Task<ActionResult<StockBatchDto>> GetById(string id) =>
-            HandleResultResponse(await Mediator.Send(new StockBatchGetByIdQuery(id)));
+            HandleResultResponseOld(await Mediator.Send(new StockBatchGetByIdQuery(id)));
 
         [HttpPut("{id}")]
         public async Task<ActionResult<StockBatchDto>> Update(string id, StockBatchCreateDto dto) =>
-            HandleResultResponse(await Mediator.Send(new StockBatchUpdateCommand(id, dto)));
+            HandleResultResponseOld(await Mediator.Send(new StockBatchUpdateCommand(id, dto)));
 
         [HttpDelete("{id}")]
         public async Task<ActionResult<Unit>> Delete(string id) =>
-            HandleResultResponse(await Mediator.Send(new StockBatchDeleteCommand(id)));
+            HandleResultResponseOld(await Mediator.Send(new StockBatchDeleteCommand(id)));
     }
 }

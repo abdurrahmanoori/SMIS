@@ -16,7 +16,7 @@ namespace SMIS.Api.Controllers
         public async Task<ActionResult<DistrictDto>> Create(
             DistrictCreateDto dto
         ) =>
-            HandleResultResponse(await Mediator.Send(new DistrictCreateCommand(dto)));
+            HandleResultResponseOld(await Mediator.Send(new DistrictCreateCommand(dto)));
 
         [HttpGet]
         public async Task<ActionResult<PagedList<DistrictDto>>> GetAll(
@@ -24,26 +24,26 @@ namespace SMIS.Api.Controllers
             [FromQuery] int pageSize = 25
         )
         {
-            return HandleResultResponse(await Mediator.Send(new DistrictGetListQuery(pageNumber, pageSize)));
+            return HandleResultResponseOld(await Mediator.Send(new DistrictGetListQuery(pageNumber, pageSize)));
         }
 
         [HttpGet("{id}")]
         public async Task<ActionResult<DistrictDto>> GetById(
             string id
         ) =>
-            HandleResultResponse(await Mediator.Send(new DistrictGetByIdQuery(id)));
+            HandleResultResponseOld(await Mediator.Send(new DistrictGetByIdQuery(id)));
 
         [HttpPut("{id}")]
         public async Task<ActionResult<DistrictDto>> Update(
             string id,
             DistrictCreateDto dto
         ) =>
-            HandleResultResponse(await Mediator.Send(new DistrictUpdateCommand(id, dto)));
+            HandleResultResponseOld(await Mediator.Send(new DistrictUpdateCommand(id, dto)));
 
         [HttpDelete("{id}")]
         public async Task<ActionResult<Unit>> Delete(
             string id
         ) =>
-            HandleResultResponse(await Mediator.Send(new DistrictDeleteCommand(id)));
+            HandleResultResponseOld(await Mediator.Send(new DistrictDeleteCommand(id)));
     }
 }

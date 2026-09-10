@@ -14,24 +14,24 @@ namespace SMIS.Api.Controllers
     {
         [HttpPost]
         public async Task<ActionResult<StockTransactionDto>> Create(StockTransactionCreateDto dto) =>
-            HandleResultResponse(await Mediator.Send(new StockTransactionCreateCommand(dto)));
+            HandleResultResponseOld(await Mediator.Send(new StockTransactionCreateCommand(dto)));
 
         [HttpGet]
         public async Task<ActionResult<PagedList<StockTransactionDto>>> GetAll([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 25, [FromQuery] bool includeRelated = false)
         {
-            return HandleResultResponse(await Mediator.Send(new StockTransactionGetListQuery(pageNumber, pageSize, includeRelated)));
+            return HandleResultResponseOld(await Mediator.Send(new StockTransactionGetListQuery(pageNumber, pageSize, includeRelated)));
         }
 
         [HttpGet("{id}")]
         public async Task<ActionResult<StockTransactionDto>> GetById(string id, [FromQuery] bool includeRelated = false) =>
-            HandleResultResponse(await Mediator.Send(new StockTransactionGetByIdQuery(id, includeRelated)));
+            HandleResultResponseOld(await Mediator.Send(new StockTransactionGetByIdQuery(id, includeRelated)));
 
         [HttpPut("{id}")]
         public async Task<ActionResult<StockTransactionDto>> Update(string id, StockTransactionCreateDto dto) =>
-            HandleResultResponse(await Mediator.Send(new StockTransactionUpdateCommand(id, dto)));
+            HandleResultResponseOld(await Mediator.Send(new StockTransactionUpdateCommand(id, dto)));
 
         [HttpDelete("{id}")]
         public async Task<ActionResult<Unit>> Delete(string id) =>
-            HandleResultResponse(await Mediator.Send(new StockTransactionDeleteCommand(id)));
+            HandleResultResponseOld(await Mediator.Send(new StockTransactionDeleteCommand(id)));
     }
 }

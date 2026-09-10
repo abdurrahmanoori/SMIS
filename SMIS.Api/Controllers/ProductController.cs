@@ -18,13 +18,13 @@ namespace SMIS.Api.Controllers
         public async Task<ActionResult<ProductDto>> Create(
             ProductCreateDto dto
         ) =>
-            HandleResultResponse(await Mediator.Send(new ProductCreateCommand(dto)));
+            HandleResultResponseOld(await Mediator.Send(new ProductCreateCommand(dto)));
 
         [HttpPost("sync")]
         public async Task<ActionResult<ProductDto>> SyncCreate(
             ProductSyncCreateDto dto
         ) =>
-            HandleResultResponse(await Mediator.Send(new ProductSyncCreateCommand(dto)));
+            HandleResultResponseOld(await Mediator.Send(new ProductSyncCreateCommand(dto)));
 
         [HttpGet]
         [Authorize]
@@ -34,7 +34,7 @@ namespace SMIS.Api.Controllers
             [FromQuery] bool includeCategory = false
         )
         {
-            return HandleResultResponse(
+            return HandleResultResponseOld(
                 await Mediator.Send(new ProductGetListQuery(pageNumber, pageSize, includeCategory)));
         }
 
@@ -43,45 +43,45 @@ namespace SMIS.Api.Controllers
             string id,
             [FromQuery] bool includeCategory = false
         ) =>
-            HandleResultResponse(await Mediator.Send(new ProductGetByIdQuery(id, includeCategory)));
+            HandleResultResponseOld(await Mediator.Send(new ProductGetByIdQuery(id, includeCategory)));
 
         [HttpGet("{id}/loan-info")]
         public async Task<ActionResult<ProductLoanInfoDto>> GetLoanInfo(
             string id
         ) =>
-            HandleResultResponse(await Mediator.Send(new ProductGetLoanInfoQuery(id)));
+            HandleResultResponseOld(await Mediator.Send(new ProductGetLoanInfoQuery(id)));
 
         [HttpPut("{id}")]
         public async Task<ActionResult<ProductDto>> Update(
             string id,
             ProductCreateDto dto
         ) =>
-            HandleResultResponse(await Mediator.Send(new ProductUpdateCommand(id, dto)));
+            HandleResultResponseOld(await Mediator.Send(new ProductUpdateCommand(id, dto)));
 
         [HttpPut("{id}/sync")]
         public async Task<ActionResult<ProductDto>> SyncUpdate(
             string id,
             ProductSyncUpdateDto dto
         ) =>
-            HandleResultResponse(await Mediator.Send(new ProductSyncUpdateCommand(id, dto)));
+            HandleResultResponseOld(await Mediator.Send(new ProductSyncUpdateCommand(id, dto)));
 
         [HttpDelete("{id}")]
         public async Task<ActionResult<Unit>> Delete(
             string id
         ) =>
-            HandleResultResponse(await Mediator.Send(new ProductDeleteCommand(id)));
+            HandleResultResponseOld(await Mediator.Send(new ProductDeleteCommand(id)));
 
         [HttpDelete("{id}/sync")]
         public async Task<ActionResult<ProductDto>> SyncDelete(
             string id,
             ProductSyncDeleteDto dto
         ) =>
-            HandleResultResponse(await Mediator.Send(new ProductSyncDeleteCommand(id, dto)));
+            HandleResultResponseOld(await Mediator.Send(new ProductSyncDeleteCommand(id, dto)));
 
         [HttpGet("pull")]
         public async Task<ActionResult<List<ProductDto>>> Pull(
             [FromQuery] DateTime changedSince
         ) =>
-            HandleResultResponse(await Mediator.Send(new ProductPullQuery(changedSince)));
+            HandleResultResponseOld(await Mediator.Send(new ProductPullQuery(changedSince)));
     }
 }

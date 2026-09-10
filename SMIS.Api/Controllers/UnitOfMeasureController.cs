@@ -15,36 +15,36 @@ namespace SMIS.Api.Controllers
 
         [HttpPost]
         public async Task<ActionResult<UnitOfMeasureDto>> Create(UnitOfMeasureCreateDto dto) =>
-            HandleResultResponse(await Mediator.Send(new UnitOfMeasureCreateCommand(dto)));
+            HandleResultResponseOld(await Mediator.Send(new UnitOfMeasureCreateCommand(dto)));
 
         [HttpPost("sync")]
-        public async Task<ActionResult<UnitOfMeasureDto>> SyncCreate(UnitOfMeasureSyncCreateDto dto) => HandleResultResponse(await Mediator.Send(new UnitOfMeasureSyncCreateCommand(dto)));
+        public async Task<ActionResult<UnitOfMeasureDto>> SyncCreate(UnitOfMeasureSyncCreateDto dto) => HandleResultResponseOld(await Mediator.Send(new UnitOfMeasureSyncCreateCommand(dto)));
 
         [HttpGet]
         public async Task<ActionResult<PagedList<UnitOfMeasureDto>>> GetAll([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 25)
         {
-            return HandleResultResponse(await Mediator.Send(new UnitOfMeasureGetListQuery(pageNumber, pageSize)));
+            return HandleResultResponseOld(await Mediator.Send(new UnitOfMeasureGetListQuery(pageNumber, pageSize)));
         }
 
         [HttpGet("{id}")]
         public async Task<ActionResult<UnitOfMeasureDto>> GetById(string id) =>
-            HandleResultResponse(await Mediator.Send(new UnitOfMeasureGetByIdQuery(id)));
+            HandleResultResponseOld(await Mediator.Send(new UnitOfMeasureGetByIdQuery(id)));
 
         [HttpPut("{id}")]
         public async Task<ActionResult<UnitOfMeasureDto>> Update(string id, UnitOfMeasureCreateDto dto) =>
-            HandleResultResponse(await Mediator.Send(new UnitOfMeasureUpdateCommand(id, dto)));
+            HandleResultResponseOld(await Mediator.Send(new UnitOfMeasureUpdateCommand(id, dto)));
 
         [HttpPut("{id}/sync")]
-        public async Task<ActionResult<UnitOfMeasureDto>> SyncUpdate(string id, UnitOfMeasureSyncUpdateDto dto) => HandleResultResponse(await Mediator.Send(new UnitOfMeasureSyncUpdateCommand(id, dto)));
+        public async Task<ActionResult<UnitOfMeasureDto>> SyncUpdate(string id, UnitOfMeasureSyncUpdateDto dto) => HandleResultResponseOld(await Mediator.Send(new UnitOfMeasureSyncUpdateCommand(id, dto)));
 
         [HttpDelete("{id}")]
         public async Task<ActionResult<Unit>> Delete(string id) =>
-            HandleResultResponse(await Mediator.Send(new UnitOfMeasureDeleteCommand(id)));
+            HandleResultResponseOld(await Mediator.Send(new UnitOfMeasureDeleteCommand(id)));
 
         [HttpDelete("{id}/sync")]
-        public async Task<ActionResult<UnitOfMeasureDto>> SyncDelete(string id, UnitOfMeasureSyncDeleteDto dto) => HandleResultResponse(await Mediator.Send(new UnitOfMeasureSyncDeleteCommand(id, dto)));
+        public async Task<ActionResult<UnitOfMeasureDto>> SyncDelete(string id, UnitOfMeasureSyncDeleteDto dto) => HandleResultResponseOld(await Mediator.Send(new UnitOfMeasureSyncDeleteCommand(id, dto)));
 
         [HttpGet("pull")]
-        public async Task<ActionResult<List<UnitOfMeasureDto>>> Pull([FromQuery] DateTime changedSince) => HandleResultResponse(await Mediator.Send(new UnitOfMeasurePullQuery(changedSince)));
+        public async Task<ActionResult<List<UnitOfMeasureDto>>> Pull([FromQuery] DateTime changedSince) => HandleResultResponseOld(await Mediator.Send(new UnitOfMeasurePullQuery(changedSince)));
     }
 }

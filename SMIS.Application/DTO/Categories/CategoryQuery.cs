@@ -2,7 +2,7 @@ using SMIS.Application.Common.Queries;
 
 namespace SMIS.Application.DTO.Categories;
 
-public sealed class CategoryQuery : PagedQuery
+public sealed class CategoryQueryDto : PagedQuery
 {
     public string? Id { get; set; }
 
