@@ -1,31 +1,38 @@
-using AutoMapper;
 using MediatR;
 using SMIS.Application.Common;
 using SMIS.Application.Common.Response;
 using SMIS.Application.DTO.Categories;
+using SMIS.Application.Repositories.Categories;
 using SMIS.Application.Services;
-using SMIS.Domain.Entities;
 
 namespace SMIS.Application.Features.Categories.Queries;
 
-public record CategoryQuery(EntityDropdown<CategoryQuery> query) : IRequest<Result<PagedListNew<CategoryDto>>>
+public sealed class CategoryQueryCriteria
 {
+    public string? Id { get; set; }
+    public string? Name { get; set; }
+    public string? Code { get; set; }
+    public string? Description { get; set; }
+    public bool? IsActive { get; set; }
+    public string? ShopId { get; set; }
 }
 
-internal record CategoryQueryHandler : IRequestHandler<CategoryQuery, Result<PagedListNew<CategoryDto>>>
+public record CategoryQuery(EntityDropdown<CategoryQueryCriteria> Query)
+    : IRequest<Result<PagedListNew<CategoryDto>>>;
+
+internal sealed class CategoryQueryHandler
+    : IRequestHandler<CategoryQuery, Result<PagedListNew<CategoryDto>>>
 {
-    private readonly IGenericQueryService _queryService;
+    private readonly ICategoryRepository _categoryRepository;
     private readonly IApplicationDbContext _context;
-    private readonly IMapper _mapper;
 
     public CategoryQueryHandler(
-        IGenericQueryService queryService,
-        IApplicationDbContext context,
-        IMapper mapper
+        ICategoryRepository categoryRepository,
+        IApplicationDbContext context
     )
     {
-        _queryService = queryService;
-        _mapper = mapper;
+        _categoryRepository = categoryRepository;
+        _context = context;
     }
 
     public async Task<Result<PagedListNew<CategoryDto>>> Handle(
@@ -33,42 +40,35 @@ internal record CategoryQueryHandler : IRequestHandler<CategoryQuery, Result<Pag
         CancellationToken cancellationToken
     )
     {
-        var query = _context.Categories.Select(x => new CategoryDto
-        {
-            Id = x.Id,
-            Name = x.Name,
-            Code = x.Code,
-            Description = x.Description,
-            IsActive = x.IsActive,
-            ShopId = x.ShopId,
-            CreatedDate = x.CreatedDate,
-            CreatedBy = x.CreatedBy,
-            UpdatedDate = x.UpdatedDate,
-            UpdatedBy = x.UpdatedBy,
-            ClientCreatedDate = x.ClientCreatedDate,
-            ClientCreatedBy = x.ClientCreatedBy,
-            ClientModifiedDate = x.ClientModifiedDate,
-            ClientModifiedBy = x.ClientModifiedBy,
-            LastModifiedUtc = x.LastModifiedUtc,
-            IsDeleted = x.IsDeleted,
-        }).OrderBy(x => x.Name);
+        var query = _context.Categories
+            .OrderBy(x => x.Name)
+            .Select(x => new CategoryDto
+            {
+                Id = x.Id,
+                Name = x.Name,
+                Code = x.Code,
+                Description = x.Description,
+                IsActive = x.IsActive,
+                ShopId = x.ShopId,
+                CreatedDate = x.CreatedDate,
+                CreatedBy = x.CreatedBy,
+                UpdatedDate = x.UpdatedDate,
+                UpdatedBy = x.UpdatedBy,
+                ClientCreatedDate = x.ClientCreatedDate,
+                ClientCreatedBy = x.ClientCreatedBy,
+                ClientModifiedDate = x.ClientModifiedDate,
+                ClientModifiedBy = x.ClientModifiedBy,
+                LastModifiedUtc = x.LastModifiedUtc,
+                IsDeleted = x.IsDeleted,
+            });
+        var pagedList = await query.Filter(request.Query.Criteria).Select(request.Query.Columns)
+            .ToPagedList((int)request.Query.PageNumber!,
+                (int)request.Query.PageSize!);
 
-        var pagedList = query.Filter(request.query.Criteria).Select(request.query.Columns).ToPagedList(
-            (int)request.query.PageNumber!,
-            (int)request.query.PageSize!);
-        return default;
+        // var pagedList = await query.ToPagedList(
+        //     request.Query.GetPageNumber(),
+        //     request.Query.GetPageSize());
 
-        //
-        //
-        // var categories = object;// await _queryService.QueryAsync<Category, CategoryQuery>(default(CategoryQuery), cancellationToken);
-        //
-        // return Result<PagedList<CategoryDto>>.SuccessResult(new PagedList<CategoryDto>
-        // {
-        //     Items = _mapper.Map<List<CategoryDto>>(categories.Items),
-        //     PageNumber = categories.PageNumber,
-        //     PageSize = categories.PageSize,
-        //     TotalCount = categories.TotalCount,
-        //     TotalPages = categories.TotalPages
-        // });
+        return Result<PagedListNew<CategoryDto>>.SuccessResult(pagedList);
     }
 }

@@ -87,21 +87,29 @@ public static class QueryExtensions
     {
         if (columns == null || columns.Length == 0) return source;
 
-        columns = columns.Select(x => x.ToUpper()).ToArray();
-        var sourceType = source.ElementType;
         var resultType = typeof(TResult);
-        var parameter = Expression.Parameter(sourceType, "e");
+        var parameter = Expression.Parameter(resultType, "e");
+        const BindingFlags propertyFlags =
+            BindingFlags.IgnoreCase | BindingFlags.Instance | BindingFlags.Public;
+
+        var selectedProperties = columns
+            .Select(column => new
+            {
+                Column = column,
+                Property = resultType.GetProperty(column, propertyFlags)
+            })
+            .ToList();
 
         var invalidColumns = string.Join(
             ", ",
-            columns.Where(x => resultType.GetProperty(x, BindingFlags.IgnoreCase) == null)
+            selectedProperties.Where(x => x.Property == null).Select(x => x.Column)
         );
-        if (string.IsNullOrEmpty(invalidColumns))
+        if (!string.IsNullOrEmpty(invalidColumns))
             throw new InvalidDataException($"{invalidColumns} columns are invalid.");
 
-        var bindings = columns.Select(column => Expression.Bind(
-                resultType.GetProperty(column)!,
-                Expression.PropertyOrField(parameter, column)
+        var bindings = selectedProperties.Select(item => Expression.Bind(
+                item.Property!,
+                Expression.Property(parameter, item.Property!)
             )
         );
         var body = Expression.MemberInit(Expression.New(resultType), bindings);
@@ -110,45 +118,71 @@ public static class QueryExtensions
             Expression.Call(
                 typeof(Queryable),
                 "Select",
-                new Type[] { sourceType, resultType },
+                new Type[] { resultType, resultType },
                 source.Expression,
                 Expression.Quote(selector)
             )
         );
     }
 
-    public static IQueryable<TResult> Filter<TResult>(this IQueryable<TResult> source, TResult? filter)
+    public static IQueryable<TEntity> Filter<TEntity, TFilter>(
+        this IQueryable<TEntity> source,
+        TFilter? filter)
     {
         if (filter == null) return source;
 
-        var properties = filter
-            .GetType()
-            .GetProperties(BindingFlags.DeclaredOnly | BindingFlags.Instance | BindingFlags.Public);
+        var filterProperties = typeof(TFilter)
+            .GetProperties(BindingFlags.Instance | BindingFlags.Public);
+        const BindingFlags entityPropertyFlags =
+            BindingFlags.IgnoreCase | BindingFlags.Instance | BindingFlags.Public;
 
         Expression? conditions = null;
-        var entityAccess = Expression.Parameter(typeof(TResult), "x");
-        foreach (var property in properties)
-        {
-            var type = property.PropertyType;
-            var value = property.GetValue(filter);
-            if (value == null) continue;
-            var propertyAccess = Expression.Property(entityAccess, property.Name);
-            var constantExpression = Expression.Constant(value, type);
+        var entityAccess = Expression.Parameter(typeof(TEntity), "x");
 
-            Expression binaryExpression = type == typeof(string)
-                ? GetLikeExpression(propertyAccess, (string)value)
-                : Expression.Equal(propertyAccess, constantExpression);
+        foreach (var filterProperty in filterProperties)
+        {
+            var value = filterProperty.GetValue(filter);
+            if (value == null) continue;
+
+            if (value is string stringValue && string.IsNullOrWhiteSpace(stringValue))
+                continue;
+
+            var entityProperty = typeof(TEntity).GetProperty(
+                filterProperty.Name,
+                entityPropertyFlags);
+
+            if (entityProperty == null)
+                throw new InvalidDataException(
+                    $"{filterProperty.Name} is not a valid filter property for {typeof(TEntity).Name}.");
+
+            var propertyAccess = Expression.Property(entityAccess, entityProperty);
+            Expression condition;
+
+            if (value is string term)
+            {
+                if (entityProperty.PropertyType != typeof(string))
+                    throw new InvalidDataException(
+                        $"{filterProperty.Name} must match the entity property type.");
+
+                condition = GetLikeExpression(propertyAccess, term.Trim());
+            }
+            else
+            {
+                Expression constant = Expression.Constant(value, value.GetType());
+                if (constant.Type != propertyAccess.Type)
+                    constant = Expression.Convert(constant, propertyAccess.Type);
+
+                condition = Expression.Equal(propertyAccess, constant);
+            }
 
             conditions = conditions == null
-                ? binaryExpression
-                : Expression.AndAlso(conditions, binaryExpression);
+                ? condition
+                : Expression.AndAlso(conditions, condition);
         }
 
         if (conditions == null) return source;
-        var lambda = Expression.Lambda<Func<TResult, bool>>(conditions, entityAccess);
-        source = source.Where(lambda);
-
-        return source;
+        var lambda = Expression.Lambda<Func<TEntity, bool>>(conditions, entityAccess);
+        return source.Where(lambda);
     }
 
     public static IQueryable<TEntity> WhereIf<TEntity>(this IQueryable<TEntity> queryable, bool condition,
@@ -187,23 +221,30 @@ public static class QueryExtensions
         );
     }
 
-    public static MethodCallExpression GetLikeExpression(MemberExpression property, string term)
+    public static Expression GetLikeExpression(MemberExpression property, string term)
     {
         var method = (term.StartsWith('%'), term.EndsWith('%')) switch
         {
             (true, true) => nameof(string.Contains),
-            (true, false) => nameof(string.StartsWith),
-            (false, true) => nameof(string.EndsWith),
-            (false, false) => nameof(string.Equals)
+            (true, false) => nameof(string.EndsWith),
+            (false, true) => nameof(string.StartsWith),
+            (false, false) when property.Member.Name.EndsWith(
+                "Id",
+                StringComparison.OrdinalIgnoreCase) => nameof(string.Equals),
+            (false, false) => nameof(string.Contains)
         };
 
         var toUpperMethod = typeof(string).GetMethod(nameof(string.ToUpper), Type.EmptyTypes)!;
         var upperTerm = term.ToUpper();
 
-        return Expression.Call(
+        var stringComparison = Expression.Call(
             Expression.Call(property, toUpperMethod),
             typeof(string).GetMethod(method, new[] { typeof(string) })!,
             Expression.Constant(upperTerm.Trim('%'), typeof(string))
         );
+
+        return Expression.AndAlso(
+            Expression.NotEqual(property, Expression.Constant(null, typeof(string))),
+            stringComparison);
     }
 }

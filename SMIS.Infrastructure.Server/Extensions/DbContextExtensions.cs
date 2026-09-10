@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using SMIS.Application.Services;
 using SMIS.Domain.Common.Interfaces;
 using SMIS.Infrastructure.Server.Context;
 using SMIS.Infrastructure.Server.Interceptors;
@@ -11,7 +12,11 @@ namespace SMIS.Infrastructure.Server.Extensions
 {
     public static class DbContextExtensions
     {
-        public static IServiceCollection AddApplicationDbContext(this IServiceCollection services, IConfiguration configuration, IWebHostEnvironment environment)
+        public static IServiceCollection AddApplicationDbContext(
+            this IServiceCollection services,
+            IConfiguration configuration,
+            IWebHostEnvironment environment
+        )
         {
             services.AddDbContext<AppDbContext>((serviceProvider, options) =>
             {
@@ -24,23 +29,26 @@ namespace SMIS.Infrastructure.Server.Extensions
                 {
                     // Production: SQL Server hosted on databaseasp.net
                     options.UseSqlServer(connectionString)
-                           .AddInterceptors(interceptor, pkEntityInterceptor);
+                        .AddInterceptors(interceptor, pkEntityInterceptor);
                 }
                 else
                 {
                     // Development/Staging: SQL Server LocalDB
                     options.UseSqlServer(connectionString)
-                           .AddInterceptors(interceptor, pkEntityInterceptor).EnableSensitiveDataLogging();
+                        .AddInterceptors(interceptor, pkEntityInterceptor).EnableSensitiveDataLogging();
                 }
 
                 options.EnableSensitiveDataLogging(true);
             });
-
+            services.AddScoped<IApplicationDbContext>(provider => provider.GetRequiredService<AppDbContext>());
             return services;
         }
 
         // Converts a SQLite connection string with a relative Data Source path into an absolute one.
-        private static string ResolveConnectionString(string connectionString, string basePath)
+        private static string ResolveConnectionString(
+            string connectionString,
+            string basePath
+        )
         {
             const string prefix = "Data Source=";
             var index = connectionString.IndexOf(prefix, StringComparison.OrdinalIgnoreCase);

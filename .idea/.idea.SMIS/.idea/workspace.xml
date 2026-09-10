@@ -55,6 +55,11 @@
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="CopilotPersistence">
+    <persistenceIdMap>
+      <entry key="_E:/Repo/SMIS" value="3J8E7debTYnZznQuXAJCdDn4uTi" />
+    </persistenceIdMap>
+  </component>
   <component name="DatabaseLocalColorSettings">
     <colors>
       <entry key="217c9ab8-3f82-4012-9b1f-829d2efba1cc" value="@0" />
@@ -115,61 +120,61 @@
   <component name="MetaFilesCheckinStateConfiguration" checkMetaFiles="true" />
   <component name="NextEditCompletionFeaturesState">
     <decayedCancelled>
-      <entry key="MS100" value="4.8163441185509074E-279" />
-      <entry key="MS500" value="2.170418595989788E-56" />
-      <entry key="S2" value="1.2137685364810162E-14" />
-      <entry key="S5" value="2.7142781471917547E-6" />
-      <entry key="S10" value="0.0016475074014747067" />
-      <entry key="S30" value="0.1198592512854576" />
-      <entry key="S60" value="0.44767216752075983" />
-      <entry key="M2" value="1.5517738757265342" />
-      <entry key="M5" value="5.290829732225861" />
-      <entry key="M10" value="10.31640198361863" />
-      <entry key="M15" value="14.642838187758736" />
-      <entry key="M30" value="24.882021325968235" />
-      <entry key="H1" value="37.87070665334344" />
-      <entry key="H2" value="57.067831557484446" />
-      <entry key="H4" value="101.39024351727447" />
-      <entry key="D1" value="268.7618653045461" />
-      <entry key="W1" value="333.39836297640943" />
-    </decayedCancelled>
-    <decayedSelected>
       <entry key="MS100" value="1.0" />
       <entry key="MS500" value="1.0" />
-      <entry key="S2" value="1.0000000000000169" />
-      <entry key="S5" value="1.0000032624125812" />
-      <entry key="S10" value="1.0028135856684406" />
-      <entry key="S30" value="1.5265465721715092" />
-      <entry key="S60" value="3.3296841200629452" />
-      <entry key="M2" value="6.757664269668832" />
-      <entry key="M5" value="14.17157828619483" />
-      <entry key="M10" value="22.821253722096344" />
-      <entry key="M15" value="29.115898883397552" />
-      <entry key="M30" value="40.56828668911892" />
-      <entry key="H1" value="51.07993081939578" />
-      <entry key="H2" value="61.54389294353392" />
-      <entry key="H4" value="78.68172674850574" />
-      <entry key="D1" value="134.47864716306267" />
-      <entry key="W1" value="155.0290302632934" />
+      <entry key="S2" value="1.0" />
+      <entry key="S5" value="1.0000001249453028" />
+      <entry key="S10" value="1.0003534760284567" />
+      <entry key="S30" value="1.0708351620925336" />
+      <entry key="S60" value="1.3011740422488567" />
+      <entry key="M2" value="2.1064913359213486" />
+      <entry key="M5" value="5.07754476811342" />
+      <entry key="M10" value="8.207863455116449" />
+      <entry key="M15" value="10.365223468678337" />
+      <entry key="M30" value="16.808854774746028" />
+      <entry key="H1" value="30.005994822077284" />
+      <entry key="H2" value="52.052509455038646" />
+      <entry key="H4" value="97.21799716914471" />
+      <entry key="D1" value="275.20158446718546" />
+      <entry key="W1" value="347.6813806719017" />
+    </decayedCancelled>
+    <decayedSelected>
+      <entry key="MS100" value="0.0" />
+      <entry key="MS500" value="4.0869895292727587E-69" />
+      <entry key="S2" value="7.995596722013316E-18" />
+      <entry key="S5" value="1.44924013584654E-7" />
+      <entry key="S10" value="3.8070740992989855E-4" />
+      <entry key="S30" value="0.07676229304957628" />
+      <entry key="S60" value="0.39628197910078267" />
+      <entry key="M2" value="1.645814417095323" />
+      <entry key="M5" value="6.244781321459629" />
+      <entry key="M10" value="10.840128641624199" />
+      <entry key="M15" value="13.95288188080787" />
+      <entry key="M30" value="23.270026913555945" />
+      <entry key="H1" value="39.45818334200223" />
+      <entry key="H2" value="58.908530605585156" />
+      <entry key="H4" value="82.88188914668224" />
+      <entry key="D1" value="149.6452798669933" />
+      <entry key="W1" value="174.22304965076538" />
     </decayedSelected>
     <decayedShown>
-      <entry key="MS100" value="1.2223356286462726E-5" />
-      <entry key="MS500" value="0.10409697136006862" />
-      <entry key="S2" value="0.5680146323933661" />
-      <entry key="S5" value="0.7975295259783223" />
-      <entry key="S10" value="0.8972895522261445" />
-      <entry key="S30" value="1.5977533543943676" />
-      <entry key="S60" value="3.7297919502045978" />
-      <entry key="M2" value="8.252933364726331" />
-      <entry key="M5" value="19.40176375762861" />
-      <entry key="M10" value="33.08419630854274" />
-      <entry key="M15" value="43.710529540520334" />
-      <entry key="M30" value="65.41196891048055" />
-      <entry key="H1" value="88.92347241637873" />
-      <entry key="H2" value="118.59407976163543" />
-      <entry key="H4" value="180.06027600436522" />
-      <entry key="D1" value="403.23714632380404" />
-      <entry key="W1" value="488.42683961148475" />
+      <entry key="MS100" value="0.0134150849443399" />
+      <entry key="MS500" value="0.42220044371189097" />
+      <entry key="S2" value="0.8060828314929676" />
+      <entry key="S5" value="0.9173857255148938" />
+      <entry key="S10" value="0.9584819963523764" />
+      <entry key="S30" value="1.1292565771634713" />
+      <entry key="S60" value="1.6782399106179644" />
+      <entry key="M2" value="3.7243058984705644" />
+      <entry key="M5" value="11.288354058290487" />
+      <entry key="M10" value="19.020065151541587" />
+      <entry key="M15" value="24.294357792588276" />
+      <entry key="M30" value="40.058368282541245" />
+      <entry key="H1" value="69.44504487753872" />
+      <entry key="H2" value="110.94550935635492" />
+      <entry key="H4" value="180.08836510321197" />
+      <entry key="D1" value="424.8432591896946" />
+      <entry key="W1" value="521.9038282128581" />
     </decayedShown>
   </component>
   <component name="ProblemsViewState">
@@ -184,47 +189,48 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;.NET Launch Settings Profile.SMIS.Api: http.executor&quot;: &quot;Run&quot;,
-    &quot;.NET Launch Settings Profile.SMIS.Api: https.executor&quot;: &quot;Run&quot;,
-    &quot;.NET Launch Settings Profile.SMIS.UI: Windows Machine.executor&quot;: &quot;Run&quot;,
-    &quot;ASKED_SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;DataGrid.QuickDoc.View&quot;: &quot;TRANSPOSED&quot;,
-    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.MCP Project settings loaded&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.cidr.known.project.marker&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.readMode.enableVisualFormatting&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
-    &quot;cidr.known.project.marker&quot;: &quot;true&quot;,
-    &quot;codeWithMe.voiceChat.enabledByDefault&quot;: &quot;false&quot;,
-    &quot;com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;flutter-and-api-only&quot;,
-    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
-    &quot;junie.onboarding.icon.badge.shown&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
-    &quot;sqlserver_backup_path_localServer&quot;: &quot;E:&quot;,
-    &quot;to.speed.mode.migration.done&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    ".NET Launch Settings Profile.SMIS.Api: http.executor": "Run",
+    ".NET Launch Settings Profile.SMIS.Api: https.executor": "Run",
+    ".NET Launch Settings Profile.SMIS.UI: Windows Machine.executor": "Run",
+    "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "DataGrid.QuickDoc.View": "TRANSPOSED",
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.MCP Project settings loaded": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.cidr.known.project.marker": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "RunOnceActivity.readMode.enableVisualFormatting": "true",
+    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
+    "cidr.known.project.marker": "true",
+    "codeWithMe.voiceChat.enabledByDefault": "false",
+    "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
+    "copilot.chat.legacySessionMetadata.migrated": "true",
+    "git-widget-placeholder": "flutter-and-api-only",
+    "ignore.virus.scanning.warn.message": "true",
+    "junie.onboarding.icon.badge.shown": "true",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "preferences.pluginManager",
+    "sqlserver_backup_path_localServer": "E:",
+    "to.speed.mode.migration.done": "true"
   },
-  &quot;keyToStringList&quot;: {
-    &quot;DatabaseDriversLRU&quot;: [
-      &quot;sqlite&quot;,
-      &quot;postgresql&quot;
+  "keyToStringList": {
+    "DatabaseDriversLRU": [
+      "sqlite",
+      "postgresql"
     ],
-    &quot;GitStage.ChangesTree.GroupingKeys&quot;: [
-      &quot;directory&quot;,
-      &quot;module&quot;,
-      &quot;repository&quot;
+    "GitStage.ChangesTree.GroupingKeys": [
+      "directory",
+      "module",
+      "repository"
     ]
   }
-}</component>
+}]]></component>
   <component name="RunManager" selected=".NET Launch Settings Profile.SMIS.Api: http">
     <configuration name="SMIS.Api: site48297-WebDeploy" type="DotNetMsBuildPublish" factoryName="Publish to IIS">
       <riderPublish configuration="Release" platform="Any CPU" publish_profile="site48297-WebDeploy.pubxml" pubxml_path="$PROJECT_DIR$/SMIS.Api/Properties/PublishProfiles/site48297-WebDeploy.pubxml" user_name="site48297" uuid_high="6959429607722075224" uuid_low="-6423334993005118021" />
@@ -762,7 +768,15 @@
       <option name="project" value="LOCAL" />
       <updated>1789030975760</updated>
     </task>
-    <option name="localTasksCounter" value="48" />
+    <task id="LOCAL-00048" summary="refactor: rename CategoryQuery to CategoryQueryDto and update related handlers to use HandleResultResponseOld">
+      <option name="closed" value="true" />
+      <created>1789036620816</created>
+      <option name="number" value="00048" />
+      <option name="presentableId" value="LOCAL-00048" />
+      <option name="project" value="LOCAL" />
+      <updated>1789036620816</updated>
+    </task>
+    <option name="localTasksCounter" value="49" />
     <option name="clearContext" value="false" />
     <option name="createChangelist" value="false" />
     <option name="createBranch" value="false" />
@@ -775,7 +789,6 @@
   <component name="UnityProjectConfiguration" hasMinimizedUI="false" />
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
-    <MESSAGE value="just format the code" />
     <MESSAGE value="feat: add sync endpoints for Customer, Product, ProductPrice, ProductUnit, Shop, and UnitOfMeasure controllers" />
     <MESSAGE value="feat: implement synchronization support for Product, Customer, Shop, and UnitOfMeasure entities" />
     <MESSAGE value="feat: add validation rules and command validators for Customer, Product, ProductPrice, ProductUnit, and UnitOfMeasure synchronization" />
@@ -800,6 +813,7 @@
     <MESSAGE value="fix: update database journal mode handling for compatibility with Android versions" />
     <MESSAGE value="feat: add Wasil Shop roles and users, and update seed data for new shop" />
     <MESSAGE value="feat: implement generic entity dropdown and new paged list functionality" />
+    <MESSAGE value="refactor: rename CategoryQuery to CategoryQueryDto and update related handlers to use HandleResultResponseOld" />
     <option name="LAST_COMMIT_MESSAGE" value="" />
   </component>
   <component name="XDebuggerManager">

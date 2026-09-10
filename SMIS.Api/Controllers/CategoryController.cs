@@ -35,15 +35,15 @@ namespace SMIS.Api.Controllers
 
         [HttpGet("query")]
         public async Task<ActionResult<PagedListNew<CategoryDto>>> Query(
-            [FromQuery] CategoryQuery criteria,
+            [FromQuery] CategoryQueryCriteria criteria,
             [FromQuery] string[]? columns,
-            [FromQuery] int pageNumber,
-            [FromQuery] int pageSize,
-            CancellationToken cancellationToken
+            [FromQuery] int pageNumber = 1,
+            [FromQuery] int pageSize = 25,
+            CancellationToken cancellationToken = default
         )
         {
             return await HandleRequest(new CategoryQuery(
-                new EntityDropdown<CategoryQuery>
+                new EntityDropdown<CategoryQueryCriteria>
                 {
                     Criteria = criteria,
                     Columns = columns,
