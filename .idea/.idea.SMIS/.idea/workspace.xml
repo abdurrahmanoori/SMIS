@@ -96,6 +96,10 @@
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/4db36763b7d04376a4837b0568a664df50620/3f/95c73b6d/SecurityTokenDescriptor.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/4db36763b7d04376a4837b0568a664df50620/4b/63722296/SecurityTokenHandler.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/9c31640fb7734f77994409ff691e2328239728/07/f64c2950/LocalhostListenOptions.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/SMIS.Application/Common/EntityDropdown.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/SMIS.Application/Common/ExpressionHelpers.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/SMIS.Application/Common/PagedListNew.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/SMIS.Application/QueryExtensions.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/SMIS.Application/Services/IApplicationDbContext.cs" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="InvalidFacetManager">
@@ -110,61 +114,61 @@
   <component name="MetaFilesCheckinStateConfiguration" checkMetaFiles="true" />
   <component name="NextEditCompletionFeaturesState">
     <decayedCancelled>
-      <entry key="MS100" value="0.0" />
-      <entry key="MS500" value="1.521556349282662E-262" />
-      <entry key="S2" value="6.545600325482287E-66" />
-      <entry key="S5" value="1.7957530196985537E-26" />
-      <entry key="S10" value="2.6376894231438114E-13" />
-      <entry key="S30" value="1.6427894791614536E-4" />
-      <entry key="S60" value="0.027215999824699903" />
-      <entry key="M2" value="0.37441165355227596" />
-      <entry key="M5" value="2.359416011508541" />
-      <entry key="M10" value="5.974927776107282" />
-      <entry key="M15" value="9.057200370935295" />
-      <entry key="M30" value="15.516229383020653" />
-      <entry key="H1" value="23.468418093541104" />
-      <entry key="H2" value="39.29769000928643" />
-      <entry key="H4" value="83.13192055300527" />
-      <entry key="D1" value="244.22419854289947" />
-      <entry key="W1" value="304.3689983550159" />
+      <entry key="MS100" value="1.0" />
+      <entry key="MS500" value="1.0" />
+      <entry key="S2" value="1.0" />
+      <entry key="S5" value="1.0000000000003075" />
+      <entry key="S10" value="1.0000005544651036" />
+      <entry key="S30" value="1.008216660496232" />
+      <entry key="S60" value="1.0930924821442818" />
+      <entry key="M2" value="1.4134913857322053" />
+      <entry key="M5" value="3.0768727211872124" />
+      <entry key="M10" value="6.483754269302767" />
+      <entry key="M15" value="9.567011472292075" />
+      <entry key="M30" value="16.243479396422273" />
+      <entry key="H1" value="24.506704879461793" />
+      <entry key="H2" value="40.49778863448762" />
+      <entry key="H4" value="84.29271078281941" />
+      <entry key="D1" value="245.81480458921308" />
+      <entry key="W1" value="306.2961169563047" />
     </decayedCancelled>
     <decayedSelected>
-      <entry key="MS100" value="1.0000008775755873" />
-      <entry key="MS500" value="1.0684229772149534" />
-      <entry key="S2" value="1.8115396117777807" />
-      <entry key="S5" value="2.5931222423432003" />
-      <entry key="S10" value="3.1274312199088863" />
-      <entry key="S30" value="3.6612490884757074" />
-      <entry key="S60" value="3.930668463573931" />
-      <entry key="M2" value="4.561355341271073" />
-      <entry key="M5" value="6.1223121334903166" />
-      <entry key="M10" value="7.4646916160021" />
-      <entry key="M15" value="8.31904754340671" />
-      <entry key="M30" value="10.175978777166458" />
-      <entry key="H1" value="12.807186982069306" />
-      <entry key="H2" value="18.281141992115096" />
-      <entry key="H4" value="33.04228398792045" />
-      <entry key="D1" value="84.67830540915523" />
-      <entry key="W1" value="103.40298200195271" />
+      <entry key="MS100" value="9.199583646322322E-6" />
+      <entry key="MS500" value="0.09834530566919572" />
+      <entry key="S2" value="0.560000492080363" />
+      <entry key="S5" value="0.7930039735211257" />
+      <entry key="S10" value="0.8905093863955753" />
+      <entry key="S30" value="0.9918509715223308" />
+      <entry key="S60" value="1.335284730383568" />
+      <entry key="M2" value="2.360077495637597" />
+      <entry key="M5" value="4.779935275201515" />
+      <entry key="M10" value="6.866443852151181" />
+      <entry key="M15" value="8.084871741650993" />
+      <entry key="M30" value="10.391069730801853" />
+      <entry key="H1" value="13.303444355743833" />
+      <entry key="H2" value="18.918084581355284" />
+      <entry key="H4" value="33.71260068488009" />
+      <entry key="D1" value="85.53692302411281" />
+      <entry key="W1" value="104.3783010660788" />
     </decayedSelected>
     <decayedShown>
-      <entry key="MS100" value="0.013696972162538217" />
-      <entry key="MS500" value="0.4479334694376639" />
-      <entry key="S2" value="1.3155183371446608" />
-      <entry key="S5" value="2.198997576366046" />
-      <entry key="S10" value="2.8609948328042654" />
-      <entry key="S30" value="3.5498712757800464" />
-      <entry key="S60" value="3.895960174324355" />
-      <entry key="M2" value="4.891574724165574" />
-      <entry key="M5" value="8.435684408044967" />
-      <entry key="M10" value="13.395816565722736" />
-      <entry key="M15" value="17.33746408476239" />
-      <entry key="M30" value="25.66463933481624" />
-      <entry key="H1" value="36.25806818937294" />
-      <entry key="H2" value="57.5677520505027" />
-      <entry key="H4" value="116.16629866561317" />
-      <entry key="D1" value="328.89990297493205" />
-      <entry key="W1" value="407.7715433259996" />
+      <entry key="MS100" value="1.740711651722645E-5" />
+      <entry key="MS500" value="0.1251941381854983" />
+      <entry key="S2" value="0.9188262476737903" />
+      <entry key="S5" value="1.453222463262432" />
+      <entry key="S10" value="1.7024571215702013" />
+      <entry key="S30" value="1.9318523499008817" />
+      <entry key="S60" value="2.3881106976117064" />
+      <entry key="M2" value="3.742258710791058" />
+      <entry key="M5" value="7.820768721664437" />
+      <entry key="M10" value="13.31187776959125" />
+      <entry key="M15" value="17.616233295465552" />
+      <entry key="M30" value="26.6077851193387" />
+      <entry key="H1" value="37.79263828926068" />
+      <entry key="H2" value="59.40468063116021" />
+      <entry key="H4" value="117.99731794071776" />
+      <entry key="D1" value="331.3491031947301" />
+      <entry key="W1" value="410.67397712583914" />
     </decayedShown>
   </component>
   <component name="ProblemsViewState">
@@ -733,7 +737,15 @@
       <option name="project" value="LOCAL" />
       <updated>1789008328793</updated>
     </task>
-    <option name="localTasksCounter" value="45" />
+    <task id="LOCAL-00045" summary="feat: add Wasil Shop roles and users, and update seed data for new shop">
+      <option name="closed" value="true" />
+      <created>1789027736492</created>
+      <option name="number" value="00045" />
+      <option name="presentableId" value="LOCAL-00045" />
+      <option name="project" value="LOCAL" />
+      <updated>1789027736493</updated>
+    </task>
+    <option name="localTasksCounter" value="46" />
     <option name="clearContext" value="false" />
     <option name="createChangelist" value="false" />
     <option name="createBranch" value="false" />
@@ -746,7 +758,6 @@
   <component name="UnityProjectConfiguration" hasMinimizedUI="false" />
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
-    <MESSAGE value="refactor: update CategorySync command handlers and validators to use CategorySyncRules" />
     <MESSAGE value="feat(Category): add CategoryConfiguration for entity configuration and clean up validation logic" />
     <MESSAGE value="just format the code" />
     <MESSAGE value="feat: add sync endpoints for Customer, Product, ProductPrice, ProductUnit, Shop, and UnitOfMeasure controllers" />
@@ -771,7 +782,8 @@
     <MESSAGE value="feat: update database schema for multi-tenancy support and adjust database configurations" />
     <MESSAGE value="feat: add localization support with locale controller and integrate into various screens" />
     <MESSAGE value="fix: update database journal mode handling for compatibility with Android versions" />
-    <option name="LAST_COMMIT_MESSAGE" value="" />
+    <MESSAGE value="feat: add Wasil Shop roles and users, and update seed data for new shop" />
+    <option name="LAST_COMMIT_MESSAGE" value="feat: add Wasil Shop roles and users, and update seed data for new shop" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

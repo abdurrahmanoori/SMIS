@@ -35,12 +35,25 @@ namespace SMIS.Api.Controllers
 
         [HttpGet("query")]
         public async Task<ActionResult<PagedList<CategoryDto>>> Query(
+
+
+
+
             [FromQuery] CategoryQuery query,
             CancellationToken cancellationToken
         ) =>
             HandleResultResponse(await Mediator.Send(
                 new CategoryGetFilteredListQuery(query),
                 cancellationToken));
+        //
+        // [HttpGet("query")]
+        // public async Task<ActionResult<PagedList<CategoryDto>>> Query(
+        //     [FromQuery] CategoryQuery query,
+        //     CancellationToken cancellationToken
+        // ) =>
+        //     HandleResultResponse(await Mediator.Send(
+        //         new CategoryGetFilteredListQuery(query),
+        //         cancellationToken));
 
         [HttpGet("{id}")]
         public async Task<ActionResult<CategoryDto>> GetById(

@@ -44,7 +44,7 @@ namespace SMIS.Application.Features.Districts.Queries
                 return Result<PagedList<DistrictDto>>.EmptyResult(nameof(DistrictDto));
             }
 
-            return Result<PagedList<DistrictDto>>.SuccessResult(pagedEntities);
+            return Result<PagedList<DistrictDto>>.SuccessResult(default);
         }
     }
 }

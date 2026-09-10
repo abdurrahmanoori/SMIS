@@ -32,6 +32,6 @@ internal sealed class LanguageGetListQueryHandler : IRequestHandler<LanguageGetL
             return Result<PagedList<LanguageDto>>.EmptyResult(nameof(LanguageDto));
         }
 
-        return Result<PagedList<LanguageDto>>.SuccessResult(paged);
+        return Result<PagedList<LanguageDto>>.SuccessResult(default);
     }
 }
