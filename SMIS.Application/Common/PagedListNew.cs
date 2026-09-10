@@ -31,7 +31,8 @@ namespace SMIS.Application.Common
         public static async Task<PagedListNew<T>> CreateList(
             IQueryable<T> entities,
             int pageNumber,
-            int pageSize
+            int pageSize,
+            CancellationToken ct = default
         )
         {
             var count = 0;
@@ -48,7 +49,7 @@ namespace SMIS.Application.Common
                 PageSize = pageSize,
                 TotalCount = count,
                 TotalPages = CalculateTotalPages(count, pageSize),
-                Items = await entities.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToListAsync()
+                Items = await entities.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToListAsync(ct)
             };
         }
 
@@ -74,10 +75,11 @@ namespace SMIS.Application.Common
         public static async Task<PagedListNew<TEntity>> ToPagedList<TEntity>(
             this IQueryable<TEntity> queryable,
             int pageNumber,
-            int pageSize
+            int pageSize,
+            CancellationToken ct = default
         )
         {
-            return await PagedListNew<TEntity>.CreateList(queryable, pageNumber, pageSize);
+            return await PagedListNew<TEntity>.CreateList(queryable, pageNumber, pageSize, ct);
         }
 
         public static async Task<PagedListNew<TEntity>> ToPagedList<TEntity>(
