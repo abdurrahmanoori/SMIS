@@ -24,7 +24,9 @@ class AppDatabase {
         version: 6,
         onConfigure: (database) async {
           await database.execute('PRAGMA foreign_keys = ON');
-          await database.execute('PRAGMA journal_mode = WAL');
+          // Use rawQuery for journal_mode as it returns a result which some
+          // Android versions require to be handled via query methods.
+          await database.rawQuery('PRAGMA journal_mode = WAL');
         },
         onCreate: _createSchema,
         onUpgrade: _upgradeSchema,
