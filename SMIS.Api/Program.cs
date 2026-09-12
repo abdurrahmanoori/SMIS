@@ -59,7 +59,6 @@ app.UseSwaggerWithUI();
 app.UseMiniProfiler();
 
 app.UseStaticFiles();
-app.UseCors("AllowReactApp");
 app.UseHttpsRedirection();
 app.UseRouting();
 
@@ -70,8 +69,8 @@ app.UseMiddleware<DevelopmentJwtMiddleware>();
 
 app.UseAuthentication();
 app.UseMiddleware<UnauthorizedMiddleware>();
+app.UseCors("AllowReactApp");
 app.UseAuthorization();
-
 app.MapControllers();
 
 app.Run();

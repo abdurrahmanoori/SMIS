@@ -1,6 +1,5 @@
-import 'dart:io';
 import 'dart:ui';
-
+import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:workmanager/workmanager.dart';
 
@@ -66,7 +65,13 @@ class BackgroundSyncScheduler {
   const BackgroundSyncScheduler._();
 
   static Future<void> initialize() async {
-    if (!Platform.isAndroid && !Platform.isIOS && !Platform.isMacOS) return;
+    if (kIsWeb) return;
+
+    if (defaultTargetPlatform != TargetPlatform.android &&
+        defaultTargetPlatform != TargetPlatform.iOS &&
+        defaultTargetPlatform != TargetPlatform.macOS) {
+      return;
+    }
 
     await Workmanager().initialize(callbackDispatcher);
     await Workmanager().registerPeriodicTask(

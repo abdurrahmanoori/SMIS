@@ -1,14 +1,14 @@
-import 'dart:io';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:path/path.dart' as p;
-import 'package:sqflite_common_ffi/sqflite_ffi.dart';
+import 'package:sqflite/sqflite.dart';
 
 import 'config/app_config.dart';
 import 'controllers/app_dependencies.dart';
 import 'data/database.dart';
+import 'data/database_factory_init.dart'
+    if (dart.library.io) 'data/database_factory_native.dart'
+    if (dart.library.html) 'data/database_factory_web.dart';
 import 'screens/authentication_gate.dart';
 import 'services/background_sync.dart';
 import 'controllers/theme_controller.dart';
@@ -26,30 +26,14 @@ Future<void> main() async {
   
   await mainEntryPoint();
 }
+
 Future<void> mainEntryPoint() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  String? customDatabasePath;
+  final dbConfig = await initDatabasePlatform(AppConfig.databaseName);
+  databaseFactory = dbConfig.factory;
 
-  if (!kIsWeb && (Platform.isWindows || Platform.isLinux)) {
-    sqfliteFfiInit();
-    databaseFactory = databaseFactoryFfi;
-
-    if (Platform.isWindows) {
-      final projectDir = Directory.current.path;
-      final databaseFolder = Directory(p.join(projectDir, 'database'));
-
-      if (!await databaseFolder.exists()) {
-        await databaseFolder.create(recursive: true);
-      }
-
-      customDatabasePath = p.join(databaseFolder.path, AppConfig.databaseName);
-
-      debugPrint('PROJECT_DATABASE_PATH: $customDatabasePath');
-    }
-  }
-
-  final database = AppDatabase(databasePath: customDatabasePath);
+  final database = AppDatabase(databasePath: dbConfig.path);
   await database.instance;
 
   try {
