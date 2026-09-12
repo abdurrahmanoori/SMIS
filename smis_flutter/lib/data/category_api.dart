@@ -19,7 +19,45 @@ abstract interface class CategoryApi {
   Future<void> delete(CategoryLocalRecord category);
 }
 
-class DioCategoryApi implements CategoryApi {
+class CategoryPage {
+  const CategoryPage({
+    required this.items,
+    required this.pageNumber,
+    required this.pageSize,
+    required this.totalCount,
+    required this.totalPages,
+  });
+
+  final List<CategoryRemoteModel> items;
+  final int pageNumber;
+  final int pageSize;
+  final int totalCount;
+  final int totalPages;
+
+  factory CategoryPage.fromJson(Map<String, dynamic> json) => CategoryPage(
+    items: (json['items'] as List<dynamic>? ?? const <dynamic>[])
+        .map(
+          (item) => CategoryRemoteModel.fromJson(
+            Map<String, dynamic>.from(item as Map),
+          ),
+        )
+        .toList(growable: false),
+    pageNumber: (json['pageNumber'] as num?)?.toInt() ?? 1,
+    pageSize: (json['pageSize'] as num?)?.toInt() ?? 25,
+    totalCount: (json['totalCount'] as num?)?.toInt() ?? 0,
+    totalPages: (json['totalPages'] as num?)?.toInt() ?? 0,
+  );
+}
+
+abstract interface class CategoryQueryApi {
+  Future<CategoryPage> getPage({
+    required String shopId,
+    required int pageNumber,
+    required int pageSize,
+  });
+}
+
+class DioCategoryApi implements CategoryApi, CategoryQueryApi {
   DioCategoryApi({Dio? dio, AuthSessionStore? sessionStore})
     : _sessionStore = sessionStore ?? SecureAuthSessionStore(),
       _dio =
@@ -40,6 +78,27 @@ class DioCategoryApi implements CategoryApi {
 
   final Dio _dio;
   final AuthSessionStore _sessionStore;
+
+  @override
+  Future<CategoryPage> getPage({
+    required String shopId,
+    required int pageNumber,
+    required int pageSize,
+  }) async {
+    try {
+      final response = await _dio.get<Map<String, dynamic>>(
+        '${AppConfig.categoryEndpoint}/query',
+        queryParameters: {
+          'shopId': shopId,
+          'pageNumber': pageNumber,
+          'pageSize': pageSize,
+        },
+      );
+      return CategoryPage.fromJson(response.data ?? const <String, dynamic>{});
+    } catch (error, stackTrace) {
+      ApiErrorParser.mapAndThrow(error, stackTrace);
+    }
+  }
 
   @override
   Future<List<CategoryRemoteModel>> pull(DateTime changedSince) async {

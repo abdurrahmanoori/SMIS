@@ -120,61 +120,61 @@
   <component name="MetaFilesCheckinStateConfiguration" checkMetaFiles="true" />
   <component name="NextEditCompletionFeaturesState">
     <decayedCancelled>
-      <entry key="MS100" value="1.0" />
-      <entry key="MS500" value="1.0" />
-      <entry key="S2" value="1.0" />
-      <entry key="S5" value="1.0000001249453028" />
-      <entry key="S10" value="1.0003534760284567" />
-      <entry key="S30" value="1.0708351620925336" />
-      <entry key="S60" value="1.3011740422488567" />
-      <entry key="M2" value="2.1064913359213486" />
-      <entry key="M5" value="5.07754476811342" />
-      <entry key="M10" value="8.207863455116449" />
-      <entry key="M15" value="10.365223468678337" />
-      <entry key="M30" value="16.808854774746028" />
-      <entry key="H1" value="30.005994822077284" />
-      <entry key="H2" value="52.052509455038646" />
-      <entry key="H4" value="97.21799716914471" />
-      <entry key="D1" value="275.20158446718546" />
-      <entry key="W1" value="347.6813806719017" />
+      <entry key="MS100" value="2.941796710330678E-185" />
+      <entry key="MS500" value="1.2408592759830807E-37" />
+      <entry key="S2" value="5.935135424692469E-10" />
+      <entry key="S5" value="2.0387888657919174E-4" />
+      <entry key="S10" value="0.014278616410609317" />
+      <entry key="S30" value="0.2427009045902782" />
+      <entry key="S60" value="0.5050166536049296" />
+      <entry key="M2" value="0.9080313349769663" />
+      <entry key="M5" value="2.8722154806146314" />
+      <entry key="M10" value="6.088452946267508" />
+      <entry key="M15" value="8.557380728690683" />
+      <entry key="M30" value="15.373120889472599" />
+      <entry key="H1" value="28.757677967654146" />
+      <entry key="H2" value="51.069120105455994" />
+      <entry key="H4" value="96.35048603155859" />
+      <entry key="D1" value="275.3142876685427" />
+      <entry key="W1" value="348.5210371054583" />
     </decayedCancelled>
     <decayedSelected>
-      <entry key="MS100" value="0.0" />
-      <entry key="MS500" value="4.0869895292727587E-69" />
-      <entry key="S2" value="7.995596722013316E-18" />
-      <entry key="S5" value="1.44924013584654E-7" />
-      <entry key="S10" value="3.8070740992989855E-4" />
-      <entry key="S30" value="0.07676229304957628" />
-      <entry key="S60" value="0.39628197910078267" />
-      <entry key="M2" value="1.645814417095323" />
-      <entry key="M5" value="6.244781321459629" />
-      <entry key="M10" value="10.840128641624199" />
-      <entry key="M15" value="13.95288188080787" />
-      <entry key="M30" value="23.270026913555945" />
-      <entry key="H1" value="39.45818334200223" />
-      <entry key="H2" value="58.908530605585156" />
-      <entry key="H4" value="82.88188914668224" />
-      <entry key="D1" value="149.6452798669933" />
-      <entry key="W1" value="174.22304965076538" />
+      <entry key="MS100" value="1.0" />
+      <entry key="MS500" value="1.0000000135794473" />
+      <entry key="S2" value="1.0107950088824702" />
+      <entry key="S5" value="1.1652891184324154" />
+      <entry key="S10" value="1.4648827253482777" />
+      <entry key="S30" value="2.361646896386218" />
+      <entry key="S60" value="2.9789269530908866" />
+      <entry key="M2" value="3.581792504364403" />
+      <entry key="M5" value="6.214702043827509" />
+      <entry key="M10" value="10.6821152566641" />
+      <entry key="M15" value="14.148823831040959" />
+      <entry key="M30" value="23.886716641017436" />
+      <entry key="H1" value="40.49515703857515" />
+      <entry key="H2" value="60.659588235978255" />
+      <entry key="H4" value="85.28678713699531" />
+      <entry key="D1" value="153.16214906765805" />
+      <entry key="W1" value="178.14260581819653" />
     </decayedSelected>
     <decayedShown>
-      <entry key="MS100" value="0.0134150849443399" />
-      <entry key="MS500" value="0.42220044371189097" />
-      <entry key="S2" value="0.8060828314929676" />
-      <entry key="S5" value="0.9173857255148938" />
-      <entry key="S10" value="0.9584819963523764" />
-      <entry key="S30" value="1.1292565771634713" />
-      <entry key="S60" value="1.6782399106179644" />
-      <entry key="M2" value="3.7243058984705644" />
-      <entry key="M5" value="11.288354058290487" />
-      <entry key="M10" value="19.020065151541587" />
-      <entry key="M15" value="24.294357792588276" />
-      <entry key="M30" value="40.058368282541245" />
-      <entry key="H1" value="69.44504487753872" />
-      <entry key="H2" value="110.94550935635492" />
-      <entry key="H4" value="180.08836510321197" />
-      <entry key="D1" value="424.8432591896946" />
-      <entry key="W1" value="521.9038282128581" />
+      <entry key="MS100" value="4.923350581189737E-5" />
+      <entry key="MS500" value="0.13754733145375048" />
+      <entry key="S2" value="0.6175195779789647" />
+      <entry key="S5" value="0.9705636693388191" />
+      <entry key="S10" value="1.360921243459911" />
+      <entry key="S30" value="2.539176545174801" />
+      <entry key="S60" value="3.440697323563119" />
+      <entry key="M2" value="4.4614967819348035" />
+      <entry key="M5" value="9.062033728497367" />
+      <entry key="M10" value="16.747051959122995" />
+      <entry key="M15" value="22.684750059402216" />
+      <entry key="M30" value="39.24022347578343" />
+      <entry key="H1" value="69.23409850449843" />
+      <entry key="H2" value="111.71325120792274" />
+      <entry key="H4" value="181.62571425592063" />
+      <entry key="D1" value="428.47280003590885" />
+      <entry key="W1" value="526.6630349223262" />
     </decayedShown>
   </component>
   <component name="ProblemsViewState">
@@ -189,48 +189,48 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    ".NET Launch Settings Profile.SMIS.Api: http.executor": "Run",
-    ".NET Launch Settings Profile.SMIS.Api: https.executor": "Run",
-    ".NET Launch Settings Profile.SMIS.UI: Windows Machine.executor": "Run",
-    "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "DataGrid.QuickDoc.View": "TRANSPOSED",
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "RunOnceActivity.MCP Project settings loaded": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.cidr.known.project.marker": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "RunOnceActivity.readMode.enableVisualFormatting": "true",
-    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
-    "cidr.known.project.marker": "true",
-    "codeWithMe.voiceChat.enabledByDefault": "false",
-    "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
-    "copilot.chat.legacySessionMetadata.migrated": "true",
-    "git-widget-placeholder": "flutter-and-api-only",
-    "ignore.virus.scanning.warn.message": "true",
-    "junie.onboarding.icon.badge.shown": "true",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "preferences.pluginManager",
-    "sqlserver_backup_path_localServer": "E:",
-    "to.speed.mode.migration.done": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;.NET Launch Settings Profile.SMIS.Api: http.executor&quot;: &quot;Run&quot;,
+    &quot;.NET Launch Settings Profile.SMIS.Api: https.executor&quot;: &quot;Run&quot;,
+    &quot;.NET Launch Settings Profile.SMIS.UI: Windows Machine.executor&quot;: &quot;Run&quot;,
+    &quot;ASKED_SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;DataGrid.QuickDoc.View&quot;: &quot;TRANSPOSED&quot;,
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.MCP Project settings loaded&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.cidr.known.project.marker&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.readMode.enableVisualFormatting&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
+    &quot;cidr.known.project.marker&quot;: &quot;true&quot;,
+    &quot;codeWithMe.voiceChat.enabledByDefault&quot;: &quot;false&quot;,
+    &quot;com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1&quot;: &quot;true&quot;,
+    &quot;copilot.chat.legacySessionMetadata.migrated&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;flutter-and-api-only&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;junie.onboarding.icon.badge.shown&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
+    &quot;sqlserver_backup_path_localServer&quot;: &quot;E:&quot;,
+    &quot;to.speed.mode.migration.done&quot;: &quot;true&quot;
   },
-  "keyToStringList": {
-    "DatabaseDriversLRU": [
-      "sqlite",
-      "postgresql"
+  &quot;keyToStringList&quot;: {
+    &quot;DatabaseDriversLRU&quot;: [
+      &quot;sqlite&quot;,
+      &quot;postgresql&quot;
     ],
-    "GitStage.ChangesTree.GroupingKeys": [
-      "directory",
-      "module",
-      "repository"
+    &quot;GitStage.ChangesTree.GroupingKeys&quot;: [
+      &quot;directory&quot;,
+      &quot;module&quot;,
+      &quot;repository&quot;
     ]
   }
-}]]></component>
+}</component>
   <component name="RunManager" selected=".NET Launch Settings Profile.SMIS.Api: http">
     <configuration name="SMIS.Api: site48297-WebDeploy" type="DotNetMsBuildPublish" factoryName="Publish to IIS">
       <riderPublish configuration="Release" platform="Any CPU" publish_profile="site48297-WebDeploy.pubxml" pubxml_path="$PROJECT_DIR$/SMIS.Api/Properties/PublishProfiles/site48297-WebDeploy.pubxml" user_name="site48297" uuid_high="6959429607722075224" uuid_low="-6423334993005118021" />
@@ -399,14 +399,6 @@
       <option name="presentableId" value="LOCAL-00001" />
       <option name="project" value="LOCAL" />
       <updated>1788873767067</updated>
-    </task>
-    <task id="LOCAL-00002" summary="just some task">
-      <option name="closed" value="true" />
-      <created>1787743691358</created>
-      <option name="number" value="00002" />
-      <option name="presentableId" value="LOCAL-00002" />
-      <option name="project" value="LOCAL" />
-      <updated>1787743691358</updated>
     </task>
     <task id="LOCAL-00003" summary="some ide realted upate">
       <option name="closed" value="true" />
@@ -776,7 +768,23 @@
       <option name="project" value="LOCAL" />
       <updated>1789036620816</updated>
     </task>
-    <option name="localTasksCounter" value="49" />
+    <task id="LOCAL-00049" summary="feat: update CategoryQuery to CategoryQueryCriteria and enhance filtering capabilities">
+      <option name="closed" value="true" />
+      <created>1789037569238</created>
+      <option name="number" value="00049" />
+      <option name="presentableId" value="LOCAL-00049" />
+      <option name="project" value="LOCAL" />
+      <updated>1789037569238</updated>
+    </task>
+    <task id="LOCAL-00050" summary="feat: add cancellation token support to PagedListNew and update CategoryQuery for conflict date normalization">
+      <option name="closed" value="true" />
+      <created>1789038990487</created>
+      <option name="number" value="00050" />
+      <option name="presentableId" value="LOCAL-00050" />
+      <option name="project" value="LOCAL" />
+      <updated>1789038990488</updated>
+    </task>
+    <option name="localTasksCounter" value="51" />
     <option name="clearContext" value="false" />
     <option name="createChangelist" value="false" />
     <option name="createBranch" value="false" />
@@ -789,8 +797,6 @@
   <component name="UnityProjectConfiguration" hasMinimizedUI="false" />
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
-    <MESSAGE value="feat: add sync endpoints for Customer, Product, ProductPrice, ProductUnit, Shop, and UnitOfMeasure controllers" />
-    <MESSAGE value="feat: implement synchronization support for Product, Customer, Shop, and UnitOfMeasure entities" />
     <MESSAGE value="feat: add validation rules and command validators for Customer, Product, ProductPrice, ProductUnit, and UnitOfMeasure synchronization" />
     <MESSAGE value="feat: implement authentication flow with login screen and secure session management" />
     <MESSAGE value="feat: add profile management with user details and update functionality" />
@@ -814,6 +820,8 @@
     <MESSAGE value="feat: add Wasil Shop roles and users, and update seed data for new shop" />
     <MESSAGE value="feat: implement generic entity dropdown and new paged list functionality" />
     <MESSAGE value="refactor: rename CategoryQuery to CategoryQueryDto and update related handlers to use HandleResultResponseOld" />
+    <MESSAGE value="feat: update CategoryQuery to CategoryQueryCriteria and enhance filtering capabilities" />
+    <MESSAGE value="feat: add cancellation token support to PagedListNew and update CategoryQuery for conflict date normalization" />
     <option name="LAST_COMMIT_MESSAGE" value="" />
   </component>
   <component name="XDebuggerManager">

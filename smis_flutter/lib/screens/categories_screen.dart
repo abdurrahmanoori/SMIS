@@ -91,6 +91,9 @@ class _CategoriesScreenState extends ConsumerState<CategoriesScreen>
                 state: value,
                 onEdit: _edit,
                 onDelete: _delete,
+                onLoadMore: () {
+                  ref.read(categoryControllerProvider.notifier).loadNextPage();
+                },
               ),
             ),
           ),
@@ -228,11 +231,13 @@ class _CategoryContent extends StatelessWidget {
     required this.state,
     required this.onEdit,
     required this.onDelete,
+    required this.onLoadMore,
   });
 
   final CategoryScreenState state;
   final ValueChanged<Category> onEdit;
   final ValueChanged<Category> onDelete;
+  final VoidCallback onLoadMore;
 
   @override
   Widget build(BuildContext context) => Column(
@@ -255,6 +260,23 @@ class _CategoryContent extends StatelessWidget {
                 },
               ),
       ),
+      if (state.hasNextPage)
+        SafeArea(
+          top: false,
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
+            child: FilledButton.tonalIcon(
+              onPressed: state.isLoadingMore ? null : onLoadMore,
+              icon: state.isLoadingMore
+                  ? const SizedBox.square(
+                      dimension: 18,
+                      child: CircularProgressIndicator(strokeWidth: 2),
+                    )
+                  : const Icon(Icons.expand_more),
+              label: Text(context.l10n.text('Load more')),
+            ),
+          ),
+        ),
     ],
   );
 }

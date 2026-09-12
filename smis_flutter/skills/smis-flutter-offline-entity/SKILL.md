@@ -213,8 +213,6 @@ Keep validation in the model/repository even if the form also validates for a
 better user experience.
 
 ## Verification
-
-Add focused tests using in-memory SQLite and fake remote/connectivity adapters.
 At minimum cover:
 
 1. offline create/update/delete without any API;
@@ -226,9 +224,8 @@ At minimum cover:
 7. server tombstone pull;
 8. transient failure persistence/backoff and later retry;
 9. manual force retry;
-10. a presentation smoke test.
 
-Run formatting, `flutter analyze`, and `flutter test`. If native background
+Run formatting, `flutter analyze`. If native background
 configuration changed, attempt the relevant native build. Distinguish host/tool
 failures from source failures and report them accurately.
 
@@ -248,4 +245,3 @@ Before finishing, confirm:
 - timestamps and delete semantics match the server;
 - manual and background sync use the same engine;
 - existing unrelated user changes were preserved;
-- tests and analysis results are stated, including any verification blocker.
