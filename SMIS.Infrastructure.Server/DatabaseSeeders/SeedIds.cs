@@ -29,21 +29,21 @@ public static class SeedIds
 
     // Users
     public const string UserSuperAdmin = "44444444-0000-0000-0000-000000000001";
-    public const string UserWAdmin = "44444444-0000-0000-0000-000000000002";
-    public const string UserWAdministration = "44444444-0000-0000-0000-000000000003";
-    public const string UserWManager = "44444444-0000-0000-0000-000000000004";
-    public const string UserWStaff = "44444444-0000-0000-0000-000000000005";
-    public const string UserWViewer = "44444444-0000-0000-0000-000000000006";
-    public const string UserWEditor = "44444444-0000-0000-0000-000000000007";
-    public const string UserWUser = "44444444-0000-0000-0000-000000000008";
-    public const string UserRAdmin = "44444444-0000-0000-0000-000000000009";
-    public const string UserRAdministration = "44444444-0000-0000-0000-000000000010";
-    public const string UserRManager = "44444444-0000-0000-0000-000000000011";
-    public const string UserRStaff = "44444444-0000-0000-0000-000000000012";
-    public const string UserRViewer = "44444444-0000-0000-0000-000000000013";
-    public const string UserREditor = "44444444-0000-0000-0000-000000000014";
-    public const string UserRUser = "44444444-0000-0000-0000-000000000015";
-    public const string UserWasil = "44444444-0000-0000-0000-000000000016";
+    public const string UserMainAdmin = "44444444-0000-0000-0000-000000000002";
+    public const string UserMainAdministration = "44444444-0000-0000-0000-000000000003";
+    public const string UserMainManager = "44444444-0000-0000-0000-000000000004";
+    public const string UserMainStaff = "44444444-0000-0000-0000-000000000005";
+    public const string UserMainViewer = "44444444-0000-0000-0000-000000000006";
+    public const string UserMainEditor = "44444444-0000-0000-0000-000000000007";
+    public const string UserMainUser = "44444444-0000-0000-0000-000000000008";
+    public const string UserBranchAdmin = "44444444-0000-0000-0000-000000000009";
+    public const string UserBranchAdministration = "44444444-0000-0000-0000-000000000010";
+    public const string UserBranchManager = "44444444-0000-0000-0000-000000000011";
+    public const string UserBranchStaff = "44444444-0000-0000-0000-000000000012";
+    public const string UserBranchViewer = "44444444-0000-0000-0000-000000000013";
+    public const string UserBranchEditor = "44444444-0000-0000-0000-000000000014";
+    public const string UserBranchUser = "44444444-0000-0000-0000-000000000015";
+    public const string UserWasilAdmin = "44444444-0000-0000-0000-000000000016";
 
     // TranslationKeys
     public const string TKey1 = "55555555-0000-0000-0000-000000000001";

@@ -120,61 +120,61 @@
   <component name="MetaFilesCheckinStateConfiguration" checkMetaFiles="true" />
   <component name="NextEditCompletionFeaturesState">
     <decayedCancelled>
-      <entry key="MS100" value="3.030951866806411E-31" />
-      <entry key="MS500" value="7.876184691007505E-7" />
-      <entry key="S2" value="0.030822006498616238" />
-      <entry key="S5" value="0.341950664012246" />
-      <entry key="S10" value="0.9348802060855727" />
-      <entry key="S30" value="1.9981426165951692" />
-      <entry key="S60" value="2.443154364265327" />
-      <entry key="M2" value="2.7058869127333574" />
-      <entry key="M5" value="2.878362956160707" />
-      <entry key="M10" value="2.9532399006317824" />
-      <entry key="M15" value="3.1219369237174135" />
-      <entry key="M30" value="5.238614895976447" />
-      <entry key="H1" value="14.317708781233673" />
-      <entry key="H2" value="35.70268908202375" />
-      <entry key="H4" value="80.58104635961107" />
-      <entry key="D1" value="272.6277465035018" />
-      <entry key="W1" value="357.007425595715" />
+      <entry key="MS100" value="0.0" />
+      <entry key="MS500" value="2.273963370283039E-128" />
+      <entry key="S2" value="2.024140668572744E-32" />
+      <entry key="S5" value="3.1796899409374957E-13" />
+      <entry key="S10" value="7.972333113640204E-7" />
+      <entry key="S30" value="0.01471819985630905" />
+      <entry key="S60" value="0.1715690538085882" />
+      <entry key="M2" value="0.5857787762110245" />
+      <entry key="M5" value="1.2247430464916609" />
+      <entry key="M10" value="1.6178739148299284" />
+      <entry key="M15" value="1.9129964753470097" />
+      <entry key="M30" value="3.2177073376601846" />
+      <entry key="H1" value="9.254835794556294" />
+      <entry key="H2" value="27.513879906251834" />
+      <entry key="H4" value="70.15308454358426" />
+      <entry key="D1" value="267.13162210868404" />
+      <entry key="W1" value="357.5884634762447" />
     </decayedCancelled>
     <decayedSelected>
       <entry key="MS100" value="1.0" />
-      <entry key="MS500" value="1.0000000000588567" />
-      <entry key="S2" value="1.0027698047571865" />
-      <entry key="S5" value="1.0948374051533507" />
-      <entry key="S10" value="1.307956823521335" />
-      <entry key="S30" value="1.675299783453061" />
-      <entry key="S60" value="1.8217662584050656" />
-      <entry key="M2" value="1.9065132422671658" />
-      <entry key="M5" value="1.9615320704537051" />
-      <entry key="M10" value="2.0012763974434327" />
-      <entry key="M15" value="2.203477546994201" />
-      <entry key="M30" value="4.954824747738054" />
-      <entry key="H1" value="16.43471975267241" />
-      <entry key="H2" value="39.02007540022093" />
-      <entry key="H4" value="69.9637779982463" />
-      <entry key="D1" value="153.49838014277145" />
-      <entry key="W1" value="184.84817812489558" />
+      <entry key="MS500" value="1.0" />
+      <entry key="S2" value="1.0" />
+      <entry key="S5" value="1.0000000000008609" />
+      <entry key="S10" value="1.0000012949653623" />
+      <entry key="S30" value="1.0172507454850352" />
+      <entry key="S60" value="1.1856759888715749" />
+      <entry key="M2" value="1.609329283018679" />
+      <entry key="M5" value="2.2438640781668315" />
+      <entry key="M10" value="2.613022123104128" />
+      <entry key="M15" value="2.8586584056305706" />
+      <entry key="M30" value="4.148062753843857" />
+      <entry key="H1" value="11.341911412716204" />
+      <entry key="H2" value="30.889602133560903" />
+      <entry key="H4" value="62.171276526725094" />
+      <entry key="D1" value="152.27643560197674" />
+      <entry key="W1" value="187.11326099232343" />
     </decayedSelected>
     <decayedShown>
-      <entry key="MS100" value="1.6112745857086565E-25" />
-      <entry key="MS500" value="1.1037837281943118E-5" />
-      <entry key="S2" value="0.07280966574135864" />
-      <entry key="S5" value="0.6360654606040458" />
-      <entry key="S10" value="1.627595006273665" />
-      <entry key="S30" value="3.3677869008200996" />
-      <entry key="S60" value="4.0929777275782016" />
-      <entry key="M2" value="4.520941488700255" />
-      <entry key="M5" value="4.801891212805241" />
-      <entry key="M10" value="4.935190902745381" />
-      <entry key="M15" value="5.31203512605103" />
-      <entry key="M30" value="10.183930677151306" />
-      <entry key="H1" value="30.74175571659863" />
-      <entry key="H2" value="74.7111581588987" />
-      <entry key="H4" value="150.53448146570892" />
-      <entry key="D1" value="426.1223343597418" />
-      <entry key="W1" value="541.8549515860269" />
+      <entry key="MS100" value="0.01120277537512365" />
+      <entry key="MS500" value="0.40725378153510766" />
+      <entry key="S2" value="0.798851916449148" />
+      <entry key="S5" value="0.9140848532351" />
+      <entry key="S10" value="0.9560796852621484" />
+      <entry key="S30" value="1.0157404991520311" />
+      <entry key="S60" value="1.3420587865710971" />
+      <entry key="M2" value="2.178375973236381" />
+      <entry key="M5" value="3.456333737105828" />
+      <entry key="M10" value="4.222937584328448" />
+      <entry key="M15" value="4.765275109373519" />
+      <entry key="M30" value="7.3603363589492785" />
+      <entry key="H1" value="20.58975494614808" />
+      <entry key="H2" value="58.394398192559336" />
+      <entry key="H4" value="132.31521883356345" />
+      <entry key="D1" value="419.40430382183797" />
+      <entry key="W1" value="544.7010655087001" />
     </decayedShown>
   </component>
   <component name="ProblemsViewState">
@@ -185,6 +185,9 @@
   &quot;fromUser&quot;: false
 }</component>
   <component name="ProjectId" id="3IGyQQrnuWcy1GwkF4fjMp7t6VO" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
@@ -344,14 +347,6 @@
       <option name="presentableId" value="LOCAL-00001" />
       <option name="project" value="LOCAL" />
       <updated>1788873767067</updated>
-    </task>
-    <task id="LOCAL-00007" summary="refactor(Category): enhance documentation and comments across data source and model files">
-      <option name="closed" value="true" />
-      <created>1787822433164</created>
-      <option name="number" value="00007" />
-      <option name="presentableId" value="LOCAL-00007" />
-      <option name="project" value="LOCAL" />
-      <updated>1787822433164</updated>
     </task>
     <task id="LOCAL-00008" summary="feat(Category): add client sync metadata and update related DTOs and commands">
       <option name="closed" value="true" />
@@ -729,7 +724,15 @@
       <option name="project" value="LOCAL" />
       <updated>1789303720700</updated>
     </task>
-    <option name="localTasksCounter" value="55" />
+    <task id="LOCAL-00055" summary="feat: standardize user roles and update role assignments in the database">
+      <option name="closed" value="true" />
+      <created>1789304811750</created>
+      <option name="number" value="00055" />
+      <option name="presentableId" value="LOCAL-00055" />
+      <option name="project" value="LOCAL" />
+      <updated>1789304811750</updated>
+    </task>
+    <option name="localTasksCounter" value="56" />
     <option name="clearContext" value="false" />
     <option name="createChangelist" value="false" />
     <option name="createBranch" value="false" />
@@ -742,7 +745,6 @@
   <component name="UnityProjectConfiguration" hasMinimizedUI="false" />
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
-    <MESSAGE value="feat: add client modification metadata clearing in delete commands for Product, ProductUnit, Shop, and ProductPrice" />
     <MESSAGE value="feat: update user profile management to include username and language selection" />
     <MESSAGE value="feat: implement multiple account switching functionality in authentication" />
     <MESSAGE value="feat: add AppDrawer widget for improved navigation and user account management" />
@@ -767,6 +769,7 @@
     <MESSAGE value="feat: implement pagination support in CategoryController and enhance Category API for page retrieval" />
     <MESSAGE value="feat: remove deprecated flutterDev.db data source and update pagination logic in Category API" />
     <MESSAGE value="feat: add search functionality to categories and update filtering in repository" />
+    <MESSAGE value="feat: standardize user roles and update role assignments in the database" />
     <option name="LAST_COMMIT_MESSAGE" value="" />
   </component>
   <component name="XDebuggerManager">
