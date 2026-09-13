@@ -120,6 +120,10 @@ class ShopRepository {
   Future<void> delete(String id) async {
     final existing = await getRecord(id);
     if (existing == null) return;
+    final recordCount = await countLocalRecords(id);
+    if (recordCount > 0) {
+      throw ShopInUseException(recordCount);
+    }
     if (existing.pendingOperation == ShopPendingOperation.create) {
       await removeRecord(id);
       return;
@@ -186,6 +190,23 @@ class ShopRepository {
     final database = await _database.instance;
     final result = await database.rawQuery(
       "SELECT COUNT(*) AS count FROM $_table WHERE pending_operation != 'none'",
+    );
+    return Sqflite.firstIntValue(result) ?? 0;
+  }
+
+  Future<int> countLocalRecords(String shopId) async {
+    final database = await _database.instance;
+    final result = await database.rawQuery(
+      '''
+      SELECT
+        (SELECT COUNT(*) FROM categories
+          WHERE is_deleted = 0 AND shop_id = ?) +
+        (SELECT COUNT(*) FROM unit_of_measures
+          WHERE is_deleted = 0 AND shop_id = ?) +
+        (SELECT COUNT(*) FROM products
+          WHERE is_deleted = 0 AND shop_id = ?) AS count
+      ''',
+      [shopId, shopId, shopId],
     );
     return Sqflite.firstIntValue(result) ?? 0;
   }

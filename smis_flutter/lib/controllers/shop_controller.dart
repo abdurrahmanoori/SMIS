@@ -73,6 +73,7 @@ class ShopController extends AsyncNotifier<ShopScreenState> {
   Future<void> create(ShopDraft draft) async { await _repository.create(draft); await reload(); }
   Future<void> updateShop(String id, ShopDraft draft) async { await _repository.update(id, draft); await reload(); }
   Future<void> delete(String id) async { await _repository.delete(id); await reload(); }
+  Future<int> countLocalRecords(String id) => _repository.countLocalRecords(id);
 
   Future<ShopSyncResult> syncNow() async {
     final current = state.value ?? await _load();

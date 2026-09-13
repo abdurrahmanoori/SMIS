@@ -26,6 +26,14 @@ namespace SMIS.Application.Features.Shops.Commands
                 return Result<Unit>.NotFoundResult(request?.Id);
             }
 
+            var referenceCount = await _shopRepository.CountReferencesAsync(
+                entity.Id,
+                cancellationToken);
+            if (referenceCount > 0)
+                return Result<Unit>.FailureResult(
+                    "ShopInUse",
+                    $"Shop contains {referenceCount} related record(s). Remove or reassign them before deleting the shop.");
+
             entity.ClearClientModificationMetadata();
             await _shopRepository.RemoveAsync(entity);
             await _unitOfWork.SaveChanges(cancellationToken);

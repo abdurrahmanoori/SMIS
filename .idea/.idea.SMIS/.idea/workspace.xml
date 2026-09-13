@@ -348,14 +348,6 @@
       <option name="project" value="LOCAL" />
       <updated>1788873767067</updated>
     </task>
-    <task id="LOCAL-00010" summary="feat(Database): add custom database path setup for Windows and include new data source configurations">
-      <option name="closed" value="true" />
-      <created>1787997595467</created>
-      <option name="number" value="00010" />
-      <option name="presentableId" value="LOCAL-00010" />
-      <option name="project" value="LOCAL" />
-      <updated>1787997595467</updated>
-    </task>
     <task id="LOCAL-00011" summary="feat(Configuration): add devtools options and update database source configurations">
       <option name="closed" value="true" />
       <created>1788004263990</created>
@@ -732,7 +724,15 @@
       <option name="project" value="LOCAL" />
       <updated>1789305815306</updated>
     </task>
-    <option name="localTasksCounter" value="58" />
+    <task id="LOCAL-00058" summary="feat: implement product count check before category deletion and update related error handling">
+      <option name="closed" value="true" />
+      <created>1789307140438</created>
+      <option name="number" value="00058" />
+      <option name="presentableId" value="LOCAL-00058" />
+      <option name="project" value="LOCAL" />
+      <updated>1789307140438</updated>
+    </task>
+    <option name="localTasksCounter" value="59" />
     <option name="clearContext" value="false" />
     <option name="createChangelist" value="false" />
     <option name="createBranch" value="false" />
@@ -745,7 +745,6 @@
   <component name="UnityProjectConfiguration" hasMinimizedUI="false" />
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
-    <MESSAGE value="feat: add AppDrawer widget for improved navigation and user account management" />
     <MESSAGE value="feat: implement theme management with ThemeController and integrate into main app" />
     <MESSAGE value="feat: enhance error handling with AppErrorView and refactor error management in authentication and profile APIs" />
     <MESSAGE value="feat: add WebDeploy configurations for site48297 and site62669 in workspace settings" />
@@ -770,6 +769,7 @@
     <MESSAGE value="feat: standardize user roles and update role assignments in the database" />
     <MESSAGE value="feat: standardize user identities and update role assignments in seed data" />
     <MESSAGE value="feat: implement search functionality for products, shops, and units of measurement" />
+    <MESSAGE value="feat: implement product count check before category deletion and update related error handling" />
     <option name="LAST_COMMIT_MESSAGE" value="" />
   </component>
   <component name="XDebuggerManager">

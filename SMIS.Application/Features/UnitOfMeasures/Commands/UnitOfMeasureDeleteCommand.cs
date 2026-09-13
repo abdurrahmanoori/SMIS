@@ -26,6 +26,14 @@ namespace SMIS.Application.Features.UnitOfMeasures.Commands
                 return Result<Unit>.NotFoundResult(request.Id);
             }
 
+            var referenceCount = await _unitOfMeasureRepository.CountReferencesAsync(
+                entity.Id,
+                cancellationToken);
+            if (referenceCount > 0)
+                return Result<Unit>.FailureResult(
+                    "UnitOfMeasureInUse",
+                    $"Unit of measurement is used by {referenceCount} record(s). Reassign them before deleting the unit.");
+
             entity.ClearClientModificationMetadata();
             await _unitOfMeasureRepository.RemoveAsync(entity);
             await _unitOfWork.SaveChanges(cancellationToken);

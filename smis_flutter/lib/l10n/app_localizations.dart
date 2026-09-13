@@ -102,6 +102,8 @@ class AppLocalizations {
       'No category': 'بدون دسته‌بندی',
       'Current category unavailable ({id})':
           'دسته‌بندی فعلی در دسترس نیست ({id})',
+      'Current unit unavailable ({id})':
+          'واحد فعلی در دسترس نیست ({id})',
       'SKU': 'کُد کالا',
       'Barcode': 'بارکد',
       'Image URL': 'نشانی تصویر',
@@ -118,12 +120,20 @@ class AppLocalizations {
       'Delete offline': 'حذف آفلاین',
       'Delete category?': 'دسته‌بندی حذف شود؟',
       'Cannot delete category': 'دسته‌بندی حذف نمی‌شود',
+      'Cannot delete unit': 'واحد حذف نمی‌شود',
+      'Cannot delete shop': 'فروشگاه حذف نمی‌شود',
       'This category is used by {count} product. Reassign that product before deleting the category.':
           'این دسته‌بندی توسط {count} محصول استفاده می‌شود. پیش از حذف دسته‌بندی، محصول را به دسته دیگری انتقال دهید.',
       'This category is used by {count} products. Reassign those products before deleting the category.':
           'این دسته‌بندی توسط {count} محصول استفاده می‌شود. پیش از حذف دسته‌بندی، محصولات را به دسته دیگری انتقال دهید.',
       'Manage products': 'مدیریت محصولات',
       'Close': 'بستن',
+      'This unit is used by {count} product. Reassign that product before deleting the unit.':
+          'این واحد توسط {count} محصول استفاده می‌شود. پیش از حذف واحد، محصول را به واحد دیگری انتقال دهید.',
+      'This unit is used by {count} products. Reassign those products before deleting the unit.':
+          'این واحد توسط {count} محصول استفاده می‌شود. پیش از حذف واحد، محصولات را به واحد دیگری انتقال دهید.',
+      'This shop contains {count} local records. Remove or reassign them before deleting the shop.':
+          'این فروشگاه دارای {count} رکورد محلی است. پیش از حذف فروشگاه، آن‌ها را حذف یا انتقال دهید.',
       'Delete unit of measurement?': 'واحد اندازه‌گیری حذف شود؟',
       'Delete product?': 'محصول حذف شود؟',
       'Delete shop?': 'فروشگاه حذف شود؟',
@@ -322,6 +332,7 @@ class AppLocalizations {
       'No category': 'بې کټګورۍ',
       'Current category unavailable ({id})':
           'اوسنۍ کټګوري نشته ({id})',
+      'Current unit unavailable ({id})': 'اوسنی واحد نشته ({id})',
       'SKU': 'د توکي کوډ',
       'Barcode': 'بارکوډ',
       'Image URL': 'د انځور پته',
@@ -338,12 +349,20 @@ class AppLocalizations {
       'Delete offline': 'آفلاین ړنګول',
       'Delete category?': 'کټګوري ړنګه شي؟',
       'Cannot delete category': 'کټګوري نشي ړنګېدای',
+      'Cannot delete unit': 'واحد نشي ړنګېدای',
+      'Cannot delete shop': 'دوکان نشي ړنګېدای',
       'This category is used by {count} product. Reassign that product before deleting the category.':
           'دا کټګوري د {count} محصول لخوا کارول کېږي. د کټګورۍ له ړنګولو مخکې محصول بلې کټګورۍ ته واړوئ.',
       'This category is used by {count} products. Reassign those products before deleting the category.':
           'دا کټګوري د {count} محصولاتو لخوا کارول کېږي. د کټګورۍ له ړنګولو مخکې محصولات بلې کټګورۍ ته واړوئ.',
       'Manage products': 'محصولات مدیریت کړئ',
       'Close': 'بندول',
+      'This unit is used by {count} product. Reassign that product before deleting the unit.':
+          'دا واحد د {count} محصول لخوا کارول کېږي. د واحد له ړنګولو مخکې محصول بل واحد ته واړوئ.',
+      'This unit is used by {count} products. Reassign those products before deleting the unit.':
+          'دا واحد د {count} محصولاتو لخوا کارول کېږي. د واحد له ړنګولو مخکې محصولات بل واحد ته واړوئ.',
+      'This shop contains {count} local records. Remove or reassign them before deleting the shop.':
+          'دا دوکان {count} ځايي ریکارډونه لري. د دوکان له ړنګولو مخکې یې ړنګ یا بل ځای ته انتقال کړئ.',
       'Delete unit of measurement?': 'د اندازه کولو واحد ړنګ شي؟',
       'Delete product?': 'محصول ړنګ شي؟',
       'Delete shop?': 'دوکان ړنګ شي؟',

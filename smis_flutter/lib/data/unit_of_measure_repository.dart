@@ -33,6 +33,7 @@ class UnitOfMeasureRepository {
   }) async {
     try {
       final database = await _database.instance;
+      await _repairMissingShopIds(database, shopId);
 
       String where = 'is_deleted = 0 AND shop_id = ?';
       List<Object?> whereArgs = [shopId];
@@ -66,6 +67,7 @@ class UnitOfMeasureRepository {
   Future<int> getTotalCount(String shopId, {String? searchQuery}) async {
     try {
       final database = await _database.instance;
+      await _repairMissingShopIds(database, shopId);
 
       String where = 'is_deleted = 0 AND shop_id = ?';
       List<Object?> whereArgs = [shopId];
@@ -143,6 +145,10 @@ class UnitOfMeasureRepository {
   Future<void> delete(String id) async {
     final existing = await getRecord(id);
     if (existing == null) return;
+    final productCount = await countProductsUsingUnit(id);
+    if (productCount > 0) {
+      throw UnitOfMeasureInUseException(productCount);
+    }
     if (existing.pendingOperation == UnitOfMeasurePendingOperation.create) {
       await removeRecord(id);
       return;
@@ -192,6 +198,7 @@ class UnitOfMeasureRepository {
     required bool force,
   }) async {
     final database = await _database.instance;
+    await _repairMissingShopIds(database, shopId);
     final now = DateTime.now().toUtc().toIso8601String();
     final retryFilter = force
         ? ''
@@ -210,11 +217,30 @@ class UnitOfMeasureRepository {
 
   Future<int> getPendingCount(String shopId) async {
     final database = await _database.instance;
+    await _repairMissingShopIds(database, shopId);
     final result = await database.rawQuery(
       "SELECT COUNT(*) AS count FROM $_table WHERE pending_operation != 'none' AND shop_id = ?",
       [shopId],
     );
     return Sqflite.firstIntValue(result) ?? 0;
+  }
+
+  Future<int> countProductsUsingUnit(String unitId) async {
+    final database = await _database.instance;
+    final result = await database.rawQuery(
+      'SELECT COUNT(*) AS count FROM products '
+      'WHERE is_deleted = 0 AND base_unit_id = ?',
+      [unitId],
+    );
+    return Sqflite.firstIntValue(result) ?? 0;
+  }
+
+  Future<void> _repairMissingShopIds(Database database, String shopId) async {
+    await database.update(
+      _table,
+      {'shop_id': shopId},
+      where: "shop_id IS NULL OR TRIM(shop_id) = ''",
+    );
   }
 
   Future<DateTime> getPullCursor(String shopId) async {

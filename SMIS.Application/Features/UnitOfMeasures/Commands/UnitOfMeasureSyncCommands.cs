@@ -38,7 +38,31 @@ internal sealed class UnitOfMeasureSyncDeleteCommandHandler : IRequestHandler<Un
     private readonly IUnitOfMeasureRepository _repository; private readonly IUnitOfWork _unitOfWork; private readonly ICurrentUser _currentUser; private readonly IMapper _mapper;
     public UnitOfMeasureSyncDeleteCommandHandler(IUnitOfMeasureRepository repository, IUnitOfWork unitOfWork, ICurrentUser currentUser, IMapper mapper) => (_repository, _unitOfWork, _currentUser, _mapper) = (repository, unitOfWork, currentUser, mapper);
     public async Task<Result<UnitOfMeasureDto>> Handle(UnitOfMeasureSyncDeleteCommand request, CancellationToken cancellationToken)
-    { if (!UnitOfMeasureSyncRules.User(request.Dto.ClientModifiedBy, _currentUser)) return UnitOfMeasureSyncRules.InvalidUser(); var unit = await _repository.GetByIdIncludingDeletedAsync(UnitOfMeasureSyncRules.Id(request.Id), cancellationToken); if (unit is null) return Result<UnitOfMeasureDto>.NotFoundResult(request.Id); if (!UnitOfMeasureSyncRules.Access(unit, _currentUser)) return UnitOfMeasureSyncRules.Forbidden(); var modified = DateTimeService.NormalizeUtc(request.Dto.ClientModifiedDate); if (modified <= unit.GetConflictModifiedUtc()) return Result<UnitOfMeasureDto>.SuccessResult(_mapper.Map<UnitOfMeasureDto>(unit)); unit.SetClientModificationMetadata(modified, request.Dto.ClientModifiedBy); await _repository.RemoveAsync(unit); await _unitOfWork.SaveChanges(cancellationToken); return Result<UnitOfMeasureDto>.SuccessResult(_mapper.Map<UnitOfMeasureDto>(unit)); }
+    {
+        if (!UnitOfMeasureSyncRules.User(request.Dto.ClientModifiedBy, _currentUser))
+            return UnitOfMeasureSyncRules.InvalidUser();
+        var unit = await _repository.GetByIdIncludingDeletedAsync(
+            UnitOfMeasureSyncRules.Id(request.Id), cancellationToken);
+        if (unit is null) return Result<UnitOfMeasureDto>.NotFoundResult(request.Id);
+        if (!UnitOfMeasureSyncRules.Access(unit, _currentUser))
+            return UnitOfMeasureSyncRules.Forbidden();
+        var modified = DateTimeService.NormalizeUtc(request.Dto.ClientModifiedDate);
+        if (modified <= unit.GetConflictModifiedUtc())
+            return Result<UnitOfMeasureDto>.SuccessResult(_mapper.Map<UnitOfMeasureDto>(unit));
+
+        var referenceCount = await _repository.CountReferencesAsync(
+            unit.Id,
+            cancellationToken);
+        if (referenceCount > 0)
+            return Result<UnitOfMeasureDto>.FailureResult(
+                "UnitOfMeasureInUse",
+                $"Unit of measurement is used by {referenceCount} record(s). Reassign them before deleting the unit.");
+
+        unit.SetClientModificationMetadata(modified, request.Dto.ClientModifiedBy);
+        await _repository.RemoveAsync(unit);
+        await _unitOfWork.SaveChanges(cancellationToken);
+        return Result<UnitOfMeasureDto>.SuccessResult(_mapper.Map<UnitOfMeasureDto>(unit));
+    }
 }
 internal static class UnitOfMeasureSyncRules
 {

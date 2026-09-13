@@ -138,6 +138,14 @@ internal sealed class ShopSyncDeleteCommandHandler : IRequestHandler<ShopSyncDel
         if (clientModified <= shop.GetConflictModifiedUtc())
             return Result<ShopDto>.SuccessResult(_mapper.Map<ShopDto>(shop));
 
+        var referenceCount = await _repository.CountReferencesAsync(
+            shop.Id,
+            cancellationToken);
+        if (referenceCount > 0)
+            return Result<ShopDto>.FailureResult(
+                "ShopInUse",
+                $"Shop contains {referenceCount} related record(s). Remove or reassign them before deleting the shop.");
+
         shop.SetClientModificationMetadata(clientModified, request.Dto.ClientModifiedBy);
         await _repository.RemoveAsync(shop);
         await _unitOfWork.SaveChanges(cancellationToken);

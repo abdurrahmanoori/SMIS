@@ -291,7 +291,14 @@ class UnitOfMeasureSyncService {
         await _repository.saveRecord(_recordFromRemote(server, existing: local));
         return const _UnitPushOutcome(conflictResolved: true);
       }
-      await _api.delete(local);
+      try {
+        await _api.delete(local);
+      } on RemotePermanentException {
+        await _repository.saveRecord(
+          _recordFromRemote(server, existing: local),
+        );
+        rethrow;
+      }
       await _repository.removeRecord(local.id);
       return const _UnitPushOutcome(pushed: true);
     }
@@ -344,10 +351,15 @@ class UnitOfMeasureSyncService {
   }
 
   Future<void> _markFailure(UnitOfMeasureLocalRecord record, String message) async {
-    final retryCount = record.retryCount + 1;
+    final current = await _repository.getRecord(record.id);
+    if (current == null ||
+        current.pendingOperation == UnitOfMeasurePendingOperation.none) {
+      return;
+    }
+    final retryCount = current.retryCount + 1;
     final exponent = retryCount.clamp(1, 6).toInt();
     await _repository.saveRecord(
-      record.copyWith(
+      current.copyWith(
         syncStatus: UnitOfMeasureSyncStatus.failed,
         retryCount: retryCount,
         nextRetryAt: DateTime.now().toUtc().add(Duration(minutes: 1 << (exponent - 1))),

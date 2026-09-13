@@ -12,5 +12,9 @@ namespace SMIS.Application.Repositories.Products
         Task<int> CountByCategoryIdAsync(
             string categoryId,
             CancellationToken cancellationToken = default);
+
+        Task<int> CountReferencesAsync(
+            string id,
+            CancellationToken cancellationToken = default);
     }
 }

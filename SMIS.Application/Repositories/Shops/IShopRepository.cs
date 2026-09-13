@@ -6,5 +6,6 @@ namespace SMIS.Application.Repositories.Shops
 public interface IShopRepository : IGenericRepository<Shop>
 {
     Task<Shop?> GetByIdIncludingDeletedAsync(string id, CancellationToken cancellationToken = default);
+    Task<int> CountReferencesAsync(string id, CancellationToken cancellationToken = default);
 }
 }

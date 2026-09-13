@@ -40,6 +40,20 @@ class CategoryInUseException extends ValidationException {
   final int productCount;
 }
 
+class UnitOfMeasureInUseException extends ValidationException {
+  UnitOfMeasureInUseException(this.productCount)
+    : super('Unit of measurement is used by $productCount product(s).');
+
+  final int productCount;
+}
+
+class ShopInUseException extends ValidationException {
+  ShopInUseException(this.recordCount)
+    : super('Shop contains $recordCount local record(s).');
+
+  final int recordCount;
+}
+
 class ApiErrorParser {
   static Never mapAndThrow(Object error, StackTrace stackTrace, {String? fallbackMessage}) {
     if (error is AppException) {
@@ -132,14 +146,29 @@ class AppErrorNotification {
   static void show(BuildContext context, Object error, [StackTrace? stackTrace]) {
     final colors = Theme.of(context).colorScheme;
     final rawMessage = error is AppException ? error.message : error.toString();
-    final message = error is CategoryInUseException
-        ? context.l10n.text(
-            error.productCount == 1
-                ? 'This category is used by {count} product. Reassign that product before deleting the category.'
-                : 'This category is used by {count} products. Reassign those products before deleting the category.',
-            {'count': error.productCount},
-          )
-        : context.l10n.errorMessage(rawMessage);
+    late final String message;
+    if (error is CategoryInUseException) {
+      message = context.l10n.text(
+        error.productCount == 1
+            ? 'This category is used by {count} product. Reassign that product before deleting the category.'
+            : 'This category is used by {count} products. Reassign those products before deleting the category.',
+        {'count': error.productCount},
+      );
+    } else if (error is UnitOfMeasureInUseException) {
+      message = context.l10n.text(
+        error.productCount == 1
+            ? 'This unit is used by {count} product. Reassign that product before deleting the unit.'
+            : 'This unit is used by {count} products. Reassign those products before deleting the unit.',
+        {'count': error.productCount},
+      );
+    } else if (error is ShopInUseException) {
+      message = context.l10n.text(
+        'This shop contains {count} local records. Remove or reassign them before deleting the shop.',
+        {'count': error.recordCount},
+      );
+    } else {
+      message = context.l10n.errorMessage(rawMessage);
+    }
     
     final content = Column(
       mainAxisSize: MainAxisSize.min,

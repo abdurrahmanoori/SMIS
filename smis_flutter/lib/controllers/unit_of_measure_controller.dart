@@ -65,6 +65,7 @@ class UnitOfMeasureController extends AsyncNotifier<UnitOfMeasureScreenState> {
         searchQuery: previousQuery,
         lastSyncResult: previousSyncResult,
       ));
+      ref.invalidate(unitOfMeasureLookupProvider);
     } catch (error, stackTrace) {
       state = AsyncError(error, stackTrace);
     }
@@ -98,6 +99,9 @@ class UnitOfMeasureController extends AsyncNotifier<UnitOfMeasureScreenState> {
     await reload();
   }
 
+  Future<int> countProductsUsingUnit(String id) =>
+      _repository.countProductsUsingUnit(id);
+
   Future<UnitOfMeasureSyncResult> syncNow() async {
     final current = state.value ?? await _load();
     state = AsyncData(current.copyWith(isSyncing: true));
@@ -112,6 +116,7 @@ class UnitOfMeasureController extends AsyncNotifier<UnitOfMeasureScreenState> {
       searchQuery: current.searchQuery,
       lastSyncResult: result,
     ));
+    ref.invalidate(unitOfMeasureLookupProvider);
     return result;
   }
 
@@ -151,3 +156,10 @@ final unitOfMeasureControllerProvider =
     AsyncNotifierProvider<UnitOfMeasureController, UnitOfMeasureScreenState>(
       UnitOfMeasureController.new,
     );
+
+/// Complete local unit list for selectors, independent of screen searching.
+final unitOfMeasureLookupProvider = FutureProvider<List<UnitOfMeasure>>((ref) async {
+  final session = ref.watch(authControllerProvider.select((state) => state.session));
+  if (session == null) return const <UnitOfMeasure>[];
+  return ref.watch(unitOfMeasureRepositoryProvider).getAll(session.shopId);
+});

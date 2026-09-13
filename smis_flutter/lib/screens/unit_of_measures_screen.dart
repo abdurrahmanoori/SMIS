@@ -169,6 +169,39 @@ class _UnitOfMeasuresScreenState extends ConsumerState<UnitOfMeasuresScreen>
   }
 
   Future<void> _delete(UnitOfMeasure unit) async {
+    try {
+      final productCount = await ref
+          .read(unitOfMeasureControllerProvider.notifier)
+          .countProductsUsingUnit(unit.id);
+      if (!mounted) return;
+      if (productCount > 0) {
+        await showDialog<void>(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: Text(context.l10n.text('Cannot delete unit')),
+            content: Text(
+              context.l10n.text(
+                productCount == 1
+                    ? 'This unit is used by {count} product. Reassign that product before deleting the unit.'
+                    : 'This unit is used by {count} products. Reassign those products before deleting the unit.',
+                {'count': productCount},
+              ),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: Text(context.l10n.text('Close')),
+              ),
+            ],
+          ),
+        );
+        return;
+      }
+    } catch (error, stackTrace) {
+      if (mounted) AppErrorNotification.show(context, error, stackTrace);
+      return;
+    }
+
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(

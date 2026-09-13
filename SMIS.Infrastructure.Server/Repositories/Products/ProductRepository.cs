@@ -29,5 +29,27 @@ namespace SMIS.Infrastructure.Server.Repositories.Products
                 product => product.CategoryId == categoryId,
                 cancellationToken);
         }
+
+        public async Task<int> CountReferencesAsync(
+            string id,
+            CancellationToken cancellationToken = default)
+        {
+            var count = await _context.ProductUnits.CountAsync(
+                productUnit => productUnit.ProductId == id,
+                cancellationToken);
+            count += await _context.ProductPrices.CountAsync(
+                price => price.ProductId == id,
+                cancellationToken);
+            count += await _context.StockBatches.CountAsync(
+                batch => batch.ProductId == id,
+                cancellationToken);
+            count += await _context.StockTransactions.CountAsync(
+                transaction => transaction.ProductId == id,
+                cancellationToken);
+            count += await _context.LoanAccounts.CountAsync(
+                loan => loan.ProductId == id,
+                cancellationToken);
+            return count;
+        }
     }
 }

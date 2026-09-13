@@ -26,6 +26,14 @@ namespace SMIS.Application.Features.Products.Commands
                 return Result<Unit>.NotFoundResult(request?.Id);
             }
 
+            var referenceCount = await _productRepository.CountReferencesAsync(
+                entity.Id,
+                cancellationToken);
+            if (referenceCount > 0)
+                return Result<Unit>.FailureResult(
+                    "ProductInUse",
+                    $"Product is used by {referenceCount} record(s). Remove those references before deleting the product.");
+
             entity.ClearClientModificationMetadata();
             await _productRepository.RemoveAsync(entity);
             await _unitOfWork.SaveChanges(cancellationToken);

@@ -95,7 +95,67 @@ class _ShopsScreenState extends ConsumerState<ShopsScreen> with WidgetsBindingOb
   }
   Future<void> _create() async { final draft = await showDialog<ShopDraft>(context: context, builder: (context) => const ShopFormDialog()); if (draft != null) await _runMutation(() => ref.read(shopControllerProvider.notifier).create(draft), context.l10n.text('Shop saved locally.')); }
   Future<void> _edit(Shop shop) async { final draft = await showDialog<ShopDraft>(context: context, builder: (context) => ShopFormDialog(shop: shop)); if (draft != null) await _runMutation(() => ref.read(shopControllerProvider.notifier).updateShop(shop.id, draft), context.l10n.text('Shop updated locally.')); }
-  Future<void> _delete(Shop shop) async { final confirmed = await showDialog<bool>(context: context, builder: (context) => AlertDialog(title: Text(context.l10n.text('Delete shop?')), content: Text(context.l10n.text('“{name}” will disappear now and its deletion will sync later.', {'name': shop.name})), actions: [TextButton(onPressed: () => Navigator.pop(context, false), child: Text(context.l10n.text('Cancel'))), FilledButton.tonal(onPressed: () => Navigator.pop(context, true), child: Text(context.l10n.text('Delete offline')))])); if (confirmed == true) await _runMutation(() => ref.read(shopControllerProvider.notifier).delete(shop.id), context.l10n.text('Shop deleted locally.')); }
+  Future<void> _delete(Shop shop) async {
+    try {
+      final recordCount = await ref
+          .read(shopControllerProvider.notifier)
+          .countLocalRecords(shop.id);
+      if (!mounted) return;
+      if (recordCount > 0) {
+        await showDialog<void>(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: Text(context.l10n.text('Cannot delete shop')),
+            content: Text(
+              context.l10n.text(
+                'This shop contains {count} local records. Remove or reassign them before deleting the shop.',
+                {'count': recordCount},
+              ),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: Text(context.l10n.text('Close')),
+              ),
+            ],
+          ),
+        );
+        return;
+      }
+    } catch (error, stackTrace) {
+      if (mounted) AppErrorNotification.show(context, error, stackTrace);
+      return;
+    }
+
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(context.l10n.text('Delete shop?')),
+        content: Text(
+          context.l10n.text(
+            '“{name}” will disappear now and its deletion will sync later.',
+            {'name': shop.name},
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: Text(context.l10n.text('Cancel')),
+          ),
+          FilledButton.tonal(
+            onPressed: () => Navigator.pop(context, true),
+            child: Text(context.l10n.text('Delete offline')),
+          ),
+        ],
+      ),
+    );
+    if (confirmed == true) {
+      await _runMutation(
+        () => ref.read(shopControllerProvider.notifier).delete(shop.id),
+        context.l10n.text('Shop deleted locally.'),
+      );
+    }
+  }
   Future<void> _sync() async { try { final result = await ref.read(shopControllerProvider.notifier).syncNow(); if (!mounted || !result.success) return; ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(context.l10n.syncMessage(result.message)), backgroundColor: Theme.of(context).colorScheme.primary)); } catch (error, stackTrace) { if (!mounted) return; AppErrorNotification.show(context, error, stackTrace); await ref.read(shopControllerProvider.notifier).reload(); } }
   Future<void> _runMutation(Future<void> Function() action, String message) async { try { await action(); if (mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message))); } catch (error, stackTrace) { if (mounted) AppErrorNotification.show(context, error, stackTrace); } }
 }

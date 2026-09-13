@@ -289,18 +289,27 @@ class ShopSyncService {
         await _repository.saveRecord(_recordFromRemote(server, existing: local));
         return const _ShopPushOutcome(conflictResolved: true);
       }
-      final deleted = await _api.delete(local);
-      if (deleted == null || deleted.isDeleted) {
-        await _repository.removeRecord(local.id);
-        return _ShopPushOutcome(
-          pushed: deleted == null ||
-              !deleted.conflictModifiedUtc.isAfter(local.lastModifiedUtc),
-          conflictResolved: deleted != null &&
-              deleted.conflictModifiedUtc.isAfter(local.lastModifiedUtc),
+      try {
+        final deleted = await _api.delete(local);
+        if (deleted == null || deleted.isDeleted) {
+          await _repository.removeRecord(local.id);
+          return _ShopPushOutcome(
+            pushed: deleted == null ||
+                !deleted.conflictModifiedUtc.isAfter(local.lastModifiedUtc),
+            conflictResolved: deleted != null &&
+                deleted.conflictModifiedUtc.isAfter(local.lastModifiedUtc),
+          );
+        }
+        await _repository.saveRecord(
+          _recordFromRemote(deleted, existing: local),
         );
+        return const _ShopPushOutcome(conflictResolved: true);
+      } on RemotePermanentException {
+        await _repository.saveRecord(
+          _recordFromRemote(server, existing: local),
+        );
+        rethrow;
       }
-      await _repository.saveRecord(_recordFromRemote(deleted, existing: local));
-      return const _ShopPushOutcome(conflictResolved: true);
     }
 
     if (server == null) {
@@ -377,10 +386,15 @@ class ShopSyncService {
   }
 
   Future<void> _markFailure(ShopLocalRecord record, String message) async {
-    final retryCount = record.retryCount + 1;
+    final current = await _repository.getRecord(record.id);
+    if (current == null ||
+        current.pendingOperation == ShopPendingOperation.none) {
+      return;
+    }
+    final retryCount = current.retryCount + 1;
     final exponent = retryCount.clamp(1, 6).toInt();
     await _repository.saveRecord(
-      record.copyWith(
+      current.copyWith(
         syncStatus: ShopSyncStatus.failed,
         retryCount: retryCount,
         nextRetryAt: DateTime.now().toUtc().add(

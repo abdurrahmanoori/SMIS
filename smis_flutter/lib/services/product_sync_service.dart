@@ -203,13 +203,22 @@ class ProductSyncService {
         await _repository.saveRecord(_recordFromRemote(server, existing: local));
         return const _PushOutcome(conflictResolved: true);
       }
-      final deleted = await _api.delete(local);
-      if (deleted == null || deleted.isDeleted) {
-        await _repository.removeRecord(local.id);
-        return const _PushOutcome(pushed: true);
+      try {
+        final deleted = await _api.delete(local);
+        if (deleted == null || deleted.isDeleted) {
+          await _repository.removeRecord(local.id);
+          return const _PushOutcome(pushed: true);
+        }
+        await _repository.saveRecord(
+          _recordFromRemote(deleted, existing: local),
+        );
+        return const _PushOutcome(conflictResolved: true);
+      } on RemotePermanentException {
+        await _repository.saveRecord(
+          _recordFromRemote(server, existing: local),
+        );
+        rethrow;
       }
-      await _repository.saveRecord(_recordFromRemote(deleted, existing: local));
-      return const _PushOutcome(conflictResolved: true);
     }
     if (server == null) {
       final created = await _api.create(local);
@@ -262,9 +271,14 @@ class ProductSyncService {
   }
 
   Future<void> _markFailure(ProductLocalRecord record, String message) async {
-    final retryCount = record.retryCount + 1;
+    final current = await _repository.getRecord(record.id);
+    if (current == null ||
+        current.pendingOperation == ProductPendingOperation.none) {
+      return;
+    }
+    final retryCount = current.retryCount + 1;
     final exponent = retryCount.clamp(1, 6).toInt();
-    await _repository.saveRecord(record.copyWith(
+    await _repository.saveRecord(current.copyWith(
       syncStatus: ProductSyncStatus.failed,
       retryCount: retryCount,
       nextRetryAt: DateTime.now().toUtc().add(Duration(minutes: 1 << (exponent - 1))),

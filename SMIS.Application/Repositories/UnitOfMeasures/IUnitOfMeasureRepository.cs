@@ -6,5 +6,6 @@ namespace SMIS.Application.Repositories.UnitOfMeasures
     public interface IUnitOfMeasureRepository : IGenericRepository<UnitOfMeasure>
     {
         Task<UnitOfMeasure?> GetByIdIncludingDeletedAsync(string id, CancellationToken cancellationToken = default);
+        Task<int> CountReferencesAsync(string id, CancellationToken cancellationToken = default);
     }
 }

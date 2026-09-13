@@ -308,7 +308,14 @@ class CategorySyncService {
         );
         return const _PushOutcome(conflictResolved: true);
       }
-      await _api.delete(localRecord);
+      try {
+        await _api.delete(localRecord);
+      } on RemotePermanentException {
+        await _repository.saveRecord(
+          _recordFromRemote(server, existing: localRecord),
+        );
+        rethrow;
+      }
       await _repository.removeRecord(localRecord.id);
       return const _PushOutcome(pushed: true);
     }
@@ -375,11 +382,16 @@ class CategorySyncService {
   }
 
   Future<void> _markFailure(CategoryLocalRecord record, String message) async {
-    final retryCount = record.retryCount + 1;
+    final current = await _repository.getRecord(record.id);
+    if (current == null ||
+        current.pendingOperation == CategoryPendingOperation.none) {
+      return;
+    }
+    final retryCount = current.retryCount + 1;
     final exponent = retryCount.clamp(1, 6);
     final delay = Duration(minutes: 1 << (exponent - 1));
     await _repository.saveRecord(
-      record.copyWith(
+      current.copyWith(
         syncStatus: CategorySyncStatus.failed,
         retryCount: retryCount,
         nextRetryAt: DateTime.now().toUtc().add(delay),

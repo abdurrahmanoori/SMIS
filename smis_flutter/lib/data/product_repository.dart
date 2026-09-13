@@ -29,6 +29,7 @@ class ProductRepository {
   }) async {
     try {
       final database = await _database.instance;
+      await _repairMissingShopIds(database, shopId);
 
       String where = 'is_deleted = 0 AND shop_id = ?';
       List<Object?> whereArgs = [shopId];
@@ -62,6 +63,7 @@ class ProductRepository {
   Future<int> getTotalCount(String shopId, {String? searchQuery}) async {
     try {
       final database = await _database.instance;
+      await _repairMissingShopIds(database, shopId);
 
       String where = 'is_deleted = 0 AND shop_id = ?';
       List<Object?> whereArgs = [shopId];
@@ -183,6 +185,7 @@ class ProductRepository {
 
   Future<List<ProductLocalRecord>> getPendingRecords({required String shopId, required bool force}) async {
     final database = await _database.instance;
+    await _repairMissingShopIds(database, shopId);
     final now = DateTime.now().toUtc().toIso8601String();
     final retryFilter = force ? '' : ' AND retry_count < 5 AND (next_retry_at IS NULL OR next_retry_at <= ?)';
     final rows = await database.query(
@@ -196,11 +199,20 @@ class ProductRepository {
 
   Future<int> getPendingCount(String shopId) async {
     final database = await _database.instance;
+    await _repairMissingShopIds(database, shopId);
     final rows = await database.rawQuery(
         "SELECT COUNT(*) AS count FROM $_table WHERE pending_operation != 'none' AND shop_id = ?",
         [shopId],
     );
     return Sqflite.firstIntValue(rows) ?? 0;
+  }
+
+  Future<void> _repairMissingShopIds(Database database, String shopId) async {
+    await database.update(
+      _table,
+      {'shop_id': shopId},
+      where: "shop_id IS NULL OR TRIM(shop_id) = ''",
+    );
   }
 
   Future<DateTime> getPullCursor(String shopId) async {

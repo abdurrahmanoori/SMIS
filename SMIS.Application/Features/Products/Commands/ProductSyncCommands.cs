@@ -132,6 +132,13 @@ internal sealed class ProductSyncDeleteCommandHandler : IRequestHandler<ProductS
         var modified = DateTimeService.NormalizeUtc(request.Dto.ClientModifiedDate);
         if (modified <= product.GetConflictModifiedUtc())
             return Result<ProductDto>.SuccessResult(_mapper.Map<ProductDto>(product));
+        var referenceCount = await _repository.CountReferencesAsync(
+            product.Id,
+            cancellationToken);
+        if (referenceCount > 0)
+            return Result<ProductDto>.FailureResult(
+                "ProductInUse",
+                $"Product is used by {referenceCount} record(s). Remove those references before deleting the product.");
         product.SetClientModificationMetadata(modified, request.Dto.ClientModifiedBy);
         await _repository.RemoveAsync(product);
         await _unitOfWork.SaveChanges(cancellationToken);

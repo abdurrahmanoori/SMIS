@@ -14,5 +14,27 @@ namespace SMIS.Infrastructure.Server.Repositories.UnitOfMeasures
 
         public Task<UnitOfMeasure?> GetByIdIncludingDeletedAsync(string id, CancellationToken cancellationToken = default) =>
             _context.UnitOfMeasures.IgnoreQueryFilters().FirstOrDefaultAsync(unit => unit.Id == id, cancellationToken);
+
+        public async Task<int> CountReferencesAsync(
+            string id,
+            CancellationToken cancellationToken = default)
+        {
+            var count = await _context.Products.CountAsync(
+                product => product.BaseUnitId == id,
+                cancellationToken);
+            count += await _context.ProductUnits.CountAsync(
+                productUnit => productUnit.UnitOfMeasureId == id,
+                cancellationToken);
+            count += await _context.StockBatches.CountAsync(
+                batch => batch.UnitId == id,
+                cancellationToken);
+            count += await _context.StockTransactions.CountAsync(
+                transaction => transaction.UnitId == id,
+                cancellationToken);
+            count += await _context.LoanAccounts.CountAsync(
+                loan => loan.UnitId == id,
+                cancellationToken);
+            return count;
+        }
     }
 }

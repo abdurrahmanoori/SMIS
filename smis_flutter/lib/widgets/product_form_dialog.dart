@@ -39,12 +39,11 @@ class _ProductFormDialogState extends State<ProductFormDialog> {
     _description = TextEditingController(text: widget.product?.description);
     _barcode = TextEditingController(text: widget.product?.barcode);
     _imageUrl = TextEditingController(text: widget.product?.imageUrl);
-    _baseUnitId = _availableUnit(widget.product?.baseUnitId);
+    _baseUnitId = widget.product?.baseUnitId;
     _categoryId = widget.product?.categoryId;
     _isActive = widget.product?.isActive ?? true;
   }
 
-  String? _availableUnit(String? id) => widget.units.any((unit) => unit.id == id) ? id : null;
   @override
   void dispose() {
     _name.dispose(); _sku.dispose(); _description.dispose(); _barcode.dispose(); _imageUrl.dispose();
@@ -70,7 +69,25 @@ class _ProductFormDialogState extends State<ProductFormDialog> {
               value: _baseUnitId,
               isExpanded: true,
               decoration: InputDecoration(labelText: context.l10n.text('Base unit *')),
-              items: widget.units.map((unit) => DropdownMenuItem(value: unit.id, child: Text('${unit.name} (${unit.symbol})'))).toList(growable: false),
+              items: [
+                ...widget.units.map(
+                  (unit) => DropdownMenuItem(
+                    value: unit.id,
+                    child: Text('${unit.name} (${unit.symbol})'),
+                  ),
+                ),
+                if (_baseUnitId != null &&
+                    !widget.units.any((unit) => unit.id == _baseUnitId))
+                  DropdownMenuItem(
+                    value: _baseUnitId,
+                    child: Text(
+                      context.l10n.text(
+                        'Current unit unavailable ({id})',
+                        {'id': _baseUnitId!},
+                      ),
+                    ),
+                  ),
+              ],
               onChanged: (value) => setState(() => _baseUnitId = value),
               validator: (value) => value == null ? context.l10n.text('Select a base unit.') : null,
             ),
