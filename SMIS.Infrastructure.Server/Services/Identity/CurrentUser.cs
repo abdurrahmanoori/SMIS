@@ -10,7 +10,9 @@ public class CurrentUser : ICurrentUser
 {
     private readonly IHttpContextAccessor _httpContextAccessor;
 
-    public CurrentUser(IHttpContextAccessor httpContextAccessor)
+    public CurrentUser(
+        IHttpContextAccessor httpContextAccessor
+    )
     {
         _httpContextAccessor = httpContextAccessor;
     }
@@ -36,13 +38,13 @@ public class CurrentUser : ICurrentUser
     public bool IsRetailAdmin()
     {
         var user = _httpContextAccessor.HttpContext?.User;
-        return user?.IsInRole(SD.Role_RShop_Admin) ?? false;
+        return user?.IsInRole(SD.Role_Admin) ?? false;
     }
 
     public bool IsWholesaleAdmin()
     {
         var user = _httpContextAccessor.HttpContext?.User;
-        return user?.IsInRole(SD.Role_WShop_Admin) ?? false;
+        return user?.IsInRole(SD.Role_Admin) ?? false;
     }
 
     public bool IsSuperAdmin()
