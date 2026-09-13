@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -25,6 +26,10 @@ class CategoriesScreen extends ConsumerStatefulWidget {
 
 class _CategoriesScreenState extends ConsumerState<CategoriesScreen>
     with WidgetsBindingObserver {
+  final _searchController = TextEditingController();
+  bool _isSearching = false;
+  Timer? _searchDebounce;
+
   @override
   void initState() {
     super.initState();
@@ -33,8 +38,25 @@ class _CategoriesScreenState extends ConsumerState<CategoriesScreen>
 
   @override
   void dispose() {
+    _searchController.dispose();
+    _searchDebounce?.cancel();
     WidgetsBinding.instance.removeObserver(this);
     super.dispose();
+  }
+
+  void _onSearchChanged(String query) {
+    _searchDebounce?.cancel();
+    _searchDebounce = Timer(const Duration(milliseconds: 500), () {
+      ref.read(categoryControllerProvider.notifier).search(query);
+    });
+  }
+
+  void _stopSearching() {
+    setState(() {
+      _isSearching = false;
+      _searchController.clear();
+    });
+    ref.read(categoryControllerProvider.notifier).search('');
   }
 
   @override
@@ -51,17 +73,37 @@ class _CategoriesScreenState extends ConsumerState<CategoriesScreen>
 
     return Scaffold(
       appBar: AppBar(
-        title: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(context.l10n.text('Categories')),
-            Text(
-              context.l10n.text('Local-first inventory setup'),
-              style: const TextStyle(fontSize: 12, fontWeight: FontWeight.normal),
-            ),
-          ],
-        ),
+        title: _isSearching
+            ? TextField(
+                controller: _searchController,
+                autofocus: true,
+                decoration: InputDecoration(
+                  hintText: context.l10n.text('Search categories...'),
+                  border: InputBorder.none,
+                ),
+                onChanged: _onSearchChanged,
+              )
+            : Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(context.l10n.text('Categories')),
+                  Text(
+                    context.l10n.text('Local-first inventory setup'),
+                    style: const TextStyle(fontSize: 12, fontWeight: FontWeight.normal),
+                  ),
+                ],
+              ),
         actions: [
+          if (_isSearching)
+            IconButton(
+              icon: const Icon(Icons.close),
+              onPressed: _stopSearching,
+            )
+          else
+            IconButton(
+              icon: const Icon(Icons.search),
+              onPressed: () => setState(() => _isSearching = true),
+            ),
           categories.maybeWhen(
             data: (value) => _SyncButton(
               state: value,
@@ -245,7 +287,7 @@ class _CategoryContent extends StatelessWidget {
       if (state.lastSyncResult case final result?) _SyncSummary(result: result),
       Expanded(
         child: state.categories.isEmpty
-            ? const _EmptyView()
+            ? _EmptyView(isSearch: state.searchQuery.isNotEmpty)
             : ListView.separated(
                 padding: const EdgeInsets.fromLTRB(16, 16, 16, 100),
                 itemCount: state.categories.length,
@@ -450,7 +492,9 @@ class _SyncStateIcon extends StatelessWidget {
 }
 
 class _EmptyView extends StatelessWidget {
-  const _EmptyView();
+  const _EmptyView({this.isSearch = false});
+
+  final bool isSearch;
 
   @override
   Widget build(BuildContext context) => Center(
@@ -459,11 +503,11 @@ class _EmptyView extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const Icon(Icons.category_outlined, size: 56),
+          Icon(isSearch ? Icons.search_off : Icons.category_outlined, size: 56),
           const SizedBox(height: 12),
-          Text(context.l10n.text('No categories yet')),
+          Text(context.l10n.text(isSearch ? 'No matching categories' : 'No categories yet')),
           const SizedBox(height: 4),
-          Text(context.l10n.text('Add one now—even while completely offline.')),
+          Text(context.l10n.text(isSearch ? 'Try a different search term.' : 'Add one now—even while completely offline.')),
         ],
       ),
     ),

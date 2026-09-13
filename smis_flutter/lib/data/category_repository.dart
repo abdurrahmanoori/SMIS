@@ -22,13 +22,28 @@ class CategoryRepository {
   final UtcNow _utcNow;
   final IdGenerator _idGenerator;
 
-  Future<List<Category>> getAll(String shopId, {int? limit, int? offset}) async {
+  Future<List<Category>> getAll(
+    String shopId, {
+    String? searchQuery,
+    int? limit,
+    int? offset,
+  }) async {
     try {
       final database = await _database.instance;
+      
+      String where = 'is_deleted = 0 AND shop_id = ?';
+      List<Object?> whereArgs = [shopId];
+
+      if (searchQuery != null && searchQuery.trim().isNotEmpty) {
+        final query = '%${searchQuery.trim()}%';
+        where += ' AND (name LIKE ? OR code LIKE ? OR description LIKE ?)';
+        whereArgs.addAll([query, query, query]);
+      }
+
       final rows = await database.query(
         _categoryTable,
-        where: 'is_deleted = 0 AND shop_id = ?',
-        whereArgs: [shopId],
+        where: where,
+        whereArgs: whereArgs,
         orderBy: 'name COLLATE NOCASE ASC',
         limit: limit,
         offset: offset,
@@ -45,12 +60,22 @@ class CategoryRepository {
     }
   }
 
-  Future<int> getTotalCount(String shopId) async {
+  Future<int> getTotalCount(String shopId, {String? searchQuery}) async {
     try {
       final database = await _database.instance;
+      
+      String where = 'is_deleted = 0 AND shop_id = ?';
+      List<Object?> whereArgs = [shopId];
+
+      if (searchQuery != null && searchQuery.trim().isNotEmpty) {
+        final query = '%${searchQuery.trim()}%';
+        where += ' AND (name LIKE ? OR code LIKE ? OR description LIKE ?)';
+        whereArgs.addAll([query, query, query]);
+      }
+
       final result = await database.rawQuery(
-        "SELECT COUNT(*) AS count FROM $_categoryTable WHERE is_deleted = 0 AND shop_id = ?",
-        [shopId],
+        "SELECT COUNT(*) AS count FROM $_categoryTable WHERE $where",
+        whereArgs,
       );
       return Sqflite.firstIntValue(result) ?? 0;
     } catch (error) {

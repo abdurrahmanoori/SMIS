@@ -15,6 +15,7 @@ class CategoryScreenState {
   const CategoryScreenState({
     required this.categories,
     required this.pendingCount,
+    this.searchQuery = '',
     this.pageNumber = 1,
     this.pageSize = 25,
     this.totalCount = 0,
@@ -26,6 +27,7 @@ class CategoryScreenState {
 
   final List<Category> categories;
   final int pendingCount;
+  final String searchQuery;
   final int pageNumber;
   final int pageSize;
   final int totalCount;
@@ -39,6 +41,7 @@ class CategoryScreenState {
   CategoryScreenState copyWith({
     List<Category>? categories,
     int? pendingCount,
+    String? searchQuery,
     int? pageNumber,
     int? pageSize,
     int? totalCount,
@@ -49,6 +52,7 @@ class CategoryScreenState {
   }) => CategoryScreenState(
     categories: categories ?? this.categories,
     pendingCount: pendingCount ?? this.pendingCount,
+    searchQuery: searchQuery ?? this.searchQuery,
     pageNumber: pageNumber ?? this.pageNumber,
     pageSize: pageSize ?? this.pageSize,
     totalCount: totalCount ?? this.totalCount,
@@ -82,7 +86,25 @@ class CategoryController extends AsyncNotifier<CategoryScreenState> {
   Future<void> reload() async {
     final previous = state.value;
     try {
-      final loaded = await _load(lastSyncResult: previous?.lastSyncResult);
+      final loaded = await _load(
+        searchQuery: previous?.searchQuery,
+        lastSyncResult: previous?.lastSyncResult,
+      );
+      state = AsyncData(loaded);
+    } catch (error, stackTrace) {
+      state = AsyncError(error, stackTrace);
+    }
+  }
+
+  Future<void> search(String query) async {
+    final previous = state.value;
+    if (previous?.searchQuery == query) return;
+    
+    // Defer the search slightly to avoid excessive rebuilding
+    state = AsyncData(previous?.copyWith(searchQuery: query, isLoadingMore: true) ?? CategoryScreenState(categories: [], pendingCount: 0, searchQuery: query, isLoadingMore: true));
+    
+    try {
+      final loaded = await _load(searchQuery: query);
       state = AsyncData(loaded);
     } catch (error, stackTrace) {
       state = AsyncError(error, stackTrace);
@@ -114,7 +136,10 @@ class CategoryController extends AsyncNotifier<CategoryScreenState> {
       debugPrint(result.messageFor(includeDiagnostics: true));
     }
 
-    state = AsyncData(await _load(lastSyncResult: result));
+    state = AsyncData(await _load(
+      searchQuery: current.searchQuery,
+      lastSyncResult: result,
+    ));
     return result;
   }
 
@@ -130,6 +155,7 @@ class CategoryController extends AsyncNotifier<CategoryScreenState> {
       final loaded = await _readLocal(
         pageNumber: nextPage,
         pageSize: current.pageSize,
+        searchQuery: current.searchQuery,
         lastSyncResult: current.lastSyncResult,
       );
       
@@ -148,12 +174,14 @@ class CategoryController extends AsyncNotifier<CategoryScreenState> {
   }
 
   Future<CategoryScreenState> _load({
+    String? searchQuery,
     CategorySyncResult? lastSyncResult,
     bool isSyncing = false,
   }) async {
     return _readLocal(
       pageNumber: 1,
       pageSize: _pageSize,
+      searchQuery: searchQuery,
       lastSyncResult: lastSyncResult,
       isSyncing: isSyncing,
     );
@@ -162,13 +190,15 @@ class CategoryController extends AsyncNotifier<CategoryScreenState> {
   Future<CategoryScreenState> _readLocal({
     required int pageNumber,
     required int pageSize,
+    String? searchQuery,
     CategorySyncResult? lastSyncResult,
     bool isSyncing = false,
   }) async {
     final shopId = _shopId;
-    final totalCount = await _repository.getTotalCount(shopId);
+    final totalCount = await _repository.getTotalCount(shopId, searchQuery: searchQuery);
     final categories = await _repository.getAll(
       shopId,
+      searchQuery: searchQuery,
       limit: pageSize,
       offset: (pageNumber - 1) * pageSize,
     );
@@ -176,6 +206,7 @@ class CategoryController extends AsyncNotifier<CategoryScreenState> {
     return CategoryScreenState(
       categories: categories,
       pendingCount: await _repository.getPendingCount(shopId),
+      searchQuery: searchQuery ?? '',
       pageNumber: pageNumber,
       pageSize: pageSize,
       totalCount: totalCount,
