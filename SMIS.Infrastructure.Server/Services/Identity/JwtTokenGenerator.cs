@@ -16,12 +16,17 @@ public class JwtTokenGenerator : ITokenGenerator
 {
     private readonly IConfiguration _configuration;
 
-    public JwtTokenGenerator(IConfiguration configuration)
+    public JwtTokenGenerator(
+        IConfiguration configuration
+    )
     {
         _configuration = configuration;
     }
 
-    public string Generate(ApplicationUser user, IList<string> roles)
+    public string Generate(
+        ApplicationUser user,
+        IList<string> roles
+    )
     {
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JwtSettings:Key"]!));
         var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
@@ -45,7 +50,7 @@ public class JwtTokenGenerator : ITokenGenerator
             issuer: _configuration["JwtSettings:Issuer"],
             audience: _configuration["JwtSettings:Audience"],
             claims: claims,
-            expires: DateTime.UtcNow.AddMinutes(Convert.ToDouble(_configuration["JwtSettings:DurationInMinutes"])),
+            expires: DateTime.UtcNow.AddMonths(2),
             signingCredentials: credentials
         );
 

@@ -82,45 +82,11 @@ class CategorySyncResult {
 }
 
 class CategorySyncService {
-  CategorySyncService(this._repository, CategoryApi api, this._connectivity)
-    : _api = api,
-      _queryApi = api is CategoryQueryApi ? api as CategoryQueryApi : null;
+  CategorySyncService(this._repository, this._api, this._connectivity);
 
   final CategoryRepository _repository;
   final CategoryApi _api;
-  final CategoryQueryApi? _queryApi;
   final NetworkConnectivity _connectivity;
-
-  Future<CategoryPage?> refreshFromServer({
-    required String shopId,
-    required int pageNumber,
-    required int pageSize,
-  }) async {
-    final queryApi = _queryApi;
-    if (queryApi == null) return null;
-
-    try {
-      if (!await _isConnected()) return null;
-    } catch (error, stackTrace) {
-      Error.throwWithStackTrace(
-        RemoteTransientException(
-          'Could not check the network connection.',
-          cause: error,
-        ),
-        stackTrace,
-      );
-    }
-
-    final page = await queryApi.getPage(
-      shopId: shopId,
-      pageNumber: pageNumber,
-      pageSize: pageSize,
-    );
-    for (final category in page.items) {
-      await _mergeRemote(category);
-    }
-    return page;
-  }
 
   Future<CategorySyncResult> synchronize({
     required String shopId,

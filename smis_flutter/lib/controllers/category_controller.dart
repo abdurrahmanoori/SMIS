@@ -126,34 +126,22 @@ class CategoryController extends AsyncNotifier<CategoryScreenState> {
 
     state = AsyncData(current.copyWith(isLoadingMore: true));
     try {
-      final page = await _syncService.refreshFromServer(
-        shopId: _shopId,
-        pageNumber: current.pageNumber + 1,
+      final nextPage = current.pageNumber + 1;
+      final loaded = await _readLocal(
+        pageNumber: nextPage,
         pageSize: current.pageSize,
+        lastSyncResult: current.lastSyncResult,
       );
-      if (page == null) {
-        state = AsyncData(current.copyWith(isLoadingMore: false));
-        return;
-      }
-
+      
       state = AsyncData(
-        await _readLocal(
-          pageNumber: page.pageNumber,
-          pageSize: page.pageSize,
-          totalCount: page.totalCount > 0
-              ? page.totalCount
-              : current.totalCount,
-          totalPages: page.totalPages > 0
-              ? page.totalPages
-              : current.totalPages,
-          lastSyncResult: current.lastSyncResult,
+        current.copyWith(
+          categories: [...current.categories, ...loaded.categories],
+          pageNumber: loaded.pageNumber,
+          totalCount: loaded.totalCount,
+          totalPages: loaded.totalPages,
+          isLoadingMore: false,
         ),
       );
-    } on RemoteTransientException catch (error, stackTrace) {
-      if (kDebugMode) {
-        debugPrint('Category page load failed: $error\n$stackTrace');
-      }
-      state = AsyncData(current.copyWith(isLoadingMore: false));
     } catch (error, stackTrace) {
       state = AsyncError(error, stackTrace);
     }
@@ -163,25 +151,9 @@ class CategoryController extends AsyncNotifier<CategoryScreenState> {
     CategorySyncResult? lastSyncResult,
     bool isSyncing = false,
   }) async {
-    final shopId = _shopId;
-    CategoryPage? page;
-    try {
-      page = await _syncService.refreshFromServer(
-        shopId: shopId,
-        pageNumber: 1,
-        pageSize: _pageSize,
-      );
-    } on RemoteTransientException catch (error, stackTrace) {
-      if (kDebugMode) {
-        debugPrint('Category refresh failed: $error\n$stackTrace');
-      }
-    }
-
     return _readLocal(
-      pageNumber: page?.pageNumber ?? 1,
-      pageSize: page?.pageSize ?? _pageSize,
-      totalCount: page?.totalCount,
-      totalPages: page?.totalPages,
+      pageNumber: 1,
+      pageSize: _pageSize,
       lastSyncResult: lastSyncResult,
       isSyncing: isSyncing,
     );
@@ -190,20 +162,24 @@ class CategoryController extends AsyncNotifier<CategoryScreenState> {
   Future<CategoryScreenState> _readLocal({
     required int pageNumber,
     required int pageSize,
-    int? totalCount,
-    int? totalPages,
     CategorySyncResult? lastSyncResult,
     bool isSyncing = false,
   }) async {
     final shopId = _shopId;
-    final categories = await _repository.getAll(shopId);
+    final totalCount = await _repository.getTotalCount(shopId);
+    final categories = await _repository.getAll(
+      shopId,
+      limit: pageSize,
+      offset: (pageNumber - 1) * pageSize,
+    );
+    
     return CategoryScreenState(
       categories: categories,
       pendingCount: await _repository.getPendingCount(shopId),
       pageNumber: pageNumber,
       pageSize: pageSize,
-      totalCount: totalCount ?? categories.length,
-      totalPages: totalPages ?? 1,
+      totalCount: totalCount,
+      totalPages: (totalCount / pageSize).ceil(),
       isSyncing: isSyncing,
       lastSyncResult: lastSyncResult,
     );

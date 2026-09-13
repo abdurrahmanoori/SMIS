@@ -120,61 +120,61 @@
   <component name="MetaFilesCheckinStateConfiguration" checkMetaFiles="true" />
   <component name="NextEditCompletionFeaturesState">
     <decayedCancelled>
-      <entry key="MS100" value="8.234966537929866E-198" />
-      <entry key="MS500" value="3.8294144149824746E-40" />
-      <entry key="S2" value="1.3988884742451484E-10" />
-      <entry key="S5" value="1.1437029380766914E-4" />
-      <entry key="S10" value="0.010694404790360398" />
-      <entry key="S30" value="0.2204084424832402" />
-      <entry key="S60" value="0.4812648186453193" />
-      <entry key="M2" value="0.8864210144662006" />
-      <entry key="M5" value="2.844675298915186" />
-      <entry key="M10" value="6.059193132315139" />
-      <entry key="M15" value="8.529942083630383" />
-      <entry key="M30" value="15.348454680481836" />
-      <entry key="H1" value="28.734597824590505" />
-      <entry key="H2" value="51.04862263710641" />
-      <entry key="H4" value="96.33114812988019" />
-      <entry key="D1" value="275.30507746434046" />
-      <entry key="W1" value="348.5193714786835" />
+      <entry key="MS100" value="3.579192606952764E-51" />
+      <entry key="MS500" value="1.4120045398764012E-10" />
+      <entry key="S2" value="0.0057962740184549" />
+      <entry key="S5" value="0.1931394316934528" />
+      <entry key="S10" value="0.6215117884009274" />
+      <entry key="S30" value="1.3546784127716633" />
+      <entry key="S60" value="1.646159170046435" />
+      <entry key="M2" value="1.8460636258129606" />
+      <entry key="M5" value="2.922813365542169" />
+      <entry key="M10" value="5.967870829501693" />
+      <entry key="M15" value="8.919518173196993" />
+      <entry key="M30" value="16.707389056497643" />
+      <entry key="H1" value="30.805279190687656" />
+      <entry key="H2" value="53.93703588198255" />
+      <entry key="H4" value="99.62940828072585" />
+      <entry key="D1" value="281.1047473042173" />
+      <entry key="W1" value="356.1218135949991" />
     </decayedCancelled>
     <decayedSelected>
-      <entry key="MS100" value="1.00000000000028" />
-      <entry key="MS500" value="1.003086098916374" />
-      <entry key="S2" value="1.2382404758394332" />
-      <entry key="S5" value="1.6536942646791821" />
-      <entry key="S10" value="2.0971685480422746" />
-      <entry key="S30" value="3.1447258921700576" />
-      <entry key="S60" value="3.8388226994163124" />
-      <entry key="M2" value="4.496549098062421" />
-      <entry key="M5" value="7.155112495393524" />
-      <entry key="M10" value="11.630779275621597" />
-      <entry key="M15" value="15.10345661326379" />
-      <entry key="M30" value="24.84839034741664" />
-      <entry key="H1" value="41.46265670878892" />
-      <entry key="H2" value="61.63524146855015" />
-      <entry key="H4" value="86.26966976092332" />
-      <entry key="D1" value="154.15702527012135" />
-      <entry key="W1" value="179.14175445181579" />
+      <entry key="MS100" value="1.0000000000952163" />
+      <entry key="MS500" value="1.0099028120848543" />
+      <entry key="S2" value="1.340975492166699" />
+      <entry key="S5" value="1.9169143118849687" />
+      <entry key="S10" value="2.5140163539793345" />
+      <entry key="S30" value="3.3317244432923845" />
+      <entry key="S60" value="3.653586845244852" />
+      <entry key="M2" value="3.957233709459434" />
+      <entry key="M5" value="5.1100816890833975" />
+      <entry key="M10" value="8.377241378121685" />
+      <entry key="M15" value="11.838432395098039" />
+      <entry key="M30" value="21.899215613613844" />
+      <entry key="H1" value="39.26234822109927" />
+      <entry key="H2" value="61.05079159237171" />
+      <entry key="H4" value="87.27706840085632" />
+      <entry key="D1" value="157.94696390804486" />
+      <entry key="W1" value="183.94026701121456" />
     </decayedSelected>
     <decayedShown>
-      <entry key="MS100" value="2.7994361219056027E-13" />
-      <entry key="MS500" value="0.0035105835392515816" />
-      <entry key="S2" value="0.38124311116589127" />
-      <entry key="S5" value="1.1054305308924588" />
-      <entry key="S10" value="1.7682838959775553" />
-      <entry key="S30" value="3.2140975795375746" />
-      <entry key="S60" value="4.23184339927775" />
-      <entry key="M2" value="5.331518122190511" />
-      <entry key="M5" value="9.965554115801503" />
-      <entry key="M10" value="17.661763390235343" />
-      <entry key="M15" value="23.608806558601437" />
-      <entry key="M30" value="40.17565794161344" />
-      <entry key="H1" value="70.17773049581383" />
-      <entry key="H2" value="112.66801180895831" />
-      <entry key="H4" value="182.58906059435975" />
-      <entry key="D1" value="429.458432702411" />
-      <entry key="W1" value="527.660513152948" />
+      <entry key="MS100" value="2.804439343254477E-4" />
+      <entry key="MS500" value="0.1948182711491464" />
+      <entry key="S2" value="0.746228084011255" />
+      <entry key="S5" value="1.5216372371962106" />
+      <entry key="S10" value="2.622352800365285" />
+      <entry key="S30" value="4.406007388275886" />
+      <entry key="S60" value="5.137390375563155" />
+      <entry key="M2" value="5.712524614102701" />
+      <entry key="M5" value="7.987834718065837" />
+      <entry key="M10" value="14.313659859039957" />
+      <entry key="M15" value="20.731030570009903" />
+      <entry key="M30" value="38.584141705645955" />
+      <entry key="H1" value="70.04742207788279" />
+      <entry key="H2" value="114.97136459665921" />
+      <entry key="H4" value="186.89423752324308" />
+      <entry key="D1" value="439.04789866429496" />
+      <entry key="W1" value="540.0614440354875" />
     </decayedShown>
   </component>
   <component name="ProblemsViewState">
@@ -215,7 +215,7 @@
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
     &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
     &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;ml.llm.AcpAgentsConfigurable&quot;,
     &quot;sqlserver_backup_path_localServer&quot;: &quot;E:&quot;,
     &quot;to.speed.mode.migration.done&quot;: &quot;true&quot;
   },
@@ -232,14 +232,6 @@
   }
 }</component>
   <component name="RunManager" selected=".NET Launch Settings Profile.SMIS.Api: http">
-    <configuration name="SMIS.Api: site48297-WebDeploy" type="DotNetMsBuildPublish" factoryName="Publish to IIS">
-      <riderPublish configuration="Release" platform="Any CPU" publish_profile="site48297-WebDeploy.pubxml" pubxml_path="$PROJECT_DIR$/SMIS.Api/Properties/PublishProfiles/site48297-WebDeploy.pubxml" user_name="site48297" uuid_high="6959429607722075224" uuid_low="-6423334993005118021" />
-      <method v="2" />
-    </configuration>
-    <configuration name="SMIS.Api: site62669-WebDeploy" type="DotNetMsBuildPublish" factoryName="Publish to IIS">
-      <riderPublish configuration="Release" platform="Any CPU" publish_profile="site62669-WebDeploy.pubxml" pubxml_path="$PROJECT_DIR$/SMIS.Api/Properties/PublishProfiles/site62669-WebDeploy.pubxml" user_name="site62669" uuid_high="6959429607722075224" uuid_low="-6423334993005118021" />
-      <method v="2" />
-    </configuration>
     <configuration name="SMIS.Api: Production" type="LaunchSettings" factoryName=".NET Launch Settings Profile">
       <option name="LAUNCH_PROFILE_PROJECT_FILE_PATH" value="$PROJECT_DIR$/SMIS.Api/SMIS.Api.csproj" />
       <option name="LAUNCH_PROFILE_TFM" value="net9.0" />
@@ -276,22 +268,6 @@
       <option name="LAUNCH_PROFILE_PROJECT_FILE_PATH" value="$PROJECT_DIR$/SMIS.Api/SMIS.Api.csproj" />
       <option name="LAUNCH_PROFILE_TFM" value="net9.0" />
       <option name="LAUNCH_PROFILE_NAME" value="https" />
-      <option name="USE_MONO" value="0" />
-      <option name="RUNTIME_ARGUMENTS" value="" />
-      <option name="GENERATE_APPLICATIONHOST_CONFIG" value="1" />
-      <option name="SHOW_IIS_EXPRESS_OUTPUT" value="0" />
-      <option name="SEND_DEBUG_REQUEST" value="1" />
-      <option name="ADDITIONAL_IIS_EXPRESS_ARGUMENTS" value="" />
-      <option name="AUTO_ATTACH_CHILDREN" value="0" />
-      <option name="MIXED_MODE_DEBUG" value="0" />
-      <method v="2">
-        <option name="Build" />
-      </method>
-    </configuration>
-    <configuration name="SMIS.UI: Windows Machine" type="LaunchSettings" factoryName=".NET Launch Settings Profile">
-      <option name="LAUNCH_PROFILE_PROJECT_FILE_PATH" value="$PROJECT_DIR$/SMIS.UI/SMIS.UI.csproj" />
-      <option name="LAUNCH_PROFILE_TFM" value="net9.0-windows10.0.19041.0" />
-      <option name="LAUNCH_PROFILE_NAME" value="Windows Machine" />
       <option name="USE_MONO" value="0" />
       <option name="RUNTIME_ARGUMENTS" value="" />
       <option name="GENERATE_APPLICATIONHOST_CONFIG" value="1" />
@@ -352,37 +328,6 @@
         <option name="Build" />
       </method>
     </configuration>
-    <configuration name="SMIS.UI" type="UwpProject" factoryName="UWP">
-      <option name="PROJECT_PATH" value="$PROJECT_DIR$/SMIS.UI/SMIS.UI.csproj" />
-      <option name="PROGRAM_PARAMETERS" value="" />
-      <method v="2">
-        <option name="Build" />
-      </method>
-    </configuration>
-    <configuration name="SMIS.UI" type="XamarinAndroidProject" factoryName="Xamarin.Android">
-      <option name="PROJECT_PATH" value="$PROJECT_DIR$/SMIS.UI/SMIS.UI.csproj" />
-      <option name="PROGRAM_PARAMETERS" value="" />
-      <option name="TARGET_SELECTION_MODE" value="DEVICE_AND_SNAPSHOT_COMBO_BOX" />
-      <option name="DEPLOY_BEHAVIOUR_NAME" value="Default" />
-      <method v="2" />
-    </configuration>
-    <configuration name="SMIS.UI" type="XamarinIOSProject" factoryName="Xamarin.iOS">
-      <option name="PROJECT_PATH" value="$PROJECT_DIR$/SMIS.UI/SMIS.UI.csproj" />
-      <option name="PROGRAM_PARAMETERS" value="" />
-      <option name="IS_PASS_PARENT_ENVS" value="false" />
-      <option name="EXTRA_MLAUNCH_PARAMETERS" value="" />
-      <option name="PLATFORM_TYPE" value="IOS" />
-      <method v="2" />
-    </configuration>
-    <configuration name="SMIS.UI" type="XamarinMacProject" factoryName="Xamarin.Mac">
-      <option name="PROJECT_PATH" value="$PROJECT_DIR$/SMIS.UI/SMIS.UI.csproj" />
-      <option name="PROGRAM_PARAMETERS" value="" />
-      <option name="WORKING_DIRECTORY" value="" />
-      <option name="PASS_PARENT_ENVS_MAC" value="1" />
-      <method v="2">
-        <option name="Build" />
-      </method>
-    </configuration>
   </component>
   <component name="TaskManager">
     <task id="Default" summary="Default task">
@@ -399,22 +344,6 @@
       <option name="presentableId" value="LOCAL-00001" />
       <option name="project" value="LOCAL" />
       <updated>1788873767067</updated>
-    </task>
-    <task id="LOCAL-00003" summary="some ide realted upate">
-      <option name="closed" value="true" />
-      <created>1787743845871</created>
-      <option name="number" value="00003" />
-      <option name="presentableId" value="LOCAL-00003" />
-      <option name="project" value="LOCAL" />
-      <updated>1787743845871</updated>
-    </task>
-    <task id="LOCAL-00004" summary="flutte project createed">
-      <option name="closed" value="true" />
-      <created>1787747343449</created>
-      <option name="number" value="00004" />
-      <option name="presentableId" value="LOCAL-00004" />
-      <option name="project" value="LOCAL" />
-      <updated>1787747343449</updated>
     </task>
     <task id="LOCAL-00005" summary="Flutter project added with crud operation for category&#10;&#10;fix(Category): update accumulated hierarchy time and last focus timestamps">
       <option name="closed" value="true" />
@@ -784,7 +713,23 @@
       <option name="project" value="LOCAL" />
       <updated>1789038990488</updated>
     </task>
-    <option name="localTasksCounter" value="51" />
+    <task id="LOCAL-00051" summary="feat: implement pagination support in CategoryController and enhance Category API for page retrieval">
+      <option name="closed" value="true" />
+      <created>1789220802506</created>
+      <option name="number" value="00051" />
+      <option name="presentableId" value="LOCAL-00051" />
+      <option name="project" value="LOCAL" />
+      <updated>1789220802507</updated>
+    </task>
+    <task id="LOCAL-00052" summary="feat: add web database factory initialization and update CORS middleware usage">
+      <option name="closed" value="true" />
+      <created>1789220884683</created>
+      <option name="number" value="00052" />
+      <option name="presentableId" value="LOCAL-00052" />
+      <option name="project" value="LOCAL" />
+      <updated>1789220884683</updated>
+    </task>
+    <option name="localTasksCounter" value="53" />
     <option name="clearContext" value="false" />
     <option name="createChangelist" value="false" />
     <option name="createBranch" value="false" />
@@ -797,8 +742,6 @@
   <component name="UnityProjectConfiguration" hasMinimizedUI="false" />
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
-    <MESSAGE value="feat: add validation rules and command validators for Customer, Product, ProductPrice, ProductUnit, and UnitOfMeasure synchronization" />
-    <MESSAGE value="feat: implement authentication flow with login screen and secure session management" />
     <MESSAGE value="feat: add profile management with user details and update functionality" />
     <MESSAGE value="migrstion only" />
     <MESSAGE value="feat: add client modification metadata clearing in delete commands for Product, ProductUnit, Shop, and ProductPrice" />
@@ -822,7 +765,9 @@
     <MESSAGE value="refactor: rename CategoryQuery to CategoryQueryDto and update related handlers to use HandleResultResponseOld" />
     <MESSAGE value="feat: update CategoryQuery to CategoryQueryCriteria and enhance filtering capabilities" />
     <MESSAGE value="feat: add cancellation token support to PagedListNew and update CategoryQuery for conflict date normalization" />
-    <option name="LAST_COMMIT_MESSAGE" value="" />
+    <MESSAGE value="feat: add web database factory initialization and update CORS middleware usage" />
+    <MESSAGE value="feat: implement pagination support in CategoryController and enhance Category API for page retrieval" />
+    <option name="LAST_COMMIT_MESSAGE" value="feat: implement pagination support in CategoryController and enhance Category API for page retrieval" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

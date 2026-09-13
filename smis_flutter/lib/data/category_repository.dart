@@ -22,7 +22,7 @@ class CategoryRepository {
   final UtcNow _utcNow;
   final IdGenerator _idGenerator;
 
-  Future<List<Category>> getAll(String shopId) async {
+  Future<List<Category>> getAll(String shopId, {int? limit, int? offset}) async {
     try {
       final database = await _database.instance;
       final rows = await database.query(
@@ -30,6 +30,8 @@ class CategoryRepository {
         where: 'is_deleted = 0 AND shop_id = ?',
         whereArgs: [shopId],
         orderBy: 'name COLLATE NOCASE ASC',
+        limit: limit,
+        offset: offset,
       );
       return rows
           .map(CategoryLocalRecord.fromMap)
@@ -38,6 +40,22 @@ class CategoryRepository {
     } catch (error) {
       throw LocalStorageException(
         'Could not read categories from local storage.',
+        cause: error,
+      );
+    }
+  }
+
+  Future<int> getTotalCount(String shopId) async {
+    try {
+      final database = await _database.instance;
+      final result = await database.rawQuery(
+        "SELECT COUNT(*) AS count FROM $_categoryTable WHERE is_deleted = 0 AND shop_id = ?",
+        [shopId],
+      );
+      return Sqflite.firstIntValue(result) ?? 0;
+    } catch (error) {
+      throw LocalStorageException(
+        'Could not count categories in local storage.',
         cause: error,
       );
     }

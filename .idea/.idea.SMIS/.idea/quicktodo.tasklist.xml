@@ -29,6 +29,7 @@
             <description>the app should be completly offline first and then using backgourd job should sync data api</description>
           </task>
           <task id="23168215-338a-4212-a0d0-1434d3cfde2a" text="add WhereIF Extention method" level="1" createdAt="1787744839602" lastModified="1787744839602" />
+          <task id="98ecd6ac-163f-438d-89ae-9f72ec620557" text="add valid fk relationship" level="1" createdAt="1789297187450" lastModified="1789297187450" />
         </subtasks>
       </task>
       <task id="923330e7-c226-4228-87c2-11147434c074" text="Ready" createdAt="1787734360436" lastModified="1787734394961" />
