@@ -20,5 +20,14 @@ namespace SMIS.Infrastructure.Server.Repositories.Products
                 .IgnoreQueryFilters()
                 .FirstOrDefaultAsync(product => product.Id == id, cancellationToken);
         }
+
+        public Task<int> CountByCategoryIdAsync(
+            string categoryId,
+            CancellationToken cancellationToken = default)
+        {
+            return _context.Products.CountAsync(
+                product => product.CategoryId == categoryId,
+                cancellationToken);
+        }
     }
 }

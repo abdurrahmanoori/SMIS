@@ -33,6 +33,13 @@ class ValidationException extends RemotePermanentException {
   const ValidationException(super.message, {super.cause});
 }
 
+class CategoryInUseException extends ValidationException {
+  CategoryInUseException(this.productCount)
+    : super('Category is used by $productCount product(s).');
+
+  final int productCount;
+}
+
 class ApiErrorParser {
   static Never mapAndThrow(Object error, StackTrace stackTrace, {String? fallbackMessage}) {
     if (error is AppException) {
@@ -125,7 +132,14 @@ class AppErrorNotification {
   static void show(BuildContext context, Object error, [StackTrace? stackTrace]) {
     final colors = Theme.of(context).colorScheme;
     final rawMessage = error is AppException ? error.message : error.toString();
-    final message = context.l10n.errorMessage(rawMessage);
+    final message = error is CategoryInUseException
+        ? context.l10n.text(
+            error.productCount == 1
+                ? 'This category is used by {count} product. Reassign that product before deleting the category.'
+                : 'This category is used by {count} products. Reassign those products before deleting the category.',
+            {'count': error.productCount},
+          )
+        : context.l10n.errorMessage(rawMessage);
     
     final content = Column(
       mainAxisSize: MainAxisSize.min,

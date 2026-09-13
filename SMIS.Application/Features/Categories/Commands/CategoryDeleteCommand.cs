@@ -2,6 +2,7 @@ using MediatR;
 using SMIS.Application.Common.Response;
 using SMIS.Application.Repositories.Base;
 using SMIS.Application.Repositories.Categories;
+using SMIS.Application.Repositories.Products;
 using SMIS.Application.Identity.IServices;
 
 namespace SMIS.Application.Features.Categories.Commands
@@ -13,11 +14,17 @@ namespace SMIS.Application.Features.Categories.Commands
         private readonly ICategoryRepository _categoryRepository;
         private readonly IUnitOfWork _unitOfWork;
         private readonly ICurrentUser _currentUser;
+        private readonly IProductRepository _productRepository;
 
-        public CategoryDeleteCommandHandler(IUnitOfWork unitOfWork, ICategoryRepository categoryRepository, ICurrentUser currentUser)
+        public CategoryDeleteCommandHandler(
+            IUnitOfWork unitOfWork,
+            ICategoryRepository categoryRepository,
+            IProductRepository productRepository,
+            ICurrentUser currentUser)
         {
             _unitOfWork = unitOfWork;
             _categoryRepository = categoryRepository;
+            _productRepository = productRepository;
             _currentUser = currentUser;
         }
 
@@ -30,7 +37,13 @@ namespace SMIS.Application.Features.Categories.Commands
             if (!_currentUser.IsSuperAdmin() && entity.ShopId != _currentUser.GetShopId())
                 return Result<Unit>.FailureResult("Forbidden", "You can only delete categories from your own shop");
 
-            entity.ClearClientModificationMetadata();
+            var productCount = await _productRepository.CountByCategoryIdAsync(
+                entity.Id,
+                cancellationToken);
+            if (productCount > 0)
+                return Result<Unit>.FailureResult(
+                    "CategoryInUse",
+                    $"Category is used by {productCount} product(s). Reassign them before deleting the category.");
 
             // Physical remove — SoftDeleteInterceptor converts this to a soft delete
             // transparently before EF Core hits the database.

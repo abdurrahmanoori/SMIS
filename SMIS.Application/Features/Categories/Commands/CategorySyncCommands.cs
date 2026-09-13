@@ -5,6 +5,7 @@ using SMIS.Application.DTO.Categories;
 using SMIS.Application.Identity.IServices;
 using SMIS.Application.Repositories.Base;
 using SMIS.Application.Repositories.Categories;
+using SMIS.Application.Repositories.Products;
 using SMIS.Domain.Entities;
 using SMIS.Domain.Services;
 
@@ -213,15 +214,18 @@ internal sealed class CategorySyncDeleteCommandHandler
     private readonly IUnitOfWork _unitOfWork;
     private readonly ICurrentUser _currentUser;
     private readonly IMapper _mapper;
+    private readonly IProductRepository _productRepository;
 
     public CategorySyncDeleteCommandHandler(
         ICategoryRepository repository,
+        IProductRepository productRepository,
         IUnitOfWork unitOfWork,
         ICurrentUser currentUser,
         IMapper mapper
     )
     {
         _repository = repository;
+        _productRepository = productRepository;
         _unitOfWork = unitOfWork;
         _currentUser = currentUser;
         _mapper = mapper;
@@ -258,6 +262,16 @@ internal sealed class CategorySyncDeleteCommandHandler
         {
             return Result<CategoryDto>.SuccessResult(
                 _mapper.Map<CategoryDto>(category));
+        }
+
+        var productCount = await _productRepository.CountByCategoryIdAsync(
+            category.Id,
+            cancellationToken);
+        if (productCount > 0)
+        {
+            return Result<CategoryDto>.FailureResult(
+                "CategoryInUse",
+                $"Category is used by {productCount} product(s). Reassign them before deleting the category.");
         }
 
         category.SetClientModificationMetadata(

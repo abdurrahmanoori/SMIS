@@ -57,14 +57,18 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen> with WidgetsBin
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (state == AppLifecycleState.resumed) ref.read(productControllerProvider.notifier).reload();
+    if (state == AppLifecycleState.resumed) {
+      ref.invalidate(categoryLookupProvider);
+      ref.read(productControllerProvider.notifier).reload();
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     final productState = ref.watch(productControllerProvider);
     final units = ref.watch(unitOfMeasureControllerProvider).value?.units ?? const <UnitOfMeasure>[];
-    final categories = ref.watch(categoryControllerProvider).value?.categories ?? const <Category>[];
+    final categories =
+        ref.watch(categoryLookupProvider).value ?? const <Category>[];
     final hasUnits = units.isNotEmpty;
     return Scaffold(
       appBar: AppBar(
@@ -116,20 +120,23 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen> with WidgetsBin
         ),
       ))),
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: hasUnits ? () => _create(units, categories) : null,
+        onPressed: hasUnits ? () => _create(units) : null,
         icon: const Icon(Icons.add), label: Text(context.l10n.text('Add product')),
       ),
     );
   }
 
-  Future<void> _create(List<UnitOfMeasure> units, List<Category> categories) async {
+  Future<void> _create(List<UnitOfMeasure> units) async {
+    final categories = await _loadCategories();
+    if (categories == null || !mounted) return;
     final draft = await showDialog<ProductDraft>(context: context, builder: (context) => ProductFormDialog(units: units, categories: categories));
     if (draft == null) return;
     await _runMutation(() => ref.read(productControllerProvider.notifier).create(draft), context.l10n.text('Product saved locally.'));
   }
   Future<void> _edit(Product product) async {
     final units = ref.read(unitOfMeasureControllerProvider).value?.units ?? const <UnitOfMeasure>[];
-    final categories = ref.read(categoryControllerProvider).value?.categories ?? const <Category>[];
+    final categories = await _loadCategories();
+    if (categories == null || !mounted) return;
     final draft = await showDialog<ProductDraft>(context: context, builder: (context) => ProductFormDialog(product: product, units: units, categories: categories));
     if (draft == null) return;
     await _runMutation(() => ref.read(productControllerProvider.notifier).updateProduct(product.id, draft), context.l10n.text('Product updated locally.'));
@@ -156,6 +163,15 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen> with WidgetsBin
   Future<void> _runMutation(Future<void> Function() action, String message) async {
     try { await action(); if (mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message))); }
     catch (error, stackTrace) { if (mounted) AppErrorNotification.show(context, error, stackTrace); }
+  }
+
+  Future<List<Category>?> _loadCategories() async {
+    try {
+      return await ref.read(categoryLookupProvider.future);
+    } catch (error, stackTrace) {
+      if (mounted) AppErrorNotification.show(context, error, stackTrace);
+      return null;
+    }
   }
 }
 

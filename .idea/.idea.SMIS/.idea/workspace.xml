@@ -194,7 +194,7 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
-    ".NET Launch Settings Profile.SMIS.Api: http.executor": "Run",
+    ".NET Launch Settings Profile.SMIS.Api: http.executor": "Debug",
     ".NET Launch Settings Profile.SMIS.Api: https.executor": "Run",
     ".NET Launch Settings Profile.SMIS.UI: Windows Machine.executor": "Run",
     "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
@@ -347,22 +347,6 @@
       <option name="presentableId" value="LOCAL-00001" />
       <option name="project" value="LOCAL" />
       <updated>1788873767067</updated>
-    </task>
-    <task id="LOCAL-00008" summary="feat(Category): add client sync metadata and update related DTOs and commands">
-      <option name="closed" value="true" />
-      <created>1787833095991</created>
-      <option name="number" value="00008" />
-      <option name="presentableId" value="LOCAL-00008" />
-      <option name="project" value="LOCAL" />
-      <updated>1787833095992</updated>
-    </task>
-    <task id="LOCAL-00009" summary="feat(Category): implement client metadata synchronization and update database schema">
-      <option name="closed" value="true" />
-      <created>1787835424831</created>
-      <option name="number" value="00009" />
-      <option name="presentableId" value="LOCAL-00009" />
-      <option name="project" value="LOCAL" />
-      <updated>1787835424831</updated>
     </task>
     <task id="LOCAL-00010" summary="feat(Database): add custom database path setup for Windows and include new data source configurations">
       <option name="closed" value="true" />
@@ -732,7 +716,23 @@
       <option name="project" value="LOCAL" />
       <updated>1789304811750</updated>
     </task>
-    <option name="localTasksCounter" value="56" />
+    <task id="LOCAL-00056" summary="feat: standardize user identities and update role assignments in seed data">
+      <option name="closed" value="true" />
+      <created>1789305784005</created>
+      <option name="number" value="00056" />
+      <option name="presentableId" value="LOCAL-00056" />
+      <option name="project" value="LOCAL" />
+      <updated>1789305784005</updated>
+    </task>
+    <task id="LOCAL-00057" summary="feat: implement search functionality for products, shops, and units of measurement">
+      <option name="closed" value="true" />
+      <created>1789305815306</created>
+      <option name="number" value="00057" />
+      <option name="presentableId" value="LOCAL-00057" />
+      <option name="project" value="LOCAL" />
+      <updated>1789305815306</updated>
+    </task>
+    <option name="localTasksCounter" value="58" />
     <option name="clearContext" value="false" />
     <option name="createChangelist" value="false" />
     <option name="createBranch" value="false" />
@@ -745,8 +745,6 @@
   <component name="UnityProjectConfiguration" hasMinimizedUI="false" />
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
-    <MESSAGE value="feat: update user profile management to include username and language selection" />
-    <MESSAGE value="feat: implement multiple account switching functionality in authentication" />
     <MESSAGE value="feat: add AppDrawer widget for improved navigation and user account management" />
     <MESSAGE value="feat: implement theme management with ThemeController and integrate into main app" />
     <MESSAGE value="feat: enhance error handling with AppErrorView and refactor error management in authentication and profile APIs" />
@@ -770,6 +768,8 @@
     <MESSAGE value="feat: remove deprecated flutterDev.db data source and update pagination logic in Category API" />
     <MESSAGE value="feat: add search functionality to categories and update filtering in repository" />
     <MESSAGE value="feat: standardize user roles and update role assignments in the database" />
+    <MESSAGE value="feat: standardize user identities and update role assignments in seed data" />
+    <MESSAGE value="feat: implement search functionality for products, shops, and units of measurement" />
     <option name="LAST_COMMIT_MESSAGE" value="" />
   </component>
   <component name="XDebuggerManager">

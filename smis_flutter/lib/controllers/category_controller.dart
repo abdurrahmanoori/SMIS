@@ -91,6 +91,7 @@ class CategoryController extends AsyncNotifier<CategoryScreenState> {
         lastSyncResult: previous?.lastSyncResult,
       );
       state = AsyncData(loaded);
+      ref.invalidate(categoryLookupProvider);
     } catch (error, stackTrace) {
       state = AsyncError(error, stackTrace);
     }
@@ -126,6 +127,9 @@ class CategoryController extends AsyncNotifier<CategoryScreenState> {
     await reload();
   }
 
+  Future<int> countProductsUsingCategory(String id) =>
+      _repository.countProductsUsingCategory(id);
+
   Future<CategorySyncResult> syncNow() async {
     final current = state.value ?? await _load();
     state = AsyncData(current.copyWith(isSyncing: true));
@@ -140,6 +144,7 @@ class CategoryController extends AsyncNotifier<CategoryScreenState> {
       searchQuery: current.searchQuery,
       lastSyncResult: result,
     ));
+    ref.invalidate(categoryLookupProvider);
     return result;
   }
 
@@ -237,3 +242,11 @@ final categoryControllerProvider =
     AsyncNotifierProvider<CategoryController, CategoryScreenState>(
       CategoryController.new,
     );
+
+/// All locally available categories for selectors and relationship labels.
+/// This is intentionally separate from the paginated Categories screen state.
+final categoryLookupProvider = FutureProvider<List<Category>>((ref) async {
+  final session = ref.watch(authControllerProvider.select((state) => state.session));
+  if (session == null) return const <Category>[];
+  return ref.watch(categoryRepositoryProvider).getAll(session.shopId);
+});

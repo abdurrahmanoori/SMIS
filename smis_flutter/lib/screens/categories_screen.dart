@@ -16,6 +16,7 @@ import '../widgets/theme_mode_action.dart';
 import '../widgets/category_form_dialog.dart';
 import '../widgets/locale_action.dart';
 import 'profile_screen.dart';
+import 'products_screen.dart';
 
 class CategoriesScreen extends ConsumerStatefulWidget {
   const CategoriesScreen({super.key});
@@ -176,6 +177,48 @@ class _CategoriesScreenState extends ConsumerState<CategoriesScreen>
   }
 
   Future<void> _delete(Category category) async {
+    try {
+      final productCount = await ref
+          .read(categoryControllerProvider.notifier)
+          .countProductsUsingCategory(category.id);
+      if (!mounted) return;
+      if (productCount > 0) {
+        final manageProducts = await showDialog<bool>(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: Text(context.l10n.text('Cannot delete category')),
+            content: Text(
+              context.l10n.text(
+                productCount == 1
+                    ? 'This category is used by {count} product. Reassign that product before deleting the category.'
+                    : 'This category is used by {count} products. Reassign those products before deleting the category.',
+                {'count': productCount},
+              ),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context, false),
+                child: Text(context.l10n.text('Close')),
+              ),
+              FilledButton.tonal(
+                onPressed: () => Navigator.pop(context, true),
+                child: Text(context.l10n.text('Manage products')),
+              ),
+            ],
+          ),
+        );
+        if (manageProducts == true && mounted) {
+          await Navigator.of(context).push(
+            MaterialPageRoute<void>(builder: (_) => const ProductsScreen()),
+          );
+        }
+        return;
+      }
+    } catch (error, stackTrace) {
+      if (mounted) AppErrorNotification.show(context, error, stackTrace);
+      return;
+    }
+
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(

@@ -40,13 +40,11 @@ class _ProductFormDialogState extends State<ProductFormDialog> {
     _barcode = TextEditingController(text: widget.product?.barcode);
     _imageUrl = TextEditingController(text: widget.product?.imageUrl);
     _baseUnitId = _availableUnit(widget.product?.baseUnitId);
-    _categoryId = _availableCategory(widget.product?.categoryId);
+    _categoryId = widget.product?.categoryId;
     _isActive = widget.product?.isActive ?? true;
   }
 
   String? _availableUnit(String? id) => widget.units.any((unit) => unit.id == id) ? id : null;
-  String? _availableCategory(String? id) => widget.categories.any((category) => category.id == id) ? id : null;
-
   @override
   void dispose() {
     _name.dispose(); _sku.dispose(); _description.dispose(); _barcode.dispose(); _imageUrl.dispose();
@@ -81,7 +79,31 @@ class _ProductFormDialogState extends State<ProductFormDialog> {
               value: _categoryId,
               isExpanded: true,
               decoration: InputDecoration(labelText: context.l10n.text('Category')),
-              items: [DropdownMenuItem<String>(value: '', child: Text(context.l10n.text('No category'))), ...widget.categories.map((category) => DropdownMenuItem(value: category.id, child: Text(category.name)))],
+              items: [
+                DropdownMenuItem<String>(
+                  value: '',
+                  child: Text(context.l10n.text('No category')),
+                ),
+                ...widget.categories.map(
+                  (category) => DropdownMenuItem(
+                    value: category.id,
+                    child: Text(category.name),
+                  ),
+                ),
+                if (_categoryId != null &&
+                    !widget.categories.any(
+                      (category) => category.id == _categoryId,
+                    ))
+                  DropdownMenuItem(
+                    value: _categoryId,
+                    child: Text(
+                      context.l10n.text(
+                        'Current category unavailable ({id})',
+                        {'id': _categoryId!},
+                      ),
+                    ),
+                  ),
+              ],
               onChanged: (value) => setState(() => _categoryId = value?.isEmpty ?? true ? null : value),
             ),
             const SizedBox(height: 12),

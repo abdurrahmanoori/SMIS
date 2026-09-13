@@ -100,6 +100,8 @@ class AppLocalizations {
       'Select a base unit.': 'یک واحد اصلی انتخاب کنید.',
       'Category': 'دسته‌بندی',
       'No category': 'بدون دسته‌بندی',
+      'Current category unavailable ({id})':
+          'دسته‌بندی فعلی در دسترس نیست ({id})',
       'SKU': 'کُد کالا',
       'Barcode': 'بارکد',
       'Image URL': 'نشانی تصویر',
@@ -115,6 +117,13 @@ class AppLocalizations {
       'Delete': 'حذف',
       'Delete offline': 'حذف آفلاین',
       'Delete category?': 'دسته‌بندی حذف شود؟',
+      'Cannot delete category': 'دسته‌بندی حذف نمی‌شود',
+      'This category is used by {count} product. Reassign that product before deleting the category.':
+          'این دسته‌بندی توسط {count} محصول استفاده می‌شود. پیش از حذف دسته‌بندی، محصول را به دسته دیگری انتقال دهید.',
+      'This category is used by {count} products. Reassign those products before deleting the category.':
+          'این دسته‌بندی توسط {count} محصول استفاده می‌شود. پیش از حذف دسته‌بندی، محصولات را به دسته دیگری انتقال دهید.',
+      'Manage products': 'مدیریت محصولات',
+      'Close': 'بستن',
       'Delete unit of measurement?': 'واحد اندازه‌گیری حذف شود؟',
       'Delete product?': 'محصول حذف شود؟',
       'Delete shop?': 'فروشگاه حذف شود؟',
@@ -311,6 +320,8 @@ class AppLocalizations {
       'Select a base unit.': 'اصلي واحد وټاکئ.',
       'Category': 'کټګوري',
       'No category': 'بې کټګورۍ',
+      'Current category unavailable ({id})':
+          'اوسنۍ کټګوري نشته ({id})',
       'SKU': 'د توکي کوډ',
       'Barcode': 'بارکوډ',
       'Image URL': 'د انځور پته',
@@ -326,6 +337,13 @@ class AppLocalizations {
       'Delete': 'ړنګول',
       'Delete offline': 'آفلاین ړنګول',
       'Delete category?': 'کټګوري ړنګه شي؟',
+      'Cannot delete category': 'کټګوري نشي ړنګېدای',
+      'This category is used by {count} product. Reassign that product before deleting the category.':
+          'دا کټګوري د {count} محصول لخوا کارول کېږي. د کټګورۍ له ړنګولو مخکې محصول بلې کټګورۍ ته واړوئ.',
+      'This category is used by {count} products. Reassign those products before deleting the category.':
+          'دا کټګوري د {count} محصولاتو لخوا کارول کېږي. د کټګورۍ له ړنګولو مخکې محصولات بلې کټګورۍ ته واړوئ.',
+      'Manage products': 'محصولات مدیریت کړئ',
+      'Close': 'بندول',
       'Delete unit of measurement?': 'د اندازه کولو واحد ړنګ شي؟',
       'Delete product?': 'محصول ړنګ شي؟',
       'Delete shop?': 'دوکان ړنګ شي؟',
