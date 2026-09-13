@@ -12,23 +12,27 @@ class UnitOfMeasureScreenState {
   const UnitOfMeasureScreenState({
     required this.units,
     required this.pendingCount,
+    this.searchQuery = '',
     this.isSyncing = false,
     this.lastSyncResult,
   });
 
   final List<UnitOfMeasure> units;
   final int pendingCount;
+  final String searchQuery;
   final bool isSyncing;
   final UnitOfMeasureSyncResult? lastSyncResult;
 
   UnitOfMeasureScreenState copyWith({
     List<UnitOfMeasure>? units,
     int? pendingCount,
+    String? searchQuery,
     bool? isSyncing,
     UnitOfMeasureSyncResult? lastSyncResult,
   }) => UnitOfMeasureScreenState(
     units: units ?? this.units,
     pendingCount: pendingCount ?? this.pendingCount,
+    searchQuery: searchQuery ?? this.searchQuery,
     isSyncing: isSyncing ?? this.isSyncing,
     lastSyncResult: lastSyncResult ?? this.lastSyncResult,
   );
@@ -53,9 +57,27 @@ class UnitOfMeasureController extends AsyncNotifier<UnitOfMeasureScreenState> {
   }
 
   Future<void> reload() async {
-    final previous = state.value;
+    final previousQuery = state.hasValue ? state.value?.searchQuery : null;
+    final previousSyncResult = state.hasValue ? state.value?.lastSyncResult : null;
+    
     try {
-      state = AsyncData(await _load(lastSyncResult: previous?.lastSyncResult));
+      state = AsyncData(await _load(
+        searchQuery: previousQuery,
+        lastSyncResult: previousSyncResult,
+      ));
+    } catch (error, stackTrace) {
+      state = AsyncError(error, stackTrace);
+    }
+  }
+
+  Future<void> search(String query) async {
+    final previous = state.value;
+    if (previous?.searchQuery == query) return;
+    
+    state = AsyncData(previous?.copyWith(searchQuery: query, units: []) ?? UnitOfMeasureScreenState(units: [], pendingCount: 0, searchQuery: query));
+    
+    try {
+      state = AsyncData(await _load(searchQuery: query));
     } catch (error, stackTrace) {
       state = AsyncError(error, stackTrace);
     }
@@ -86,17 +108,22 @@ class UnitOfMeasureController extends AsyncNotifier<UnitOfMeasureScreenState> {
           .join('\n\n');
       debugPrint('${result.message}\n\n$details');
     }
-    state = AsyncData(await _load(lastSyncResult: result));
+    state = AsyncData(await _load(
+      searchQuery: current.searchQuery,
+      lastSyncResult: result,
+    ));
     return result;
   }
 
   Future<UnitOfMeasureScreenState> _load({
+    String? searchQuery,
     UnitOfMeasureSyncResult? lastSyncResult,
   }) async {
     final shopId = _shopId;
     return UnitOfMeasureScreenState(
-      units: await _repository.getAll(shopId),
+      units: await _repository.getAll(shopId, searchQuery: searchQuery),
       pendingCount: await _repository.getPendingCount(shopId),
+      searchQuery: searchQuery ?? '',
       lastSyncResult: lastSyncResult,
     );
   }

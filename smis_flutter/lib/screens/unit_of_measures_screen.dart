@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -22,6 +23,10 @@ class UnitOfMeasuresScreen extends ConsumerStatefulWidget {
 
 class _UnitOfMeasuresScreenState extends ConsumerState<UnitOfMeasuresScreen>
     with WidgetsBindingObserver {
+  final _searchController = TextEditingController();
+  bool _isSearching = false;
+  Timer? _searchDebounce;
+
   @override
   void initState() {
     super.initState();
@@ -30,8 +35,25 @@ class _UnitOfMeasuresScreenState extends ConsumerState<UnitOfMeasuresScreen>
 
   @override
   void dispose() {
+    _searchController.dispose();
+    _searchDebounce?.cancel();
     WidgetsBinding.instance.removeObserver(this);
     super.dispose();
+  }
+
+  void _onSearchChanged(String query) {
+    _searchDebounce?.cancel();
+    _searchDebounce = Timer(const Duration(milliseconds: 500), () {
+      ref.read(unitOfMeasureControllerProvider.notifier).search(query);
+    });
+  }
+
+  void _stopSearching() {
+    setState(() {
+      _isSearching = false;
+      _searchController.clear();
+    });
+    ref.read(unitOfMeasureControllerProvider.notifier).search('');
   }
 
   @override
@@ -46,14 +68,34 @@ class _UnitOfMeasuresScreenState extends ConsumerState<UnitOfMeasuresScreen>
     final units = ref.watch(unitOfMeasureControllerProvider);
     return Scaffold(
       appBar: AppBar(
-        title: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(context.l10n.text('Units of measurement')),
-            Text(context.l10n.text('Local-first inventory setup'), style: const TextStyle(fontSize: 12, fontWeight: FontWeight.normal)),
-          ],
-        ),
+        title: _isSearching
+            ? TextField(
+                controller: _searchController,
+                autofocus: true,
+                decoration: InputDecoration(
+                  hintText: context.l10n.text('Search units...'),
+                  border: InputBorder.none,
+                ),
+                onChanged: _onSearchChanged,
+              )
+            : Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(context.l10n.text('Units of measurement')),
+                  Text(context.l10n.text('Local-first inventory setup'), style: const TextStyle(fontSize: 12, fontWeight: FontWeight.normal)),
+                ],
+              ),
         actions: [
+          if (_isSearching)
+            IconButton(
+              icon: const Icon(Icons.close),
+              onPressed: _stopSearching,
+            )
+          else
+            IconButton(
+              icon: const Icon(Icons.search),
+              onPressed: () => setState(() => _isSearching = true),
+            ),
           units.maybeWhen(
             data: (value) => Badge(
               isLabelVisible: value.pendingCount > 0,
@@ -85,7 +127,11 @@ class _UnitOfMeasuresScreenState extends ConsumerState<UnitOfMeasuresScreen>
                 stackTrace: stackTrace,
                 onRetry: () => ref.read(unitOfMeasureControllerProvider.notifier).reload(),
               ),
-              data: (value) => _Content(state: value, onEdit: _edit, onDelete: _delete),
+              data: (value) => _Content(
+                state: value, 
+                onEdit: _edit, 
+                onDelete: _delete,
+              ),
             ),
           ),
         ),
@@ -182,7 +228,7 @@ class _Content extends StatelessWidget {
       if (state.lastSyncResult case final result?) _SyncSummary(result: result),
       Expanded(
         child: state.units.isEmpty
-            ? const _EmptyView()
+            ? _EmptyView(isSearch: state.searchQuery.isNotEmpty)
             : ListView.separated(
                 padding: const EdgeInsets.fromLTRB(16, 16, 16, 100),
                 itemCount: state.units.length,
@@ -273,18 +319,24 @@ class _SyncStateIcon extends StatelessWidget {
 }
 
 class _EmptyView extends StatelessWidget {
-  const _EmptyView();
+  const _EmptyView({this.isSearch = false});
+
+  final bool isSearch;
+
   @override
   Widget build(BuildContext context) => Center(
     child: Padding(
       padding: const EdgeInsets.all(32),
-      child: Column(mainAxisSize: MainAxisSize.min, children: [
-        const Icon(Icons.straighten_outlined, size: 56),
-        const SizedBox(height: 12),
-        Text(context.l10n.text('No units of measurement yet')),
-        const SizedBox(height: 4),
-        Text(context.l10n.text('Add one now—even while completely offline.')),
-      ]),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(isSearch ? Icons.search_off : Icons.straighten_outlined, size: 56),
+          const SizedBox(height: 12),
+          Text(context.l10n.text(isSearch ? 'No matching units' : 'No units of measurement yet')),
+          const SizedBox(height: 4),
+          Text(context.l10n.text(isSearch ? 'Try a different search term.' : 'Add one now—even while completely offline.')),
+        ],
+      ),
     ),
   );
 }

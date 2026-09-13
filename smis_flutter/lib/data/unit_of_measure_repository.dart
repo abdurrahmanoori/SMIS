@@ -25,14 +25,31 @@ class UnitOfMeasureRepository {
   final UnitOfMeasureUtcNow _utcNow;
   final UnitOfMeasureIdGenerator _idGenerator;
 
-  Future<List<UnitOfMeasure>> getAll(String shopId) async {
+  Future<List<UnitOfMeasure>> getAll(
+    String shopId, {
+    String? searchQuery,
+    int? limit,
+    int? offset,
+  }) async {
     try {
       final database = await _database.instance;
+
+      String where = 'is_deleted = 0 AND shop_id = ?';
+      List<Object?> whereArgs = [shopId];
+
+      if (searchQuery != null && searchQuery.trim().isNotEmpty) {
+        final query = '%${searchQuery.trim()}%';
+        where += ' AND (name LIKE ? OR symbol LIKE ?)';
+        whereArgs.addAll([query, query]);
+      }
+
       final rows = await database.query(
         _table,
-        where: 'is_deleted = 0 AND shop_id = ?',
-        whereArgs: [shopId],
+        where: where,
+        whereArgs: whereArgs,
         orderBy: 'name COLLATE NOCASE ASC',
+        limit: limit,
+        offset: offset,
       );
       return rows
           .map(UnitOfMeasureLocalRecord.fromMap)
@@ -41,6 +58,32 @@ class UnitOfMeasureRepository {
     } catch (error) {
       throw LocalStorageException(
         'Could not read units of measurement from local storage.',
+        cause: error,
+      );
+    }
+  }
+
+  Future<int> getTotalCount(String shopId, {String? searchQuery}) async {
+    try {
+      final database = await _database.instance;
+
+      String where = 'is_deleted = 0 AND shop_id = ?';
+      List<Object?> whereArgs = [shopId];
+
+      if (searchQuery != null && searchQuery.trim().isNotEmpty) {
+        final query = '%${searchQuery.trim()}%';
+        where += ' AND (name LIKE ? OR symbol LIKE ?)';
+        whereArgs.addAll([query, query]);
+      }
+
+      final result = await database.rawQuery(
+        "SELECT COUNT(*) AS count FROM $_table WHERE $where",
+        whereArgs,
+      );
+      return Sqflite.firstIntValue(result) ?? 0;
+    } catch (error) {
+      throw LocalStorageException(
+        'Could not count units of measurement in local storage.',
         cause: error,
       );
     }

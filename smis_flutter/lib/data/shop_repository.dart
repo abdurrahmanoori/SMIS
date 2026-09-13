@@ -25,12 +25,23 @@ class ShopRepository {
   final ShopUtcNow _utcNow;
   final ShopIdGenerator _idGenerator;
 
-  Future<List<Shop>> getAll() async {
+  Future<List<Shop>> getAll({String? searchQuery}) async {
     try {
       final database = await _database.instance;
+
+      String where = 'is_deleted = 0';
+      List<Object?> whereArgs = [];
+
+      if (searchQuery != null && searchQuery.trim().isNotEmpty) {
+        final query = '%${searchQuery.trim()}%';
+        where += ' AND (name LIKE ? OR address LIKE ? OR tax_number LIKE ?)';
+        whereArgs.addAll([query, query, query]);
+      }
+
       final rows = await database.query(
         _table,
-        where: 'is_deleted = 0',
+        where: where,
+        whereArgs: whereArgs,
         orderBy: 'name COLLATE NOCASE ASC',
       );
       return rows

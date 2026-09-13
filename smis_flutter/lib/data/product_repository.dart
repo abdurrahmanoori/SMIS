@@ -21,18 +21,67 @@ class ProductRepository {
   final ProductUtcNow _utcNow;
   final ProductIdGenerator _idGenerator;
 
-  Future<List<Product>> getAll(String shopId) async {
+  Future<List<Product>> getAll(
+    String shopId, {
+    String? searchQuery,
+    int? limit,
+    int? offset,
+  }) async {
     try {
       final database = await _database.instance;
+
+      String where = 'is_deleted = 0 AND shop_id = ?';
+      List<Object?> whereArgs = [shopId];
+
+      if (searchQuery != null && searchQuery.trim().isNotEmpty) {
+        final query = '%${searchQuery.trim()}%';
+        where += ' AND (name LIKE ? OR sku LIKE ? OR barcode LIKE ? OR description LIKE ?)';
+        whereArgs.addAll([query, query, query, query]);
+      }
+
       final rows = await database.query(
         _table,
-        where: 'is_deleted = 0 AND shop_id = ?',
-        whereArgs: [shopId],
+        where: where,
+        whereArgs: whereArgs,
         orderBy: 'name COLLATE NOCASE ASC',
+        limit: limit,
+        offset: offset,
       );
-      return rows.map(ProductLocalRecord.fromMap).map((record) => record.toProduct()).toList(growable: false);
+      return rows
+          .map(ProductLocalRecord.fromMap)
+          .map((record) => record.toProduct())
+          .toList(growable: false);
     } catch (error) {
-      throw LocalStorageException('Could not read products from local storage.', cause: error);
+      throw LocalStorageException(
+        'Could not read products from local storage.',
+        cause: error,
+      );
+    }
+  }
+
+  Future<int> getTotalCount(String shopId, {String? searchQuery}) async {
+    try {
+      final database = await _database.instance;
+
+      String where = 'is_deleted = 0 AND shop_id = ?';
+      List<Object?> whereArgs = [shopId];
+
+      if (searchQuery != null && searchQuery.trim().isNotEmpty) {
+        final query = '%${searchQuery.trim()}%';
+        where += ' AND (name LIKE ? OR sku LIKE ? OR barcode LIKE ? OR description LIKE ?)';
+        whereArgs.addAll([query, query, query, query]);
+      }
+
+      final result = await database.rawQuery(
+        "SELECT COUNT(*) AS count FROM $_table WHERE $where",
+        whereArgs,
+      );
+      return Sqflite.firstIntValue(result) ?? 0;
+    } catch (error) {
+      throw LocalStorageException(
+        'Could not count products in local storage.',
+        cause: error,
+      );
     }
   }
 

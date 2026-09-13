@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -25,10 +26,35 @@ class ProductsScreen extends ConsumerStatefulWidget {
 }
 
 class _ProductsScreenState extends ConsumerState<ProductsScreen> with WidgetsBindingObserver {
+  final _searchController = TextEditingController();
+  bool _isSearching = false;
+  Timer? _searchDebounce;
+
   @override
   void initState() { super.initState(); WidgetsBinding.instance.addObserver(this); }
   @override
-  void dispose() { WidgetsBinding.instance.removeObserver(this); super.dispose(); }
+  void dispose() { 
+    _searchController.dispose();
+    _searchDebounce?.cancel();
+    WidgetsBinding.instance.removeObserver(this); 
+    super.dispose(); 
+  }
+
+  void _onSearchChanged(String query) {
+    _searchDebounce?.cancel();
+    _searchDebounce = Timer(const Duration(milliseconds: 500), () {
+      ref.read(productControllerProvider.notifier).search(query);
+    });
+  }
+
+  void _stopSearching() {
+    setState(() {
+      _isSearching = false;
+      _searchController.clear();
+    });
+    ref.read(productControllerProvider.notifier).search('');
+  }
+
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.resumed) ref.read(productControllerProvider.notifier).reload();
@@ -42,10 +68,30 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen> with WidgetsBin
     final hasUnits = units.isNotEmpty;
     return Scaffold(
       appBar: AppBar(
-        title: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Text(context.l10n.text('Products')), Text(context.l10n.text('Local-first inventory setup'), style: const TextStyle(fontSize: 12, fontWeight: FontWeight.normal)),
-        ]),
+        title: _isSearching
+            ? TextField(
+                controller: _searchController,
+                autofocus: true,
+                decoration: InputDecoration(
+                  hintText: context.l10n.text('Search products...'),
+                  border: InputBorder.none,
+                ),
+                onChanged: _onSearchChanged,
+              )
+            : Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                Text(context.l10n.text('Products')), Text(context.l10n.text('Local-first inventory setup'), style: const TextStyle(fontSize: 12, fontWeight: FontWeight.normal)),
+              ]),
         actions: [
+          if (_isSearching)
+            IconButton(
+              icon: const Icon(Icons.close),
+              onPressed: _stopSearching,
+            )
+          else
+            IconButton(
+              icon: const Icon(Icons.search),
+              onPressed: () => setState(() => _isSearching = true),
+            ),
           productState.maybeWhen(
             data: (state) => Badge(
               isLabelVisible: state.pendingCount > 0, label: Text('${state.pendingCount}'),
@@ -125,7 +171,7 @@ class _Content extends StatelessWidget {
   Widget build(BuildContext context) => Column(children: [
     if (state.lastSyncResult case final result?) _SyncSummary(result: result),
     if (!hasUnits) const _MissingUnitNotice(),
-    Expanded(child: state.products.isEmpty ? const _EmptyView() : ListView.separated(
+    Expanded(child: state.products.isEmpty ? _EmptyView(isSearch: state.searchQuery.isNotEmpty) : ListView.separated(
       padding: const EdgeInsets.fromLTRB(16, 16, 16, 100), itemCount: state.products.length,
       separatorBuilder: (_, _) => const SizedBox(height: 10),
       itemBuilder: (context, index) { final product = state.products[index]; return _ProductCard(product: product, unitName: _unitName(product.baseUnitId), categoryName: _categoryName(product.categoryId), onEdit: () => onEdit(product), onDelete: () => onDelete(product)); },
@@ -170,7 +216,28 @@ class _ProductCard extends StatelessWidget {
   ));
 }
 class _SyncStateIcon extends StatelessWidget { const _SyncStateIcon({required this.product}); final Product product; @override Widget build(BuildContext context) { final failed = product.syncStatus == ProductSyncStatus.failed; final synced = product.syncStatus == ProductSyncStatus.synced; return Tooltip(message: product.lastSyncError ?? context.l10n.text(synced ? 'Synced' : failed ? 'Sync failed' : 'Waiting to sync'), child: Icon(failed ? Icons.cloud_off_outlined : synced ? Icons.cloud_done_outlined : Icons.cloud_upload_outlined, size: 18, color: failed ? Theme.of(context).colorScheme.error : Theme.of(context).colorScheme.outline)); } }
-class _EmptyView extends StatelessWidget { const _EmptyView(); @override Widget build(BuildContext context) => Center(child: Padding(padding: const EdgeInsets.all(32), child: Column(mainAxisSize: MainAxisSize.min, children: [const Icon(Icons.inventory_2_outlined, size: 56), const SizedBox(height: 12), Text(context.l10n.text('No products yet')), const SizedBox(height: 4), Text(context.l10n.text('Add one now—even while completely offline.'))]))) ; }
+class _EmptyView extends StatelessWidget {
+  const _EmptyView({this.isSearch = false});
+
+  final bool isSearch;
+
+  @override
+  Widget build(BuildContext context) => Center(
+    child: Padding(
+      padding: const EdgeInsets.all(32),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(isSearch ? Icons.search_off : Icons.inventory_2_outlined, size: 56),
+          const SizedBox(height: 12),
+          Text(context.l10n.text(isSearch ? 'No matching products' : 'No products yet')),
+          const SizedBox(height: 4),
+          Text(context.l10n.text(isSearch ? 'Try a different search term.' : 'Add one now—even while completely offline.')),
+        ],
+      ),
+    ),
+  );
+}
 class _MissingUnitNotice extends StatelessWidget {
   const _MissingUnitNotice();
   @override
