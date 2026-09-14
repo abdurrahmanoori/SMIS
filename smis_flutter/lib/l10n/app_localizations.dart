@@ -142,6 +142,8 @@ class AppLocalizations {
       'Category saved locally.': 'دسته‌بندی به‌صورت محلی ذخیره شد.',
       'Category updated locally.': 'دسته‌بندی به‌صورت محلی به‌روز شد.',
       'Category deleted locally.': 'دسته‌بندی به‌صورت محلی حذف شد.',
+      'A category with this name already exists in this shop.':
+          'یک دسته‌بندی با این نام از قبل در این فروشگاه وجود دارد.',
       'Unit of measurement saved locally.': 'واحد اندازه‌گیری به‌صورت محلی ذخیره شد.',
       'Unit of measurement updated locally.': 'واحد اندازه‌گیری به‌صورت محلی به‌روز شد.',
       'Unit of measurement deleted locally.': 'واحد اندازه‌گیری به‌صورت محلی حذف شد.',
@@ -371,6 +373,8 @@ class AppLocalizations {
       'Category saved locally.': 'کټګوري په ځايي ډول وساتل شوه.',
       'Category updated locally.': 'کټګوري په ځايي ډول تازه شوه.',
       'Category deleted locally.': 'کټګوري په ځايي ډول ړنګه شوه.',
+      'A category with this name already exists in this shop.':
+          'په دې دوکان کې په دې نوم کټګوري له مخکې شته.',
       'Unit of measurement saved locally.': 'د اندازه کولو واحد په ځايي ډول وساتل شو.',
       'Unit of measurement updated locally.': 'د اندازه کولو واحد په ځايي ډول تازه شو.',
       'Unit of measurement deleted locally.': 'د اندازه کولو واحد په ځايي ډول ړنګ شو.',
@@ -522,6 +526,7 @@ class AppLocalizations {
       'Signed out of this app, but the saved session could not be removed.',
       'An unexpected error occurred.',
       'The server request failed.',
+      'A category with this name already exists in this shop.',
     };
     return knownMessages.contains(message) ? text(message) : message;
   }

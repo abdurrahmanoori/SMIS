@@ -21,7 +21,7 @@ class AppDatabase {
     _database = await _factory.openDatabase(
       path,
       options: OpenDatabaseOptions(
-        version: 6,
+        version: 7,
         onConfigure: (database) async {
           await database.execute('PRAGMA foreign_keys = ON');
           // Use rawQuery for journal_mode as it returns a result which some
@@ -73,6 +73,7 @@ class AppDatabase {
       CREATE INDEX IF NOT EXISTS idx_categories_pending
       ON categories(pending_operation, next_retry_at)
     ''');
+    await _createCategoryNameUniqueIndex(database);
     await database.execute('''
       CREATE TABLE sync_metadata (
         key TEXT PRIMARY KEY,
@@ -129,6 +130,19 @@ class AppDatabase {
       await _createShopsSchema(database);
       await _createProductsSchema(database);
     }
+    if (oldVersion < 7) {
+      await _createCategoryNameUniqueIndex(database);
+    }
+  }
+
+  static Future<void> _createCategoryNameUniqueIndex(
+    Database database,
+  ) async {
+    await database.execute('''
+      CREATE UNIQUE INDEX IF NOT EXISTS ux_categories_shop_name
+      ON categories(shop_id, name COLLATE NOCASE)
+      WHERE is_deleted = 0 AND shop_id IS NOT NULL
+    ''');
   }
 
   static Future<void> _createUnitOfMeasuresSchema(Database database) async {

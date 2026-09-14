@@ -25,5 +25,23 @@ namespace SMIS.Infrastructure.Server.Repositories.Categories
             return _context.Categories.IgnoreQueryFilters()
                 .FirstOrDefaultAsync(category => category.Id == id, cancellationToken);
         }
+
+        public Task<bool> NameExistsInShopAsync(
+            string shopId,
+            string name,
+            string? excludeId = null,
+            CancellationToken cancellationToken = default)
+        {
+            var normalizedName = name.Trim().ToUpperInvariant();
+            return _context.Categories
+                .IgnoreQueryFilters()
+                .AnyAsync(
+                    category =>
+                        !category.IsDeleted &&
+                        category.ShopId == shopId &&
+                        category.Id != excludeId &&
+                        category.Name.ToUpper() == normalizedName,
+                    cancellationToken);
+        }
     }
 }

@@ -45,6 +45,17 @@ namespace SMIS.Application.Features.Categories.Commands
                 return Result<CategoryDto>.FailureResult("You can only update categories from your own shop");
             }
 
+            if (await _categoryRepository.NameExistsInShopAsync(
+                    entity.ShopId,
+                    request.CategoryUpdateDto.Name,
+                    entity.Id,
+                    cancellationToken))
+            {
+                return Result<CategoryDto>.FailureResult(
+                    "CategoryNameAlreadyExists",
+                    "A category with this name already exists in this shop.");
+            }
+
             //await _translationKeyRepository.AddTranslationKeysForChangedProperties(request.CategoryUpdateDto, entity);
             
             // Update existing entity using domain methods (ShopId remains unchanged)

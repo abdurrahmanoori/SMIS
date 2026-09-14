@@ -257,6 +257,11 @@ namespace SMIS.Infrastructure.Server.Migrations
 
                     b.HasIndex("ShopId");
 
+                    b.HasIndex("ShopId", "Name")
+                        .IsUnique()
+                        .HasDatabaseName("UX_Category_ShopId_Name")
+                        .HasFilter("[IsDeleted] = 0");
+
                     b.ToTable("Category", (string)null);
 
                     b.HasData(

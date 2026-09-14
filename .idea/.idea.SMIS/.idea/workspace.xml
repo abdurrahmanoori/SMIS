@@ -63,7 +63,6 @@
   <component name="DatabaseLocalColorSettings">
     <colors>
       <entry key="217c9ab8-3f82-4012-9b1f-829d2efba1cc" value="@0" />
-      <entry key="8953dd4c-a13f-45bd-aa39-4b486bc39f97" value="" />
       <entry key="ac5415fe-1e2d-4654-8634-a9fa83f2c4ba" value="yellow" />
       <entry key="c23083d1-ad9e-4a55-b047-06addaa567c3" value="green" />
     </colors>
@@ -194,7 +193,7 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
-    ".NET Launch Settings Profile.SMIS.Api: http.executor": "Debug",
+    ".NET Launch Settings Profile.SMIS.Api: http.executor": "Run",
     ".NET Launch Settings Profile.SMIS.Api: https.executor": "Run",
     ".NET Launch Settings Profile.SMIS.UI: Windows Machine.executor": "Run",
     "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
@@ -347,14 +346,6 @@
       <option name="presentableId" value="LOCAL-00001" />
       <option name="project" value="LOCAL" />
       <updated>1788873767067</updated>
-    </task>
-    <task id="LOCAL-00011" summary="feat(Configuration): add devtools options and update database source configurations">
-      <option name="closed" value="true" />
-      <created>1788004263990</created>
-      <option name="number" value="00011" />
-      <option name="presentableId" value="LOCAL-00011" />
-      <option name="project" value="LOCAL" />
-      <updated>1788004263990</updated>
     </task>
     <task id="LOCAL-00012" summary="refactor(CategoryListPage): improve comments and formatting for clarity">
       <option name="closed" value="true" />
@@ -732,7 +723,15 @@
       <option name="project" value="LOCAL" />
       <updated>1789307140438</updated>
     </task>
-    <option name="localTasksCounter" value="59" />
+    <task id="LOCAL-00059" summary="feat: add reference count checks before deleting products, shops, and units of measurement">
+      <option name="closed" value="true" />
+      <created>1789308059679</created>
+      <option name="number" value="00059" />
+      <option name="presentableId" value="LOCAL-00059" />
+      <option name="project" value="LOCAL" />
+      <updated>1789308059679</updated>
+    </task>
+    <option name="localTasksCounter" value="60" />
     <option name="clearContext" value="false" />
     <option name="createChangelist" value="false" />
     <option name="createBranch" value="false" />
@@ -745,7 +744,6 @@
   <component name="UnityProjectConfiguration" hasMinimizedUI="false" />
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
-    <MESSAGE value="feat: implement theme management with ThemeController and integrate into main app" />
     <MESSAGE value="feat: enhance error handling with AppErrorView and refactor error management in authentication and profile APIs" />
     <MESSAGE value="feat: add WebDeploy configurations for site48297 and site62669 in workspace settings" />
     <MESSAGE value="feat: implement offline-first flow for Unit of Measurement with local storage and synchronization" />
@@ -770,6 +768,7 @@
     <MESSAGE value="feat: standardize user identities and update role assignments in seed data" />
     <MESSAGE value="feat: implement search functionality for products, shops, and units of measurement" />
     <MESSAGE value="feat: implement product count check before category deletion and update related error handling" />
+    <MESSAGE value="feat: add reference count checks before deleting products, shops, and units of measurement" />
     <option name="LAST_COMMIT_MESSAGE" value="" />
   </component>
   <component name="XDebuggerManager">

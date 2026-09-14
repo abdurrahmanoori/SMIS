@@ -184,11 +184,31 @@ class CategoryRepository {
 
   Future<void> saveRecord(CategoryLocalRecord record) async {
     final database = await _database.instance;
-    await database.insert(
-      _categoryTable,
-      record.toMap(),
-      conflictAlgorithm: ConflictAlgorithm.replace,
-    );
+    if (!record.isDeleted && record.shopId != null) {
+      await _ensureUniqueName(
+        database,
+        shopId: record.shopId!,
+        name: record.name,
+        excludeId: record.id,
+      );
+    }
+
+    try {
+      final updated = await database.update(
+        _categoryTable,
+        record.toMap(),
+        where: 'id = ?',
+        whereArgs: [record.id],
+      );
+      if (updated == 0) {
+        await database.insert(_categoryTable, record.toMap());
+      }
+    } on DatabaseException catch (error) {
+      if (error.toString().contains('UNIQUE constraint failed')) {
+        throw CategoryAlreadyExistsException(cause: error);
+      }
+      rethrow;
+    }
   }
 
   Future<void> removeRecord(String id) async {
@@ -243,6 +263,26 @@ class CategoryRepository {
       {'shop_id': shopId},
       where: "shop_id IS NULL OR TRIM(shop_id) = ''",
     );
+  }
+
+  Future<void> _ensureUniqueName(
+    Database database, {
+    required String shopId,
+    required String name,
+    required String excludeId,
+  }) async {
+    final duplicate = await database.query(
+      _categoryTable,
+      columns: ['id'],
+      where:
+          'is_deleted = 0 AND shop_id = ? AND name = ? COLLATE NOCASE '
+          'AND id != ?',
+      whereArgs: [shopId, name.trim(), excludeId],
+      limit: 1,
+    );
+    if (duplicate.isNotEmpty) {
+      throw CategoryAlreadyExistsException();
+    }
   }
 
   Future<DateTime> getPullCursor(String shopId) async {

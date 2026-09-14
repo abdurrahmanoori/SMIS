@@ -34,6 +34,16 @@ namespace SMIS.Application.Features.Categories.Commands
             // Get ShopId from authenticated user (secure)
             var shopId = _currentUser.GetShopId();
 
+            if (await _categoryRepository.NameExistsInShopAsync(
+                    shopId,
+                    request.CategoryCreateDto.Name,
+                    cancellationToken: cancellationToken))
+            {
+                return Result<CategoryDto>.FailureResult(
+                    "CategoryNameAlreadyExists",
+                    "A category with this name already exists in this shop.");
+            }
+
             var entity = Category.Create(
                 request.CategoryCreateDto.Name,
                 shopId,

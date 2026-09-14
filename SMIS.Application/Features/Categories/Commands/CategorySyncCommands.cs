@@ -86,6 +86,15 @@ internal sealed class CategorySyncCreateCommandHandler
                     _mapper.Map<CategoryDto>(existing));
             }
 
+            if (await _repository.NameExistsInShopAsync(
+                    existing.ShopId,
+                    request.Dto.Name,
+                    existing.Id,
+                    cancellationToken))
+            {
+                return CategorySyncRules.DuplicateName();
+            }
+
             CategorySyncRules.Apply(existing, request.Dto);
 
             existing.SetClientCreationMetadata(
@@ -104,9 +113,18 @@ internal sealed class CategorySyncCreateCommandHandler
                 _mapper.Map<CategoryDto>(existing));
         }
 
+        var shopId = _currentUser.GetShopId();
+        if (await _repository.NameExistsInShopAsync(
+                shopId,
+                request.Dto.Name,
+                cancellationToken: cancellationToken))
+        {
+            return CategorySyncRules.DuplicateName();
+        }
+
         var category = Category.Create(
             request.Dto.Name,
-            _currentUser.GetShopId(),
+            shopId,
             request.Dto.Code,
             request.Dto.Description,
             request.Dto.IsActive);
@@ -186,6 +204,15 @@ internal sealed class CategorySyncUpdateCommandHandler
         {
             return Result<CategoryDto>.SuccessResult(
                 _mapper.Map<CategoryDto>(category));
+        }
+
+        if (await _repository.NameExistsInShopAsync(
+                category.ShopId,
+                request.Dto.Name,
+                category.Id,
+                cancellationToken))
+        {
+            return CategorySyncRules.DuplicateName();
         }
 
         CategorySyncRules.Apply(category, request.Dto);
@@ -358,4 +385,9 @@ internal static class CategorySyncRules
         Result<CategoryDto>.FailureResult(
             "Forbidden",
             "You can only synchronize categories from your own shop.");
+
+    public static Result<CategoryDto> DuplicateName() =>
+        Result<CategoryDto>.FailureResult(
+            "CategoryNameAlreadyExists",
+            "A category with this name already exists in this shop.");
 }

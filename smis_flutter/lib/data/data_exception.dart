@@ -40,6 +40,14 @@ class CategoryInUseException extends ValidationException {
   final int productCount;
 }
 
+class CategoryAlreadyExistsException extends ValidationException {
+  CategoryAlreadyExistsException({Object? cause})
+    : super(
+        'A category with this name already exists in this shop.',
+        cause: cause,
+      );
+}
+
 class UnitOfMeasureInUseException extends ValidationException {
   UnitOfMeasureInUseException(this.productCount)
     : super('Unit of measurement is used by $productCount product(s).');
