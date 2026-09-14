@@ -6,8 +6,11 @@ namespace SMIS.Infrastructure.Server.EntityConfigurations
 {
     public class StockTransactionConfiguration : IEntityTypeConfiguration<StockTransaction>
     {
-        public void Configure(EntityTypeBuilder<StockTransaction> builder)
+        public void Configure(
+            EntityTypeBuilder<StockTransaction> builder
+        )
         {
+            builder.ConfigureAuditUserRelationships();
             builder.ToTable(nameof(StockTransaction));
 
             builder.HasKey(st => st.Id);

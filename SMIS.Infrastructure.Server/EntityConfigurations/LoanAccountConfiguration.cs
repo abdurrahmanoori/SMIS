@@ -6,8 +6,11 @@ namespace SMIS.Infrastructure.Server.EntityConfigurations;
 
 public class LoanAccountConfiguration : IEntityTypeConfiguration<LoanAccount>
 {
-    public void Configure(EntityTypeBuilder<LoanAccount> builder)
+    public void Configure(
+        EntityTypeBuilder<LoanAccount> builder
+    )
     {
+        builder.ConfigureAuditUserRelationships();
         builder.ToTable(nameof(LoanAccount));
 
         builder.HasKey(l => l.Id);

@@ -6,8 +6,11 @@ namespace SMIS.Infrastructure.Server.EntityConfigurations
 {
     public class ShopOwnerConfiguration : IEntityTypeConfiguration<ShopOwner>
     {
-        public void Configure(EntityTypeBuilder<ShopOwner> builder)
+        public void Configure(
+            EntityTypeBuilder<ShopOwner> builder
+        )
         {
+            builder.ConfigureAuditUserRelationships();
             builder.ToTable(nameof(ShopOwner));
 
             builder.HasKey(so => so.Id);
@@ -90,4 +93,3 @@ namespace SMIS.Infrastructure.Server.EntityConfigurations
         }
     }
 }
-

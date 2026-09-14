@@ -6,8 +6,12 @@ namespace SMIS.Infrastructure.Server.EntityConfigurations
 {
     public class ProductUnitConfiguration : IEntityTypeConfiguration<ProductUnit>
     {
-        public void Configure(EntityTypeBuilder<ProductUnit> builder)
+        public void Configure(
+            EntityTypeBuilder<ProductUnit> builder
+        )
         {
+            builder.ConfigureAuditUserRelationships();
+            builder.ConfigureClientAuditUserRelationships();
             builder.ToTable(nameof(ProductUnit));
 
             builder.HasKey(pu => pu.Id);

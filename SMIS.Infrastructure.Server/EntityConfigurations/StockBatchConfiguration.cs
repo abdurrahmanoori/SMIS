@@ -6,8 +6,11 @@ namespace SMIS.Infrastructure.Server.EntityConfigurations
 {
     public class StockBatchConfiguration : IEntityTypeConfiguration<StockBatch>
     {
-        public void Configure(EntityTypeBuilder<StockBatch> builder)
+        public void Configure(
+            EntityTypeBuilder<StockBatch> builder
+        )
         {
+            builder.ConfigureAuditUserRelationships();
             builder.ToTable(nameof(StockBatch));
 
             builder.HasKey(s => s.Id);

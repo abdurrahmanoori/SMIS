@@ -6,8 +6,12 @@ namespace SMIS.Infrastructure.Server.EntityConfigurations
 {
     public class CategoryConfiguration : IEntityTypeConfiguration<Category>
     {
-        public void Configure(EntityTypeBuilder<Category> builder)
+        public void Configure(
+            EntityTypeBuilder<Category> builder
+        )
         {
+            builder.ConfigureAuditUserRelationships();
+            builder.ConfigureClientAuditUserRelationships();
             builder.ToTable(nameof(Category));
 
             builder.HasKey(c => c.Id);
@@ -42,7 +46,7 @@ namespace SMIS.Infrastructure.Server.EntityConfigurations
                 .WithMany()
                 .HasForeignKey(c => c.ShopId)
                 .OnDelete(DeleteBehavior.Restrict);
-            
+
             // Backend-specific: Ignore offline properties
             builder.Ignore(c => c.IsSyncedToServer);
             builder.Ignore(c => c.LastSyncedAt);

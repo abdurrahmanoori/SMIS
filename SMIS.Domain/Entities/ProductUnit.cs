@@ -13,7 +13,7 @@ public class ProductUnit : BaseSyncableAuditableEntity
 {
     /// <summary>
     /// Foreign key to the Product.
-    /// Example: Biscuit, Notebook, Coca Cola
+    /// Example: Biscuit, Notebook, Coca-Cola
     /// </summary>
     public string ProductId { get; private set; } = string.Empty;
     public string? ProductName { get; private set; }

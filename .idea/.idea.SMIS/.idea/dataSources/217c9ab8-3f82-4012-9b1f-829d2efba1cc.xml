@@ -16897,12 +16897,12 @@
     <schema id="5591" parent="5542" name="dbo">
       <AutoIntrospectionLevel>3</AutoIntrospectionLevel>
       <Current>1</Current>
-      <IntrospectionTimestamp>2026-09-14.10:23:54</IntrospectionTimestamp>
-      <LastIntrospectionL1Timestamp>2026-09-14.10:23:54</LastIntrospectionL1Timestamp>
-      <LastIntrospectionL2Timestamp>2026-09-14.10:23:54</LastIntrospectionL2Timestamp>
-      <LastIntrospectionL3Timestamp>2026-09-14.10:23:54</LastIntrospectionL3Timestamp>
+      <IntrospectionTimestamp>2026-09-14.19:36:01</IntrospectionTimestamp>
+      <LastIntrospectionL1Timestamp>2026-09-14.19:36:01</LastIntrospectionL1Timestamp>
+      <LastIntrospectionL2Timestamp>2026-09-14.19:36:01</LastIntrospectionL2Timestamp>
+      <LastIntrospectionL3Timestamp>2026-09-14.19:36:01</LastIntrospectionL3Timestamp>
       <LastIntrospectionLevel>3</LastIntrospectionLevel>
-      <LastIntrospectionLocalTimestamp>2026-09-14.03:54:16</LastIntrospectionLocalTimestamp>
+      <LastIntrospectionLocalTimestamp>2026-09-14.13:06:25</LastIntrospectionLocalTimestamp>
       <ObjectId>1</ObjectId>
     </schema>
     <schema id="5592" parent="5542" name="guest">
@@ -16971,7 +16971,7 @@
       <CreatedTimestamp>2026-09-03.19:14:29.023</CreatedTimestamp>
       <DataRetentionPeriod>-1</DataRetentionPeriod>
       <DetailsLevel>2</DetailsLevel>
-      <ModifiedTimestamp>2026-09-14.10:16:05.410</ModifiedTimestamp>
+      <ModifiedTimestamp>2026-09-14.19:15:02.080</ModifiedTimestamp>
       <ObjectId>734625660</ObjectId>
       <LobDataSpaceId>1</LobDataSpaceId>
     </table>
@@ -16979,7 +16979,7 @@
       <CreatedTimestamp>2026-09-03.19:14:29.027</CreatedTimestamp>
       <DataRetentionPeriod>-1</DataRetentionPeriod>
       <DetailsLevel>2</DetailsLevel>
-      <ModifiedTimestamp>2026-09-14.10:16:04.853</ModifiedTimestamp>
+      <ModifiedTimestamp>2026-09-14.19:15:02.007</ModifiedTimestamp>
       <ObjectId>798625888</ObjectId>
       <LobDataSpaceId>1</LobDataSpaceId>
     </table>
@@ -16987,7 +16987,7 @@
       <CreatedTimestamp>2026-09-03.19:14:29.047</CreatedTimestamp>
       <DataRetentionPeriod>-1</DataRetentionPeriod>
       <DetailsLevel>2</DetailsLevel>
-      <ModifiedTimestamp>2026-09-14.10:16:04.917</ModifiedTimestamp>
+      <ModifiedTimestamp>2026-09-14.19:15:02.023</ModifiedTimestamp>
       <ObjectId>1358627883</ObjectId>
       <LobDataSpaceId>1</LobDataSpaceId>
     </table>
@@ -17027,7 +17027,7 @@
       <CreatedTimestamp>2026-09-03.19:14:29.043</CreatedTimestamp>
       <DataRetentionPeriod>-1</DataRetentionPeriod>
       <DetailsLevel>2</DetailsLevel>
-      <ModifiedTimestamp>2026-09-14.10:16:05.053</ModifiedTimestamp>
+      <ModifiedTimestamp>2026-09-14.19:15:02.037</ModifiedTimestamp>
       <ObjectId>1278627598</ObjectId>
       <LobDataSpaceId>1</LobDataSpaceId>
     </table>
@@ -17035,7 +17035,7 @@
       <CreatedTimestamp>2026-09-03.19:14:29.060</CreatedTimestamp>
       <DataRetentionPeriod>-1</DataRetentionPeriod>
       <DetailsLevel>2</DetailsLevel>
-      <ModifiedTimestamp>2026-09-14.10:16:05.087</ModifiedTimestamp>
+      <ModifiedTimestamp>2026-09-14.19:15:02.050</ModifiedTimestamp>
       <ObjectId>1662628966</ObjectId>
       <LobDataSpaceId>1</LobDataSpaceId>
     </table>
@@ -17043,7 +17043,7 @@
       <CreatedTimestamp>2026-09-03.19:14:29.053</CreatedTimestamp>
       <DataRetentionPeriod>-1</DataRetentionPeriod>
       <DetailsLevel>2</DetailsLevel>
-      <ModifiedTimestamp>2026-09-14.10:16:05.120</ModifiedTimestamp>
+      <ModifiedTimestamp>2026-09-14.19:15:02.060</ModifiedTimestamp>
       <ObjectId>1438628168</ObjectId>
       <LobDataSpaceId>1</LobDataSpaceId>
     </table>
@@ -17067,7 +17067,7 @@
       <CreatedTimestamp>2026-09-03.19:14:29.017</CreatedTimestamp>
       <DataRetentionPeriod>-1</DataRetentionPeriod>
       <DetailsLevel>2</DetailsLevel>
-      <ModifiedTimestamp>2026-09-14.10:16:05.193</ModifiedTimestamp>
+      <ModifiedTimestamp>2026-09-14.19:15:02.070</ModifiedTimestamp>
       <ObjectId>558625033</ObjectId>
       <LobDataSpaceId>1</LobDataSpaceId>
     </table>
@@ -17115,7 +17115,7 @@
       <CreatedTimestamp>2026-09-03.19:14:29.030</CreatedTimestamp>
       <DataRetentionPeriod>-1</DataRetentionPeriod>
       <DetailsLevel>2</DetailsLevel>
-      <ModifiedTimestamp>2026-09-14.10:16:05.403</ModifiedTimestamp>
+      <ModifiedTimestamp>2026-09-14.19:15:02.083</ModifiedTimestamp>
       <ObjectId>846626059</ObjectId>
       <LobDataSpaceId>1</LobDataSpaceId>
     </table>
@@ -17812,7 +17812,25 @@ Name</ColNames>
       <RefTableId>558625033</RefTableId>
       <RefTableName>Shop</RefTableName>
     </foreign-key>
-    <foreign-key id="5747" parent="5602" name="FK_Category_AspNetUsers_CreatedBy">
+    <foreign-key id="5747" parent="5602" name="FK_Category_AspNetUsers_ClientCreatedBy">
+      <ColNames>ClientCreatedBy</ColNames>
+      <CreatedTimestamp>2026-09-14.19:15:02</CreatedTimestamp>
+      <ModifiedTimestamp>2026-09-14.19:15:02</ModifiedTimestamp>
+      <ObjectId>1339151816</ObjectId>
+      <RefColNames>Id</RefColNames>
+      <RefTableId>734625660</RefTableId>
+      <RefTableName>AspNetUsers</RefTableName>
+    </foreign-key>
+    <foreign-key id="5748" parent="5602" name="FK_Category_AspNetUsers_ClientModifiedBy">
+      <ColNames>ClientModifiedBy</ColNames>
+      <CreatedTimestamp>2026-09-14.19:15:02.007</CreatedTimestamp>
+      <ModifiedTimestamp>2026-09-14.19:15:02.007</ModifiedTimestamp>
+      <ObjectId>1355151873</ObjectId>
+      <RefColNames>Id</RefColNames>
+      <RefTableId>734625660</RefTableId>
+      <RefTableName>AspNetUsers</RefTableName>
+    </foreign-key>
+    <foreign-key id="5749" parent="5602" name="FK_Category_AspNetUsers_CreatedBy">
       <ColNames>CreatedBy</ColNames>
       <CreatedTimestamp>2026-09-14.10:16:04.830</CreatedTimestamp>
       <ModifiedTimestamp>2026-09-14.10:16:04.830</ModifiedTimestamp>
@@ -17821,7 +17839,7 @@ Name</ColNames>
       <RefTableId>734625660</RefTableId>
       <RefTableName>AspNetUsers</RefTableName>
     </foreign-key>
-    <foreign-key id="5748" parent="5602" name="FK_Category_AspNetUsers_UpdatedBy">
+    <foreign-key id="5750" parent="5602" name="FK_Category_AspNetUsers_UpdatedBy">
       <ColNames>UpdatedBy</ColNames>
       <CreatedTimestamp>2026-09-14.10:16:04.850</CreatedTimestamp>
       <ModifiedTimestamp>2026-09-14.10:16:04.850</ModifiedTimestamp>
@@ -17830,162 +17848,172 @@ Name</ColNames>
       <RefTableId>734625660</RefTableId>
       <RefTableName>AspNetUsers</RefTableName>
     </foreign-key>
-    <index id="5749" parent="5602" name="PK_Category">
+    <index id="5751" parent="5602" name="PK_Category">
       <Clustering>1</Clustering>
       <ColNames>Id</ColNames>
       <Position>1</Position>
       <Unique>1</Unique>
       <PartitionDataSpaceId>1</PartitionDataSpaceId>
     </index>
-    <index id="5750" parent="5602" name="IX_Category_ShopId">
+    <index id="5752" parent="5602" name="IX_Category_ShopId">
       <ColNames>ShopId</ColNames>
       <Position>2</Position>
       <PartitionDataSpaceId>1</PartitionDataSpaceId>
     </index>
-    <index id="5751" parent="5602" name="IX_Category_CreatedBy">
+    <index id="5753" parent="5602" name="IX_Category_CreatedBy">
       <ColNames>CreatedBy</ColNames>
       <Position>6</Position>
       <PartitionDataSpaceId>1</PartitionDataSpaceId>
     </index>
-    <index id="5752" parent="5602" name="IX_Category_UpdatedBy">
+    <index id="5754" parent="5602" name="IX_Category_UpdatedBy">
       <ColNames>UpdatedBy</ColNames>
       <Position>7</Position>
       <PartitionDataSpaceId>1</PartitionDataSpaceId>
     </index>
-    <key id="5753" parent="5602" name="PK_Category">
+    <index id="5755" parent="5602" name="IX_Category_ClientCreatedBy">
+      <ColNames>ClientCreatedBy</ColNames>
+      <Position>10</Position>
+      <PartitionDataSpaceId>1</PartitionDataSpaceId>
+    </index>
+    <index id="5756" parent="5602" name="IX_Category_ClientModifiedBy">
+      <ColNames>ClientModifiedBy</ColNames>
+      <Position>11</Position>
+      <PartitionDataSpaceId>1</PartitionDataSpaceId>
+    </index>
+    <key id="5757" parent="5602" name="PK_Category">
       <CreatedTimestamp>2026-09-03.19:14:29.027</CreatedTimestamp>
       <ModifiedTimestamp>2026-09-03.19:14:29.027</ModifiedTimestamp>
       <ObjectId>814625945</ObjectId>
       <Primary>1</Primary>
       <UnderlyingIndexName>PK_Category</UnderlyingIndexName>
     </key>
-    <column id="5754" parent="5603" name="Id">
+    <column id="5758" parent="5603" name="Id">
       <NotNull>1</NotNull>
       <Position>1</Position>
       <StoredType>nvarchar(450 char)|0s</StoredType>
     </column>
-    <column id="5755" parent="5603" name="FirstName">
+    <column id="5759" parent="5603" name="FirstName">
       <NotNull>1</NotNull>
       <Position>2</Position>
       <StoredType>nvarchar(100 char)|0s</StoredType>
     </column>
-    <column id="5756" parent="5603" name="LastName">
+    <column id="5760" parent="5603" name="LastName">
       <Position>3</Position>
       <StoredType>nvarchar(100 char)|0s</StoredType>
     </column>
-    <column id="5757" parent="5603" name="ShopId">
+    <column id="5761" parent="5603" name="ShopId">
       <NotNull>1</NotNull>
       <Position>4</Position>
       <StoredType>nvarchar(450 char)|0s</StoredType>
     </column>
-    <column id="5758" parent="5603" name="ShopName">
+    <column id="5762" parent="5603" name="ShopName">
       <Position>5</Position>
       <StoredType>nvarchar(200 char)|0s</StoredType>
     </column>
-    <column id="5759" parent="5603" name="CustomerType">
+    <column id="5763" parent="5603" name="CustomerType">
       <NotNull>1</NotNull>
       <Position>6</Position>
       <StoredType>nvarchar(max)|0s</StoredType>
     </column>
-    <column id="5760" parent="5603" name="FatherName">
+    <column id="5764" parent="5603" name="FatherName">
       <Position>7</Position>
       <StoredType>nvarchar(100 char)|0s</StoredType>
     </column>
-    <column id="5761" parent="5603" name="Email">
+    <column id="5765" parent="5603" name="Email">
       <Position>8</Position>
       <StoredType>nvarchar(100 char)|0s</StoredType>
     </column>
-    <column id="5762" parent="5603" name="PhoneNumber">
+    <column id="5766" parent="5603" name="PhoneNumber">
       <Position>9</Position>
       <StoredType>nvarchar(20 char)|0s</StoredType>
     </column>
-    <column id="5763" parent="5603" name="Address">
+    <column id="5767" parent="5603" name="Address">
       <Position>10</Position>
       <StoredType>nvarchar(500 char)|0s</StoredType>
     </column>
-    <column id="5764" parent="5603" name="TaxNumber">
+    <column id="5768" parent="5603" name="TaxNumber">
       <Position>11</Position>
       <StoredType>nvarchar(20 char)|0s</StoredType>
     </column>
-    <column id="5765" parent="5603" name="IsActive">
+    <column id="5769" parent="5603" name="IsActive">
       <NotNull>1</NotNull>
       <Position>12</Position>
       <StoredType>bit|0s</StoredType>
     </column>
-    <column id="5766" parent="5603" name="IsDeleted">
+    <column id="5770" parent="5603" name="IsDeleted">
       <NotNull>1</NotNull>
       <Position>13</Position>
       <StoredType>bit|0s</StoredType>
     </column>
-    <column id="5767" parent="5603" name="DeletedAt">
+    <column id="5771" parent="5603" name="DeletedAt">
       <Position>14</Position>
       <StoredType>datetime2|0s</StoredType>
     </column>
-    <column id="5768" parent="5603" name="DeletedBy">
+    <column id="5772" parent="5603" name="DeletedBy">
       <Position>15</Position>
       <StoredType>nvarchar(450 char)|0s</StoredType>
     </column>
-    <column id="5769" parent="5603" name="ProvinceId">
+    <column id="5773" parent="5603" name="ProvinceId">
       <Position>16</Position>
       <StoredType>nvarchar(450 char)|0s</StoredType>
     </column>
-    <column id="5770" parent="5603" name="DistrictId">
+    <column id="5774" parent="5603" name="DistrictId">
       <Position>17</Position>
       <StoredType>nvarchar(450 char)|0s</StoredType>
     </column>
-    <column id="5771" parent="5603" name="IsPublic">
+    <column id="5775" parent="5603" name="IsPublic">
       <NotNull>1</NotNull>
       <Position>18</Position>
       <StoredType>bit|0s</StoredType>
     </column>
-    <column id="5772" parent="5603" name="Version">
+    <column id="5776" parent="5603" name="Version">
       <NotNull>1</NotNull>
       <Position>19</Position>
       <StoredType>int|0s</StoredType>
     </column>
-    <column id="5773" parent="5603" name="EntityState">
+    <column id="5777" parent="5603" name="EntityState">
       <NotNull>1</NotNull>
       <Position>20</Position>
       <StoredType>nvarchar(max)|0s</StoredType>
     </column>
-    <column id="5774" parent="5603" name="LastModifiedUtc">
+    <column id="5778" parent="5603" name="LastModifiedUtc">
       <NotNull>1</NotNull>
       <Position>21</Position>
       <StoredType>nvarchar(max)|0s</StoredType>
     </column>
-    <column id="5775" parent="5603" name="ClientModifiedDate">
+    <column id="5779" parent="5603" name="ClientModifiedDate">
       <Position>23</Position>
       <StoredType>datetime2|0s</StoredType>
     </column>
-    <column id="5776" parent="5603" name="CreatedBy">
+    <column id="5780" parent="5603" name="CreatedBy">
       <Position>24</Position>
       <StoredType>nvarchar(450 char)|0s</StoredType>
     </column>
-    <column id="5777" parent="5603" name="CreatedDate">
+    <column id="5781" parent="5603" name="CreatedDate">
       <Position>25</Position>
       <StoredType>datetime2|0s</StoredType>
     </column>
-    <column id="5778" parent="5603" name="UpdatedBy">
+    <column id="5782" parent="5603" name="UpdatedBy">
       <Position>26</Position>
       <StoredType>nvarchar(450 char)|0s</StoredType>
     </column>
-    <column id="5779" parent="5603" name="UpdatedDate">
+    <column id="5783" parent="5603" name="UpdatedDate">
       <Position>27</Position>
       <StoredType>datetime2|0s</StoredType>
     </column>
-    <column id="5780" parent="5603" name="ClientCreatedBy">
+    <column id="5784" parent="5603" name="ClientCreatedBy">
       <Position>28</Position>
       <StoredType>nvarchar(450 char)|0s</StoredType>
     </column>
-    <column id="5781" parent="5603" name="ClientCreatedDate">
+    <column id="5785" parent="5603" name="ClientCreatedDate">
       <Position>29</Position>
       <StoredType>datetime2|0s</StoredType>
     </column>
-    <column id="5782" parent="5603" name="ClientModifiedBy">
+    <column id="5786" parent="5603" name="ClientModifiedBy">
       <Position>30</Position>
       <StoredType>nvarchar(450 char)|0s</StoredType>
     </column>
-    <foreign-key id="5783" parent="5603" name="FK_Customers_Shop_ShopId">
+    <foreign-key id="5787" parent="5603" name="FK_Customers_Shop_ShopId">
       <ColNames>ShopId</ColNames>
       <CreatedTimestamp>2026-09-03.19:14:29.050</CreatedTimestamp>
       <ModifiedTimestamp>2026-09-03.19:14:29.050</ModifiedTimestamp>
@@ -17994,7 +18022,7 @@ Name</ColNames>
       <RefTableId>558625033</RefTableId>
       <RefTableName>Shop</RefTableName>
     </foreign-key>
-    <foreign-key id="5784" parent="5603" name="FK_Customers_AspNetUsers_DeletedBy">
+    <foreign-key id="5788" parent="5603" name="FK_Customers_AspNetUsers_DeletedBy">
       <ColNames>DeletedBy</ColNames>
       <CreatedTimestamp>2026-09-14.10:16:04.917</CreatedTimestamp>
       <ModifiedTimestamp>2026-09-14.10:16:04.917</ModifiedTimestamp>
@@ -18003,7 +18031,7 @@ Name</ColNames>
       <RefTableId>734625660</RefTableId>
       <RefTableName>AspNetUsers</RefTableName>
     </foreign-key>
-    <foreign-key id="5785" parent="5603" name="FK_Customers_Provinces_ProvinceId">
+    <foreign-key id="5789" parent="5603" name="FK_Customers_Provinces_ProvinceId">
       <ColNames>ProvinceId</ColNames>
       <CreatedTimestamp>2026-09-03.19:14:29.050</CreatedTimestamp>
       <ModifiedTimestamp>2026-09-03.19:14:29.050</ModifiedTimestamp>
@@ -18013,7 +18041,7 @@ Name</ColNames>
       <RefTableId>526624919</RefTableId>
       <RefTableName>Provinces</RefTableName>
     </foreign-key>
-    <foreign-key id="5786" parent="5603" name="FK_Customers_Districts_DistrictId">
+    <foreign-key id="5790" parent="5603" name="FK_Customers_Districts_DistrictId">
       <ColNames>DistrictId</ColNames>
       <CreatedTimestamp>2026-09-03.19:14:29.050</CreatedTimestamp>
       <ModifiedTimestamp>2026-09-03.19:14:29.050</ModifiedTimestamp>
@@ -18023,7 +18051,7 @@ Name</ColNames>
       <RefTableId>894626230</RefTableId>
       <RefTableName>Districts</RefTableName>
     </foreign-key>
-    <foreign-key id="5787" parent="5603" name="FK_Customers_AspNetUsers_CreatedBy">
+    <foreign-key id="5791" parent="5603" name="FK_Customers_AspNetUsers_CreatedBy">
       <ColNames>CreatedBy</ColNames>
       <CreatedTimestamp>2026-09-14.10:16:04.873</CreatedTimestamp>
       <ModifiedTimestamp>2026-09-14.10:16:04.873</ModifiedTimestamp>
@@ -18032,7 +18060,7 @@ Name</ColNames>
       <RefTableId>734625660</RefTableId>
       <RefTableName>AspNetUsers</RefTableName>
     </foreign-key>
-    <foreign-key id="5788" parent="5603" name="FK_Customers_AspNetUsers_UpdatedBy">
+    <foreign-key id="5792" parent="5603" name="FK_Customers_AspNetUsers_UpdatedBy">
       <ColNames>UpdatedBy</ColNames>
       <CreatedTimestamp>2026-09-14.10:16:04.893</CreatedTimestamp>
       <ModifiedTimestamp>2026-09-14.10:16:04.893</ModifiedTimestamp>
@@ -18041,144 +18069,172 @@ Name</ColNames>
       <RefTableId>734625660</RefTableId>
       <RefTableName>AspNetUsers</RefTableName>
     </foreign-key>
-    <index id="5789" parent="5603" name="PK_Customers">
+    <foreign-key id="5793" parent="5603" name="FK_Customers_AspNetUsers_ClientCreatedBy">
+      <ColNames>ClientCreatedBy</ColNames>
+      <CreatedTimestamp>2026-09-14.19:15:02.017</CreatedTimestamp>
+      <ModifiedTimestamp>2026-09-14.19:15:02.017</ModifiedTimestamp>
+      <ObjectId>1371151930</ObjectId>
+      <RefColNames>Id</RefColNames>
+      <RefTableId>734625660</RefTableId>
+      <RefTableName>AspNetUsers</RefTableName>
+    </foreign-key>
+    <foreign-key id="5794" parent="5603" name="FK_Customers_AspNetUsers_ClientModifiedBy">
+      <ColNames>ClientModifiedBy</ColNames>
+      <CreatedTimestamp>2026-09-14.19:15:02.020</CreatedTimestamp>
+      <ModifiedTimestamp>2026-09-14.19:15:02.020</ModifiedTimestamp>
+      <ObjectId>1387151987</ObjectId>
+      <RefColNames>Id</RefColNames>
+      <RefTableId>734625660</RefTableId>
+      <RefTableName>AspNetUsers</RefTableName>
+    </foreign-key>
+    <index id="5795" parent="5603" name="PK_Customers">
       <Clustering>1</Clustering>
       <ColNames>Id</ColNames>
       <Position>1</Position>
       <Unique>1</Unique>
       <PartitionDataSpaceId>1</PartitionDataSpaceId>
     </index>
-    <index id="5790" parent="5603" name="IX_Customers_DistrictId">
+    <index id="5796" parent="5603" name="IX_Customers_DistrictId">
       <ColNames>DistrictId</ColNames>
       <Position>2</Position>
       <PartitionDataSpaceId>1</PartitionDataSpaceId>
     </index>
-    <index id="5791" parent="5603" name="IX_Customers_Email">
+    <index id="5797" parent="5603" name="IX_Customers_Email">
       <ColNames>Email</ColNames>
       <Position>3</Position>
       <PartitionDataSpaceId>1</PartitionDataSpaceId>
     </index>
-    <index id="5792" parent="5603" name="IX_Customers_IsActive">
+    <index id="5798" parent="5603" name="IX_Customers_IsActive">
       <ColNames>IsActive</ColNames>
       <Position>4</Position>
       <PartitionDataSpaceId>1</PartitionDataSpaceId>
     </index>
-    <index id="5793" parent="5603" name="IX_Customers_IsDeleted">
+    <index id="5799" parent="5603" name="IX_Customers_IsDeleted">
       <ColNames>IsDeleted</ColNames>
       <Position>5</Position>
       <PartitionDataSpaceId>1</PartitionDataSpaceId>
     </index>
-    <index id="5794" parent="5603" name="IX_Customers_PhoneNumber">
+    <index id="5800" parent="5603" name="IX_Customers_PhoneNumber">
       <ColNames>PhoneNumber</ColNames>
       <Position>6</Position>
       <PartitionDataSpaceId>1</PartitionDataSpaceId>
     </index>
-    <index id="5795" parent="5603" name="IX_Customers_ProvinceId">
+    <index id="5801" parent="5603" name="IX_Customers_ProvinceId">
       <ColNames>ProvinceId</ColNames>
       <Position>7</Position>
       <PartitionDataSpaceId>1</PartitionDataSpaceId>
     </index>
-    <index id="5796" parent="5603" name="IX_Customers_ShopId">
+    <index id="5802" parent="5603" name="IX_Customers_ShopId">
       <ColNames>ShopId</ColNames>
       <Position>8</Position>
       <PartitionDataSpaceId>1</PartitionDataSpaceId>
     </index>
-    <index id="5797" parent="5603" name="IX_Customers_TaxNumber">
+    <index id="5803" parent="5603" name="IX_Customers_TaxNumber">
       <ColNames>TaxNumber</ColNames>
       <Position>9</Position>
       <PartitionDataSpaceId>1</PartitionDataSpaceId>
     </index>
-    <index id="5798" parent="5603" name="IX_Customers_CreatedBy">
+    <index id="5804" parent="5603" name="IX_Customers_CreatedBy">
       <ColNames>CreatedBy</ColNames>
       <Position>10</Position>
       <PartitionDataSpaceId>1</PartitionDataSpaceId>
     </index>
-    <index id="5799" parent="5603" name="IX_Customers_UpdatedBy">
+    <index id="5805" parent="5603" name="IX_Customers_UpdatedBy">
       <ColNames>UpdatedBy</ColNames>
       <Position>11</Position>
       <PartitionDataSpaceId>1</PartitionDataSpaceId>
     </index>
-    <index id="5800" parent="5603" name="IX_Customers_DeletedBy">
+    <index id="5806" parent="5603" name="IX_Customers_DeletedBy">
       <ColNames>DeletedBy</ColNames>
       <Position>12</Position>
       <PartitionDataSpaceId>1</PartitionDataSpaceId>
     </index>
-    <key id="5801" parent="5603" name="PK_Customers">
+    <index id="5807" parent="5603" name="IX_Customers_ClientCreatedBy">
+      <ColNames>ClientCreatedBy</ColNames>
+      <Position>15</Position>
+      <PartitionDataSpaceId>1</PartitionDataSpaceId>
+    </index>
+    <index id="5808" parent="5603" name="IX_Customers_ClientModifiedBy">
+      <ColNames>ClientModifiedBy</ColNames>
+      <Position>16</Position>
+      <PartitionDataSpaceId>1</PartitionDataSpaceId>
+    </index>
+    <key id="5809" parent="5603" name="PK_Customers">
       <CreatedTimestamp>2026-09-03.19:14:29.050</CreatedTimestamp>
       <ModifiedTimestamp>2026-09-03.19:14:29.050</ModifiedTimestamp>
       <ObjectId>1374627940</ObjectId>
       <Primary>1</Primary>
       <UnderlyingIndexName>PK_Customers</UnderlyingIndexName>
     </key>
-    <column id="5802" parent="5604" name="Id">
+    <column id="5810" parent="5604" name="Id">
       <NotNull>1</NotNull>
       <Position>1</Position>
       <StoredType>nvarchar(450 char)|0s</StoredType>
     </column>
-    <column id="5803" parent="5604" name="Name">
+    <column id="5811" parent="5604" name="Name">
       <NotNull>1</NotNull>
       <Position>2</Position>
       <StoredType>nvarchar(200 char)|0s</StoredType>
     </column>
-    <column id="5804" parent="5604" name="TranslationKeyId">
+    <column id="5812" parent="5604" name="TranslationKeyId">
       <Position>3</Position>
       <StoredType>nvarchar(450 char)|0s</StoredType>
     </column>
-    <column id="5805" parent="5604" name="IsPublic">
+    <column id="5813" parent="5604" name="IsPublic">
       <NotNull>1</NotNull>
       <Position>4</Position>
       <StoredType>bit|0s</StoredType>
     </column>
-    <column id="5806" parent="5604" name="Version">
+    <column id="5814" parent="5604" name="Version">
       <NotNull>1</NotNull>
       <Position>5</Position>
       <StoredType>int|0s</StoredType>
     </column>
-    <column id="5807" parent="5604" name="EntityState">
+    <column id="5815" parent="5604" name="EntityState">
       <NotNull>1</NotNull>
       <Position>6</Position>
       <StoredType>nvarchar(max)|0s</StoredType>
     </column>
-    <column id="5808" parent="5604" name="LastModifiedUtc">
+    <column id="5816" parent="5604" name="LastModifiedUtc">
       <NotNull>1</NotNull>
       <Position>7</Position>
       <StoredType>nvarchar(max)|0s</StoredType>
     </column>
-    <column id="5809" parent="5604" name="IsSyncedToServer">
+    <column id="5817" parent="5604" name="IsSyncedToServer">
       <NotNull>1</NotNull>
       <Position>8</Position>
       <StoredType>bit|0s</StoredType>
     </column>
-    <column id="5810" parent="5604" name="LastSyncedAt">
+    <column id="5818" parent="5604" name="LastSyncedAt">
       <Position>9</Position>
       <StoredType>datetime2|0s</StoredType>
     </column>
-    <column id="5811" parent="5604" name="IsDeleted">
+    <column id="5819" parent="5604" name="IsDeleted">
       <NotNull>1</NotNull>
       <Position>10</Position>
       <StoredType>bit|0s</StoredType>
     </column>
-    <column id="5812" parent="5604" name="DeletedAt">
+    <column id="5820" parent="5604" name="DeletedAt">
       <Position>11</Position>
       <StoredType>datetime2|0s</StoredType>
     </column>
-    <column id="5813" parent="5604" name="CreatedBy">
+    <column id="5821" parent="5604" name="CreatedBy">
       <Position>12</Position>
       <StoredType>nvarchar(450 char)|0s</StoredType>
     </column>
-    <column id="5814" parent="5604" name="CreatedDate">
+    <column id="5822" parent="5604" name="CreatedDate">
       <Position>13</Position>
       <StoredType>datetime2|0s</StoredType>
     </column>
-    <column id="5815" parent="5604" name="UpdatedBy">
+    <column id="5823" parent="5604" name="UpdatedBy">
       <Position>14</Position>
       <StoredType>nvarchar(450 char)|0s</StoredType>
     </column>
-    <column id="5816" parent="5604" name="UpdatedDate">
+    <column id="5824" parent="5604" name="UpdatedDate">
       <Position>15</Position>
       <StoredType>datetime2|0s</StoredType>
     </column>
-    <foreign-key id="5817" parent="5604" name="FK_Districts_TranslationKeys_TranslationKeyId">
+    <foreign-key id="5825" parent="5604" name="FK_Districts_TranslationKeys_TranslationKeyId">
       <ColNames>TranslationKeyId</ColNames>
       <CreatedTimestamp>2026-09-03.19:14:29.030</CreatedTimestamp>
       <ModifiedTimestamp>2026-09-03.19:14:29.030</ModifiedTimestamp>
@@ -18188,7 +18244,7 @@ Name</ColNames>
       <RefTableId>590625147</RefTableId>
       <RefTableName>TranslationKeys</RefTableName>
     </foreign-key>
-    <foreign-key id="5818" parent="5604" name="FK_Districts_AspNetUsers_CreatedBy">
+    <foreign-key id="5826" parent="5604" name="FK_Districts_AspNetUsers_CreatedBy">
       <ColNames>CreatedBy</ColNames>
       <CreatedTimestamp>2026-09-14.10:16:04.933</CreatedTimestamp>
       <ModifiedTimestamp>2026-09-14.10:16:04.933</ModifiedTimestamp>
@@ -18197,7 +18253,7 @@ Name</ColNames>
       <RefTableId>734625660</RefTableId>
       <RefTableName>AspNetUsers</RefTableName>
     </foreign-key>
-    <foreign-key id="5819" parent="5604" name="FK_Districts_AspNetUsers_UpdatedBy">
+    <foreign-key id="5827" parent="5604" name="FK_Districts_AspNetUsers_UpdatedBy">
       <ColNames>UpdatedBy</ColNames>
       <CreatedTimestamp>2026-09-14.10:16:04.953</CreatedTimestamp>
       <ModifiedTimestamp>2026-09-14.10:16:04.953</ModifiedTimestamp>
@@ -18206,226 +18262,226 @@ Name</ColNames>
       <RefTableId>734625660</RefTableId>
       <RefTableName>AspNetUsers</RefTableName>
     </foreign-key>
-    <index id="5820" parent="5604" name="PK_Districts">
+    <index id="5828" parent="5604" name="PK_Districts">
       <Clustering>1</Clustering>
       <ColNames>Id</ColNames>
       <Position>1</Position>
       <Unique>1</Unique>
       <PartitionDataSpaceId>1</PartitionDataSpaceId>
     </index>
-    <index id="5821" parent="5604" name="IX_Districts_TranslationKeyId">
+    <index id="5829" parent="5604" name="IX_Districts_TranslationKeyId">
       <ColNames>TranslationKeyId</ColNames>
       <Condition>[TranslationKeyId] IS NOT NULL</Condition>
       <Position>2</Position>
       <Unique>1</Unique>
       <PartitionDataSpaceId>1</PartitionDataSpaceId>
     </index>
-    <index id="5822" parent="5604" name="IX_Districts_CreatedBy">
+    <index id="5830" parent="5604" name="IX_Districts_CreatedBy">
       <ColNames>CreatedBy</ColNames>
       <Position>3</Position>
       <PartitionDataSpaceId>1</PartitionDataSpaceId>
     </index>
-    <index id="5823" parent="5604" name="IX_Districts_UpdatedBy">
+    <index id="5831" parent="5604" name="IX_Districts_UpdatedBy">
       <ColNames>UpdatedBy</ColNames>
       <Position>4</Position>
       <PartitionDataSpaceId>1</PartitionDataSpaceId>
     </index>
-    <key id="5824" parent="5604" name="PK_Districts">
+    <key id="5832" parent="5604" name="PK_Districts">
       <CreatedTimestamp>2026-09-03.19:14:29.030</CreatedTimestamp>
       <ModifiedTimestamp>2026-09-03.19:14:29.030</ModifiedTimestamp>
       <ObjectId>910626287</ObjectId>
       <Primary>1</Primary>
       <UnderlyingIndexName>PK_Districts</UnderlyingIndexName>
     </key>
-    <column id="5825" parent="5605" name="Id">
+    <column id="5833" parent="5605" name="Id">
       <NotNull>1</NotNull>
       <Position>1</Position>
       <StoredType>nvarchar(450 char)|0s</StoredType>
     </column>
-    <column id="5826" parent="5605" name="Name">
+    <column id="5834" parent="5605" name="Name">
       <NotNull>1</NotNull>
       <Position>2</Position>
       <StoredType>nvarchar(100 char)|0s</StoredType>
     </column>
-    <column id="5827" parent="5605" name="Code">
+    <column id="5835" parent="5605" name="Code">
       <Position>3</Position>
       <StoredType>nvarchar(10 char)|0s</StoredType>
     </column>
-    <column id="5828" parent="5605" name="IsActive">
+    <column id="5836" parent="5605" name="IsActive">
       <NotNull>1</NotNull>
       <Position>4</Position>
       <StoredType>bit|0s</StoredType>
     </column>
-    <column id="5829" parent="5605" name="Version">
+    <column id="5837" parent="5605" name="Version">
       <NotNull>1</NotNull>
       <Position>5</Position>
       <StoredType>int|0s</StoredType>
     </column>
-    <column id="5830" parent="5605" name="EntityState">
+    <column id="5838" parent="5605" name="EntityState">
       <NotNull>1</NotNull>
       <Position>6</Position>
       <StoredType>nvarchar(max)|0s</StoredType>
     </column>
-    <column id="5831" parent="5605" name="LastModifiedUtc">
+    <column id="5839" parent="5605" name="LastModifiedUtc">
       <NotNull>1</NotNull>
       <Position>7</Position>
       <StoredType>nvarchar(max)|0s</StoredType>
     </column>
-    <index id="5832" parent="5605" name="PK_Languages">
+    <index id="5840" parent="5605" name="PK_Languages">
       <Clustering>1</Clustering>
       <ColNames>Id</ColNames>
       <Position>1</Position>
       <Unique>1</Unique>
       <PartitionDataSpaceId>1</PartitionDataSpaceId>
     </index>
-    <index id="5833" parent="5605" name="IX_Languages_Code">
+    <index id="5841" parent="5605" name="IX_Languages_Code">
       <ColNames>Code</ColNames>
       <Condition>[Code] IS NOT NULL</Condition>
       <Position>2</Position>
       <Unique>1</Unique>
       <PartitionDataSpaceId>1</PartitionDataSpaceId>
     </index>
-    <key id="5834" parent="5605" name="PK_Languages">
+    <key id="5842" parent="5605" name="PK_Languages">
       <CreatedTimestamp>2026-09-03.19:14:29.013</CreatedTimestamp>
       <ModifiedTimestamp>2026-09-03.19:14:29.013</ModifiedTimestamp>
       <ObjectId>510624862</ObjectId>
       <Primary>1</Primary>
       <UnderlyingIndexName>PK_Languages</UnderlyingIndexName>
     </key>
-    <column id="5835" parent="5606" name="Id">
+    <column id="5843" parent="5606" name="Id">
       <NotNull>1</NotNull>
       <Position>1</Position>
       <StoredType>nvarchar(450 char)|0s</StoredType>
     </column>
-    <column id="5836" parent="5606" name="CustomerId">
+    <column id="5844" parent="5606" name="CustomerId">
       <NotNull>1</NotNull>
       <Position>2</Position>
       <StoredType>nvarchar(450 char)|0s</StoredType>
     </column>
-    <column id="5837" parent="5606" name="CustomerName">
+    <column id="5845" parent="5606" name="CustomerName">
       <Position>3</Position>
       <StoredType>nvarchar(200 char)|0s</StoredType>
     </column>
-    <column id="5838" parent="5606" name="ShopId">
+    <column id="5846" parent="5606" name="ShopId">
       <NotNull>1</NotNull>
       <Position>4</Position>
       <StoredType>nvarchar(450 char)|0s</StoredType>
     </column>
-    <column id="5839" parent="5606" name="ShopName">
+    <column id="5847" parent="5606" name="ShopName">
       <Position>5</Position>
       <StoredType>nvarchar(200 char)|0s</StoredType>
     </column>
-    <column id="5840" parent="5606" name="ProductId">
+    <column id="5848" parent="5606" name="ProductId">
       <NotNull>1</NotNull>
       <Position>6</Position>
       <StoredType>nvarchar(450 char)|0s</StoredType>
     </column>
-    <column id="5841" parent="5606" name="ProductName">
+    <column id="5849" parent="5606" name="ProductName">
       <Position>7</Position>
       <StoredType>nvarchar(200 char)|0s</StoredType>
     </column>
-    <column id="5842" parent="5606" name="Quantity">
+    <column id="5850" parent="5606" name="Quantity">
       <NotNull>1</NotNull>
       <Position>8</Position>
       <StoredType>decimal(18,2)|0s</StoredType>
     </column>
-    <column id="5843" parent="5606" name="UnitId">
+    <column id="5851" parent="5606" name="UnitId">
       <NotNull>1</NotNull>
       <Position>9</Position>
       <StoredType>nvarchar(450 char)|0s</StoredType>
     </column>
-    <column id="5844" parent="5606" name="UnitName">
+    <column id="5852" parent="5606" name="UnitName">
       <Position>10</Position>
       <StoredType>nvarchar(100 char)|0s</StoredType>
     </column>
-    <column id="5845" parent="5606" name="PriceAtLoanTime">
+    <column id="5853" parent="5606" name="PriceAtLoanTime">
       <NotNull>1</NotNull>
       <Position>11</Position>
       <StoredType>decimal(18,2)|0s</StoredType>
     </column>
-    <column id="5846" parent="5606" name="TotalAmount">
+    <column id="5854" parent="5606" name="TotalAmount">
       <NotNull>1</NotNull>
       <Position>12</Position>
       <StoredType>bigint|0s</StoredType>
     </column>
-    <column id="5847" parent="5606" name="LoanDate">
+    <column id="5855" parent="5606" name="LoanDate">
       <NotNull>1</NotNull>
       <Position>13</Position>
       <StoredType>datetime2|0s</StoredType>
     </column>
-    <column id="5848" parent="5606" name="DueDate">
+    <column id="5856" parent="5606" name="DueDate">
       <Position>14</Position>
       <StoredType>datetime2|0s</StoredType>
     </column>
-    <column id="5849" parent="5606" name="Status">
+    <column id="5857" parent="5606" name="Status">
       <NotNull>1</NotNull>
       <Position>15</Position>
       <StoredType>int|0s</StoredType>
     </column>
-    <column id="5850" parent="5606" name="Notes">
+    <column id="5858" parent="5606" name="Notes">
       <Position>16</Position>
       <StoredType>nvarchar(500 char)|0s</StoredType>
     </column>
-    <column id="5851" parent="5606" name="IsActive">
+    <column id="5859" parent="5606" name="IsActive">
       <NotNull>1</NotNull>
       <Position>17</Position>
       <StoredType>bit|0s</StoredType>
     </column>
-    <column id="5852" parent="5606" name="IsPublic">
+    <column id="5860" parent="5606" name="IsPublic">
       <NotNull>1</NotNull>
       <Position>18</Position>
       <StoredType>bit|0s</StoredType>
     </column>
-    <column id="5853" parent="5606" name="Version">
+    <column id="5861" parent="5606" name="Version">
       <NotNull>1</NotNull>
       <Position>19</Position>
       <StoredType>int|0s</StoredType>
     </column>
-    <column id="5854" parent="5606" name="EntityState">
+    <column id="5862" parent="5606" name="EntityState">
       <NotNull>1</NotNull>
       <Position>20</Position>
       <StoredType>nvarchar(max)|0s</StoredType>
     </column>
-    <column id="5855" parent="5606" name="LastModifiedUtc">
+    <column id="5863" parent="5606" name="LastModifiedUtc">
       <NotNull>1</NotNull>
       <Position>21</Position>
       <StoredType>nvarchar(max)|0s</StoredType>
     </column>
-    <column id="5856" parent="5606" name="IsSyncedToServer">
+    <column id="5864" parent="5606" name="IsSyncedToServer">
       <NotNull>1</NotNull>
       <Position>22</Position>
       <StoredType>bit|0s</StoredType>
     </column>
-    <column id="5857" parent="5606" name="LastSyncedAt">
+    <column id="5865" parent="5606" name="LastSyncedAt">
       <Position>23</Position>
       <StoredType>datetime2|0s</StoredType>
     </column>
-    <column id="5858" parent="5606" name="IsDeleted">
+    <column id="5866" parent="5606" name="IsDeleted">
       <NotNull>1</NotNull>
       <Position>24</Position>
       <StoredType>bit|0s</StoredType>
     </column>
-    <column id="5859" parent="5606" name="DeletedAt">
+    <column id="5867" parent="5606" name="DeletedAt">
       <Position>25</Position>
       <StoredType>datetime2|0s</StoredType>
     </column>
-    <column id="5860" parent="5606" name="CreatedBy">
+    <column id="5868" parent="5606" name="CreatedBy">
       <Position>26</Position>
       <StoredType>nvarchar(450 char)|0s</StoredType>
     </column>
-    <column id="5861" parent="5606" name="CreatedDate">
+    <column id="5869" parent="5606" name="CreatedDate">
       <Position>27</Position>
       <StoredType>datetime2|0s</StoredType>
     </column>
-    <column id="5862" parent="5606" name="UpdatedBy">
+    <column id="5870" parent="5606" name="UpdatedBy">
       <Position>28</Position>
       <StoredType>nvarchar(450 char)|0s</StoredType>
     </column>
-    <column id="5863" parent="5606" name="UpdatedDate">
+    <column id="5871" parent="5606" name="UpdatedDate">
       <Position>29</Position>
       <StoredType>datetime2|0s</StoredType>
     </column>
-    <foreign-key id="5864" parent="5606" name="FK_LoanAccount_Customers_CustomerId">
+    <foreign-key id="5872" parent="5606" name="FK_LoanAccount_Customers_CustomerId">
       <ColNames>CustomerId</ColNames>
       <CreatedTimestamp>2026-09-03.19:14:29.060</CreatedTimestamp>
       <ModifiedTimestamp>2026-09-03.19:14:29.060</ModifiedTimestamp>
@@ -18434,7 +18490,7 @@ Name</ColNames>
       <RefTableId>1358627883</RefTableId>
       <RefTableName>Customers</RefTableName>
     </foreign-key>
-    <foreign-key id="5865" parent="5606" name="FK_LoanAccount_Shop_ShopId">
+    <foreign-key id="5873" parent="5606" name="FK_LoanAccount_Shop_ShopId">
       <ColNames>ShopId</ColNames>
       <CreatedTimestamp>2026-09-03.19:14:29.060</CreatedTimestamp>
       <ModifiedTimestamp>2026-09-03.19:14:29.060</ModifiedTimestamp>
@@ -18443,7 +18499,7 @@ Name</ColNames>
       <RefTableId>558625033</RefTableId>
       <RefTableName>Shop</RefTableName>
     </foreign-key>
-    <foreign-key id="5866" parent="5606" name="FK_LoanAccount_Product_ProductId">
+    <foreign-key id="5874" parent="5606" name="FK_LoanAccount_Product_ProductId">
       <ColNames>ProductId</ColNames>
       <CreatedTimestamp>2026-09-03.19:14:29.060</CreatedTimestamp>
       <ModifiedTimestamp>2026-09-03.19:14:29.060</ModifiedTimestamp>
@@ -18452,7 +18508,7 @@ Name</ColNames>
       <RefTableId>1278627598</RefTableId>
       <RefTableName>Product</RefTableName>
     </foreign-key>
-    <foreign-key id="5867" parent="5606" name="FK_LoanAccount_UnitOfMeasure_UnitId">
+    <foreign-key id="5875" parent="5606" name="FK_LoanAccount_UnitOfMeasure_UnitId">
       <ColNames>UnitId</ColNames>
       <CreatedTimestamp>2026-09-03.19:14:29.060</CreatedTimestamp>
       <ModifiedTimestamp>2026-09-03.19:14:29.060</ModifiedTimestamp>
@@ -18461,7 +18517,7 @@ Name</ColNames>
       <RefTableId>846626059</RefTableId>
       <RefTableName>UnitOfMeasure</RefTableName>
     </foreign-key>
-    <foreign-key id="5868" parent="5606" name="FK_LoanAccount_AspNetUsers_CreatedBy">
+    <foreign-key id="5876" parent="5606" name="FK_LoanAccount_AspNetUsers_CreatedBy">
       <ColNames>CreatedBy</ColNames>
       <CreatedTimestamp>2026-09-14.10:16:04.970</CreatedTimestamp>
       <ModifiedTimestamp>2026-09-14.10:16:04.970</ModifiedTimestamp>
@@ -18470,7 +18526,7 @@ Name</ColNames>
       <RefTableId>734625660</RefTableId>
       <RefTableName>AspNetUsers</RefTableName>
     </foreign-key>
-    <foreign-key id="5869" parent="5606" name="FK_LoanAccount_AspNetUsers_UpdatedBy">
+    <foreign-key id="5877" parent="5606" name="FK_LoanAccount_AspNetUsers_UpdatedBy">
       <ColNames>UpdatedBy</ColNames>
       <CreatedTimestamp>2026-09-14.10:16:04.990</CreatedTimestamp>
       <ModifiedTimestamp>2026-09-14.10:16:04.990</ModifiedTimestamp>
@@ -18479,144 +18535,144 @@ Name</ColNames>
       <RefTableId>734625660</RefTableId>
       <RefTableName>AspNetUsers</RefTableName>
     </foreign-key>
-    <index id="5870" parent="5606" name="PK_LoanAccount">
+    <index id="5878" parent="5606" name="PK_LoanAccount">
       <Clustering>1</Clustering>
       <ColNames>Id</ColNames>
       <Position>1</Position>
       <Unique>1</Unique>
       <PartitionDataSpaceId>1</PartitionDataSpaceId>
     </index>
-    <index id="5871" parent="5606" name="IX_LoanAccount_CustomerId">
+    <index id="5879" parent="5606" name="IX_LoanAccount_CustomerId">
       <ColNames>CustomerId</ColNames>
       <Position>2</Position>
       <PartitionDataSpaceId>1</PartitionDataSpaceId>
     </index>
-    <index id="5872" parent="5606" name="IX_LoanAccount_ProductId">
+    <index id="5880" parent="5606" name="IX_LoanAccount_ProductId">
       <ColNames>ProductId</ColNames>
       <Position>3</Position>
       <PartitionDataSpaceId>1</PartitionDataSpaceId>
     </index>
-    <index id="5873" parent="5606" name="IX_LoanAccount_ShopId">
+    <index id="5881" parent="5606" name="IX_LoanAccount_ShopId">
       <ColNames>ShopId</ColNames>
       <Position>4</Position>
       <PartitionDataSpaceId>1</PartitionDataSpaceId>
     </index>
-    <index id="5874" parent="5606" name="IX_LoanAccount_UnitId">
+    <index id="5882" parent="5606" name="IX_LoanAccount_UnitId">
       <ColNames>UnitId</ColNames>
       <Position>5</Position>
       <PartitionDataSpaceId>1</PartitionDataSpaceId>
     </index>
-    <index id="5875" parent="5606" name="IX_LoanAccount_CreatedBy">
+    <index id="5883" parent="5606" name="IX_LoanAccount_CreatedBy">
       <ColNames>CreatedBy</ColNames>
       <Position>6</Position>
       <PartitionDataSpaceId>1</PartitionDataSpaceId>
     </index>
-    <index id="5876" parent="5606" name="IX_LoanAccount_UpdatedBy">
+    <index id="5884" parent="5606" name="IX_LoanAccount_UpdatedBy">
       <ColNames>UpdatedBy</ColNames>
       <Position>7</Position>
       <PartitionDataSpaceId>1</PartitionDataSpaceId>
     </index>
-    <key id="5877" parent="5606" name="PK_LoanAccount">
+    <key id="5885" parent="5606" name="PK_LoanAccount">
       <CreatedTimestamp>2026-09-03.19:14:29.060</CreatedTimestamp>
       <ModifiedTimestamp>2026-09-03.19:14:29.060</ModifiedTimestamp>
       <ObjectId>1582628681</ObjectId>
       <Primary>1</Primary>
       <UnderlyingIndexName>PK_LoanAccount</UnderlyingIndexName>
     </key>
-    <column id="5878" parent="5607" name="Id">
+    <column id="5886" parent="5607" name="Id">
       <NotNull>1</NotNull>
       <Position>1</Position>
       <StoredType>nvarchar(450 char)|0s</StoredType>
     </column>
-    <column id="5879" parent="5607" name="LoanAccountId">
+    <column id="5887" parent="5607" name="LoanAccountId">
       <NotNull>1</NotNull>
       <Position>2</Position>
       <StoredType>nvarchar(450 char)|0s</StoredType>
     </column>
-    <column id="5880" parent="5607" name="Amount">
+    <column id="5888" parent="5607" name="Amount">
       <NotNull>1</NotNull>
       <Position>3</Position>
       <StoredType>bigint|0s</StoredType>
     </column>
-    <column id="5881" parent="5607" name="PaymentStatus">
+    <column id="5889" parent="5607" name="PaymentStatus">
       <NotNull>1</NotNull>
       <Position>4</Position>
       <StoredType>int|0s</StoredType>
     </column>
-    <column id="5882" parent="5607" name="PaymentDate">
+    <column id="5890" parent="5607" name="PaymentDate">
       <NotNull>1</NotNull>
       <Position>5</Position>
       <StoredType>datetime2|0s</StoredType>
     </column>
-    <column id="5883" parent="5607" name="Notes">
+    <column id="5891" parent="5607" name="Notes">
       <Position>6</Position>
       <StoredType>nvarchar(500 char)|0s</StoredType>
     </column>
-    <column id="5884" parent="5607" name="PaymentMethod">
+    <column id="5892" parent="5607" name="PaymentMethod">
       <NotNull>1</NotNull>
       <Position>7</Position>
       <StoredType>nvarchar(50 char)|0s</StoredType>
     </column>
-    <column id="5885" parent="5607" name="IsActive">
+    <column id="5893" parent="5607" name="IsActive">
       <NotNull>1</NotNull>
       <Position>8</Position>
       <StoredType>bit|0s</StoredType>
     </column>
-    <column id="5886" parent="5607" name="IsPublic">
+    <column id="5894" parent="5607" name="IsPublic">
       <NotNull>1</NotNull>
       <Position>9</Position>
       <StoredType>bit|0s</StoredType>
     </column>
-    <column id="5887" parent="5607" name="Version">
+    <column id="5895" parent="5607" name="Version">
       <NotNull>1</NotNull>
       <Position>10</Position>
       <StoredType>int|0s</StoredType>
     </column>
-    <column id="5888" parent="5607" name="EntityState">
+    <column id="5896" parent="5607" name="EntityState">
       <NotNull>1</NotNull>
       <Position>11</Position>
       <StoredType>nvarchar(max)|0s</StoredType>
     </column>
-    <column id="5889" parent="5607" name="LastModifiedUtc">
+    <column id="5897" parent="5607" name="LastModifiedUtc">
       <NotNull>1</NotNull>
       <Position>12</Position>
       <StoredType>nvarchar(max)|0s</StoredType>
     </column>
-    <column id="5890" parent="5607" name="IsSyncedToServer">
+    <column id="5898" parent="5607" name="IsSyncedToServer">
       <NotNull>1</NotNull>
       <Position>13</Position>
       <StoredType>bit|0s</StoredType>
     </column>
-    <column id="5891" parent="5607" name="LastSyncedAt">
+    <column id="5899" parent="5607" name="LastSyncedAt">
       <Position>14</Position>
       <StoredType>datetime2|0s</StoredType>
     </column>
-    <column id="5892" parent="5607" name="IsDeleted">
+    <column id="5900" parent="5607" name="IsDeleted">
       <NotNull>1</NotNull>
       <Position>15</Position>
       <StoredType>bit|0s</StoredType>
     </column>
-    <column id="5893" parent="5607" name="DeletedAt">
+    <column id="5901" parent="5607" name="DeletedAt">
       <Position>16</Position>
       <StoredType>datetime2|0s</StoredType>
     </column>
-    <column id="5894" parent="5607" name="CreatedBy">
+    <column id="5902" parent="5607" name="CreatedBy">
       <Position>17</Position>
       <StoredType>nvarchar(450 char)|0s</StoredType>
     </column>
-    <column id="5895" parent="5607" name="CreatedDate">
+    <column id="5903" parent="5607" name="CreatedDate">
       <Position>18</Position>
       <StoredType>datetime2|0s</StoredType>
     </column>
-    <column id="5896" parent="5607" name="UpdatedBy">
+    <column id="5904" parent="5607" name="UpdatedBy">
       <Position>19</Position>
       <StoredType>nvarchar(450 char)|0s</StoredType>
     </column>
-    <column id="5897" parent="5607" name="UpdatedDate">
+    <column id="5905" parent="5607" name="UpdatedDate">
       <Position>20</Position>
       <StoredType>datetime2|0s</StoredType>
     </column>
-    <foreign-key id="5898" parent="5607" name="FK_LoanAccountPayment_LoanAccount_LoanAccountId">
+    <foreign-key id="5906" parent="5607" name="FK_LoanAccountPayment_LoanAccount_LoanAccountId">
       <ColNames>LoanAccountId</ColNames>
       <CreatedTimestamp>2026-09-03.19:14:29.063</CreatedTimestamp>
       <ModifiedTimestamp>2026-09-03.19:14:29.063</ModifiedTimestamp>
@@ -18626,7 +18682,7 @@ Name</ColNames>
       <RefTableId>1566628624</RefTableId>
       <RefTableName>LoanAccount</RefTableName>
     </foreign-key>
-    <foreign-key id="5899" parent="5607" name="FK_LoanAccountPayment_AspNetUsers_CreatedBy">
+    <foreign-key id="5907" parent="5607" name="FK_LoanAccountPayment_AspNetUsers_CreatedBy">
       <ColNames>CreatedBy</ColNames>
       <CreatedTimestamp>2026-09-14.10:16:05</CreatedTimestamp>
       <ModifiedTimestamp>2026-09-14.10:16:05</ModifiedTimestamp>
@@ -18635,7 +18691,7 @@ Name</ColNames>
       <RefTableId>734625660</RefTableId>
       <RefTableName>AspNetUsers</RefTableName>
     </foreign-key>
-    <foreign-key id="5900" parent="5607" name="FK_LoanAccountPayment_AspNetUsers_UpdatedBy">
+    <foreign-key id="5908" parent="5607" name="FK_LoanAccountPayment_AspNetUsers_UpdatedBy">
       <ColNames>UpdatedBy</ColNames>
       <CreatedTimestamp>2026-09-14.10:16:05.017</CreatedTimestamp>
       <ModifiedTimestamp>2026-09-14.10:16:05.017</ModifiedTimestamp>
@@ -18644,164 +18700,164 @@ Name</ColNames>
       <RefTableId>734625660</RefTableId>
       <RefTableName>AspNetUsers</RefTableName>
     </foreign-key>
-    <index id="5901" parent="5607" name="PK_LoanAccountPayment">
+    <index id="5909" parent="5607" name="PK_LoanAccountPayment">
       <Clustering>1</Clustering>
       <ColNames>Id</ColNames>
       <Position>1</Position>
       <Unique>1</Unique>
       <PartitionDataSpaceId>1</PartitionDataSpaceId>
     </index>
-    <index id="5902" parent="5607" name="IX_LoanAccountPayment_LoanAccountId">
+    <index id="5910" parent="5607" name="IX_LoanAccountPayment_LoanAccountId">
       <ColNames>LoanAccountId</ColNames>
       <Position>2</Position>
       <PartitionDataSpaceId>1</PartitionDataSpaceId>
     </index>
-    <index id="5903" parent="5607" name="IX_LoanAccountPayment_CreatedBy">
+    <index id="5911" parent="5607" name="IX_LoanAccountPayment_CreatedBy">
       <ColNames>CreatedBy</ColNames>
       <Position>3</Position>
       <PartitionDataSpaceId>1</PartitionDataSpaceId>
     </index>
-    <index id="5904" parent="5607" name="IX_LoanAccountPayment_UpdatedBy">
+    <index id="5912" parent="5607" name="IX_LoanAccountPayment_UpdatedBy">
       <ColNames>UpdatedBy</ColNames>
       <Position>4</Position>
       <PartitionDataSpaceId>1</PartitionDataSpaceId>
     </index>
-    <key id="5905" parent="5607" name="PK_LoanAccountPayment">
+    <key id="5913" parent="5607" name="PK_LoanAccountPayment">
       <CreatedTimestamp>2026-09-03.19:14:29.063</CreatedTimestamp>
       <ModifiedTimestamp>2026-09-03.19:14:29.063</ModifiedTimestamp>
       <ObjectId>1838629593</ObjectId>
       <Primary>1</Primary>
       <UnderlyingIndexName>PK_LoanAccountPayment</UnderlyingIndexName>
     </key>
-    <column id="5906" parent="5608" name="Id">
+    <column id="5914" parent="5608" name="Id">
       <NotNull>1</NotNull>
       <Position>1</Position>
       <StoredType>nvarchar(450 char)|0s</StoredType>
     </column>
-    <column id="5907" parent="5608" name="Name">
+    <column id="5915" parent="5608" name="Name">
       <NotNull>1</NotNull>
       <Position>2</Position>
       <StoredType>nvarchar(200 char)|0s</StoredType>
     </column>
-    <column id="5908" parent="5608" name="BaseUnitId">
+    <column id="5916" parent="5608" name="BaseUnitId">
       <NotNull>1</NotNull>
       <Position>3</Position>
       <StoredType>nvarchar(450 char)|0s</StoredType>
     </column>
-    <column id="5909" parent="5608" name="BaseUnitName">
+    <column id="5917" parent="5608" name="BaseUnitName">
       <Position>4</Position>
       <StoredType>nvarchar(100 char)|0s</StoredType>
     </column>
-    <column id="5910" parent="5608" name="Description">
+    <column id="5918" parent="5608" name="Description">
       <Position>5</Position>
       <StoredType>nvarchar(500 char)|0s</StoredType>
     </column>
-    <column id="5911" parent="5608" name="IsActive">
+    <column id="5919" parent="5608" name="IsActive">
       <NotNull>1</NotNull>
       <Position>6</Position>
       <StoredType>bit|0s</StoredType>
     </column>
-    <column id="5912" parent="5608" name="SKU">
+    <column id="5920" parent="5608" name="SKU">
       <NotNull>1</NotNull>
       <Position>7</Position>
       <StoredType>nvarchar(100 char)|0s</StoredType>
     </column>
-    <column id="5913" parent="5608" name="Barcode">
+    <column id="5921" parent="5608" name="Barcode">
       <Position>8</Position>
       <StoredType>nvarchar(100 char)|0s</StoredType>
     </column>
-    <column id="5914" parent="5608" name="ImageUrl">
+    <column id="5922" parent="5608" name="ImageUrl">
       <Position>9</Position>
       <StoredType>nvarchar(500 char)|0s</StoredType>
     </column>
-    <column id="5915" parent="5608" name="CategoryId">
+    <column id="5923" parent="5608" name="CategoryId">
       <Position>10</Position>
       <StoredType>nvarchar(450 char)|0s</StoredType>
     </column>
-    <column id="5916" parent="5608" name="CategoryName">
+    <column id="5924" parent="5608" name="CategoryName">
       <Position>11</Position>
       <StoredType>nvarchar(200 char)|0s</StoredType>
     </column>
-    <column id="5917" parent="5608" name="ShopId">
+    <column id="5925" parent="5608" name="ShopId">
       <NotNull>1</NotNull>
       <Position>12</Position>
       <StoredType>nvarchar(450 char)|0s</StoredType>
     </column>
-    <column id="5918" parent="5608" name="ShopName">
+    <column id="5926" parent="5608" name="ShopName">
       <Position>13</Position>
       <StoredType>nvarchar(200 char)|0s</StoredType>
     </column>
-    <column id="5919" parent="5608" name="IsPublic">
+    <column id="5927" parent="5608" name="IsPublic">
       <NotNull>1</NotNull>
       <Position>14</Position>
       <StoredType>bit|0s</StoredType>
     </column>
-    <column id="5920" parent="5608" name="Version">
+    <column id="5928" parent="5608" name="Version">
       <NotNull>1</NotNull>
       <Position>15</Position>
       <StoredType>int|0s</StoredType>
     </column>
-    <column id="5921" parent="5608" name="EntityState">
+    <column id="5929" parent="5608" name="EntityState">
       <NotNull>1</NotNull>
       <Position>16</Position>
       <StoredType>nvarchar(max)|0s</StoredType>
     </column>
-    <column id="5922" parent="5608" name="LastModifiedUtc">
+    <column id="5930" parent="5608" name="LastModifiedUtc">
       <NotNull>1</NotNull>
       <Position>17</Position>
       <StoredType>nvarchar(max)|0s</StoredType>
     </column>
-    <column id="5923" parent="5608" name="IsSyncedToServer">
+    <column id="5931" parent="5608" name="IsSyncedToServer">
       <NotNull>1</NotNull>
       <Position>18</Position>
       <StoredType>bit|0s</StoredType>
     </column>
-    <column id="5924" parent="5608" name="LastSyncedAt">
+    <column id="5932" parent="5608" name="LastSyncedAt">
       <Position>19</Position>
       <StoredType>datetime2|0s</StoredType>
     </column>
-    <column id="5925" parent="5608" name="IsDeleted">
+    <column id="5933" parent="5608" name="IsDeleted">
       <NotNull>1</NotNull>
       <Position>20</Position>
       <StoredType>bit|0s</StoredType>
     </column>
-    <column id="5926" parent="5608" name="DeletedAt">
+    <column id="5934" parent="5608" name="DeletedAt">
       <Position>21</Position>
       <StoredType>datetime2|0s</StoredType>
     </column>
-    <column id="5927" parent="5608" name="CreatedBy">
+    <column id="5935" parent="5608" name="CreatedBy">
       <Position>22</Position>
       <StoredType>nvarchar(450 char)|0s</StoredType>
     </column>
-    <column id="5928" parent="5608" name="CreatedDate">
+    <column id="5936" parent="5608" name="CreatedDate">
       <Position>23</Position>
       <StoredType>datetime2|0s</StoredType>
     </column>
-    <column id="5929" parent="5608" name="UpdatedBy">
+    <column id="5937" parent="5608" name="UpdatedBy">
       <Position>24</Position>
       <StoredType>nvarchar(450 char)|0s</StoredType>
     </column>
-    <column id="5930" parent="5608" name="UpdatedDate">
+    <column id="5938" parent="5608" name="UpdatedDate">
       <Position>25</Position>
       <StoredType>datetime2|0s</StoredType>
     </column>
-    <column id="5931" parent="5608" name="ClientCreatedBy">
+    <column id="5939" parent="5608" name="ClientCreatedBy">
       <Position>26</Position>
       <StoredType>nvarchar(450 char)|0s</StoredType>
     </column>
-    <column id="5932" parent="5608" name="ClientCreatedDate">
+    <column id="5940" parent="5608" name="ClientCreatedDate">
       <Position>27</Position>
       <StoredType>datetime2|0s</StoredType>
     </column>
-    <column id="5933" parent="5608" name="ClientModifiedBy">
+    <column id="5941" parent="5608" name="ClientModifiedBy">
       <Position>28</Position>
       <StoredType>nvarchar(450 char)|0s</StoredType>
     </column>
-    <column id="5934" parent="5608" name="ClientModifiedDate">
+    <column id="5942" parent="5608" name="ClientModifiedDate">
       <Position>29</Position>
       <StoredType>datetime2|0s</StoredType>
     </column>
-    <foreign-key id="5935" parent="5608" name="FK_Product_UnitOfMeasure_BaseUnitId">
+    <foreign-key id="5943" parent="5608" name="FK_Product_UnitOfMeasure_BaseUnitId">
       <ColNames>BaseUnitId</ColNames>
       <CreatedTimestamp>2026-09-03.19:14:29.047</CreatedTimestamp>
       <ModifiedTimestamp>2026-09-03.19:14:29.047</ModifiedTimestamp>
@@ -18810,7 +18866,7 @@ Name</ColNames>
       <RefTableId>846626059</RefTableId>
       <RefTableName>UnitOfMeasure</RefTableName>
     </foreign-key>
-    <foreign-key id="5936" parent="5608" name="FK_Product_Category_CategoryId">
+    <foreign-key id="5944" parent="5608" name="FK_Product_Category_CategoryId">
       <ColNames>CategoryId</ColNames>
       <CreatedTimestamp>2026-09-03.19:14:29.043</CreatedTimestamp>
       <ModifiedTimestamp>2026-09-03.19:14:29.043</ModifiedTimestamp>
@@ -18820,7 +18876,7 @@ Name</ColNames>
       <RefTableId>798625888</RefTableId>
       <RefTableName>Category</RefTableName>
     </foreign-key>
-    <foreign-key id="5937" parent="5608" name="FK_Product_Shop_ShopId">
+    <foreign-key id="5945" parent="5608" name="FK_Product_Shop_ShopId">
       <ColNames>ShopId</ColNames>
       <CreatedTimestamp>2026-09-03.19:14:29.047</CreatedTimestamp>
       <ModifiedTimestamp>2026-09-03.19:14:29.047</ModifiedTimestamp>
@@ -18829,7 +18885,7 @@ Name</ColNames>
       <RefTableId>558625033</RefTableId>
       <RefTableName>Shop</RefTableName>
     </foreign-key>
-    <foreign-key id="5938" parent="5608" name="FK_Product_AspNetUsers_CreatedBy">
+    <foreign-key id="5946" parent="5608" name="FK_Product_AspNetUsers_CreatedBy">
       <ColNames>CreatedBy</ColNames>
       <CreatedTimestamp>2026-09-14.10:16:05.033</CreatedTimestamp>
       <ModifiedTimestamp>2026-09-14.10:16:05.033</ModifiedTimestamp>
@@ -18838,7 +18894,7 @@ Name</ColNames>
       <RefTableId>734625660</RefTableId>
       <RefTableName>AspNetUsers</RefTableName>
     </foreign-key>
-    <foreign-key id="5939" parent="5608" name="FK_Product_AspNetUsers_UpdatedBy">
+    <foreign-key id="5947" parent="5608" name="FK_Product_AspNetUsers_UpdatedBy">
       <ColNames>UpdatedBy</ColNames>
       <CreatedTimestamp>2026-09-14.10:16:05.050</CreatedTimestamp>
       <ModifiedTimestamp>2026-09-14.10:16:05.050</ModifiedTimestamp>
@@ -18847,155 +18903,183 @@ Name</ColNames>
       <RefTableId>734625660</RefTableId>
       <RefTableName>AspNetUsers</RefTableName>
     </foreign-key>
-    <index id="5940" parent="5608" name="PK_Product">
+    <foreign-key id="5948" parent="5608" name="FK_Product_AspNetUsers_ClientCreatedBy">
+      <ColNames>ClientCreatedBy</ColNames>
+      <CreatedTimestamp>2026-09-14.19:15:02.030</CreatedTimestamp>
+      <ModifiedTimestamp>2026-09-14.19:15:02.030</ModifiedTimestamp>
+      <ObjectId>1403152044</ObjectId>
+      <RefColNames>Id</RefColNames>
+      <RefTableId>734625660</RefTableId>
+      <RefTableName>AspNetUsers</RefTableName>
+    </foreign-key>
+    <foreign-key id="5949" parent="5608" name="FK_Product_AspNetUsers_ClientModifiedBy">
+      <ColNames>ClientModifiedBy</ColNames>
+      <CreatedTimestamp>2026-09-14.19:15:02.033</CreatedTimestamp>
+      <ModifiedTimestamp>2026-09-14.19:15:02.033</ModifiedTimestamp>
+      <ObjectId>1419152101</ObjectId>
+      <RefColNames>Id</RefColNames>
+      <RefTableId>734625660</RefTableId>
+      <RefTableName>AspNetUsers</RefTableName>
+    </foreign-key>
+    <index id="5950" parent="5608" name="PK_Product">
       <Clustering>1</Clustering>
       <ColNames>Id</ColNames>
       <Position>1</Position>
       <Unique>1</Unique>
       <PartitionDataSpaceId>1</PartitionDataSpaceId>
     </index>
-    <index id="5941" parent="5608" name="IX_Product_BaseUnitId">
+    <index id="5951" parent="5608" name="IX_Product_BaseUnitId">
       <ColNames>BaseUnitId</ColNames>
       <Position>2</Position>
       <PartitionDataSpaceId>1</PartitionDataSpaceId>
     </index>
-    <index id="5942" parent="5608" name="IX_Product_CategoryId">
+    <index id="5952" parent="5608" name="IX_Product_CategoryId">
       <ColNames>CategoryId</ColNames>
       <Position>3</Position>
       <PartitionDataSpaceId>1</PartitionDataSpaceId>
     </index>
-    <index id="5943" parent="5608" name="IX_Product_ShopId">
+    <index id="5953" parent="5608" name="IX_Product_ShopId">
       <ColNames>ShopId</ColNames>
       <Position>4</Position>
       <PartitionDataSpaceId>1</PartitionDataSpaceId>
     </index>
-    <index id="5944" parent="5608" name="IX_Product_CreatedBy">
+    <index id="5954" parent="5608" name="IX_Product_CreatedBy">
       <ColNames>CreatedBy</ColNames>
       <Position>6</Position>
       <PartitionDataSpaceId>1</PartitionDataSpaceId>
     </index>
-    <index id="5945" parent="5608" name="IX_Product_UpdatedBy">
+    <index id="5955" parent="5608" name="IX_Product_UpdatedBy">
       <ColNames>UpdatedBy</ColNames>
       <Position>7</Position>
       <PartitionDataSpaceId>1</PartitionDataSpaceId>
     </index>
-    <key id="5946" parent="5608" name="PK_Product">
+    <index id="5956" parent="5608" name="IX_Product_ClientCreatedBy">
+      <ColNames>ClientCreatedBy</ColNames>
+      <Position>10</Position>
+      <PartitionDataSpaceId>1</PartitionDataSpaceId>
+    </index>
+    <index id="5957" parent="5608" name="IX_Product_ClientModifiedBy">
+      <ColNames>ClientModifiedBy</ColNames>
+      <Position>11</Position>
+      <PartitionDataSpaceId>1</PartitionDataSpaceId>
+    </index>
+    <key id="5958" parent="5608" name="PK_Product">
       <CreatedTimestamp>2026-09-03.19:14:29.043</CreatedTimestamp>
       <ModifiedTimestamp>2026-09-03.19:14:29.043</ModifiedTimestamp>
       <ObjectId>1294627655</ObjectId>
       <Primary>1</Primary>
       <UnderlyingIndexName>PK_Product</UnderlyingIndexName>
     </key>
-    <column id="5947" parent="5609" name="Id">
+    <column id="5959" parent="5609" name="Id">
       <NotNull>1</NotNull>
       <Position>1</Position>
       <StoredType>nvarchar(450 char)|0s</StoredType>
     </column>
-    <column id="5948" parent="5609" name="ProductId">
+    <column id="5960" parent="5609" name="ProductId">
       <NotNull>1</NotNull>
       <Position>2</Position>
       <StoredType>nvarchar(450 char)|0s</StoredType>
     </column>
-    <column id="5949" parent="5609" name="ProductUnitId">
+    <column id="5961" parent="5609" name="ProductUnitId">
       <NotNull>1</NotNull>
       <Position>3</Position>
       <StoredType>nvarchar(450 char)|0s</StoredType>
     </column>
-    <column id="5950" parent="5609" name="BuyPrice">
+    <column id="5962" parent="5609" name="BuyPrice">
       <NotNull>1</NotNull>
       <Position>4</Position>
       <StoredType>bigint|0s</StoredType>
     </column>
-    <column id="5951" parent="5609" name="SellPrice">
+    <column id="5963" parent="5609" name="SellPrice">
       <NotNull>1</NotNull>
       <Position>5</Position>
       <StoredType>bigint|0s</StoredType>
     </column>
-    <column id="5952" parent="5609" name="EffectiveDate">
+    <column id="5964" parent="5609" name="EffectiveDate">
       <NotNull>1</NotNull>
       <Position>6</Position>
       <StoredType>datetime2|0s</StoredType>
     </column>
-    <column id="5953" parent="5609" name="EndDate">
+    <column id="5965" parent="5609" name="EndDate">
       <Position>7</Position>
       <StoredType>datetime2|0s</StoredType>
     </column>
-    <column id="5954" parent="5609" name="IsActive">
+    <column id="5966" parent="5609" name="IsActive">
       <NotNull>1</NotNull>
       <Position>8</Position>
       <StoredType>bit|0s</StoredType>
     </column>
-    <column id="5955" parent="5609" name="IsPublic">
+    <column id="5967" parent="5609" name="IsPublic">
       <NotNull>1</NotNull>
       <Position>9</Position>
       <StoredType>bit|0s</StoredType>
     </column>
-    <column id="5956" parent="5609" name="Version">
+    <column id="5968" parent="5609" name="Version">
       <NotNull>1</NotNull>
       <Position>10</Position>
       <StoredType>int|0s</StoredType>
     </column>
-    <column id="5957" parent="5609" name="EntityState">
+    <column id="5969" parent="5609" name="EntityState">
       <NotNull>1</NotNull>
       <Position>11</Position>
       <StoredType>nvarchar(max)|0s</StoredType>
     </column>
-    <column id="5958" parent="5609" name="LastModifiedUtc">
+    <column id="5970" parent="5609" name="LastModifiedUtc">
       <NotNull>1</NotNull>
       <Position>12</Position>
       <StoredType>nvarchar(max)|0s</StoredType>
     </column>
-    <column id="5959" parent="5609" name="IsSyncedToServer">
+    <column id="5971" parent="5609" name="IsSyncedToServer">
       <NotNull>1</NotNull>
       <Position>13</Position>
       <StoredType>bit|0s</StoredType>
     </column>
-    <column id="5960" parent="5609" name="LastSyncedAt">
+    <column id="5972" parent="5609" name="LastSyncedAt">
       <Position>14</Position>
       <StoredType>datetime2|0s</StoredType>
     </column>
-    <column id="5961" parent="5609" name="IsDeleted">
+    <column id="5973" parent="5609" name="IsDeleted">
       <NotNull>1</NotNull>
       <Position>15</Position>
       <StoredType>bit|0s</StoredType>
     </column>
-    <column id="5962" parent="5609" name="DeletedAt">
+    <column id="5974" parent="5609" name="DeletedAt">
       <Position>16</Position>
       <StoredType>datetime2|0s</StoredType>
     </column>
-    <column id="5963" parent="5609" name="CreatedBy">
+    <column id="5975" parent="5609" name="CreatedBy">
       <Position>17</Position>
       <StoredType>nvarchar(450 char)|0s</StoredType>
     </column>
-    <column id="5964" parent="5609" name="CreatedDate">
+    <column id="5976" parent="5609" name="CreatedDate">
       <Position>18</Position>
       <StoredType>datetime2|0s</StoredType>
     </column>
-    <column id="5965" parent="5609" name="UpdatedBy">
+    <column id="5977" parent="5609" name="UpdatedBy">
       <Position>19</Position>
       <StoredType>nvarchar(450 char)|0s</StoredType>
     </column>
-    <column id="5966" parent="5609" name="UpdatedDate">
+    <column id="5978" parent="5609" name="UpdatedDate">
       <Position>20</Position>
       <StoredType>datetime2|0s</StoredType>
     </column>
-    <column id="5967" parent="5609" name="ClientCreatedBy">
+    <column id="5979" parent="5609" name="ClientCreatedBy">
       <Position>21</Position>
       <StoredType>nvarchar(450 char)|0s</StoredType>
     </column>
-    <column id="5968" parent="5609" name="ClientCreatedDate">
+    <column id="5980" parent="5609" name="ClientCreatedDate">
       <Position>22</Position>
       <StoredType>datetime2|0s</StoredType>
     </column>
-    <column id="5969" parent="5609" name="ClientModifiedBy">
+    <column id="5981" parent="5609" name="ClientModifiedBy">
       <Position>23</Position>
       <StoredType>nvarchar(450 char)|0s</StoredType>
     </column>
-    <column id="5970" parent="5609" name="ClientModifiedDate">
+    <column id="5982" parent="5609" name="ClientModifiedDate">
       <Position>24</Position>
       <StoredType>datetime2|0s</StoredType>
     </column>
-    <foreign-key id="5971" parent="5609" name="FK_ProductPrice_Product_ProductId">
+    <foreign-key id="5983" parent="5609" name="FK_ProductPrice_Product_ProductId">
       <ColNames>ProductId</ColNames>
       <CreatedTimestamp>2026-09-03.19:14:29.060</CreatedTimestamp>
       <ModifiedTimestamp>2026-09-03.19:14:29.060</ModifiedTimestamp>
@@ -19005,7 +19089,7 @@ Name</ColNames>
       <RefTableId>1278627598</RefTableId>
       <RefTableName>Product</RefTableName>
     </foreign-key>
-    <foreign-key id="5972" parent="5609" name="FK_ProductPrice_ProductUnit_ProductUnitId">
+    <foreign-key id="5984" parent="5609" name="FK_ProductPrice_ProductUnit_ProductUnitId">
       <ColNames>ProductUnitId</ColNames>
       <CreatedTimestamp>2026-09-03.19:14:29.060</CreatedTimestamp>
       <ModifiedTimestamp>2026-09-03.19:14:29.060</ModifiedTimestamp>
@@ -19014,7 +19098,7 @@ Name</ColNames>
       <RefTableId>1438628168</RefTableId>
       <RefTableName>ProductUnit</RefTableName>
     </foreign-key>
-    <foreign-key id="5973" parent="5609" name="FK_ProductPrice_AspNetUsers_CreatedBy">
+    <foreign-key id="5985" parent="5609" name="FK_ProductPrice_AspNetUsers_CreatedBy">
       <ColNames>CreatedBy</ColNames>
       <CreatedTimestamp>2026-09-14.10:16:05.067</CreatedTimestamp>
       <ModifiedTimestamp>2026-09-14.10:16:05.067</ModifiedTimestamp>
@@ -19023,7 +19107,7 @@ Name</ColNames>
       <RefTableId>734625660</RefTableId>
       <RefTableName>AspNetUsers</RefTableName>
     </foreign-key>
-    <foreign-key id="5974" parent="5609" name="FK_ProductPrice_AspNetUsers_UpdatedBy">
+    <foreign-key id="5986" parent="5609" name="FK_ProductPrice_AspNetUsers_UpdatedBy">
       <ColNames>UpdatedBy</ColNames>
       <CreatedTimestamp>2026-09-14.10:16:05.083</CreatedTimestamp>
       <ModifiedTimestamp>2026-09-14.10:16:05.083</ModifiedTimestamp>
@@ -19032,173 +19116,201 @@ Name</ColNames>
       <RefTableId>734625660</RefTableId>
       <RefTableName>AspNetUsers</RefTableName>
     </foreign-key>
-    <index id="5975" parent="5609" name="PK_ProductPrice">
+    <foreign-key id="5987" parent="5609" name="FK_ProductPrice_AspNetUsers_ClientCreatedBy">
+      <ColNames>ClientCreatedBy</ColNames>
+      <CreatedTimestamp>2026-09-14.19:15:02.043</CreatedTimestamp>
+      <ModifiedTimestamp>2026-09-14.19:15:02.043</ModifiedTimestamp>
+      <ObjectId>1435152158</ObjectId>
+      <RefColNames>Id</RefColNames>
+      <RefTableId>734625660</RefTableId>
+      <RefTableName>AspNetUsers</RefTableName>
+    </foreign-key>
+    <foreign-key id="5988" parent="5609" name="FK_ProductPrice_AspNetUsers_ClientModifiedBy">
+      <ColNames>ClientModifiedBy</ColNames>
+      <CreatedTimestamp>2026-09-14.19:15:02.047</CreatedTimestamp>
+      <ModifiedTimestamp>2026-09-14.19:15:02.047</ModifiedTimestamp>
+      <ObjectId>1451152215</ObjectId>
+      <RefColNames>Id</RefColNames>
+      <RefTableId>734625660</RefTableId>
+      <RefTableName>AspNetUsers</RefTableName>
+    </foreign-key>
+    <index id="5989" parent="5609" name="PK_ProductPrice">
       <Clustering>1</Clustering>
       <ColNames>Id</ColNames>
       <Position>1</Position>
       <Unique>1</Unique>
       <PartitionDataSpaceId>1</PartitionDataSpaceId>
     </index>
-    <index id="5976" parent="5609" name="IX_ProductPrice_IsActive">
+    <index id="5990" parent="5609" name="IX_ProductPrice_IsActive">
       <ColNames>IsActive</ColNames>
       <Position>2</Position>
       <PartitionDataSpaceId>1</PartitionDataSpaceId>
     </index>
-    <index id="5977" parent="5609" name="IX_ProductPrice_ProductId_ProductUnitId_EffectiveDate">
+    <index id="5991" parent="5609" name="IX_ProductPrice_ProductId_ProductUnitId_EffectiveDate">
       <ColNames>ProductId
 ProductUnitId
 EffectiveDate</ColNames>
       <Position>3</Position>
       <PartitionDataSpaceId>1</PartitionDataSpaceId>
     </index>
-    <index id="5978" parent="5609" name="IX_ProductPrice_ProductUnitId">
+    <index id="5992" parent="5609" name="IX_ProductPrice_ProductUnitId">
       <ColNames>ProductUnitId</ColNames>
       <Position>4</Position>
       <PartitionDataSpaceId>1</PartitionDataSpaceId>
     </index>
-    <index id="5979" parent="5609" name="IX_ProductPrice_CreatedBy">
+    <index id="5993" parent="5609" name="IX_ProductPrice_CreatedBy">
       <ColNames>CreatedBy</ColNames>
       <Position>5</Position>
       <PartitionDataSpaceId>1</PartitionDataSpaceId>
     </index>
-    <index id="5980" parent="5609" name="IX_ProductPrice_UpdatedBy">
+    <index id="5994" parent="5609" name="IX_ProductPrice_UpdatedBy">
       <ColNames>UpdatedBy</ColNames>
       <Position>6</Position>
       <PartitionDataSpaceId>1</PartitionDataSpaceId>
     </index>
-    <key id="5981" parent="5609" name="PK_ProductPrice">
+    <index id="5995" parent="5609" name="IX_ProductPrice_ClientCreatedBy">
+      <ColNames>ClientCreatedBy</ColNames>
+      <Position>9</Position>
+      <PartitionDataSpaceId>1</PartitionDataSpaceId>
+    </index>
+    <index id="5996" parent="5609" name="IX_ProductPrice_ClientModifiedBy">
+      <ColNames>ClientModifiedBy</ColNames>
+      <Position>10</Position>
+      <PartitionDataSpaceId>1</PartitionDataSpaceId>
+    </index>
+    <key id="5997" parent="5609" name="PK_ProductPrice">
       <CreatedTimestamp>2026-09-03.19:14:29.060</CreatedTimestamp>
       <ModifiedTimestamp>2026-09-03.19:14:29.060</ModifiedTimestamp>
       <ObjectId>1678629023</ObjectId>
       <Primary>1</Primary>
       <UnderlyingIndexName>PK_ProductPrice</UnderlyingIndexName>
     </key>
-    <column id="5982" parent="5610" name="Id">
+    <column id="5998" parent="5610" name="Id">
       <NotNull>1</NotNull>
       <Position>1</Position>
       <StoredType>nvarchar(450 char)|0s</StoredType>
     </column>
-    <column id="5983" parent="5610" name="ProductId">
+    <column id="5999" parent="5610" name="ProductId">
       <NotNull>1</NotNull>
       <Position>2</Position>
       <StoredType>nvarchar(450 char)|0s</StoredType>
     </column>
-    <column id="5984" parent="5610" name="ProductName">
+    <column id="6000" parent="5610" name="ProductName">
       <Position>3</Position>
       <StoredType>nvarchar(200 char)|0s</StoredType>
     </column>
-    <column id="5985" parent="5610" name="UnitOfMeasureId">
+    <column id="6001" parent="5610" name="UnitOfMeasureId">
       <NotNull>1</NotNull>
       <Position>4</Position>
       <StoredType>nvarchar(450 char)|0s</StoredType>
     </column>
-    <column id="5986" parent="5610" name="UnitName">
+    <column id="6002" parent="5610" name="UnitName">
       <Position>5</Position>
       <StoredType>nvarchar(100 char)|0s</StoredType>
     </column>
-    <column id="5987" parent="5610" name="ConversionFactor">
+    <column id="6003" parent="5610" name="ConversionFactor">
       <NotNull>1</NotNull>
       <Position>6</Position>
       <StoredType>decimal(18,2)|0s</StoredType>
     </column>
-    <column id="5988" parent="5610" name="Version">
+    <column id="6004" parent="5610" name="Version">
       <NotNull>1</NotNull>
       <Position>7</Position>
       <StoredType>int|0s</StoredType>
     </column>
-    <column id="5989" parent="5610" name="EntityState">
+    <column id="6005" parent="5610" name="EntityState">
       <NotNull>1</NotNull>
       <Position>8</Position>
       <StoredType>nvarchar(max)|0s</StoredType>
     </column>
-    <column id="5990" parent="5610" name="LastModifiedUtc">
+    <column id="6006" parent="5610" name="LastModifiedUtc">
       <NotNull>1</NotNull>
       <Position>9</Position>
       <StoredType>nvarchar(max)|0s</StoredType>
     </column>
-    <column id="5991" parent="5610" name="ClientCreatedBy">
+    <column id="6007" parent="5610" name="ClientCreatedBy">
       <Position>10</Position>
       <StoredType>nvarchar(450 char)|0s</StoredType>
     </column>
-    <column id="5992" parent="5610" name="ClientCreatedDate">
+    <column id="6008" parent="5610" name="ClientCreatedDate">
       <Position>11</Position>
       <StoredType>datetime2|0s</StoredType>
     </column>
-    <column id="5993" parent="5610" name="ClientModifiedBy">
+    <column id="6009" parent="5610" name="ClientModifiedBy">
       <Position>12</Position>
       <StoredType>nvarchar(450 char)|0s</StoredType>
     </column>
-    <column id="5994" parent="5610" name="ClientModifiedDate">
+    <column id="6010" parent="5610" name="ClientModifiedDate">
       <Position>13</Position>
       <StoredType>datetime2|0s</StoredType>
     </column>
-    <column id="5995" parent="5610" name="CreatedBy">
+    <column id="6011" parent="5610" name="CreatedBy">
       <Position>14</Position>
       <StoredType>nvarchar(450 char)|0s</StoredType>
     </column>
-    <column id="5996" parent="5610" name="CreatedDate">
+    <column id="6012" parent="5610" name="CreatedDate">
       <Position>15</Position>
       <StoredType>datetime2|0s</StoredType>
     </column>
-    <column id="5997" parent="5610" name="DeletedAt">
+    <column id="6013" parent="5610" name="DeletedAt">
       <Position>16</Position>
       <StoredType>datetime2|0s</StoredType>
     </column>
-    <column id="5998" parent="5610" name="IsDeleted">
+    <column id="6014" parent="5610" name="IsDeleted">
       <NotNull>1</NotNull>
       <Position>17</Position>
       <StoredType>bit|0s</StoredType>
       <DefaultConstraintId>2078630448</DefaultConstraintId>
       <DefaultConstraintName>DF__ProductUn__IsDel__7BE56230</DefaultConstraintName>
     </column>
-    <column id="5999" parent="5610" name="IsPublic">
+    <column id="6015" parent="5610" name="IsPublic">
       <NotNull>1</NotNull>
       <Position>18</Position>
       <StoredType>bit|0s</StoredType>
       <DefaultConstraintId>2094630505</DefaultConstraintId>
       <DefaultConstraintName>DF__ProductUn__IsPub__7CD98669</DefaultConstraintName>
     </column>
-    <column id="6000" parent="5610" name="IsSyncedToServer">
+    <column id="6016" parent="5610" name="IsSyncedToServer">
       <NotNull>1</NotNull>
       <Position>19</Position>
       <StoredType>bit|0s</StoredType>
       <DefaultConstraintId>2110630562</DefaultConstraintId>
       <DefaultConstraintName>DF__ProductUn__IsSyn__7DCDAAA2</DefaultConstraintName>
     </column>
-    <column id="6001" parent="5610" name="LastSyncedAt">
+    <column id="6017" parent="5610" name="LastSyncedAt">
       <Position>20</Position>
       <StoredType>datetime2|0s</StoredType>
     </column>
-    <column id="6002" parent="5610" name="UpdatedBy">
+    <column id="6018" parent="5610" name="UpdatedBy">
       <Position>21</Position>
       <StoredType>nvarchar(450 char)|0s</StoredType>
     </column>
-    <column id="6003" parent="5610" name="UpdatedDate">
+    <column id="6019" parent="5610" name="UpdatedDate">
       <Position>22</Position>
       <StoredType>datetime2|0s</StoredType>
     </column>
-    <default id="6004" parent="5610" name="DF__ProductUn__IsDel__7BE56230">
+    <default id="6020" parent="5610" name="DF__ProductUn__IsDel__7BE56230">
       <ColNames>IsDeleted</ColNames>
       <DefaultExpression>CONVERT([bit],0)</DefaultExpression>
       <ModifiedTimestamp>2026-09-06.21:37:38.360</ModifiedTimestamp>
       <NameSurrogate>1</NameSurrogate>
       <ObjectId>2078630448</ObjectId>
     </default>
-    <default id="6005" parent="5610" name="DF__ProductUn__IsPub__7CD98669">
+    <default id="6021" parent="5610" name="DF__ProductUn__IsPub__7CD98669">
       <ColNames>IsPublic</ColNames>
       <DefaultExpression>CONVERT([bit],0)</DefaultExpression>
       <ModifiedTimestamp>2026-09-06.21:37:38.367</ModifiedTimestamp>
       <NameSurrogate>1</NameSurrogate>
       <ObjectId>2094630505</ObjectId>
     </default>
-    <default id="6006" parent="5610" name="DF__ProductUn__IsSyn__7DCDAAA2">
+    <default id="6022" parent="5610" name="DF__ProductUn__IsSyn__7DCDAAA2">
       <ColNames>IsSyncedToServer</ColNames>
       <DefaultExpression>CONVERT([bit],0)</DefaultExpression>
       <ModifiedTimestamp>2026-09-06.21:37:38.367</ModifiedTimestamp>
       <NameSurrogate>1</NameSurrogate>
       <ObjectId>2110630562</ObjectId>
     </default>
-    <foreign-key id="6007" parent="5610" name="FK_ProductUnit_Product_ProductId">
+    <foreign-key id="6023" parent="5610" name="FK_ProductUnit_Product_ProductId">
       <ColNames>ProductId</ColNames>
       <CreatedTimestamp>2026-09-03.19:14:29.053</CreatedTimestamp>
       <ModifiedTimestamp>2026-09-03.19:14:29.053</ModifiedTimestamp>
@@ -19208,7 +19320,7 @@ EffectiveDate</ColNames>
       <RefTableId>1278627598</RefTableId>
       <RefTableName>Product</RefTableName>
     </foreign-key>
-    <foreign-key id="6008" parent="5610" name="FK_ProductUnit_UnitOfMeasure_UnitOfMeasureId">
+    <foreign-key id="6024" parent="5610" name="FK_ProductUnit_UnitOfMeasure_UnitOfMeasureId">
       <ColNames>UnitOfMeasureId</ColNames>
       <CreatedTimestamp>2026-09-03.19:14:29.053</CreatedTimestamp>
       <ModifiedTimestamp>2026-09-03.19:14:29.053</ModifiedTimestamp>
@@ -19218,7 +19330,25 @@ EffectiveDate</ColNames>
       <RefTableId>846626059</RefTableId>
       <RefTableName>UnitOfMeasure</RefTableName>
     </foreign-key>
-    <foreign-key id="6009" parent="5610" name="FK_ProductUnit_AspNetUsers_CreatedBy">
+    <foreign-key id="6025" parent="5610" name="FK_ProductUnit_AspNetUsers_ClientCreatedBy">
+      <ColNames>ClientCreatedBy</ColNames>
+      <CreatedTimestamp>2026-09-14.19:15:02.053</CreatedTimestamp>
+      <ModifiedTimestamp>2026-09-14.19:15:02.053</ModifiedTimestamp>
+      <ObjectId>1467152272</ObjectId>
+      <RefColNames>Id</RefColNames>
+      <RefTableId>734625660</RefTableId>
+      <RefTableName>AspNetUsers</RefTableName>
+    </foreign-key>
+    <foreign-key id="6026" parent="5610" name="FK_ProductUnit_AspNetUsers_ClientModifiedBy">
+      <ColNames>ClientModifiedBy</ColNames>
+      <CreatedTimestamp>2026-09-14.19:15:02.057</CreatedTimestamp>
+      <ModifiedTimestamp>2026-09-14.19:15:02.057</ModifiedTimestamp>
+      <ObjectId>1483152329</ObjectId>
+      <RefColNames>Id</RefColNames>
+      <RefTableId>734625660</RefTableId>
+      <RefTableName>AspNetUsers</RefTableName>
+    </foreign-key>
+    <foreign-key id="6027" parent="5610" name="FK_ProductUnit_AspNetUsers_CreatedBy">
       <ColNames>CreatedBy</ColNames>
       <CreatedTimestamp>2026-09-14.10:16:05.100</CreatedTimestamp>
       <ModifiedTimestamp>2026-09-14.10:16:05.100</ModifiedTimestamp>
@@ -19227,7 +19357,7 @@ EffectiveDate</ColNames>
       <RefTableId>734625660</RefTableId>
       <RefTableName>AspNetUsers</RefTableName>
     </foreign-key>
-    <foreign-key id="6010" parent="5610" name="FK_ProductUnit_AspNetUsers_UpdatedBy">
+    <foreign-key id="6028" parent="5610" name="FK_ProductUnit_AspNetUsers_UpdatedBy">
       <ColNames>UpdatedBy</ColNames>
       <CreatedTimestamp>2026-09-14.10:16:05.117</CreatedTimestamp>
       <ModifiedTimestamp>2026-09-14.10:16:05.117</ModifiedTimestamp>
@@ -19236,86 +19366,96 @@ EffectiveDate</ColNames>
       <RefTableId>734625660</RefTableId>
       <RefTableName>AspNetUsers</RefTableName>
     </foreign-key>
-    <index id="6011" parent="5610" name="PK_ProductUnit">
+    <index id="6029" parent="5610" name="PK_ProductUnit">
       <Clustering>1</Clustering>
       <ColNames>Id</ColNames>
       <Position>1</Position>
       <Unique>1</Unique>
       <PartitionDataSpaceId>1</PartitionDataSpaceId>
     </index>
-    <index id="6012" parent="5610" name="IX_ProductUnit_ProductId">
+    <index id="6030" parent="5610" name="IX_ProductUnit_ProductId">
       <ColNames>ProductId</ColNames>
       <Position>2</Position>
       <PartitionDataSpaceId>1</PartitionDataSpaceId>
     </index>
-    <index id="6013" parent="5610" name="IX_ProductUnit_UnitOfMeasureId">
+    <index id="6031" parent="5610" name="IX_ProductUnit_UnitOfMeasureId">
       <ColNames>UnitOfMeasureId</ColNames>
       <Position>3</Position>
       <PartitionDataSpaceId>1</PartitionDataSpaceId>
     </index>
-    <index id="6014" parent="5610" name="IX_ProductUnit_CreatedBy">
+    <index id="6032" parent="5610" name="IX_ProductUnit_CreatedBy">
       <ColNames>CreatedBy</ColNames>
       <Position>5</Position>
       <PartitionDataSpaceId>1</PartitionDataSpaceId>
     </index>
-    <index id="6015" parent="5610" name="IX_ProductUnit_UpdatedBy">
+    <index id="6033" parent="5610" name="IX_ProductUnit_UpdatedBy">
       <ColNames>UpdatedBy</ColNames>
       <Position>6</Position>
       <PartitionDataSpaceId>1</PartitionDataSpaceId>
     </index>
-    <key id="6016" parent="5610" name="PK_ProductUnit">
+    <index id="6034" parent="5610" name="IX_ProductUnit_ClientCreatedBy">
+      <ColNames>ClientCreatedBy</ColNames>
+      <Position>9</Position>
+      <PartitionDataSpaceId>1</PartitionDataSpaceId>
+    </index>
+    <index id="6035" parent="5610" name="IX_ProductUnit_ClientModifiedBy">
+      <ColNames>ClientModifiedBy</ColNames>
+      <Position>10</Position>
+      <PartitionDataSpaceId>1</PartitionDataSpaceId>
+    </index>
+    <key id="6036" parent="5610" name="PK_ProductUnit">
       <CreatedTimestamp>2026-09-03.19:14:29.053</CreatedTimestamp>
       <ModifiedTimestamp>2026-09-03.19:14:29.053</ModifiedTimestamp>
       <ObjectId>1454628225</ObjectId>
       <Primary>1</Primary>
       <UnderlyingIndexName>PK_ProductUnit</UnderlyingIndexName>
     </key>
-    <column id="6017" parent="5611" name="Id">
+    <column id="6037" parent="5611" name="Id">
       <NotNull>1</NotNull>
       <Position>1</Position>
       <StoredType>nvarchar(450 char)|0s</StoredType>
     </column>
-    <column id="6018" parent="5611" name="ProvinceId">
+    <column id="6038" parent="5611" name="ProvinceId">
       <NotNull>1</NotNull>
       <Position>2</Position>
       <StoredType>nvarchar(450 char)|0s</StoredType>
     </column>
-    <column id="6019" parent="5611" name="Name">
+    <column id="6039" parent="5611" name="Name">
       <NotNull>1</NotNull>
       <Position>3</Position>
       <StoredType>nvarchar(200 char)|0s</StoredType>
     </column>
-    <column id="6020" parent="5611" name="Version">
+    <column id="6040" parent="5611" name="Version">
       <NotNull>1</NotNull>
       <Position>4</Position>
       <StoredType>int|0s</StoredType>
     </column>
-    <column id="6021" parent="5611" name="EntityState">
+    <column id="6041" parent="5611" name="EntityState">
       <NotNull>1</NotNull>
       <Position>5</Position>
       <StoredType>nvarchar(max)|0s</StoredType>
     </column>
-    <column id="6022" parent="5611" name="LastModifiedUtc">
+    <column id="6042" parent="5611" name="LastModifiedUtc">
       <NotNull>1</NotNull>
       <Position>6</Position>
       <StoredType>nvarchar(max)|0s</StoredType>
     </column>
-    <column id="6023" parent="5611" name="LanguageCode">
+    <column id="6043" parent="5611" name="LanguageCode">
       <NotNull>1</NotNull>
       <Position>7</Position>
       <StoredType>nvarchar(10 char)|0s</StoredType>
     </column>
-    <column id="6024" parent="5611" name="LanguageId">
+    <column id="6044" parent="5611" name="LanguageId">
       <NotNull>1</NotNull>
       <Position>8</Position>
       <StoredType>nvarchar(450 char)|0s</StoredType>
     </column>
-    <column id="6025" parent="5611" name="IsDefault">
+    <column id="6045" parent="5611" name="IsDefault">
       <NotNull>1</NotNull>
       <Position>9</Position>
       <StoredType>bit|0s</StoredType>
     </column>
-    <foreign-key id="6026" parent="5611" name="FK_ProvinceTranslations_Provinces_ProvinceId">
+    <foreign-key id="6046" parent="5611" name="FK_ProvinceTranslations_Provinces_ProvinceId">
       <ColNames>ProvinceId</ColNames>
       <CreatedTimestamp>2026-09-03.19:14:29.023</CreatedTimestamp>
       <ModifiedTimestamp>2026-09-03.19:14:29.023</ModifiedTimestamp>
@@ -19325,7 +19465,7 @@ EffectiveDate</ColNames>
       <RefTableId>526624919</RefTableId>
       <RefTableName>Provinces</RefTableName>
     </foreign-key>
-    <foreign-key id="6027" parent="5611" name="FK_ProvinceTranslations_Languages_LanguageId">
+    <foreign-key id="6047" parent="5611" name="FK_ProvinceTranslations_Languages_LanguageId">
       <ColNames>LanguageId</ColNames>
       <CreatedTimestamp>2026-09-03.19:14:29.023</CreatedTimestamp>
       <ModifiedTimestamp>2026-09-03.19:14:29.023</ModifiedTimestamp>
@@ -19334,97 +19474,97 @@ EffectiveDate</ColNames>
       <RefTableId>494624805</RefTableId>
       <RefTableName>Languages</RefTableName>
     </foreign-key>
-    <index id="6028" parent="5611" name="PK_ProvinceTranslations">
+    <index id="6048" parent="5611" name="PK_ProvinceTranslations">
       <Clustering>1</Clustering>
       <ColNames>Id</ColNames>
       <Position>1</Position>
       <Unique>1</Unique>
       <PartitionDataSpaceId>1</PartitionDataSpaceId>
     </index>
-    <index id="6029" parent="5611" name="IX_ProvinceTranslations_LanguageId">
+    <index id="6049" parent="5611" name="IX_ProvinceTranslations_LanguageId">
       <ColNames>LanguageId</ColNames>
       <Position>2</Position>
       <PartitionDataSpaceId>1</PartitionDataSpaceId>
     </index>
-    <index id="6030" parent="5611" name="IX_ProvinceTranslations_ProvinceId_LanguageId">
+    <index id="6050" parent="5611" name="IX_ProvinceTranslations_ProvinceId_LanguageId">
       <ColNames>ProvinceId
 LanguageId</ColNames>
       <Position>3</Position>
       <Unique>1</Unique>
       <PartitionDataSpaceId>1</PartitionDataSpaceId>
     </index>
-    <key id="6031" parent="5611" name="PK_ProvinceTranslations">
+    <key id="6051" parent="5611" name="PK_ProvinceTranslations">
       <CreatedTimestamp>2026-09-03.19:14:29.023</CreatedTimestamp>
       <ModifiedTimestamp>2026-09-03.19:14:29.023</ModifiedTimestamp>
       <ObjectId>686625489</ObjectId>
       <Primary>1</Primary>
       <UnderlyingIndexName>PK_ProvinceTranslations</UnderlyingIndexName>
     </key>
-    <column id="6032" parent="5612" name="Id">
+    <column id="6052" parent="5612" name="Id">
       <NotNull>1</NotNull>
       <Position>1</Position>
       <StoredType>nvarchar(450 char)|0s</StoredType>
     </column>
-    <column id="6033" parent="5612" name="Name">
+    <column id="6053" parent="5612" name="Name">
       <NotNull>1</NotNull>
       <Position>2</Position>
       <StoredType>nvarchar(200 char)|0s</StoredType>
     </column>
-    <column id="6034" parent="5612" name="IsPublic">
+    <column id="6054" parent="5612" name="IsPublic">
       <NotNull>1</NotNull>
       <Position>3</Position>
       <StoredType>bit|0s</StoredType>
     </column>
-    <column id="6035" parent="5612" name="Version">
+    <column id="6055" parent="5612" name="Version">
       <NotNull>1</NotNull>
       <Position>4</Position>
       <StoredType>int|0s</StoredType>
     </column>
-    <column id="6036" parent="5612" name="EntityState">
+    <column id="6056" parent="5612" name="EntityState">
       <NotNull>1</NotNull>
       <Position>5</Position>
       <StoredType>nvarchar(max)|0s</StoredType>
     </column>
-    <column id="6037" parent="5612" name="LastModifiedUtc">
+    <column id="6057" parent="5612" name="LastModifiedUtc">
       <NotNull>1</NotNull>
       <Position>6</Position>
       <StoredType>nvarchar(max)|0s</StoredType>
     </column>
-    <column id="6038" parent="5612" name="IsSyncedToServer">
+    <column id="6058" parent="5612" name="IsSyncedToServer">
       <NotNull>1</NotNull>
       <Position>7</Position>
       <StoredType>bit|0s</StoredType>
     </column>
-    <column id="6039" parent="5612" name="LastSyncedAt">
+    <column id="6059" parent="5612" name="LastSyncedAt">
       <Position>8</Position>
       <StoredType>datetime2|0s</StoredType>
     </column>
-    <column id="6040" parent="5612" name="IsDeleted">
+    <column id="6060" parent="5612" name="IsDeleted">
       <NotNull>1</NotNull>
       <Position>9</Position>
       <StoredType>bit|0s</StoredType>
     </column>
-    <column id="6041" parent="5612" name="DeletedAt">
+    <column id="6061" parent="5612" name="DeletedAt">
       <Position>10</Position>
       <StoredType>datetime2|0s</StoredType>
     </column>
-    <column id="6042" parent="5612" name="CreatedBy">
+    <column id="6062" parent="5612" name="CreatedBy">
       <Position>11</Position>
       <StoredType>nvarchar(450 char)|0s</StoredType>
     </column>
-    <column id="6043" parent="5612" name="CreatedDate">
+    <column id="6063" parent="5612" name="CreatedDate">
       <Position>12</Position>
       <StoredType>datetime2|0s</StoredType>
     </column>
-    <column id="6044" parent="5612" name="UpdatedBy">
+    <column id="6064" parent="5612" name="UpdatedBy">
       <Position>13</Position>
       <StoredType>nvarchar(450 char)|0s</StoredType>
     </column>
-    <column id="6045" parent="5612" name="UpdatedDate">
+    <column id="6065" parent="5612" name="UpdatedDate">
       <Position>14</Position>
       <StoredType>datetime2|0s</StoredType>
     </column>
-    <foreign-key id="6046" parent="5612" name="FK_Provinces_AspNetUsers_CreatedBy">
+    <foreign-key id="6066" parent="5612" name="FK_Provinces_AspNetUsers_CreatedBy">
       <ColNames>CreatedBy</ColNames>
       <CreatedTimestamp>2026-09-14.10:16:05.133</CreatedTimestamp>
       <ModifiedTimestamp>2026-09-14.10:16:05.133</ModifiedTimestamp>
@@ -19433,7 +19573,7 @@ LanguageId</ColNames>
       <RefTableId>734625660</RefTableId>
       <RefTableName>AspNetUsers</RefTableName>
     </foreign-key>
-    <foreign-key id="6047" parent="5612" name="FK_Provinces_AspNetUsers_UpdatedBy">
+    <foreign-key id="6067" parent="5612" name="FK_Provinces_AspNetUsers_UpdatedBy">
       <ColNames>UpdatedBy</ColNames>
       <CreatedTimestamp>2026-09-14.10:16:05.150</CreatedTimestamp>
       <ModifiedTimestamp>2026-09-14.10:16:05.150</ModifiedTimestamp>
@@ -19442,128 +19582,128 @@ LanguageId</ColNames>
       <RefTableId>734625660</RefTableId>
       <RefTableName>AspNetUsers</RefTableName>
     </foreign-key>
-    <index id="6048" parent="5612" name="PK_Provinces">
+    <index id="6068" parent="5612" name="PK_Provinces">
       <Clustering>1</Clustering>
       <ColNames>Id</ColNames>
       <Position>1</Position>
       <Unique>1</Unique>
       <PartitionDataSpaceId>1</PartitionDataSpaceId>
     </index>
-    <index id="6049" parent="5612" name="IX_Provinces_CreatedBy">
+    <index id="6069" parent="5612" name="IX_Provinces_CreatedBy">
       <ColNames>CreatedBy</ColNames>
       <Position>2</Position>
       <PartitionDataSpaceId>1</PartitionDataSpaceId>
     </index>
-    <index id="6050" parent="5612" name="IX_Provinces_UpdatedBy">
+    <index id="6070" parent="5612" name="IX_Provinces_UpdatedBy">
       <ColNames>UpdatedBy</ColNames>
       <Position>3</Position>
       <PartitionDataSpaceId>1</PartitionDataSpaceId>
     </index>
-    <key id="6051" parent="5612" name="PK_Provinces">
+    <key id="6071" parent="5612" name="PK_Provinces">
       <CreatedTimestamp>2026-09-03.19:14:29.013</CreatedTimestamp>
       <ModifiedTimestamp>2026-09-03.19:14:29.013</ModifiedTimestamp>
       <ObjectId>542624976</ObjectId>
       <Primary>1</Primary>
       <UnderlyingIndexName>PK_Provinces</UnderlyingIndexName>
     </key>
-    <column id="6052" parent="5613" name="Id">
+    <column id="6072" parent="5613" name="Id">
       <NotNull>1</NotNull>
       <Position>1</Position>
       <StoredType>nvarchar(450 char)|0s</StoredType>
     </column>
-    <column id="6053" parent="5613" name="Name">
+    <column id="6073" parent="5613" name="Name">
       <NotNull>1</NotNull>
       <Position>2</Position>
       <StoredType>nvarchar(200 char)|0s</StoredType>
     </column>
-    <column id="6054" parent="5613" name="ShopType">
+    <column id="6074" parent="5613" name="ShopType">
       <NotNull>1</NotNull>
       <Position>3</Position>
       <StoredType>nvarchar(max)|0s</StoredType>
     </column>
-    <column id="6055" parent="5613" name="Address">
+    <column id="6075" parent="5613" name="Address">
       <Position>4</Position>
       <StoredType>nvarchar(500 char)|0s</StoredType>
     </column>
-    <column id="6056" parent="5613" name="PhoneNumber">
+    <column id="6076" parent="5613" name="PhoneNumber">
       <Position>5</Position>
       <StoredType>nvarchar(50 char)|0s</StoredType>
     </column>
-    <column id="6057" parent="5613" name="Email">
+    <column id="6077" parent="5613" name="Email">
       <Position>6</Position>
       <StoredType>nvarchar(100 char)|0s</StoredType>
     </column>
-    <column id="6058" parent="5613" name="TaxNumber">
+    <column id="6078" parent="5613" name="TaxNumber">
       <Position>7</Position>
       <StoredType>nvarchar(50 char)|0s</StoredType>
     </column>
-    <column id="6059" parent="5613" name="IsActive">
+    <column id="6079" parent="5613" name="IsActive">
       <NotNull>1</NotNull>
       <Position>8</Position>
       <StoredType>bit|0s</StoredType>
     </column>
-    <column id="6060" parent="5613" name="LastModifiedUtc">
+    <column id="6080" parent="5613" name="LastModifiedUtc">
       <NotNull>1</NotNull>
       <Position>9</Position>
       <StoredType>nvarchar(max)|0s</StoredType>
     </column>
-    <column id="6061" parent="5613" name="IsPublic">
+    <column id="6081" parent="5613" name="IsPublic">
       <NotNull>1</NotNull>
       <Position>10</Position>
       <StoredType>bit|0s</StoredType>
     </column>
-    <column id="6062" parent="5613" name="Version">
+    <column id="6082" parent="5613" name="Version">
       <NotNull>1</NotNull>
       <Position>11</Position>
       <StoredType>int|0s</StoredType>
     </column>
-    <column id="6063" parent="5613" name="EntityState">
+    <column id="6083" parent="5613" name="EntityState">
       <NotNull>1</NotNull>
       <Position>12</Position>
       <StoredType>nvarchar(max)|0s</StoredType>
     </column>
-    <column id="6064" parent="5613" name="IsDeleted">
+    <column id="6084" parent="5613" name="IsDeleted">
       <NotNull>1</NotNull>
       <Position>13</Position>
       <StoredType>bit|0s</StoredType>
     </column>
-    <column id="6065" parent="5613" name="DeletedAt">
+    <column id="6085" parent="5613" name="DeletedAt">
       <Position>14</Position>
       <StoredType>datetime2|0s</StoredType>
     </column>
-    <column id="6066" parent="5613" name="CreatedBy">
+    <column id="6086" parent="5613" name="CreatedBy">
       <Position>15</Position>
       <StoredType>nvarchar(450 char)|0s</StoredType>
     </column>
-    <column id="6067" parent="5613" name="CreatedDate">
+    <column id="6087" parent="5613" name="CreatedDate">
       <Position>16</Position>
       <StoredType>datetime2|0s</StoredType>
     </column>
-    <column id="6068" parent="5613" name="UpdatedBy">
+    <column id="6088" parent="5613" name="UpdatedBy">
       <Position>17</Position>
       <StoredType>nvarchar(450 char)|0s</StoredType>
     </column>
-    <column id="6069" parent="5613" name="UpdatedDate">
+    <column id="6089" parent="5613" name="UpdatedDate">
       <Position>18</Position>
       <StoredType>datetime2|0s</StoredType>
     </column>
-    <column id="6070" parent="5613" name="ClientCreatedBy">
+    <column id="6090" parent="5613" name="ClientCreatedBy">
       <Position>19</Position>
-      <StoredType>nvarchar(max)|0s</StoredType>
+      <StoredType>nvarchar(450 char)|0s</StoredType>
     </column>
-    <column id="6071" parent="5613" name="ClientCreatedDate">
+    <column id="6091" parent="5613" name="ClientCreatedDate">
       <Position>20</Position>
       <StoredType>datetime2|0s</StoredType>
     </column>
-    <column id="6072" parent="5613" name="ClientModifiedBy">
+    <column id="6092" parent="5613" name="ClientModifiedBy">
       <Position>21</Position>
-      <StoredType>nvarchar(max)|0s</StoredType>
+      <StoredType>nvarchar(450 char)|0s</StoredType>
     </column>
-    <column id="6073" parent="5613" name="ClientModifiedDate">
+    <column id="6093" parent="5613" name="ClientModifiedDate">
       <Position>22</Position>
       <StoredType>datetime2|0s</StoredType>
     </column>
-    <foreign-key id="6074" parent="5613" name="FK_Shop_AspNetUsers_CreatedBy">
+    <foreign-key id="6094" parent="5613" name="FK_Shop_AspNetUsers_CreatedBy">
       <ColNames>CreatedBy</ColNames>
       <CreatedTimestamp>2026-09-14.10:16:05.177</CreatedTimestamp>
       <ModifiedTimestamp>2026-09-14.10:16:05.177</ModifiedTimestamp>
@@ -19572,7 +19712,7 @@ LanguageId</ColNames>
       <RefTableId>734625660</RefTableId>
       <RefTableName>AspNetUsers</RefTableName>
     </foreign-key>
-    <foreign-key id="6075" parent="5613" name="FK_Shop_AspNetUsers_UpdatedBy">
+    <foreign-key id="6095" parent="5613" name="FK_Shop_AspNetUsers_UpdatedBy">
       <ColNames>UpdatedBy</ColNames>
       <CreatedTimestamp>2026-09-14.10:16:05.193</CreatedTimestamp>
       <ModifiedTimestamp>2026-09-14.10:16:05.193</ModifiedTimestamp>
@@ -19581,157 +19721,185 @@ LanguageId</ColNames>
       <RefTableId>734625660</RefTableId>
       <RefTableName>AspNetUsers</RefTableName>
     </foreign-key>
-    <index id="6076" parent="5613" name="PK_Shop">
+    <foreign-key id="6096" parent="5613" name="FK_Shop_AspNetUsers_ClientCreatedBy">
+      <ColNames>ClientCreatedBy</ColNames>
+      <CreatedTimestamp>2026-09-14.19:15:02.063</CreatedTimestamp>
+      <ModifiedTimestamp>2026-09-14.19:15:02.063</ModifiedTimestamp>
+      <ObjectId>1499152386</ObjectId>
+      <RefColNames>Id</RefColNames>
+      <RefTableId>734625660</RefTableId>
+      <RefTableName>AspNetUsers</RefTableName>
+    </foreign-key>
+    <foreign-key id="6097" parent="5613" name="FK_Shop_AspNetUsers_ClientModifiedBy">
+      <ColNames>ClientModifiedBy</ColNames>
+      <CreatedTimestamp>2026-09-14.19:15:02.070</CreatedTimestamp>
+      <ModifiedTimestamp>2026-09-14.19:15:02.070</ModifiedTimestamp>
+      <ObjectId>1515152443</ObjectId>
+      <RefColNames>Id</RefColNames>
+      <RefTableId>734625660</RefTableId>
+      <RefTableName>AspNetUsers</RefTableName>
+    </foreign-key>
+    <index id="6098" parent="5613" name="PK_Shop">
       <Clustering>1</Clustering>
       <ColNames>Id</ColNames>
       <Position>1</Position>
       <Unique>1</Unique>
       <PartitionDataSpaceId>1</PartitionDataSpaceId>
     </index>
-    <index id="6077" parent="5613" name="IX_Shop_CreatedBy">
+    <index id="6099" parent="5613" name="IX_Shop_CreatedBy">
       <ColNames>CreatedBy</ColNames>
       <Position>3</Position>
       <PartitionDataSpaceId>1</PartitionDataSpaceId>
     </index>
-    <index id="6078" parent="5613" name="IX_Shop_UpdatedBy">
+    <index id="6100" parent="5613" name="IX_Shop_UpdatedBy">
       <ColNames>UpdatedBy</ColNames>
       <Position>4</Position>
       <PartitionDataSpaceId>1</PartitionDataSpaceId>
     </index>
-    <key id="6079" parent="5613" name="PK_Shop">
+    <index id="6101" parent="5613" name="IX_Shop_ClientCreatedBy">
+      <ColNames>ClientCreatedBy</ColNames>
+      <Position>5</Position>
+      <PartitionDataSpaceId>1</PartitionDataSpaceId>
+    </index>
+    <index id="6102" parent="5613" name="IX_Shop_ClientModifiedBy">
+      <ColNames>ClientModifiedBy</ColNames>
+      <Position>6</Position>
+      <PartitionDataSpaceId>1</PartitionDataSpaceId>
+    </index>
+    <key id="6103" parent="5613" name="PK_Shop">
       <CreatedTimestamp>2026-09-03.19:14:29.017</CreatedTimestamp>
       <ModifiedTimestamp>2026-09-03.19:14:29.017</ModifiedTimestamp>
       <ObjectId>574625090</ObjectId>
       <Primary>1</Primary>
       <UnderlyingIndexName>PK_Shop</UnderlyingIndexName>
     </key>
-    <column id="6080" parent="5614" name="Id">
+    <column id="6104" parent="5614" name="Id">
       <NotNull>1</NotNull>
       <Position>1</Position>
       <StoredType>nvarchar(450 char)|0s</StoredType>
     </column>
-    <column id="6081" parent="5614" name="ApplicationUserId">
+    <column id="6105" parent="5614" name="ApplicationUserId">
       <NotNull>1</NotNull>
       <Position>2</Position>
       <StoredType>nvarchar(450 char)|0s</StoredType>
     </column>
-    <column id="6082" parent="5614" name="ShopId">
+    <column id="6106" parent="5614" name="ShopId">
       <NotNull>1</NotNull>
       <Position>3</Position>
       <StoredType>nvarchar(450 char)|0s</StoredType>
     </column>
-    <column id="6083" parent="5614" name="ShopName">
+    <column id="6107" parent="5614" name="ShopName">
       <NotNull>1</NotNull>
       <Position>4</Position>
       <StoredType>nvarchar(200 char)|0s</StoredType>
     </column>
-    <column id="6084" parent="5614" name="FirstName">
+    <column id="6108" parent="5614" name="FirstName">
       <NotNull>1</NotNull>
       <Position>5</Position>
       <StoredType>nvarchar(100 char)|0s</StoredType>
     </column>
-    <column id="6085" parent="5614" name="LastName">
+    <column id="6109" parent="5614" name="LastName">
       <Position>6</Position>
       <StoredType>nvarchar(100 char)|0s</StoredType>
     </column>
-    <column id="6086" parent="5614" name="NationalIdCardNumber">
+    <column id="6110" parent="5614" name="NationalIdCardNumber">
       <Position>7</Position>
       <StoredType>nvarchar(50 char)|0s</StoredType>
     </column>
-    <column id="6087" parent="5614" name="PhoneNumber">
+    <column id="6111" parent="5614" name="PhoneNumber">
       <Position>8</Position>
       <StoredType>nvarchar(20 char)|0s</StoredType>
     </column>
-    <column id="6088" parent="5614" name="Email">
+    <column id="6112" parent="5614" name="Email">
       <Position>9</Position>
       <StoredType>nvarchar(256 char)|0s</StoredType>
     </column>
-    <column id="6089" parent="5614" name="Address">
+    <column id="6113" parent="5614" name="Address">
       <Position>10</Position>
       <StoredType>nvarchar(500 char)|0s</StoredType>
     </column>
-    <column id="6090" parent="5614" name="OwnershipPercentage">
+    <column id="6114" parent="5614" name="OwnershipPercentage">
       <NotNull>1</NotNull>
       <Position>11</Position>
       <StoredType>decimal(5,2)|0s</StoredType>
     </column>
-    <column id="6091" parent="5614" name="StartDate">
+    <column id="6115" parent="5614" name="StartDate">
       <NotNull>1</NotNull>
       <Position>12</Position>
       <StoredType>datetime2|0s</StoredType>
     </column>
-    <column id="6092" parent="5614" name="EndDate">
+    <column id="6116" parent="5614" name="EndDate">
       <Position>13</Position>
       <StoredType>datetime2|0s</StoredType>
     </column>
-    <column id="6093" parent="5614" name="IsActive">
+    <column id="6117" parent="5614" name="IsActive">
       <NotNull>1</NotNull>
       <Position>14</Position>
       <StoredType>bit|0s</StoredType>
     </column>
-    <column id="6094" parent="5614" name="ProvinceId">
+    <column id="6118" parent="5614" name="ProvinceId">
       <Position>15</Position>
       <StoredType>nvarchar(450 char)|0s</StoredType>
     </column>
-    <column id="6095" parent="5614" name="DistrictId">
+    <column id="6119" parent="5614" name="DistrictId">
       <Position>16</Position>
       <StoredType>nvarchar(450 char)|0s</StoredType>
     </column>
-    <column id="6096" parent="5614" name="IsPublic">
+    <column id="6120" parent="5614" name="IsPublic">
       <NotNull>1</NotNull>
       <Position>17</Position>
       <StoredType>bit|0s</StoredType>
     </column>
-    <column id="6097" parent="5614" name="Version">
+    <column id="6121" parent="5614" name="Version">
       <NotNull>1</NotNull>
       <Position>18</Position>
       <StoredType>int|0s</StoredType>
     </column>
-    <column id="6098" parent="5614" name="EntityState">
+    <column id="6122" parent="5614" name="EntityState">
       <NotNull>1</NotNull>
       <Position>19</Position>
       <StoredType>nvarchar(max)|0s</StoredType>
     </column>
-    <column id="6099" parent="5614" name="LastModifiedUtc">
+    <column id="6123" parent="5614" name="LastModifiedUtc">
       <NotNull>1</NotNull>
       <Position>20</Position>
       <StoredType>nvarchar(max)|0s</StoredType>
     </column>
-    <column id="6100" parent="5614" name="IsSyncedToServer">
+    <column id="6124" parent="5614" name="IsSyncedToServer">
       <NotNull>1</NotNull>
       <Position>21</Position>
       <StoredType>bit|0s</StoredType>
     </column>
-    <column id="6101" parent="5614" name="LastSyncedAt">
+    <column id="6125" parent="5614" name="LastSyncedAt">
       <Position>22</Position>
       <StoredType>datetime2|0s</StoredType>
     </column>
-    <column id="6102" parent="5614" name="IsDeleted">
+    <column id="6126" parent="5614" name="IsDeleted">
       <NotNull>1</NotNull>
       <Position>23</Position>
       <StoredType>bit|0s</StoredType>
     </column>
-    <column id="6103" parent="5614" name="DeletedAt">
+    <column id="6127" parent="5614" name="DeletedAt">
       <Position>24</Position>
       <StoredType>datetime2|0s</StoredType>
     </column>
-    <column id="6104" parent="5614" name="CreatedBy">
+    <column id="6128" parent="5614" name="CreatedBy">
       <Position>25</Position>
       <StoredType>nvarchar(450 char)|0s</StoredType>
     </column>
-    <column id="6105" parent="5614" name="CreatedDate">
+    <column id="6129" parent="5614" name="CreatedDate">
       <Position>26</Position>
       <StoredType>datetime2|0s</StoredType>
     </column>
-    <column id="6106" parent="5614" name="UpdatedBy">
+    <column id="6130" parent="5614" name="UpdatedBy">
       <Position>27</Position>
       <StoredType>nvarchar(450 char)|0s</StoredType>
     </column>
-    <column id="6107" parent="5614" name="UpdatedDate">
+    <column id="6131" parent="5614" name="UpdatedDate">
       <Position>28</Position>
       <StoredType>datetime2|0s</StoredType>
     </column>
-    <foreign-key id="6108" parent="5614" name="FK_ShopOwner_AspNetUsers_ApplicationUserId">
+    <foreign-key id="6132" parent="5614" name="FK_ShopOwner_AspNetUsers_ApplicationUserId">
       <ColNames>ApplicationUserId</ColNames>
       <CreatedTimestamp>2026-09-03.19:14:29.043</CreatedTimestamp>
       <ModifiedTimestamp>2026-09-03.19:14:29.043</ModifiedTimestamp>
@@ -19740,7 +19908,7 @@ LanguageId</ColNames>
       <RefTableId>734625660</RefTableId>
       <RefTableName>AspNetUsers</RefTableName>
     </foreign-key>
-    <foreign-key id="6109" parent="5614" name="FK_ShopOwner_Shop_ShopId">
+    <foreign-key id="6133" parent="5614" name="FK_ShopOwner_Shop_ShopId">
       <ColNames>ShopId</ColNames>
       <CreatedTimestamp>2026-09-03.19:14:29.043</CreatedTimestamp>
       <ModifiedTimestamp>2026-09-03.19:14:29.043</ModifiedTimestamp>
@@ -19749,7 +19917,7 @@ LanguageId</ColNames>
       <RefTableId>558625033</RefTableId>
       <RefTableName>Shop</RefTableName>
     </foreign-key>
-    <foreign-key id="6110" parent="5614" name="FK_ShopOwner_Provinces_ProvinceId">
+    <foreign-key id="6134" parent="5614" name="FK_ShopOwner_Provinces_ProvinceId">
       <ColNames>ProvinceId</ColNames>
       <CreatedTimestamp>2026-09-14.10:16:05.430</CreatedTimestamp>
       <ModifiedTimestamp>2026-09-14.10:16:05.430</ModifiedTimestamp>
@@ -19759,7 +19927,7 @@ LanguageId</ColNames>
       <RefTableId>526624919</RefTableId>
       <RefTableName>Provinces</RefTableName>
     </foreign-key>
-    <foreign-key id="6111" parent="5614" name="FK_ShopOwner_Districts_DistrictId">
+    <foreign-key id="6135" parent="5614" name="FK_ShopOwner_Districts_DistrictId">
       <ColNames>DistrictId</ColNames>
       <CreatedTimestamp>2026-09-14.10:16:05.433</CreatedTimestamp>
       <ModifiedTimestamp>2026-09-14.10:16:05.433</ModifiedTimestamp>
@@ -19769,7 +19937,7 @@ LanguageId</ColNames>
       <RefTableId>894626230</RefTableId>
       <RefTableName>Districts</RefTableName>
     </foreign-key>
-    <foreign-key id="6112" parent="5614" name="FK_ShopOwner_AspNetUsers_CreatedBy">
+    <foreign-key id="6136" parent="5614" name="FK_ShopOwner_AspNetUsers_CreatedBy">
       <ColNames>CreatedBy</ColNames>
       <CreatedTimestamp>2026-09-14.10:16:05.220</CreatedTimestamp>
       <ModifiedTimestamp>2026-09-14.10:16:05.220</ModifiedTimestamp>
@@ -19778,7 +19946,7 @@ LanguageId</ColNames>
       <RefTableId>734625660</RefTableId>
       <RefTableName>AspNetUsers</RefTableName>
     </foreign-key>
-    <foreign-key id="6113" parent="5614" name="FK_ShopOwner_AspNetUsers_UpdatedBy">
+    <foreign-key id="6137" parent="5614" name="FK_ShopOwner_AspNetUsers_UpdatedBy">
       <ColNames>UpdatedBy</ColNames>
       <CreatedTimestamp>2026-09-14.10:16:05.243</CreatedTimestamp>
       <ModifiedTimestamp>2026-09-14.10:16:05.243</ModifiedTimestamp>
@@ -19787,143 +19955,143 @@ LanguageId</ColNames>
       <RefTableId>734625660</RefTableId>
       <RefTableName>AspNetUsers</RefTableName>
     </foreign-key>
-    <index id="6114" parent="5614" name="PK_ShopOwner">
+    <index id="6138" parent="5614" name="PK_ShopOwner">
       <Clustering>1</Clustering>
       <ColNames>Id</ColNames>
       <Position>1</Position>
       <Unique>1</Unique>
       <PartitionDataSpaceId>1</PartitionDataSpaceId>
     </index>
-    <index id="6115" parent="5614" name="IX_ShopOwner_ApplicationUserId">
+    <index id="6139" parent="5614" name="IX_ShopOwner_ApplicationUserId">
       <ColNames>ApplicationUserId</ColNames>
       <Position>2</Position>
       <PartitionDataSpaceId>1</PartitionDataSpaceId>
     </index>
-    <index id="6116" parent="5614" name="IX_ShopOwner_IsActive">
+    <index id="6140" parent="5614" name="IX_ShopOwner_IsActive">
       <ColNames>IsActive</ColNames>
       <Position>3</Position>
       <PartitionDataSpaceId>1</PartitionDataSpaceId>
     </index>
-    <index id="6117" parent="5614" name="IX_ShopOwner_ShopId">
+    <index id="6141" parent="5614" name="IX_ShopOwner_ShopId">
       <ColNames>ShopId</ColNames>
       <Position>4</Position>
       <PartitionDataSpaceId>1</PartitionDataSpaceId>
     </index>
-    <index id="6118" parent="5614" name="IX_ShopOwner_CreatedBy">
+    <index id="6142" parent="5614" name="IX_ShopOwner_CreatedBy">
       <ColNames>CreatedBy</ColNames>
       <Position>7</Position>
       <PartitionDataSpaceId>1</PartitionDataSpaceId>
     </index>
-    <index id="6119" parent="5614" name="IX_ShopOwner_UpdatedBy">
+    <index id="6143" parent="5614" name="IX_ShopOwner_UpdatedBy">
       <ColNames>UpdatedBy</ColNames>
       <Position>8</Position>
       <PartitionDataSpaceId>1</PartitionDataSpaceId>
     </index>
-    <index id="6120" parent="5614" name="IX_ShopOwner_ProvinceId">
+    <index id="6144" parent="5614" name="IX_ShopOwner_ProvinceId">
       <ColNames>ProvinceId</ColNames>
       <Position>9</Position>
       <PartitionDataSpaceId>1</PartitionDataSpaceId>
     </index>
-    <index id="6121" parent="5614" name="IX_ShopOwner_DistrictId">
+    <index id="6145" parent="5614" name="IX_ShopOwner_DistrictId">
       <ColNames>DistrictId</ColNames>
       <Position>10</Position>
       <PartitionDataSpaceId>1</PartitionDataSpaceId>
     </index>
-    <key id="6122" parent="5614" name="PK_ShopOwner">
+    <key id="6146" parent="5614" name="PK_ShopOwner">
       <CreatedTimestamp>2026-09-03.19:14:29.043</CreatedTimestamp>
       <ModifiedTimestamp>2026-09-03.19:14:29.043</ModifiedTimestamp>
       <ObjectId>1230627427</ObjectId>
       <Primary>1</Primary>
       <UnderlyingIndexName>PK_ShopOwner</UnderlyingIndexName>
     </key>
-    <column id="6123" parent="5615" name="Id">
+    <column id="6147" parent="5615" name="Id">
       <NotNull>1</NotNull>
       <Position>1</Position>
       <StoredType>nvarchar(450 char)|0s</StoredType>
     </column>
-    <column id="6124" parent="5615" name="ProductId">
+    <column id="6148" parent="5615" name="ProductId">
       <NotNull>1</NotNull>
       <Position>2</Position>
       <StoredType>nvarchar(450 char)|0s</StoredType>
     </column>
-    <column id="6125" parent="5615" name="ProductName">
+    <column id="6149" parent="5615" name="ProductName">
       <Position>3</Position>
       <StoredType>nvarchar(200 char)|0s</StoredType>
     </column>
-    <column id="6126" parent="5615" name="BatchNumber">
+    <column id="6150" parent="5615" name="BatchNumber">
       <Position>4</Position>
       <StoredType>nvarchar(50 char)|0s</StoredType>
     </column>
-    <column id="6127" parent="5615" name="Quantity">
+    <column id="6151" parent="5615" name="Quantity">
       <NotNull>1</NotNull>
       <Position>5</Position>
       <StoredType>decimal(18,4)|0s</StoredType>
     </column>
-    <column id="6128" parent="5615" name="UnitId">
+    <column id="6152" parent="5615" name="UnitId">
       <NotNull>1</NotNull>
       <Position>6</Position>
       <StoredType>nvarchar(450 char)|0s</StoredType>
     </column>
-    <column id="6129" parent="5615" name="UnitName">
+    <column id="6153" parent="5615" name="UnitName">
       <Position>7</Position>
       <StoredType>nvarchar(100 char)|0s</StoredType>
     </column>
-    <column id="6130" parent="5615" name="ReceivedDate">
+    <column id="6154" parent="5615" name="ReceivedDate">
       <NotNull>1</NotNull>
       <Position>8</Position>
       <StoredType>datetime2|0s</StoredType>
     </column>
-    <column id="6131" parent="5615" name="ExpirationDate">
+    <column id="6155" parent="5615" name="ExpirationDate">
       <Position>9</Position>
       <StoredType>datetime2|0s</StoredType>
     </column>
-    <column id="6132" parent="5615" name="PurchasePrice">
+    <column id="6156" parent="5615" name="PurchasePrice">
       <NotNull>1</NotNull>
       <Position>10</Position>
       <StoredType>bigint|0s</StoredType>
     </column>
-    <column id="6133" parent="5615" name="Status">
+    <column id="6157" parent="5615" name="Status">
       <NotNull>1</NotNull>
       <Position>11</Position>
       <StoredType>nvarchar(450 char)|0s</StoredType>
     </column>
-    <column id="6134" parent="5615" name="IsPublic">
+    <column id="6158" parent="5615" name="IsPublic">
       <NotNull>1</NotNull>
       <Position>12</Position>
       <StoredType>bit|0s</StoredType>
     </column>
-    <column id="6135" parent="5615" name="CreatedBy">
+    <column id="6159" parent="5615" name="CreatedBy">
       <Position>13</Position>
       <StoredType>nvarchar(450 char)|0s</StoredType>
     </column>
-    <column id="6136" parent="5615" name="CreatedDate">
+    <column id="6160" parent="5615" name="CreatedDate">
       <Position>14</Position>
       <StoredType>datetime2|0s</StoredType>
     </column>
-    <column id="6137" parent="5615" name="UpdatedBy">
+    <column id="6161" parent="5615" name="UpdatedBy">
       <Position>15</Position>
       <StoredType>nvarchar(450 char)|0s</StoredType>
     </column>
-    <column id="6138" parent="5615" name="UpdatedDate">
+    <column id="6162" parent="5615" name="UpdatedDate">
       <Position>16</Position>
       <StoredType>datetime2|0s</StoredType>
     </column>
-    <column id="6139" parent="5615" name="Version">
+    <column id="6163" parent="5615" name="Version">
       <NotNull>1</NotNull>
       <Position>17</Position>
       <StoredType>int|0s</StoredType>
     </column>
-    <column id="6140" parent="5615" name="EntityState">
+    <column id="6164" parent="5615" name="EntityState">
       <NotNull>1</NotNull>
       <Position>18</Position>
       <StoredType>nvarchar(max)|0s</StoredType>
     </column>
-    <column id="6141" parent="5615" name="LastModifiedUtc">
+    <column id="6165" parent="5615" name="LastModifiedUtc">
       <NotNull>1</NotNull>
       <Position>19</Position>
       <StoredType>nvarchar(max)|0s</StoredType>
     </column>
-    <foreign-key id="6142" parent="5615" name="FK_StockBatch_Product_ProductId">
+    <foreign-key id="6166" parent="5615" name="FK_StockBatch_Product_ProductId">
       <ColNames>ProductId</ColNames>
       <CreatedTimestamp>2026-09-03.19:14:29.057</CreatedTimestamp>
       <ModifiedTimestamp>2026-09-03.19:14:29.057</ModifiedTimestamp>
@@ -19932,7 +20100,7 @@ LanguageId</ColNames>
       <RefTableId>1278627598</RefTableId>
       <RefTableName>Product</RefTableName>
     </foreign-key>
-    <foreign-key id="6143" parent="5615" name="FK_StockBatch_UnitOfMeasure_UnitId">
+    <foreign-key id="6167" parent="5615" name="FK_StockBatch_UnitOfMeasure_UnitId">
       <ColNames>UnitId</ColNames>
       <CreatedTimestamp>2026-09-03.19:14:29.057</CreatedTimestamp>
       <ModifiedTimestamp>2026-09-03.19:14:29.057</ModifiedTimestamp>
@@ -19941,7 +20109,7 @@ LanguageId</ColNames>
       <RefTableId>846626059</RefTableId>
       <RefTableName>UnitOfMeasure</RefTableName>
     </foreign-key>
-    <foreign-key id="6144" parent="5615" name="FK_StockBatch_AspNetUsers_CreatedBy">
+    <foreign-key id="6168" parent="5615" name="FK_StockBatch_AspNetUsers_CreatedBy">
       <ColNames>CreatedBy</ColNames>
       <CreatedTimestamp>2026-09-14.10:16:05.263</CreatedTimestamp>
       <ModifiedTimestamp>2026-09-14.10:16:05.263</ModifiedTimestamp>
@@ -19950,7 +20118,7 @@ LanguageId</ColNames>
       <RefTableId>734625660</RefTableId>
       <RefTableName>AspNetUsers</RefTableName>
     </foreign-key>
-    <foreign-key id="6145" parent="5615" name="FK_StockBatch_AspNetUsers_UpdatedBy">
+    <foreign-key id="6169" parent="5615" name="FK_StockBatch_AspNetUsers_UpdatedBy">
       <ColNames>UpdatedBy</ColNames>
       <CreatedTimestamp>2026-09-14.10:16:05.283</CreatedTimestamp>
       <ModifiedTimestamp>2026-09-14.10:16:05.283</ModifiedTimestamp>
@@ -19959,148 +20127,148 @@ LanguageId</ColNames>
       <RefTableId>734625660</RefTableId>
       <RefTableName>AspNetUsers</RefTableName>
     </foreign-key>
-    <index id="6146" parent="5615" name="PK_StockBatch">
+    <index id="6170" parent="5615" name="PK_StockBatch">
       <Clustering>1</Clustering>
       <ColNames>Id</ColNames>
       <Position>1</Position>
       <Unique>1</Unique>
       <PartitionDataSpaceId>1</PartitionDataSpaceId>
     </index>
-    <index id="6147" parent="5615" name="IX_StockBatch_BatchNumber">
+    <index id="6171" parent="5615" name="IX_StockBatch_BatchNumber">
       <ColNames>BatchNumber</ColNames>
       <Position>2</Position>
       <PartitionDataSpaceId>1</PartitionDataSpaceId>
     </index>
-    <index id="6148" parent="5615" name="IX_StockBatch_ExpirationDate">
+    <index id="6172" parent="5615" name="IX_StockBatch_ExpirationDate">
       <ColNames>ExpirationDate</ColNames>
       <Position>3</Position>
       <PartitionDataSpaceId>1</PartitionDataSpaceId>
     </index>
-    <index id="6149" parent="5615" name="IX_StockBatch_ProductId">
+    <index id="6173" parent="5615" name="IX_StockBatch_ProductId">
       <ColNames>ProductId</ColNames>
       <Position>4</Position>
       <PartitionDataSpaceId>1</PartitionDataSpaceId>
     </index>
-    <index id="6150" parent="5615" name="IX_StockBatch_Status">
+    <index id="6174" parent="5615" name="IX_StockBatch_Status">
       <ColNames>Status</ColNames>
       <Position>5</Position>
       <PartitionDataSpaceId>1</PartitionDataSpaceId>
     </index>
-    <index id="6151" parent="5615" name="IX_StockBatch_UnitId">
+    <index id="6175" parent="5615" name="IX_StockBatch_UnitId">
       <ColNames>UnitId</ColNames>
       <Position>6</Position>
       <PartitionDataSpaceId>1</PartitionDataSpaceId>
     </index>
-    <index id="6152" parent="5615" name="IX_StockBatch_CreatedBy">
+    <index id="6176" parent="5615" name="IX_StockBatch_CreatedBy">
       <ColNames>CreatedBy</ColNames>
       <Position>7</Position>
       <PartitionDataSpaceId>1</PartitionDataSpaceId>
     </index>
-    <index id="6153" parent="5615" name="IX_StockBatch_UpdatedBy">
+    <index id="6177" parent="5615" name="IX_StockBatch_UpdatedBy">
       <ColNames>UpdatedBy</ColNames>
       <Position>8</Position>
       <PartitionDataSpaceId>1</PartitionDataSpaceId>
     </index>
-    <key id="6154" parent="5615" name="PK_StockBatch">
+    <key id="6178" parent="5615" name="PK_StockBatch">
       <CreatedTimestamp>2026-09-03.19:14:29.057</CreatedTimestamp>
       <ModifiedTimestamp>2026-09-03.19:14:29.057</ModifiedTimestamp>
       <ObjectId>1518628453</ObjectId>
       <Primary>1</Primary>
       <UnderlyingIndexName>PK_StockBatch</UnderlyingIndexName>
     </key>
-    <column id="6155" parent="5616" name="Id">
+    <column id="6179" parent="5616" name="Id">
       <NotNull>1</NotNull>
       <Position>1</Position>
       <StoredType>nvarchar(450 char)|0s</StoredType>
     </column>
-    <column id="6156" parent="5616" name="ShopId">
+    <column id="6180" parent="5616" name="ShopId">
       <NotNull>1</NotNull>
       <Position>2</Position>
       <StoredType>nvarchar(450 char)|0s</StoredType>
     </column>
-    <column id="6157" parent="5616" name="ShopName">
+    <column id="6181" parent="5616" name="ShopName">
       <Position>3</Position>
       <StoredType>nvarchar(200 char)|0s</StoredType>
     </column>
-    <column id="6158" parent="5616" name="ProductId">
+    <column id="6182" parent="5616" name="ProductId">
       <NotNull>1</NotNull>
       <Position>4</Position>
       <StoredType>nvarchar(450 char)|0s</StoredType>
     </column>
-    <column id="6159" parent="5616" name="ProductName">
+    <column id="6183" parent="5616" name="ProductName">
       <Position>5</Position>
       <StoredType>nvarchar(200 char)|0s</StoredType>
     </column>
-    <column id="6160" parent="5616" name="StockBatchId">
+    <column id="6184" parent="5616" name="StockBatchId">
       <NotNull>1</NotNull>
       <Position>6</Position>
       <StoredType>nvarchar(450 char)|0s</StoredType>
     </column>
-    <column id="6161" parent="5616" name="Quantity">
+    <column id="6185" parent="5616" name="Quantity">
       <NotNull>1</NotNull>
       <Position>7</Position>
       <StoredType>decimal(18,4)|0s</StoredType>
     </column>
-    <column id="6162" parent="5616" name="UnitId">
+    <column id="6186" parent="5616" name="UnitId">
       <NotNull>1</NotNull>
       <Position>8</Position>
       <StoredType>nvarchar(450 char)|0s</StoredType>
     </column>
-    <column id="6163" parent="5616" name="UnitName">
+    <column id="6187" parent="5616" name="UnitName">
       <Position>9</Position>
       <StoredType>nvarchar(100 char)|0s</StoredType>
     </column>
-    <column id="6164" parent="5616" name="Type">
+    <column id="6188" parent="5616" name="Type">
       <NotNull>1</NotNull>
       <Position>10</Position>
       <StoredType>nvarchar(50 char)|0s</StoredType>
     </column>
-    <column id="6165" parent="5616" name="TransactionDate">
+    <column id="6189" parent="5616" name="TransactionDate">
       <NotNull>1</NotNull>
       <Position>11</Position>
       <StoredType>datetime2|0s</StoredType>
     </column>
-    <column id="6166" parent="5616" name="Reference">
+    <column id="6190" parent="5616" name="Reference">
       <Position>12</Position>
       <StoredType>nvarchar(200 char)|0s</StoredType>
     </column>
-    <column id="6167" parent="5616" name="IsPublic">
+    <column id="6191" parent="5616" name="IsPublic">
       <NotNull>1</NotNull>
       <Position>13</Position>
       <StoredType>bit|0s</StoredType>
     </column>
-    <column id="6168" parent="5616" name="CreatedBy">
+    <column id="6192" parent="5616" name="CreatedBy">
       <Position>14</Position>
       <StoredType>nvarchar(450 char)|0s</StoredType>
     </column>
-    <column id="6169" parent="5616" name="CreatedDate">
+    <column id="6193" parent="5616" name="CreatedDate">
       <Position>15</Position>
       <StoredType>datetime2|0s</StoredType>
     </column>
-    <column id="6170" parent="5616" name="UpdatedBy">
+    <column id="6194" parent="5616" name="UpdatedBy">
       <Position>16</Position>
       <StoredType>nvarchar(450 char)|0s</StoredType>
     </column>
-    <column id="6171" parent="5616" name="UpdatedDate">
+    <column id="6195" parent="5616" name="UpdatedDate">
       <Position>17</Position>
       <StoredType>datetime2|0s</StoredType>
     </column>
-    <column id="6172" parent="5616" name="Version">
+    <column id="6196" parent="5616" name="Version">
       <NotNull>1</NotNull>
       <Position>18</Position>
       <StoredType>int|0s</StoredType>
     </column>
-    <column id="6173" parent="5616" name="EntityState">
+    <column id="6197" parent="5616" name="EntityState">
       <NotNull>1</NotNull>
       <Position>19</Position>
       <StoredType>nvarchar(max)|0s</StoredType>
     </column>
-    <column id="6174" parent="5616" name="LastModifiedUtc">
+    <column id="6198" parent="5616" name="LastModifiedUtc">
       <NotNull>1</NotNull>
       <Position>20</Position>
       <StoredType>nvarchar(max)|0s</StoredType>
     </column>
-    <foreign-key id="6175" parent="5616" name="FK_StockTransaction_Shop_ShopId">
+    <foreign-key id="6199" parent="5616" name="FK_StockTransaction_Shop_ShopId">
       <ColNames>ShopId</ColNames>
       <CreatedTimestamp>2026-09-03.19:14:29.063</CreatedTimestamp>
       <ModifiedTimestamp>2026-09-03.19:14:29.063</ModifiedTimestamp>
@@ -20109,7 +20277,7 @@ LanguageId</ColNames>
       <RefTableId>558625033</RefTableId>
       <RefTableName>Shop</RefTableName>
     </foreign-key>
-    <foreign-key id="6176" parent="5616" name="FK_StockTransaction_Product_ProductId">
+    <foreign-key id="6200" parent="5616" name="FK_StockTransaction_Product_ProductId">
       <ColNames>ProductId</ColNames>
       <CreatedTimestamp>2026-09-03.19:14:29.063</CreatedTimestamp>
       <ModifiedTimestamp>2026-09-03.19:14:29.063</ModifiedTimestamp>
@@ -20118,7 +20286,7 @@ LanguageId</ColNames>
       <RefTableId>1278627598</RefTableId>
       <RefTableName>Product</RefTableName>
     </foreign-key>
-    <foreign-key id="6177" parent="5616" name="FK_StockTransaction_StockBatch_StockBatchId">
+    <foreign-key id="6201" parent="5616" name="FK_StockTransaction_StockBatch_StockBatchId">
       <ColNames>StockBatchId</ColNames>
       <CreatedTimestamp>2026-09-03.19:14:29.063</CreatedTimestamp>
       <ModifiedTimestamp>2026-09-03.19:14:29.063</ModifiedTimestamp>
@@ -20127,7 +20295,7 @@ LanguageId</ColNames>
       <RefTableId>1502628396</RefTableId>
       <RefTableName>StockBatch</RefTableName>
     </foreign-key>
-    <foreign-key id="6178" parent="5616" name="FK_StockTransaction_UnitOfMeasure_UnitId">
+    <foreign-key id="6202" parent="5616" name="FK_StockTransaction_UnitOfMeasure_UnitId">
       <ColNames>UnitId</ColNames>
       <CreatedTimestamp>2026-09-03.19:14:29.063</CreatedTimestamp>
       <ModifiedTimestamp>2026-09-03.19:14:29.063</ModifiedTimestamp>
@@ -20136,7 +20304,7 @@ LanguageId</ColNames>
       <RefTableId>846626059</RefTableId>
       <RefTableName>UnitOfMeasure</RefTableName>
     </foreign-key>
-    <foreign-key id="6179" parent="5616" name="FK_StockTransaction_AspNetUsers_CreatedBy">
+    <foreign-key id="6203" parent="5616" name="FK_StockTransaction_AspNetUsers_CreatedBy">
       <ColNames>CreatedBy</ColNames>
       <CreatedTimestamp>2026-09-14.10:16:05.300</CreatedTimestamp>
       <ModifiedTimestamp>2026-09-14.10:16:05.300</ModifiedTimestamp>
@@ -20145,7 +20313,7 @@ LanguageId</ColNames>
       <RefTableId>734625660</RefTableId>
       <RefTableName>AspNetUsers</RefTableName>
     </foreign-key>
-    <foreign-key id="6180" parent="5616" name="FK_StockTransaction_AspNetUsers_UpdatedBy">
+    <foreign-key id="6204" parent="5616" name="FK_StockTransaction_AspNetUsers_UpdatedBy">
       <ColNames>UpdatedBy</ColNames>
       <CreatedTimestamp>2026-09-14.10:16:05.313</CreatedTimestamp>
       <ModifiedTimestamp>2026-09-14.10:16:05.313</ModifiedTimestamp>
@@ -20154,134 +20322,134 @@ LanguageId</ColNames>
       <RefTableId>734625660</RefTableId>
       <RefTableName>AspNetUsers</RefTableName>
     </foreign-key>
-    <index id="6181" parent="5616" name="PK_StockTransaction">
+    <index id="6205" parent="5616" name="PK_StockTransaction">
       <Clustering>1</Clustering>
       <ColNames>Id</ColNames>
       <Position>1</Position>
       <Unique>1</Unique>
       <PartitionDataSpaceId>1</PartitionDataSpaceId>
     </index>
-    <index id="6182" parent="5616" name="IX_StockTransaction_ProductId">
+    <index id="6206" parent="5616" name="IX_StockTransaction_ProductId">
       <ColNames>ProductId</ColNames>
       <Position>2</Position>
       <PartitionDataSpaceId>1</PartitionDataSpaceId>
     </index>
-    <index id="6183" parent="5616" name="IX_StockTransaction_ShopId">
+    <index id="6207" parent="5616" name="IX_StockTransaction_ShopId">
       <ColNames>ShopId</ColNames>
       <Position>3</Position>
       <PartitionDataSpaceId>1</PartitionDataSpaceId>
     </index>
-    <index id="6184" parent="5616" name="IX_StockTransaction_StockBatchId">
+    <index id="6208" parent="5616" name="IX_StockTransaction_StockBatchId">
       <ColNames>StockBatchId</ColNames>
       <Position>4</Position>
       <PartitionDataSpaceId>1</PartitionDataSpaceId>
     </index>
-    <index id="6185" parent="5616" name="IX_StockTransaction_TransactionDate">
+    <index id="6209" parent="5616" name="IX_StockTransaction_TransactionDate">
       <ColNames>TransactionDate</ColNames>
       <Position>5</Position>
       <PartitionDataSpaceId>1</PartitionDataSpaceId>
     </index>
-    <index id="6186" parent="5616" name="IX_StockTransaction_Type">
+    <index id="6210" parent="5616" name="IX_StockTransaction_Type">
       <ColNames>Type</ColNames>
       <Position>6</Position>
       <PartitionDataSpaceId>1</PartitionDataSpaceId>
     </index>
-    <index id="6187" parent="5616" name="IX_StockTransaction_UnitId">
+    <index id="6211" parent="5616" name="IX_StockTransaction_UnitId">
       <ColNames>UnitId</ColNames>
       <Position>7</Position>
       <PartitionDataSpaceId>1</PartitionDataSpaceId>
     </index>
-    <index id="6188" parent="5616" name="IX_StockTransaction_CreatedBy">
+    <index id="6212" parent="5616" name="IX_StockTransaction_CreatedBy">
       <ColNames>CreatedBy</ColNames>
       <Position>8</Position>
       <PartitionDataSpaceId>1</PartitionDataSpaceId>
     </index>
-    <index id="6189" parent="5616" name="IX_StockTransaction_UpdatedBy">
+    <index id="6213" parent="5616" name="IX_StockTransaction_UpdatedBy">
       <ColNames>UpdatedBy</ColNames>
       <Position>9</Position>
       <PartitionDataSpaceId>1</PartitionDataSpaceId>
     </index>
-    <key id="6190" parent="5616" name="PK_StockTransaction">
+    <key id="6214" parent="5616" name="PK_StockTransaction">
       <CreatedTimestamp>2026-09-03.19:14:29.063</CreatedTimestamp>
       <ModifiedTimestamp>2026-09-03.19:14:29.063</ModifiedTimestamp>
       <ObjectId>1742629251</ObjectId>
       <Primary>1</Primary>
       <UnderlyingIndexName>PK_StockTransaction</UnderlyingIndexName>
     </key>
-    <column id="6191" parent="5617" name="Id">
+    <column id="6215" parent="5617" name="Id">
       <NotNull>1</NotNull>
       <Position>1</Position>
       <StoredType>nvarchar(450 char)|0s</StoredType>
     </column>
-    <column id="6192" parent="5617" name="Name">
+    <column id="6216" parent="5617" name="Name">
       <NotNull>1</NotNull>
       <Position>2</Position>
       <StoredType>nvarchar(200 char)|0s</StoredType>
     </column>
-    <column id="6193" parent="5617" name="MessageCode">
+    <column id="6217" parent="5617" name="MessageCode">
       <Position>3</Position>
       <StoredType>nvarchar(100 char)|0s</StoredType>
     </column>
-    <column id="6194" parent="5617" name="IsActive">
+    <column id="6218" parent="5617" name="IsActive">
       <NotNull>1</NotNull>
       <Position>4</Position>
       <StoredType>bit|0s</StoredType>
     </column>
-    <column id="6195" parent="5617" name="IsPublic">
+    <column id="6219" parent="5617" name="IsPublic">
       <NotNull>1</NotNull>
       <Position>5</Position>
       <StoredType>bit|0s</StoredType>
     </column>
-    <column id="6196" parent="5617" name="Version">
+    <column id="6220" parent="5617" name="Version">
       <NotNull>1</NotNull>
       <Position>6</Position>
       <StoredType>int|0s</StoredType>
     </column>
-    <column id="6197" parent="5617" name="EntityState">
+    <column id="6221" parent="5617" name="EntityState">
       <NotNull>1</NotNull>
       <Position>7</Position>
       <StoredType>nvarchar(max)|0s</StoredType>
     </column>
-    <column id="6198" parent="5617" name="LastModifiedUtc">
+    <column id="6222" parent="5617" name="LastModifiedUtc">
       <NotNull>1</NotNull>
       <Position>8</Position>
       <StoredType>nvarchar(max)|0s</StoredType>
     </column>
-    <column id="6199" parent="5617" name="IsSyncedToServer">
+    <column id="6223" parent="5617" name="IsSyncedToServer">
       <NotNull>1</NotNull>
       <Position>9</Position>
       <StoredType>bit|0s</StoredType>
     </column>
-    <column id="6200" parent="5617" name="LastSyncedAt">
+    <column id="6224" parent="5617" name="LastSyncedAt">
       <Position>10</Position>
       <StoredType>datetime2|0s</StoredType>
     </column>
-    <column id="6201" parent="5617" name="IsDeleted">
+    <column id="6225" parent="5617" name="IsDeleted">
       <NotNull>1</NotNull>
       <Position>11</Position>
       <StoredType>bit|0s</StoredType>
     </column>
-    <column id="6202" parent="5617" name="DeletedAt">
+    <column id="6226" parent="5617" name="DeletedAt">
       <Position>12</Position>
       <StoredType>datetime2|0s</StoredType>
     </column>
-    <column id="6203" parent="5617" name="CreatedBy">
+    <column id="6227" parent="5617" name="CreatedBy">
       <Position>13</Position>
       <StoredType>nvarchar(450 char)|0s</StoredType>
     </column>
-    <column id="6204" parent="5617" name="CreatedDate">
+    <column id="6228" parent="5617" name="CreatedDate">
       <Position>14</Position>
       <StoredType>datetime2|0s</StoredType>
     </column>
-    <column id="6205" parent="5617" name="UpdatedBy">
+    <column id="6229" parent="5617" name="UpdatedBy">
       <Position>15</Position>
       <StoredType>nvarchar(450 char)|0s</StoredType>
     </column>
-    <column id="6206" parent="5617" name="UpdatedDate">
+    <column id="6230" parent="5617" name="UpdatedDate">
       <Position>16</Position>
       <StoredType>datetime2|0s</StoredType>
     </column>
-    <foreign-key id="6207" parent="5617" name="FK_TranslationKeys_AspNetUsers_CreatedBy">
+    <foreign-key id="6231" parent="5617" name="FK_TranslationKeys_AspNetUsers_CreatedBy">
       <ColNames>CreatedBy</ColNames>
       <CreatedTimestamp>2026-09-14.10:16:05.327</CreatedTimestamp>
       <ModifiedTimestamp>2026-09-14.10:16:05.327</ModifiedTimestamp>
@@ -20290,7 +20458,7 @@ LanguageId</ColNames>
       <RefTableId>734625660</RefTableId>
       <RefTableName>AspNetUsers</RefTableName>
     </foreign-key>
-    <foreign-key id="6208" parent="5617" name="FK_TranslationKeys_AspNetUsers_UpdatedBy">
+    <foreign-key id="6232" parent="5617" name="FK_TranslationKeys_AspNetUsers_UpdatedBy">
       <ColNames>UpdatedBy</ColNames>
       <CreatedTimestamp>2026-09-14.10:16:05.340</CreatedTimestamp>
       <ModifiedTimestamp>2026-09-14.10:16:05.340</ModifiedTimestamp>
@@ -20299,110 +20467,110 @@ LanguageId</ColNames>
       <RefTableId>734625660</RefTableId>
       <RefTableName>AspNetUsers</RefTableName>
     </foreign-key>
-    <index id="6209" parent="5617" name="PK_TranslationKeys">
+    <index id="6233" parent="5617" name="PK_TranslationKeys">
       <Clustering>1</Clustering>
       <ColNames>Id</ColNames>
       <Position>1</Position>
       <Unique>1</Unique>
       <PartitionDataSpaceId>1</PartitionDataSpaceId>
     </index>
-    <index id="6210" parent="5617" name="IX_TranslationKeys_MessageCode">
+    <index id="6234" parent="5617" name="IX_TranslationKeys_MessageCode">
       <ColNames>MessageCode</ColNames>
       <Position>2</Position>
       <PartitionDataSpaceId>1</PartitionDataSpaceId>
     </index>
-    <index id="6211" parent="5617" name="IX_TranslationKeys_CreatedBy">
+    <index id="6235" parent="5617" name="IX_TranslationKeys_CreatedBy">
       <ColNames>CreatedBy</ColNames>
       <Position>5</Position>
       <PartitionDataSpaceId>1</PartitionDataSpaceId>
     </index>
-    <index id="6212" parent="5617" name="IX_TranslationKeys_UpdatedBy">
+    <index id="6236" parent="5617" name="IX_TranslationKeys_UpdatedBy">
       <ColNames>UpdatedBy</ColNames>
       <Position>6</Position>
       <PartitionDataSpaceId>1</PartitionDataSpaceId>
     </index>
-    <key id="6213" parent="5617" name="PK_TranslationKeys">
+    <key id="6237" parent="5617" name="PK_TranslationKeys">
       <CreatedTimestamp>2026-09-03.19:14:29.020</CreatedTimestamp>
       <ModifiedTimestamp>2026-09-03.19:14:29.020</ModifiedTimestamp>
       <ObjectId>606625204</ObjectId>
       <Primary>1</Primary>
       <UnderlyingIndexName>PK_TranslationKeys</UnderlyingIndexName>
     </key>
-    <column id="6214" parent="5618" name="Id">
+    <column id="6238" parent="5618" name="Id">
       <NotNull>1</NotNull>
       <Position>1</Position>
       <StoredType>nvarchar(450 char)|0s</StoredType>
     </column>
-    <column id="6215" parent="5618" name="Name">
+    <column id="6239" parent="5618" name="Name">
       <NotNull>1</NotNull>
       <Position>2</Position>
       <StoredType>nvarchar(500 char)|0s</StoredType>
     </column>
-    <column id="6216" parent="5618" name="TranslationKeyId">
+    <column id="6240" parent="5618" name="TranslationKeyId">
       <NotNull>1</NotNull>
       <Position>3</Position>
       <StoredType>nvarchar(450 char)|0s</StoredType>
     </column>
-    <column id="6217" parent="5618" name="LanguageNo">
+    <column id="6241" parent="5618" name="LanguageNo">
       <NotNull>1</NotNull>
       <Position>4</Position>
       <StoredType>nvarchar(450 char)|0s</StoredType>
     </column>
-    <column id="6218" parent="5618" name="IsPublic">
+    <column id="6242" parent="5618" name="IsPublic">
       <NotNull>1</NotNull>
       <Position>5</Position>
       <StoredType>bit|0s</StoredType>
     </column>
-    <column id="6219" parent="5618" name="Version">
+    <column id="6243" parent="5618" name="Version">
       <NotNull>1</NotNull>
       <Position>6</Position>
       <StoredType>int|0s</StoredType>
     </column>
-    <column id="6220" parent="5618" name="EntityState">
+    <column id="6244" parent="5618" name="EntityState">
       <NotNull>1</NotNull>
       <Position>7</Position>
       <StoredType>nvarchar(max)|0s</StoredType>
     </column>
-    <column id="6221" parent="5618" name="LastModifiedUtc">
+    <column id="6245" parent="5618" name="LastModifiedUtc">
       <NotNull>1</NotNull>
       <Position>8</Position>
       <StoredType>nvarchar(max)|0s</StoredType>
     </column>
-    <column id="6222" parent="5618" name="IsSyncedToServer">
+    <column id="6246" parent="5618" name="IsSyncedToServer">
       <NotNull>1</NotNull>
       <Position>9</Position>
       <StoredType>bit|0s</StoredType>
     </column>
-    <column id="6223" parent="5618" name="LastSyncedAt">
+    <column id="6247" parent="5618" name="LastSyncedAt">
       <Position>10</Position>
       <StoredType>datetime2|0s</StoredType>
     </column>
-    <column id="6224" parent="5618" name="IsDeleted">
+    <column id="6248" parent="5618" name="IsDeleted">
       <NotNull>1</NotNull>
       <Position>11</Position>
       <StoredType>bit|0s</StoredType>
     </column>
-    <column id="6225" parent="5618" name="DeletedAt">
+    <column id="6249" parent="5618" name="DeletedAt">
       <Position>12</Position>
       <StoredType>datetime2|0s</StoredType>
     </column>
-    <column id="6226" parent="5618" name="CreatedBy">
+    <column id="6250" parent="5618" name="CreatedBy">
       <Position>13</Position>
       <StoredType>nvarchar(450 char)|0s</StoredType>
     </column>
-    <column id="6227" parent="5618" name="CreatedDate">
+    <column id="6251" parent="5618" name="CreatedDate">
       <Position>14</Position>
       <StoredType>datetime2|0s</StoredType>
     </column>
-    <column id="6228" parent="5618" name="UpdatedBy">
+    <column id="6252" parent="5618" name="UpdatedBy">
       <Position>15</Position>
       <StoredType>nvarchar(450 char)|0s</StoredType>
     </column>
-    <column id="6229" parent="5618" name="UpdatedDate">
+    <column id="6253" parent="5618" name="UpdatedDate">
       <Position>16</Position>
       <StoredType>datetime2|0s</StoredType>
     </column>
-    <foreign-key id="6230" parent="5618" name="FK_Translations_TranslationKeys_TranslationKeyId">
+    <foreign-key id="6254" parent="5618" name="FK_Translations_TranslationKeys_TranslationKeyId">
       <ColNames>TranslationKeyId</ColNames>
       <CreatedTimestamp>2026-09-03.19:14:29.033</CreatedTimestamp>
       <ModifiedTimestamp>2026-09-03.19:14:29.033</ModifiedTimestamp>
@@ -20412,7 +20580,7 @@ LanguageId</ColNames>
       <RefTableId>590625147</RefTableId>
       <RefTableName>TranslationKeys</RefTableName>
     </foreign-key>
-    <foreign-key id="6231" parent="5618" name="FK_Translations_Languages_LanguageNo">
+    <foreign-key id="6255" parent="5618" name="FK_Translations_Languages_LanguageNo">
       <ColNames>LanguageNo</ColNames>
       <CreatedTimestamp>2026-09-03.19:14:29.033</CreatedTimestamp>
       <ModifiedTimestamp>2026-09-03.19:14:29.033</ModifiedTimestamp>
@@ -20421,7 +20589,7 @@ LanguageId</ColNames>
       <RefTableId>494624805</RefTableId>
       <RefTableName>Languages</RefTableName>
     </foreign-key>
-    <foreign-key id="6232" parent="5618" name="FK_Translations_AspNetUsers_CreatedBy">
+    <foreign-key id="6256" parent="5618" name="FK_Translations_AspNetUsers_CreatedBy">
       <ColNames>CreatedBy</ColNames>
       <CreatedTimestamp>2026-09-14.10:16:05.353</CreatedTimestamp>
       <ModifiedTimestamp>2026-09-14.10:16:05.353</ModifiedTimestamp>
@@ -20430,7 +20598,7 @@ LanguageId</ColNames>
       <RefTableId>734625660</RefTableId>
       <RefTableName>AspNetUsers</RefTableName>
     </foreign-key>
-    <foreign-key id="6233" parent="5618" name="FK_Translations_AspNetUsers_UpdatedBy">
+    <foreign-key id="6257" parent="5618" name="FK_Translations_AspNetUsers_UpdatedBy">
       <ColNames>UpdatedBy</ColNames>
       <CreatedTimestamp>2026-09-14.10:16:05.370</CreatedTimestamp>
       <ModifiedTimestamp>2026-09-14.10:16:05.370</ModifiedTimestamp>
@@ -20439,164 +20607,164 @@ LanguageId</ColNames>
       <RefTableId>734625660</RefTableId>
       <RefTableName>AspNetUsers</RefTableName>
     </foreign-key>
-    <index id="6234" parent="5618" name="PK_Translations">
+    <index id="6258" parent="5618" name="PK_Translations">
       <Clustering>1</Clustering>
       <ColNames>Id</ColNames>
       <Position>1</Position>
       <Unique>1</Unique>
       <PartitionDataSpaceId>1</PartitionDataSpaceId>
     </index>
-    <index id="6235" parent="5618" name="IX_Translations_LanguageNo">
+    <index id="6259" parent="5618" name="IX_Translations_LanguageNo">
       <ColNames>LanguageNo</ColNames>
       <Position>2</Position>
       <PartitionDataSpaceId>1</PartitionDataSpaceId>
     </index>
-    <index id="6236" parent="5618" name="IX_Translations_TranslationKeyId_LanguageNo">
+    <index id="6260" parent="5618" name="IX_Translations_TranslationKeyId_LanguageNo">
       <ColNames>TranslationKeyId
 LanguageNo</ColNames>
       <Position>3</Position>
       <Unique>1</Unique>
       <PartitionDataSpaceId>1</PartitionDataSpaceId>
     </index>
-    <index id="6237" parent="5618" name="IX_Translations_CreatedBy">
+    <index id="6261" parent="5618" name="IX_Translations_CreatedBy">
       <ColNames>CreatedBy</ColNames>
       <Position>5</Position>
       <PartitionDataSpaceId>1</PartitionDataSpaceId>
     </index>
-    <index id="6238" parent="5618" name="IX_Translations_UpdatedBy">
+    <index id="6262" parent="5618" name="IX_Translations_UpdatedBy">
       <ColNames>UpdatedBy</ColNames>
       <Position>6</Position>
       <PartitionDataSpaceId>1</PartitionDataSpaceId>
     </index>
-    <key id="6239" parent="5618" name="PK_Translations">
+    <key id="6263" parent="5618" name="PK_Translations">
       <CreatedTimestamp>2026-09-03.19:14:29.033</CreatedTimestamp>
       <ModifiedTimestamp>2026-09-03.19:14:29.033</ModifiedTimestamp>
       <ObjectId>958626458</ObjectId>
       <Primary>1</Primary>
       <UnderlyingIndexName>PK_Translations</UnderlyingIndexName>
     </key>
-    <column id="6240" parent="5619" name="Id">
+    <column id="6264" parent="5619" name="Id">
       <NotNull>1</NotNull>
       <Position>1</Position>
       <StoredType>nvarchar(450 char)|0s</StoredType>
     </column>
-    <column id="6241" parent="5619" name="Name">
+    <column id="6265" parent="5619" name="Name">
       <NotNull>1</NotNull>
       <Position>2</Position>
       <StoredType>nvarchar(100 char)|0s</StoredType>
     </column>
-    <column id="6242" parent="5619" name="Symbol">
+    <column id="6266" parent="5619" name="Symbol">
       <NotNull>1</NotNull>
       <Position>3</Position>
       <StoredType>nvarchar(20 char)|0s</StoredType>
     </column>
-    <column id="6243" parent="5619" name="Description">
+    <column id="6267" parent="5619" name="Description">
       <Position>4</Position>
       <StoredType>nvarchar(500 char)|0s</StoredType>
     </column>
-    <column id="6244" parent="5619" name="ShopId">
+    <column id="6268" parent="5619" name="ShopId">
       <NotNull>1</NotNull>
       <Position>5</Position>
       <StoredType>nvarchar(450 char)|0s</StoredType>
     </column>
-    <column id="6245" parent="5619" name="Version">
+    <column id="6269" parent="5619" name="Version">
       <NotNull>1</NotNull>
       <Position>6</Position>
       <StoredType>int|0s</StoredType>
     </column>
-    <column id="6246" parent="5619" name="EntityState">
+    <column id="6270" parent="5619" name="EntityState">
       <NotNull>1</NotNull>
       <Position>7</Position>
       <StoredType>nvarchar(max)|0s</StoredType>
     </column>
-    <column id="6247" parent="5619" name="LastModifiedUtc">
+    <column id="6271" parent="5619" name="LastModifiedUtc">
       <NotNull>1</NotNull>
       <Position>8</Position>
       <StoredType>nvarchar(max)|0s</StoredType>
     </column>
-    <column id="6248" parent="5619" name="ClientCreatedBy">
+    <column id="6272" parent="5619" name="ClientCreatedBy">
       <Position>9</Position>
       <StoredType>nvarchar(450 char)|0s</StoredType>
     </column>
-    <column id="6249" parent="5619" name="ClientCreatedDate">
+    <column id="6273" parent="5619" name="ClientCreatedDate">
       <Position>10</Position>
       <StoredType>datetime2|0s</StoredType>
     </column>
-    <column id="6250" parent="5619" name="ClientModifiedBy">
+    <column id="6274" parent="5619" name="ClientModifiedBy">
       <Position>11</Position>
       <StoredType>nvarchar(450 char)|0s</StoredType>
     </column>
-    <column id="6251" parent="5619" name="ClientModifiedDate">
+    <column id="6275" parent="5619" name="ClientModifiedDate">
       <Position>12</Position>
       <StoredType>datetime2|0s</StoredType>
     </column>
-    <column id="6252" parent="5619" name="CreatedBy">
+    <column id="6276" parent="5619" name="CreatedBy">
       <Position>13</Position>
       <StoredType>nvarchar(450 char)|0s</StoredType>
     </column>
-    <column id="6253" parent="5619" name="CreatedDate">
+    <column id="6277" parent="5619" name="CreatedDate">
       <Position>14</Position>
       <StoredType>datetime2|0s</StoredType>
     </column>
-    <column id="6254" parent="5619" name="DeletedAt">
+    <column id="6278" parent="5619" name="DeletedAt">
       <Position>15</Position>
       <StoredType>datetime2|0s</StoredType>
     </column>
-    <column id="6255" parent="5619" name="IsDeleted">
+    <column id="6279" parent="5619" name="IsDeleted">
       <NotNull>1</NotNull>
       <Position>16</Position>
       <StoredType>bit|0s</StoredType>
       <DefaultConstraintId>2030630277</DefaultConstraintId>
       <DefaultConstraintName>DF__UnitOfMea__IsDel__7908F585</DefaultConstraintName>
     </column>
-    <column id="6256" parent="5619" name="IsPublic">
+    <column id="6280" parent="5619" name="IsPublic">
       <NotNull>1</NotNull>
       <Position>17</Position>
       <StoredType>bit|0s</StoredType>
       <DefaultConstraintId>2046630334</DefaultConstraintId>
       <DefaultConstraintName>DF__UnitOfMea__IsPub__79FD19BE</DefaultConstraintName>
     </column>
-    <column id="6257" parent="5619" name="IsSyncedToServer">
+    <column id="6281" parent="5619" name="IsSyncedToServer">
       <NotNull>1</NotNull>
       <Position>18</Position>
       <StoredType>bit|0s</StoredType>
       <DefaultConstraintId>2062630391</DefaultConstraintId>
       <DefaultConstraintName>DF__UnitOfMea__IsSyn__7AF13DF7</DefaultConstraintName>
     </column>
-    <column id="6258" parent="5619" name="LastSyncedAt">
+    <column id="6282" parent="5619" name="LastSyncedAt">
       <Position>19</Position>
       <StoredType>datetime2|0s</StoredType>
     </column>
-    <column id="6259" parent="5619" name="UpdatedBy">
+    <column id="6283" parent="5619" name="UpdatedBy">
       <Position>20</Position>
       <StoredType>nvarchar(450 char)|0s</StoredType>
     </column>
-    <column id="6260" parent="5619" name="UpdatedDate">
+    <column id="6284" parent="5619" name="UpdatedDate">
       <Position>21</Position>
       <StoredType>datetime2|0s</StoredType>
     </column>
-    <default id="6261" parent="5619" name="DF__UnitOfMea__IsDel__7908F585">
+    <default id="6285" parent="5619" name="DF__UnitOfMea__IsDel__7908F585">
       <ColNames>IsDeleted</ColNames>
       <DefaultExpression>CONVERT([bit],0)</DefaultExpression>
       <ModifiedTimestamp>2026-09-06.21:37:38.337</ModifiedTimestamp>
       <NameSurrogate>1</NameSurrogate>
       <ObjectId>2030630277</ObjectId>
     </default>
-    <default id="6262" parent="5619" name="DF__UnitOfMea__IsPub__79FD19BE">
+    <default id="6286" parent="5619" name="DF__UnitOfMea__IsPub__79FD19BE">
       <ColNames>IsPublic</ColNames>
       <DefaultExpression>CONVERT([bit],0)</DefaultExpression>
       <ModifiedTimestamp>2026-09-06.21:37:38.343</ModifiedTimestamp>
       <NameSurrogate>1</NameSurrogate>
       <ObjectId>2046630334</ObjectId>
     </default>
-    <default id="6263" parent="5619" name="DF__UnitOfMea__IsSyn__7AF13DF7">
+    <default id="6287" parent="5619" name="DF__UnitOfMea__IsSyn__7AF13DF7">
       <ColNames>IsSyncedToServer</ColNames>
       <DefaultExpression>CONVERT([bit],0)</DefaultExpression>
       <ModifiedTimestamp>2026-09-06.21:37:38.347</ModifiedTimestamp>
       <NameSurrogate>1</NameSurrogate>
       <ObjectId>2062630391</ObjectId>
     </default>
-    <foreign-key id="6264" parent="5619" name="FK_UnitOfMeasure_Shop_ShopId">
+    <foreign-key id="6288" parent="5619" name="FK_UnitOfMeasure_Shop_ShopId">
       <ColNames>ShopId</ColNames>
       <CreatedTimestamp>2026-09-03.19:14:29.030</CreatedTimestamp>
       <ModifiedTimestamp>2026-09-03.19:14:29.030</ModifiedTimestamp>
@@ -20605,7 +20773,25 @@ LanguageNo</ColNames>
       <RefTableId>558625033</RefTableId>
       <RefTableName>Shop</RefTableName>
     </foreign-key>
-    <foreign-key id="6265" parent="5619" name="FK_UnitOfMeasure_AspNetUsers_CreatedBy">
+    <foreign-key id="6289" parent="5619" name="FK_UnitOfMeasure_AspNetUsers_ClientCreatedBy">
+      <ColNames>ClientCreatedBy</ColNames>
+      <CreatedTimestamp>2026-09-14.19:15:02.077</CreatedTimestamp>
+      <ModifiedTimestamp>2026-09-14.19:15:02.077</ModifiedTimestamp>
+      <ObjectId>1531152500</ObjectId>
+      <RefColNames>Id</RefColNames>
+      <RefTableId>734625660</RefTableId>
+      <RefTableName>AspNetUsers</RefTableName>
+    </foreign-key>
+    <foreign-key id="6290" parent="5619" name="FK_UnitOfMeasure_AspNetUsers_ClientModifiedBy">
+      <ColNames>ClientModifiedBy</ColNames>
+      <CreatedTimestamp>2026-09-14.19:15:02.080</CreatedTimestamp>
+      <ModifiedTimestamp>2026-09-14.19:15:02.080</ModifiedTimestamp>
+      <ObjectId>1547152557</ObjectId>
+      <RefColNames>Id</RefColNames>
+      <RefTableId>734625660</RefTableId>
+      <RefTableName>AspNetUsers</RefTableName>
+    </foreign-key>
+    <foreign-key id="6291" parent="5619" name="FK_UnitOfMeasure_AspNetUsers_CreatedBy">
       <ColNames>CreatedBy</ColNames>
       <CreatedTimestamp>2026-09-14.10:16:05.383</CreatedTimestamp>
       <ModifiedTimestamp>2026-09-14.10:16:05.383</ModifiedTimestamp>
@@ -20614,7 +20800,7 @@ LanguageNo</ColNames>
       <RefTableId>734625660</RefTableId>
       <RefTableName>AspNetUsers</RefTableName>
     </foreign-key>
-    <foreign-key id="6266" parent="5619" name="FK_UnitOfMeasure_AspNetUsers_UpdatedBy">
+    <foreign-key id="6292" parent="5619" name="FK_UnitOfMeasure_AspNetUsers_UpdatedBy">
       <ColNames>UpdatedBy</ColNames>
       <CreatedTimestamp>2026-09-14.10:16:05.400</CreatedTimestamp>
       <ModifiedTimestamp>2026-09-14.10:16:05.400</ModifiedTimestamp>
@@ -20623,53 +20809,63 @@ LanguageNo</ColNames>
       <RefTableId>734625660</RefTableId>
       <RefTableName>AspNetUsers</RefTableName>
     </foreign-key>
-    <index id="6267" parent="5619" name="PK_UnitOfMeasure">
+    <index id="6293" parent="5619" name="PK_UnitOfMeasure">
       <Clustering>1</Clustering>
       <ColNames>Id</ColNames>
       <Position>1</Position>
       <Unique>1</Unique>
       <PartitionDataSpaceId>1</PartitionDataSpaceId>
     </index>
-    <index id="6268" parent="5619" name="IX_UnitOfMeasure_ShopId">
+    <index id="6294" parent="5619" name="IX_UnitOfMeasure_ShopId">
       <ColNames>ShopId</ColNames>
       <Position>2</Position>
       <PartitionDataSpaceId>1</PartitionDataSpaceId>
     </index>
-    <index id="6269" parent="5619" name="IX_UnitOfMeasure_CreatedBy">
+    <index id="6295" parent="5619" name="IX_UnitOfMeasure_CreatedBy">
       <ColNames>CreatedBy</ColNames>
       <Position>5</Position>
       <PartitionDataSpaceId>1</PartitionDataSpaceId>
     </index>
-    <index id="6270" parent="5619" name="IX_UnitOfMeasure_UpdatedBy">
+    <index id="6296" parent="5619" name="IX_UnitOfMeasure_UpdatedBy">
       <ColNames>UpdatedBy</ColNames>
       <Position>6</Position>
       <PartitionDataSpaceId>1</PartitionDataSpaceId>
     </index>
-    <key id="6271" parent="5619" name="PK_UnitOfMeasure">
+    <index id="6297" parent="5619" name="IX_UnitOfMeasure_ClientCreatedBy">
+      <ColNames>ClientCreatedBy</ColNames>
+      <Position>9</Position>
+      <PartitionDataSpaceId>1</PartitionDataSpaceId>
+    </index>
+    <index id="6298" parent="5619" name="IX_UnitOfMeasure_ClientModifiedBy">
+      <ColNames>ClientModifiedBy</ColNames>
+      <Position>10</Position>
+      <PartitionDataSpaceId>1</PartitionDataSpaceId>
+    </index>
+    <key id="6299" parent="5619" name="PK_UnitOfMeasure">
       <CreatedTimestamp>2026-09-03.19:14:29.030</CreatedTimestamp>
       <ModifiedTimestamp>2026-09-03.19:14:29.030</ModifiedTimestamp>
       <ObjectId>862626116</ObjectId>
       <Primary>1</Primary>
       <UnderlyingIndexName>PK_UnitOfMeasure</UnderlyingIndexName>
     </key>
-    <column id="6272" parent="5620" name="MigrationId">
+    <column id="6300" parent="5620" name="MigrationId">
       <NotNull>1</NotNull>
       <Position>1</Position>
       <StoredType>nvarchar(150 char)|0s</StoredType>
     </column>
-    <column id="6273" parent="5620" name="ProductVersion">
+    <column id="6301" parent="5620" name="ProductVersion">
       <NotNull>1</NotNull>
       <Position>2</Position>
       <StoredType>nvarchar(32 char)|0s</StoredType>
     </column>
-    <index id="6274" parent="5620" name="PK___EFMigrationsHistory">
+    <index id="6302" parent="5620" name="PK___EFMigrationsHistory">
       <Clustering>1</Clustering>
       <ColNames>MigrationId</ColNames>
       <Position>1</Position>
       <Unique>1</Unique>
       <PartitionDataSpaceId>1</PartitionDataSpaceId>
     </index>
-    <key id="6275" parent="5620" name="PK___EFMigrationsHistory">
+    <key id="6303" parent="5620" name="PK___EFMigrationsHistory">
       <CreatedTimestamp>2026-09-03.18:50:07.347</CreatedTimestamp>
       <ModifiedTimestamp>2026-09-03.18:50:07.347</ModifiedTimestamp>
       <ObjectId>1541580530</ObjectId>

@@ -7,8 +7,12 @@ namespace SMIS.Infrastructure.Server.EntityConfigurations
 {
     public class CustomerConfiguration : IEntityTypeConfiguration<Customer>
     {
-        public void Configure(EntityTypeBuilder<Customer> builder)
+        public void Configure(
+            EntityTypeBuilder<Customer> builder
+        )
         {
+            builder.ConfigureAuditUserRelationships();
+            builder.ConfigureClientAuditUserRelationships();
             builder.HasKey(e => e.Id);
             builder.Property(e => e.Id).HasMaxLength(450);
 

@@ -6,8 +6,11 @@ namespace SMIS.Infrastructure.Server.EntityConfigurations
 {
     public class TranslationConfiguration : IEntityTypeConfiguration<Translation>
     {
-        public void Configure(EntityTypeBuilder<Translation> builder)
+        public void Configure(
+            EntityTypeBuilder<Translation> builder
+        )
         {
+            builder.ConfigureAuditUserRelationships();
             builder.HasKey(x => x.Id);
 
 

@@ -22,6 +22,10 @@ namespace SMIS.Infrastructure.Server.EntityConfigurations
                 .IsRequired()
                 .HasMaxLength(450);
 
+            builder.Property(u => u.LanguageId)
+                .IsRequired()
+                .HasMaxLength(450);
+
             builder.Property(u => u.ShopName)
                 .HasMaxLength(200);
 
@@ -36,14 +40,18 @@ namespace SMIS.Infrastructure.Server.EntityConfigurations
             builder.Property(u => u.PhoneNumber)
                 .HasMaxLength(20);
 
-            // Foreign key relationship
             builder.HasOne(u => u.Shop)
-                .WithMany() // Shop has commented navigation to Users
+                .WithMany()
                 .HasForeignKey(u => u.ShopId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            // Indexes
+            builder.HasOne(u => u.Language)
+                .WithMany()
+                .HasForeignKey(u => u.LanguageId)
+                .OnDelete(DeleteBehavior.Cascade);
+
             builder.HasIndex(u => u.ShopId);
+            builder.HasIndex(u => u.LanguageId);
             builder.HasIndex(u => u.Email).IsUnique();
             builder.HasIndex(u => u.UserName).IsUnique();
         }

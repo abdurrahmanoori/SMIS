@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
@@ -67,27 +67,6 @@ public partial class AppDbContext : IdentityDbContext<ApplicationUser, Applicati
                 modelBuilder.Entity(entityType.ClrType)
                     .Property(nameof(BaseEntity.LastModifiedUtc))
                     .HasConversion(converter);
-            }
-
-            if (typeof(IAuditableEntity).IsAssignableFrom(entityType.ClrType))
-            {
-                var entityBuilder = modelBuilder.Entity(entityType.ClrType);
-
-                entityBuilder.Property(nameof(IAuditableEntity.CreatedBy))
-                    .HasMaxLength(450);
-
-                entityBuilder.Property(nameof(IAuditableEntity.UpdatedBy))
-                    .HasMaxLength(450);
-
-                entityBuilder.HasOne(typeof(ApplicationUser), null)
-                    .WithMany()
-                    .HasForeignKey(nameof(IAuditableEntity.CreatedBy))
-                    .OnDelete(DeleteBehavior.Restrict);
-
-                entityBuilder.HasOne(typeof(ApplicationUser), null)
-                    .WithMany()
-                    .HasForeignKey(nameof(IAuditableEntity.UpdatedBy))
-                    .OnDelete(DeleteBehavior.Restrict);
             }
         }
 

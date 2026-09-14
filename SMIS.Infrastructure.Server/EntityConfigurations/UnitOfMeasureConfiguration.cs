@@ -6,8 +6,12 @@ namespace SMIS.Infrastructure.Server.EntityConfigurations
 {
     public class UnitOfMeasureConfiguration : IEntityTypeConfiguration<UnitOfMeasure>
     {
-        public void Configure(EntityTypeBuilder<UnitOfMeasure> builder)
+        public void Configure(
+            EntityTypeBuilder<UnitOfMeasure> builder
+        )
         {
+            builder.ConfigureAuditUserRelationships();
+            builder.ConfigureClientAuditUserRelationships();
             builder.ToTable(nameof(UnitOfMeasure));
 
             builder.HasKey(u => u.Id);
