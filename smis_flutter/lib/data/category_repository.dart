@@ -31,7 +31,7 @@ class CategoryRepository {
     try {
       final database = await _database.instance;
       await _repairMissingShopIds(database, shopId);
-      
+
       String where = 'is_deleted = 0 AND shop_id = ?';
       List<Object?> whereArgs = [shopId];
 
@@ -65,7 +65,7 @@ class CategoryRepository {
     try {
       final database = await _database.instance;
       await _repairMissingShopIds(database, shopId);
-      
+
       String where = 'is_deleted = 0 AND shop_id = ?';
       List<Object?> whereArgs = [shopId];
 
@@ -90,6 +90,7 @@ class CategoryRepository {
 
   Future<Category> create(CategoryDraft draft, String shopId) async {
     final normalized = draft.normalized();
+    await _ensureShopExists(shopId);
     final now = _utcNow();
     final record = CategoryLocalRecord(
       id: _idGenerator(),
@@ -258,11 +259,9 @@ class CategoryRepository {
   }
 
   Future<void> _repairMissingShopIds(Database database, String shopId) async {
-    await database.update(
-      _categoryTable,
-      {'shop_id': shopId},
-      where: "shop_id IS NULL OR TRIM(shop_id) = ''",
-    );
+    await database.update(_categoryTable, {
+      'shop_id': shopId,
+    }, where: "shop_id IS NULL OR TRIM(shop_id) = ''");
   }
 
   Future<void> _ensureUniqueName(
@@ -285,6 +284,22 @@ class CategoryRepository {
     }
   }
 
+  Future<void> _ensureShopExists(String shopId) async {
+    final database = await _database.instance;
+    final rows = await database.query(
+      'shops',
+      columns: ['id'],
+      where: 'id = ? AND is_deleted = 0',
+      whereArgs: [shopId],
+      limit: 1,
+    );
+    if (rows.isEmpty) {
+      throw const LocalStorageException(
+        'The selected shop is not available in local storage. Sync shops before creating a category.',
+      );
+    }
+  }
+
   Future<DateTime> getPullCursor(String shopId) async {
     final value = await _getMetadata('${_pullCursorKey}_$shopId');
     return value == null
@@ -292,8 +307,10 @@ class CategoryRepository {
         : DateTime.parse(value).toUtc();
   }
 
-  Future<void> setPullCursor(String shopId, DateTime value) =>
-      _setMetadata('${_pullCursorKey}_$shopId', value.toUtc().toIso8601String());
+  Future<void> setPullCursor(String shopId, DateTime value) => _setMetadata(
+    '${_pullCursorKey}_$shopId',
+    value.toUtc().toIso8601String(),
+  );
 
   Future<bool> tryAcquireSyncLock(String owner, String shopId) async {
     final database = await _database.instance;

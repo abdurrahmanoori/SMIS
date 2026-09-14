@@ -11,11 +11,14 @@ import '../data/unit_of_measure_api.dart';
 import '../data/unit_of_measure_repository.dart';
 import '../data/product_api.dart';
 import '../data/product_repository.dart';
+import '../data/shop_api.dart';
+import '../data/shop_repository.dart';
 import 'auth_session_store.dart';
 import 'category_sync_service.dart';
 import 'connectivity_service.dart';
 import 'unit_of_measure_sync_service.dart';
 import 'product_sync_service.dart';
+import 'shop_sync_service.dart';
 
 @pragma('vm:entry-point')
 void callbackDispatcher() {
@@ -33,6 +36,11 @@ void callbackDispatcher() {
       final session = await sessionStore.read();
       if (session == null) return true;
 
+      final shopSyncService = ShopSyncService(
+        ShopRepository(database),
+        DioShopApi(sessionStore: sessionStore),
+        ConnectivityService(),
+      );
       final categorySyncService = CategorySyncService(
         CategoryRepository(database),
         DioCategoryApi(sessionStore: sessionStore),
@@ -48,11 +56,21 @@ void callbackDispatcher() {
         DioProductApi(sessionStore: sessionStore),
         ConnectivityService(),
       );
-      
-      final categoryResult = await categorySyncService.synchronize(shopId: session.shopId);
-      final unitOfMeasureResult = await unitOfMeasureSyncService.synchronize(shopId: session.shopId);
-      final productResult = await productSyncService.synchronize(shopId: session.shopId);
-      return !categoryResult.transientFailure &&
+
+      // Parent rows must exist before child rows now that SQLite enforces the
+      // same relationships as the backend.
+      final shopResult = await shopSyncService.synchronize();
+      final categoryResult = await categorySyncService.synchronize(
+        shopId: session.shopId,
+      );
+      final unitOfMeasureResult = await unitOfMeasureSyncService.synchronize(
+        shopId: session.shopId,
+      );
+      final productResult = await productSyncService.synchronize(
+        shopId: session.shopId,
+      );
+      return !shopResult.transientFailure &&
+          !categoryResult.transientFailure &&
           !unitOfMeasureResult.transientFailure &&
           !productResult.transientFailure;
     } finally {

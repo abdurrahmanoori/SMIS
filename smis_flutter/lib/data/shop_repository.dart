@@ -156,11 +156,15 @@ class ShopRepository {
 
   Future<void> saveRecord(ShopLocalRecord record) async {
     final database = await _database.instance;
-    await database.insert(
+    final updated = await database.update(
       _table,
       record.toMap(),
-      conflictAlgorithm: ConflictAlgorithm.replace,
+      where: 'id = ?',
+      whereArgs: [record.id],
     );
+    if (updated == 0) {
+      await database.insert(_table, record.toMap());
+    }
   }
 
   Future<void> removeRecord(String id) async {
@@ -168,9 +172,7 @@ class ShopRepository {
     await database.delete(_table, where: 'id = ?', whereArgs: [id]);
   }
 
-  Future<List<ShopLocalRecord>> getPendingRecords({
-    required bool force,
-  }) async {
+  Future<List<ShopLocalRecord>> getPendingRecords({required bool force}) async {
     final database = await _database.instance;
     final now = DateTime.now().toUtc().toIso8601String();
     final retryFilter = force
