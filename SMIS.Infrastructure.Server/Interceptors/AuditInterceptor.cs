@@ -32,12 +32,15 @@ namespace SMIS.Infrastructure.Server.Interceptors
 
             if (context == null) return await base.SavingChangesAsync(eventData, result, cancellationToken);
 
+            var currentUserId = _currentUser.GetId();
+            var auditUserId = string.IsNullOrWhiteSpace(currentUserId) ? null : currentUserId;
+
             foreach (var entry in context.ChangeTracker.Entries<BaseAuditableEntity>())
             {
                 if (entry.State == EntityState.Added)
                 {
                     entry.Entity.CreatedDate ??= DateTimeService.NowUtc;
-                    entry.Entity.CreatedBy ??= _currentUser.GetId();
+                    entry.Entity.CreatedBy ??= auditUserId;
 
                     entry.Entity.UpdatedDate = null;
                     entry.Entity.UpdatedBy = null;
@@ -61,7 +64,7 @@ namespace SMIS.Infrastructure.Server.Interceptors
                     softDeletable.DeletedAt = DateTimeService.NowUtc;
 
                     entry.Entity.UpdatedDate = DateTimeService.NowUtc;
-                    entry.Entity.UpdatedBy = _currentUser.GetId();
+                    entry.Entity.UpdatedBy = auditUserId;
                     entry.Entity.LastModifiedUtc = DateTimeService.NowUtc;
 
                     entry.Property(e => e.CreatedDate).IsModified = false; // Ensure CreatedDate is not updated
@@ -79,7 +82,7 @@ namespace SMIS.Infrastructure.Server.Interceptors
                     //
                     // if (!entry.Property(e => e.UpdatedBy).IsModified || string.IsNullOrEmpty(entry.Entity.UpdatedBy))
                     // {
-                    entry.Entity.UpdatedBy = _currentUser.GetId();
+                    entry.Entity.UpdatedBy = auditUserId;
                     // }
 
                     // Respect client-provided LastModifiedUtc (offline sync scenario).

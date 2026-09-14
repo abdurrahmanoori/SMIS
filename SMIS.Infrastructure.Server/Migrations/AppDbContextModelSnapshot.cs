@@ -205,7 +205,8 @@ namespace SMIS.Infrastructure.Server.Migrations
                         .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime?>("CreatedDate")
                         .HasColumnType("datetime2");
@@ -245,7 +246,8 @@ namespace SMIS.Infrastructure.Server.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("UpdatedBy")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime?>("UpdatedDate")
                         .HasColumnType("datetime2");
@@ -255,7 +257,9 @@ namespace SMIS.Infrastructure.Server.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ShopId");
+                    b.HasIndex("CreatedBy");
+
+                    b.HasIndex("UpdatedBy");
 
                     b.HasIndex("ShopId", "Name")
                         .IsUnique()
@@ -388,7 +392,8 @@ namespace SMIS.Infrastructure.Server.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime?>("CreatedDate")
                         .HasColumnType("datetime2");
@@ -401,7 +406,8 @@ namespace SMIS.Infrastructure.Server.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("DeletedBy")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("DistrictId")
                         .HasMaxLength(450)
@@ -463,7 +469,8 @@ namespace SMIS.Infrastructure.Server.Migrations
                         .HasColumnType("nvarchar(20)");
 
                     b.Property<string>("UpdatedBy")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime?>("UpdatedDate")
                         .HasColumnType("datetime2");
@@ -472,6 +479,10 @@ namespace SMIS.Infrastructure.Server.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CreatedBy");
+
+                    b.HasIndex("DeletedBy");
 
                     b.HasIndex("DistrictId");
 
@@ -488,6 +499,8 @@ namespace SMIS.Infrastructure.Server.Migrations
                     b.HasIndex("ShopId");
 
                     b.HasIndex("TaxNumber");
+
+                    b.HasIndex("UpdatedBy");
 
                     b.ToTable("Customers");
 
@@ -1481,7 +1494,8 @@ namespace SMIS.Infrastructure.Server.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime?>("CreatedDate")
                         .HasColumnType("datetime2");
@@ -1574,7 +1588,8 @@ namespace SMIS.Infrastructure.Server.Migrations
                         .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("UpdatedBy")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime?>("UpdatedDate")
                         .HasColumnType("datetime2");
@@ -1584,6 +1599,8 @@ namespace SMIS.Infrastructure.Server.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CreatedBy");
+
                     b.HasIndex("CustomerId");
 
                     b.HasIndex("ProductId");
@@ -1591,6 +1608,8 @@ namespace SMIS.Infrastructure.Server.Migrations
                     b.HasIndex("ShopId");
 
                     b.HasIndex("UnitId");
+
+                    b.HasIndex("UpdatedBy");
 
                     b.ToTable("LoanAccount", (string)null);
 
@@ -1885,7 +1904,8 @@ namespace SMIS.Infrastructure.Server.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime?>("CreatedDate")
                         .HasColumnType("datetime2");
@@ -1937,7 +1957,8 @@ namespace SMIS.Infrastructure.Server.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("UpdatedBy")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime?>("UpdatedDate")
                         .HasColumnType("datetime2");
@@ -1947,7 +1968,11 @@ namespace SMIS.Infrastructure.Server.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CreatedBy");
+
                     b.HasIndex("LoanAccountId");
+
+                    b.HasIndex("UpdatedBy");
 
                     b.ToTable("LoanAccountPayment", (string)null);
                 });
@@ -2027,7 +2052,8 @@ namespace SMIS.Infrastructure.Server.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime?>("CreatedDate")
                         .HasColumnType("datetime2");
@@ -2071,7 +2097,8 @@ namespace SMIS.Infrastructure.Server.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("UpdatedBy")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime?>("UpdatedDate")
                         .HasColumnType("datetime2");
@@ -2081,7 +2108,11 @@ namespace SMIS.Infrastructure.Server.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CreatedBy");
+
                     b.HasIndex("LanguageNo");
+
+                    b.HasIndex("UpdatedBy");
 
                     b.HasIndex("TranslationKeyId", "LanguageNo")
                         .IsUnique();
@@ -2111,7 +2142,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                             IsSyncedToServer = true,
                             LanguageNo = "22222222-0000-0000-0000-000000000002",
                             LastModifiedUtc = "2026-09-10 03:06:50.793205",
-                            Name = "Ù…Ù†Ø·Ù‚Ù‡ Ù…Ø±Ú©Ø² Ú©Ø§Ø¨Ù„",
+                            Name = "+à+å+++é+ç +à+¦+¬+¦ +¬+º+¿+ä",
                             TranslationKeyId = "55555555-0000-0000-0000-000000000001",
                             Version = 0
                         },
@@ -2137,7 +2168,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                             IsSyncedToServer = true,
                             LanguageNo = "22222222-0000-0000-0000-000000000002",
                             LastModifiedUtc = "2026-09-10 03:06:50.793205",
-                            Name = "Ù…Ù†Ø·Ù‚Ù‡ Ø´Ù…Ø§Ù„ Ú©Ø§Ø¨Ù„",
+                            Name = "+à+å+++é+ç +¦+à+º+ä +¬+º+¿+ä",
                             TranslationKeyId = "55555555-0000-0000-0000-000000000002",
                             Version = 0
                         },
@@ -2163,7 +2194,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                             IsSyncedToServer = true,
                             LanguageNo = "22222222-0000-0000-0000-000000000002",
                             LastModifiedUtc = "2026-09-10 03:06:50.793207",
-                            Name = "Ù…Ù†Ø·Ù‚Ù‡ Ù…Ø±Ú©Ø² Ù‡Ø±Ø§Øª",
+                            Name = "+à+å+++é+ç +à+¦+¬+¦ +ç+¦+º+¬",
                             TranslationKeyId = "55555555-0000-0000-0000-000000000003",
                             Version = 0
                         },
@@ -2189,7 +2220,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                             IsSyncedToServer = true,
                             LanguageNo = "22222222-0000-0000-0000-000000000002",
                             LastModifiedUtc = "2026-09-10 03:06:50.793209",
-                            Name = "ÙˆÙ„Ø§ÛŒØª Ú©Ø§Ø¨Ù„",
+                            Name = "+ê+ä+º¦î+¬ +¬+º+¿+ä",
                             TranslationKeyId = "55555555-0000-0000-0000-000000000004",
                             Version = 0
                         },
@@ -2215,7 +2246,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                             IsSyncedToServer = true,
                             LanguageNo = "22222222-0000-0000-0000-000000000002",
                             LastModifiedUtc = "2026-09-10 03:06:50.793210",
-                            Name = "ÙˆÙ„Ø§ÛŒØª Ù‡Ø±Ø§Øª",
+                            Name = "+ê+ä+º¦î+¬ +ç+¦+º+¬",
                             TranslationKeyId = "55555555-0000-0000-0000-000000000005",
                             Version = 0
                         },
@@ -2241,7 +2272,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                             IsSyncedToServer = true,
                             LanguageNo = "22222222-0000-0000-0000-000000000002",
                             LastModifiedUtc = "2026-09-10 03:06:50.793210",
-                            Name = "Ù¾ÛŒØ§Ù… Ø®ÙˆØ´ Ø¢Ù…Ø¯ÛŒØ¯",
+                            Name = "++¦î+º+à +«+ê+¦ +ó+à+»¦î+»",
                             TranslationKeyId = "55555555-0000-0000-0000-000000000006",
                             Version = 0
                         });
@@ -2253,7 +2284,8 @@ namespace SMIS.Infrastructure.Server.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime?>("CreatedDate")
                         .HasColumnType("datetime2");
@@ -2294,7 +2326,8 @@ namespace SMIS.Infrastructure.Server.Migrations
                         .HasColumnType("nvarchar(200)");
 
                     b.Property<string>("UpdatedBy")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime?>("UpdatedDate")
                         .HasColumnType("datetime2");
@@ -2304,7 +2337,11 @@ namespace SMIS.Infrastructure.Server.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CreatedBy");
+
                     b.HasIndex("MessageCode");
+
+                    b.HasIndex("UpdatedBy");
 
                     b.ToTable("TranslationKeys");
 
@@ -2421,7 +2458,8 @@ namespace SMIS.Infrastructure.Server.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime?>("CreatedDate")
                         .HasColumnType("datetime2");
@@ -2459,7 +2497,8 @@ namespace SMIS.Infrastructure.Server.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("UpdatedBy")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime?>("UpdatedDate")
                         .HasColumnType("datetime2");
@@ -2469,9 +2508,13 @@ namespace SMIS.Infrastructure.Server.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CreatedBy");
+
                     b.HasIndex("TranslationKeyId")
                         .IsUnique()
                         .HasFilter("[TranslationKeyId] IS NOT NULL");
+
+                    b.HasIndex("UpdatedBy");
 
                     b.ToTable("Districts");
 
@@ -2520,7 +2563,8 @@ namespace SMIS.Infrastructure.Server.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime?>("CreatedDate")
                         .HasColumnType("datetime2");
@@ -2554,7 +2598,8 @@ namespace SMIS.Infrastructure.Server.Migrations
                         .HasColumnType("nvarchar(200)");
 
                     b.Property<string>("UpdatedBy")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime?>("UpdatedDate")
                         .HasColumnType("datetime2");
@@ -2563,6 +2608,10 @@ namespace SMIS.Infrastructure.Server.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CreatedBy");
+
+                    b.HasIndex("UpdatedBy");
 
                     b.ToTable("Provinces");
 
@@ -2680,7 +2729,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                             LanguageCode = "ps",
                             LanguageId = "22222222-0000-0000-0000-000000000002",
                             LastModifiedUtc = "2026-09-10 03:06:50.794014",
-                            Name = "Ú©Ø§Ø¨Ù„",
+                            Name = "+¬+º+¿+ä",
                             ProvinceId = "77777777-0000-0000-0000-000000000001",
                             Version = 0
                         },
@@ -2692,7 +2741,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                             LanguageCode = "fa",
                             LanguageId = "22222222-0000-0000-0000-000000000003",
                             LastModifiedUtc = "2026-09-10 03:06:50.794016",
-                            Name = "Ú©Ø§Ø¨Ù„",
+                            Name = "+¬+º+¿+ä",
                             ProvinceId = "77777777-0000-0000-0000-000000000001",
                             Version = 0
                         },
@@ -2716,7 +2765,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                             LanguageCode = "ps",
                             LanguageId = "22222222-0000-0000-0000-000000000002",
                             LastModifiedUtc = "2026-09-10 03:06:50.794016",
-                            Name = "Ù‡Ø±Ø§Øª",
+                            Name = "+ç+¦+º+¬",
                             ProvinceId = "77777777-0000-0000-0000-000000000002",
                             Version = 0
                         },
@@ -2728,7 +2777,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                             LanguageCode = "fa",
                             LanguageId = "22222222-0000-0000-0000-000000000003",
                             LastModifiedUtc = "2026-09-10 03:06:50.794016",
-                            Name = "Ù‡Ø±Ø§Øª",
+                            Name = "+ç+¦+º+¬",
                             ProvinceId = "77777777-0000-0000-0000-000000000002",
                             Version = 0
                         },
@@ -2752,7 +2801,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                             LanguageCode = "ps",
                             LanguageId = "22222222-0000-0000-0000-000000000002",
                             LastModifiedUtc = "2026-09-10 03:06:50.794018",
-                            Name = "Ú©Ù†Ø¯Ù‡Ø§Ø±",
+                            Name = "+¬+å+»+ç+º+¦",
                             ProvinceId = "77777777-0000-0000-0000-000000000003",
                             Version = 0
                         },
@@ -2764,7 +2813,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                             LanguageCode = "fa",
                             LanguageId = "22222222-0000-0000-0000-000000000003",
                             LastModifiedUtc = "2026-09-10 03:06:50.794018",
-                            Name = "Ù‚Ù†Ø¯Ù‡Ø§Ø±",
+                            Name = "+é+å+»+ç+º+¦",
                             ProvinceId = "77777777-0000-0000-0000-000000000003",
                             Version = 0
                         },
@@ -2788,7 +2837,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                             LanguageCode = "ps",
                             LanguageId = "22222222-0000-0000-0000-000000000002",
                             LastModifiedUtc = "2026-09-10 03:06:50.794019",
-                            Name = "Ø¨Ù„Ø®",
+                            Name = "+¿+ä+«",
                             ProvinceId = "77777777-0000-0000-0000-000000000004",
                             Version = 0
                         },
@@ -2800,7 +2849,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                             LanguageCode = "fa",
                             LanguageId = "22222222-0000-0000-0000-000000000003",
                             LastModifiedUtc = "2026-09-10 03:06:50.794019",
-                            Name = "Ø¨Ù„Ø®",
+                            Name = "+¿+ä+«",
                             ProvinceId = "77777777-0000-0000-0000-000000000004",
                             Version = 0
                         });
@@ -2847,7 +2896,8 @@ namespace SMIS.Infrastructure.Server.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime?>("CreatedDate")
                         .HasColumnType("datetime2");
@@ -2906,7 +2956,8 @@ namespace SMIS.Infrastructure.Server.Migrations
                         .HasColumnType("nvarchar(200)");
 
                     b.Property<string>("UpdatedBy")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime?>("UpdatedDate")
                         .HasColumnType("datetime2");
@@ -2920,7 +2971,11 @@ namespace SMIS.Infrastructure.Server.Migrations
 
                     b.HasIndex("CategoryId");
 
+                    b.HasIndex("CreatedBy");
+
                     b.HasIndex("ShopId");
+
+                    b.HasIndex("UpdatedBy");
 
                     b.ToTable("Product", (string)null);
 
@@ -3318,7 +3373,8 @@ namespace SMIS.Infrastructure.Server.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime?>("CreatedDate")
                         .HasColumnType("datetime2");
@@ -3368,7 +3424,8 @@ namespace SMIS.Infrastructure.Server.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<string>("UpdatedBy")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime?>("UpdatedDate")
                         .HasColumnType("datetime2");
@@ -3378,9 +3435,13 @@ namespace SMIS.Infrastructure.Server.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CreatedBy");
+
                     b.HasIndex("IsActive");
 
                     b.HasIndex("ProductUnitId");
+
+                    b.HasIndex("UpdatedBy");
 
                     b.HasIndex("ProductId", "ProductUnitId", "EffectiveDate");
 
@@ -4259,7 +4320,8 @@ namespace SMIS.Infrastructure.Server.Migrations
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime?>("CreatedDate")
                         .HasColumnType("datetime2");
@@ -4306,7 +4368,8 @@ namespace SMIS.Infrastructure.Server.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("UpdatedBy")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime?>("UpdatedDate")
                         .HasColumnType("datetime2");
@@ -4316,9 +4379,13 @@ namespace SMIS.Infrastructure.Server.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CreatedBy");
+
                     b.HasIndex("ProductId");
 
                     b.HasIndex("UnitOfMeasureId");
+
+                    b.HasIndex("UpdatedBy");
 
                     b.ToTable("ProductUnit", (string)null);
 
@@ -5052,7 +5119,8 @@ namespace SMIS.Infrastructure.Server.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime?>("CreatedDate")
                         .HasColumnType("datetime2");
@@ -5099,7 +5167,8 @@ namespace SMIS.Infrastructure.Server.Migrations
                         .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("UpdatedBy")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime?>("UpdatedDate")
                         .HasColumnType("datetime2");
@@ -5108,6 +5177,10 @@ namespace SMIS.Infrastructure.Server.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CreatedBy");
+
+                    b.HasIndex("UpdatedBy");
 
                     b.ToTable("Shop", (string)null);
 
@@ -5201,7 +5274,8 @@ namespace SMIS.Infrastructure.Server.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime?>("CreatedDate")
                         .HasColumnType("datetime2");
@@ -5210,8 +5284,8 @@ namespace SMIS.Infrastructure.Server.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("DistrictId")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Email")
                         .HasMaxLength(256)
@@ -5265,8 +5339,8 @@ namespace SMIS.Infrastructure.Server.Migrations
                         .HasColumnType("nvarchar(20)");
 
                     b.Property<string>("ProvinceId")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("ShopId")
                         .IsRequired()
@@ -5282,7 +5356,8 @@ namespace SMIS.Infrastructure.Server.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("UpdatedBy")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime?>("UpdatedDate")
                         .HasColumnType("datetime2");
@@ -5294,9 +5369,17 @@ namespace SMIS.Infrastructure.Server.Migrations
 
                     b.HasIndex("ApplicationUserId");
 
+                    b.HasIndex("CreatedBy");
+
+                    b.HasIndex("DistrictId");
+
                     b.HasIndex("IsActive");
 
+                    b.HasIndex("ProvinceId");
+
                     b.HasIndex("ShopId");
+
+                    b.HasIndex("UpdatedBy");
 
                     b.ToTable("ShopOwner", (string)null);
 
@@ -5409,7 +5492,8 @@ namespace SMIS.Infrastructure.Server.Migrations
                         .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime?>("CreatedDate")
                         .HasColumnType("datetime2");
@@ -5461,7 +5545,8 @@ namespace SMIS.Infrastructure.Server.Migrations
                         .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("UpdatedBy")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime?>("UpdatedDate")
                         .HasColumnType("datetime2");
@@ -5473,6 +5558,8 @@ namespace SMIS.Infrastructure.Server.Migrations
 
                     b.HasIndex("BatchNumber");
 
+                    b.HasIndex("CreatedBy");
+
                     b.HasIndex("ExpirationDate");
 
                     b.HasIndex("ProductId");
@@ -5480,6 +5567,8 @@ namespace SMIS.Infrastructure.Server.Migrations
                     b.HasIndex("Status");
 
                     b.HasIndex("UnitId");
+
+                    b.HasIndex("UpdatedBy");
 
                     b.ToTable("StockBatch", (string)null);
 
@@ -5571,7 +5660,8 @@ namespace SMIS.Infrastructure.Server.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime?>("CreatedDate")
                         .HasColumnType("datetime2");
@@ -5635,7 +5725,8 @@ namespace SMIS.Infrastructure.Server.Migrations
                         .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("UpdatedBy")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime?>("UpdatedDate")
                         .HasColumnType("datetime2");
@@ -5644,6 +5735,8 @@ namespace SMIS.Infrastructure.Server.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CreatedBy");
 
                     b.HasIndex("ProductId");
 
@@ -5656,6 +5749,8 @@ namespace SMIS.Infrastructure.Server.Migrations
                     b.HasIndex("Type");
 
                     b.HasIndex("UnitId");
+
+                    b.HasIndex("UpdatedBy");
 
                     b.ToTable("StockTransaction", (string)null);
 
@@ -5892,7 +5987,8 @@ namespace SMIS.Infrastructure.Server.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime?>("CreatedDate")
                         .HasColumnType("datetime2");
@@ -5940,7 +6036,8 @@ namespace SMIS.Infrastructure.Server.Migrations
                         .HasColumnType("nvarchar(20)");
 
                     b.Property<string>("UpdatedBy")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime?>("UpdatedDate")
                         .HasColumnType("datetime2");
@@ -5950,7 +6047,11 @@ namespace SMIS.Infrastructure.Server.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CreatedBy");
+
                     b.HasIndex("ShopId");
+
+                    b.HasIndex("UpdatedBy");
 
                     b.ToTable("UnitOfMeasure", (string)null);
 
@@ -6133,19 +6234,49 @@ namespace SMIS.Infrastructure.Server.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("SMIS.Domain.Entities.AppLog", b =>
+                {
+                    b.HasOne("SMIS.Domain.Entities.Identity.Entity.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("SMIS.Domain.Entities.Category", b =>
                 {
+                    b.HasOne("SMIS.Domain.Entities.Identity.Entity.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("CreatedBy")
+                        .OnDelete(DeleteBehavior.Restrict);
+
                     b.HasOne("SMIS.Domain.Entities.Shop", "Shop")
                         .WithMany()
                         .HasForeignKey("ShopId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("SMIS.Domain.Entities.Identity.Entity.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("UpdatedBy")
+                        .OnDelete(DeleteBehavior.Restrict);
+
                     b.Navigation("Shop");
                 });
 
             modelBuilder.Entity("SMIS.Domain.Entities.Customer", b =>
                 {
+                    b.HasOne("SMIS.Domain.Entities.Identity.Entity.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("CreatedBy")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("SMIS.Domain.Entities.Identity.Entity.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("DeletedBy")
+                        .OnDelete(DeleteBehavior.Restrict);
+
                     b.HasOne("SMIS.Domain.Entities.LocationEntities.District", "District")
                         .WithMany()
                         .HasForeignKey("DistrictId")
@@ -6161,6 +6292,11 @@ namespace SMIS.Infrastructure.Server.Migrations
                         .HasForeignKey("ShopId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.HasOne("SMIS.Domain.Entities.Identity.Entity.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("UpdatedBy")
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("District");
 
@@ -6205,6 +6341,11 @@ namespace SMIS.Infrastructure.Server.Migrations
 
             modelBuilder.Entity("SMIS.Domain.Entities.LoanAccount", b =>
                 {
+                    b.HasOne("SMIS.Domain.Entities.Identity.Entity.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("CreatedBy")
+                        .OnDelete(DeleteBehavior.Restrict);
+
                     b.HasOne("SMIS.Domain.Entities.Customer", "Customer")
                         .WithMany()
                         .HasForeignKey("CustomerId")
@@ -6229,6 +6370,11 @@ namespace SMIS.Infrastructure.Server.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("SMIS.Domain.Entities.Identity.Entity.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("UpdatedBy")
+                        .OnDelete(DeleteBehavior.Restrict);
+
                     b.Navigation("Customer");
 
                     b.Navigation("Product");
@@ -6240,17 +6386,32 @@ namespace SMIS.Infrastructure.Server.Migrations
 
             modelBuilder.Entity("SMIS.Domain.Entities.LoanAccountPayment", b =>
                 {
+                    b.HasOne("SMIS.Domain.Entities.Identity.Entity.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("CreatedBy")
+                        .OnDelete(DeleteBehavior.Restrict);
+
                     b.HasOne("SMIS.Domain.Entities.LoanAccount", "LoanAccount")
                         .WithMany("Payments")
                         .HasForeignKey("LoanAccountId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("SMIS.Domain.Entities.Identity.Entity.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("UpdatedBy")
+                        .OnDelete(DeleteBehavior.Restrict);
+
                     b.Navigation("LoanAccount");
                 });
 
             modelBuilder.Entity("SMIS.Domain.Entities.Localization.Translation", b =>
                 {
+                    b.HasOne("SMIS.Domain.Entities.Identity.Entity.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("CreatedBy")
+                        .OnDelete(DeleteBehavior.Restrict);
+
                     b.HasOne("SMIS.Domain.Entities.Localization.Language", "Language")
                         .WithMany()
                         .HasForeignKey("LanguageNo")
@@ -6263,19 +6424,60 @@ namespace SMIS.Infrastructure.Server.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("SMIS.Domain.Entities.Identity.Entity.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("UpdatedBy")
+                        .OnDelete(DeleteBehavior.Restrict);
+
                     b.Navigation("Language");
 
                     b.Navigation("TranslationKey");
                 });
 
+            modelBuilder.Entity("SMIS.Domain.Entities.Localization.TranslationKey", b =>
+                {
+                    b.HasOne("SMIS.Domain.Entities.Identity.Entity.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("CreatedBy")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("SMIS.Domain.Entities.Identity.Entity.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("UpdatedBy")
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
             modelBuilder.Entity("SMIS.Domain.Entities.LocationEntities.District", b =>
                 {
+                    b.HasOne("SMIS.Domain.Entities.Identity.Entity.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("CreatedBy")
+                        .OnDelete(DeleteBehavior.Restrict);
+
                     b.HasOne("SMIS.Domain.Entities.Localization.TranslationKey", "TranslationKey")
                         .WithOne()
                         .HasForeignKey("SMIS.Domain.Entities.LocationEntities.District", "TranslationKeyId")
                         .OnDelete(DeleteBehavior.Cascade);
 
+                    b.HasOne("SMIS.Domain.Entities.Identity.Entity.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("UpdatedBy")
+                        .OnDelete(DeleteBehavior.Restrict);
+
                     b.Navigation("TranslationKey");
+                });
+
+            modelBuilder.Entity("SMIS.Domain.Entities.LocationEntities.Province", b =>
+                {
+                    b.HasOne("SMIS.Domain.Entities.Identity.Entity.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("CreatedBy")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("SMIS.Domain.Entities.Identity.Entity.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("UpdatedBy")
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
             modelBuilder.Entity("SMIS.Domain.Entities.LocationEntities.ProvinceTranslation", b =>
@@ -6310,11 +6512,21 @@ namespace SMIS.Infrastructure.Server.Migrations
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.SetNull);
 
+                    b.HasOne("SMIS.Domain.Entities.Identity.Entity.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("CreatedBy")
+                        .OnDelete(DeleteBehavior.Restrict);
+
                     b.HasOne("SMIS.Domain.Entities.Shop", "Shop")
                         .WithMany()
                         .HasForeignKey("ShopId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.HasOne("SMIS.Domain.Entities.Identity.Entity.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("UpdatedBy")
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("Category");
 
@@ -6325,6 +6537,11 @@ namespace SMIS.Infrastructure.Server.Migrations
 
             modelBuilder.Entity("SMIS.Domain.Entities.ProductPrice", b =>
                 {
+                    b.HasOne("SMIS.Domain.Entities.Identity.Entity.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("CreatedBy")
+                        .OnDelete(DeleteBehavior.Restrict);
+
                     b.HasOne("SMIS.Domain.Entities.Product", "Product")
                         .WithMany("ProductPrices")
                         .HasForeignKey("ProductId")
@@ -6337,6 +6554,11 @@ namespace SMIS.Infrastructure.Server.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("SMIS.Domain.Entities.Identity.Entity.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("UpdatedBy")
+                        .OnDelete(DeleteBehavior.Restrict);
+
                     b.Navigation("Product");
 
                     b.Navigation("ProductUnit");
@@ -6344,6 +6566,11 @@ namespace SMIS.Infrastructure.Server.Migrations
 
             modelBuilder.Entity("SMIS.Domain.Entities.ProductUnit", b =>
                 {
+                    b.HasOne("SMIS.Domain.Entities.Identity.Entity.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("CreatedBy")
+                        .OnDelete(DeleteBehavior.Restrict);
+
                     b.HasOne("SMIS.Domain.Entities.Product", "Product")
                         .WithMany("ProductUnits")
                         .HasForeignKey("ProductId")
@@ -6356,9 +6583,27 @@ namespace SMIS.Infrastructure.Server.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("SMIS.Domain.Entities.Identity.Entity.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("UpdatedBy")
+                        .OnDelete(DeleteBehavior.Restrict);
+
                     b.Navigation("Product");
 
                     b.Navigation("UnitOfMeasure");
+                });
+
+            modelBuilder.Entity("SMIS.Domain.Entities.Shop", b =>
+                {
+                    b.HasOne("SMIS.Domain.Entities.Identity.Entity.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("CreatedBy")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("SMIS.Domain.Entities.Identity.Entity.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("UpdatedBy")
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
             modelBuilder.Entity("SMIS.Domain.Entities.ShopOwner", b =>
@@ -6369,11 +6614,35 @@ namespace SMIS.Infrastructure.Server.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("SMIS.Domain.Entities.Identity.Entity.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("CreatedBy")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("SMIS.Domain.Entities.LocationEntities.District", "District")
+                        .WithMany()
+                        .HasForeignKey("DistrictId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.HasOne("SMIS.Domain.Entities.LocationEntities.Province", "Province")
+                        .WithMany()
+                        .HasForeignKey("ProvinceId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
                     b.HasOne("SMIS.Domain.Entities.Shop", "Shop")
                         .WithMany()
                         .HasForeignKey("ShopId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.HasOne("SMIS.Domain.Entities.Identity.Entity.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("UpdatedBy")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("District");
+
+                    b.Navigation("Province");
 
                     b.Navigation("Shop");
 
@@ -6382,21 +6651,40 @@ namespace SMIS.Infrastructure.Server.Migrations
 
             modelBuilder.Entity("SMIS.Domain.Entities.StockBatch", b =>
                 {
-                    b.HasOne("SMIS.Domain.Entities.Product", null)
+                    b.HasOne("SMIS.Domain.Entities.Identity.Entity.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("CreatedBy")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("SMIS.Domain.Entities.Product", "Product")
                         .WithMany()
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("SMIS.Domain.Entities.UnitOfMeasure", null)
+                    b.HasOne("SMIS.Domain.Entities.UnitOfMeasure", "UnitOfMeasure")
                         .WithMany()
                         .HasForeignKey("UnitId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.HasOne("SMIS.Domain.Entities.Identity.Entity.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("UpdatedBy")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("Product");
+
+                    b.Navigation("UnitOfMeasure");
                 });
 
             modelBuilder.Entity("SMIS.Domain.Entities.StockTransaction", b =>
                 {
+                    b.HasOne("SMIS.Domain.Entities.Identity.Entity.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("CreatedBy")
+                        .OnDelete(DeleteBehavior.Restrict);
+
                     b.HasOne("SMIS.Domain.Entities.Product", "Product")
                         .WithMany()
                         .HasForeignKey("ProductId")
@@ -6421,6 +6709,11 @@ namespace SMIS.Infrastructure.Server.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("SMIS.Domain.Entities.Identity.Entity.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("UpdatedBy")
+                        .OnDelete(DeleteBehavior.Restrict);
+
                     b.Navigation("Product");
 
                     b.Navigation("Shop");
@@ -6432,11 +6725,21 @@ namespace SMIS.Infrastructure.Server.Migrations
 
             modelBuilder.Entity("SMIS.Domain.Entities.UnitOfMeasure", b =>
                 {
+                    b.HasOne("SMIS.Domain.Entities.Identity.Entity.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("CreatedBy")
+                        .OnDelete(DeleteBehavior.Restrict);
+
                     b.HasOne("SMIS.Domain.Entities.Shop", "Shop")
                         .WithMany()
                         .HasForeignKey("ShopId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.HasOne("SMIS.Domain.Entities.Identity.Entity.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("UpdatedBy")
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("Shop");
                 });

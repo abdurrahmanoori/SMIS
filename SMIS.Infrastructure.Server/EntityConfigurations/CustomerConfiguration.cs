@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using SMIS.Domain.Entities;
+using SMIS.Domain.Entities.Identity.Entity;
 
 namespace SMIS.Infrastructure.Server.EntityConfigurations
 {
@@ -21,6 +22,7 @@ namespace SMIS.Infrastructure.Server.EntityConfigurations
             builder.Property(e => e.PhoneNumber).HasMaxLength(20);
             builder.Property(e => e.Address).HasMaxLength(500);
             builder.Property(e => e.TaxNumber).HasMaxLength(20);
+            builder.Property(e => e.DeletedBy).HasMaxLength(450);
             builder.Property(e => e.ProvinceId).HasMaxLength(450);
             builder.Property(e => e.DistrictId).HasMaxLength(450);
             builder.Property(e => e.ClientCreatedBy).HasMaxLength(450);
@@ -51,6 +53,11 @@ namespace SMIS.Infrastructure.Server.EntityConfigurations
                 .WithMany()
                 .HasForeignKey(e => e.DistrictId)
                 .OnDelete(DeleteBehavior.SetNull);
+
+            builder.HasOne<ApplicationUser>()
+                .WithMany()
+                .HasForeignKey(e => e.DeletedBy)
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

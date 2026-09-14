@@ -37,14 +37,8 @@ public class ProductUnit : BaseSyncableAuditableEntity
 
     public DateTime ConflictModifiedUtc => GetConflictModifiedUtc();
 
-    /// <summary>
-    /// Navigation property to Product.
-    /// </summary>
     public Product Product { get; set; } = null!;
 
-    /// <summary>
-    /// Navigation property to Unit.
-    /// </summary>
     public UnitOfMeasure UnitOfMeasure { get; set; } = null!;
 
     internal ProductUnit() { } // EF Core & Seeding

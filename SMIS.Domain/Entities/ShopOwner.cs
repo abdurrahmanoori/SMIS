@@ -1,6 +1,7 @@
 using SMIS.Domain.Common.BaseAbstract;
 using SMIS.Domain.Common.Interfaces;
 using SMIS.Domain.Entities.Identity.Entity;
+using SMIS.Domain.Entities.LocationEntities;
 using SMIS.Domain.Exceptions;
 
 namespace SMIS.Domain.Entities;
@@ -29,6 +30,8 @@ public class ShopOwner : BaseAuditableEntity, IShopEntity
     // Navigation Properties
     public virtual ApplicationUser User { get; set; } = null!;
     public virtual Shop Shop { get; set; } = null!;
+    public virtual Province? Province { get; set; }
+    public virtual District? District { get; set; }
 
     internal ShopOwner() { } // EF Core & Seeding
 

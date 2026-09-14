@@ -26,29 +26,22 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c1539008-1193-464d-b486-40cdba8ba5f6" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.SMIS/.idea/dataSources/8953dd4c-a13f-45bd-aa39-4b486bc39f97.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.SMIS/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.SMIS/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMIS.Api/Controllers/Base/BaseApiController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/SMIS.Api/Controllers/Base/BaseApiController.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMIS.Api/Controllers/DistrictController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/SMIS.Api/Controllers/DistrictController.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMIS.Api/Controllers/ProductController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/SMIS.Api/Controllers/ProductController.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMIS.Api/Controllers/ProvinceController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/SMIS.Api/Controllers/ProvinceController.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMIS.Api/Extentions/ApiBehaviorOptionsExtensions.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMIS.Api/Extentions/ApplicationBuilderExtensions.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMIS.Api/Extentions/CorsServiceExtensions.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMIS.Api/Extentions/MiniProfilerExtension.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMIS.Api/Extentions/SerilogExtension.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMIS.Api/Extentions/SwaggerServiceCollectionExtensions.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMIS.Api/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/SMIS.Api/Program.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMIS.Application/Repositories/Base/IGenericRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/SMIS.Application/Repositories/Base/IGenericRepository.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMIS.Application/Repositories/Base/IUnitOfWork.cs" beforeDir="false" afterPath="$PROJECT_DIR$/SMIS.Application/Repositories/Base/IUnitOfWork.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMIS.Infrastructure.Server/Configurations/RegisterRepositories.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMIS.Infrastructure.Server/Extensions/InfrastructureServicesRegistration.cs" beforeDir="false" afterPath="$PROJECT_DIR$/SMIS.Infrastructure.Server/Extensions/InfrastructureServicesRegistration.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMIS.Infrastructure.Server/Repositories/Base/GenericRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/SMIS.Infrastructure.Server/Repositories/Base/GenericRepository.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMIS.Infrastructure.Server/Repositories/Base/UnitOfWork.cs" beforeDir="false" afterPath="$PROJECT_DIR$/SMIS.Infrastructure.Server/Repositories/Base/UnitOfWork.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMIS.Infrastructure.Server/RepositoryStores/RepositoriesStore.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/smis_flutter/database/smis_offline.db" beforeDir="false" afterPath="$PROJECT_DIR$/smis_flutter/database/smis_offline.db" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/smis_flutter/database/smis_offline.db-shm" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/smis_flutter/database/smis_offline.db-wal" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/SMIS.Domain/Entities/AppLog.cs" beforeDir="false" afterPath="$PROJECT_DIR$/SMIS.Domain/Entities/AppLog.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SMIS.Domain/Entities/ProductUnit.cs" beforeDir="false" afterPath="$PROJECT_DIR$/SMIS.Domain/Entities/ProductUnit.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SMIS.Domain/Entities/ShopOwner.cs" beforeDir="false" afterPath="$PROJECT_DIR$/SMIS.Domain/Entities/ShopOwner.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SMIS.Domain/Entities/StockBatch.cs" beforeDir="false" afterPath="$PROJECT_DIR$/SMIS.Domain/Entities/StockBatch.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SMIS.Infrastructure.Server/EntityConfigurations/AppLogConfiguration.cs" beforeDir="false" afterPath="$PROJECT_DIR$/SMIS.Infrastructure.Server/EntityConfigurations/AppLogConfiguration.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SMIS.Infrastructure.Server/EntityConfigurations/ShopOwnerConfiguration.cs" beforeDir="false" afterPath="$PROJECT_DIR$/SMIS.Infrastructure.Server/EntityConfigurations/ShopOwnerConfiguration.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SMIS.Infrastructure.Server/EntityConfigurations/StockBatchConfiguration.cs" beforeDir="false" afterPath="$PROJECT_DIR$/SMIS.Infrastructure.Server/EntityConfigurations/StockBatchConfiguration.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SMIS.Infrastructure.Server/Logging/DatabaseSink.cs" beforeDir="false" afterPath="$PROJECT_DIR$/SMIS.Infrastructure.Server/Logging/DatabaseSink.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SMIS.Infrastructure.Server/Migrations/AppDbContextModelSnapshot.cs" beforeDir="false" afterPath="$PROJECT_DIR$/SMIS.Infrastructure.Server/Migrations/AppDbContextModelSnapshot.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/smis_flutter/lib/screens/categories_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/smis_flutter/lib/screens/categories_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/smis_flutter/lib/screens/products_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/smis_flutter/lib/screens/products_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/smis_flutter/lib/screens/profile_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/smis_flutter/lib/screens/profile_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/smis_flutter/lib/screens/shops_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/smis_flutter/lib/screens/shops_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/smis_flutter/lib/screens/unit_of_measures_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/smis_flutter/lib/screens/unit_of_measures_screen.dart" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -191,48 +184,48 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    ".NET Launch Settings Profile.SMIS.Api: http.executor": "Run",
-    ".NET Launch Settings Profile.SMIS.Api: https.executor": "Run",
-    ".NET Launch Settings Profile.SMIS.UI: Windows Machine.executor": "Run",
-    "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "DataGrid.QuickDoc.View": "TRANSPOSED",
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "RunOnceActivity.MCP Project settings loaded": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.cidr.known.project.marker": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "RunOnceActivity.readMode.enableVisualFormatting": "true",
-    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
-    "cidr.known.project.marker": "true",
-    "codeWithMe.voiceChat.enabledByDefault": "false",
-    "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
-    "copilot.chat.legacySessionMetadata.migrated": "true",
-    "git-widget-placeholder": "flutter-and-api-only",
-    "ignore.virus.scanning.warn.message": "true",
-    "junie.onboarding.icon.badge.shown": "true",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "ml.llm.AcpAgentsConfigurable",
-    "sqlserver_backup_path_localServer": "E:",
-    "to.speed.mode.migration.done": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;.NET Launch Settings Profile.SMIS.Api: http.executor&quot;: &quot;Run&quot;,
+    &quot;.NET Launch Settings Profile.SMIS.Api: https.executor&quot;: &quot;Run&quot;,
+    &quot;.NET Launch Settings Profile.SMIS.UI: Windows Machine.executor&quot;: &quot;Run&quot;,
+    &quot;ASKED_SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;DataGrid.QuickDoc.View&quot;: &quot;TRANSPOSED&quot;,
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.MCP Project settings loaded&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.cidr.known.project.marker&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.readMode.enableVisualFormatting&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
+    &quot;cidr.known.project.marker&quot;: &quot;true&quot;,
+    &quot;codeWithMe.voiceChat.enabledByDefault&quot;: &quot;false&quot;,
+    &quot;com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1&quot;: &quot;true&quot;,
+    &quot;copilot.chat.legacySessionMetadata.migrated&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;flutter-and-api-only&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;junie.onboarding.icon.badge.shown&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;ml.llm.AcpAgentsConfigurable&quot;,
+    &quot;sqlserver_backup_path_localServer&quot;: &quot;E:&quot;,
+    &quot;to.speed.mode.migration.done&quot;: &quot;true&quot;
   },
-  "keyToStringList": {
-    "DatabaseDriversLRU": [
-      "sqlite",
-      "postgresql"
+  &quot;keyToStringList&quot;: {
+    &quot;DatabaseDriversLRU&quot;: [
+      &quot;sqlite&quot;,
+      &quot;postgresql&quot;
     ],
-    "GitStage.ChangesTree.GroupingKeys": [
-      "directory",
-      "module",
-      "repository"
+    &quot;GitStage.ChangesTree.GroupingKeys&quot;: [
+      &quot;directory&quot;,
+      &quot;module&quot;,
+      &quot;repository&quot;
     ]
   }
-}]]></component>
+}</component>
   <component name="RunManager" selected=".NET Launch Settings Profile.SMIS.Api: http">
     <configuration name="SMIS.Api: Production" type="LaunchSettings" factoryName=".NET Launch Settings Profile">
       <option name="LAUNCH_PROFILE_PROJECT_FILE_PATH" value="$PROJECT_DIR$/SMIS.Api/SMIS.Api.csproj" />
@@ -346,14 +339,6 @@
       <option name="presentableId" value="LOCAL-00001" />
       <option name="project" value="LOCAL" />
       <updated>1788873767067</updated>
-    </task>
-    <task id="LOCAL-00012" summary="refactor(CategoryListPage): improve comments and formatting for clarity">
-      <option name="closed" value="true" />
-      <created>1788006051330</created>
-      <option name="number" value="00012" />
-      <option name="presentableId" value="LOCAL-00012" />
-      <option name="project" value="LOCAL" />
-      <updated>1788006051330</updated>
     </task>
     <task id="LOCAL-00013" summary="other layer remove and jsut we have api, flutter project and test if api layer">
       <option name="closed" value="true" />
@@ -731,7 +716,15 @@
       <option name="project" value="LOCAL" />
       <updated>1789308059679</updated>
     </task>
-    <option name="localTasksCounter" value="60" />
+    <task id="LOCAL-00060" summary="feat: enforce unique category names per shop and enhance related error handling">
+      <option name="closed" value="true" />
+      <created>1789355414344</created>
+      <option name="number" value="00060" />
+      <option name="presentableId" value="LOCAL-00060" />
+      <option name="project" value="LOCAL" />
+      <updated>1789355414345</updated>
+    </task>
+    <option name="localTasksCounter" value="61" />
     <option name="clearContext" value="false" />
     <option name="createChangelist" value="false" />
     <option name="createBranch" value="false" />
@@ -744,7 +737,6 @@
   <component name="UnityProjectConfiguration" hasMinimizedUI="false" />
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
-    <MESSAGE value="feat: enhance error handling with AppErrorView and refactor error management in authentication and profile APIs" />
     <MESSAGE value="feat: add WebDeploy configurations for site48297 and site62669 in workspace settings" />
     <MESSAGE value="feat: implement offline-first flow for Unit of Measurement with local storage and synchronization" />
     <MESSAGE value="feat: enhance authentication flow with AuthenticationGate and improve logout handling" />
@@ -769,6 +761,7 @@
     <MESSAGE value="feat: implement search functionality for products, shops, and units of measurement" />
     <MESSAGE value="feat: implement product count check before category deletion and update related error handling" />
     <MESSAGE value="feat: add reference count checks before deleting products, shops, and units of measurement" />
+    <MESSAGE value="feat: enforce unique category names per shop and enhance related error handling" />
     <option name="LAST_COMMIT_MESSAGE" value="" />
   </component>
   <component name="XDebuggerManager">

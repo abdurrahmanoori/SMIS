@@ -68,6 +68,27 @@ public partial class AppDbContext : IdentityDbContext<ApplicationUser, Applicati
                     .Property(nameof(BaseEntity.LastModifiedUtc))
                     .HasConversion(converter);
             }
+
+            if (typeof(IAuditableEntity).IsAssignableFrom(entityType.ClrType))
+            {
+                var entityBuilder = modelBuilder.Entity(entityType.ClrType);
+
+                entityBuilder.Property(nameof(IAuditableEntity.CreatedBy))
+                    .HasMaxLength(450);
+
+                entityBuilder.Property(nameof(IAuditableEntity.UpdatedBy))
+                    .HasMaxLength(450);
+
+                entityBuilder.HasOne(typeof(ApplicationUser), null)
+                    .WithMany()
+                    .HasForeignKey(nameof(IAuditableEntity.CreatedBy))
+                    .OnDelete(DeleteBehavior.Restrict);
+
+                entityBuilder.HasOne(typeof(ApplicationUser), null)
+                    .WithMany()
+                    .HasForeignKey(nameof(IAuditableEntity.UpdatedBy))
+                    .OnDelete(DeleteBehavior.Restrict);
+            }
         }
 
         // Hide tombstones from normal queries. Shop-owned entities also receive

@@ -44,13 +44,12 @@ namespace SMIS.Infrastructure.Server.EntityConfigurations
             builder.Property(s => s.Status)
                 .IsRequired()
                 .HasConversion<string>();
-            builder.HasOne<Product>()
+            builder.HasOne(s => s.Product)
                 .WithMany()
                 .HasForeignKey(s => s.ProductId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-
-            builder.HasOne<UnitOfMeasure>()
+            builder.HasOne(s => s.UnitOfMeasure)
                 .WithMany()
                 .HasForeignKey(s => s.UnitId)
                 .OnDelete(DeleteBehavior.Restrict);

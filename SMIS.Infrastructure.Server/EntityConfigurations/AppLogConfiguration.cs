@@ -30,6 +30,11 @@ public class AppLogConfiguration : IEntityTypeConfiguration<AppLog>
         builder.Property(x => x.CreatedAt)
             .IsRequired();
 
+        builder.HasOne(x => x.User)
+            .WithMany()
+            .HasForeignKey(x => x.UserId)
+            .OnDelete(DeleteBehavior.SetNull);
+
         builder.HasIndex(x => x.Level);
         builder.HasIndex(x => x.CreatedAt);
         builder.HasIndex(x => x.UserId);

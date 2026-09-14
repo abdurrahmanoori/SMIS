@@ -14,6 +14,7 @@ import '../widgets/app_error_view.dart';
 import '../widgets/shop_form_dialog.dart';
 import '../widgets/theme_mode_action.dart';
 import '../widgets/locale_action.dart';
+import '../widgets/home_action.dart';
 
 class ShopsScreen extends ConsumerStatefulWidget {
   const ShopsScreen({super.key});
@@ -79,9 +80,11 @@ class _ShopsScreenState extends ConsumerState<ShopsScreen> with WidgetsBindingOb
               icon: const Icon(Icons.search),
               onPressed: () => setState(() => _isSearching = true),
             ),
-          shops.maybeWhen(data: (state) => Badge(isLabelVisible: state.pendingCount > 0, label: Text('${state.pendingCount}'), child: IconButton.filledTonal(tooltip: context.l10n.text('Sync shops'), onPressed: state.isSyncing ? null : _sync, icon: state.isSyncing ? const SizedBox.square(dimension: 18, child: CircularProgressIndicator(strokeWidth: 2)) : const Icon(Icons.sync))), orElse: () => const SizedBox.shrink()),
-          const LocaleAction(),
-          const ThemeModeAction(), const SizedBox(width: 8),
+          shops.maybeWhen(data: (state) => Badge(isLabelVisible: state.pendingCount > 0, label: Text('${state.pendingCount}'), child: IconButton.filledTonal(tooltip: context.l10n.text('Sync shops'), onPressed: state.isSyncing ? null : _sync, icon: state.isSyncing ? const SizedBox.square(dimension: 18, child: CircularProgressIndicator(strokeWidth: 2)) : const Icon(Icons.sync))), orElse: () => const SizedBox.shrink(),
+        ),
+        const HomeAction(),
+        const LocaleAction(),
+        const ThemeModeAction(), const SizedBox(width: 8),
         ],
       ),
       drawer: const AppDrawer(),

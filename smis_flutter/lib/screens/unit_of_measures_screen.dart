@@ -12,6 +12,7 @@ import '../widgets/app_drawer.dart';
 import '../widgets/app_error_view.dart';
 import '../widgets/theme_mode_action.dart';
 import '../widgets/locale_action.dart';
+import '../widgets/home_action.dart';
 import '../widgets/unit_of_measure_form_dialog.dart';
 
 class UnitOfMeasuresScreen extends ConsumerStatefulWidget {
@@ -110,6 +111,7 @@ class _UnitOfMeasuresScreenState extends ConsumerState<UnitOfMeasuresScreen>
             ),
             orElse: () => const SizedBox.shrink(),
           ),
+          const HomeAction(),
           const LocaleAction(),
           const ThemeModeAction(),
           const SizedBox(width: 8),

@@ -10,6 +10,7 @@ import '../widgets/app_drawer.dart';
 import '../widgets/app_error_view.dart';
 import '../widgets/theme_mode_action.dart';
 import '../widgets/locale_action.dart';
+import '../widgets/home_action.dart';
 
 class ProfileScreen extends ConsumerWidget {
   const ProfileScreen({super.key});
@@ -27,6 +28,7 @@ class ProfileScreen extends ConsumerWidget {
             onPressed: () => ref.read(profileControllerProvider.notifier).reload(),
             icon: const Icon(Icons.refresh),
           ),
+          const HomeAction(),
           const LocaleAction(),
           const ThemeModeAction(),
           const SizedBox(width: 8),

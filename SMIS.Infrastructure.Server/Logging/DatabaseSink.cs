@@ -42,18 +42,19 @@ namespace SMIS.Infrastructure.Server.Logging
                 Message = logEvent.RenderMessage(),
                 Exception = logEvent.Exception?.ToString(),
                 Properties = JsonSerializer.Serialize(properties),
-                UserId = ExtractUserId(properties),
+                UserId = ExtractUserId(logEvent.Properties),
                 CreatedAt = DateTimeService.NowLocal
             };
         }
 
-        private static string? ExtractUserId(Dictionary<string, string> properties)
+        private static string? ExtractUserId(IReadOnlyDictionary<string, LogEventPropertyValue> properties)
         {
-            if (properties.TryGetValue("UserId", out var userIdStr))
-            {
-                return userIdStr;
-            }
-            return null;
+            if (!properties.TryGetValue("UserId", out var userIdValue) ||
+                userIdValue is not ScalarValue { Value: string userId } ||
+                string.IsNullOrWhiteSpace(userId))
+                return null;
+
+            return userId;
         }
     }
 }

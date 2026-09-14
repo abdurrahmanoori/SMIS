@@ -17,6 +17,7 @@ import '../widgets/app_error_view.dart';
 import '../widgets/product_form_dialog.dart';
 import '../widgets/theme_mode_action.dart';
 import '../widgets/locale_action.dart';
+import '../widgets/home_action.dart';
 import 'unit_of_measures_screen.dart';
 
 class ProductsScreen extends ConsumerStatefulWidget {
@@ -109,6 +110,7 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen> with WidgetsBin
             ),
             orElse: () => const SizedBox.shrink(),
           ),
+          const HomeAction(),
           const LocaleAction(),
           const ThemeModeAction(), const SizedBox(width: 8),
         ],

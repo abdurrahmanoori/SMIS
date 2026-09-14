@@ -17,6 +17,9 @@ public class StockBatch : BaseAuditableEntityWithoutName
     public long PurchasePrice { get; private set; }
     public StatusEnum Status { get; private set; } = StatusEnum.Active;
 
+    public virtual Product Product { get; set; } = null!;
+    public virtual UnitOfMeasure UnitOfMeasure { get; set; } = null!;
+
     internal StockBatch() { } // EF Core & Seeding
 
     public static StockBatch Create(string productId, string unitId, decimal quantity, long purchasePrice, DateTime? receivedDate = null, string? batchNumber = null, DateTime? expirationDate = null)

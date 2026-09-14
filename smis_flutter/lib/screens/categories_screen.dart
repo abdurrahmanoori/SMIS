@@ -15,6 +15,7 @@ import '../widgets/app_error_view.dart';
 import '../widgets/theme_mode_action.dart';
 import '../widgets/category_form_dialog.dart';
 import '../widgets/locale_action.dart';
+import '../widgets/home_action.dart';
 import 'profile_screen.dart';
 import 'products_screen.dart';
 
@@ -112,6 +113,7 @@ class _CategoriesScreenState extends ConsumerState<CategoriesScreen>
             ),
             orElse: () => const SizedBox.shrink(),
           ),
+          const HomeAction(),
           const LocaleAction(),
           const ThemeModeAction(),
           const SizedBox(width: 8),
