@@ -16,7 +16,7 @@ public class LoanAccountDto
     public decimal Quantity { get; set; }
     public string UnitId { get; set; } = string.Empty;
     public string? UnitName { get; set; }
-    public decimal PriceAtLoanTime { get; set; }
+    public long PriceAtLoanTime { get; set; }
     public long TotalAmount { get; set; }
     public DateTime LoanDate { get; set; }
     public DateTime? DueDate { get; set; }

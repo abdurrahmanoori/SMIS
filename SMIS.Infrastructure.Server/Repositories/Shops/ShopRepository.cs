@@ -24,7 +24,6 @@ namespace SMIS.Infrastructure.Server.Repositories.Shops
     {
         var count = await _context.Users.CountAsync(user => user.ShopId == id, cancellationToken);
         count += await _context.Categories.CountAsync(category => category.ShopId == id, cancellationToken);
-        count += await _context.UnitOfMeasures.CountAsync(unit => unit.ShopId == id, cancellationToken);
         count += await _context.Products.CountAsync(product => product.ShopId == id, cancellationToken);
         count += await _context.StockTransactions.CountAsync(transaction => transaction.ShopId == id, cancellationToken);
         count += await _context.Customers.CountAsync(customer => customer.ShopId == id, cancellationToken);

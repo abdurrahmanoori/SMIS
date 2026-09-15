@@ -34,11 +34,10 @@ namespace SMIS.Infrastructure.Server.Repositories.Products
             string id,
             CancellationToken cancellationToken = default)
         {
-            var count = await _context.ProductUnits.CountAsync(
-                productUnit => productUnit.ProductId == id,
-                cancellationToken);
-            count += await _context.ProductPrices.CountAsync(
-                price => price.ProductId == id,
+            // ProductUnit is an owned child of Product and is deleted by cascade.
+            // Only external/business references should block deleting the product.
+            var count = await _context.ProductPrices.CountAsync(
+                price => price.ProductUnit.ProductId == id,
                 cancellationToken);
             count += await _context.StockBatches.CountAsync(
                 batch => batch.ProductId == id,
@@ -56,9 +55,18 @@ namespace SMIS.Infrastructure.Server.Repositories.Products
             string id,
             CancellationToken cancellationToken = default)
         {
+            var baseUnitId = await _context.Products
+                .IgnoreQueryFilters()
+                .Where(product => product.Id == id)
+                .Select(product => product.BaseUnitId)
+                .FirstOrDefaultAsync(cancellationToken);
+
             var hasConversions = await _context.ProductUnits
                 .IgnoreQueryFilters()
-                .AnyAsync(productUnit => productUnit.ProductId == id, cancellationToken);
+                .AnyAsync(
+                    productUnit => productUnit.ProductId == id &&
+                                   productUnit.UnitOfMeasureId != baseUnitId,
+                    cancellationToken);
             if (hasConversions) return true;
 
             var hasStockBatches = await _context.StockBatches

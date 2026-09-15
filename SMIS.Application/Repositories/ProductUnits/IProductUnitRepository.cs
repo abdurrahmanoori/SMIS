@@ -11,5 +11,6 @@ namespace SMIS.Application.Repositories.ProductUnits
             string unitOfMeasureId,
             string? excludeId = null,
             CancellationToken cancellationToken = default);
+        Task<bool> HasUsageAsync(string id, CancellationToken cancellationToken = default);
     }
 }

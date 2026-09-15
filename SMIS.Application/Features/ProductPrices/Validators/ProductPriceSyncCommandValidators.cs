@@ -25,9 +25,7 @@ public sealed class ProductPriceSyncCreateCommandValidator : AbstractValidator<P
 
     private static void AddProductPriceRules(InlineValidator<DTO.ProductPrices.ProductPriceSyncUpdateDto> rules)
     {
-        rules.RuleFor(x => x.ProductId).NotEmpty().MaximumLength(450);
         rules.RuleFor(x => x.ProductUnitId).NotEmpty().MaximumLength(450);
-        rules.RuleFor(x => x.BuyPrice).GreaterThanOrEqualTo(0);
         rules.RuleFor(x => x.SellPrice).GreaterThanOrEqualTo(0);
         rules.RuleFor(x => x.EffectiveDate).NotEmpty();
         rules.RuleFor(x => x.EndDate).GreaterThanOrEqualTo(x => x.EffectiveDate).When(x => x.EndDate.HasValue);
@@ -41,9 +39,7 @@ public sealed class ProductPriceSyncUpdateCommandValidator : AbstractValidator<P
         RuleFor(x => x.Id).NotEmpty().Must(SyncValidationRules.BeValidGuid);
         RuleFor(x => x.Dto).NotNull().DependentRules(() =>
         {
-            RuleFor(x => x.Dto.ProductId).NotEmpty().MaximumLength(450);
             RuleFor(x => x.Dto.ProductUnitId).NotEmpty().MaximumLength(450);
-            RuleFor(x => x.Dto.BuyPrice).GreaterThanOrEqualTo(0);
             RuleFor(x => x.Dto.SellPrice).GreaterThanOrEqualTo(0);
             RuleFor(x => x.Dto.EffectiveDate).NotEmpty();
             RuleFor(x => x.Dto.EndDate).GreaterThanOrEqualTo(x => x.Dto.EffectiveDate).When(x => x.Dto.EndDate.HasValue);

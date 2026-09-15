@@ -34,7 +34,6 @@ namespace SMIS.Application.Features.UnitOfMeasures.Commands
             entity.SetName(request.UnitOfMeasureCreateDto.Name);
             entity.SetSymbol(request.UnitOfMeasureCreateDto.Symbol);
             entity.SetDescription(request.UnitOfMeasureCreateDto.Description);
-            entity.SetShopId(request.UnitOfMeasureCreateDto.ShopId);
             entity.ClearClientModificationMetadata();
             
             await _unitOfWork.SaveChanges(cancellationToken);

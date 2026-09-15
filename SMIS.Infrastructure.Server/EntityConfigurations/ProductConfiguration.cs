@@ -62,6 +62,16 @@ namespace SMIS.Infrastructure.Server.EntityConfigurations
             builder.Property(p => p.ClientModifiedBy)
                 .HasMaxLength(450);
 
+            builder.HasIndex(p => new { p.ShopId, p.SKU })
+                .IsUnique()
+                .HasFilter("[IsDeleted] = 0")
+                .HasDatabaseName("UX_Product_ShopId_SKU_Active");
+
+            builder.HasIndex(p => new { p.ShopId, p.Barcode })
+                .IsUnique()
+                .HasFilter("[IsDeleted] = 0 AND [Barcode] IS NOT NULL")
+                .HasDatabaseName("UX_Product_ShopId_Barcode_Active");
+
             // Foreign keys
             builder.HasOne(p => p.Shop)
                 .WithMany() // Shop has commented navigation to Products

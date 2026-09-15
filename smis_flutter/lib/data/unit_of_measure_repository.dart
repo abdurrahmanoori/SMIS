@@ -33,10 +33,9 @@ class UnitOfMeasureRepository {
   }) async {
     try {
       final database = await _database.instance;
-      await _repairMissingShopIds(database, shopId);
 
-      String where = 'is_deleted = 0 AND shop_id = ?';
-      List<Object?> whereArgs = [shopId];
+      String where = 'is_deleted = 0';
+      List<Object?> whereArgs = [];
 
       if (searchQuery != null && searchQuery.trim().isNotEmpty) {
         final query = '%${searchQuery.trim()}%';
@@ -67,10 +66,9 @@ class UnitOfMeasureRepository {
   Future<int> getTotalCount(String shopId, {String? searchQuery}) async {
     try {
       final database = await _database.instance;
-      await _repairMissingShopIds(database, shopId);
 
-      String where = 'is_deleted = 0 AND shop_id = ?';
-      List<Object?> whereArgs = [shopId];
+      String where = 'is_deleted = 0';
+      List<Object?> whereArgs = [];
 
       if (searchQuery != null && searchQuery.trim().isNotEmpty) {
         final query = '%${searchQuery.trim()}%';
@@ -93,14 +91,12 @@ class UnitOfMeasureRepository {
 
   Future<UnitOfMeasure> create(UnitOfMeasureDraft draft, String shopId) async {
     final normalized = draft.normalized();
-    await _ensureShopExists(shopId);
     final now = _utcNow();
     final record = UnitOfMeasureLocalRecord(
       id: _idGenerator(),
       name: normalized.name,
       symbol: normalized.symbol,
       description: normalized.description,
-      shopId: shopId,
       createdAt: now,
       updatedAt: now,
       lastModifiedUtc: now,
@@ -203,7 +199,6 @@ class UnitOfMeasureRepository {
     required bool force,
   }) async {
     final database = await _database.instance;
-    await _repairMissingShopIds(database, shopId);
     final now = DateTime.now().toUtc().toIso8601String();
     final retryFilter = force
         ? ''
@@ -211,8 +206,8 @@ class UnitOfMeasureRepository {
               '(next_retry_at IS NULL OR next_retry_at <= ?)';
     final rows = await database.query(
       _table,
-      where: "pending_operation != 'none' AND shop_id = ?$retryFilter",
-      whereArgs: force ? [shopId] : [shopId, now],
+      where: "pending_operation != 'none'$retryFilter",
+      whereArgs: force ? const [] : [now],
       orderBy: 'last_modified_utc ASC',
     );
     return rows.map(UnitOfMeasureLocalRecord.fromMap).toList(growable: false);
@@ -220,10 +215,8 @@ class UnitOfMeasureRepository {
 
   Future<int> getPendingCount(String shopId) async {
     final database = await _database.instance;
-    await _repairMissingShopIds(database, shopId);
     final result = await database.rawQuery(
-      "SELECT COUNT(*) AS count FROM $_table WHERE pending_operation != 'none' AND shop_id = ?",
-      [shopId],
+      "SELECT COUNT(*) AS count FROM $_table WHERE pending_operation != 'none'",
     );
     return Sqflite.firstIntValue(result) ?? 0;
   }
@@ -236,28 +229,6 @@ class UnitOfMeasureRepository {
       [unitId],
     );
     return Sqflite.firstIntValue(result) ?? 0;
-  }
-
-  Future<void> _ensureShopExists(String shopId) async {
-    final database = await _database.instance;
-    final rows = await database.query(
-      'shops',
-      columns: ['id'],
-      where: 'id = ? AND is_deleted = 0',
-      whereArgs: [shopId],
-      limit: 1,
-    );
-    if (rows.isEmpty) {
-      throw const LocalStorageException(
-        'The selected shop is not available in local storage. Sync shops before creating a unit of measurement.',
-      );
-    }
-  }
-
-  Future<void> _repairMissingShopIds(Database database, String shopId) async {
-    await database.update(_table, {
-      'shop_id': shopId,
-    }, where: "shop_id IS NULL OR TRIM(shop_id) = ''");
   }
 
   Future<DateTime> getPullCursor(String shopId) async {

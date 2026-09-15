@@ -27,17 +27,18 @@ namespace SMIS.Infrastructure.Server.EntityConfigurations
             builder.Property(u => u.Description)
                 .HasMaxLength(500);
 
-            builder.Property(u => u.ShopId)
-                .IsRequired()
-                .HasMaxLength(450);
-
             builder.Property(u => u.ClientCreatedBy).HasMaxLength(450);
             builder.Property(u => u.ClientModifiedBy).HasMaxLength(450);
 
-            builder.HasOne(u => u.Shop)
-                .WithMany()
-                .HasForeignKey(u => u.ShopId)
-                .OnDelete(DeleteBehavior.Restrict);
+            builder.HasIndex(u => u.Name)
+                .IsUnique()
+                .HasFilter("[IsDeleted] = 0")
+                .HasDatabaseName("UX_UnitOfMeasure_Name_Active");
+
+            builder.HasIndex(u => u.Symbol)
+                .IsUnique()
+                .HasFilter("[IsDeleted] = 0 AND [Symbol] IS NOT NULL")
+                .HasDatabaseName("UX_UnitOfMeasure_Symbol_Active");
         }
     }
 }

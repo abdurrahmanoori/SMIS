@@ -15,7 +15,6 @@ class UnitOfMeasureLocalRecord {
     required this.syncStatus,
     required this.retryCount,
     this.description,
-    this.shopId,
     this.nextRetryAt,
     this.lastSyncError,
     this.serverCreatedDate,
@@ -29,7 +28,6 @@ class UnitOfMeasureLocalRecord {
   final String name;
   final String symbol;
   final String? description;
-  final String? shopId;
   final DateTime createdAt;
   final DateTime updatedAt;
   final DateTime lastModifiedUtc;
@@ -50,7 +48,6 @@ class UnitOfMeasureLocalRecord {
     name: name,
     symbol: symbol,
     description: description,
-    shopId: shopId,
     createdAt: createdAt,
     updatedAt: updatedAt,
     lastModifiedUtc: lastModifiedUtc,
@@ -63,7 +60,6 @@ class UnitOfMeasureLocalRecord {
     String? symbol,
     String? description,
     bool clearDescription = false,
-    String? shopId,
     DateTime? updatedAt,
     DateTime? lastModifiedUtc,
     bool? isDeleted,
@@ -84,7 +80,6 @@ class UnitOfMeasureLocalRecord {
     name: name ?? this.name,
     symbol: symbol ?? this.symbol,
     description: clearDescription ? null : description ?? this.description,
-    shopId: shopId ?? this.shopId,
     createdAt: createdAt,
     updatedAt: updatedAt ?? this.updatedAt,
     lastModifiedUtc: lastModifiedUtc ?? this.lastModifiedUtc,
@@ -108,7 +103,6 @@ class UnitOfMeasureLocalRecord {
     'name': name,
     'symbol': symbol,
     'description': description,
-    'shop_id': shopId,
     'created_at': createdAt.toUtc().toIso8601String(),
     'updated_at': updatedAt.toUtc().toIso8601String(),
     'last_modified_utc': lastModifiedUtc.toUtc().toIso8601String(),
@@ -133,7 +127,6 @@ class UnitOfMeasureLocalRecord {
         name: map['name']! as String,
         symbol: map['symbol']! as String,
         description: map['description'] as String?,
-        shopId: map['shop_id'] as String?,
         createdAt: DateTime.parse(map['created_at']! as String).toUtc(),
         updatedAt: DateTime.parse(map['updated_at']! as String).toUtc(),
         lastModifiedUtc: DateTime.parse(

@@ -5,20 +5,16 @@ namespace SMIS.Domain.Entities;
 
 public class ProductPrice : BaseSyncableAuditableEntity
 {
-    public string ProductId { get; private set; } = string.Empty;
     public string ProductUnitId { get; private set; } = string.Empty;
 
-    public long BuyPrice { get; private set; }
     public long SellPrice { get; private set; }
 
     public DateTime EffectiveDate { get; private set; }
     public DateTime? EndDate { get; private set; }
-    public bool IsActive { get; private set; } = true;
 
     public DateTime ConflictModifiedUtc => GetConflictModifiedUtc();
 
     // Navigation Properties
-    public virtual Product Product { get; set; } = null!;
     public ProductUnit ProductUnit { get; set; } = null!;
 
     internal ProductPrice()
@@ -26,30 +22,16 @@ public class ProductPrice : BaseSyncableAuditableEntity
     } // EF Core
 
     public static ProductPrice Create(
-        string productId,
         string productUnitId,
-        long buyPrice,
         long sellPrice,
         DateTime effectiveDate
     )
     {
         var productPrice = new ProductPrice();
-        productPrice.SetProductId(productId);
         productPrice.SetProductUnitId(productUnitId);
-        productPrice.SetBuyPrice(buyPrice);
         productPrice.SetSellPrice(sellPrice);
         productPrice.SetEffectiveDate(effectiveDate);
         return productPrice;
-    }
-
-    public void SetProductId(
-        string productId
-    )
-    {
-        if (string.IsNullOrWhiteSpace(productId))
-            throw new DomainValidationException("Product ID cannot be empty");
-
-        ProductId = productId;
     }
 
     public void SetProductUnitId(
@@ -60,16 +42,6 @@ public class ProductPrice : BaseSyncableAuditableEntity
             throw new DomainValidationException("Product unit ID cannot be empty");
 
         ProductUnitId = productUnitId;
-    }
-
-    public void SetBuyPrice(
-        long buyPrice
-    )
-    {
-        if (buyPrice < 0)
-            throw new DomainValidationException("Buy price cannot be negative");
-
-        BuyPrice = buyPrice;
     }
 
     public void SetSellPrice(
@@ -99,6 +71,4 @@ public class ProductPrice : BaseSyncableAuditableEntity
         EndDate = endDate;
     }
 
-    public void Activate() => IsActive = true;
-    public void Deactivate() => IsActive = false;
 }

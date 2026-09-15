@@ -16,7 +16,7 @@ public class LoanAccount : BaseAuditableEntity, IShopEntity
     public decimal Quantity { get; private set; }
     public string UnitId { get; private set; } = string.Empty;
     public string? UnitName { get; set; }
-    public decimal PriceAtLoanTime { get; private set; }
+    public long PriceAtLoanTime { get; private set; }
     public long TotalAmount { get; private set; }
     public DateTime LoanDate { get; private set; }
     public DateTime? DueDate { get; private set; } = null;
@@ -43,7 +43,7 @@ public class LoanAccount : BaseAuditableEntity, IShopEntity
         string productId,
         decimal quantity,
         string unitId,
-        decimal priceAtLoanTime,
+        long priceAtLoanTime,
         long totalAmount,
         DateTime? dueDate = null,
         string? notes = null
@@ -109,7 +109,7 @@ public class LoanAccount : BaseAuditableEntity, IShopEntity
     }
 
     public void SetPriceAtLoanTime(
-        decimal priceAtLoanTime
+        long priceAtLoanTime
     )
     {
         if (priceAtLoanTime <= 0)

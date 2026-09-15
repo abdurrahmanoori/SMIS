@@ -7,6 +7,7 @@ using SMIS.Application.Repositories.Base;
 using SMIS.Application.Repositories.Categories;
 using SMIS.Application.Repositories.Localization;
 using SMIS.Application.Repositories.Products;
+using SMIS.Application.Repositories.ProductUnits;
 using SMIS.Application.Repositories.Shops;
 using SMIS.Application.Repositories.UnitOfMeasures;
 using SMIS.Domain.Entities;
@@ -21,11 +22,12 @@ internal sealed class ProductCreateCommandHandler : IRequestHandler<ProductCreat
     private readonly ITranslationKeyRepository _translationKeyRepository;
     private readonly IShopRepository _shopRepository;
     private readonly IUnitOfMeasureRepository _unitOfMeasureRepository;
+    private readonly IProductUnitRepository _productUnitRepository;
     private readonly ICategoryRepository _categoryRepository;
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
 
-    public ProductCreateCommandHandler(IUnitOfWork unitOfWork, IMapper mapper, IProductRepository productRepository, ITranslationKeyRepository translationKeyRepository, IShopRepository shopRepository, IUnitOfMeasureRepository unitOfMeasureRepository, ICategoryRepository categoryRepository)
+    public ProductCreateCommandHandler(IUnitOfWork unitOfWork, IMapper mapper, IProductRepository productRepository, ITranslationKeyRepository translationKeyRepository, IShopRepository shopRepository, IUnitOfMeasureRepository unitOfMeasureRepository, ICategoryRepository categoryRepository, IProductUnitRepository productUnitRepository)
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
@@ -34,6 +36,7 @@ internal sealed class ProductCreateCommandHandler : IRequestHandler<ProductCreat
         _shopRepository = shopRepository;
         _unitOfMeasureRepository = unitOfMeasureRepository;
         _categoryRepository = categoryRepository;
+        _productUnitRepository = productUnitRepository;
     }
 
     public async Task<Result<ProductDto>> Handle(ProductCreateCommand request, CancellationToken cancellationToken)
@@ -56,6 +59,12 @@ internal sealed class ProductCreateCommandHandler : IRequestHandler<ProductCreat
         }
         
         await _productRepository.AddAsync(entity);
+
+        var baseProductUnit = ProductUnit.Create(entity.Id, entity.BaseUnitId, 1m);
+        baseProductUnit.SetProductName(entity.Name);
+        baseProductUnit.SetUnitName(unit?.Name);
+        await _productUnitRepository.AddAsync(baseProductUnit);
+
         await _unitOfWork.SaveChanges(cancellationToken);
 
         return Result<ProductDto>.SuccessResult(_mapper.Map<ProductDto>(entity));

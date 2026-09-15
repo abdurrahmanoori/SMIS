@@ -1,9 +1,185 @@
-using AutoMapper; using MediatR; using SMIS.Application.Common.Response; using SMIS.Application.DTO.ProductPrices; using SMIS.Application.Identity.IServices; using SMIS.Application.Repositories.Base; using SMIS.Application.Repositories.ProductPrices; using SMIS.Application.Repositories.Products; using SMIS.Domain.Entities; using SMIS.Domain.Services;
+using AutoMapper;
+using MediatR;
+using SMIS.Application.Common.Response;
+using SMIS.Application.DTO.ProductPrices;
+using SMIS.Application.Identity.IServices;
+using SMIS.Application.Repositories.Base;
+using SMIS.Application.Repositories.ProductPrices;
+using SMIS.Application.Repositories.ProductUnits;
+using SMIS.Domain.Entities;
+using SMIS.Domain.Services;
+
 namespace SMIS.Application.Features.ProductPrices.Commands;
+
 public record ProductPriceSyncCreateCommand(ProductPriceSyncCreateDto Dto) : IRequest<Result<ProductPriceDto>>;
 public record ProductPriceSyncUpdateCommand(string Id, ProductPriceSyncUpdateDto Dto) : IRequest<Result<ProductPriceDto>>;
 public record ProductPriceSyncDeleteCommand(string Id, ProductPriceSyncDeleteDto Dto) : IRequest<Result<ProductPriceDto>>;
-internal sealed class ProductPriceSyncCreateCommandHandler : IRequestHandler<ProductPriceSyncCreateCommand,Result<ProductPriceDto>> {private readonly IProductPriceRepository _repository;private readonly IProductRepository _products;private readonly IUnitOfWork _uow;private readonly ICurrentUser _user;private readonly IMapper _mapper;public ProductPriceSyncCreateCommandHandler(IProductPriceRepository repository,IProductRepository products,IUnitOfWork uow,ICurrentUser user,IMapper mapper)=>(_repository,_products,_uow,_user,_mapper)=(repository,products,uow,user,mapper);public async Task<Result<ProductPriceDto>> Handle(ProductPriceSyncCreateCommand r,CancellationToken ct){var id=ProductPriceSyncRules.Id(r.Dto.Id);if(!ProductPriceSyncRules.User(r.Dto.ClientCreatedBy,_user)||!ProductPriceSyncRules.User(r.Dto.ClientModifiedBy,_user))return ProductPriceSyncRules.InvalidUser();var value=await _repository.GetByIdIncludingDeletedAsync(id,ct);var modified=DateTimeService.NormalizeUtc(r.Dto.ClientModifiedDate);if(value is not null){if(!await ProductPriceSyncRules.Access(value.ProductId,_products,_user,ct))return ProductPriceSyncRules.Forbidden();if(modified<=value.GetConflictModifiedUtc())return Result<ProductPriceDto>.SuccessResult(_mapper.Map<ProductPriceDto>(value));ProductPriceSyncRules.Apply(value,r.Dto);value.SetClientCreationMetadata(r.Dto.ClientCreatedDate,r.Dto.ClientCreatedBy);value.SetClientModificationMetadata(modified,r.Dto.ClientModifiedBy);value.Restore();await _uow.SaveChanges(ct);return Result<ProductPriceDto>.SuccessResult(_mapper.Map<ProductPriceDto>(value));}if(!await ProductPriceSyncRules.Access(r.Dto.ProductId,_products,_user,ct))return ProductPriceSyncRules.Forbidden();value=ProductPrice.Create(r.Dto.ProductId,r.Dto.ProductUnitId,r.Dto.BuyPrice,r.Dto.SellPrice,r.Dto.EffectiveDate);ProductPriceSyncRules.Apply(value,r.Dto);value.Id=id;value.SetClientCreationMetadata(r.Dto.ClientCreatedDate,r.Dto.ClientCreatedBy);value.SetClientModificationMetadata(modified,r.Dto.ClientModifiedBy);await _repository.AddAsync(value);await _uow.SaveChanges(ct);return Result<ProductPriceDto>.SuccessResult(_mapper.Map<ProductPriceDto>(value));}}
-internal sealed class ProductPriceSyncUpdateCommandHandler : IRequestHandler<ProductPriceSyncUpdateCommand,Result<ProductPriceDto>> {private readonly IProductPriceRepository _repository;private readonly IProductRepository _products;private readonly IUnitOfWork _uow;private readonly ICurrentUser _user;private readonly IMapper _mapper;public ProductPriceSyncUpdateCommandHandler(IProductPriceRepository repository,IProductRepository products,IUnitOfWork uow,ICurrentUser user,IMapper mapper)=>(_repository,_products,_uow,_user,_mapper)=(repository,products,uow,user,mapper);public async Task<Result<ProductPriceDto>> Handle(ProductPriceSyncUpdateCommand r,CancellationToken ct){if(!ProductPriceSyncRules.User(r.Dto.ClientModifiedBy,_user))return ProductPriceSyncRules.InvalidUser();var value=await _repository.GetByIdIncludingDeletedAsync(ProductPriceSyncRules.Id(r.Id),ct);if(value is null)return Result<ProductPriceDto>.NotFoundResult(r.Id);if(!await ProductPriceSyncRules.Access(value.ProductId,_products,_user,ct)||!await ProductPriceSyncRules.Access(r.Dto.ProductId,_products,_user,ct))return ProductPriceSyncRules.Forbidden();var modified=DateTimeService.NormalizeUtc(r.Dto.ClientModifiedDate);if(modified<=value.GetConflictModifiedUtc())return Result<ProductPriceDto>.SuccessResult(_mapper.Map<ProductPriceDto>(value));ProductPriceSyncRules.Apply(value,r.Dto);value.SetClientModificationMetadata(modified,r.Dto.ClientModifiedBy);value.Restore();await _uow.SaveChanges(ct);return Result<ProductPriceDto>.SuccessResult(_mapper.Map<ProductPriceDto>(value));}}
-internal sealed class ProductPriceSyncDeleteCommandHandler : IRequestHandler<ProductPriceSyncDeleteCommand,Result<ProductPriceDto>> {private readonly IProductPriceRepository _repository;private readonly IProductRepository _products;private readonly IUnitOfWork _uow;private readonly ICurrentUser _user;private readonly IMapper _mapper;public ProductPriceSyncDeleteCommandHandler(IProductPriceRepository repository,IProductRepository products,IUnitOfWork uow,ICurrentUser user,IMapper mapper)=>(_repository,_products,_uow,_user,_mapper)=(repository,products,uow,user,mapper);public async Task<Result<ProductPriceDto>> Handle(ProductPriceSyncDeleteCommand r,CancellationToken ct){if(!ProductPriceSyncRules.User(r.Dto.ClientModifiedBy,_user))return ProductPriceSyncRules.InvalidUser();var value=await _repository.GetByIdIncludingDeletedAsync(ProductPriceSyncRules.Id(r.Id),ct);if(value is null)return Result<ProductPriceDto>.NotFoundResult(r.Id);if(!await ProductPriceSyncRules.Access(value.ProductId,_products,_user,ct))return ProductPriceSyncRules.Forbidden();var modified=DateTimeService.NormalizeUtc(r.Dto.ClientModifiedDate);if(modified<=value.GetConflictModifiedUtc())return Result<ProductPriceDto>.SuccessResult(_mapper.Map<ProductPriceDto>(value));value.SetClientModificationMetadata(modified,r.Dto.ClientModifiedBy);await _repository.RemoveAsync(value);await _uow.SaveChanges(ct);return Result<ProductPriceDto>.SuccessResult(_mapper.Map<ProductPriceDto>(value));}}
-internal static class ProductPriceSyncRules{public static string Id(string value)=>Guid.Parse(value).ToString("D");public static bool User(string? value,ICurrentUser user)=>string.IsNullOrWhiteSpace(value)||string.Equals(value.Trim(),user.GetId(),StringComparison.Ordinal);public static async Task<bool> Access(string productId,IProductRepository products,ICurrentUser user,CancellationToken ct){var product=await products.GetByIdAsync(productId);return product is not null&&(user.IsSuperAdmin()||product.ShopId==user.GetShopId());}public static void Apply(ProductPrice value,ProductPriceSyncUpdateDto dto){value.SetProductId(dto.ProductId);value.SetProductUnitId(dto.ProductUnitId);value.SetBuyPrice(dto.BuyPrice);value.SetSellPrice(dto.SellPrice);value.SetEffectiveDate(dto.EffectiveDate);value.SetEndDate(dto.EndDate);if(dto.IsActive)value.Activate();else value.Deactivate();}public static Result<ProductPriceDto> InvalidUser()=>Result<ProductPriceDto>.FailureResult("InvalidClientUser","Client user metadata must match the authenticated user.");public static Result<ProductPriceDto> Forbidden()=>Result<ProductPriceDto>.FailureResult("Forbidden","You can only synchronize product prices from your own shop.");}
+
+internal sealed class ProductPriceSyncCreateCommandHandler : IRequestHandler<ProductPriceSyncCreateCommand, Result<ProductPriceDto>>
+{
+    private readonly IProductPriceRepository _repository;
+    private readonly IProductUnitRepository _productUnits;
+    private readonly IUnitOfWork _uow;
+    private readonly ICurrentUser _user;
+    private readonly IMapper _mapper;
+
+    public ProductPriceSyncCreateCommandHandler(
+        IProductPriceRepository repository,
+        IProductUnitRepository productUnits,
+        IUnitOfWork uow,
+        ICurrentUser user,
+        IMapper mapper)
+    {
+        _repository = repository;
+        _productUnits = productUnits;
+        _uow = uow;
+        _user = user;
+        _mapper = mapper;
+    }
+
+    public async Task<Result<ProductPriceDto>> Handle(ProductPriceSyncCreateCommand request, CancellationToken ct)
+    {
+        if (!ProductPriceSyncRules.User(request.Dto.ClientCreatedBy, _user) ||
+            !ProductPriceSyncRules.User(request.Dto.ClientModifiedBy, _user))
+            return ProductPriceSyncRules.InvalidUser();
+
+        var id = ProductPriceSyncRules.Id(request.Dto.Id);
+        var existing = await _repository.GetByIdIncludingDeletedAsync(id, ct);
+        if (existing is not null)
+            return Result<ProductPriceDto>.SuccessResult(_mapper.Map<ProductPriceDto>(existing));
+
+        var productUnit = await ProductPriceCommandRules.GetAccessibleProductUnitAsync(
+            request.Dto.ProductUnitId,
+            _productUnits,
+            _user);
+        if (productUnit is null) return ProductPriceCommandRules.ProductUnitNotFoundOrForbidden();
+
+        var latest = await _repository.GetLatestForProductUnitAsync(request.Dto.ProductUnitId, ct);
+        var timelineError = ProductPriceCommandRules.ValidateAndCloseLatest(latest, request.Dto.EffectiveDate);
+        if (timelineError is not null) return timelineError;
+
+        var value = ProductPrice.Create(request.Dto.ProductUnitId, request.Dto.SellPrice, request.Dto.EffectiveDate);
+        value.Id = id;
+        value.SetEndDate(request.Dto.EndDate);
+        value.SetClientCreationMetadata(request.Dto.ClientCreatedDate, request.Dto.ClientCreatedBy);
+        value.SetClientModificationMetadata(request.Dto.ClientModifiedDate, request.Dto.ClientModifiedBy);
+        await _repository.AddAsync(value);
+        await _uow.SaveChanges(ct);
+        return Result<ProductPriceDto>.SuccessResult(_mapper.Map<ProductPriceDto>(value));
+    }
+}
+
+internal sealed class ProductPriceSyncUpdateCommandHandler : IRequestHandler<ProductPriceSyncUpdateCommand, Result<ProductPriceDto>>
+{
+    private readonly IProductPriceRepository _repository;
+    private readonly IProductUnitRepository _productUnits;
+    private readonly IUnitOfWork _uow;
+    private readonly ICurrentUser _user;
+    private readonly IMapper _mapper;
+
+    public ProductPriceSyncUpdateCommandHandler(
+        IProductPriceRepository repository,
+        IProductUnitRepository productUnits,
+        IUnitOfWork uow,
+        ICurrentUser user,
+        IMapper mapper)
+    {
+        _repository = repository;
+        _productUnits = productUnits;
+        _uow = uow;
+        _user = user;
+        _mapper = mapper;
+    }
+
+    public async Task<Result<ProductPriceDto>> Handle(ProductPriceSyncUpdateCommand request, CancellationToken ct)
+    {
+        if (!ProductPriceSyncRules.User(request.Dto.ClientModifiedBy, _user))
+            return ProductPriceSyncRules.InvalidUser();
+
+        var existing = await _repository.GetByIdIncludingDeletedAsync(ProductPriceSyncRules.Id(request.Id), ct);
+        if (existing is null) return Result<ProductPriceDto>.NotFoundResult(request.Id);
+        if (!string.Equals(existing.ProductUnitId, request.Dto.ProductUnitId, StringComparison.Ordinal))
+            return ProductPriceCommandRules.ProductUnitCannotChange();
+
+        var productUnit = await ProductPriceCommandRules.GetAccessibleProductUnitAsync(
+            existing.ProductUnitId,
+            _productUnits,
+            _user);
+        if (productUnit is null) return ProductPriceCommandRules.ProductUnitNotFoundOrForbidden();
+
+        var latest = await _repository.GetLatestForProductUnitAsync(existing.ProductUnitId, ct);
+        if (latest is null || !string.Equals(latest.Id, existing.Id, StringComparison.Ordinal))
+            return ProductPriceCommandRules.HistoricalPriceImmutable();
+
+        var timelineError = ProductPriceCommandRules.ValidateAndCloseLatest(latest, request.Dto.EffectiveDate);
+        if (timelineError is not null) return timelineError;
+
+        var successor = ProductPrice.Create(existing.ProductUnitId, request.Dto.SellPrice, request.Dto.EffectiveDate);
+        successor.SetEndDate(request.Dto.EndDate);
+        successor.SetClientModificationMetadata(request.Dto.ClientModifiedDate, request.Dto.ClientModifiedBy);
+        await _repository.AddAsync(successor);
+        await _uow.SaveChanges(ct);
+        return Result<ProductPriceDto>.SuccessResult(_mapper.Map<ProductPriceDto>(successor));
+    }
+}
+
+internal sealed class ProductPriceSyncDeleteCommandHandler : IRequestHandler<ProductPriceSyncDeleteCommand, Result<ProductPriceDto>>
+{
+    private readonly IProductPriceRepository _repository;
+    private readonly IProductUnitRepository _productUnits;
+    private readonly IUnitOfWork _uow;
+    private readonly ICurrentUser _user;
+    private readonly IMapper _mapper;
+
+    public ProductPriceSyncDeleteCommandHandler(
+        IProductPriceRepository repository,
+        IProductUnitRepository productUnits,
+        IUnitOfWork uow,
+        ICurrentUser user,
+        IMapper mapper)
+    {
+        _repository = repository;
+        _productUnits = productUnits;
+        _uow = uow;
+        _user = user;
+        _mapper = mapper;
+    }
+
+    public async Task<Result<ProductPriceDto>> Handle(ProductPriceSyncDeleteCommand request, CancellationToken ct)
+    {
+        if (!ProductPriceSyncRules.User(request.Dto.ClientModifiedBy, _user))
+            return ProductPriceSyncRules.InvalidUser();
+
+        var value = await _repository.GetByIdIncludingDeletedAsync(ProductPriceSyncRules.Id(request.Id), ct);
+        if (value is null) return Result<ProductPriceDto>.NotFoundResult(request.Id);
+
+        var productUnit = await ProductPriceCommandRules.GetAccessibleProductUnitAsync(
+            value.ProductUnitId,
+            _productUnits,
+            _user);
+        if (productUnit is null) return ProductPriceCommandRules.ProductUnitNotFoundOrForbidden();
+
+        var modified = DateTimeService.NormalizeUtc(request.Dto.ClientModifiedDate);
+        if (modified <= value.GetConflictModifiedUtc())
+            return Result<ProductPriceDto>.SuccessResult(_mapper.Map<ProductPriceDto>(value));
+
+        value.SetClientModificationMetadata(modified, request.Dto.ClientModifiedBy);
+        await _repository.RemoveAsync(value);
+        await _uow.SaveChanges(ct);
+        return Result<ProductPriceDto>.SuccessResult(_mapper.Map<ProductPriceDto>(value));
+    }
+}
+
+internal static class ProductPriceSyncRules
+{
+    public static string Id(string value) => Guid.Parse(value).ToString("D");
+
+    public static bool User(string? value, ICurrentUser user) =>
+        string.IsNullOrWhiteSpace(value) ||
+        string.Equals(value.Trim(), user.GetId(), StringComparison.Ordinal);
+
+    public static Result<ProductPriceDto> InvalidUser() =>
+        Result<ProductPriceDto>.FailureResult(
+            "InvalidClientUser",
+            "Client user metadata must match the authenticated user.");
+}

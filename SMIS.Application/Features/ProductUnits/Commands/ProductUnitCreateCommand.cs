@@ -31,6 +31,18 @@ namespace SMIS.Application.Features.ProductUnits.Commands
 
         public async Task<Result<ProductUnitDto>> Handle(ProductUnitCreateCommand request, CancellationToken cancellationToken)
         {
+            var product = await _productRepository.GetByIdAsync(request.ProductUnitCreateDto.ProductId);
+            if (product == null)
+            {
+                return Result<ProductUnitDto>.NotFoundResult(nameof(ProductUnitCreateDto.ProductId));
+            }
+
+            if (string.Equals(product.BaseUnitId, request.ProductUnitCreateDto.UnitOfMeasureId, StringComparison.Ordinal) &&
+                request.ProductUnitCreateDto.BaseUnitQuantity != 1m)
+            {
+                return ProductUnitCommandRules.BaseUnitMustEqualOne();
+            }
+
             if (await _productUnitRepository.ExistsPairAsync(
                 request.ProductUnitCreateDto.ProductId,
                 request.ProductUnitCreateDto.UnitOfMeasureId,
@@ -42,7 +54,6 @@ namespace SMIS.Application.Features.ProductUnits.Commands
             var entity = _mapper.Map<ProductUnit>(request.ProductUnitCreateDto);
             
             // Populate name fields using domain methods
-            var product = await _productRepository.GetByIdAsync(request.ProductUnitCreateDto.ProductId);
             entity.SetProductName(product?.Name);
             
             var unit = await _unitOfMeasureRepository.GetByIdAsync(request.ProductUnitCreateDto.UnitOfMeasureId);
@@ -61,5 +72,20 @@ namespace SMIS.Application.Features.ProductUnits.Commands
             Result<ProductUnitDto>.FailureResult(
                 "ProductUnitAlreadyExists",
                 "This unit of measurement is already configured for the selected product.");
+
+        public static Result<ProductUnitDto> BaseUnitProtected() =>
+            Result<ProductUnitDto>.FailureResult(
+                "BaseProductUnitProtected",
+                "The product's base-unit mapping is managed by the product and cannot be changed or deleted directly.");
+
+        public static Result<ProductUnitDto> BaseUnitMustEqualOne() =>
+            Result<ProductUnitDto>.FailureResult(
+                "InvalidBaseUnitQuantity",
+                "The product's base unit must have BaseUnitQuantity = 1.");
+
+        public static Result<ProductUnitDto> ConversionInUse() =>
+            Result<ProductUnitDto>.FailureResult(
+                "ProductUnitInUse",
+                "This product-unit conversion has pricing or inventory history and cannot be changed or deleted.");
     }
 }

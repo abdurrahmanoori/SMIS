@@ -23,7 +23,7 @@ internal sealed class ProductPriceGetByIdQueryHandler : IRequestHandler<ProductP
     {
         var dbProductPrice = await _productPriceRepository.GetFirstOrDefaultAsync(
             x => x.Id == request.Id,
-            includeProperties: request.IncludeProduct ? "Product" : null);
+            includeProperties: request.IncludeProduct ? "ProductUnit.Product" : null);
 
         if (dbProductPrice == null)
         {

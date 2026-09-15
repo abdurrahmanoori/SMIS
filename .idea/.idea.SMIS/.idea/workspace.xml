@@ -112,61 +112,61 @@
   <component name="MetaFilesCheckinStateConfiguration" checkMetaFiles="true" />
   <component name="NextEditCompletionFeaturesState">
     <decayedCancelled>
-      <entry key="MS100" value="1.0086186312260552" />
-      <entry key="MS500" value="1.4867379051860206" />
-      <entry key="S2" value="2.782077079003907" />
-      <entry key="S5" value="4.83541667460869" />
-      <entry key="S10" value="6.779792835434435" />
-      <entry key="S30" value="9.173434968445704" />
-      <entry key="S60" value="10.017064337198214" />
-      <entry key="M2" value="10.489432422319672" />
-      <entry key="M5" value="10.790951855701103" />
-      <entry key="M10" value="10.894651679183683" />
-      <entry key="M15" value="10.929584423253463" />
-      <entry key="M30" value="10.968179546854142" />
-      <entry key="H1" value="11.273365854706679" />
-      <entry key="H2" value="15.66064931606798" />
-      <entry key="H4" value="39.539172784323256" />
-      <entry key="D1" value="242.24639344355884" />
-      <entry key="W1" value="364.46177727670226" />
+      <entry key="MS100" value="1.0132395197268562" />
+      <entry key="MS500" value="1.582536805275971" />
+      <entry key="S2" value="3.189523134308116" />
+      <entry key="S5" value="4.1101326450224" />
+      <entry key="S10" value="4.5209387411711965" />
+      <entry key="S30" value="4.831992670421428" />
+      <entry key="S60" value="4.914906401790195" />
+      <entry key="M2" value="4.957176818637367" />
+      <entry key="M5" value="4.982807376403448" />
+      <entry key="M10" value="4.997583465305365" />
+      <entry key="M15" value="5.0692557685377375" />
+      <entry key="M30" value="5.905694512748211" />
+      <entry key="H1" value="8.243190324768758" />
+      <entry key="H2" value="13.400946233096969" />
+      <entry key="H4" value="33.960094771244044" />
+      <entry key="D1" value="234.9959408319794" />
+      <entry key="W1" value="366.7698766984321" />
     </decayedCancelled>
     <decayedSelected>
       <entry key="MS100" value="0.0" />
       <entry key="MS500" value="0.0" />
       <entry key="S2" value="0.0" />
       <entry key="S5" value="0.0" />
-      <entry key="S10" value="7.883444348648393E-275" />
-      <entry key="S30" value="4.2878409612297824E-92" />
-      <entry key="S60" value="2.07071025525779E-46" />
-      <entry key="M2" value="1.438996266589247E-23" />
-      <entry key="M5" value="7.298336225280204E-10" />
-      <entry key="M10" value="2.7015838451822438E-5" />
-      <entry key="M15" value="9.012405085538209E-4" />
-      <entry key="M30" value="0.032488193481650746" />
-      <entry key="H1" value="0.44420054279104504" />
-      <entry key="H2" value="5.141297199601886" />
-      <entry key="H4" value="24.961474713920552" />
-      <entry key="D1" value="131.65844877593705" />
-      <entry key="W1" value="184.87509768901194" />
+      <entry key="S10" value="0.0" />
+      <entry key="S30" value="5.3158886942068745E-157" />
+      <entry key="S60" value="7.291014123019427E-79" />
+      <entry key="M2" value="8.538743539315036E-40" />
+      <entry key="M5" value="2.3580748585244856E-16" />
+      <entry key="M10" value="1.5356254856473775E-8" />
+      <entry key="M15" value="6.184224936649497E-6" />
+      <entry key="M30" value="0.0026912116227498744" />
+      <entry key="H1" value="0.12784690779894878" />
+      <entry key="H2" value="2.7582160499193074" />
+      <entry key="H4" value="18.28302384043724" />
+      <entry key="D1" value="125.00048502603734" />
+      <entry key="W1" value="183.5096217122411" />
     </decayedSelected>
     <decayedShown>
-      <entry key="MS100" value="0.9607354634805944" />
-      <entry key="MS500" value="1.4711840248361223" />
-      <entry key="S2" value="2.7716170800402575" />
-      <entry key="S5" value="4.819965352361953" />
-      <entry key="S10" value="6.765450320355055" />
-      <entry key="S30" value="9.165897803035302" />
-      <entry key="S60" value="10.01281854802664" />
-      <entry key="M2" value="10.487177219464806" />
-      <entry key="M5" value="10.790016193488587" />
-      <entry key="M10" value="10.894205039119706" />
-      <entry key="M15" value="10.93016713859001" />
-      <entry key="M30" value="11.000480143589837" />
-      <entry key="H1" value="11.717244468268227" />
-      <entry key="H2" value="20.800418964996535" />
-      <entry key="H4" value="64.49697002553935" />
-      <entry key="D1" value="373.90159481503" />
-      <entry key="W1" value="549.3362235869743" />
+      <entry key="MS100" value="0.9457330672610158" />
+      <entry key="MS500" value="1.5634780778165194" />
+      <entry key="S2" value="3.180434231674182" />
+      <entry key="S5" value="4.105462137401854" />
+      <entry key="S10" value="4.5183702211637335" />
+      <entry key="S30" value="4.831077378027825" />
+      <entry key="S60" value="4.914440860442135" />
+      <entry key="M2" value="4.956942034231512" />
+      <entry key="M5" value="4.982712973840663" />
+      <entry key="M10" value="4.99753592844375" />
+      <entry key="M15" value="5.069228226862322" />
+      <entry key="M30" value="5.90835440526855" />
+      <entry key="H1" value="8.370936685099265" />
+      <entry key="H2" value="16.15833883227242" />
+      <entry key="H4" value="52.24042307462235" />
+      <entry key="D1" value="359.99334234577583" />
+      <entry key="W1" value="550.2788517959871" />
     </decayedShown>
   </component>
   <component name="ProblemsViewState">
@@ -339,14 +339,6 @@
       <option name="presentableId" value="LOCAL-00001" />
       <option name="project" value="LOCAL" />
       <updated>1789462942314</updated>
-    </task>
-    <task id="LOCAL-00021" summary="just format the code">
-      <option name="closed" value="true" />
-      <created>1788689116905</created>
-      <option name="number" value="00021" />
-      <option name="presentableId" value="LOCAL-00021" />
-      <option name="project" value="LOCAL" />
-      <updated>1788689116905</updated>
     </task>
     <task id="LOCAL-00022" summary="feat: add sync endpoints for Customer, Product, ProductPrice, ProductUnit, Shop, and UnitOfMeasure controllers">
       <option name="closed" value="true" />
@@ -724,7 +716,15 @@
       <option name="project" value="LOCAL" />
       <updated>1789462917869</updated>
     </task>
-    <option name="localTasksCounter" value="69" />
+    <task id="LOCAL-00069" summary="just comment added">
+      <option name="closed" value="true" />
+      <created>1789469381150</created>
+      <option name="number" value="00069" />
+      <option name="presentableId" value="LOCAL-00069" />
+      <option name="project" value="LOCAL" />
+      <updated>1789469381150</updated>
+    </task>
+    <option name="localTasksCounter" value="70" />
     <option name="clearContext" value="false" />
     <option name="createChangelist" value="false" />
     <option name="createBranch" value="false" />
@@ -737,7 +737,6 @@
   <component name="UnityProjectConfiguration" hasMinimizedUI="false" />
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
-    <MESSAGE value="feat: add localization support with locale controller and integrate into various screens" />
     <MESSAGE value="fix: update database journal mode handling for compatibility with Android versions" />
     <MESSAGE value="feat: add Wasil Shop roles and users, and update seed data for new shop" />
     <MESSAGE value="feat: implement generic entity dropdown and new paged list functionality" />
@@ -762,6 +761,7 @@
     <MESSAGE value="feat: rename ExistsActiveAsync to ExistsPairAsync for consistency; enforce unique product-unit pairs in repository and database schema" />
     <MESSAGE value="feat: implement base unit change validation; prevent changes if stock or conversions exist" />
     <MESSAGE value="domain layer code formated" />
+    <MESSAGE value="just comment added" />
     <option name="LAST_COMMIT_MESSAGE" value="" />
   </component>
   <component name="XDebuggerManager">

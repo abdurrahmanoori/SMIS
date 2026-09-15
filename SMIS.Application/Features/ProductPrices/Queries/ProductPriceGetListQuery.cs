@@ -23,7 +23,8 @@ internal sealed class ProductPriceGetListQueryHandler : IRequestHandler<ProductP
 
     public async Task<Result<PagedList<ProductPriceDto>>> Handle(ProductPriceGetListQuery request, CancellationToken cancellationToken)
     {
-        var query = _productPriceRepository.GetAllQueryable(includeProperties: request.IncludeProduct ? "Product" : null);
+        var query = _productPriceRepository.GetAllQueryable(
+            includeProperties: request.IncludeProduct ? "ProductUnit.Product" : null);
         var productPrices = await query.ToPagedList(request.PageNumber, request.PageSize);
 
         if (!productPrices.Items.Any())

@@ -334,7 +334,6 @@ class UnitOfMeasureSyncService {
       name: remote.name,
       symbol: remote.symbol,
       description: remote.description,
-      shopId: remote.shopId,
       createdAt: existing?.createdAt ?? remote.clientCreatedDate ?? remote.createdDate ?? timestamp,
       updatedAt: timestamp,
       lastModifiedUtc: timestamp,

@@ -5,7 +5,6 @@ class UnitOfMeasureRemoteModel {
     required this.id,
     required this.name,
     required this.symbol,
-    required this.shopId,
     required this.lastModifiedUtc,
     required this.isDeleted,
     this.description,
@@ -24,7 +23,6 @@ class UnitOfMeasureRemoteModel {
   final String name;
   final String symbol;
   final String? description;
-  final String shopId;
   final DateTime lastModifiedUtc;
   final bool isDeleted;
   final DateTime? createdDate;
@@ -48,7 +46,6 @@ class UnitOfMeasureRemoteModel {
       name: json['name'] as String,
       symbol: json['symbol'] as String,
       description: json['description'] as String?,
-      shopId: json['shopId'] as String? ?? '',
       lastModifiedUtc: lastModifiedUtc,
       isDeleted: json['isDeleted'] as bool? ?? false,
       createdDate: createdDate,

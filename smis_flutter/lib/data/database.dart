@@ -21,7 +21,7 @@ class AppDatabase {
     _database = await _factory.openDatabase(
       path,
       options: OpenDatabaseOptions(
-        version: 10,
+        version: 11,
         onConfigure: (database) async {
           await database.execute('PRAGMA foreign_keys = ON');
           // Use rawQuery for journal_mode as it returns a result which some
@@ -115,6 +115,10 @@ class AppDatabase {
     if (oldVersion == 9) {
       await _migrateProductUnitsToBaseUnitQuantity(database);
     }
+    if (oldVersion < 11) {
+      await _migrateUnitOfMeasuresToGlobal(database);
+      await _createProductIndexes(database);
+    }
   }
 
   static Future<void> _createCategoriesSchema(
@@ -188,7 +192,6 @@ class AppDatabase {
         name TEXT NOT NULL,
         symbol TEXT NOT NULL,
         description TEXT,
-        shop_id TEXT,
         created_at TEXT NOT NULL,
         updated_at TEXT NOT NULL,
         last_modified_utc TEXT NOT NULL,
@@ -202,9 +205,7 @@ class AppDatabase {
         server_updated_date TEXT,
         server_created_by TEXT,
         server_updated_by TEXT,
-        server_last_modified_utc TEXT,
-        CONSTRAINT fk_unit_of_measures_shops_shop_id
-          FOREIGN KEY (shop_id) REFERENCES shops(id) ON DELETE RESTRICT
+        server_last_modified_utc TEXT
       )
     ''');
     if (!createIndexes) return;
@@ -217,8 +218,14 @@ class AppDatabase {
       ON unit_of_measures(pending_operation, next_retry_at)
     ''');
     await database.execute('''
-      CREATE INDEX IF NOT EXISTS idx_unit_of_measures_shop_id
-      ON unit_of_measures(shop_id)
+      CREATE UNIQUE INDEX IF NOT EXISTS ux_unit_of_measures_name_active
+      ON unit_of_measures(name COLLATE NOCASE)
+      WHERE is_deleted = 0
+    ''');
+    await database.execute('''
+      CREATE UNIQUE INDEX IF NOT EXISTS ux_unit_of_measures_symbol_active
+      ON unit_of_measures(symbol COLLATE NOCASE)
+      WHERE is_deleted = 0
     ''');
   }
 
@@ -314,6 +321,67 @@ class AppDatabase {
     await database.execute('''
       CREATE INDEX IF NOT EXISTS idx_products_shop_id
       ON products(shop_id)
+    ''');
+    await _createProductIndexes(database);
+  }
+
+  static Future<void> _createProductIndexes(Database database) async {
+    await database.execute('''
+      CREATE UNIQUE INDEX IF NOT EXISTS ux_products_shop_sku_active
+      ON products(shop_id, sku COLLATE NOCASE)
+      WHERE is_deleted = 0 AND sku IS NOT NULL AND TRIM(sku) <> ''
+    ''');
+    await database.execute('''
+      CREATE UNIQUE INDEX IF NOT EXISTS ux_products_shop_barcode_active
+      ON products(shop_id, barcode COLLATE NOCASE)
+      WHERE is_deleted = 0 AND barcode IS NOT NULL AND TRIM(barcode) <> ''
+    ''');
+  }
+
+  static Future<void> _migrateUnitOfMeasuresToGlobal(Database database) async {
+    await database.execute('PRAGMA defer_foreign_keys = ON');
+    await _createUnitOfMeasuresSchema(
+      database,
+      tableName: 'unit_of_measures_v11',
+      createIndexes: false,
+    );
+    await database.execute('''
+      INSERT INTO unit_of_measures_v11 (
+        id, name, symbol, description,
+        created_at, updated_at, last_modified_utc, is_deleted,
+        pending_operation, sync_status, retry_count, next_retry_at,
+        last_sync_error, server_created_date, server_updated_date,
+        server_created_by, server_updated_by, server_last_modified_utc
+      )
+      SELECT
+        id, name, symbol, description,
+        created_at, updated_at, last_modified_utc, is_deleted,
+        pending_operation, sync_status, retry_count, next_retry_at,
+        last_sync_error, server_created_date, server_updated_date,
+        server_created_by, server_updated_by, server_last_modified_utc
+      FROM unit_of_measures
+    ''');
+    await database.execute('DROP TABLE unit_of_measures');
+    await database.execute(
+      'ALTER TABLE unit_of_measures_v11 RENAME TO unit_of_measures',
+    );
+    await database.execute('''
+      CREATE INDEX IF NOT EXISTS idx_unit_of_measures_visible
+      ON unit_of_measures(is_deleted, name COLLATE NOCASE)
+    ''');
+    await database.execute('''
+      CREATE INDEX IF NOT EXISTS idx_unit_of_measures_pending
+      ON unit_of_measures(pending_operation, next_retry_at)
+    ''');
+    await database.execute('''
+      CREATE UNIQUE INDEX IF NOT EXISTS ux_unit_of_measures_name_active
+      ON unit_of_measures(name COLLATE NOCASE)
+      WHERE is_deleted = 0
+    ''');
+    await database.execute('''
+      CREATE UNIQUE INDEX IF NOT EXISTS ux_unit_of_measures_symbol_active
+      ON unit_of_measures(symbol COLLATE NOCASE)
+      WHERE is_deleted = 0
     ''');
   }
 

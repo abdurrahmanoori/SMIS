@@ -48,8 +48,7 @@ public class LoanAccountConfiguration : IEntityTypeConfiguration<LoanAccount>
             .HasMaxLength(100);
 
         builder.Property(l => l.PriceAtLoanTime)
-            .IsRequired()
-            .HasPrecision(18, 2);
+            .IsRequired();
 
         builder.Property(l => l.TotalAmount)
             .IsRequired();

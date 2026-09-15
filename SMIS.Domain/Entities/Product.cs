@@ -6,7 +6,7 @@ namespace SMIS.Domain.Entities;
 
 public class Product : BaseSyncableAuditableEntity, IEntity, IShopEntity
 {
-    public string Name { get; set; } = string.Empty;
+    public string Name { get; private set; } = string.Empty;
 
     public string BaseUnitId { get; private set; } = string.Empty;
     public string? BaseUnitName { get; set; }
@@ -27,7 +27,6 @@ public class Product : BaseSyncableAuditableEntity, IEntity, IShopEntity
     public UnitOfMeasure UnitOfMeasure { get; set; } = null!;
     public Category? Category { get; set; }
     public ICollection<ProductUnit> ProductUnits { get; set; } = new List<ProductUnit>();
-    public ICollection<ProductPrice> ProductPrices { get; set; } = new List<ProductPrice>();
 
     internal Product()
     {
@@ -62,6 +61,9 @@ public class Product : BaseSyncableAuditableEntity, IEntity, IShopEntity
         string name
     )
     {
+        if (string.IsNullOrWhiteSpace(name))
+            throw new DomainValidationException("Product name cannot be empty");
+
         Name = name.Trim();
     }
 

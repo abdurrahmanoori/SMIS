@@ -149,7 +149,6 @@ public class MappingProfile : Profile
             .ConstructUsing(src => UnitOfMeasure.Create(
                 src.Name,
                 src.Symbol,
-                src.ShopId,
                 src.Description
             ));
 
@@ -191,16 +190,13 @@ public class MappingProfile : Profile
             .ForMember(dest => dest.ConflictModifiedUtc, opt => opt.MapFrom(src => src.GetConflictModifiedUtc()));
         CreateMap<ProductPriceCreateDto, ProductPrice>()
             .ConstructUsing(src => ProductPrice.Create(
-                src.ProductId,
                 src.ProductUnitId,
-                src.BuyPrice,
                 src.SellPrice,
                 src.EffectiveDate
             ))
             .AfterMap((src, dest) =>
             {
                 dest.SetEndDate(src.EndDate);
-                if (src.IsActive) dest.Activate(); else dest.Deactivate();
             });
 
         // TranslationKey mapping

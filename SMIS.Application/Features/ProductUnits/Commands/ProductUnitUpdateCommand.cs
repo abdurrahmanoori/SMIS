@@ -37,6 +37,44 @@ namespace SMIS.Application.Features.ProductUnits.Commands
                 return Result<ProductUnitDto>.NotFoundResult(nameof(ProductUnitDto.Id));
             }
 
+            var currentProduct = await _productRepository.GetByIdAsync(entity.ProductId);
+            if (currentProduct == null)
+            {
+                return Result<ProductUnitDto>.NotFoundResult(nameof(ProductUnitCreateDto.ProductId));
+            }
+
+            var isBaseProductUnit = string.Equals(
+                currentProduct.BaseUnitId,
+                entity.UnitOfMeasureId,
+                StringComparison.Ordinal);
+            var changesIdentityOrQuantity =
+                !string.Equals(entity.ProductId, request.ProductUnitCreateDto.ProductId, StringComparison.Ordinal) ||
+                !string.Equals(entity.UnitOfMeasureId, request.ProductUnitCreateDto.UnitOfMeasureId, StringComparison.Ordinal) ||
+                entity.BaseUnitQuantity != request.ProductUnitCreateDto.BaseUnitQuantity;
+
+            if (isBaseProductUnit && changesIdentityOrQuantity)
+            {
+                return ProductUnitCommandRules.BaseUnitProtected();
+            }
+
+            if (!isBaseProductUnit && changesIdentityOrQuantity &&
+                await _productUnitRepository.HasUsageAsync(entity.Id, cancellationToken))
+            {
+                return ProductUnitCommandRules.ConversionInUse();
+            }
+
+            var targetProduct = await _productRepository.GetByIdAsync(request.ProductUnitCreateDto.ProductId);
+            if (targetProduct == null)
+            {
+                return Result<ProductUnitDto>.NotFoundResult(nameof(ProductUnitCreateDto.ProductId));
+            }
+
+            if (string.Equals(targetProduct.BaseUnitId, request.ProductUnitCreateDto.UnitOfMeasureId, StringComparison.Ordinal) &&
+                request.ProductUnitCreateDto.BaseUnitQuantity != 1m)
+            {
+                return ProductUnitCommandRules.BaseUnitMustEqualOne();
+            }
+
             if (await _productUnitRepository.ExistsPairAsync(
                 request.ProductUnitCreateDto.ProductId,
                 request.ProductUnitCreateDto.UnitOfMeasureId,
@@ -52,8 +90,7 @@ namespace SMIS.Application.Features.ProductUnits.Commands
             entity.SetBaseUnitQuantity(request.ProductUnitCreateDto.BaseUnitQuantity);
             
             // Update name fields using domain methods
-            var product = await _productRepository.GetByIdAsync(request.ProductUnitCreateDto.ProductId);
-            entity.SetProductName(product?.Name);
+            entity.SetProductName(targetProduct.Name);
             
             var unit = await _unitOfMeasureRepository.GetByIdAsync(request.ProductUnitCreateDto.UnitOfMeasureId);
             entity.SetUnitName(unit?.Name);

@@ -23,7 +23,40 @@ namespace SMIS.Infrastructure.Server.Repositories.ProductUnits
             _context.ProductUnits.IgnoreQueryFilters().AnyAsync(
                 item => item.ProductId == productId &&
                         item.UnitOfMeasureId == unitOfMeasureId &&
-                        (excludeId == null || item.Id != excludeId),
+                         (excludeId == null || item.Id != excludeId),
                 cancellationToken);
+
+        public async Task<bool> HasUsageAsync(
+            string id,
+            CancellationToken cancellationToken = default)
+        {
+            var productUnit = await _context.ProductUnits
+                .IgnoreQueryFilters()
+                .Where(item => item.Id == id)
+                .Select(item => new { item.ProductId, item.UnitOfMeasureId })
+                .FirstOrDefaultAsync(cancellationToken);
+
+            if (productUnit is null) return false;
+
+            if (await _context.ProductPrices
+                    .IgnoreQueryFilters()
+                    .AnyAsync(price => price.ProductUnitId == id, cancellationToken))
+                return true;
+
+            if (await _context.StockBatches
+                    .IgnoreQueryFilters()
+                    .AnyAsync(
+                        batch => batch.ProductId == productUnit.ProductId &&
+                                 batch.UnitId == productUnit.UnitOfMeasureId,
+                        cancellationToken))
+                return true;
+
+            return await _context.StockTransactions
+                .IgnoreQueryFilters()
+                .AnyAsync(
+                    transaction => transaction.ProductId == productUnit.ProductId &&
+                                   transaction.UnitId == productUnit.UnitOfMeasureId,
+                    cancellationToken);
+        }
     }
 }

@@ -1,11 +1,10 @@
 ﻿using SMIS.Domain.Common.BaseAbstract;
 using SMIS.Domain.Exceptions;
-using SMIS.Domain.Common.Interfaces;
 using SMIS.Domain.ValueObjects;
 
 namespace SMIS.Domain.Entities;
 
-public class UnitOfMeasure : BaseSyncableAuditableEntity, IShopEntity
+public class UnitOfMeasure : BaseSyncableAuditableEntity
 {
     public string Name { get; private set; } = null!;
 
@@ -14,12 +13,10 @@ public class UnitOfMeasure : BaseSyncableAuditableEntity, IShopEntity
 
     // pcs, g, ml, l, box, pack
     public string? Description { get; private set; } = null!;
-    public string ShopId { get; private set; } = string.Empty;
 
     public DateTime ConflictModifiedUtc => GetConflictModifiedUtc();
 
     // Navigation Properties
-    public virtual Shop Shop { get; set; } = null!;
     public virtual ICollection<ProductUnit> ProductUnits { get; set; } = new List<ProductUnit>();
 
     internal UnitOfMeasure()
@@ -29,14 +26,12 @@ public class UnitOfMeasure : BaseSyncableAuditableEntity, IShopEntity
     public static UnitOfMeasure Create(
         string name,
         string? symbol,
-        string shopId,
         string? description = null
     )
     {
         var unit = new UnitOfMeasure();
         unit.SetName(name);
         unit.SetSymbol(symbol);
-        unit.SetShopId(shopId);
         unit.SetDescription(description);
         return unit;
     }
@@ -64,15 +59,6 @@ public class UnitOfMeasure : BaseSyncableAuditableEntity, IShopEntity
         Description = description?.Trim();
     }
 
-    public void SetShopId(
-        string shopId
-    )
-    {
-        if (string.IsNullOrWhiteSpace(shopId))
-            throw new DomainValidationException("Shop ID cannot be empty");
-
-        ShopId = shopId;
-    }
 }
 
 /*

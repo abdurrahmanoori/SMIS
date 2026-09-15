@@ -42,6 +42,7 @@ public class ProductUnit : BaseSyncableAuditableEntity
     public Product Product { get; set; } = null!;
 
     public UnitOfMeasure UnitOfMeasure { get; set; } = null!;
+    public ICollection<ProductPrice> ProductPrices { get; set; } = new List<ProductPrice>();
 
     internal ProductUnit()
     {

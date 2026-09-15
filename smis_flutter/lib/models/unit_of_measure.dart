@@ -18,7 +18,6 @@ class UnitOfMeasure {
     required this.lastModifiedUtc,
     required this.syncStatus,
     this.description,
-    this.shopId,
     this.lastSyncError,
   });
 
@@ -26,7 +25,6 @@ class UnitOfMeasure {
   final String name;
   final String symbol;
   final String? description;
-  final String? shopId;
   final DateTime createdAt;
   final DateTime updatedAt;
   final DateTime lastModifiedUtc;
