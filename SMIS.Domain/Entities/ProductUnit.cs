@@ -1,4 +1,4 @@
-﻿using SMIS.Domain.Common.BaseAbstract;
+using SMIS.Domain.Common.BaseAbstract;
 using SMIS.Domain.Exceptions;
 using SMIS.Domain.ValueObjects;
 
@@ -29,11 +29,11 @@ public class ProductUnit : BaseSyncableAuditableEntity
     /// How many Base Units of the Product are contained in this Unit.
     /// 
     /// Example:
-    /// - Biscuit: 1 Box = 12 Packs → ConversionFactor = 12
-    /// - Notebook: 1 Box = 10 Pieces → ConversionFactor = 10
-    /// - Coca Cola: 1 Carton = 24 Bottles → ConversionFactor = 24
+    /// - Biscuit: 1 Box = 12 Packs → BaseUnitQuantity = 12
+    /// - Notebook: 1 Box = 10 Pieces → BaseUnitQuantity = 10
+    /// - Coca Cola: 1 Carton = 24 Bottles → BaseUnitQuantity = 24
     /// </summary>
-    public decimal ConversionFactor { get; private set; }
+    public decimal BaseUnitQuantity { get; private set; }
 
     public DateTime ConflictModifiedUtc => GetConflictModifiedUtc();
 
@@ -43,12 +43,12 @@ public class ProductUnit : BaseSyncableAuditableEntity
 
     internal ProductUnit() { } // EF Core & Seeding
 
-    public static ProductUnit Create(string productId, string unitOfMeasureId, decimal conversionFactor)
+    public static ProductUnit Create(string productId, string unitOfMeasureId, decimal baseUnitQuantity)
     {
         var productUnit = new ProductUnit();
         productUnit.SetProductId(productId);
         productUnit.SetUnitOfMeasureId(unitOfMeasureId);
-        productUnit.SetConversionFactor(conversionFactor);
+        productUnit.SetBaseUnitQuantity(baseUnitQuantity);
         return productUnit;
     }
 
@@ -68,10 +68,10 @@ public class ProductUnit : BaseSyncableAuditableEntity
         UnitOfMeasureId = unitOfMeasureId.Trim();
     }
 
-    public void SetConversionFactor(decimal conversionFactor)
+    public void SetBaseUnitQuantity(decimal baseUnitQuantity)
     {
-        var conversionFactorVO = ValueObjects.ConversionFactor.Create(conversionFactor);
-        ConversionFactor = conversionFactorVO;
+        var baseUnitQuantityVO = ValueObjects.BaseUnitQuantity.Create(baseUnitQuantity);
+        BaseUnitQuantity = baseUnitQuantityVO;
     }
 
     public void SetProductName(string? productName) => ProductName = productName?.Trim();
@@ -113,7 +113,7 @@ A unit only describes the container.
 The product defines how much that container holds.
 
 So conversion belongs to:
-Product + Unit → ConversionFactor
+Product + Unit → BaseUnitQuantity
 That is exactly why ProductUnit exists.
 🧠 Mental Rule (Never Forget This)
 

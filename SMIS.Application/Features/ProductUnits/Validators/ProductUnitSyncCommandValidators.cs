@@ -27,7 +27,7 @@ public sealed class ProductUnitSyncCreateCommandValidator : AbstractValidator<Pr
     {
         rules.RuleFor(x => x.ProductId).NotEmpty().MaximumLength(450);
         rules.RuleFor(x => x.UnitOfMeasureId).NotEmpty().MaximumLength(450);
-        rules.RuleFor(x => x.ConversionFactor).GreaterThan(0).PrecisionScale(18, 2, false);
+        rules.RuleFor(x => x.BaseUnitQuantity).GreaterThan(0).PrecisionScale(18, 2, false);
     }
 }
 
@@ -40,7 +40,7 @@ public sealed class ProductUnitSyncUpdateCommandValidator : AbstractValidator<Pr
         {
             RuleFor(x => x.Dto.ProductId).NotEmpty().MaximumLength(450);
             RuleFor(x => x.Dto.UnitOfMeasureId).NotEmpty().MaximumLength(450);
-            RuleFor(x => x.Dto.ConversionFactor).GreaterThan(0).PrecisionScale(18, 2, false);
+            RuleFor(x => x.Dto.BaseUnitQuantity).GreaterThan(0).PrecisionScale(18, 2, false);
             RuleFor(x => x.Dto.ClientModifiedDate).NotEmpty().Must(SyncValidationRules.BeReasonableUtcTimestamp);
             RuleFor(x => x.Dto.ClientModifiedBy).MaximumLength(450);
         });

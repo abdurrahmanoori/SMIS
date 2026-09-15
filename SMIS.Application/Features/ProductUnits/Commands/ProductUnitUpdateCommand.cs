@@ -37,10 +37,19 @@ namespace SMIS.Application.Features.ProductUnits.Commands
                 return Result<ProductUnitDto>.NotFoundResult(nameof(ProductUnitDto.Id));
             }
 
+            if (await _productUnitRepository.ExistsActiveAsync(
+                request.ProductUnitCreateDto.ProductId,
+                request.ProductUnitCreateDto.UnitOfMeasureId,
+                entity.Id,
+                cancellationToken))
+            {
+                return ProductUnitCommandRules.DuplicatePair();
+            }
+
             // Update using domain methods
             entity.SetProductId(request.ProductUnitCreateDto.ProductId);
             entity.SetUnitOfMeasureId(request.ProductUnitCreateDto.UnitOfMeasureId);
-            entity.SetConversionFactor(request.ProductUnitCreateDto.ConversionFactor);
+            entity.SetBaseUnitQuantity(request.ProductUnitCreateDto.BaseUnitQuantity);
             
             // Update name fields using domain methods
             var product = await _productRepository.GetByIdAsync(request.ProductUnitCreateDto.ProductId);

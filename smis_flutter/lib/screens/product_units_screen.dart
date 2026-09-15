@@ -317,7 +317,7 @@ class _Content extends ConsumerWidget {
                         ),
                         title: Text(productName(item.productId)),
                         subtitle: Text(
-                          '${unitName(item.unitOfMeasureId)} • ${item.conversionFactor}',
+                          '${unitName(item.unitOfMeasureId)} • ${item.baseUnitQuantity}',
                         ),
                         trailing: Row(
                           mainAxisSize: MainAxisSize.min,

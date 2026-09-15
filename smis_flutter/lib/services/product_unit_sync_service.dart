@@ -247,7 +247,7 @@ class ProductUnitSyncService {
       id: remote.id,
       productId: remote.productId,
       unitOfMeasureId: remote.unitOfMeasureId,
-      conversionFactor: remote.conversionFactor,
+      baseUnitQuantity: remote.baseUnitQuantity,
       createdAt:
           existing?.createdAt ??
           remote.clientCreatedDate ??

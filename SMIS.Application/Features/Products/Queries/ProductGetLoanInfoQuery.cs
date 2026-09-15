@@ -34,17 +34,17 @@ internal sealed class ProductGetLoanInfoQueryHandler : IRequestHandler<ProductGe
             .Where(p => p.IsActive && 
                        p.ProductUnit != null &&
                        (p.EndDate == null || p.EndDate >= DateTimeService.NowLocal))
-            .OrderBy(p => p.ProductUnit.ConversionFactor) // Prefer base unit (ConversionFactor=1)
+            .OrderBy(p => p.ProductUnit.BaseUnitQuantity) // Prefer base unit (BaseUnitQuantity=1)
             .ThenByDescending(p => p.EffectiveDate)
             .FirstOrDefault();
 
-        // Calculate base unit price from any ProductUnit using ConversionFactor
+        // Calculate base unit price from any ProductUnit using BaseUnitQuantity
         var baseUnitSellPrice = activePrice != null && activePrice.ProductUnit != null
-            ? (long)(activePrice.SellPrice / activePrice.ProductUnit.ConversionFactor)
+            ? (long)(activePrice.SellPrice / activePrice.ProductUnit.BaseUnitQuantity)
             : 0;
         
         var baseUnitBuyPrice = activePrice != null && activePrice.ProductUnit != null
-            ? (long)(activePrice.BuyPrice / activePrice.ProductUnit.ConversionFactor)
+            ? (long)(activePrice.BuyPrice / activePrice.ProductUnit.BaseUnitQuantity)
             : 0;
 
         var dto = new ProductLoanInfoDto

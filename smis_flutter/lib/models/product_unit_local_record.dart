@@ -7,7 +7,7 @@ class ProductUnitLocalRecord {
     required this.id,
     required this.productId,
     required this.unitOfMeasureId,
-    required this.conversionFactor,
+    required this.baseUnitQuantity,
     required this.createdAt,
     required this.updatedAt,
     required this.lastModifiedUtc,
@@ -27,7 +27,7 @@ class ProductUnitLocalRecord {
   final String id;
   final String productId;
   final String unitOfMeasureId;
-  final double conversionFactor;
+  final double baseUnitQuantity;
   final DateTime createdAt;
   final DateTime updatedAt;
   final DateTime lastModifiedUtc;
@@ -47,7 +47,7 @@ class ProductUnitLocalRecord {
     id: id,
     productId: productId,
     unitOfMeasureId: unitOfMeasureId,
-    conversionFactor: conversionFactor,
+    baseUnitQuantity: baseUnitQuantity,
     createdAt: createdAt,
     updatedAt: updatedAt,
     lastModifiedUtc: lastModifiedUtc,
@@ -58,7 +58,7 @@ class ProductUnitLocalRecord {
   ProductUnitLocalRecord copyWith({
     String? productId,
     String? unitOfMeasureId,
-    double? conversionFactor,
+    double? baseUnitQuantity,
     DateTime? updatedAt,
     DateTime? lastModifiedUtc,
     bool? isDeleted,
@@ -78,7 +78,7 @@ class ProductUnitLocalRecord {
     id: id,
     productId: productId ?? this.productId,
     unitOfMeasureId: unitOfMeasureId ?? this.unitOfMeasureId,
-    conversionFactor: conversionFactor ?? this.conversionFactor,
+    baseUnitQuantity: baseUnitQuantity ?? this.baseUnitQuantity,
     createdAt: createdAt,
     updatedAt: updatedAt ?? this.updatedAt,
     lastModifiedUtc: lastModifiedUtc ?? this.lastModifiedUtc,
@@ -101,7 +101,7 @@ class ProductUnitLocalRecord {
     'id': id,
     'product_id': productId,
     'unit_of_measure_id': unitOfMeasureId,
-    'conversion_factor': conversionFactor,
+    'base_unit_quantity': baseUnitQuantity,
     'created_at': createdAt.toUtc().toIso8601String(),
     'updated_at': updatedAt.toUtc().toIso8601String(),
     'last_modified_utc': lastModifiedUtc.toUtc().toIso8601String(),
@@ -125,7 +125,7 @@ class ProductUnitLocalRecord {
         id: map['id']! as String,
         productId: map['product_id']! as String,
         unitOfMeasureId: map['unit_of_measure_id']! as String,
-        conversionFactor: (map['conversion_factor']! as num).toDouble(),
+        baseUnitQuantity: (map['base_unit_quantity']! as num).toDouble(),
         createdAt: DateTime.parse(map['created_at']! as String).toUtc(),
         updatedAt: DateTime.parse(map['updated_at']! as String).toUtc(),
         lastModifiedUtc: DateTime.parse(

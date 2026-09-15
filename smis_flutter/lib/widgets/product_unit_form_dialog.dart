@@ -23,7 +23,7 @@ class ProductUnitFormDialog extends StatefulWidget {
 
 class _ProductUnitFormDialogState extends State<ProductUnitFormDialog> {
   final _formKey = GlobalKey<FormState>();
-  late final TextEditingController _conversionFactor;
+  late final TextEditingController _baseUnitQuantity;
   String? _productId;
   String? _unitId;
 
@@ -32,14 +32,14 @@ class _ProductUnitFormDialogState extends State<ProductUnitFormDialog> {
     super.initState();
     _productId = widget.productUnit?.productId;
     _unitId = widget.productUnit?.unitOfMeasureId;
-    _conversionFactor = TextEditingController(
-      text: widget.productUnit?.conversionFactor.toString() ?? '',
+    _baseUnitQuantity = TextEditingController(
+      text: widget.productUnit?.baseUnitQuantity.toString() ?? '',
     );
   }
 
   @override
   void dispose() {
-    _conversionFactor.dispose();
+    _baseUnitQuantity.dispose();
     super.dispose();
   }
 
@@ -97,12 +97,12 @@ class _ProductUnitFormDialogState extends State<ProductUnitFormDialog> {
             ),
             const SizedBox(height: 12),
             TextFormField(
-              controller: _conversionFactor,
+              controller: _baseUnitQuantity,
               keyboardType: const TextInputType.numberWithOptions(
                 decimal: true,
               ),
               decoration: InputDecoration(
-                labelText: context.l10n.text('Conversion factor *'),
+                labelText: context.l10n.text('Base unit quantity *'),
                 helperText: context.l10n.text(
                   'For example: 12 means one box has 12 pieces.',
                 ),
@@ -131,7 +131,7 @@ class _ProductUnitFormDialogState extends State<ProductUnitFormDialog> {
             ProductUnitDraft(
               productId: _productId!,
               unitOfMeasureId: _unitId!,
-              conversionFactor: double.parse(_conversionFactor.text.trim()),
+              baseUnitQuantity: double.parse(_baseUnitQuantity.text.trim()),
             ),
           );
         },

@@ -8,7 +8,7 @@ namespace SMIS.Application.DTO.ProductUnits
         public string Id { get; set; } = string.Empty;
         public string ProductId { get; set; } = string.Empty;
         public string UnitOfMeasureId { get; set; } = string.Empty;
-        public decimal ConversionFactor { get; set; }
+        public decimal BaseUnitQuantity { get; set; }
         public DateTime? ClientCreatedDate { get; set; }
         public string? ClientCreatedBy { get; set; }
         public DateTime? ClientModifiedDate { get; set; }

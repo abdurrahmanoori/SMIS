@@ -21,7 +21,7 @@ class AppDatabase {
     _database = await _factory.openDatabase(
       path,
       options: OpenDatabaseOptions(
-        version: 9,
+        version: 10,
         onConfigure: (database) async {
           await database.execute('PRAGMA foreign_keys = ON');
           // Use rawQuery for journal_mode as it returns a result which some
@@ -111,6 +111,9 @@ class AppDatabase {
     }
     if (oldVersion < 9) {
       await _createProductUnitsSchema(database);
+    }
+    if (oldVersion == 9) {
+      await _migrateProductUnitsToBaseUnitQuantity(database);
     }
   }
 
@@ -314,13 +317,17 @@ class AppDatabase {
     ''');
   }
 
-  static Future<void> _createProductUnitsSchema(Database database) async {
+  static Future<void> _createProductUnitsSchema(
+    Database database, {
+    String tableName = 'product_units',
+    bool createIndexes = true,
+  }) async {
     await database.execute('''
-      CREATE TABLE IF NOT EXISTS product_units (
+      CREATE TABLE IF NOT EXISTS $tableName (
         id TEXT PRIMARY KEY,
         product_id TEXT NOT NULL,
         unit_of_measure_id TEXT NOT NULL,
-        conversion_factor REAL NOT NULL,
+        base_unit_quantity REAL NOT NULL,
         created_at TEXT NOT NULL,
         updated_at TEXT NOT NULL,
         last_modified_utc TEXT NOT NULL,
@@ -341,6 +348,11 @@ class AppDatabase {
           FOREIGN KEY (unit_of_measure_id) REFERENCES unit_of_measures(id) ON DELETE RESTRICT
       )
     ''');
+    if (!createIndexes) return;
+    await _createProductUnitIndexes(database);
+  }
+
+  static Future<void> _createProductUnitIndexes(Database database) async {
     await database.execute('''
       CREATE INDEX IF NOT EXISTS idx_product_units_visible
       ON product_units(is_deleted, product_id, unit_of_measure_id)
@@ -353,6 +365,62 @@ class AppDatabase {
       CREATE INDEX IF NOT EXISTS idx_product_units_product_id
       ON product_units(product_id)
     ''');
+    await database.execute('''
+      CREATE UNIQUE INDEX IF NOT EXISTS ux_product_units_product_unit
+      ON product_units(product_id, unit_of_measure_id)
+      WHERE is_deleted = 0
+    ''');
+  }
+
+  static Future<void> _migrateProductUnitsToBaseUnitQuantity(
+    Database database,
+  ) async {
+    final duplicates =
+        Sqflite.firstIntValue(
+          await database.rawQuery('''
+      SELECT COUNT(*)
+      FROM (
+        SELECT product_id, unit_of_measure_id
+        FROM product_units
+        WHERE is_deleted = 0
+        GROUP BY product_id, unit_of_measure_id
+        HAVING COUNT(*) > 1
+      )
+    '''),
+        ) ??
+        0;
+    if (duplicates > 0) {
+      throw StateError(
+        'Cannot apply the ProductUnit uniqueness upgrade because $duplicates '
+        'duplicate active product-unit pair(s) exist locally. Resolve them first.',
+      );
+    }
+    await _createProductUnitsSchema(
+      database,
+      tableName: 'product_units_v10',
+      createIndexes: false,
+    );
+    await database.execute('''
+      INSERT INTO product_units_v10 (
+        id, product_id, unit_of_measure_id, base_unit_quantity,
+        created_at, updated_at, last_modified_utc, is_deleted,
+        pending_operation, sync_status, retry_count, next_retry_at,
+        last_sync_error, server_created_date, server_updated_date,
+        server_created_by, server_updated_by, server_last_modified_utc
+      )
+      SELECT
+        id, product_id, unit_of_measure_id, conversion_factor,
+        created_at, updated_at, last_modified_utc, is_deleted,
+        pending_operation, sync_status, retry_count, next_retry_at,
+        last_sync_error, server_created_date, server_updated_date,
+        server_created_by, server_updated_by, server_last_modified_utc
+      FROM product_units
+    ''');
+    await database.execute('DROP TABLE product_units');
+    await database.execute(
+      'ALTER TABLE product_units_v10 RENAME TO product_units',
+    );
+    await _createProductUnitIndexes(database);
   }
 
   static Future<void> _migrateExistingTablesToForeignKeys(

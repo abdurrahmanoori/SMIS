@@ -90,9 +90,9 @@ public static class ProductUnitSeed
         );
     }
 
-    private static ProductUnit CreateProductUnit(string id, string productId, string unitOfMeasureId, decimal conversionFactor)
+    private static ProductUnit CreateProductUnit(string id, string productId, string unitOfMeasureId, decimal baseUnitQuantity)
     {
-        var productUnit = ProductUnit.Create(productId, unitOfMeasureId, conversionFactor);
+        var productUnit = ProductUnit.Create(productId, unitOfMeasureId, baseUnitQuantity);
 
         // Set ID for seeding (bypass domain validation for infrastructure concerns)
         typeof(ProductUnit).GetProperty(nameof(ProductUnit.Id))!.SetValue(productUnit, id);

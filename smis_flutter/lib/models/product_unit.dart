@@ -13,7 +13,7 @@ class ProductUnit {
     required this.id,
     required this.productId,
     required this.unitOfMeasureId,
-    required this.conversionFactor,
+    required this.baseUnitQuantity,
     required this.createdAt,
     required this.updatedAt,
     required this.lastModifiedUtc,
@@ -24,7 +24,7 @@ class ProductUnit {
   final String id;
   final String productId;
   final String unitOfMeasureId;
-  final double conversionFactor;
+  final double baseUnitQuantity;
   final DateTime createdAt;
   final DateTime updatedAt;
   final DateTime lastModifiedUtc;
@@ -36,12 +36,12 @@ class ProductUnitDraft {
   const ProductUnitDraft({
     required this.productId,
     required this.unitOfMeasureId,
-    required this.conversionFactor,
+    required this.baseUnitQuantity,
   });
 
   final String productId;
   final String unitOfMeasureId;
-  final double conversionFactor;
+  final double baseUnitQuantity;
 
   ProductUnitDraft normalized() {
     final productId = this.productId.trim();
@@ -54,20 +54,20 @@ class ProductUnitDraft {
         'Select a unit of measurement.',
       );
     }
-    if (!conversionFactor.isFinite || conversionFactor <= 0) {
+    if (!baseUnitQuantity.isFinite || baseUnitQuantity <= 0) {
       throw const ProductUnitValidationException(
-        'Conversion factor must be greater than zero.',
+        'Base unit quantity must be greater than zero.',
       );
     }
-    if ((conversionFactor * 100).roundToDouble() != conversionFactor * 100) {
+    if ((baseUnitQuantity * 100).roundToDouble() != baseUnitQuantity * 100) {
       throw const ProductUnitValidationException(
-        'Conversion factor can have at most two decimal places.',
+        'Base unit quantity can have at most two decimal places.',
       );
     }
     return ProductUnitDraft(
       productId: productId,
       unitOfMeasureId: unitId,
-      conversionFactor: conversionFactor,
+      baseUnitQuantity: baseUnitQuantity,
     );
   }
 }

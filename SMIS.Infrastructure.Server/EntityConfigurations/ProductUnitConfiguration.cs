@@ -27,7 +27,11 @@ namespace SMIS.Infrastructure.Server.EntityConfigurations
                 .IsRequired()
                 .HasMaxLength(450);
 
-            builder.Property(pu => pu.ConversionFactor)
+            builder.HasIndex(pu => new { pu.ProductId, pu.UnitOfMeasureId })
+                .IsUnique()
+                .HasFilter("[IsDeleted] = 0");
+
+            builder.Property(pu => pu.BaseUnitQuantity)
                 .IsRequired()
                 .HasColumnType("decimal(18,2)");
 

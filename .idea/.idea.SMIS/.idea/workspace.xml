@@ -98,8 +98,7 @@
     <setting file="file://$PROJECT_DIR$/SMIS.Application/Common/PagedListNew.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/SMIS.Application/Features/Categories/Queries/CategoryQuery.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/SMIS.Application/Services/IApplicationDbContext.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/SMIS.Infrastructure.Server/Migrations/20260914133653_sdf.Designer.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/SMIS.Infrastructure.Server/Migrations/20260914133653_sdf.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="gitIndexFs://ce9ec9ff:E\:/Repo/SMIS:E\:/Repo/SMIS/SMIS.Application/Features/ProductUnits/Queries/ProductUnitQuery.cs" root0="SKIP_HIGHLIGHTING" />
   </component>
   <component name="InvalidFacetManager">
     <ignored-facets>
@@ -340,14 +339,6 @@
       <option name="presentableId" value="LOCAL-00001" />
       <option name="project" value="LOCAL" />
       <updated>1788873767067</updated>
-    </task>
-    <task id="LOCAL-00016" summary="db data">
-      <option name="closed" value="true" />
-      <created>1788438915928</created>
-      <option name="number" value="00016" />
-      <option name="presentableId" value="LOCAL-00016" />
-      <option name="project" value="LOCAL" />
-      <updated>1788438915928</updated>
     </task>
     <task id="LOCAL-00017" summary="back project a bit simpliyed with some breadking changes">
       <option name="closed" value="true" />
@@ -725,7 +716,15 @@
       <option name="project" value="LOCAL" />
       <updated>1789394401287</updated>
     </task>
-    <option name="localTasksCounter" value="64" />
+    <task id="LOCAL-00064" summary="feat: add ProductUnit API, controller, and synchronization logic; update database schema and UI components">
+      <option name="closed" value="true" />
+      <created>1789454451550</created>
+      <option name="number" value="00064" />
+      <option name="presentableId" value="LOCAL-00064" />
+      <option name="project" value="LOCAL" />
+      <updated>1789454451550</updated>
+    </task>
+    <option name="localTasksCounter" value="65" />
     <option name="clearContext" value="false" />
     <option name="createChangelist" value="false" />
     <option name="createBranch" value="false" />
@@ -738,7 +737,6 @@
   <component name="UnityProjectConfiguration" hasMinimizedUI="false" />
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
-    <MESSAGE value="feat: implement shop and product management with corresponding APIs, controllers, and UI components" />
     <MESSAGE value="feat: update email domains for user accounts and adjust database configurations" />
     <MESSAGE value="feat: add ShopId to LoginResponseDto and update LoginCommand for shop association" />
     <MESSAGE value="feat: associate shopId with authentication and synchronization processes across various services" />
@@ -763,6 +761,7 @@
     <MESSAGE value="feat: enforce foreign key relationships and improve navigation properties across entities" />
     <MESSAGE value="feat: enhance entity configurations with audit user relationships and improve code formatting" />
     <MESSAGE value="feat: update workspace configuration to skip highlighting for migration files and clean up task entries" />
+    <MESSAGE value="feat: add ProductUnit API, controller, and synchronization logic; update database schema and UI components" />
     <option name="LAST_COMMIT_MESSAGE" value="" />
   </component>
   <component name="XDebuggerManager">

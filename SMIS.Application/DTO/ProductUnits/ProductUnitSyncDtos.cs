@@ -4,7 +4,7 @@ public class ProductUnitSyncUpdateDto
 {
     public string ProductId { get; set; } = string.Empty;
     public string UnitOfMeasureId { get; set; } = string.Empty;
-    public decimal ConversionFactor { get; set; }
+    public decimal BaseUnitQuantity { get; set; }
     public DateTime ClientModifiedDate { get; set; }
     public string? ClientModifiedBy { get; set; }
 }

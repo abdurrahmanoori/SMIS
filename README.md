@@ -200,12 +200,12 @@ Defines product-specific unit conversions. Critical for inventory accuracy.
   - `Id` (string) - Unique identifier
   - `ProductId` (string) - Foreign key to Product
   - `UnitOfMeasureId` (string) - Foreign key to UnitOfMeasure
-  - `ConversionFactor` (decimal) - How many base units in this unit
+  - `BaseUnitQuantity` (decimal) - How many base units in this unit
   - `CreatedAt`, `UpdatedAt` - Audit fields
 - **Example**: 
-  - Biscuit: 1 Box = 12 Packs (ConversionFactor = 12)
-  - Notebook: 1 Box = 10 Pieces (ConversionFactor = 10)
-  - Coca Cola: 1 Carton = 24 Bottles (ConversionFactor = 24)
+  - Biscuit: 1 Box = 12 Packs (BaseUnitQuantity = 12)
+  - Notebook: 1 Box = 10 Pieces (BaseUnitQuantity = 10)
+  - Coca Cola: 1 Carton = 24 Bottles (BaseUnitQuantity = 24)
 
 ### Inventory Management
 

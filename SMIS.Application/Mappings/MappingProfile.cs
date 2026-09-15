@@ -180,7 +180,7 @@ public class MappingProfile : Profile
             .ConstructUsing(src => ProductUnit.Create(
                 src.ProductId,
                 src.UnitOfMeasureId,
-                src.ConversionFactor
+                src.BaseUnitQuantity
             ));
 
         // ProductPrice mapping

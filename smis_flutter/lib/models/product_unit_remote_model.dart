@@ -5,7 +5,7 @@ class ProductUnitRemoteModel {
     required this.id,
     required this.productId,
     required this.unitOfMeasureId,
-    required this.conversionFactor,
+    required this.baseUnitQuantity,
     required this.lastModifiedUtc,
     required this.isDeleted,
     required this.conflictModifiedUtc,
@@ -20,7 +20,7 @@ class ProductUnitRemoteModel {
   final String id;
   final String productId;
   final String unitOfMeasureId;
-  final double conversionFactor;
+  final double baseUnitQuantity;
   final DateTime lastModifiedUtc;
   final bool isDeleted;
   final DateTime conflictModifiedUtc;
@@ -43,7 +43,7 @@ class ProductUnitRemoteModel {
       id: json['id'] as String,
       productId: json['productId'] as String,
       unitOfMeasureId: json['unitOfMeasureId'] as String,
-      conversionFactor: (json['conversionFactor'] as num).toDouble(),
+      baseUnitQuantity: (json['baseUnitQuantity'] as num).toDouble(),
       lastModifiedUtc: lastModifiedUtc,
       isDeleted: json['isDeleted'] as bool? ?? false,
       conflictModifiedUtc:
@@ -71,7 +71,7 @@ class ProductUnitRemoteModel {
   static Map<String, Object?> updatePayload(ProductUnitLocalRecord record) => {
     'productId': record.productId,
     'unitOfMeasureId': record.unitOfMeasureId,
-    'conversionFactor': record.conversionFactor,
+    'baseUnitQuantity': record.baseUnitQuantity,
     'clientModifiedDate': record.lastModifiedUtc.toUtc().toIso8601String(),
   };
 

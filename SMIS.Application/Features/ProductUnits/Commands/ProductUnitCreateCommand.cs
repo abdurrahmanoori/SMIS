@@ -31,6 +31,14 @@ namespace SMIS.Application.Features.ProductUnits.Commands
 
         public async Task<Result<ProductUnitDto>> Handle(ProductUnitCreateCommand request, CancellationToken cancellationToken)
         {
+            if (await _productUnitRepository.ExistsActiveAsync(
+                request.ProductUnitCreateDto.ProductId,
+                request.ProductUnitCreateDto.UnitOfMeasureId,
+                cancellationToken: cancellationToken))
+            {
+                return ProductUnitCommandRules.DuplicatePair();
+            }
+
             var entity = _mapper.Map<ProductUnit>(request.ProductUnitCreateDto);
             
             // Populate name fields using domain methods
@@ -45,5 +53,13 @@ namespace SMIS.Application.Features.ProductUnits.Commands
 
             return Result<ProductUnitDto>.SuccessResult(_mapper.Map<ProductUnitDto>(entity));
         }
+    }
+
+    internal static class ProductUnitCommandRules
+    {
+        public static Result<ProductUnitDto> DuplicatePair() =>
+            Result<ProductUnitDto>.FailureResult(
+                "ProductUnitAlreadyExists",
+                "This unit of measurement is already configured for the selected product.");
     }
 }

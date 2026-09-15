@@ -13,7 +13,7 @@ public sealed class ProductUnitQueryCriteria
     public string? Id { get; set; }
     public string? ProductId { get; set; }
     public string? UnitOfMeasureId { get; set; }
-    public decimal? ConversionFactor { get; set; }
+    public decimal? BaseUnitQuantity { get; set; }
 }
 
 public record ProductUnitQuery(EntityDropdown<ProductUnitQueryCriteria> Query)
@@ -46,7 +46,7 @@ internal sealed class ProductUnitQueryHandler
                 Id = x.Id,
                 ProductId = x.ProductId,
                 UnitOfMeasureId = x.UnitOfMeasureId,
-                ConversionFactor = x.ConversionFactor,
+                BaseUnitQuantity = x.BaseUnitQuantity,
                 ClientCreatedDate = x.ClientCreatedDate,
                 ClientCreatedBy = x.ClientCreatedBy,
                 ClientModifiedDate = x.ClientModifiedDate,

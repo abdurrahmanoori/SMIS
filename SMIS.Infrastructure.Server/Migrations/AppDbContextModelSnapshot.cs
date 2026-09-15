@@ -4332,7 +4332,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                     b.Property<DateTime?>("ClientModifiedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<decimal>("ConversionFactor")
+                    b.Property<decimal>("BaseUnitQuantity")
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("CreatedBy")
@@ -4403,6 +4403,10 @@ namespace SMIS.Infrastructure.Server.Migrations
 
                     b.HasIndex("ProductId");
 
+                    b.HasIndex("ProductId", "UnitOfMeasureId")
+                        .IsUnique()
+                        .HasFilter("[IsDeleted] = 0");
+
                     b.HasIndex("UnitOfMeasureId");
 
                     b.HasIndex("UpdatedBy");
@@ -4413,7 +4417,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                         new
                         {
                             Id = "dddddddd-0000-0000-0000-000000000001",
-                            ConversionFactor = 1m,
+                            BaseUnitQuantity = 1m,
                             EntityState = "Unchanged",
                             IsDeleted = false,
                             IsPublic = false,
@@ -4428,7 +4432,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                         new
                         {
                             Id = "dddddddd-0000-0000-0000-000000000002",
-                            ConversionFactor = 12m,
+                            BaseUnitQuantity = 12m,
                             EntityState = "Unchanged",
                             IsDeleted = false,
                             IsPublic = false,
@@ -4443,7 +4447,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                         new
                         {
                             Id = "dddddddd-0000-0000-0000-000000000003",
-                            ConversionFactor = 24m,
+                            BaseUnitQuantity = 24m,
                             EntityState = "Unchanged",
                             IsDeleted = false,
                             IsPublic = false,
@@ -4458,7 +4462,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                         new
                         {
                             Id = "dddddddd-0000-0000-0000-000000000004",
-                            ConversionFactor = 1m,
+                            BaseUnitQuantity = 1m,
                             EntityState = "Unchanged",
                             IsDeleted = false,
                             IsPublic = false,
@@ -4473,7 +4477,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                         new
                         {
                             Id = "dddddddd-0000-0000-0000-000000000005",
-                            ConversionFactor = 12m,
+                            BaseUnitQuantity = 12m,
                             EntityState = "Unchanged",
                             IsDeleted = false,
                             IsPublic = false,
@@ -4488,7 +4492,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                         new
                         {
                             Id = "dddddddd-0000-0000-0000-000000000006",
-                            ConversionFactor = 24m,
+                            BaseUnitQuantity = 24m,
                             EntityState = "Unchanged",
                             IsDeleted = false,
                             IsPublic = false,
@@ -4503,7 +4507,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                         new
                         {
                             Id = "dddddddd-0000-0000-0000-000000000007",
-                            ConversionFactor = 1m,
+                            BaseUnitQuantity = 1m,
                             EntityState = "Unchanged",
                             IsDeleted = false,
                             IsPublic = false,
@@ -4518,7 +4522,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                         new
                         {
                             Id = "dddddddd-0000-0000-0000-000000000008",
-                            ConversionFactor = 6m,
+                            BaseUnitQuantity = 6m,
                             EntityState = "Unchanged",
                             IsDeleted = false,
                             IsPublic = false,
@@ -4533,7 +4537,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                         new
                         {
                             Id = "dddddddd-0000-0000-0000-000000000009",
-                            ConversionFactor = 12m,
+                            BaseUnitQuantity = 12m,
                             EntityState = "Unchanged",
                             IsDeleted = false,
                             IsPublic = false,
@@ -4548,7 +4552,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                         new
                         {
                             Id = "dddddddd-0000-0000-0000-000000000010",
-                            ConversionFactor = 1m,
+                            BaseUnitQuantity = 1m,
                             EntityState = "Unchanged",
                             IsDeleted = false,
                             IsPublic = false,
@@ -4563,7 +4567,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                         new
                         {
                             Id = "dddddddd-0000-0000-0000-000000000011",
-                            ConversionFactor = 12m,
+                            BaseUnitQuantity = 12m,
                             EntityState = "Unchanged",
                             IsDeleted = false,
                             IsPublic = false,
@@ -4578,7 +4582,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                         new
                         {
                             Id = "dddddddd-0000-0000-0000-000000000012",
-                            ConversionFactor = 48m,
+                            BaseUnitQuantity = 48m,
                             EntityState = "Unchanged",
                             IsDeleted = false,
                             IsPublic = false,
@@ -4593,7 +4597,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                         new
                         {
                             Id = "dddddddd-0000-0000-0000-000000000013",
-                            ConversionFactor = 1m,
+                            BaseUnitQuantity = 1m,
                             EntityState = "Unchanged",
                             IsDeleted = false,
                             IsPublic = false,
@@ -4608,7 +4612,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                         new
                         {
                             Id = "dddddddd-0000-0000-0000-000000000014",
-                            ConversionFactor = 20m,
+                            BaseUnitQuantity = 20m,
                             EntityState = "Unchanged",
                             IsDeleted = false,
                             IsPublic = false,
@@ -4623,7 +4627,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                         new
                         {
                             Id = "dddddddd-0000-0000-0000-000000000015",
-                            ConversionFactor = 60m,
+                            BaseUnitQuantity = 60m,
                             EntityState = "Unchanged",
                             IsDeleted = false,
                             IsPublic = false,
@@ -4638,7 +4642,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                         new
                         {
                             Id = "dddddddd-0000-0000-0000-000000000016",
-                            ConversionFactor = 1m,
+                            BaseUnitQuantity = 1m,
                             EntityState = "Unchanged",
                             IsDeleted = false,
                             IsPublic = false,
@@ -4653,7 +4657,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                         new
                         {
                             Id = "dddddddd-0000-0000-0000-000000000017",
-                            ConversionFactor = 24m,
+                            BaseUnitQuantity = 24m,
                             EntityState = "Unchanged",
                             IsDeleted = false,
                             IsPublic = false,
@@ -4668,7 +4672,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                         new
                         {
                             Id = "dddddddd-0000-0000-0000-000000000018",
-                            ConversionFactor = 72m,
+                            BaseUnitQuantity = 72m,
                             EntityState = "Unchanged",
                             IsDeleted = false,
                             IsPublic = false,
@@ -4683,7 +4687,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                         new
                         {
                             Id = "dddddddd-0000-0000-0000-000000000019",
-                            ConversionFactor = 1m,
+                            BaseUnitQuantity = 1m,
                             EntityState = "Unchanged",
                             IsDeleted = false,
                             IsPublic = false,
@@ -4698,7 +4702,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                         new
                         {
                             Id = "dddddddd-0000-0000-0000-000000000020",
-                            ConversionFactor = 12m,
+                            BaseUnitQuantity = 12m,
                             EntityState = "Unchanged",
                             IsDeleted = false,
                             IsPublic = false,
@@ -4713,7 +4717,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                         new
                         {
                             Id = "dddddddd-0000-0000-0000-000000000021",
-                            ConversionFactor = 50m,
+                            BaseUnitQuantity = 50m,
                             EntityState = "Unchanged",
                             IsDeleted = false,
                             IsPublic = false,
@@ -4728,7 +4732,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                         new
                         {
                             Id = "dddddddd-0000-0000-0000-000000000022",
-                            ConversionFactor = 1m,
+                            BaseUnitQuantity = 1m,
                             EntityState = "Unchanged",
                             IsDeleted = false,
                             IsPublic = false,
@@ -4743,7 +4747,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                         new
                         {
                             Id = "dddddddd-0000-0000-0000-000000000023",
-                            ConversionFactor = 12m,
+                            BaseUnitQuantity = 12m,
                             EntityState = "Unchanged",
                             IsDeleted = false,
                             IsPublic = false,
@@ -4758,7 +4762,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                         new
                         {
                             Id = "dddddddd-0000-0000-0000-000000000024",
-                            ConversionFactor = 144m,
+                            BaseUnitQuantity = 144m,
                             EntityState = "Unchanged",
                             IsDeleted = false,
                             IsPublic = false,
@@ -4773,7 +4777,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                         new
                         {
                             Id = "dddddddd-0000-0000-0000-000000000025",
-                            ConversionFactor = 1m,
+                            BaseUnitQuantity = 1m,
                             EntityState = "Unchanged",
                             IsDeleted = false,
                             IsPublic = false,
@@ -4788,7 +4792,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                         new
                         {
                             Id = "dddddddd-0000-0000-0000-000000000026",
-                            ConversionFactor = 20m,
+                            BaseUnitQuantity = 20m,
                             EntityState = "Unchanged",
                             IsDeleted = false,
                             IsPublic = false,
@@ -4803,7 +4807,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                         new
                         {
                             Id = "dddddddd-0000-0000-0000-000000000027",
-                            ConversionFactor = 1m,
+                            BaseUnitQuantity = 1m,
                             EntityState = "Unchanged",
                             IsDeleted = false,
                             IsPublic = false,
@@ -4818,7 +4822,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                         new
                         {
                             Id = "dddddddd-0000-0000-0000-000000000028",
-                            ConversionFactor = 12m,
+                            BaseUnitQuantity = 12m,
                             EntityState = "Unchanged",
                             IsDeleted = false,
                             IsPublic = false,
@@ -4833,7 +4837,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                         new
                         {
                             Id = "dddddddd-0000-0000-0000-000000000029",
-                            ConversionFactor = 24m,
+                            BaseUnitQuantity = 24m,
                             EntityState = "Unchanged",
                             IsDeleted = false,
                             IsPublic = false,
@@ -4848,7 +4852,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                         new
                         {
                             Id = "dddddddd-0000-0000-0000-000000000030",
-                            ConversionFactor = 1m,
+                            BaseUnitQuantity = 1m,
                             EntityState = "Unchanged",
                             IsDeleted = false,
                             IsPublic = false,
@@ -4863,7 +4867,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                         new
                         {
                             Id = "dddddddd-0000-0000-0000-000000000031",
-                            ConversionFactor = 10m,
+                            BaseUnitQuantity = 10m,
                             EntityState = "Unchanged",
                             IsDeleted = false,
                             IsPublic = false,
@@ -4878,7 +4882,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                         new
                         {
                             Id = "dddddddd-0000-0000-0000-000000000032",
-                            ConversionFactor = 25m,
+                            BaseUnitQuantity = 25m,
                             EntityState = "Unchanged",
                             IsDeleted = false,
                             IsPublic = false,
@@ -4893,7 +4897,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                         new
                         {
                             Id = "dddddddd-0000-0000-0000-000000000033",
-                            ConversionFactor = 1m,
+                            BaseUnitQuantity = 1m,
                             EntityState = "Unchanged",
                             IsDeleted = false,
                             IsPublic = false,
@@ -4908,7 +4912,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                         new
                         {
                             Id = "dddddddd-0000-0000-0000-000000000034",
-                            ConversionFactor = 20m,
+                            BaseUnitQuantity = 20m,
                             EntityState = "Unchanged",
                             IsDeleted = false,
                             IsPublic = false,
@@ -4923,7 +4927,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                         new
                         {
                             Id = "dddddddd-0000-0000-0000-000000000035",
-                            ConversionFactor = 50m,
+                            BaseUnitQuantity = 50m,
                             EntityState = "Unchanged",
                             IsDeleted = false,
                             IsPublic = false,
@@ -4938,7 +4942,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                         new
                         {
                             Id = "dddddddd-0000-0000-0000-000000000036",
-                            ConversionFactor = 1m,
+                            BaseUnitQuantity = 1m,
                             EntityState = "Unchanged",
                             IsDeleted = false,
                             IsPublic = false,
@@ -4953,7 +4957,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                         new
                         {
                             Id = "dddddddd-0000-0000-0000-000000000037",
-                            ConversionFactor = 12m,
+                            BaseUnitQuantity = 12m,
                             EntityState = "Unchanged",
                             IsDeleted = false,
                             IsPublic = false,
@@ -4968,7 +4972,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                         new
                         {
                             Id = "dddddddd-0000-0000-0000-000000000038",
-                            ConversionFactor = 24m,
+                            BaseUnitQuantity = 24m,
                             EntityState = "Unchanged",
                             IsDeleted = false,
                             IsPublic = false,
@@ -4983,7 +4987,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                         new
                         {
                             Id = "dddddddd-0000-0000-0000-000000000039",
-                            ConversionFactor = 1m,
+                            BaseUnitQuantity = 1m,
                             EntityState = "Unchanged",
                             IsDeleted = false,
                             IsPublic = false,
@@ -4998,7 +5002,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                         new
                         {
                             Id = "dddddddd-0000-0000-0000-000000000040",
-                            ConversionFactor = 24m,
+                            BaseUnitQuantity = 24m,
                             EntityState = "Unchanged",
                             IsDeleted = false,
                             IsPublic = false,
@@ -5013,7 +5017,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                         new
                         {
                             Id = "dddddddd-0000-0000-0000-000000000041",
-                            ConversionFactor = 72m,
+                            BaseUnitQuantity = 72m,
                             EntityState = "Unchanged",
                             IsDeleted = false,
                             IsPublic = false,
@@ -5028,7 +5032,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                         new
                         {
                             Id = "dddddddd-0000-0000-0000-000000000042",
-                            ConversionFactor = 1m,
+                            BaseUnitQuantity = 1m,
                             EntityState = "Unchanged",
                             IsDeleted = false,
                             IsPublic = false,
@@ -5043,7 +5047,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                         new
                         {
                             Id = "dddddddd-0000-0000-0000-000000000043",
-                            ConversionFactor = 50m,
+                            BaseUnitQuantity = 50m,
                             EntityState = "Unchanged",
                             IsDeleted = false,
                             IsPublic = false,
@@ -5058,7 +5062,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                         new
                         {
                             Id = "dddddddd-0000-0000-0000-000000000044",
-                            ConversionFactor = 200m,
+                            BaseUnitQuantity = 200m,
                             EntityState = "Unchanged",
                             IsDeleted = false,
                             IsPublic = false,
@@ -5073,7 +5077,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                         new
                         {
                             Id = "dddddddd-0000-0000-0000-000000000045",
-                            ConversionFactor = 1m,
+                            BaseUnitQuantity = 1m,
                             EntityState = "Unchanged",
                             IsDeleted = false,
                             IsPublic = false,
@@ -5088,7 +5092,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                         new
                         {
                             Id = "dddddddd-0000-0000-0000-000000000046",
-                            ConversionFactor = 20m,
+                            BaseUnitQuantity = 20m,
                             EntityState = "Unchanged",
                             IsDeleted = false,
                             IsPublic = false,
@@ -5103,7 +5107,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                         new
                         {
                             Id = "dddddddd-0000-0000-0000-000000000047",
-                            ConversionFactor = 100m,
+                            BaseUnitQuantity = 100m,
                             EntityState = "Unchanged",
                             IsDeleted = false,
                             IsPublic = false,

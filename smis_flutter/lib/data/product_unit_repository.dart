@@ -87,7 +87,7 @@ class ProductUnitRepository {
       id: const Uuid().v4(),
       productId: normalized.productId,
       unitOfMeasureId: normalized.unitOfMeasureId,
-      conversionFactor: normalized.conversionFactor,
+      baseUnitQuantity: normalized.baseUnitQuantity,
       createdAt: now,
       updatedAt: now,
       lastModifiedUtc: now,
@@ -117,7 +117,7 @@ class ProductUnitRepository {
     final record = existing.copyWith(
       productId: normalized.productId,
       unitOfMeasureId: normalized.unitOfMeasureId,
-      conversionFactor: normalized.conversionFactor,
+      baseUnitQuantity: normalized.baseUnitQuantity,
       updatedAt: timestamp,
       lastModifiedUtc: timestamp,
       pendingOperation: remainsCreate
@@ -164,13 +164,37 @@ class ProductUnitRepository {
 
   Future<void> saveRecord(ProductUnitLocalRecord record) async {
     final database = await _database.instance;
-    final changed = await database.update(
-      _table,
-      record.toMap(),
-      where: 'id = ?',
-      whereArgs: [record.id],
-    );
-    if (changed == 0) await database.insert(_table, record.toMap());
+    if (!record.isDeleted) {
+      final duplicates = await database.query(
+        _table,
+        columns: ['id'],
+        where:
+            'is_deleted = 0 AND product_id = ? AND unit_of_measure_id = ? AND id != ?',
+        whereArgs: [record.productId, record.unitOfMeasureId, record.id],
+        limit: 1,
+      );
+      if (duplicates.isNotEmpty) {
+        throw const LocalStorageException(
+          'This unit is already configured for the selected product.',
+        );
+      }
+    }
+    try {
+      final changed = await database.update(
+        _table,
+        record.toMap(),
+        where: 'id = ?',
+        whereArgs: [record.id],
+      );
+      if (changed == 0) await database.insert(_table, record.toMap());
+    } on DatabaseException catch (error) {
+      if (error.toString().contains('UNIQUE constraint failed')) {
+        throw const LocalStorageException(
+          'This unit is already configured for the selected product.',
+        );
+      }
+      rethrow;
+    }
   }
 
   Future<void> removeRecord(String id) async {
