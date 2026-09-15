@@ -46,6 +46,9 @@ internal sealed class ProductSyncCreateCommandHandler : IRequestHandler<ProductS
             if (!ProductSyncRules.CanAccess(existing, _currentUser)) return ProductSyncRules.Forbidden();
             if (modified <= existing.GetConflictModifiedUtc())
                 return Result<ProductDto>.SuccessResult(_mapper.Map<ProductDto>(existing));
+            if (existing.IsBaseUnitChange(request.Dto.BaseUnitId) &&
+                await _repository.HasStockOrConversionsAsync(existing.Id, cancellationToken))
+                return ProductSyncRules.BaseUnitIsLocked();
             ProductSyncRules.Apply(existing, request.Dto);
             existing.SetClientCreationMetadata(request.Dto.ClientCreatedDate, request.Dto.ClientCreatedBy);
             existing.SetClientModificationMetadata(modified, request.Dto.ClientModifiedBy);
@@ -95,6 +98,9 @@ internal sealed class ProductSyncUpdateCommandHandler : IRequestHandler<ProductS
         var modified = DateTimeService.NormalizeUtc(request.Dto.ClientModifiedDate);
         if (modified <= product.GetConflictModifiedUtc())
             return Result<ProductDto>.SuccessResult(_mapper.Map<ProductDto>(product));
+        if (product.IsBaseUnitChange(request.Dto.BaseUnitId) &&
+            await _repository.HasStockOrConversionsAsync(product.Id, cancellationToken))
+            return ProductSyncRules.BaseUnitIsLocked();
         ProductSyncRules.Apply(product, request.Dto);
         product.SetClientModificationMetadata(modified, request.Dto.ClientModifiedBy);
         product.Restore();
@@ -168,7 +174,7 @@ internal static class ProductSyncRules
     )
     {
         product.SetName(dto.Name);
-        product.SetBaseUnitId(dto.BaseUnitId);
+        product.ChangeBaseUnit(dto.BaseUnitId, hasStockOrConversions: false);
         product.SetSKU(dto.SKU);
         product.SetDescription(dto.Description);
         product.SetBarcode(dto.Barcode);
@@ -183,4 +189,9 @@ internal static class ProductSyncRules
 
     public static Result<ProductDto> Forbidden() =>
         Result<ProductDto>.FailureResult("Forbidden", "You can only synchronize products from your own shop.");
+
+    public static Result<ProductDto> BaseUnitIsLocked() =>
+        Result<ProductDto>.FailureResult(
+            "BaseUnitChangeNotAllowed",
+            "Base unit cannot be changed after stock or product-unit conversions exist.");
 }

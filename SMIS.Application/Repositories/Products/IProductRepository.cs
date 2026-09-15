@@ -16,5 +16,9 @@ namespace SMIS.Application.Repositories.Products
         Task<int> CountReferencesAsync(
             string id,
             CancellationToken cancellationToken = default);
+
+        Task<bool> HasStockOrConversionsAsync(
+            string id,
+            CancellationToken cancellationToken = default);
     }
 }

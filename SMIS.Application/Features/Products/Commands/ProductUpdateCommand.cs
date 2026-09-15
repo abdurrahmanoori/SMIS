@@ -43,12 +43,21 @@ namespace SMIS.Application.Features.Products.Commands
                 return Result<ProductDto>.NotFoundResult(nameof(ProductDto.Id));
             }
 
+            if (entity.IsBaseUnitChange(request.ProductCreateDto.BaseUnitId) &&
+                await _productRepository.HasStockOrConversionsAsync(entity.Id, cancellationToken))
+            {
+                return ProductCommandRules.BaseUnitIsLocked();
+            }
+
             await _translationKeyRepository.AddTranslationKeysForChangedProperties(request.ProductCreateDto, entity);
             
             // Update existing entity using domain methods
             entity.SetName(request.ProductCreateDto.Name);
             entity.SetShopId(request.ProductCreateDto.ShopId);
-            entity.SetBaseUnitId(request.ProductCreateDto.BaseUnitId);
+            if (entity.IsBaseUnitChange(request.ProductCreateDto.BaseUnitId))
+            {
+                entity.ChangeBaseUnit(request.ProductCreateDto.BaseUnitId, hasStockOrConversions: false);
+            }
             entity.SetSKU(request.ProductCreateDto.SKU);
             entity.SetDescription(request.ProductCreateDto.Description);
             entity.SetBarcode(request.ProductCreateDto.Barcode);
@@ -81,5 +90,13 @@ namespace SMIS.Application.Features.Products.Commands
             var dto = _mapper.Map<ProductDto>(entity);
             return Result<ProductDto>.SuccessResult(dto);
         }
+    }
+
+    internal static class ProductCommandRules
+    {
+        public static Result<ProductDto> BaseUnitIsLocked() =>
+            Result<ProductDto>.FailureResult(
+                "BaseUnitChangeNotAllowed",
+                "Base unit cannot be changed after stock or product-unit conversions exist.");
     }
 }

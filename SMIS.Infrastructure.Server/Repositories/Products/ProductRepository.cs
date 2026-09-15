@@ -51,5 +51,24 @@ namespace SMIS.Infrastructure.Server.Repositories.Products
                 cancellationToken);
             return count;
         }
+
+        public async Task<bool> HasStockOrConversionsAsync(
+            string id,
+            CancellationToken cancellationToken = default)
+        {
+            var hasConversions = await _context.ProductUnits
+                .IgnoreQueryFilters()
+                .AnyAsync(productUnit => productUnit.ProductId == id, cancellationToken);
+            if (hasConversions) return true;
+
+            var hasStockBatches = await _context.StockBatches
+                .IgnoreQueryFilters()
+                .AnyAsync(batch => batch.ProductId == id, cancellationToken);
+            if (hasStockBatches) return true;
+
+            return await _context.StockTransactions
+                .IgnoreQueryFilters()
+                .AnyAsync(transaction => transaction.ProductId == id, cancellationToken);
+        }
     }
 }

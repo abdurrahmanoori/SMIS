@@ -135,6 +135,12 @@ class ProductRepository {
         'The product does not have a valid local shop relationship.',
       );
     }
+    if (existing.baseUnitId != normalized.baseUnitId &&
+        await _hasLocalConversions(existing.id)) {
+      throw const LocalStorageException(
+        'Base unit cannot be changed after product-unit conversions exist.',
+      );
+    }
     await _ensureProductReferences(
       shopId: shopId,
       baseUnitId: normalized.baseUnitId,
@@ -300,6 +306,18 @@ class ProductRepository {
         );
       }
     }
+  }
+
+  Future<bool> _hasLocalConversions(String productId) async {
+    final database = await _database.instance;
+    final rows = await database.query(
+      'product_units',
+      columns: ['id'],
+      where: 'product_id = ?',
+      whereArgs: [productId],
+      limit: 1,
+    );
+    return rows.isNotEmpty;
   }
 
   Future<void> _repairMissingShopIds(Database database, String shopId) async {

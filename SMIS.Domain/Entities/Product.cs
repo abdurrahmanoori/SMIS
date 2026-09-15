@@ -75,14 +75,32 @@ public class Product : BaseSyncableAuditableEntity, IEntity, IShopEntity
         ShopId = shopId;
     }
 
-    public void SetBaseUnitId(
-        string baseUnitId
-    )
+    public bool IsBaseUnitChange(string baseUnitId) =>
+        !string.Equals(BaseUnitId, NormalizeBaseUnitId(baseUnitId), StringComparison.Ordinal);
+
+    public void ChangeBaseUnit(string baseUnitId, bool hasStockOrConversions)
+    {
+        var normalizedBaseUnitId = NormalizeBaseUnitId(baseUnitId);
+        if (string.Equals(BaseUnitId, normalizedBaseUnitId, StringComparison.Ordinal)) return;
+
+        if (hasStockOrConversions)
+            throw new DomainValidationException(
+                "Base unit cannot be changed after stock or product-unit conversions exist.");
+
+        BaseUnitId = normalizedBaseUnitId;
+    }
+
+    private void SetBaseUnitId(string baseUnitId)
+    {
+        BaseUnitId = NormalizeBaseUnitId(baseUnitId);
+    }
+
+    private static string NormalizeBaseUnitId(string baseUnitId)
     {
         if (string.IsNullOrWhiteSpace(baseUnitId))
             throw new DomainValidationException("Base unit ID cannot be empty");
 
-        BaseUnitId = baseUnitId;
+        return baseUnitId.Trim();
     }
 
     public void SetSKU(

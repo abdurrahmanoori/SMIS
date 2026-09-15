@@ -340,14 +340,6 @@
       <option name="project" value="LOCAL" />
       <updated>1788873767067</updated>
     </task>
-    <task id="LOCAL-00017" summary="back project a bit simpliyed with some breadking changes">
-      <option name="closed" value="true" />
-      <created>1788676791131</created>
-      <option name="number" value="00017" />
-      <option name="presentableId" value="LOCAL-00017" />
-      <option name="project" value="LOCAL" />
-      <updated>1788676791131</updated>
-    </task>
     <task id="LOCAL-00018" summary="feat: implement IApplicationDbContext interface and update AppDbContext to use it">
       <option name="closed" value="true" />
       <created>1788677945936</created>
@@ -724,7 +716,15 @@
       <option name="project" value="LOCAL" />
       <updated>1789454451550</updated>
     </task>
-    <option name="localTasksCounter" value="65" />
+    <task id="LOCAL-00065" summary="feat: rename ConversionFactor to BaseUnitQuantity and enforce unique product-unit pairs; update related mappings and validations">
+      <option name="closed" value="true" />
+      <created>1789457176922</created>
+      <option name="number" value="00065" />
+      <option name="presentableId" value="LOCAL-00065" />
+      <option name="project" value="LOCAL" />
+      <updated>1789457176922</updated>
+    </task>
+    <option name="localTasksCounter" value="66" />
     <option name="clearContext" value="false" />
     <option name="createChangelist" value="false" />
     <option name="createBranch" value="false" />
@@ -737,7 +737,6 @@
   <component name="UnityProjectConfiguration" hasMinimizedUI="false" />
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
-    <MESSAGE value="feat: update email domains for user accounts and adjust database configurations" />
     <MESSAGE value="feat: add ShopId to LoginResponseDto and update LoginCommand for shop association" />
     <MESSAGE value="feat: associate shopId with authentication and synchronization processes across various services" />
     <MESSAGE value="feat: update database schema for multi-tenancy support and adjust database configurations" />
@@ -762,6 +761,7 @@
     <MESSAGE value="feat: enhance entity configurations with audit user relationships and improve code formatting" />
     <MESSAGE value="feat: update workspace configuration to skip highlighting for migration files and clean up task entries" />
     <MESSAGE value="feat: add ProductUnit API, controller, and synchronization logic; update database schema and UI components" />
+    <MESSAGE value="feat: rename ConversionFactor to BaseUnitQuantity and enforce unique product-unit pairs; update related mappings and validations" />
     <option name="LAST_COMMIT_MESSAGE" value="" />
   </component>
   <component name="XDebuggerManager">
