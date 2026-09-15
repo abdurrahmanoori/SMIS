@@ -148,6 +148,35 @@ Example:
 1 Box of Notebook = 10 Pieces
 1 Carton of Coke = 24 Bottles
 
+=======================================================================
+
+
+
+
+A clean relational version would look like this.
+
+Product
+Id	Name	BaseUnitId
+P001	Coca Cola	U001
+
+Here, U001 refers to Bottle.
+
+UnitOfMeasure
+Id	Name
+U001	Bottle
+U002	Box
+U003	Carton
+ProductUnit
+Id	ProductId	UnitOfMeasureId	BaseUnitQuantity
+PU001	P001	U001	1
+PU002	P001	U002	12
+PU003	P001	U003	24
+
+Meaning:
+
+PU001 -> 1 Bottle = 1 Bottle
+PU002 -> 1 Box    = 12 Bottles
+PU003 -> 1 Carton = 24 Bottles
 
 
 

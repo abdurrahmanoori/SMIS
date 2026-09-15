@@ -11,6 +11,7 @@ public class Shop : BaseSyncableAuditableEntity
     public ShopType ShopType { get; private set; }
     public string? Address { get; private set; } = string.Empty;
     public string? PhoneNumber { get; private set; } = string.Empty;
+
     public string? Email { get; private set; } = string.Empty;
     public string? TaxNumber { get; private set; } = string.Empty;
     public bool IsActive { get; private set; } = true;

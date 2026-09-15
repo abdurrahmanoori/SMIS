@@ -112,61 +112,61 @@
   <component name="MetaFilesCheckinStateConfiguration" checkMetaFiles="true" />
   <component name="NextEditCompletionFeaturesState">
     <decayedCancelled>
+      <entry key="MS100" value="1.0086186312260552" />
+      <entry key="MS500" value="1.4867379051860206" />
+      <entry key="S2" value="2.782077079003907" />
+      <entry key="S5" value="4.83541667460869" />
+      <entry key="S10" value="6.779792835434435" />
+      <entry key="S30" value="9.173434968445704" />
+      <entry key="S60" value="10.017064337198214" />
+      <entry key="M2" value="10.489432422319672" />
+      <entry key="M5" value="10.790951855701103" />
+      <entry key="M10" value="10.894651679183683" />
+      <entry key="M15" value="10.929584423253463" />
+      <entry key="M30" value="10.968179546854142" />
+      <entry key="H1" value="11.273365854706679" />
+      <entry key="H2" value="15.66064931606798" />
+      <entry key="H4" value="39.539172784323256" />
+      <entry key="D1" value="242.24639344355884" />
+      <entry key="W1" value="364.46177727670226" />
+    </decayedCancelled>
+    <decayedSelected>
       <entry key="MS100" value="0.0" />
       <entry key="MS500" value="0.0" />
       <entry key="S2" value="0.0" />
       <entry key="S5" value="0.0" />
-      <entry key="S10" value="4.9E-323" />
-      <entry key="S30" value="9.577867715134721E-108" />
-      <entry key="S60" value="6.434192559364542E-54" />
-      <entry key="M2" value="5.6867399745559575E-27" />
-      <entry key="M5" value="9.018401809572619E-11" />
-      <entry key="M10" value="2.333594536329678E-5" />
-      <entry key="M15" value="0.0015278306085665394" />
-      <entry key="M30" value="0.11600418271270722" />
-      <entry key="H1" value="1.6801587076578854" />
-      <entry key="H2" value="11.219374610039191" />
-      <entry key="H4" value="44.24438705409444" />
-      <entry key="D1" value="248.77186959979994" />
-      <entry key="W1" value="357.16978905794787" />
-    </decayedCancelled>
-    <decayedSelected>
-      <entry key="MS100" value="1.0" />
-      <entry key="MS500" value="1.0" />
-      <entry key="S2" value="1.0" />
-      <entry key="S5" value="1.0" />
-      <entry key="S10" value="1.0" />
-      <entry key="S30" value="1.0" />
-      <entry key="S60" value="1.0" />
-      <entry key="M2" value="1.0" />
-      <entry key="M5" value="1.0000000000559908" />
-      <entry key="M10" value="1.0000150065732656" />
-      <entry key="M15" value="1.0009969364874773" />
-      <entry key="M30" value="1.0827335272887808" />
-      <entry key="H1" value="2.564348793235271" />
-      <entry key="H2" value="12.352979341170476" />
-      <entry key="H4" value="38.69187200980085" />
-      <entry key="D1" value="141.63599928442153" />
-      <entry key="W1" value="186.81448521372786" />
+      <entry key="S10" value="7.883444348648393E-275" />
+      <entry key="S30" value="4.2878409612297824E-92" />
+      <entry key="S60" value="2.07071025525779E-46" />
+      <entry key="M2" value="1.438996266589247E-23" />
+      <entry key="M5" value="7.298336225280204E-10" />
+      <entry key="M10" value="2.7015838451822438E-5" />
+      <entry key="M15" value="9.012405085538209E-4" />
+      <entry key="M30" value="0.032488193481650746" />
+      <entry key="H1" value="0.44420054279104504" />
+      <entry key="H2" value="5.141297199601886" />
+      <entry key="H4" value="24.961474713920552" />
+      <entry key="D1" value="131.65844877593705" />
+      <entry key="W1" value="184.87509768901194" />
     </decayedSelected>
     <decayedShown>
-      <entry key="MS100" value="2.8550117125962457E-7" />
-      <entry key="MS500" value="0.049104532291723756" />
-      <entry key="S2" value="0.4707392322706031" />
-      <entry key="S5" value="0.7397963050606082" />
-      <entry key="S10" value="0.8601141232770266" />
-      <entry key="S30" value="0.9510106044244366" />
-      <entry key="S60" value="0.9751977258097132" />
-      <entry key="M2" value="0.9875210001866863" />
-      <entry key="M5" value="0.9949895877791033" />
-      <entry key="M10" value="0.9975299390254907" />
-      <entry key="M15" value="1.0008494235245" />
-      <entry key="M30" value="1.197789903323478" />
-      <entry key="H1" value="4.243109361527413" />
-      <entry key="H2" value="23.568779604851507" />
-      <entry key="H4" value="82.93058969594557" />
-      <entry key="D1" value="390.40437896112996" />
-      <entry key="W1" value="543.9836165404098" />
+      <entry key="MS100" value="0.9607354634805944" />
+      <entry key="MS500" value="1.4711840248361223" />
+      <entry key="S2" value="2.7716170800402575" />
+      <entry key="S5" value="4.819965352361953" />
+      <entry key="S10" value="6.765450320355055" />
+      <entry key="S30" value="9.165897803035302" />
+      <entry key="S60" value="10.01281854802664" />
+      <entry key="M2" value="10.487177219464806" />
+      <entry key="M5" value="10.790016193488587" />
+      <entry key="M10" value="10.894205039119706" />
+      <entry key="M15" value="10.93016713859001" />
+      <entry key="M30" value="11.000480143589837" />
+      <entry key="H1" value="11.717244468268227" />
+      <entry key="H2" value="20.800418964996535" />
+      <entry key="H4" value="64.49697002553935" />
+      <entry key="D1" value="373.90159481503" />
+      <entry key="W1" value="549.3362235869743" />
     </decayedShown>
   </component>
   <component name="ProblemsViewState">
@@ -338,15 +338,7 @@
       <option name="number" value="00001" />
       <option name="presentableId" value="LOCAL-00001" />
       <option name="project" value="LOCAL" />
-      <updated>1788873767067</updated>
-    </task>
-    <task id="LOCAL-00020" summary="feat(Category): add CategoryConfiguration for entity configuration and clean up validation logic">
-      <option name="closed" value="true" />
-      <created>1788686706788</created>
-      <option name="number" value="00020" />
-      <option name="presentableId" value="LOCAL-00020" />
-      <option name="project" value="LOCAL" />
-      <updated>1788686706788</updated>
+      <updated>1789462942314</updated>
     </task>
     <task id="LOCAL-00021" summary="just format the code">
       <option name="closed" value="true" />
@@ -490,7 +482,7 @@
       <option name="number" value="00038" />
       <option name="presentableId" value="LOCAL-00038" />
       <option name="project" value="LOCAL" />
-      <updated>1788948019843</updated>
+      <updated>1789462942314</updated>
     </task>
     <task id="LOCAL-00039" summary="feat: update email domains for user accounts and adjust database configurations">
       <option name="closed" value="true" />
@@ -724,7 +716,15 @@
       <option name="project" value="LOCAL" />
       <updated>1789462622135</updated>
     </task>
-    <option name="localTasksCounter" value="68" />
+    <task id="LOCAL-00068" summary="domain layer code formated">
+      <option name="closed" value="true" />
+      <created>1789462917869</created>
+      <option name="number" value="00068" />
+      <option name="presentableId" value="LOCAL-00068" />
+      <option name="project" value="LOCAL" />
+      <updated>1789462917869</updated>
+    </task>
+    <option name="localTasksCounter" value="69" />
     <option name="clearContext" value="false" />
     <option name="createChangelist" value="false" />
     <option name="createBranch" value="false" />
@@ -737,7 +737,6 @@
   <component name="UnityProjectConfiguration" hasMinimizedUI="false" />
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
-    <MESSAGE value="feat: update database schema for multi-tenancy support and adjust database configurations" />
     <MESSAGE value="feat: add localization support with locale controller and integrate into various screens" />
     <MESSAGE value="fix: update database journal mode handling for compatibility with Android versions" />
     <MESSAGE value="feat: add Wasil Shop roles and users, and update seed data for new shop" />
@@ -762,6 +761,7 @@
     <MESSAGE value="feat: rename ConversionFactor to BaseUnitQuantity and enforce unique product-unit pairs; update related mappings and validations" />
     <MESSAGE value="feat: rename ExistsActiveAsync to ExistsPairAsync for consistency; enforce unique product-unit pairs in repository and database schema" />
     <MESSAGE value="feat: implement base unit change validation; prevent changes if stock or conversions exist" />
+    <MESSAGE value="domain layer code formated" />
     <option name="LAST_COMMIT_MESSAGE" value="" />
   </component>
   <component name="XDebuggerManager">
