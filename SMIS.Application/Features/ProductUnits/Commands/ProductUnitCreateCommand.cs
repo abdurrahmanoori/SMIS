@@ -31,7 +31,7 @@ namespace SMIS.Application.Features.ProductUnits.Commands
 
         public async Task<Result<ProductUnitDto>> Handle(ProductUnitCreateCommand request, CancellationToken cancellationToken)
         {
-            if (await _productUnitRepository.ExistsActiveAsync(
+            if (await _productUnitRepository.ExistsPairAsync(
                 request.ProductUnitCreateDto.ProductId,
                 request.ProductUnitCreateDto.UnitOfMeasureId,
                 cancellationToken: cancellationToken))

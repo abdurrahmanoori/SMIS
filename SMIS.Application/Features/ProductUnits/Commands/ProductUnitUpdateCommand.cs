@@ -37,7 +37,7 @@ namespace SMIS.Application.Features.ProductUnits.Commands
                 return Result<ProductUnitDto>.NotFoundResult(nameof(ProductUnitDto.Id));
             }
 
-            if (await _productUnitRepository.ExistsActiveAsync(
+            if (await _productUnitRepository.ExistsPairAsync(
                 request.ProductUnitCreateDto.ProductId,
                 request.ProductUnitCreateDto.UnitOfMeasureId,
                 entity.Id,

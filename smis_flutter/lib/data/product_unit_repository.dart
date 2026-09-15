@@ -164,20 +164,17 @@ class ProductUnitRepository {
 
   Future<void> saveRecord(ProductUnitLocalRecord record) async {
     final database = await _database.instance;
-    if (!record.isDeleted) {
-      final duplicates = await database.query(
-        _table,
-        columns: ['id'],
-        where:
-            'is_deleted = 0 AND product_id = ? AND unit_of_measure_id = ? AND id != ?',
-        whereArgs: [record.productId, record.unitOfMeasureId, record.id],
-        limit: 1,
+    final duplicates = await database.query(
+      _table,
+      columns: ['id'],
+      where: 'product_id = ? AND unit_of_measure_id = ? AND id != ?',
+      whereArgs: [record.productId, record.unitOfMeasureId, record.id],
+      limit: 1,
+    );
+    if (duplicates.isNotEmpty) {
+      throw const LocalStorageException(
+        'This unit is already configured for the selected product.',
       );
-      if (duplicates.isNotEmpty) {
-        throw const LocalStorageException(
-          'This unit is already configured for the selected product.',
-        );
-      }
     }
     try {
       final changed = await database.update(

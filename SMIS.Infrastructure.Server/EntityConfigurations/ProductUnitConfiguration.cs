@@ -27,9 +27,8 @@ namespace SMIS.Infrastructure.Server.EntityConfigurations
                 .IsRequired()
                 .HasMaxLength(450);
 
-            builder.HasIndex(pu => new { pu.ProductId, pu.UnitOfMeasureId })
-                .IsUnique()
-                .HasFilter("[IsDeleted] = 0");
+            builder.HasAlternateKey(pu => new { pu.ProductId, pu.UnitOfMeasureId })
+                .HasName("AK_ProductUnit_ProductId_UnitOfMeasureId");
 
             builder.Property(pu => pu.BaseUnitQuantity)
                 .IsRequired()

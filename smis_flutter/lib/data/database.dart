@@ -345,7 +345,9 @@ class AppDatabase {
         CONSTRAINT fk_product_units_product_id
           FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE RESTRICT,
         CONSTRAINT fk_product_units_unit_of_measure_id
-          FOREIGN KEY (unit_of_measure_id) REFERENCES unit_of_measures(id) ON DELETE RESTRICT
+          FOREIGN KEY (unit_of_measure_id) REFERENCES unit_of_measures(id) ON DELETE RESTRICT,
+        CONSTRAINT uq_product_units_product_unit
+          UNIQUE (product_id, unit_of_measure_id)
       )
     ''');
     if (!createIndexes) return;
@@ -361,15 +363,6 @@ class AppDatabase {
       CREATE INDEX IF NOT EXISTS idx_product_units_pending
       ON product_units(pending_operation, next_retry_at)
     ''');
-    await database.execute('''
-      CREATE INDEX IF NOT EXISTS idx_product_units_product_id
-      ON product_units(product_id)
-    ''');
-    await database.execute('''
-      CREATE UNIQUE INDEX IF NOT EXISTS ux_product_units_product_unit
-      ON product_units(product_id, unit_of_measure_id)
-      WHERE is_deleted = 0
-    ''');
   }
 
   static Future<void> _migrateProductUnitsToBaseUnitQuantity(
@@ -382,7 +375,6 @@ class AppDatabase {
       FROM (
         SELECT product_id, unit_of_measure_id
         FROM product_units
-        WHERE is_deleted = 0
         GROUP BY product_id, unit_of_measure_id
         HAVING COUNT(*) > 1
       )
@@ -392,7 +384,7 @@ class AppDatabase {
     if (duplicates > 0) {
       throw StateError(
         'Cannot apply the ProductUnit uniqueness upgrade because $duplicates '
-        'duplicate active product-unit pair(s) exist locally. Resolve them first.',
+        'duplicate product-unit pair(s) exist locally. Resolve them first.',
       );
     }
     await _createProductUnitsSchema(

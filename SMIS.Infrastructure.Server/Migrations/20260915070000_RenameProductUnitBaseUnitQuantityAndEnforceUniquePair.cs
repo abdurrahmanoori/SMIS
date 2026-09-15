@@ -12,24 +12,41 @@ public partial class RenameProductUnitBaseUnitQuantityAndEnforceUniquePair : Mig
 {
     protected override void Up(MigrationBuilder migrationBuilder)
     {
+        migrationBuilder.Sql("""
+            IF EXISTS (
+                SELECT 1
+                FROM [ProductUnit]
+                GROUP BY [ProductId], [UnitOfMeasureId]
+                HAVING COUNT(*) > 1
+            )
+                THROW 50001, 'Cannot enforce UNIQUE(ProductId, UnitOfMeasureId) because duplicate ProductUnit pairs exist.', 1;
+            """);
+
         migrationBuilder.RenameColumn(
             name: "ConversionFactor",
             table: "ProductUnit",
             newName: "BaseUnitQuantity");
 
-        migrationBuilder.CreateIndex(
-            name: "IX_ProductUnit_ProductId_UnitOfMeasureId",
+        migrationBuilder.DropIndex(
+            name: "IX_ProductUnit_ProductId",
+            table: "ProductUnit");
+
+        migrationBuilder.AddUniqueConstraint(
+            name: "AK_ProductUnit_ProductId_UnitOfMeasureId",
             table: "ProductUnit",
-            columns: new[] { "ProductId", "UnitOfMeasureId" },
-            unique: true,
-            filter: "[IsDeleted] = 0");
+            columns: new[] { "ProductId", "UnitOfMeasureId" });
     }
 
     protected override void Down(MigrationBuilder migrationBuilder)
     {
-        migrationBuilder.DropIndex(
-            name: "IX_ProductUnit_ProductId_UnitOfMeasureId",
+        migrationBuilder.DropUniqueConstraint(
+            name: "AK_ProductUnit_ProductId_UnitOfMeasureId",
             table: "ProductUnit");
+
+        migrationBuilder.CreateIndex(
+            name: "IX_ProductUnit_ProductId",
+            table: "ProductUnit",
+            column: "ProductId");
 
         migrationBuilder.RenameColumn(
             name: "BaseUnitQuantity",
