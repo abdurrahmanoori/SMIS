@@ -21,7 +21,7 @@ class AppDatabase {
     _database = await _factory.openDatabase(
       path,
       options: OpenDatabaseOptions(
-        version: 8,
+        version: 9,
         onConfigure: (database) async {
           await database.execute('PRAGMA foreign_keys = ON');
           // Use rawQuery for journal_mode as it returns a result which some
@@ -45,6 +45,7 @@ class AppDatabase {
     await _createCategoriesSchema(database);
     await _createUnitOfMeasuresSchema(database);
     await _createProductsSchema(database);
+    await _createProductUnitsSchema(database);
     await database.execute('''
       CREATE TABLE sync_metadata (
         key TEXT PRIMARY KEY,
@@ -107,6 +108,9 @@ class AppDatabase {
     }
     if (oldVersion < 8) {
       await _migrateExistingTablesToForeignKeys(database);
+    }
+    if (oldVersion < 9) {
+      await _createProductUnitsSchema(database);
     }
   }
 
@@ -307,6 +311,47 @@ class AppDatabase {
     await database.execute('''
       CREATE INDEX IF NOT EXISTS idx_products_shop_id
       ON products(shop_id)
+    ''');
+  }
+
+  static Future<void> _createProductUnitsSchema(Database database) async {
+    await database.execute('''
+      CREATE TABLE IF NOT EXISTS product_units (
+        id TEXT PRIMARY KEY,
+        product_id TEXT NOT NULL,
+        unit_of_measure_id TEXT NOT NULL,
+        conversion_factor REAL NOT NULL,
+        created_at TEXT NOT NULL,
+        updated_at TEXT NOT NULL,
+        last_modified_utc TEXT NOT NULL,
+        is_deleted INTEGER NOT NULL DEFAULT 0,
+        pending_operation TEXT NOT NULL DEFAULT 'none',
+        sync_status TEXT NOT NULL DEFAULT 'synced',
+        retry_count INTEGER NOT NULL DEFAULT 0,
+        next_retry_at TEXT,
+        last_sync_error TEXT,
+        server_created_date TEXT,
+        server_updated_date TEXT,
+        server_created_by TEXT,
+        server_updated_by TEXT,
+        server_last_modified_utc TEXT,
+        CONSTRAINT fk_product_units_product_id
+          FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE RESTRICT,
+        CONSTRAINT fk_product_units_unit_of_measure_id
+          FOREIGN KEY (unit_of_measure_id) REFERENCES unit_of_measures(id) ON DELETE RESTRICT
+      )
+    ''');
+    await database.execute('''
+      CREATE INDEX IF NOT EXISTS idx_product_units_visible
+      ON product_units(is_deleted, product_id, unit_of_measure_id)
+    ''');
+    await database.execute('''
+      CREATE INDEX IF NOT EXISTS idx_product_units_pending
+      ON product_units(pending_operation, next_retry_at)
+    ''');
+    await database.execute('''
+      CREATE INDEX IF NOT EXISTS idx_product_units_product_id
+      ON product_units(product_id)
     ''');
   }
 

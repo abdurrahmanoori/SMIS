@@ -11,6 +11,8 @@ import '../data/unit_of_measure_api.dart';
 import '../data/unit_of_measure_repository.dart';
 import '../data/product_api.dart';
 import '../data/product_repository.dart';
+import '../data/product_unit_api.dart';
+import '../data/product_unit_repository.dart';
 import '../data/shop_api.dart';
 import '../data/shop_repository.dart';
 import 'auth_session_store.dart';
@@ -18,6 +20,7 @@ import 'category_sync_service.dart';
 import 'connectivity_service.dart';
 import 'unit_of_measure_sync_service.dart';
 import 'product_sync_service.dart';
+import 'product_unit_sync_service.dart';
 import 'shop_sync_service.dart';
 
 @pragma('vm:entry-point')
@@ -56,6 +59,11 @@ void callbackDispatcher() {
         DioProductApi(sessionStore: sessionStore),
         ConnectivityService(),
       );
+      final productUnitSyncService = ProductUnitSyncService(
+        ProductUnitRepository(database),
+        DioProductUnitApi(sessionStore: sessionStore),
+        ConnectivityService(),
+      );
 
       // Parent rows must exist before child rows now that SQLite enforces the
       // same relationships as the backend.
@@ -69,10 +77,14 @@ void callbackDispatcher() {
       final productResult = await productSyncService.synchronize(
         shopId: session.shopId,
       );
+      final productUnitResult = await productUnitSyncService.synchronize(
+        shopId: session.shopId,
+      );
       return !shopResult.transientFailure &&
           !categoryResult.transientFailure &&
           !unitOfMeasureResult.transientFailure &&
-          !productResult.transientFailure;
+          !productResult.transientFailure &&
+          !productUnitResult.transientFailure;
     } finally {
       await database.close();
     }

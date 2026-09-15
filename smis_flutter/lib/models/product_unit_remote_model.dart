@@ -1,0 +1,84 @@
+import 'product_unit_local_record.dart';
+
+class ProductUnitRemoteModel {
+  const ProductUnitRemoteModel({
+    required this.id,
+    required this.productId,
+    required this.unitOfMeasureId,
+    required this.conversionFactor,
+    required this.lastModifiedUtc,
+    required this.isDeleted,
+    required this.conflictModifiedUtc,
+    this.clientCreatedDate,
+    this.clientModifiedDate,
+    this.createdDate,
+    this.updatedDate,
+    this.createdBy,
+    this.updatedBy,
+  });
+
+  final String id;
+  final String productId;
+  final String unitOfMeasureId;
+  final double conversionFactor;
+  final DateTime lastModifiedUtc;
+  final bool isDeleted;
+  final DateTime conflictModifiedUtc;
+  final DateTime? clientCreatedDate;
+  final DateTime? clientModifiedDate;
+  final DateTime? createdDate;
+  final DateTime? updatedDate;
+  final String? createdBy;
+  final String? updatedBy;
+
+  factory ProductUnitRemoteModel.fromJson(Map<String, dynamic> json) {
+    final lastModifiedUtc = DateTime.parse(
+      json['lastModifiedUtc'] as String,
+    ).toUtc();
+    final clientModifiedDate = _dateOrNull(json['clientModifiedDate']);
+    final updatedDate = _dateOrNull(json['updatedDate']);
+    final clientCreatedDate = _dateOrNull(json['clientCreatedDate']);
+    final createdDate = _dateOrNull(json['createdDate']);
+    return ProductUnitRemoteModel(
+      id: json['id'] as String,
+      productId: json['productId'] as String,
+      unitOfMeasureId: json['unitOfMeasureId'] as String,
+      conversionFactor: (json['conversionFactor'] as num).toDouble(),
+      lastModifiedUtc: lastModifiedUtc,
+      isDeleted: json['isDeleted'] as bool? ?? false,
+      conflictModifiedUtc:
+          _dateOrNull(json['conflictModifiedUtc']) ??
+          clientModifiedDate ??
+          updatedDate ??
+          clientCreatedDate ??
+          createdDate ??
+          lastModifiedUtc,
+      clientCreatedDate: clientCreatedDate,
+      clientModifiedDate: clientModifiedDate,
+      createdDate: createdDate,
+      updatedDate: updatedDate,
+      createdBy: json['createdBy'] as String?,
+      updatedBy: json['updatedBy'] as String?,
+    );
+  }
+
+  static Map<String, Object?> createPayload(ProductUnitLocalRecord record) => {
+    'id': record.id,
+    ...updatePayload(record),
+    'clientCreatedDate': record.createdAt.toUtc().toIso8601String(),
+  };
+
+  static Map<String, Object?> updatePayload(ProductUnitLocalRecord record) => {
+    'productId': record.productId,
+    'unitOfMeasureId': record.unitOfMeasureId,
+    'conversionFactor': record.conversionFactor,
+    'clientModifiedDate': record.lastModifiedUtc.toUtc().toIso8601String(),
+  };
+
+  static Map<String, Object?> deletePayload(ProductUnitLocalRecord record) => {
+    'clientModifiedDate': record.lastModifiedUtc.toUtc().toIso8601String(),
+  };
+
+  static DateTime? _dateOrNull(Object? value) =>
+      value == null ? null : DateTime.parse(value as String).toUtc();
+}

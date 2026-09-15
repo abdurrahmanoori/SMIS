@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../controllers/auth_controller.dart';
 import '../controllers/category_controller.dart';
 import '../controllers/product_controller.dart';
+import '../controllers/product_unit_controller.dart';
 import '../controllers/shop_controller.dart';
 import '../controllers/unit_of_measure_controller.dart';
 import '../widgets/app_drawer.dart';
@@ -13,6 +14,7 @@ import '../l10n/app_localizations.dart';
 import 'categories_screen.dart';
 import 'profile_screen.dart';
 import 'products_screen.dart';
+import 'product_units_screen.dart';
 import 'shops_screen.dart';
 import 'unit_of_measures_screen.dart';
 
@@ -31,10 +33,14 @@ class HomeScreen extends ConsumerWidget {
     final shopPendingCount = shopState.value?.pendingCount ?? 0;
     final productState = ref.watch(productControllerProvider);
     final productPendingCount = productState.value?.pendingCount ?? 0;
-    final totalPendingCount = pendingCount +
+    final productUnitState = ref.watch(productUnitControllerProvider);
+    final productUnitPendingCount = productUnitState.value?.pendingCount ?? 0;
+    final totalPendingCount =
+        pendingCount +
         unitPendingCount +
         shopPendingCount +
-        productPendingCount;
+        productPendingCount +
+        productUnitPendingCount;
 
     // HomeScreen is only shown by the authentication gate after a session is
     // restored or created, but keep this defensive fallback for state changes.
@@ -43,11 +49,7 @@ class HomeScreen extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('SMIS'),
-        actions: const [
-          LocaleAction(),
-          ThemeModeAction(),
-          SizedBox(width: 8),
-        ],
+        actions: const [LocaleAction(), ThemeModeAction(), SizedBox(width: 8)],
       ),
       drawer: const AppDrawer(),
       body: SafeArea(
@@ -83,7 +85,9 @@ class HomeScreen extends ConsumerWidget {
                             ),
                       badgeLabel: pendingCount == 0
                           ? null
-                          : l10n.text('{count} pending', {'count': pendingCount}),
+                          : l10n.text('{count} pending', {
+                              'count': pendingCount,
+                            }),
                       onTap: () => _openCategories(context),
                     );
                     final profileCard = _HomeActionCard(
@@ -107,10 +111,9 @@ class HomeScreen extends ConsumerWidget {
                             ),
                       badgeLabel: unitPendingCount == 0
                           ? null
-                          : l10n.text(
-                              '{count} pending',
-                              {'count': unitPendingCount},
-                            ),
+                          : l10n.text('{count} pending', {
+                              'count': unitPendingCount,
+                            }),
                       onTap: () => _openUnits(context),
                     );
                     final shopsCard = _HomeActionCard(
@@ -126,10 +129,9 @@ class HomeScreen extends ConsumerWidget {
                             ),
                       badgeLabel: shopPendingCount == 0
                           ? null
-                          : l10n.text(
-                              '{count} pending',
-                              {'count': shopPendingCount},
-                            ),
+                          : l10n.text('{count} pending', {
+                              'count': shopPendingCount,
+                            }),
                       onTap: () => _openShops(context),
                     );
                     final productsCard = _HomeActionCard(
@@ -145,22 +147,56 @@ class HomeScreen extends ConsumerWidget {
                             ),
                       badgeLabel: productPendingCount == 0
                           ? null
-                          : l10n.text(
-                              '{count} pending',
-                              {'count': productPendingCount},
-                            ),
+                          : l10n.text('{count} pending', {
+                              'count': productPendingCount,
+                            }),
                       onTap: () => _openProducts(context),
+                    );
+                    final productUnitsCard = _HomeActionCard(
+                      icon: Icons.scale_outlined,
+                      title: l10n.text('Product units'),
+                      description: productUnitPendingCount == 0
+                          ? l10n.text('Manage local product unit conversions.')
+                          : l10n.text(
+                              '{count} local changes waiting to sync.',
+                              {'count': productUnitPendingCount},
+                            ),
+                      badgeLabel: productUnitPendingCount == 0
+                          ? null
+                          : l10n.text('{count} pending', {
+                              'count': productUnitPendingCount,
+                            }),
+                      onTap: () => _openProductUnits(context),
                     );
                     return wideLayout
                         ? Wrap(
                             spacing: 16,
                             runSpacing: 16,
                             children: [
-                              SizedBox(width: (constraints.maxWidth - 16) / 2, child: categoriesCard),
-                              SizedBox(width: (constraints.maxWidth - 16) / 2, child: unitsCard),
-                              SizedBox(width: (constraints.maxWidth - 16) / 2, child: shopsCard),
-                              SizedBox(width: (constraints.maxWidth - 16) / 2, child: productsCard),
-                              SizedBox(width: (constraints.maxWidth - 16) / 2, child: profileCard),
+                              SizedBox(
+                                width: (constraints.maxWidth - 16) / 2,
+                                child: categoriesCard,
+                              ),
+                              SizedBox(
+                                width: (constraints.maxWidth - 16) / 2,
+                                child: unitsCard,
+                              ),
+                              SizedBox(
+                                width: (constraints.maxWidth - 16) / 2,
+                                child: shopsCard,
+                              ),
+                              SizedBox(
+                                width: (constraints.maxWidth - 16) / 2,
+                                child: productsCard,
+                              ),
+                              SizedBox(
+                                width: (constraints.maxWidth - 16) / 2,
+                                child: productUnitsCard,
+                              ),
+                              SizedBox(
+                                width: (constraints.maxWidth - 16) / 2,
+                                child: profileCard,
+                              ),
                             ],
                           )
                         : Column(
@@ -172,6 +208,8 @@ class HomeScreen extends ConsumerWidget {
                               shopsCard,
                               const SizedBox(height: 16),
                               productsCard,
+                              const SizedBox(height: 16),
+                              productUnitsCard,
                               const SizedBox(height: 16),
                               profileCard,
                             ],
@@ -209,14 +247,20 @@ class HomeScreen extends ConsumerWidget {
   }
 
   void _openShops(BuildContext context) {
-    Navigator.of(context).push(
-      MaterialPageRoute<void>(builder: (context) => const ShopsScreen()),
-    );
+    Navigator.of(
+      context,
+    ).push(MaterialPageRoute<void>(builder: (context) => const ShopsScreen()));
   }
 
   void _openProducts(BuildContext context) {
     Navigator.of(context).push(
       MaterialPageRoute<void>(builder: (context) => const ProductsScreen()),
+    );
+  }
+
+  void _openProductUnits(BuildContext context) {
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(builder: (context) => const ProductUnitsScreen()),
     );
   }
 }
@@ -294,7 +338,10 @@ class _OfflineFirstNotice extends StatelessWidget {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Icon(Icons.cloud_queue_outlined, color: colors.onSecondaryContainer),
+            Icon(
+              Icons.cloud_queue_outlined,
+              color: colors.onSecondaryContainer,
+            ),
             const SizedBox(width: 12),
             Expanded(
               child: Column(
@@ -309,7 +356,9 @@ class _OfflineFirstNotice extends StatelessWidget {
                   const SizedBox(height: 4),
                   Text(
                     pendingCount == 0
-                        ? context.l10n.text('Your local changes are synchronized.')
+                        ? context.l10n.text(
+                            'Your local changes are synchronized.',
+                          )
                         : context.l10n.text(
                             pendingCount == 1
                                 ? '{count} local change is safely stored and waiting to synchronize.'

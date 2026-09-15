@@ -25,6 +25,24 @@ namespace SMIS.Api.Controllers
             return HandleResultResponseOld(await Mediator.Send(new ProductUnitGetListQuery(pageNumber, pageSize, includeProduct, includeUnitOfMeasure)));
         }
 
+        [HttpGet("query")]
+        public async Task<ActionResult<PagedListNew<ProductUnitDto>>> Query(
+            [FromQuery] ProductUnitQueryCriteria criteria,
+            [FromQuery] string[]? columns,
+            [FromQuery] int pageNumber = 1,
+            [FromQuery] int pageSize = 25,
+            CancellationToken cancellationToken = default
+        ) => await HandleRequest(
+            new ProductUnitQuery(
+                new EntityDropdown<ProductUnitQueryCriteria>
+                {
+                    Criteria = criteria,
+                    Columns = columns,
+                    PageNumber = pageNumber,
+                    PageSize = pageSize,
+                }),
+            cancellationToken);
+
         [HttpGet("{id}")]
         public async Task<ActionResult<ProductUnitDto>> GetById(string id, [FromQuery] bool includeProduct = false, [FromQuery] bool includeUnitOfMeasure = false) =>
             HandleResultResponseOld(await Mediator.Send(new ProductUnitGetByIdQuery(id, includeProduct, includeUnitOfMeasure)));

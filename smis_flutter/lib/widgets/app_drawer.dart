@@ -5,12 +5,14 @@ import '../controllers/auth_controller.dart';
 import '../controllers/category_controller.dart';
 import '../controllers/profile_controller.dart';
 import '../controllers/product_controller.dart';
+import '../controllers/product_unit_controller.dart';
 import '../controllers/shop_controller.dart';
 import '../controllers/unit_of_measure_controller.dart';
 import '../screens/categories_screen.dart';
 import '../screens/authentication_gate.dart';
 import '../screens/profile_screen.dart';
 import '../screens/products_screen.dart';
+import '../screens/product_units_screen.dart';
 import '../screens/shops_screen.dart';
 import '../screens/unit_of_measures_screen.dart';
 import '../l10n/app_localizations.dart';
@@ -30,6 +32,8 @@ class AppDrawer extends ConsumerWidget {
     final shopPendingCount = shopState.value?.pendingCount ?? 0;
     final productState = ref.watch(productControllerProvider);
     final productPendingCount = productState.value?.pendingCount ?? 0;
+    final productUnitState = ref.watch(productUnitControllerProvider);
+    final productUnitPendingCount = productUnitState.value?.pendingCount ?? 0;
 
     if (session == null) return const SizedBox.shrink();
 
@@ -57,6 +61,21 @@ class AppDrawer extends ConsumerWidget {
             onTap: () {
               Navigator.of(context).pop();
               Navigator.of(context).popUntil((route) => route.isFirst);
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.scale_outlined),
+            title: Text(l10n.text('Product units')),
+            trailing: productUnitPendingCount > 0
+                ? Badge(label: Text('$productUnitPendingCount'))
+                : null,
+            onTap: () {
+              Navigator.of(context).pop();
+              Navigator.of(context).pushReplacement(
+                MaterialPageRoute<void>(
+                  builder: (context) => const ProductUnitsScreen(),
+                ),
+              );
             },
           ),
           ListTile(
@@ -98,7 +117,9 @@ class AppDrawer extends ConsumerWidget {
             onTap: () {
               Navigator.of(context).pop();
               Navigator.of(context).pushReplacement(
-                MaterialPageRoute<void>(builder: (context) => CategoriesScreen()),
+                MaterialPageRoute<void>(
+                  builder: (context) => CategoriesScreen(),
+                ),
               );
             },
           ),

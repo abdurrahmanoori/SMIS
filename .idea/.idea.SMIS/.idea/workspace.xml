@@ -114,60 +114,60 @@
   <component name="NextEditCompletionFeaturesState">
     <decayedCancelled>
       <entry key="MS100" value="0.0" />
-      <entry key="MS500" value="2.273963370283039E-128" />
-      <entry key="S2" value="2.024140668572744E-32" />
-      <entry key="S5" value="3.1796899409374957E-13" />
-      <entry key="S10" value="7.972333113640204E-7" />
-      <entry key="S30" value="0.01471819985630905" />
-      <entry key="S60" value="0.1715690538085882" />
-      <entry key="M2" value="0.5857787762110245" />
-      <entry key="M5" value="1.2247430464916609" />
-      <entry key="M10" value="1.6178739148299284" />
-      <entry key="M15" value="1.9129964753470097" />
-      <entry key="M30" value="3.2177073376601846" />
-      <entry key="H1" value="9.254835794556294" />
-      <entry key="H2" value="27.513879906251834" />
-      <entry key="H4" value="70.15308454358426" />
-      <entry key="D1" value="267.13162210868404" />
-      <entry key="W1" value="357.5884634762447" />
+      <entry key="MS500" value="0.0" />
+      <entry key="S2" value="0.0" />
+      <entry key="S5" value="0.0" />
+      <entry key="S10" value="4.9E-323" />
+      <entry key="S30" value="9.577867715134721E-108" />
+      <entry key="S60" value="6.434192559364542E-54" />
+      <entry key="M2" value="5.6867399745559575E-27" />
+      <entry key="M5" value="9.018401809572619E-11" />
+      <entry key="M10" value="2.333594536329678E-5" />
+      <entry key="M15" value="0.0015278306085665394" />
+      <entry key="M30" value="0.11600418271270722" />
+      <entry key="H1" value="1.6801587076578854" />
+      <entry key="H2" value="11.219374610039191" />
+      <entry key="H4" value="44.24438705409444" />
+      <entry key="D1" value="248.77186959979994" />
+      <entry key="W1" value="357.16978905794787" />
     </decayedCancelled>
     <decayedSelected>
       <entry key="MS100" value="1.0" />
       <entry key="MS500" value="1.0" />
       <entry key="S2" value="1.0" />
-      <entry key="S5" value="1.0000000000008609" />
-      <entry key="S10" value="1.0000012949653623" />
-      <entry key="S30" value="1.0172507454850352" />
-      <entry key="S60" value="1.1856759888715749" />
-      <entry key="M2" value="1.609329283018679" />
-      <entry key="M5" value="2.2438640781668315" />
-      <entry key="M10" value="2.613022123104128" />
-      <entry key="M15" value="2.8586584056305706" />
-      <entry key="M30" value="4.148062753843857" />
-      <entry key="H1" value="11.341911412716204" />
-      <entry key="H2" value="30.889602133560903" />
-      <entry key="H4" value="62.171276526725094" />
-      <entry key="D1" value="152.27643560197674" />
-      <entry key="W1" value="187.11326099232343" />
+      <entry key="S5" value="1.0" />
+      <entry key="S10" value="1.0" />
+      <entry key="S30" value="1.0" />
+      <entry key="S60" value="1.0" />
+      <entry key="M2" value="1.0" />
+      <entry key="M5" value="1.0000000000559908" />
+      <entry key="M10" value="1.0000150065732656" />
+      <entry key="M15" value="1.0009969364874773" />
+      <entry key="M30" value="1.0827335272887808" />
+      <entry key="H1" value="2.564348793235271" />
+      <entry key="H2" value="12.352979341170476" />
+      <entry key="H4" value="38.69187200980085" />
+      <entry key="D1" value="141.63599928442153" />
+      <entry key="W1" value="186.81448521372786" />
     </decayedSelected>
     <decayedShown>
-      <entry key="MS100" value="0.01120277537512365" />
-      <entry key="MS500" value="0.40725378153510766" />
-      <entry key="S2" value="0.798851916449148" />
-      <entry key="S5" value="0.9140848532351" />
-      <entry key="S10" value="0.9560796852621484" />
-      <entry key="S30" value="1.0157404991520311" />
-      <entry key="S60" value="1.3420587865710971" />
-      <entry key="M2" value="2.178375973236381" />
-      <entry key="M5" value="3.456333737105828" />
-      <entry key="M10" value="4.222937584328448" />
-      <entry key="M15" value="4.765275109373519" />
-      <entry key="M30" value="7.3603363589492785" />
-      <entry key="H1" value="20.58975494614808" />
-      <entry key="H2" value="58.394398192559336" />
-      <entry key="H4" value="132.31521883356345" />
-      <entry key="D1" value="419.40430382183797" />
-      <entry key="W1" value="544.7010655087001" />
+      <entry key="MS100" value="2.8550117125962457E-7" />
+      <entry key="MS500" value="0.049104532291723756" />
+      <entry key="S2" value="0.4707392322706031" />
+      <entry key="S5" value="0.7397963050606082" />
+      <entry key="S10" value="0.8601141232770266" />
+      <entry key="S30" value="0.9510106044244366" />
+      <entry key="S60" value="0.9751977258097132" />
+      <entry key="M2" value="0.9875210001866863" />
+      <entry key="M5" value="0.9949895877791033" />
+      <entry key="M10" value="0.9975299390254907" />
+      <entry key="M15" value="1.0008494235245" />
+      <entry key="M30" value="1.197789903323478" />
+      <entry key="H1" value="4.243109361527413" />
+      <entry key="H2" value="23.568779604851507" />
+      <entry key="H4" value="82.93058969594557" />
+      <entry key="D1" value="390.40437896112996" />
+      <entry key="W1" value="543.9836165404098" />
     </decayedShown>
   </component>
   <component name="ProblemsViewState">
@@ -340,14 +340,6 @@
       <option name="presentableId" value="LOCAL-00001" />
       <option name="project" value="LOCAL" />
       <updated>1788873767067</updated>
-    </task>
-    <task id="LOCAL-00015" summary="feat(Category): add query endpoint for filtered category retrieval and implement pagination">
-      <option name="closed" value="true" />
-      <created>1788438193927</created>
-      <option name="number" value="00015" />
-      <option name="presentableId" value="LOCAL-00015" />
-      <option name="project" value="LOCAL" />
-      <updated>1788438193927</updated>
     </task>
     <task id="LOCAL-00016" summary="db data">
       <option name="closed" value="true" />
@@ -725,7 +717,15 @@
       <option name="project" value="LOCAL" />
       <updated>1789393186963</updated>
     </task>
-    <option name="localTasksCounter" value="63" />
+    <task id="LOCAL-00063" summary="feat: update workspace configuration to skip highlighting for migration files and clean up task entries">
+      <option name="closed" value="true" />
+      <created>1789394401286</created>
+      <option name="number" value="00063" />
+      <option name="presentableId" value="LOCAL-00063" />
+      <option name="project" value="LOCAL" />
+      <updated>1789394401287</updated>
+    </task>
+    <option name="localTasksCounter" value="64" />
     <option name="clearContext" value="false" />
     <option name="createChangelist" value="false" />
     <option name="createBranch" value="false" />
@@ -738,7 +738,6 @@
   <component name="UnityProjectConfiguration" hasMinimizedUI="false" />
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
-    <MESSAGE value="feat: enhance authentication flow with AuthenticationGate and improve logout handling" />
     <MESSAGE value="feat: implement shop and product management with corresponding APIs, controllers, and UI components" />
     <MESSAGE value="feat: update email domains for user accounts and adjust database configurations" />
     <MESSAGE value="feat: add ShopId to LoginResponseDto and update LoginCommand for shop association" />
@@ -763,6 +762,7 @@
     <MESSAGE value="feat: enforce unique category names per shop and enhance related error handling" />
     <MESSAGE value="feat: enforce foreign key relationships and improve navigation properties across entities" />
     <MESSAGE value="feat: enhance entity configurations with audit user relationships and improve code formatting" />
+    <MESSAGE value="feat: update workspace configuration to skip highlighting for migration files and clean up task entries" />
     <option name="LAST_COMMIT_MESSAGE" value="" />
   </component>
   <component name="XDebuggerManager">
