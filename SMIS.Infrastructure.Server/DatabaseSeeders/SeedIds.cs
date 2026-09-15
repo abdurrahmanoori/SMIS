@@ -205,7 +205,7 @@ public static class SeedIds
     public const string Batch3 = "11111111-1111-0000-0000-000000000003";
     public const string Batch4 = "11111111-1111-0000-0000-000000000004";
 
-    // StockTransactions
+    // StockMovements
     public const string STrans1 = "22222222-2222-0000-0000-000000000001";
     public const string STrans2 = "22222222-2222-0000-0000-000000000002";
     public const string STrans3 = "22222222-2222-0000-0000-000000000003";

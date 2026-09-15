@@ -12,7 +12,7 @@ using SMIS.Application.DTO.ProductUnits;
 using SMIS.Application.DTO.StockBatches;
 using SMIS.Application.DTO.TranslationKeys;
 using SMIS.Application.DTO.Translations;
-using SMIS.Application.DTO.StockTransactions;
+using SMIS.Application.DTO.StockMovements;
 using SMIS.Domain.Entities;
 using SMIS.Domain.Entities.Localization;
 using SMIS.Domain.Entities.LocationEntities;
@@ -207,33 +207,10 @@ public class MappingProfile : Profile
         CreateMap<Translation, TranslationEntityDto>().ReverseMap();
         CreateMap<Translation, TranslationEntityCreateDto>().ReverseMap();
 
-        // StockBatch mapping
-        CreateMap<StockBatch, StockBatchDto>().ReverseMap();
-        CreateMap<StockBatchCreateDto, StockBatch>()
-            .ConstructUsing(src => StockBatch.Create(
-                src.ProductId,
-                src.UnitId,
-                src.Quantity,
-                src.PurchasePrice,
-                src.ReceivedDate,
-                src.BatchNumber,
-                src.ExpirationDate
-            ));
-
-        // StockTransaction mapping
-        CreateMap<StockTransaction, StockTransactionDto>()
-            .ForMember(dest => dest.Type, opt => opt.MapFrom(src => Enum.Parse<TransactionType>(src.Type)));
-        CreateMap<StockTransactionCreateDto, StockTransaction>()
-            .ConstructUsing(src => StockTransaction.Create(
-                src.ShopId,
-                src.ProductId,
-                src.StockBatchId,
-                src.Quantity,
-                src.UnitId,
-                src.Type,
-                src.TransactionDate,
-                src.Reference
-            ));
+        // Inventory mapping. Creation is handled explicitly because conversion,
+        // tenant checks and ledger posting are domain/application operations.
+        CreateMap<StockBatch, StockBatchDto>();
+        CreateMap<StockMovement, StockMovementDto>();
 
         // Customer mapping
         CreateMap<Customer, CustomerDto>()

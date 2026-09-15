@@ -42,8 +42,8 @@ namespace SMIS.Infrastructure.Server.Repositories.Products
             count += await _context.StockBatches.CountAsync(
                 batch => batch.ProductId == id,
                 cancellationToken);
-            count += await _context.StockTransactions.CountAsync(
-                transaction => transaction.ProductId == id,
+            count += await _context.StockMovements.CountAsync(
+                movement => movement.StockBatch.ProductId == id,
                 cancellationToken);
             count += await _context.LoanAccounts.CountAsync(
                 loan => loan.ProductId == id,
@@ -74,9 +74,9 @@ namespace SMIS.Infrastructure.Server.Repositories.Products
                 .AnyAsync(batch => batch.ProductId == id, cancellationToken);
             if (hasStockBatches) return true;
 
-            return await _context.StockTransactions
+            return await _context.StockMovements
                 .IgnoreQueryFilters()
-                .AnyAsync(transaction => transaction.ProductId == id, cancellationToken);
+                .AnyAsync(movement => movement.StockBatch.ProductId == id, cancellationToken);
         }
     }
 }

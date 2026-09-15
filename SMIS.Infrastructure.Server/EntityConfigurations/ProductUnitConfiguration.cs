@@ -16,6 +16,9 @@ namespace SMIS.Infrastructure.Server.EntityConfigurations
 
             builder.HasKey(pu => pu.Id);
 
+            builder.HasAlternateKey(pu => new { pu.Id, pu.ProductId })
+                .HasName("AK_ProductUnit_Id_ProductId");
+
             builder.Property(pu => pu.Id)
                 .ValueGeneratedOnAdd();
 

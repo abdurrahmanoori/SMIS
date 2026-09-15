@@ -2,15 +2,14 @@ using SMIS.Domain.Enums;
 
 namespace SMIS.Application.DTO.StockBatches
 {
-    public class StockBatchCreateDto
-    {
-        public string ProductId { get; set; } = string.Empty;
-        public string? BatchNumber { get; set; }
-        public decimal Quantity { get; set; }
-        public string UnitId { get; set; } = string.Empty;
-        public DateTime? ReceivedDate { get; set; }
-        public DateTime? ExpirationDate { get; set; }
-        public long PurchasePrice { get; set; }
-        public StatusEnum Status { get; set; } = StatusEnum.Active;
-    }
+public class StockBatchCreateDto
+{
+    public string ProductId { get; set; } = string.Empty;
+    public string ReceivedProductUnitId { get; set; } = string.Empty;
+    public decimal ReceivedQuantity { get; set; }
+    public long UnitCostBase { get; set; }
+    public string? BatchNumber { get; set; }
+    public DateTime? ReceivedAtUtc { get; set; }
+    public DateTime? ExpirationDate { get; set; }
+}
 }

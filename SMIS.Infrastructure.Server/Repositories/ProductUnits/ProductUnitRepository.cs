@@ -45,18 +45,12 @@ namespace SMIS.Infrastructure.Server.Repositories.ProductUnits
 
             if (await _context.StockBatches
                     .IgnoreQueryFilters()
-                    .AnyAsync(
-                        batch => batch.ProductId == productUnit.ProductId &&
-                                 batch.UnitId == productUnit.UnitOfMeasureId,
-                        cancellationToken))
+                    .AnyAsync(batch => batch.ReceivedProductUnitId == id, cancellationToken))
                 return true;
 
-            return await _context.StockTransactions
+            return await _context.StockMovements
                 .IgnoreQueryFilters()
-                .AnyAsync(
-                    transaction => transaction.ProductId == productUnit.ProductId &&
-                                   transaction.UnitId == productUnit.UnitOfMeasureId,
-                    cancellationToken);
+                .AnyAsync(movement => movement.ProductUnitId == id, cancellationToken);
         }
     }
 }

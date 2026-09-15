@@ -25,7 +25,8 @@ namespace SMIS.Infrastructure.Server.Repositories.Shops
         var count = await _context.Users.CountAsync(user => user.ShopId == id, cancellationToken);
         count += await _context.Categories.CountAsync(category => category.ShopId == id, cancellationToken);
         count += await _context.Products.CountAsync(product => product.ShopId == id, cancellationToken);
-        count += await _context.StockTransactions.CountAsync(transaction => transaction.ShopId == id, cancellationToken);
+        count += await _context.StockBatches.CountAsync(batch => batch.ShopId == id, cancellationToken);
+        count += await _context.StockMovements.CountAsync(movement => movement.ShopId == id, cancellationToken);
         count += await _context.Customers.CountAsync(customer => customer.ShopId == id, cancellationToken);
         count += await _context.ShopOwners.CountAsync(owner => owner.ShopId == id, cancellationToken);
         count += await _context.LoanAccounts.CountAsync(loan => loan.ShopId == id, cancellationToken);

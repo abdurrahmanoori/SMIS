@@ -52,7 +52,7 @@ internal sealed class ProductGetLoanInfoQueryHandler : IRequestHandler<ProductGe
 
         var latestBatch = await _stockBatchRepository
             .GetAllQueryable(batch => batch.ProductId == product.Id)
-            .OrderByDescending(batch => batch.ReceivedDate)
+            .OrderByDescending(batch => batch.ReceivedAtUtc)
             .FirstOrDefaultAsync(cancellationToken);
 
         var dto = new ProductLoanInfoDto
@@ -62,7 +62,7 @@ internal sealed class ProductGetLoanInfoQueryHandler : IRequestHandler<ProductGe
             BaseUnitId = product.BaseUnitId,
             BaseUnitName = product.UnitOfMeasure?.Name ?? string.Empty,
             LatestSellPrice = baseUnitSellPrice,
-            LatestBuyPrice = latestBatch?.PurchasePrice ?? 0,
+            LatestBuyPrice = latestBatch?.UnitCostBase ?? 0,
             PriceEffectiveDate = activePrice?.Price.EffectiveDate,
             HasActivePrice = activePrice != null
         };

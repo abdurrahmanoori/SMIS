@@ -26,10 +26,10 @@ namespace SMIS.Infrastructure.Server.Repositories.UnitOfMeasures
                 productUnit => productUnit.UnitOfMeasureId == id,
                 cancellationToken);
             count += await _context.StockBatches.CountAsync(
-                batch => batch.UnitId == id,
+                batch => batch.ReceivedProductUnit.UnitOfMeasureId == id,
                 cancellationToken);
-            count += await _context.StockTransactions.CountAsync(
-                transaction => transaction.UnitId == id,
+            count += await _context.StockMovements.CountAsync(
+                movement => movement.ProductUnit.UnitOfMeasureId == id,
                 cancellationToken);
             count += await _context.LoanAccounts.CountAsync(
                 loan => loan.UnitId == id,

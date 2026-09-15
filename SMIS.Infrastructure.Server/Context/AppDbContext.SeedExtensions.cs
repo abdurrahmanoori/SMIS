@@ -25,7 +25,7 @@ public partial class AppDbContext
         CustomerSeed.DataSeed(modelBuilder);
         ShopOwnerSeed.DataSeed(modelBuilder);
         StockBatchSeed.DataSeed(modelBuilder);
-        StockTransactionSeed.DataSeed(modelBuilder);
+        StockMovementSeed.DataSeed(modelBuilder);
         LoanAccountSeed.DataSeed(modelBuilder);
     }
 }

@@ -16,6 +16,9 @@ namespace SMIS.Infrastructure.Server.EntityConfigurations
 
             builder.HasKey(p => p.Id);
 
+            builder.HasAlternateKey(p => new { p.Id, p.ShopId })
+                .HasName("AK_Product_Id_ShopId");
+
             builder.Property(p => p.Name)
                 .IsRequired()
                 .HasMaxLength(200);

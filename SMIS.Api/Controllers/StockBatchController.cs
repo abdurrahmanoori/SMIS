@@ -25,11 +25,7 @@ namespace SMIS.Api.Controllers
             HandleResultResponseOld(await Mediator.Send(new StockBatchGetByIdQuery(id)));
 
         [HttpPut("{id}")]
-        public async Task<ActionResult<StockBatchDto>> Update(string id, StockBatchCreateDto dto) =>
+        public async Task<ActionResult<StockBatchDto>> Update(string id, StockBatchUpdateDto dto) =>
             HandleResultResponseOld(await Mediator.Send(new StockBatchUpdateCommand(id, dto)));
-
-        [HttpDelete("{id}")]
-        public async Task<ActionResult<Unit>> Delete(string id) =>
-            HandleResultResponseOld(await Mediator.Send(new StockBatchDeleteCommand(id)));
     }
 }

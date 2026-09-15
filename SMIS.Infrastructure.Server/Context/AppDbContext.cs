@@ -127,7 +127,7 @@ public partial class AppDbContext : IdentityDbContext<ApplicationUser, Applicati
     public DbSet<ProductUnit> ProductUnits { get; set; }
     public DbSet<ProductPrice> ProductPrices { get; set; }
     public DbSet<StockBatch> StockBatches { get; set; }
-    public DbSet<StockTransaction> StockTransactions { get; set; }
+    public DbSet<StockMovement> StockMovements { get; set; }
     public DbSet<Customer> Customers { get; set; }
     public DbSet<ShopOwner> ShopOwners { get; set; }
     public DbSet<LoanAccount> LoanAccounts { get; set; }
