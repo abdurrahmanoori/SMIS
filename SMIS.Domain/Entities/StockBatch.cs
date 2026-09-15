@@ -20,9 +20,19 @@ public class StockBatch : BaseAuditableEntityWithoutName
     public virtual Product Product { get; set; } = null!;
     public virtual UnitOfMeasure UnitOfMeasure { get; set; } = null!;
 
-    internal StockBatch() { } // EF Core & Seeding
+    internal StockBatch()
+    {
+    } // EF Core & Seeding
 
-    public static StockBatch Create(string productId, string unitId, decimal quantity, long purchasePrice, DateTime? receivedDate = null, string? batchNumber = null, DateTime? expirationDate = null)
+    public static StockBatch Create(
+        string productId,
+        string unitId,
+        decimal quantity,
+        long purchasePrice,
+        DateTime? receivedDate = null,
+        string? batchNumber = null,
+        DateTime? expirationDate = null
+    )
     {
         var batch = new StockBatch();
         batch.SetProductId(productId);
@@ -35,47 +45,61 @@ public class StockBatch : BaseAuditableEntityWithoutName
         return batch;
     }
 
-    public void SetProductId(string productId)
+    public void SetProductId(
+        string productId
+    )
     {
         if (string.IsNullOrWhiteSpace(productId))
             throw new DomainValidationException("Product ID cannot be empty");
         ProductId = productId.Trim();
     }
 
-    public void SetUnitId(string unitId)
+    public void SetUnitId(
+        string unitId
+    )
     {
         if (string.IsNullOrWhiteSpace(unitId))
             throw new DomainValidationException("Unit ID cannot be empty");
         UnitId = unitId.Trim();
     }
 
-    public void SetQuantity(decimal quantity)
+    public void SetQuantity(
+        decimal quantity
+    )
     {
         if (quantity < 0)
             throw new DomainValidationException("Quantity cannot be negative");
         Quantity = quantity;
     }
 
-    public void SetPurchasePrice(long purchasePrice)
+    public void SetPurchasePrice(
+        long purchasePrice
+    )
     {
         if (purchasePrice < 0)
             throw new DomainValidationException("Purchase price cannot be negative");
         PurchasePrice = purchasePrice;
     }
 
-    public void SetReceivedDate(DateTime receivedDate)
+    public void SetReceivedDate(
+        DateTime receivedDate
+    )
     {
         if (receivedDate > DateTime.UtcNow.AddDays(1))
             throw new DomainValidationException("Received date cannot be in the future");
         ReceivedDate = receivedDate;
     }
 
-    public void SetBatchNumber(string? batchNumber)
+    public void SetBatchNumber(
+        string? batchNumber
+    )
     {
         BatchNumber = string.IsNullOrWhiteSpace(batchNumber) ? null : batchNumber.Trim();
     }
 
-    public void SetExpirationDate(DateTime? expirationDate)
+    public void SetExpirationDate(
+        DateTime? expirationDate
+    )
     {
         if (expirationDate.HasValue && expirationDate.Value <= ReceivedDate)
             throw new DomainValidationException("Expiration date must be after received date");
@@ -87,7 +111,9 @@ public class StockBatch : BaseAuditableEntityWithoutName
     public void MarkAsCompleted() => Status = StatusEnum.Completed;
     public void MarkAsCancelled() => Status = StatusEnum.Cancelled;
 
-    public void ConsumeQuantity(decimal consumedQuantity)
+    public void ConsumeQuantity(
+        decimal consumedQuantity
+    )
     {
         if (consumedQuantity <= 0)
             throw new DomainValidationException("Consumed quantity must be positive");
@@ -96,7 +122,9 @@ public class StockBatch : BaseAuditableEntityWithoutName
         Quantity -= consumedQuantity;
     }
 
-    public void AddQuantity(decimal addedQuantity)
+    public void AddQuantity(
+        decimal addedQuantity
+    )
     {
         if (addedQuantity <= 0)
             throw new DomainValidationException("Added quantity must be positive");

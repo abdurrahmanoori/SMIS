@@ -22,9 +22,19 @@ public class ApplicationUser : IdentityUser<string>, IEntityPK
     public virtual Shop Shop { get; set; } = null!;
     public virtual Language Language { get; set; } = null!;
 
-    internal ApplicationUser() { } // EF Core & Seeding
+    internal ApplicationUser()
+    {
+    } // EF Core & Seeding
 
-    public static ApplicationUser Create(string userName, string email, string shopId, string? firstName = null, string? lastName = null, string? phoneNumber = null, string? languageId = null)
+    public static ApplicationUser Create(
+        string userName,
+        string email,
+        string shopId,
+        string? firstName = null,
+        string? lastName = null,
+        string? phoneNumber = null,
+        string? languageId = null
+    )
     {
         var user = new ApplicationUser();
         user.SetUserName(userName);
@@ -39,18 +49,24 @@ public class ApplicationUser : IdentityUser<string>, IEntityPK
         return user;
     }
 
-    public void SetUserName(string userName)
+    public void SetUserName(
+        string userName
+    )
     {
         UserName = userName.Trim();
     }
 
-    public void SetEmail(string email)
+    public void SetEmail(
+        string email
+    )
     {
         var emailVO = ValueObjects.Email.Create(email);
         Email = emailVO;
     }
 
-    public void SetShopId(string shopId)
+    public void SetShopId(
+        string shopId
+    )
     {
         if (string.IsNullOrWhiteSpace(shopId))
             throw new DomainValidationException("Shop ID cannot be empty");
@@ -58,18 +74,24 @@ public class ApplicationUser : IdentityUser<string>, IEntityPK
         ShopId = shopId;
     }
 
-    public void SetFirstName(string? firstName)
+    public void SetFirstName(
+        string? firstName
+    )
     {
         FirstName = firstName?.Trim();
     }
 
-    public void SetLastName(string? lastName)
+    public void SetLastName(
+        string? lastName
+    )
     {
         LastName = lastName?.Trim();
     }
 
 
-    public void SetPhoneNumber(string? phoneNumber)
+    public void SetPhoneNumber(
+        string? phoneNumber
+    )
     {
         if (!string.IsNullOrWhiteSpace(phoneNumber))
         {
@@ -82,7 +104,9 @@ public class ApplicationUser : IdentityUser<string>, IEntityPK
         }
     }
 
-    public void SetLanguageId(string languageId)
+    public void SetLanguageId(
+        string languageId
+    )
     {
         if (string.IsNullOrWhiteSpace(languageId))
             throw new DomainValidationException("Language ID cannot be empty");

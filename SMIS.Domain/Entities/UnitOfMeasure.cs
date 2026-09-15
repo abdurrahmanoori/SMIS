@@ -8,8 +8,10 @@ namespace SMIS.Domain.Entities;
 public class UnitOfMeasure : BaseSyncableAuditableEntity, IShopEntity
 {
     public string Name { get; private set; } = null!;
+
     // Example: Piece, Gram, Milliliter, Liter, Box, Pack, Bottle
     public string? Symbol { get; private set; } = null!;
+
     // pcs, g, ml, l, box, pack
     public string? Description { get; private set; } = null!;
     public string ShopId { get; private set; } = string.Empty;
@@ -20,9 +22,16 @@ public class UnitOfMeasure : BaseSyncableAuditableEntity, IShopEntity
     public virtual Shop Shop { get; set; } = null!;
     public virtual ICollection<ProductUnit> ProductUnits { get; set; } = new List<ProductUnit>();
 
-    internal UnitOfMeasure() { } // EF Core & Seeding
+    internal UnitOfMeasure()
+    {
+    } // EF Core & Seeding
 
-    public static UnitOfMeasure Create(string name, string? symbol, string shopId, string? description = null)
+    public static UnitOfMeasure Create(
+        string name,
+        string? symbol,
+        string shopId,
+        string? description = null
+    )
     {
         var unit = new UnitOfMeasure();
         unit.SetName(name);
@@ -32,31 +41,38 @@ public class UnitOfMeasure : BaseSyncableAuditableEntity, IShopEntity
         return unit;
     }
 
-    public void SetName(string name)
+    public void SetName(
+        string name
+    )
     {
         var unitName = UnitName.Create(name);
         Name = unitName;
     }
 
-    public void SetSymbol(string? symbol)
+    public void SetSymbol(
+        string? symbol
+    )
     {
         var unitSymbol = UnitSymbol.Create(symbol);
         Symbol = unitSymbol;
     }
 
-    public void SetDescription(string? description)
+    public void SetDescription(
+        string? description
+    )
     {
         Description = description?.Trim();
     }
 
-    public void SetShopId(string shopId)
+    public void SetShopId(
+        string shopId
+    )
     {
         if (string.IsNullOrWhiteSpace(shopId))
             throw new DomainValidationException("Shop ID cannot be empty");
 
         ShopId = shopId;
     }
-
 }
 
 /*

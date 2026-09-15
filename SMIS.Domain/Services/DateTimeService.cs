@@ -2,12 +2,13 @@ namespace SMIS.Domain.Services;
 
 public static class DateTimeService
 {
-
     public static DateTime NowUtc => DateTime.UtcNow;
 
     public static DateTime NowLocal => DateTime.Now;
 
-    public static DateTime NormalizeUtc(DateTime value) =>
+    public static DateTime NormalizeUtc(
+        DateTime value
+    ) =>
         value.Kind switch
         {
             DateTimeKind.Utc => value,
@@ -22,6 +23,7 @@ public static class DateTimeService
 
             _ => value
         };
+
     public static bool UseUtc { get; set; } = true;
     //
     // public static DateTime Now => UseUtc ? DateTime.UtcNow : DateTime.Now;
@@ -36,6 +38,4 @@ public static class DateTimeService
     //     TimeZoneInfo.ConvertTimeFromUtc(
     //         DateTime.UtcNow,
     //         TimeZoneInfo.Local);
-
-
 }

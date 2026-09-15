@@ -1,5 +1,4 @@
-﻿
-using SMIS.Domain.Common.BaseAbstract;
+﻿using SMIS.Domain.Common.BaseAbstract;
 using SMIS.Domain.Common.Interfaces;
 using SMIS.Domain.Enums;
 using SMIS.Domain.Exceptions;
@@ -26,9 +25,20 @@ public class StockTransaction : BaseAuditableEntityWithoutName, IShopEntity
     public virtual StockBatch StockBatch { get; set; } = null!;
     public virtual UnitOfMeasure UnitOfMeasure { get; set; } = null!;
 
-    internal StockTransaction() { } // EF Core & Seeding
+    internal StockTransaction()
+    {
+    } // EF Core & Seeding
 
-    public static StockTransaction Create(string shopId, string productId, string stockBatchId, decimal quantity, string unitId, TransactionType type, DateTime transactionDate, string? reference = null)
+    public static StockTransaction Create(
+        string shopId,
+        string productId,
+        string stockBatchId,
+        decimal quantity,
+        string unitId,
+        TransactionType type,
+        DateTime transactionDate,
+        string? reference = null
+    )
     {
         var transaction = new StockTransaction();
         transaction.SetShopId(shopId);
@@ -42,7 +52,9 @@ public class StockTransaction : BaseAuditableEntityWithoutName, IShopEntity
         return transaction;
     }
 
-    public void SetShopId(string shopId)
+    public void SetShopId(
+        string shopId
+    )
     {
         if (string.IsNullOrWhiteSpace(shopId))
             throw new DomainValidationException("Shop ID cannot be empty");
@@ -50,7 +62,9 @@ public class StockTransaction : BaseAuditableEntityWithoutName, IShopEntity
         ShopId = shopId;
     }
 
-    public void SetProductId(string productId)
+    public void SetProductId(
+        string productId
+    )
     {
         if (string.IsNullOrWhiteSpace(productId))
             throw new DomainValidationException("Product ID cannot be empty");
@@ -58,7 +72,9 @@ public class StockTransaction : BaseAuditableEntityWithoutName, IShopEntity
         ProductId = productId;
     }
 
-    public void SetStockBatchId(string stockBatchId)
+    public void SetStockBatchId(
+        string stockBatchId
+    )
     {
         if (string.IsNullOrWhiteSpace(stockBatchId))
             throw new DomainValidationException("Stock batch ID cannot be empty");
@@ -66,7 +82,9 @@ public class StockTransaction : BaseAuditableEntityWithoutName, IShopEntity
         StockBatchId = stockBatchId;
     }
 
-    public void SetQuantity(decimal quantity)
+    public void SetQuantity(
+        decimal quantity
+    )
     {
         if (quantity <= 0)
             throw new DomainValidationException("Quantity must be greater than zero");
@@ -74,7 +92,9 @@ public class StockTransaction : BaseAuditableEntityWithoutName, IShopEntity
         Quantity = quantity;
     }
 
-    public void SetUnitId(string unitId)
+    public void SetUnitId(
+        string unitId
+    )
     {
         if (string.IsNullOrWhiteSpace(unitId))
             throw new DomainValidationException("Unit ID cannot be empty");
@@ -82,12 +102,16 @@ public class StockTransaction : BaseAuditableEntityWithoutName, IShopEntity
         UnitId = unitId;
     }
 
-    public void SetType(TransactionType type)
+    public void SetType(
+        TransactionType type
+    )
     {
         Type = type.ToString();
     }
 
-    public void SetTransactionDate(DateTime transactionDate)
+    public void SetTransactionDate(
+        DateTime transactionDate
+    )
     {
         if (transactionDate == default)
             throw new DomainValidationException("Transaction date cannot be empty");
@@ -95,7 +119,9 @@ public class StockTransaction : BaseAuditableEntityWithoutName, IShopEntity
         TransactionDate = transactionDate;
     }
 
-    public void SetReference(string? reference)
+    public void SetReference(
+        string? reference
+    )
     {
         var referenceVO = ValueObjects.Reference.Create(reference);
         Reference = referenceVO;

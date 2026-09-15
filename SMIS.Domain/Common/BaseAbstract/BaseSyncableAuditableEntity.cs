@@ -13,13 +13,19 @@ public abstract class BaseSyncableAuditableEntity : BaseAuditableEntity
     public string? ClientCreatedBy { get; private set; }
     public string? ClientModifiedBy { get; private set; }
 
-    public void SetClientCreationMetadata(DateTime createdDateUtc, string? createdBy)
+    public void SetClientCreationMetadata(
+        DateTime createdDateUtc,
+        string? createdBy
+    )
     {
         ClientCreatedDate = DateTimeService.NormalizeUtc(createdDateUtc);
         ClientCreatedBy = NormalizeUserId(createdBy);
     }
 
-    public void SetClientModificationMetadata(DateTime modifiedDateUtc, string? modifiedBy)
+    public void SetClientModificationMetadata(
+        DateTime modifiedDateUtc,
+        string? modifiedBy
+    )
     {
         ClientModifiedDate = DateTimeService.NormalizeUtc(modifiedDateUtc);
         ClientModifiedBy = NormalizeUserId(modifiedBy);
@@ -44,6 +50,8 @@ public abstract class BaseSyncableAuditableEntity : BaseAuditableEntity
         ?? CreatedDate
         ?? LastModifiedUtc);
 
-    private static string? NormalizeUserId(string? value) =>
+    private static string? NormalizeUserId(
+        string? value
+    ) =>
         string.IsNullOrWhiteSpace(value) ? null : value.Trim();
 }

@@ -14,13 +14,24 @@ public class ProductPrice : BaseSyncableAuditableEntity
     public DateTime EffectiveDate { get; private set; }
     public DateTime? EndDate { get; private set; }
     public bool IsActive { get; private set; } = true;
+
     public DateTime ConflictModifiedUtc => GetConflictModifiedUtc();
+
     // Navigation Properties
     public virtual Product Product { get; set; } = null!;
     public ProductUnit ProductUnit { get; set; } = null!;
-    internal ProductPrice() { } // EF Core
 
-    public static ProductPrice Create(string productId, string productUnitId, long buyPrice, long sellPrice, DateTime effectiveDate)
+    internal ProductPrice()
+    {
+    } // EF Core
+
+    public static ProductPrice Create(
+        string productId,
+        string productUnitId,
+        long buyPrice,
+        long sellPrice,
+        DateTime effectiveDate
+    )
     {
         var productPrice = new ProductPrice();
         productPrice.SetProductId(productId);
@@ -31,7 +42,9 @@ public class ProductPrice : BaseSyncableAuditableEntity
         return productPrice;
     }
 
-    public void SetProductId(string productId)
+    public void SetProductId(
+        string productId
+    )
     {
         if (string.IsNullOrWhiteSpace(productId))
             throw new DomainValidationException("Product ID cannot be empty");
@@ -39,7 +52,9 @@ public class ProductPrice : BaseSyncableAuditableEntity
         ProductId = productId;
     }
 
-    public void SetProductUnitId(string productUnitId)
+    public void SetProductUnitId(
+        string productUnitId
+    )
     {
         if (string.IsNullOrWhiteSpace(productUnitId))
             throw new DomainValidationException("Product unit ID cannot be empty");
@@ -47,7 +62,9 @@ public class ProductPrice : BaseSyncableAuditableEntity
         ProductUnitId = productUnitId;
     }
 
-    public void SetBuyPrice(long buyPrice)
+    public void SetBuyPrice(
+        long buyPrice
+    )
     {
         if (buyPrice < 0)
             throw new DomainValidationException("Buy price cannot be negative");
@@ -55,7 +72,9 @@ public class ProductPrice : BaseSyncableAuditableEntity
         BuyPrice = buyPrice;
     }
 
-    public void SetSellPrice(long sellPrice)
+    public void SetSellPrice(
+        long sellPrice
+    )
     {
         if (sellPrice < 0)
             throw new DomainValidationException("Sell price cannot be negative");
@@ -63,12 +82,16 @@ public class ProductPrice : BaseSyncableAuditableEntity
         SellPrice = sellPrice;
     }
 
-    public void SetEffectiveDate(DateTime effectiveDate)
+    public void SetEffectiveDate(
+        DateTime effectiveDate
+    )
     {
         EffectiveDate = effectiveDate;
     }
 
-    public void SetEndDate(DateTime? endDate)
+    public void SetEndDate(
+        DateTime? endDate
+    )
     {
         if (endDate.HasValue && endDate.Value < EffectiveDate)
             throw new DomainValidationException("End date cannot be before effective date");
@@ -78,5 +101,4 @@ public class ProductPrice : BaseSyncableAuditableEntity
 
     public void Activate() => IsActive = true;
     public void Deactivate() => IsActive = false;
-
 }

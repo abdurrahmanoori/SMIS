@@ -28,7 +28,15 @@ public class Shop : BaseSyncableAuditableEntity
         IsSyncedToServer = false;
     } // EF Core & Seeding
 
-    public static Shop Create(string name, ShopType shopType, string? address = null, string? phoneNumber = null, string? email = null, string? taxNumber = null, bool isActive = true)
+    public static Shop Create(
+        string name,
+        ShopType shopType,
+        string? address = null,
+        string? phoneNumber = null,
+        string? email = null,
+        string? taxNumber = null,
+        bool isActive = true
+    )
     {
         var shop = new Shop();
         shop.SetName(name);
@@ -41,12 +49,16 @@ public class Shop : BaseSyncableAuditableEntity
         return shop;
     }
 
-    public void SetName(string name)
+    public void SetName(
+        string name
+    )
     {
         Name = name.Trim();
     }
 
-    public void SetShopType(ShopType shopType)
+    public void SetShopType(
+        ShopType shopType
+    )
     {
         if (!Enum.IsDefined(typeof(ShopType), shopType))
             throw new DomainValidationException("Invalid shop type");
@@ -54,45 +66,55 @@ public class Shop : BaseSyncableAuditableEntity
         ShopType = shopType;
     }
 
-    public void SetAddress(string? address)
+    public void SetAddress(
+        string? address
+    )
     {
         Address = address?.Trim();
     }
 
-    public void SetPhoneNumber(string? phoneNumber)
+    public void SetPhoneNumber(
+        string? phoneNumber
+    )
     {
         if (string.IsNullOrWhiteSpace(phoneNumber))
         {
             PhoneNumber = null;
             return;
         }
+
         var phone = ValueObjects.PhoneNumber.Create(phoneNumber);
         PhoneNumber = phone;
     }
 
-    public void SetEmail(string? email)
+    public void SetEmail(
+        string? email
+    )
     {
         if (string.IsNullOrWhiteSpace(email))
         {
             Email = null;
             return;
         }
+
         var emailVO = ValueObjects.Email.Create(email);
         Email = emailVO;
     }
 
-    public void SetTaxNumber(string? taxNumber)
+    public void SetTaxNumber(
+        string? taxNumber
+    )
     {
         if (string.IsNullOrWhiteSpace(taxNumber))
         {
             TaxNumber = null;
             return;
         }
+
         var tax = ValueObjects.TaxNumber.Create(taxNumber);
         TaxNumber = tax;
     }
 
     public void Activate() => IsActive = true;
     public void Deactivate() => IsActive = false;
-
 }

@@ -16,9 +16,17 @@ public class LoanAccountPayment : BaseAuditableEntity
 
     public LoanAccount? LoanAccount { get; set; }
 
-    internal LoanAccountPayment() { }
+    internal LoanAccountPayment()
+    {
+    }
 
-    public static LoanAccountPayment Create(string loanAccountId, long amount, DateTime paymentDate, string paymentMethod = "Cash", string? notes = null)
+    public static LoanAccountPayment Create(
+        string loanAccountId,
+        long amount,
+        DateTime paymentDate,
+        string paymentMethod = "Cash",
+        string? notes = null
+    )
     {
         var payment = new LoanAccountPayment();
         payment.SetLoanAccountId(loanAccountId);
@@ -30,33 +38,43 @@ public class LoanAccountPayment : BaseAuditableEntity
         return payment;
     }
 
-    public void SetLoanAccountId(string loanAccountId)
+    public void SetLoanAccountId(
+        string loanAccountId
+    )
     {
         if (string.IsNullOrWhiteSpace(loanAccountId))
             throw new DomainValidationException("Loan account ID cannot be empty");
         LoanAccountId = loanAccountId.Trim();
     }
 
-    public void SetAmount(long amount)
+    public void SetAmount(
+        long amount
+    )
     {
         if (amount <= 0)
             throw new DomainValidationException("Payment amount must be greater than zero");
         Amount = amount;
     }
 
-    public void SetPaymentDate(DateTime paymentDate)
+    public void SetPaymentDate(
+        DateTime paymentDate
+    )
     {
         PaymentDate = paymentDate;
     }
 
-    public void SetPaymentMethod(string paymentMethod)
+    public void SetPaymentMethod(
+        string paymentMethod
+    )
     {
         if (string.IsNullOrWhiteSpace(paymentMethod))
             throw new DomainValidationException("Payment method cannot be empty");
         PaymentMethod = paymentMethod.Trim();
     }
 
-    public void SetNotes(string? notes)
+    public void SetNotes(
+        string? notes
+    )
     {
         if (!string.IsNullOrWhiteSpace(notes) && notes.Length > 500)
             throw new DomainValidationException("Notes cannot exceed 500 characters");

@@ -16,6 +16,7 @@ public class ProductUnit : BaseSyncableAuditableEntity
     /// Example: Biscuit, Notebook, Coca-Cola
     /// </summary>
     public string ProductId { get; private set; } = string.Empty;
+
     public string? ProductName { get; private set; }
 
     /// <summary>
@@ -23,6 +24,7 @@ public class ProductUnit : BaseSyncableAuditableEntity
     /// Example: Box, Carton, Pack
     /// </summary>
     public string UnitOfMeasureId { get; private set; } = string.Empty;
+
     public string? UnitName { get; private set; }
 
     /// <summary>
@@ -41,9 +43,15 @@ public class ProductUnit : BaseSyncableAuditableEntity
 
     public UnitOfMeasure UnitOfMeasure { get; set; } = null!;
 
-    internal ProductUnit() { } // EF Core & Seeding
+    internal ProductUnit()
+    {
+    } // EF Core & Seeding
 
-    public static ProductUnit Create(string productId, string unitOfMeasureId, decimal baseUnitQuantity)
+    public static ProductUnit Create(
+        string productId,
+        string unitOfMeasureId,
+        decimal baseUnitQuantity
+    )
     {
         var productUnit = new ProductUnit();
         productUnit.SetProductId(productId);
@@ -52,7 +60,9 @@ public class ProductUnit : BaseSyncableAuditableEntity
         return productUnit;
     }
 
-    public void SetProductId(string productId)
+    public void SetProductId(
+        string productId
+    )
     {
         if (string.IsNullOrWhiteSpace(productId))
             throw new DomainValidationException("Product ID cannot be empty");
@@ -60,7 +70,9 @@ public class ProductUnit : BaseSyncableAuditableEntity
         ProductId = productId.Trim();
     }
 
-    public void SetUnitOfMeasureId(string unitOfMeasureId)
+    public void SetUnitOfMeasureId(
+        string unitOfMeasureId
+    )
     {
         if (string.IsNullOrWhiteSpace(unitOfMeasureId))
             throw new DomainValidationException("Unit of measure ID cannot be empty");
@@ -68,18 +80,22 @@ public class ProductUnit : BaseSyncableAuditableEntity
         UnitOfMeasureId = unitOfMeasureId.Trim();
     }
 
-    public void SetBaseUnitQuantity(decimal baseUnitQuantity)
+    public void SetBaseUnitQuantity(
+        decimal baseUnitQuantity
+    )
     {
         var baseUnitQuantityVO = ValueObjects.BaseUnitQuantity.Create(baseUnitQuantity);
         BaseUnitQuantity = baseUnitQuantityVO;
     }
 
-    public void SetProductName(string? productName) => ProductName = productName?.Trim();
-    public void SetUnitName(string? unitName) => UnitName = unitName?.Trim();
+    public void SetProductName(
+        string? productName
+    ) => ProductName = productName?.Trim();
 
+    public void SetUnitName(
+        string? unitName
+    ) => UnitName = unitName?.Trim();
 }
-
-
 
 
 /*
@@ -101,7 +117,7 @@ Example from real life
 | Notebook  | Box    | 10 Pieces       |
 | Coca‑Cola | Carton | 24 Bottles      |
 | Eggs      | Carton | 30 Pieces       |
-Same unit name → different meaning. 
+Same unit name → different meaning.
 
 ❌ Wrong Thinking (Beginner Mistake)
 Box = 12

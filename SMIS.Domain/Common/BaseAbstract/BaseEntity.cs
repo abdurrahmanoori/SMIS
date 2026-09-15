@@ -7,10 +7,8 @@ namespace SMIS.Domain.Common.BaseAbstract
 {
     public abstract class BaseEntity : IEntityPK, ISyncableEntity, ISoftDeletable
     {
-        [Key]
-        public virtual string Id { get; set; } = Guid.NewGuid().ToString();
-        [Required]
-        public bool IsPublic { get; set; } = false;
+        [Key] public virtual string Id { get; set; } = Guid.NewGuid().ToString();
+        [Required] public bool IsPublic { get; set; } = false;
         public int Version { get; set; }
         public EntityStateEnum EntityState { get; set; }
         public DateTime LastModifiedUtc { get; set; } = DateTimeService.NowUtc;

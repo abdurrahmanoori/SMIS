@@ -75,10 +75,15 @@ public class Product : BaseSyncableAuditableEntity, IEntity, IShopEntity
         ShopId = shopId;
     }
 
-    public bool IsBaseUnitChange(string baseUnitId) =>
+    public bool IsBaseUnitChange(
+        string baseUnitId
+    ) =>
         !string.Equals(BaseUnitId, NormalizeBaseUnitId(baseUnitId), StringComparison.Ordinal);
 
-    public void ChangeBaseUnit(string baseUnitId, bool hasStockOrConversions)
+    public void ChangeBaseUnit(
+        string baseUnitId,
+        bool hasStockOrConversions
+    )
     {
         var normalizedBaseUnitId = NormalizeBaseUnitId(baseUnitId);
         if (string.Equals(BaseUnitId, normalizedBaseUnitId, StringComparison.Ordinal)) return;
@@ -90,12 +95,16 @@ public class Product : BaseSyncableAuditableEntity, IEntity, IShopEntity
         BaseUnitId = normalizedBaseUnitId;
     }
 
-    private void SetBaseUnitId(string baseUnitId)
+    private void SetBaseUnitId(
+        string baseUnitId
+    )
     {
         BaseUnitId = NormalizeBaseUnitId(baseUnitId);
     }
 
-    private static string NormalizeBaseUnitId(string baseUnitId)
+    private static string NormalizeBaseUnitId(
+        string baseUnitId
+    )
     {
         if (string.IsNullOrWhiteSpace(baseUnitId))
             throw new DomainValidationException("Base unit ID cannot be empty");
@@ -148,7 +157,6 @@ public class Product : BaseSyncableAuditableEntity, IEntity, IShopEntity
 
     public void Activate() => IsActive = true;
     public void Deactivate() => IsActive = false;
-
 }
 
 

@@ -340,22 +340,6 @@
       <option name="project" value="LOCAL" />
       <updated>1788873767067</updated>
     </task>
-    <task id="LOCAL-00018" summary="feat: implement IApplicationDbContext interface and update AppDbContext to use it">
-      <option name="closed" value="true" />
-      <created>1788677945936</created>
-      <option name="number" value="00018" />
-      <option name="presentableId" value="LOCAL-00018" />
-      <option name="project" value="LOCAL" />
-      <updated>1788677945936</updated>
-    </task>
-    <task id="LOCAL-00019" summary="refactor: update CategorySync command handlers and validators to use CategorySyncRules">
-      <option name="closed" value="true" />
-      <created>1788685170402</created>
-      <option name="number" value="00019" />
-      <option name="presentableId" value="LOCAL-00019" />
-      <option name="project" value="LOCAL" />
-      <updated>1788685170402</updated>
-    </task>
     <task id="LOCAL-00020" summary="feat(Category): add CategoryConfiguration for entity configuration and clean up validation logic">
       <option name="closed" value="true" />
       <created>1788686706788</created>
@@ -724,7 +708,23 @@
       <option name="project" value="LOCAL" />
       <updated>1789457176922</updated>
     </task>
-    <option name="localTasksCounter" value="66" />
+    <task id="LOCAL-00066" summary="feat: rename ExistsActiveAsync to ExistsPairAsync for consistency; enforce unique product-unit pairs in repository and database schema">
+      <option name="closed" value="true" />
+      <created>1789462427457</created>
+      <option name="number" value="00066" />
+      <option name="presentableId" value="LOCAL-00066" />
+      <option name="project" value="LOCAL" />
+      <updated>1789462427457</updated>
+    </task>
+    <task id="LOCAL-00067" summary="feat: implement base unit change validation; prevent changes if stock or conversions exist">
+      <option name="closed" value="true" />
+      <created>1789462622135</created>
+      <option name="number" value="00067" />
+      <option name="presentableId" value="LOCAL-00067" />
+      <option name="project" value="LOCAL" />
+      <updated>1789462622135</updated>
+    </task>
+    <option name="localTasksCounter" value="68" />
     <option name="clearContext" value="false" />
     <option name="createChangelist" value="false" />
     <option name="createBranch" value="false" />
@@ -737,8 +737,6 @@
   <component name="UnityProjectConfiguration" hasMinimizedUI="false" />
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
-    <MESSAGE value="feat: add ShopId to LoginResponseDto and update LoginCommand for shop association" />
-    <MESSAGE value="feat: associate shopId with authentication and synchronization processes across various services" />
     <MESSAGE value="feat: update database schema for multi-tenancy support and adjust database configurations" />
     <MESSAGE value="feat: add localization support with locale controller and integrate into various screens" />
     <MESSAGE value="fix: update database journal mode handling for compatibility with Android versions" />
@@ -762,6 +760,8 @@
     <MESSAGE value="feat: update workspace configuration to skip highlighting for migration files and clean up task entries" />
     <MESSAGE value="feat: add ProductUnit API, controller, and synchronization logic; update database schema and UI components" />
     <MESSAGE value="feat: rename ConversionFactor to BaseUnitQuantity and enforce unique product-unit pairs; update related mappings and validations" />
+    <MESSAGE value="feat: rename ExistsActiveAsync to ExistsPairAsync for consistency; enforce unique product-unit pairs in repository and database schema" />
+    <MESSAGE value="feat: implement base unit change validation; prevent changes if stock or conversions exist" />
     <option name="LAST_COMMIT_MESSAGE" value="" />
   </component>
   <component name="XDebuggerManager">
