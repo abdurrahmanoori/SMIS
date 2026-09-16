@@ -10,7 +10,7 @@ public class PaymentAllocationResultDto
 public class LoanPaymentAllocationDto
 {
     public string LoanAccountId { get; set; } = string.Empty;
-    public string ProductName { get; set; } = string.Empty;
+    public string SaleId { get; set; } = string.Empty;
     public long AllocatedAmount { get; set; }
     public long RemainingAfterPayment { get; set; }
     public string Status { get; set; } = string.Empty;

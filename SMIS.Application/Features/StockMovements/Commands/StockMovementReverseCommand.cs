@@ -2,6 +2,7 @@ using AutoMapper;
 using MediatR;
 using SMIS.Application.Common.Response;
 using SMIS.Application.DTO.StockMovements;
+using SMIS.Application.Repositories.Base;
 using SMIS.Application.Services;
 
 namespace SMIS.Application.Features.StockMovements.Commands;
@@ -16,14 +17,17 @@ internal sealed class StockMovementReverseCommandHandler
     : IRequestHandler<StockMovementReverseCommand, Result<StockMovementDto>>
 {
     private readonly IInventoryService _inventory;
+    private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
 
     public StockMovementReverseCommandHandler(
         IInventoryService inventory,
+        IUnitOfWork unitOfWork,
         IMapper mapper
     )
     {
         _inventory = inventory;
+        _unitOfWork = unitOfWork;
         _mapper = mapper;
     }
 
@@ -40,6 +44,8 @@ internal sealed class StockMovementReverseCommandHandler
                 Message = result.Message,
                 Errors = result.Errors
             };
+
+        await _unitOfWork.SaveChanges(cancellationToken);
 
         return Result<StockMovementDto>.SuccessResult(_mapper.Map<StockMovementDto>(result.Response));
     }

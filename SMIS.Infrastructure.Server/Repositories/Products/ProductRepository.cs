@@ -8,13 +8,16 @@ namespace SMIS.Infrastructure.Server.Repositories.Products
 {
     public class ProductRepository : GenericRepository<Product>, IProductRepository
     {
-        public ProductRepository(AppDbContext context) : base(context)
+        public ProductRepository(
+            AppDbContext context
+        ) : base(context)
         {
         }
 
         public Task<Product?> GetByIdIncludingDeletedAsync(
             string id,
-            CancellationToken cancellationToken = default)
+            CancellationToken cancellationToken = default
+        )
         {
             return _context.Products
                 .IgnoreQueryFilters()
@@ -23,7 +26,8 @@ namespace SMIS.Infrastructure.Server.Repositories.Products
 
         public Task<int> CountByCategoryIdAsync(
             string categoryId,
-            CancellationToken cancellationToken = default)
+            CancellationToken cancellationToken = default
+        )
         {
             return _context.Products.CountAsync(
                 product => product.CategoryId == categoryId,
@@ -32,7 +36,8 @@ namespace SMIS.Infrastructure.Server.Repositories.Products
 
         public async Task<int> CountReferencesAsync(
             string id,
-            CancellationToken cancellationToken = default)
+            CancellationToken cancellationToken = default
+        )
         {
             // ProductUnit is an owned child of Product and is deleted by cascade.
             // Only external/business references should block deleting the product.
@@ -45,15 +50,16 @@ namespace SMIS.Infrastructure.Server.Repositories.Products
             count += await _context.StockMovements.CountAsync(
                 movement => movement.StockBatch.ProductId == id,
                 cancellationToken);
-            count += await _context.LoanAccounts.CountAsync(
-                loan => loan.ProductId == id,
+            count += await _context.SaleLines.CountAsync(
+                line => line.ProductId == id,
                 cancellationToken);
             return count;
         }
 
         public async Task<bool> HasStockOrConversionsAsync(
             string id,
-            CancellationToken cancellationToken = default)
+            CancellationToken cancellationToken = default
+        )
         {
             var baseUnitId = await _context.Products
                 .IgnoreQueryFilters()

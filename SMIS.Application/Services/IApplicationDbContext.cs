@@ -23,6 +23,8 @@ public interface IApplicationDbContext
     public DbSet<ProductPrice> ProductPrices { get; set; }
     public DbSet<StockBatch> StockBatches { get; set; }
     public DbSet<StockMovement> StockMovements { get; set; }
+    public DbSet<Sale> Sales { get; set; }
+    public DbSet<SaleLine> SaleLines { get; set; }
     public DbSet<Customer> Customers { get; set; }
     public DbSet<ShopOwner> ShopOwners { get; set; }
     public DbSet<LoanAccount> LoanAccounts { get; set; }

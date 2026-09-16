@@ -22,6 +22,7 @@ using SMIS.Application.DTO.ProductPrices;
 using SMIS.Application.DTO.Customers;
 using SMIS.Application.DTO.ShopOwners;
 using SMIS.Application.DTO.LoanAccounts;
+using SMIS.Application.DTO.Sales;
 
 namespace SMIS.Application.Mappings;
 
@@ -194,10 +195,7 @@ public class MappingProfile : Profile
                 src.SellPrice,
                 src.EffectiveDate
             ))
-            .AfterMap((src, dest) =>
-            {
-                dest.SetEndDate(src.EndDate);
-            });
+            .AfterMap((src, dest) => { dest.SetEndDate(src.EndDate); });
 
         // TranslationKey mapping
         CreateMap<TranslationKey, TranslationKeyDto>().ReverseMap();
@@ -211,6 +209,15 @@ public class MappingProfile : Profile
         // tenant checks and ledger posting are domain/application operations.
         CreateMap<StockBatch, StockBatchDto>();
         CreateMap<StockMovement, StockMovementDto>();
+
+        // Sales contain commercial facts only. Inventory allocation remains represented
+        // by StockMovement rows that reference each SaleLine.Id.
+        CreateMap<SaleLine, SaleLineDto>();
+        CreateMap<Sale, SaleDto>()
+            .ForMember(dest => dest.ReceivableId,
+                opt => opt.MapFrom(src => src.Receivable == null ? null : src.Receivable.Id))
+            .ForMember(dest => dest.ReceivableRemainingAmount,
+                opt => opt.MapFrom(src => src.Receivable == null ? null : (long?)src.Receivable.RemainingAmount));
 
         // Customer mapping
         CreateMap<Customer, CustomerDto>()
@@ -258,51 +265,49 @@ public class MappingProfile : Profile
             .AfterMap((src, dest) =>
             {
                 dest.SetNationalIdCardNumber(src.NationalIdCardNumber);
-                if (src.IsActive) dest.Activate(); else dest.Deactivate();
+                if (src.IsActive) dest.Activate();
+                else dest.Deactivate();
             });
 
-        // LoanAccount mapping
+        // LoanAccount is a receivable linked to a sale. Product/unit details live on SaleLine.
         CreateMap<LoanAccount, LoanAccountDto>()
             .ForMember(dest => dest.PaidAmount, opt => opt.MapFrom(src => src.PaidAmount))
             .ForMember(dest => dest.RemainingAmount, opt => opt.MapFrom(src => src.RemainingAmount));
-        CreateMap<LoanAccountCreateDto, LoanAccount>()
-            .ConstructUsing(src => LoanAccount.Create(
-                src.CustomerId,
-                src.ShopId,
-                src.ProductId,
-                src.Quantity,
-                src.UnitId,
-                src.PriceAtLoanTime,
-                src.TotalAmount,
-                src.DueDate,
-                src.Notes
-            ));
     }
 
-    private static string ResolveProvinceName(Province src)
+    private static string ResolveProvinceName(
+        Province src
+    )
     {
         if (src.Translations != null && src.Translations.Count > 0)
         {
             var translations = src.Translations;
             var current = CultureInfo.CurrentUICulture;
-            var exact = translations.FirstOrDefault(t => string.Equals(t.LanguageCode, current.Name, StringComparison.OrdinalIgnoreCase));
+            var exact = translations.FirstOrDefault(t =>
+                string.Equals(t.LanguageCode, current.Name, StringComparison.OrdinalIgnoreCase));
             if (exact != null) return exact.Name;
-            var primary = translations.FirstOrDefault(t => string.Equals(t.LanguageCode, current.TwoLetterISOLanguageName, StringComparison.OrdinalIgnoreCase));
+            var primary = translations.FirstOrDefault(t =>
+                string.Equals(t.LanguageCode, current.TwoLetterISOLanguageName, StringComparison.OrdinalIgnoreCase));
             if (primary != null) return primary.Name;
             var def = translations.FirstOrDefault(t => t.IsDefault);
             if (def != null) return def.Name;
             return translations.First().Name;
         }
+
         return src.Name ?? string.Empty;
     }
 
-    private static DateTime AsUtc(DateTime value) => value.Kind switch
+    private static DateTime AsUtc(
+        DateTime value
+    ) => value.Kind switch
     {
         DateTimeKind.Utc => value,
         DateTimeKind.Local => value.ToUniversalTime(),
         _ => DateTime.SpecifyKind(value, DateTimeKind.Utc)
     };
 
-    private static DateTime? AsUtc(DateTime? value) =>
+    private static DateTime? AsUtc(
+        DateTime? value
+    ) =>
         value.HasValue ? AsUtc(value.Value) : null;
 }

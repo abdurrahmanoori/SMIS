@@ -15,6 +15,8 @@ public sealed class UnitOfWork : IUnitOfWork
     private readonly AppDbContext _context;
     private IDbContextTransaction? _currentTransaction;
 
+    public bool HasActiveTransaction => _currentTransaction is not null;
+
     public UnitOfWork(
         AppDbContext context
     )

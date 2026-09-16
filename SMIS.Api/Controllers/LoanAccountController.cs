@@ -13,27 +13,46 @@ namespace SMIS.Api.Controllers;
 public class LoanAccountController : BaseApiController
 {
     [HttpPost]
-    public async Task<ActionResult<LoanAccountDto>> Create(LoanAccountCreateDto dto) =>
+    public async Task<ActionResult<LoanAccountDto>> Create(
+        LoanAccountCreateDto dto
+    ) =>
         HandleResultResponseOld(await Mediator.Send(new LoanAccountCreateCommand(dto)));
 
     [HttpGet]
-    public async Task<ActionResult<PagedList<LoanAccountDto>>> GetAll([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 25, [FromQuery] bool includeCustomer = false, [FromQuery] bool includeProduct = false) =>
-        HandleResultResponseOld(await Mediator.Send(new LoanAccountGetListQuery(pageNumber, pageSize, includeCustomer, includeProduct)));
+    public async Task<ActionResult<PagedList<LoanAccountDto>>> GetAll(
+        [FromQuery] int pageNumber = 1,
+        [FromQuery] int pageSize = 25,
+        [FromQuery] bool includeCustomer = false,
+        [FromQuery] bool includeSale = false
+    ) =>
+        HandleResultResponseOld(
+            await Mediator.Send(new LoanAccountGetListQuery(pageNumber, pageSize, includeCustomer, includeSale)));
 
     [HttpGet("{id}")]
-    public async Task<ActionResult<LoanAccountDto>> GetById(string id, [FromQuery] bool includeCustomer = false, [FromQuery] bool includeProduct = false) =>
-        HandleResultResponseOld(await Mediator.Send(new LoanAccountGetByIdQuery(id, includeCustomer, includeProduct)));
+    public async Task<ActionResult<LoanAccountDto>> GetById(
+        string id,
+        [FromQuery] bool includeCustomer = false,
+        [FromQuery] bool includeSale = false
+    ) =>
+        HandleResultResponseOld(await Mediator.Send(new LoanAccountGetByIdQuery(id, includeCustomer, includeSale)));
 
     [HttpPut("{id}")]
-    public async Task<ActionResult<LoanAccountDto>> Update(string id, LoanAccountCreateDto dto) =>
+    public async Task<ActionResult<LoanAccountDto>> Update(
+        string id,
+        LoanAccountUpdateDto dto
+    ) =>
         HandleResultResponseOld(await Mediator.Send(new LoanAccountUpdateCommand(id, dto)));
 
     [HttpDelete("{id}")]
-    public async Task<ActionResult<Unit>> Delete(string id) =>
+    public async Task<ActionResult<Unit>> Delete(
+        string id
+    ) =>
         HandleResultResponseOld(await Mediator.Send(new LoanAccountDeleteCommand(id)));
 
     [HttpPost("process-payment")]
-    public async Task<ActionResult<PaymentAllocationResultDto>> ProcessPayment(CustomerPaymentDto dto) =>
+    public async Task<ActionResult<PaymentAllocationResultDto>> ProcessPayment(
+        CustomerPaymentDto dto
+    ) =>
         HandleResultResponseOld(await Mediator.Send(new ProcessCustomerPaymentCommand
         {
             CustomerId = dto.CustomerId,
@@ -44,6 +63,8 @@ public class LoanAccountController : BaseApiController
         }));
 
     [HttpGet("customer/{customerId}/debt-summary")]
-    public async Task<ActionResult<CustomerDebtSummaryDto>> GetCustomerDebtSummary(string customerId) =>
+    public async Task<ActionResult<CustomerDebtSummaryDto>> GetCustomerDebtSummary(
+        string customerId
+    ) =>
         HandleResultResponseOld(await Mediator.Send(new GetCustomerDebtSummaryQuery { CustomerId = customerId }));
 }

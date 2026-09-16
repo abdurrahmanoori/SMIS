@@ -1,6 +1,5 @@
 using SMIS.Application.Common.Response;
 using SMIS.Application.Identity.IServices;
-using SMIS.Application.Repositories.Base;
 using SMIS.Application.Repositories.Products;
 using SMIS.Application.Repositories.ProductUnits;
 using SMIS.Application.Repositories.StockBatches;
@@ -11,9 +10,9 @@ using SMIS.Domain.Enums;
 namespace SMIS.Application.Services;
 
 /// <summary>
-/// Coordinates every persisted inventory change. The service owns validation,
-/// ProductUnit conversion, batch balance mutation, ledger creation, and transaction
-/// boundaries so feature handlers cannot accidentally update stock in different ways.
+/// Coordinates every inventory change. The service owns validation, ProductUnit
+/// conversion, batch balance mutation, and ledger creation. The MediatR command that
+/// owns the business use case is responsible for the final SaveChanges call.
 /// </summary>
 public sealed class InventoryService : IInventoryService
 {
@@ -21,7 +20,6 @@ public sealed class InventoryService : IInventoryService
     private readonly IProductUnitRepository _productUnits;
     private readonly IStockBatchRepository _batches;
     private readonly IStockMovementRepository _movements;
-    private readonly IUnitOfWork _unitOfWork;
     private readonly ICurrentUser _currentUser;
 
     public InventoryService(
@@ -29,7 +27,6 @@ public sealed class InventoryService : IInventoryService
         IProductUnitRepository productUnits,
         IStockBatchRepository batches,
         IStockMovementRepository movements,
-        IUnitOfWork unitOfWork,
         ICurrentUser currentUser
     )
     {
@@ -37,7 +34,6 @@ public sealed class InventoryService : IInventoryService
         _productUnits = productUnits;
         _batches = batches;
         _movements = movements;
-        _unitOfWork = unitOfWork;
         _currentUser = currentUser;
     }
 
@@ -94,18 +90,8 @@ public sealed class InventoryService : IInventoryService
             referenceType,
             referenceId);
 
-        await _unitOfWork.StartTransactionAsync(cancellationToken);
-        try
-        {
-            await _batches.AddAsync(batch);
-            await _movements.AddAsync(movement);
-            await _unitOfWork.CommitTransactionAsync(cancellationToken);
-        }
-        catch
-        {
-            await _unitOfWork.RollbackTransactionAsync(cancellationToken);
-            throw;
-        }
+        await _batches.AddAsync(batch);
+        await _movements.AddAsync(movement);
 
         return Result<StockBatch>.SuccessResult(batch);
     }
@@ -149,18 +135,8 @@ public sealed class InventoryService : IInventoryService
             request.ReferenceType,
             request.ReferenceId);
 
-        await _unitOfWork.StartTransactionAsync(cancellationToken);
-        try
-        {
-            ApplyBalance(batch, movement.Direction, movement.QuantityBase);
-            await _movements.AddAsync(movement);
-            await _unitOfWork.CommitTransactionAsync(cancellationToken);
-        }
-        catch
-        {
-            await _unitOfWork.RollbackTransactionAsync(cancellationToken);
-            throw;
-        }
+        ApplyBalance(batch, movement.Direction, movement.QuantityBase);
+        await _movements.AddAsync(movement);
 
         return Result<StockMovement>.SuccessResult(movement);
     }
@@ -194,40 +170,30 @@ public sealed class InventoryService : IInventoryService
         var created = new List<StockMovement>();
         var remainingBase = totalBase;
 
-        await _unitOfWork.StartTransactionAsync(cancellationToken);
-        try
+        foreach (var batch in batches)
         {
-            foreach (var batch in batches)
-            {
-                if (remainingBase <= 0) break;
+            if (remainingBase <= 0) break;
+            if (batch.RemainingQuantityBase <= 0) continue;
 
-                var allocatedBase = Math.Min(batch.RemainingQuantityBase, remainingBase);
-                var allocatedEntered = allocatedBase / productUnit.BaseUnitQuantity;
+            var allocatedBase = Math.Min(batch.RemainingQuantityBase, remainingBase);
+            var allocatedEntered = allocatedBase / productUnit.BaseUnitQuantity;
 
-                var movement = StockMovement.Create(
-                    product.ShopId,
-                    batch.Id,
-                    productUnit.Id,
-                    allocatedEntered,
-                    allocatedBase,
-                    StockMovementDirection.Out,
-                    request.Reason,
-                    request.OccurredAtUtc,
-                    request.ReferenceType,
-                    request.ReferenceId);
+            var movement = StockMovement.Create(
+                product.ShopId,
+                batch.Id,
+                productUnit.Id,
+                allocatedEntered,
+                allocatedBase,
+                StockMovementDirection.Out,
+                request.Reason,
+                request.OccurredAtUtc,
+                request.ReferenceType,
+                request.ReferenceId);
 
-                ApplyBalance(batch, movement.Direction, movement.QuantityBase);
-                await _movements.AddAsync(movement);
-                created.Add(movement);
-                remainingBase -= allocatedBase;
-            }
-
-            await _unitOfWork.CommitTransactionAsync(cancellationToken);
-        }
-        catch
-        {
-            await _unitOfWork.RollbackTransactionAsync(cancellationToken);
-            throw;
+            ApplyBalance(batch, movement.Direction, movement.QuantityBase);
+            await _movements.AddAsync(movement);
+            created.Add(movement);
+            remainingBase -= allocatedBase;
         }
 
         return Result<IReadOnlyList<StockMovement>>.SuccessResult(created);
@@ -274,18 +240,8 @@ public sealed class InventoryService : IInventoryService
             nameof(StockMovement),
             original.Id);
 
-        await _unitOfWork.StartTransactionAsync(cancellationToken);
-        try
-        {
-            ApplyBalance(batch, reversal.Direction, reversal.QuantityBase);
-            await _movements.AddAsync(reversal);
-            await _unitOfWork.CommitTransactionAsync(cancellationToken);
-        }
-        catch
-        {
-            await _unitOfWork.RollbackTransactionAsync(cancellationToken);
-            throw;
-        }
+        ApplyBalance(batch, reversal.Direction, reversal.QuantityBase);
+        await _movements.AddAsync(reversal);
 
         return Result<StockMovement>.SuccessResult(reversal);
     }
