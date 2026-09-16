@@ -15,20 +15,8 @@ namespace SMIS.Api.Controllers;
 [ApiController]
 public sealed class StockMovementController : BaseApiController
 {
-    [HttpPost]
-    public async Task<ActionResult<StockMovementDto>> Create(
-        StockMovementCreateDto dto
-    ) =>
-        HandleResultResponseOld(await Mediator.Send(new StockMovementCreateCommand(dto)));
-
-    [HttpPost("fifo-out")]
-    public async Task<ActionResult<List<StockMovementDto>>> CreateFifoOut(
-        FifoStockIssueDto dto
-    ) =>
-        HandleResultResponseOld(await Mediator.Send(new StockMovementFifoIssueCommand(dto)));
-
     [HttpPost("{id}/reverse")]
-    public async Task<ActionResult<StockMovementDto>> Reverse(
+    public async Task<ActionResult<List<StockMovementDto>>> Reverse(
         string id
     ) =>
         HandleResultResponseOld(await Mediator.Send(new StockMovementReverseCommand(id)));

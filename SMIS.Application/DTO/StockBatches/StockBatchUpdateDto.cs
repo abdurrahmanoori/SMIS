@@ -6,5 +6,5 @@ public sealed class StockBatchUpdateDto
 {
     public string? BatchNumber { get; set; }
     public DateTime? ExpirationDate { get; set; }
-    public StatusEnum Status { get; set; } = StatusEnum.Active;
+    public StatusEnum? Status { get; set; }
 }

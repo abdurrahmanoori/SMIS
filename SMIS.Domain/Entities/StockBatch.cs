@@ -137,10 +137,40 @@ public class StockBatch : BaseAuditableEntityWithoutName, IShopEntity
         ExpirationDate = expirationDate;
     }
 
-    public void Activate() => Status = StatusEnum.Active;
-    public void Deactivate() => Status = StatusEnum.Inactive;
-    public void MarkAsCompleted() => Status = StatusEnum.Completed;
-    public void MarkAsCancelled() => Status = StatusEnum.Cancelled;
+    public void Activate()
+    {
+        if (Status == StatusEnum.Cancelled)
+            throw new DomainValidationException("A cancelled stock batch cannot be reactivated");
+        if (RemainingQuantityBase <= 0)
+            throw new DomainValidationException("An empty stock batch cannot be activated");
+
+        Status = StatusEnum.Active;
+    }
+
+    public void Deactivate()
+    {
+        if (Status == StatusEnum.Cancelled)
+            throw new DomainValidationException("A cancelled stock batch cannot be deactivated");
+
+        Status = StatusEnum.Inactive;
+    }
+
+    public void MarkAsCompleted()
+    {
+        if (RemainingQuantityBase != 0)
+            throw new DomainValidationException("A stock batch can only be completed when its remaining quantity is zero");
+
+        Status = StatusEnum.Completed;
+    }
+
+    public void MarkAsCancelled()
+    {
+        if (RemainingQuantityBase != 0)
+            throw new DomainValidationException(
+                "A stock batch with remaining stock cannot be cancelled. Transfer or adjust the stock first.");
+
+        Status = StatusEnum.Cancelled;
+    }
 
     public void ApplyOutMovement(
         decimal quantityBase

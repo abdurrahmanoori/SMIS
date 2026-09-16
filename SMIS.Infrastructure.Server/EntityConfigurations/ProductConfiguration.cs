@@ -53,6 +53,14 @@ namespace SMIS.Infrastructure.Server.EntityConfigurations
             builder.Property(p => p.ImageUrl)
                 .HasMaxLength(500);
 
+            builder.Property(p => p.ReorderPointBase)
+                .IsRequired()
+                .HasPrecision(18, 4);
+
+            builder.Property(p => p.ReorderQuantityBase)
+                .IsRequired()
+                .HasPrecision(18, 4);
+
             builder.Property(p => p.CategoryId)
                 .HasMaxLength(450);
 

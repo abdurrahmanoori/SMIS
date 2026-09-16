@@ -98,13 +98,10 @@
     <setting file="file://$PROJECT_DIR$/SMIS.Application/Common/PagedListNew.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/SMIS.Application/Features/Categories/Queries/CategoryQuery.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/SMIS.Application/Services/IApplicationDbContext.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="gitIndexFs://ce9ec9ff:E\:/Repo/SMIS:E\:/Repo/SMIS/SMIS.Application/Features/ProductUnits/Queries/ProductUnitQuery.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="gitIndexFs://ce9ec9ff:E\:/Repo/SMIS:E\:/Repo/SMIS/SMIS.Application/Services/IInventoryService.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="gitIndexFs://ce9ec9ff:E\:/Repo/SMIS:E\:/Repo/SMIS/SMIS.Application/Services/InventoryService.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="gitIndexFs://ce9ec9ff:E\:/Repo/SMIS:E\:/Repo/SMIS/SMIS.Domain/Entities/Sale.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="gitIndexFs://ce9ec9ff:E\:/Repo/SMIS:E\:/Repo/SMIS/SMIS.Domain/Entities/SaleLine.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="gitIndexFs://ce9ec9ff:E\:/Repo/SMIS:E\:/Repo/SMIS/SMIS.Domain/Enums/SalePaymentType.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="gitIndexFs://ce9ec9ff:E\:/Repo/SMIS:E\:/Repo/SMIS/SMIS.Infrastructure.Server/EntityConfigurations/SaleConfiguration.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="gitIndexFs://ce9ec9ff:E\:/Repo/SMIS:E\:/Repo/SMIS/SMIS.Application/DTO/Inventory/InventoryStockCountDtos.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="gitIndexFs://ce9ec9ff:E\:/Repo/SMIS:E\:/Repo/SMIS/SMIS.Application/Features/Inventory/Commands/InventoryStockCountCommands.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="gitIndexFs://ce9ec9ff:E\:/Repo/SMIS:E\:/Repo/SMIS/SMIS.Domain/Entities/PurchaseOrder.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="gitIndexFs://ce9ec9ff:E\:/Repo/SMIS:E\:/Repo/SMIS/SMIS.Infrastructure.Server/EntityConfigurations/IdempotencyRecordConfiguration.cs" root0="SKIP_HIGHLIGHTING" />
   </component>
   <component name="InvalidFacetManager">
     <ignored-facets>
@@ -118,61 +115,61 @@
   <component name="MetaFilesCheckinStateConfiguration" checkMetaFiles="true" />
   <component name="NextEditCompletionFeaturesState">
     <decayedCancelled>
-      <entry key="MS100" value="1.0132395197268562" />
-      <entry key="MS500" value="1.582536805275971" />
-      <entry key="S2" value="3.189523134308116" />
-      <entry key="S5" value="4.1101326450224" />
-      <entry key="S10" value="4.5209387411711965" />
-      <entry key="S30" value="4.831992670421428" />
-      <entry key="S60" value="4.914906401790195" />
-      <entry key="M2" value="4.957176818637367" />
-      <entry key="M5" value="4.982807376403448" />
-      <entry key="M10" value="4.997583465305365" />
-      <entry key="M15" value="5.0692557685377375" />
-      <entry key="M30" value="5.905694512748211" />
-      <entry key="H1" value="8.243190324768758" />
-      <entry key="H2" value="13.400946233096969" />
-      <entry key="H4" value="33.960094771244044" />
-      <entry key="D1" value="234.9959408319794" />
-      <entry key="W1" value="366.7698766984321" />
+      <entry key="MS100" value="6.111678143924871E-6" />
+      <entry key="MS500" value="0.09197879987652485" />
+      <entry key="S2" value="1.1322984140789643" />
+      <entry key="S5" value="3.0915418285368563" />
+      <entry key="S10" value="4.590263554405341" />
+      <entry key="S30" value="6.06462263439" />
+      <entry key="S60" value="6.513363637198296" />
+      <entry key="M2" value="6.751739728699237" />
+      <entry key="M5" value="6.899485907861941" />
+      <entry key="M10" value="6.9556871268603535" />
+      <entry key="M15" value="7.040968390832387" />
+      <entry key="M30" value="7.8896289834522175" />
+      <entry key="H1" value="10.23248763967098" />
+      <entry key="H2" value="15.392651764961565" />
+      <entry key="H4" value="35.95008331250729" />
+      <entry key="D1" value="236.98471472991687" />
+      <entry key="W1" value="368.7673779774646" />
     </decayedCancelled>
     <decayedSelected>
-      <entry key="MS100" value="0.0" />
-      <entry key="MS500" value="0.0" />
-      <entry key="S2" value="0.0" />
-      <entry key="S5" value="0.0" />
-      <entry key="S10" value="0.0" />
-      <entry key="S30" value="5.3158886942068745E-157" />
-      <entry key="S60" value="7.291014123019427E-79" />
-      <entry key="M2" value="8.538743539315036E-40" />
-      <entry key="M5" value="2.3580748585244856E-16" />
-      <entry key="M10" value="1.5356254856473775E-8" />
-      <entry key="M15" value="6.184224936649497E-6" />
-      <entry key="M30" value="0.0026912116227498744" />
-      <entry key="H1" value="0.12784690779894878" />
-      <entry key="H2" value="2.7582160499193074" />
-      <entry key="H4" value="18.28302384043724" />
-      <entry key="D1" value="125.00048502603734" />
-      <entry key="W1" value="183.5096217122411" />
+      <entry key="MS100" value="1.0000000186015747" />
+      <entry key="MS500" value="1.0284387132525281" />
+      <entry key="S2" value="1.4106553503760328" />
+      <entry key="S5" value="1.7004723456951578" />
+      <entry key="S10" value="1.8369422594750238" />
+      <entry key="S30" value="1.9423925243746303" />
+      <entry key="S60" value="1.9707690376060776" />
+      <entry key="M2" value="1.985276122519001" />
+      <entry key="M5" value="1.994084227633567" />
+      <entry key="M10" value="1.9970377415354843" />
+      <entry key="M15" value="1.9980303306273424" />
+      <entry key="M30" value="2.0016966761073665" />
+      <entry key="H1" value="2.1272067952431324" />
+      <entry key="H2" value="4.756395748253841" />
+      <entry key="H4" value="20.27768576048016" />
+      <entry key="D1" value="126.99452184843338" />
+      <entry key="W1" value="185.508372440148" />
     </decayedSelected>
     <decayedShown>
-      <entry key="MS100" value="0.9457330672610158" />
-      <entry key="MS500" value="1.5634780778165194" />
-      <entry key="S2" value="3.180434231674182" />
-      <entry key="S5" value="4.105462137401854" />
-      <entry key="S10" value="4.5183702211637335" />
-      <entry key="S30" value="4.831077378027825" />
-      <entry key="S60" value="4.914440860442135" />
-      <entry key="M2" value="4.956942034231512" />
-      <entry key="M5" value="4.982712973840663" />
-      <entry key="M10" value="4.99753592844375" />
-      <entry key="M15" value="5.069228226862322" />
-      <entry key="M30" value="5.90835440526855" />
-      <entry key="H1" value="8.370936685099265" />
-      <entry key="H2" value="16.15833883227242" />
-      <entry key="H4" value="52.24042307462235" />
-      <entry key="D1" value="359.99334234577583" />
-      <entry key="W1" value="550.2788517959871" />
+      <entry key="MS100" value="1.3352552911011843E-5" />
+      <entry key="MS500" value="0.17059799630958347" />
+      <entry key="S2" value="1.8798284403404968" />
+      <entry key="S5" value="4.3994896663195195" />
+      <entry key="S10" value="6.197256630174232" />
+      <entry key="S30" value="7.921057461512105" />
+      <entry key="S60" value="8.439852168300394" />
+      <entry key="M2" value="8.71453874473028" />
+      <entry key="M5" value="8.884496934505526" />
+      <entry key="M10" value="8.948174146085545" />
+      <entry key="M15" value="9.035959820748202" />
+      <entry key="M30" value="9.889790246031813" />
+      <entry key="H1" value="12.358841543366168" />
+      <entry key="H2" value="20.147848208734654" />
+      <entry key="H4" value="56.22488611951926" />
+      <entry key="D1" value="363.9761218452351" />
+      <entry key="W1" value="554.2750993261716" />
     </decayedShown>
   </component>
   <component name="ProblemsViewState">
@@ -346,14 +343,6 @@
       <option name="presentableId" value="LOCAL-00001" />
       <option name="project" value="LOCAL" />
       <updated>1789462942314</updated>
-    </task>
-    <task id="LOCAL-00028" summary="feat: add client modification metadata clearing in delete commands for Product, ProductUnit, Shop, and ProductPrice">
-      <option name="closed" value="true" />
-      <created>1788699633771</created>
-      <option name="number" value="00028" />
-      <option name="presentableId" value="LOCAL-00028" />
-      <option name="project" value="LOCAL" />
-      <updated>1788699633771</updated>
     </task>
     <task id="LOCAL-00029" summary="feat: update user profile management to include username and language selection">
       <option name="closed" value="true" />
@@ -731,7 +720,15 @@
       <option name="project" value="LOCAL" />
       <updated>1789541540459</updated>
     </task>
-    <option name="localTasksCounter" value="76" />
+    <task id="LOCAL-00076" summary="feat: implement InventoryController with endpoints for stock operations and reporting">
+      <option name="closed" value="true" />
+      <created>1789542521044</created>
+      <option name="number" value="00076" />
+      <option name="presentableId" value="LOCAL-00076" />
+      <option name="project" value="LOCAL" />
+      <updated>1789542521044</updated>
+    </task>
+    <option name="localTasksCounter" value="77" />
     <option name="clearContext" value="false" />
     <option name="createChangelist" value="false" />
     <option name="createBranch" value="false" />
@@ -744,7 +741,6 @@
   <component name="UnityProjectConfiguration" hasMinimizedUI="false" />
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
-    <MESSAGE value="feat: add web database factory initialization and update CORS middleware usage" />
     <MESSAGE value="feat: implement pagination support in CategoryController and enhance Category API for page retrieval" />
     <MESSAGE value="feat: remove deprecated flutterDev.db data source and update pagination logic in Category API" />
     <MESSAGE value="feat: add search functionality to categories and update filtering in repository" />
@@ -769,6 +765,7 @@
     <MESSAGE value="feat: implement Sale domain with related DTOs, commands, and validation; remove LoanAccount entities" />
     <MESSAGE value="feat(Sale): implement Sale domain with related DTOs, commands, and validation; remove LoanAccount entities" />
     <MESSAGE value="feat: add Inventory domain with related DTOs, commands, and queries" />
+    <MESSAGE value="feat: implement InventoryController with endpoints for stock operations and reporting" />
     <option name="LAST_COMMIT_MESSAGE" value="" />
   </component>
   <component name="XDebuggerManager">

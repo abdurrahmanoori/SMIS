@@ -13,5 +13,9 @@ public sealed class StockBatchUpdateCommandValidator : AbstractValidator<StockBa
         RuleFor(x => x.StockBatchUpdateDto.BatchNumber)
             .MaximumLength(50).WithMessage("Batch number cannot exceed 50 characters")
             .When(x => !string.IsNullOrWhiteSpace(x.StockBatchUpdateDto.BatchNumber));
+
+        RuleFor(x => x.StockBatchUpdateDto.Status)
+            .IsInEnum()
+            .When(x => x.StockBatchUpdateDto.Status.HasValue);
     }
 }

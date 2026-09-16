@@ -30,6 +30,8 @@ public class LoanAccountConfiguration : IEntityTypeConfiguration<LoanAccount>
             .HasMaxLength(200);
         builder.Property(loan => loan.TotalAmount)
             .IsRequired();
+        builder.Property(loan => loan.CreditAmount)
+            .IsRequired();
         builder.Property(loan => loan.LoanDate)
             .IsRequired();
         builder.Property(loan => loan.Status)
@@ -66,6 +68,8 @@ public class LoanAccountConfiguration : IEntityTypeConfiguration<LoanAccount>
             .OnDelete(DeleteBehavior.Restrict);
 
         builder.Ignore(loan => loan.PaidAmount);
+        builder.Ignore(loan => loan.NetReceivableAmount);
         builder.Ignore(loan => loan.RemainingAmount);
+        builder.Ignore(loan => loan.OverpaidAmount);
     }
 }

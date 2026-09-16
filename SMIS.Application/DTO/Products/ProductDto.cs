@@ -18,6 +18,8 @@ namespace SMIS.Application.DTO.Products
         public string? Barcode { get; set; }
         public string? ImageUrl { get; set; }
         public string? CategoryId { get; set; }
+        public decimal ReorderPointBase { get; set; }
+        public decimal ReorderQuantityBase { get; set; }
         public CategoryDto? Category { get; set; }
         public DateTime? CreatedDate { get; set; }
         public string? CreatedBy { get; set; }

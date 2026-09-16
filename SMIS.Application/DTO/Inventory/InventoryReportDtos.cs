@@ -27,9 +27,13 @@ public sealed class CurrentStockReportDto
     /// Authoritative normalized stock quantity expressed in the product's base unit.
     /// </summary>
     public decimal QuantityBase { get; set; }
+    public decimal AvailableQuantityBase { get; set; }
+    public decimal UnavailableQuantityBase { get; set; }
 
     public int BatchCount { get; set; }
     public long InventoryValueMinor { get; set; }
+    public decimal ReorderPointBase { get; set; }
+    public decimal ReorderQuantityBase { get; set; }
     public bool IsLowStock { get; set; }
     public List<InventoryUnitPresentationDto> PresentationUnits { get; set; } = new();
 }
@@ -67,6 +71,7 @@ public sealed class InventoryValuationReportDto
 public sealed class InventoryMovementHistoryDto
 {
     public string Id { get; set; } = string.Empty;
+    public string OperationId { get; set; } = string.Empty;
     public string StockBatchId { get; set; } = string.Empty;
     public string ProductId { get; set; } = string.Empty;
     public string ProductName { get; set; } = string.Empty;

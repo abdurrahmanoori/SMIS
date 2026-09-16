@@ -28,6 +28,12 @@ public sealed class SaleConfiguration : IEntityTypeConfiguration<Sale>
             .HasMaxLength(20);
         builder.Property(sale => sale.TotalAmount)
             .IsRequired();
+        builder.Property(sale => sale.ReturnedAmount)
+            .IsRequired();
+        builder.Property(sale => sale.Status)
+            .IsRequired()
+            .HasConversion<string>()
+            .HasMaxLength(30);
         builder.Property(sale => sale.Notes)
             .HasMaxLength(500);
 
@@ -50,5 +56,6 @@ public sealed class SaleConfiguration : IEntityTypeConfiguration<Sale>
         builder.HasIndex(sale => sale.CustomerId);
         builder.HasIndex(sale => sale.SaleDateUtc);
         builder.HasIndex(sale => sale.PaymentType);
+        builder.HasIndex(sale => sale.Status);
     }
 }

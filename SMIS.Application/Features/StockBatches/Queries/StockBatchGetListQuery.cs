@@ -5,6 +5,7 @@ using SMIS.Application.Common.Response;
 using SMIS.Application.DTO.StockBatches;
 using SMIS.Application.Extensions;
 using SMIS.Application.Repositories.StockBatches;
+using SMIS.Application.Identity.IServices;
 
 namespace SMIS.Application.Features.StockBatches.Queries
 {
@@ -14,16 +15,28 @@ namespace SMIS.Application.Features.StockBatches.Queries
     {
         private readonly IStockBatchRepository _stockBatchRepository;
         private readonly IMapper _mapper;
+        private readonly ICurrentUser _currentUser;
 
-        public StockBatchGetListQueryHandler(IStockBatchRepository stockBatchRepository, IMapper mapper)
+        public StockBatchGetListQueryHandler(
+            IStockBatchRepository stockBatchRepository,
+            IMapper mapper,
+            ICurrentUser currentUser)
         {
             _stockBatchRepository = stockBatchRepository;
             _mapper = mapper;
+            _currentUser = currentUser;
         }
 
         public async Task<Result<PagedList<StockBatchDto>>> Handle(StockBatchGetListQuery request, CancellationToken cancellationToken)
         {
-            var stockBatches = await _stockBatchRepository.GetAllQueryable()
+            var query = _stockBatchRepository.GetAllQueryable();
+            if (!_currentUser.IsSuperAdmin())
+            {
+                var shopId = _currentUser.GetShopId();
+                query = query.Where(batch => batch.ShopId == shopId);
+            }
+
+            var stockBatches = await query
                 .ToPagedList(request.PageNumber, request.PageSize);
 
             if (!stockBatches.Items.Any())

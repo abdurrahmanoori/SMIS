@@ -14,16 +14,19 @@ internal sealed class StockBatchCreateCommandHandler
     : IRequestHandler<StockBatchCreateCommand, Result<StockBatchDto>>
 {
     private readonly IInventoryService _inventory;
+    private readonly IIdempotencyService _idempotency;
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
 
     public StockBatchCreateCommandHandler(
         IInventoryService inventory,
+        IIdempotencyService idempotency,
         IUnitOfWork unitOfWork,
         IMapper mapper
     )
     {
         _inventory = inventory;
+        _idempotency = idempotency;
         _unitOfWork = unitOfWork;
         _mapper = mapper;
     }
@@ -34,6 +37,18 @@ internal sealed class StockBatchCreateCommandHandler
     )
     {
         var dto = request.StockBatchCreateDto;
+        var reservation = await _idempotency.ReserveAsync(
+            "inventory:purchase-receipt",
+            dto.IdempotencyKey,
+            cancellationToken);
+        if (!reservation.Success)
+            return new Result<StockBatchDto>
+            {
+                Success = false,
+                Message = reservation.Message,
+                Errors = reservation.Errors
+            };
+
         var result = await _inventory.ReceiveBatchAsync(
             new InventoryReceiptRequest(
                 dto.ProductId,

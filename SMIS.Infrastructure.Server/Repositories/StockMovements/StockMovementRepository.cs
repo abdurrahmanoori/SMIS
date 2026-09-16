@@ -26,4 +26,13 @@ public sealed class StockMovementRepository : GenericRepository<StockMovement>, 
                          movement.ReferenceType == "StockMovementReversal") &&
                         movement.ReferenceId == movementId,
             cancellationToken);
+
+    public Task<List<StockMovement>> GetByOperationIdAsync(
+        string operationId,
+        CancellationToken cancellationToken = default
+    ) =>
+        _context.StockMovements
+            .Where(movement => movement.OperationId == operationId)
+            .OrderBy(movement => movement.Id)
+            .ToListAsync(cancellationToken);
 }

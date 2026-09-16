@@ -18,6 +18,9 @@ public sealed class StockMovementConfiguration : IEntityTypeConfiguration<StockM
         builder.Property(m => m.ShopId)
             .IsRequired()
             .HasMaxLength(450);
+        builder.Property(m => m.OperationId)
+            .IsRequired()
+            .HasMaxLength(450);
         builder.Property(m => m.StockBatchId)
             .IsRequired()
             .HasMaxLength(450);
@@ -65,6 +68,7 @@ public sealed class StockMovementConfiguration : IEntityTypeConfiguration<StockM
             .OnDelete(DeleteBehavior.Restrict);
 
         builder.HasIndex(m => m.ShopId);
+        builder.HasIndex(m => m.OperationId);
         builder.HasIndex(m => m.StockBatchId);
         builder.HasIndex(m => m.ProductUnitId);
         builder.HasIndex(m => m.OccurredAtUtc);

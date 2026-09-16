@@ -83,6 +83,31 @@ public sealed class InventoryController : BaseApiController
         HandleResultResponseOld(await Mediator.Send(
             new InventoryReconciliationQuery(stockBatchId, onlyMismatches)));
 
+    [HttpPost("stock-counts")]
+    public async Task<ActionResult<StockCountSessionDto>> StartStockCount(
+        StockCountStartDto dto
+    ) =>
+        HandleResultResponseOld(await Mediator.Send(new StockCountStartCommand(dto)));
+
+    [HttpPost("stock-counts/{id}/complete")]
+    public async Task<ActionResult<StockCountSessionDto>> CompleteStockCount(
+        string id,
+        StockCountCompleteDto dto
+    ) =>
+        HandleResultResponseOld(await Mediator.Send(new StockCountCompleteCommand(id, dto)));
+
+    [HttpGet("stock-counts/{id}")]
+    public async Task<ActionResult<StockCountSessionDto>> GetStockCount(
+        string id
+    ) =>
+        HandleResultResponseOld(await Mediator.Send(new StockCountGetByIdQuery(id)));
+
+    [HttpPost("stock-counts/{id}/cancel")]
+    public async Task<ActionResult<StockCountSessionDto>> CancelStockCount(
+        string id
+    ) =>
+        HandleResultResponseOld(await Mediator.Send(new StockCountCancelCommand(id)));
+
     [HttpGet("reports/current-stock")]
     public async Task<ActionResult<List<CurrentStockReportDto>>> CurrentStock(
         [FromQuery] decimal? lowStockThresholdBase = null,
@@ -93,7 +118,7 @@ public sealed class InventoryController : BaseApiController
 
     [HttpGet("reports/low-stock")]
     public async Task<ActionResult<List<CurrentStockReportDto>>> LowStock(
-        [FromQuery] decimal thresholdBase,
+        [FromQuery] decimal? thresholdBase = null,
         [FromQuery] bool includePresentationUnits = true
     ) =>
         HandleResultResponseOld(await Mediator.Send(

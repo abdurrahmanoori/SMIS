@@ -39,6 +39,12 @@ namespace SMIS.Application.Features.Products.Validators
             RuleFor(x => x.ProductCreateDto.CategoryId)
                 .MaximumLength(50).WithMessage("CategoryId must not exceed 50 characters")
                 .When(x => !string.IsNullOrEmpty(x.ProductCreateDto.CategoryId));
+
+            RuleFor(x => x.ProductCreateDto.ReorderPointBase)
+                .GreaterThanOrEqualTo(0);
+
+            RuleFor(x => x.ProductCreateDto.ReorderQuantityBase)
+                .GreaterThanOrEqualTo(0);
         }
     }
 }

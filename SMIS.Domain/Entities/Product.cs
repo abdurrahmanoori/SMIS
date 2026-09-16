@@ -26,6 +26,8 @@ public class Product : BaseSyncableAuditableEntity, IEntity, IShopEntity
     public string? SKU { get; private set; } = string.Empty;
     public string? Barcode { get; private set; }
     public string? ImageUrl { get; private set; }
+    public decimal ReorderPointBase { get; private set; }
+    public decimal ReorderQuantityBase { get; private set; }
 
     public string? CategoryId { get; private set; }
     public string? CategoryName { get; set; }
@@ -174,6 +176,17 @@ public class Product : BaseSyncableAuditableEntity, IEntity, IShopEntity
 
     public void Activate() => IsActive = true;
     public void Deactivate() => IsActive = false;
+
+    public void SetReorderPolicy(decimal reorderPointBase, decimal reorderQuantityBase)
+    {
+        if (reorderPointBase < 0)
+            throw new DomainValidationException("Reorder point cannot be negative");
+        if (reorderQuantityBase < 0)
+            throw new DomainValidationException("Reorder quantity cannot be negative");
+
+        ReorderPointBase = reorderPointBase;
+        ReorderQuantityBase = reorderQuantityBase;
+    }
 }
 
 

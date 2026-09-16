@@ -6,6 +6,7 @@ public sealed class StockMovementDto
 {
     public string Id { get; set; } = string.Empty;
     public string ShopId { get; set; } = string.Empty;
+    public string OperationId { get; set; } = string.Empty;
     public string StockBatchId { get; set; } = string.Empty;
     public string ProductUnitId { get; set; } = string.Empty;
     public decimal QuantityEntered { get; set; }

@@ -27,6 +27,9 @@ public sealed class SaleLineConfiguration : IEntityTypeConfiguration<SaleLine>
         builder.Property(line => line.QuantityEntered)
             .IsRequired()
             .HasPrecision(18, 4);
+        builder.Property(line => line.ReturnedQuantityEntered)
+            .IsRequired()
+            .HasPrecision(18, 4);
         builder.Property(line => line.UnitPrice)
             .IsRequired();
         builder.Property(line => line.LineTotal)

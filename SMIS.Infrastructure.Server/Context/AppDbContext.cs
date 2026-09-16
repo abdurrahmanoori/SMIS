@@ -136,6 +136,12 @@ public partial class AppDbContext : IdentityDbContext<ApplicationUser, Applicati
     public DbSet<ProductPrice> ProductPrices { get; set; }
     public DbSet<StockBatch> StockBatches { get; set; }
     public DbSet<StockMovement> StockMovements { get; set; }
+    public DbSet<IdempotencyRecord> IdempotencyRecords { get; set; }
+    public DbSet<StockCountSession> StockCountSessions { get; set; }
+    public DbSet<StockCountLine> StockCountLines { get; set; }
+    public DbSet<Supplier> Suppliers { get; set; }
+    public DbSet<PurchaseOrder> PurchaseOrders { get; set; }
+    public DbSet<PurchaseOrderLine> PurchaseOrderLines { get; set; }
     public DbSet<Sale> Sales { get; set; }
     public DbSet<SaleLine> SaleLines { get; set; }
     public DbSet<Customer> Customers { get; set; }

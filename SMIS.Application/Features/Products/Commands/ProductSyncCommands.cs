@@ -70,6 +70,7 @@ internal sealed class ProductSyncCreateCommandHandler : IRequestHandler<ProductS
         var product = Product.Create(request.Dto.Name, _currentUser.GetShopId(), request.Dto.BaseUnitId,
             request.Dto.SKU, request.Dto.IsActive, request.Dto.Description, request.Dto.Barcode, request.Dto.ImageUrl,
             request.Dto.CategoryId);
+        product.SetReorderPolicy(request.Dto.ReorderPointBase, request.Dto.ReorderQuantityBase);
         product.Id = id;
         product.SetClientCreationMetadata(request.Dto.ClientCreatedDate, request.Dto.ClientCreatedBy);
         product.SetClientModificationMetadata(modified, request.Dto.ClientModifiedBy);
@@ -214,6 +215,7 @@ internal static class ProductSyncRules
         product.SetBarcode(dto.Barcode);
         product.SetImageUrl(dto.ImageUrl);
         product.SetCategoryId(dto.CategoryId);
+        product.SetReorderPolicy(dto.ReorderPointBase, dto.ReorderQuantityBase);
         if (dto.IsActive) product.Activate();
         else product.Deactivate();
     }

@@ -10,6 +10,7 @@ using SMIS.Infrastructure.Server.Extensions;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using SMIS.Infrastructure.Server.Services.Identity;
+using Microsoft.AspNetCore.Authorization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -46,6 +47,12 @@ builder.Services.ConfigurePersistenceServices(builder.Configuration, builder.Env
 builder.Services.ConfigureApplicationServices();
 builder.Services.AddIdentityServices<AppDbContext>();
 builder.Services.AddJwtAuthentication(builder.Configuration);
+builder.Services.AddAuthorization(options =>
+{
+    options.FallbackPolicy = new AuthorizationPolicyBuilder()
+        .RequireAuthenticatedUser()
+        .Build();
+});
 
 builder.Services.AddScoped<ICurrentUser, CurrentUser>();
 

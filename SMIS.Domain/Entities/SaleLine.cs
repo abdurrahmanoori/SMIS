@@ -13,6 +13,7 @@ public class SaleLine : BaseAuditableEntityWithoutName
     public string ProductId { get; private set; } = string.Empty;
     public string ProductUnitId { get; private set; } = string.Empty;
     public decimal QuantityEntered { get; private set; }
+    public decimal ReturnedQuantityEntered { get; private set; }
     public long UnitPrice { get; private set; }
     public long LineTotal { get; private set; }
 
@@ -57,5 +58,30 @@ public class SaleLine : BaseAuditableEntityWithoutName
             UnitPrice = unitPrice,
             LineTotal = (long)roundedTotal
         };
+    }
+
+    public decimal ReturnableQuantityEntered => QuantityEntered - ReturnedQuantityEntered;
+
+    public long RegisterReturn(decimal quantityEntered)
+    {
+        if (quantityEntered <= 0)
+            throw new DomainValidationException("Return quantity must be greater than zero");
+        if (quantityEntered > ReturnableQuantityEntered)
+            throw new DomainValidationException("Return quantity cannot exceed the remaining returnable sale quantity");
+
+        // Calculate the incremental refund from cumulative rounded totals. Rounding each
+        // partial return independently can make several small returns add up to more (or
+        // less) than the original immutable line total.
+        var previousReturnedAmount = decimal.Round(
+            ReturnedQuantityEntered * UnitPrice,
+            0,
+            MidpointRounding.AwayFromZero);
+        ReturnedQuantityEntered += quantityEntered;
+        var cumulativeReturnedAmount = decimal.Round(
+            ReturnedQuantityEntered * UnitPrice,
+            0,
+            MidpointRounding.AwayFromZero);
+
+        return checked((long)(cumulativeReturnedAmount - previousReturnedAmount));
     }
 }

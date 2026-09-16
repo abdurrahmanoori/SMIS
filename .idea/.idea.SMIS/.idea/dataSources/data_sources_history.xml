@@ -146,7 +146,6 @@
       <case-sensitivity plain-identifiers="mixed" quoted-identifiers="mixed" />
       <driver-ref>sqlserver.localdb.jb</driver-ref>
       <synchronize>true</synchronize>
-      <configured-by-url>true</configured-by-url>
       <jdbc-driver>com.jetbrains.jdbc.sqlserver.SqlServerDriver</jdbc-driver>
       <jdbc-url>Server=(localdb)\mssqllocaldb;Database=db47301;Trusted_Connection=true;TrustServerCertificate=true;</jdbc-url>
       <jdbc-additional-properties>

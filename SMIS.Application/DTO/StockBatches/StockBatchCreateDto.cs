@@ -26,5 +26,6 @@ namespace SMIS.Application.DTO.StockBatches
         /// receipt numbers, or other human-readable document numbers here.
         /// </summary>
         public string? ReferenceId { get; set; }
+        public string? IdempotencyKey { get; set; }
     }
 }

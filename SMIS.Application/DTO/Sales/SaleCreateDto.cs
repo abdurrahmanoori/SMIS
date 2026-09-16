@@ -10,6 +10,7 @@ public sealed class SaleCreateDto
     public DateTime? SaleDateUtc { get; set; }
     public DateTime? DueDate { get; set; }
     public string? Notes { get; set; }
+    public string? IdempotencyKey { get; set; }
     public List<SaleLineCreateDto> Lines { get; set; } = [];
 }
 

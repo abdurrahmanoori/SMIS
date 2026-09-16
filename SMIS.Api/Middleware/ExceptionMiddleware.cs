@@ -42,9 +42,12 @@ namespace SMIS.Api.Middleware
             {
                 DomainValidationException => StatusCodes.Status400BadRequest,
                 UnauthorizedAccessException => StatusCodes.Status401Unauthorized,
+                DbUpdateConcurrencyException => StatusCodes.Status409Conflict,
                 DbUpdateException dbEx
                     when dbEx.InnerException?.Message.Contains("FOREIGN KEY constraint failed") == true
                       || dbEx.InnerException?.Message.Contains("UNIQUE constraint failed") == true
+                      || dbEx.InnerException?.Message.Contains("Cannot insert duplicate key", StringComparison.OrdinalIgnoreCase) == true
+                      || dbEx.InnerException?.Message.Contains("duplicate key row", StringComparison.OrdinalIgnoreCase) == true
                     => StatusCodes.Status409Conflict,
                 _ => StatusCodes.Status500InternalServerError
             };
@@ -56,6 +59,18 @@ namespace SMIS.Api.Middleware
                 {
                     Success = false,
                     Errors = new[] { new { Code = "DomainValidation", Description = domainEx.Message } }
+                }),
+                DbUpdateConcurrencyException => JsonSerializer.Serialize(new
+                {
+                    Success = false,
+                    Errors = new[]
+                    {
+                        new
+                        {
+                            Code = "InventoryConcurrencyConflict",
+                            Description = "Inventory changed while this operation was being processed. Refresh the stock state and retry."
+                        }
+                    }
                 }),
                 _ => hostEnvironment.IsDevelopment()
                     ? JsonSerializer.Serialize(log, new JsonSerializerOptions { WriteIndented = true })

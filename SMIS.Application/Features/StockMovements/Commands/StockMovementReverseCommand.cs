@@ -11,10 +11,10 @@ namespace SMIS.Application.Features.StockMovements.Commands;
 /// Reverses a posted movement through the shared inventory workflow. The original
 /// movement remains untouched and the workflow posts an opposite ledger entry.
 /// </summary>
-public record StockMovementReverseCommand(string Id) : IRequest<Result<StockMovementDto>>;
+public record StockMovementReverseCommand(string Id) : IRequest<Result<List<StockMovementDto>>>;
 
 internal sealed class StockMovementReverseCommandHandler
-    : IRequestHandler<StockMovementReverseCommand, Result<StockMovementDto>>
+    : IRequestHandler<StockMovementReverseCommand, Result<List<StockMovementDto>>>
 {
     private readonly IInventoryService _inventory;
     private readonly IUnitOfWork _unitOfWork;
@@ -31,14 +31,14 @@ internal sealed class StockMovementReverseCommandHandler
         _mapper = mapper;
     }
 
-    public async Task<Result<StockMovementDto>> Handle(
+    public async Task<Result<List<StockMovementDto>>> Handle(
         StockMovementReverseCommand request,
         CancellationToken cancellationToken
     )
     {
         var result = await _inventory.ReverseMovementAsync(request.Id, cancellationToken);
         if (!result.Success)
-            return new Result<StockMovementDto>
+            return new Result<List<StockMovementDto>>
             {
                 Success = false,
                 Message = result.Message,
@@ -47,6 +47,7 @@ internal sealed class StockMovementReverseCommandHandler
 
         await _unitOfWork.SaveChanges(cancellationToken);
 
-        return Result<StockMovementDto>.SuccessResult(_mapper.Map<StockMovementDto>(result.Response));
+        return Result<List<StockMovementDto>>.SuccessResult(
+            _mapper.Map<List<StockMovementDto>>(result.Response));
     }
 }

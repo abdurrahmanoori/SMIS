@@ -24,16 +24,19 @@ internal sealed class InventoryBatchOperationCommandHandler
     : IRequestHandler<InventoryBatchOperationCommand, Result<StockMovementDto>>
 {
     private readonly IInventoryService _inventory;
+    private readonly IIdempotencyService _idempotency;
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
 
     public InventoryBatchOperationCommandHandler(
         IInventoryService inventory,
+        IIdempotencyService idempotency,
         IUnitOfWork unitOfWork,
         IMapper mapper
     )
     {
         _inventory = inventory;
+        _idempotency = idempotency;
         _unitOfWork = unitOfWork;
         _mapper = mapper;
     }
@@ -44,6 +47,13 @@ internal sealed class InventoryBatchOperationCommandHandler
     )
     {
         var dto = request.Dto;
+        var reservation = await _idempotency.ReserveAsync(
+            $"inventory:{request.Reason}",
+            dto.IdempotencyKey,
+            cancellationToken);
+        if (!reservation.Success)
+            return Failure(reservation);
+
         var result = await _inventory.PostMovementAsync(
             new InventoryMovementRequest(
                 dto.StockBatchId,
@@ -82,16 +92,19 @@ internal sealed class InventoryTransferCommandHandler
     : IRequestHandler<InventoryTransferCommand, Result<List<StockMovementDto>>>
 {
     private readonly IInventoryService _inventory;
+    private readonly IIdempotencyService _idempotency;
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
 
     public InventoryTransferCommandHandler(
         IInventoryService inventory,
+        IIdempotencyService idempotency,
         IUnitOfWork unitOfWork,
         IMapper mapper
     )
     {
         _inventory = inventory;
+        _idempotency = idempotency;
         _unitOfWork = unitOfWork;
         _mapper = mapper;
     }
@@ -102,6 +115,18 @@ internal sealed class InventoryTransferCommandHandler
     )
     {
         var dto = request.Dto;
+        var reservation = await _idempotency.ReserveAsync(
+            "inventory:transfer",
+            dto.IdempotencyKey,
+            cancellationToken);
+        if (!reservation.Success)
+            return new Result<List<StockMovementDto>>
+            {
+                Success = false,
+                Message = reservation.Message,
+                Errors = reservation.Errors
+            };
+
         var result = await _inventory.TransferAsync(
             new InventoryTransferRequest(
                 dto.SourceStockBatchId,

@@ -20,6 +20,7 @@ namespace SMIS.Infrastructure.Server.Repositories.StockBatches
         public Task<List<StockBatch>> GetAvailableFifoAsync(
             string shopId,
             string productId,
+            DateTime occurredAtUtc,
             CancellationToken cancellationToken = default
         ) =>
             _context.StockBatches
@@ -27,8 +28,13 @@ namespace SMIS.Infrastructure.Server.Repositories.StockBatches
                     batch.ShopId == shopId &&
                     batch.ProductId == productId &&
                     batch.RemainingQuantityBase > 0 &&
-                    batch.Status == StatusEnum.Active)
-                .OrderBy(batch => batch.ReceivedAtUtc)
+                    batch.Status == StatusEnum.Active &&
+                    (!batch.ExpirationDate.HasValue || batch.ExpirationDate.Value > occurredAtUtc))
+                // FEFO for dated stock, then FIFO. Batches without an expiry date are
+                // consumed only after all eligible expiring batches.
+                .OrderBy(batch => batch.ExpirationDate.HasValue ? 0 : 1)
+                .ThenBy(batch => batch.ExpirationDate)
+                .ThenBy(batch => batch.ReceivedAtUtc)
                 .ThenBy(batch => batch.Id)
                 .ToListAsync(cancellationToken);
     }

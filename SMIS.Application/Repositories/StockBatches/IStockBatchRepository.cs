@@ -8,6 +8,7 @@ namespace SMIS.Application.Repositories.StockBatches
         Task<List<StockBatch>> GetAvailableFifoAsync(
             string shopId,
             string productId,
+            DateTime occurredAtUtc,
             CancellationToken cancellationToken = default);
     }
 }

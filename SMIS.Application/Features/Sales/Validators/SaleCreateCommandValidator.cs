@@ -36,5 +36,13 @@ public sealed class SaleCreateCommandValidator : AbstractValidator<SaleCreateCom
 
         RuleFor(command => command.Dto.Notes)
             .MaximumLength(500);
+
+        RuleFor(command => command.Dto.IdempotencyKey)
+            .MaximumLength(200);
+
+        RuleFor(command => command.Dto.SaleDateUtc)
+            .LessThanOrEqualTo(DateTime.UtcNow.AddMinutes(5))
+            .When(command => command.Dto.SaleDateUtc.HasValue)
+            .WithMessage("Sale date cannot be in the future.");
     }
 }

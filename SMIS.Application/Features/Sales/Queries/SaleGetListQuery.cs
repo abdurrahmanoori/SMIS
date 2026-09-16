@@ -5,6 +5,7 @@ using SMIS.Application.Common.Response;
 using SMIS.Application.DTO.Sales;
 using SMIS.Application.Extensions;
 using SMIS.Application.Repositories.Sales;
+using SMIS.Application.Identity.IServices;
 
 namespace SMIS.Application.Features.Sales.Queries;
 
@@ -15,14 +16,17 @@ internal sealed class SaleGetListQueryHandler : IRequestHandler<SaleGetListQuery
 {
     private readonly ISaleRepository _sales;
     private readonly IMapper _mapper;
+    private readonly ICurrentUser _currentUser;
 
     public SaleGetListQueryHandler(
         ISaleRepository sales,
-        IMapper mapper
+        IMapper mapper,
+        ICurrentUser currentUser
     )
     {
         _sales = sales;
         _mapper = mapper;
+        _currentUser = currentUser;
     }
 
     public async Task<Result<PagedList<SaleDto>>> Handle(
@@ -30,8 +34,14 @@ internal sealed class SaleGetListQueryHandler : IRequestHandler<SaleGetListQuery
         CancellationToken cancellationToken
     )
     {
-        var page = await _sales
-            .GetAllQueryable(includeProperties: "Lines,Receivable.Payments")
+        var query = _sales.GetAllQueryable(includeProperties: "Lines,Receivable.Payments");
+        if (!_currentUser.IsSuperAdmin())
+        {
+            var shopId = _currentUser.GetShopId();
+            query = query.Where(sale => sale.ShopId == shopId);
+        }
+
+        var page = await query
             .ToPagedList(request.PageNumber, request.PageSize);
 
         if (!page.Items.Any())

@@ -24,7 +24,6 @@
     <data-source source="LOCAL" name="localServer" uuid="ac5415fe-1e2d-4654-8634-a9fa83f2c4ba">
       <driver-ref>sqlserver.localdb.jb</driver-ref>
       <synchronize>true</synchronize>
-      <configured-by-url>true</configured-by-url>
       <jdbc-driver>com.jetbrains.jdbc.sqlserver.SqlServerDriver</jdbc-driver>
       <jdbc-url>Server=(localdb)\mssqllocaldb;Database=db47301;Trusted_Connection=true;TrustServerCertificate=true;</jdbc-url>
       <jdbc-additional-properties>

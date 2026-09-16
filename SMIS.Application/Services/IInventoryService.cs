@@ -26,7 +26,7 @@ public interface IInventoryService
         CancellationToken cancellationToken = default
     );
 
-    Task<Result<StockMovement>> ReverseMovementAsync(
+    Task<Result<IReadOnlyList<StockMovement>>> ReverseMovementAsync(
         string movementId,
         CancellationToken cancellationToken = default
     );
@@ -56,7 +56,8 @@ public sealed record InventoryReceiptRequest(
     string? BatchNumber = null,
     DateTime? ExpirationDate = null,
     string? ReferenceType = null,
-    string? ReferenceId = null
+    string? ReferenceId = null,
+    string? OperationId = null
 );
 
 /// <summary>
@@ -71,7 +72,8 @@ public sealed record InventoryMovementRequest(
     StockMovementReason Reason,
     DateTime OccurredAtUtc,
     string? ReferenceType = null,
-    string? ReferenceId = null
+    string? ReferenceId = null,
+    string? OperationId = null
 );
 
 /// <summary>

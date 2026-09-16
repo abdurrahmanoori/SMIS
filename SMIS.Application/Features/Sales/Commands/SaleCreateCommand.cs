@@ -25,6 +25,7 @@ internal sealed class SaleCreateCommandHandler : IRequestHandler<SaleCreateComma
     private readonly IShopRepository _shops;
     private readonly IProductUnitRepository _productUnits;
     private readonly IInventoryService _inventory;
+    private readonly IIdempotencyService _idempotency;
     private readonly IUnitOfWork _unitOfWork;
     private readonly ICurrentUser _currentUser;
     private readonly IMapper _mapper;
@@ -36,6 +37,7 @@ internal sealed class SaleCreateCommandHandler : IRequestHandler<SaleCreateComma
         IShopRepository shops,
         IProductUnitRepository productUnits,
         IInventoryService inventory,
+        IIdempotencyService idempotency,
         IUnitOfWork unitOfWork,
         ICurrentUser currentUser,
         IMapper mapper
@@ -47,6 +49,7 @@ internal sealed class SaleCreateCommandHandler : IRequestHandler<SaleCreateComma
         _shops = shops;
         _productUnits = productUnits;
         _inventory = inventory;
+        _idempotency = idempotency;
         _unitOfWork = unitOfWork;
         _currentUser = currentUser;
         _mapper = mapper;
@@ -58,6 +61,18 @@ internal sealed class SaleCreateCommandHandler : IRequestHandler<SaleCreateComma
     )
     {
         var dto = request.Dto;
+        var reservation = await _idempotency.ReserveAsync(
+            "sale:create",
+            dto.IdempotencyKey,
+            cancellationToken);
+        if (!reservation.Success)
+            return new Result<SaleDto>
+            {
+                Success = false,
+                Message = reservation.Message,
+                Errors = reservation.Errors
+            };
+
         var shop = await _shops.GetByIdAsync(dto.ShopId);
         if (shop is null)
             return Result<SaleDto>.FailureResult("ShopNotFound", "The selected shop does not exist.");

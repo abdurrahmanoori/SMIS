@@ -32,4 +32,18 @@ public sealed class SaleController : BaseApiController
         CancellationToken cancellationToken
     ) =>
         await HandleRequest(new SaleGetByIdQuery(id), cancellationToken);
+
+    [HttpPost("{id}/returns")]
+    public async Task<ActionResult<SaleReturnResultDto>> Return(
+        string id,
+        SaleReturnDto dto,
+        CancellationToken cancellationToken) =>
+        await HandleRequest(new SaleReturnCommand(id, dto), cancellationToken);
+
+    [HttpPost("{id}/void")]
+    public async Task<ActionResult<SaleReturnResultDto>> Void(
+        string id,
+        SaleVoidDto dto,
+        CancellationToken cancellationToken) =>
+        await HandleRequest(new SaleVoidCommand(id, dto), cancellationToken);
 }

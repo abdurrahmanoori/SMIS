@@ -44,6 +44,9 @@ internal sealed class ProductCreateCommandHandler : IRequestHandler<ProductCreat
         await _translationKeyRepository.AddTranslationKeysForEntity(request.ProductCreateDto, _unitOfWork);
 
         var entity = _mapper.Map<Product>(request.ProductCreateDto);
+        entity.SetReorderPolicy(
+            request.ProductCreateDto.ReorderPointBase,
+            request.ProductCreateDto.ReorderQuantityBase);
         
         // Populate name fields
         var shop = await _shopRepository.GetByIdAsync(request.ProductCreateDto.ShopId);

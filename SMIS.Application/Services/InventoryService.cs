@@ -78,6 +78,9 @@ public sealed class InventoryService : IInventoryService
             ? batch.Id
             : request.ReferenceId;
 
+        var operationId = string.IsNullOrWhiteSpace(request.OperationId)
+            ? Guid.NewGuid().ToString()
+            : request.OperationId;
         var movement = StockMovement.Create(
             product.ShopId,
             batch.Id,
@@ -88,7 +91,8 @@ public sealed class InventoryService : IInventoryService
             StockMovementReason.PurchaseReceipt,
             request.OccurredAtUtc,
             referenceType,
-            referenceId);
+            referenceId,
+            operationId);
 
         await _batches.AddAsync(batch);
         await _movements.AddAsync(movement);
@@ -105,6 +109,16 @@ public sealed class InventoryService : IInventoryService
             return Result<StockMovement>.FailureResult(
                 "PurchaseReceiptUsesReceiptWorkflow",
                 "Purchase receipts must be posted through the inventory receipt workflow.");
+
+        if (request.Reason == StockMovementReason.Sale)
+            return Result<StockMovement>.FailureResult(
+                "SaleUsesFifoWorkflow",
+                "Sale inventory must be issued through the FIFO/FEFO sale workflow.");
+
+        if (request.Reason == StockMovementReason.Transfer)
+            return Result<StockMovement>.FailureResult(
+                "TransferUsesTransferWorkflow",
+                "Transfers must be posted through the paired transfer workflow.");
 
         var referenceFailure = ValidateReference(request.ReferenceType, request.ReferenceId);
         if (referenceFailure is not null)
@@ -149,7 +163,8 @@ public sealed class InventoryService : IInventoryService
             request.Reason,
             request.OccurredAtUtc,
             request.ReferenceType,
-            request.ReferenceId);
+            request.ReferenceId,
+            request.OperationId);
 
         ApplyBalance(batch, movement.Direction, movement.QuantityBase);
         await _movements.AddAsync(movement);
@@ -162,6 +177,11 @@ public sealed class InventoryService : IInventoryService
         CancellationToken cancellationToken = default
     )
     {
+        if (request.Reason != StockMovementReason.Sale)
+            return Result<IReadOnlyList<StockMovement>>.FailureResult(
+                "FifoIssueReservedForSales",
+                "FIFO/FEFO issuing is reserved for the sale workflow. Other stock changes must use their explicit inventory workflow.");
+
         var referenceFailure = ValidateReference(request.ReferenceType, request.ReferenceId);
         if (referenceFailure is not null)
             return Failure<IReadOnlyList<StockMovement>>(referenceFailure);
@@ -176,7 +196,11 @@ public sealed class InventoryService : IInventoryService
         var product = productResult.Product!;
         var productUnit = productResult.ProductUnit!;
         var totalBase = ConvertToBaseQuantity(request.QuantityEntered, productUnit);
-        var batches = await _batches.GetAvailableFifoAsync(product.ShopId, product.Id, cancellationToken);
+        var batches = await _batches.GetAvailableFifoAsync(
+            product.ShopId,
+            product.Id,
+            request.OccurredAtUtc,
+            cancellationToken);
 
         if (batches.Sum(batch => batch.RemainingQuantityBase) < totalBase)
             return Result<IReadOnlyList<StockMovement>>.FailureResult(
@@ -185,6 +209,7 @@ public sealed class InventoryService : IInventoryService
 
         var created = new List<StockMovement>();
         var remainingBase = totalBase;
+        var operationId = Guid.NewGuid().ToString();
 
         foreach (var batch in batches)
         {
@@ -204,7 +229,8 @@ public sealed class InventoryService : IInventoryService
                 request.Reason,
                 request.OccurredAtUtc,
                 request.ReferenceType,
-                request.ReferenceId);
+                request.ReferenceId,
+                operationId);
 
             ApplyBalance(batch, movement.Direction, movement.QuantityBase);
             await _movements.AddAsync(movement);
@@ -215,51 +241,83 @@ public sealed class InventoryService : IInventoryService
         return Result<IReadOnlyList<StockMovement>>.SuccessResult(created);
     }
 
-    public async Task<Result<StockMovement>> ReverseMovementAsync(
+    public async Task<Result<IReadOnlyList<StockMovement>>> ReverseMovementAsync(
         string movementId,
         CancellationToken cancellationToken = default
     )
     {
         var original = await _movements.GetByIdAsync(movementId);
         if (original is null)
-            return Result<StockMovement>.NotFoundResult(movementId);
+            return Result<IReadOnlyList<StockMovement>>.NotFoundResult(movementId);
 
-        if (await _movements.HasReversalAsync(original.Id, cancellationToken))
-            return Result<StockMovement>.FailureResult(
-                "MovementAlreadyReversed",
-                "This movement already has a reversal entry.");
+        if (original.Reason is StockMovementReason.Sale
+            or StockMovementReason.PurchaseReceipt
+            or StockMovementReason.CustomerReturn
+            or StockMovementReason.SupplierReturn)
+            return Result<IReadOnlyList<StockMovement>>.FailureResult(
+                "BusinessMovementRequiresWorkflowReversal",
+                "This movement belongs to a higher-level sale or purchasing workflow and cannot be reversed independently.");
 
-        var contextResult = await GetExistingBatchContextAsync(
-            original.StockBatchId,
-            original.ProductUnitId,
-            cancellationToken);
-        if (contextResult.Failure is not null)
-            return Failure<StockMovement>(contextResult.Failure);
+        if (original.ReferenceType is nameof(StockMovement) or "StockMovementReversal")
+            return Result<IReadOnlyList<StockMovement>>.FailureResult(
+                "ReversalCannotBeReversedDirectly",
+                "A compensating reversal cannot itself be reversed through the generic movement endpoint.");
 
-        var batch = contextResult.Batch!;
-        var reverseDirection = original.Direction == StockMovementDirection.In
-            ? StockMovementDirection.Out
-            : StockMovementDirection.In;
+        var originals = string.IsNullOrWhiteSpace(original.OperationId)
+            ? new List<StockMovement> { original }
+            : await _movements.GetByOperationIdAsync(original.OperationId, cancellationToken);
 
-        // A reversal uses the original normalized quantity rather than re-running the
-        // current conversion factor. That guarantees an exact undo even if packaging
-        // definitions change after the original movement was posted.
-        var reversal = StockMovement.Create(
-            original.ShopId,
-            original.StockBatchId,
-            original.ProductUnitId,
-            original.QuantityEntered,
-            original.QuantityBase,
-            reverseDirection,
-            StockMovementReason.Adjustment,
-            DateTime.UtcNow,
-            nameof(StockMovement),
-            original.Id);
+        foreach (var movement in originals)
+        {
+            if (await _movements.HasReversalAsync(movement.Id, cancellationToken))
+                return Result<IReadOnlyList<StockMovement>>.FailureResult(
+                    "MovementAlreadyReversed",
+                    "This inventory operation already has a reversal entry.");
+        }
 
-        ApplyBalance(batch, reversal.Direction, reversal.QuantityBase);
-        await _movements.AddAsync(reversal);
+        var contexts = new List<(StockMovement Movement, StockBatch Batch)>();
+        foreach (var movement in originals)
+        {
+            var contextResult = await GetExistingBatchContextAsync(
+                movement.StockBatchId,
+                movement.ProductUnitId,
+                cancellationToken);
+            if (contextResult.Failure is not null)
+                return Failure<IReadOnlyList<StockMovement>>(contextResult.Failure);
 
-        return Result<StockMovement>.SuccessResult(reversal);
+            contexts.Add((movement, contextResult.Batch!));
+        }
+
+        var reversalOperationId = Guid.NewGuid().ToString();
+        var reversals = new List<StockMovement>();
+        foreach (var (movement, batch) in contexts)
+        {
+            var reverseDirection = movement.Direction == StockMovementDirection.In
+                ? StockMovementDirection.Out
+                : StockMovementDirection.In;
+
+            // Reverse the exact historical normalized quantity. All movements belonging
+            // to the same logical operation (FIFO split, transfer, etc.) are reversed
+            // together so a business operation cannot be half-undone.
+            var reversal = StockMovement.Create(
+                movement.ShopId,
+                movement.StockBatchId,
+                movement.ProductUnitId,
+                movement.QuantityEntered,
+                movement.QuantityBase,
+                reverseDirection,
+                StockMovementReason.Adjustment,
+                DateTime.UtcNow,
+                "StockMovementReversal",
+                movement.Id,
+                reversalOperationId);
+
+            ApplyBalance(batch, reversal.Direction, reversal.QuantityBase);
+            await _movements.AddAsync(reversal);
+            reversals.Add(reversal);
+        }
+
+        return Result<IReadOnlyList<StockMovement>>.SuccessResult(reversals);
     }
 
     public async Task<Result<IReadOnlyList<StockMovement>>> TransferAsync(
@@ -313,6 +371,17 @@ public sealed class InventoryService : IInventoryService
                 "TransferCostMismatch",
                 "Source and destination batches must have the same base-unit cost.");
 
+        if (!string.Equals(source.BatchNumber, destination.BatchNumber, StringComparison.Ordinal) ||
+            source.ExpirationDate != destination.ExpirationDate)
+            return Result<IReadOnlyList<StockMovement>>.FailureResult(
+                "TransferLotMismatch",
+                "Source and destination batches must represent the same lot and expiration date.");
+
+        if (source.ExpirationDate.HasValue && source.ExpirationDate.Value <= request.OccurredAtUtc)
+            return Result<IReadOnlyList<StockMovement>>.FailureResult(
+                "ExpiredStockTransfer",
+                "Expired stock cannot be transferred as available inventory.");
+
         // Transfers still accept the quantity in a user-facing ProductUnit, but both
         // sides of the transfer are posted with the same normalized base quantity.
         // This keeps the OUT and IN ledger entries exactly symmetrical.
@@ -330,6 +399,7 @@ public sealed class InventoryService : IInventoryService
         var destinationReferenceType = request.ReferenceType ?? nameof(StockBatch);
         var destinationReferenceId = request.ReferenceId ?? source.Id;
 
+        var operationId = Guid.NewGuid().ToString();
         var sourceMovement = StockMovement.Create(
             source.ShopId,
             source.Id,
@@ -340,7 +410,8 @@ public sealed class InventoryService : IInventoryService
             StockMovementReason.Transfer,
             request.OccurredAtUtc,
             sourceReferenceType,
-            sourceReferenceId);
+            sourceReferenceId,
+            operationId);
 
         var destinationMovement = StockMovement.Create(
             destination.ShopId,
@@ -352,7 +423,8 @@ public sealed class InventoryService : IInventoryService
             StockMovementReason.Transfer,
             request.OccurredAtUtc,
             destinationReferenceType,
-            destinationReferenceId);
+            destinationReferenceId,
+            operationId);
 
         // Both batch mutations are staged before the caller performs its single
         // SaveChanges. EF Core makes that SaveChanges atomic.

@@ -70,6 +70,9 @@ namespace SMIS.Application.Features.Products.Commands
             entity.SetBarcode(request.ProductCreateDto.Barcode);
             entity.SetImageUrl(request.ProductCreateDto.ImageUrl);
             entity.SetCategoryId(request.ProductCreateDto.CategoryId);
+            entity.SetReorderPolicy(
+                request.ProductCreateDto.ReorderPointBase,
+                request.ProductCreateDto.ReorderQuantityBase);
             if (request.ProductCreateDto.IsActive) entity.Activate(); else entity.Deactivate();
             
             // Update name fields

@@ -32,6 +32,8 @@ public sealed class ProductSyncCreateCommandValidator : AbstractValidator<Produc
         rules.RuleFor(x => x.Barcode).MaximumLength(100);
         rules.RuleFor(x => x.ImageUrl).MaximumLength(500);
         rules.RuleFor(x => x.CategoryId).MaximumLength(450);
+        rules.RuleFor(x => x.ReorderPointBase).GreaterThanOrEqualTo(0);
+        rules.RuleFor(x => x.ReorderQuantityBase).GreaterThanOrEqualTo(0);
     }
 }
 
@@ -49,6 +51,8 @@ public sealed class ProductSyncUpdateCommandValidator : AbstractValidator<Produc
             RuleFor(x => x.Dto.Barcode).MaximumLength(100);
             RuleFor(x => x.Dto.ImageUrl).MaximumLength(500);
             RuleFor(x => x.Dto.CategoryId).MaximumLength(450);
+            RuleFor(x => x.Dto.ReorderPointBase).GreaterThanOrEqualTo(0);
+            RuleFor(x => x.Dto.ReorderQuantityBase).GreaterThanOrEqualTo(0);
             RuleFor(x => x.Dto.ClientModifiedDate).NotEmpty().Must(SyncValidationRules.BeReasonableUtcTimestamp);
             RuleFor(x => x.Dto.ClientModifiedBy).MaximumLength(450);
         });

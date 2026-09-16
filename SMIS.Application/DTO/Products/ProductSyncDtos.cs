@@ -10,6 +10,8 @@ public class ProductSyncUpdateDto
     public string? Barcode { get; set; }
     public string? ImageUrl { get; set; }
     public string? CategoryId { get; set; }
+    public decimal ReorderPointBase { get; set; }
+    public decimal ReorderQuantityBase { get; set; }
     public DateTime ClientModifiedDate { get; set; }
     public string? ClientModifiedBy { get; set; }
 }

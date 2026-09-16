@@ -5,6 +5,7 @@ using SMIS.Application.Common.Response;
 using SMIS.Application.DTO.StockMovements;
 using SMIS.Application.Extensions;
 using SMIS.Application.Repositories.StockMovements;
+using SMIS.Application.Identity.IServices;
 
 namespace SMIS.Application.Features.StockMovements.Queries;
 
@@ -16,15 +17,26 @@ internal sealed class StockMovementGetListQueryHandler
 {
     private readonly IStockMovementRepository _repository;
     private readonly IMapper _mapper;
+    private readonly ICurrentUser _currentUser;
 
-    public StockMovementGetListQueryHandler(IStockMovementRepository repository, IMapper mapper) =>
-        (_repository, _mapper) = (repository, mapper);
+    public StockMovementGetListQueryHandler(
+        IStockMovementRepository repository,
+        IMapper mapper,
+        ICurrentUser currentUser) =>
+        (_repository, _mapper, _currentUser) = (repository, mapper, currentUser);
 
     public async Task<Result<PagedList<StockMovementDto>>> Handle(
         StockMovementGetListQuery request,
         CancellationToken cancellationToken)
     {
-        var page = await _repository.GetAllQueryable()
+        var query = _repository.GetAllQueryable();
+        if (!_currentUser.IsSuperAdmin())
+        {
+            var shopId = _currentUser.GetShopId();
+            query = query.Where(movement => movement.ShopId == shopId);
+        }
+
+        var page = await query
             .OrderByDescending(movement => movement.OccurredAtUtc)
             .ToPagedList(request.PageNumber, request.PageSize);
 

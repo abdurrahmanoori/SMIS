@@ -22,6 +22,7 @@ public class LoanAccount : BaseAuditableEntity, IShopEntity
     /// Original receivable principal in minor monetary units. Payments never rewrite it.
     /// </summary>
     public long TotalAmount { get; private set; }
+    public long CreditAmount { get; private set; }
 
     public DateTime LoanDate { get; private set; }
     public DateTime? DueDate { get; private set; }
@@ -39,7 +40,11 @@ public class LoanAccount : BaseAuditableEntity, IShopEntity
     /// </summary>
     public long PaidAmount => Payments.Sum(payment => payment.Amount);
 
-    public long RemainingAmount => TotalAmount - PaidAmount;
+    public long NetReceivableAmount => TotalAmount - CreditAmount;
+
+    public long RemainingAmount => Math.Max(0, NetReceivableAmount - PaidAmount);
+
+    public long OverpaidAmount => Math.Max(0, PaidAmount - NetReceivableAmount);
 
     internal LoanAccount()
     {
@@ -137,9 +142,20 @@ public class LoanAccount : BaseAuditableEntity, IShopEntity
     {
         if (amount <= 0)
             throw new DomainValidationException("Payment amount must be greater than zero");
-        if (RemainingAmount < 0)
+        if (PaidAmount > NetReceivableAmount)
             throw new DomainValidationException("Payments cannot exceed the receivable amount");
 
+        UpdateStatus();
+    }
+
+    public void ApplyCredit(long amount)
+    {
+        if (amount <= 0)
+            throw new DomainValidationException("Receivable credit must be greater than zero");
+        if (CreditAmount + amount > TotalAmount)
+            throw new DomainValidationException("Receivable credits cannot exceed the original receivable amount");
+
+        CreditAmount += amount;
         UpdateStatus();
     }
 

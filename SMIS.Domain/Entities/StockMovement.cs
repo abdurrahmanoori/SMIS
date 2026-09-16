@@ -10,6 +10,7 @@ public class StockMovement : BaseAuditableEntityWithoutName, IShopEntity
     // StockMovement is intentionally immutable after posting. Corrections are made
     // by posting an opposite movement so inventory history remains auditable.
     public string ShopId { get; private set; } = string.Empty;
+    public string OperationId { get; private set; } = string.Empty;
     public string StockBatchId { get; private set; } = string.Empty;
     public string ProductUnitId { get; private set; } = string.Empty;
     public decimal QuantityEntered { get; private set; }
@@ -53,7 +54,8 @@ public class StockMovement : BaseAuditableEntityWithoutName, IShopEntity
         StockMovementReason reason,
         DateTime occurredAtUtc,
         string? referenceType = null,
-        string? referenceId = null
+        string? referenceId = null,
+        string? operationId = null
     )
     {
         // QuantityEntered preserves what the user transacted (e.g. 2 boxes), while
@@ -80,6 +82,9 @@ public class StockMovement : BaseAuditableEntityWithoutName, IShopEntity
         return new StockMovement
         {
             ShopId = shopId.Trim(),
+            OperationId = string.IsNullOrWhiteSpace(operationId)
+                ? Guid.NewGuid().ToString()
+                : operationId.Trim(),
             StockBatchId = stockBatchId.Trim(),
             ProductUnitId = productUnitId.Trim(),
             QuantityEntered = quantityEntered,
@@ -99,7 +104,11 @@ public class StockMovement : BaseAuditableEntityWithoutName, IShopEntity
         if (value == default)
             throw new DomainValidationException("Movement time cannot be empty");
 
-        return value.Kind == DateTimeKind.Utc ? value : value.ToUniversalTime();
+        var utc = value.Kind == DateTimeKind.Utc ? value : value.ToUniversalTime();
+        if (utc > DateTime.UtcNow.AddMinutes(5))
+            throw new DomainValidationException("Movement time cannot be in the future");
+
+        return utc;
     }
 
     private static string? NormalizeOptional(

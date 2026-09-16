@@ -10,6 +10,9 @@ public sealed class SaleDto
     public DateTime SaleDateUtc { get; set; }
     public SalePaymentType PaymentType { get; set; }
     public long TotalAmount { get; set; }
+    public long ReturnedAmount { get; set; }
+    public long NetAmount { get; set; }
+    public SaleStatus Status { get; set; }
     public string? Notes { get; set; }
     public string? ReceivableId { get; set; }
     public long? ReceivableRemainingAmount { get; set; }
@@ -23,6 +26,8 @@ public sealed class SaleLineDto
     public string ProductId { get; set; } = string.Empty;
     public string ProductUnitId { get; set; } = string.Empty;
     public decimal QuantityEntered { get; set; }
+    public decimal ReturnedQuantityEntered { get; set; }
+    public decimal ReturnableQuantityEntered { get; set; }
     public long UnitPrice { get; set; }
     public long LineTotal { get; set; }
 }

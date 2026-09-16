@@ -4,6 +4,7 @@ using SMIS.Application.Common.Response;
 using SMIS.Application.DTO.StockBatches;
 using SMIS.Application.Repositories.Base;
 using SMIS.Application.Repositories.StockBatches;
+using SMIS.Application.Identity.IServices;
 
 namespace SMIS.Application.Features.StockBatches.Commands
 {
@@ -18,16 +19,19 @@ namespace SMIS.Application.Features.StockBatches.Commands
         private readonly IStockBatchRepository _stockBatchRepository;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
+        private readonly ICurrentUser _currentUser;
 
         public StockBatchUpdateCommandHandler(
             IUnitOfWork unitOfWork,
             IMapper mapper,
-            IStockBatchRepository stockBatchRepository
+            IStockBatchRepository stockBatchRepository,
+            ICurrentUser currentUser
         )
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _stockBatchRepository = stockBatchRepository;
+            _currentUser = currentUser;
         }
 
         public async Task<Result<StockBatchDto>> Handle(
@@ -37,6 +41,12 @@ namespace SMIS.Application.Features.StockBatches.Commands
         {
             var entity = await _stockBatchRepository.GetByIdAsync(request.Id);
             if (entity == null)
+            {
+                return Result<StockBatchDto>.NotFoundResult(nameof(StockBatchDto.Id));
+            }
+
+            if (!_currentUser.IsSuperAdmin() &&
+                !string.Equals(entity.ShopId, _currentUser.GetShopId(), StringComparison.Ordinal))
             {
                 return Result<StockBatchDto>.NotFoundResult(nameof(StockBatchDto.Id));
             }
@@ -58,6 +68,16 @@ namespace SMIS.Application.Features.StockBatches.Commands
                 case Domain.Enums.StatusEnum.Cancelled:
                     entity.MarkAsCancelled();
                     break;
+                case Domain.Enums.StatusEnum.Pending:
+                    return Result<StockBatchDto>.FailureResult(
+                        "InvalidStockBatchStatus",
+                        "Pending is not a valid persisted state for an existing stock batch.");
+                case null:
+                    break;
+                default:
+                    return Result<StockBatchDto>.FailureResult(
+                        "InvalidStockBatchStatus",
+                        "The requested stock batch status is not supported.");
             }
 
             await _unitOfWork.SaveChanges(cancellationToken);

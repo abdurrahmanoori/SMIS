@@ -26,6 +26,9 @@ public sealed class InventoryBatchOperationCommandValidator
         RuleFor(x => x.Dto)
             .Must(dto => string.IsNullOrWhiteSpace(dto.ReferenceType) == string.IsNullOrWhiteSpace(dto.ReferenceId))
             .WithMessage("ReferenceType and ReferenceId must either both be supplied or both be empty.");
+
+        RuleFor(x => x.Dto.IdempotencyKey)
+            .MaximumLength(200);
     }
 }
 
@@ -50,5 +53,8 @@ public sealed class InventoryTransferCommandValidator
         RuleFor(x => x.Dto)
             .Must(dto => string.IsNullOrWhiteSpace(dto.ReferenceType) == string.IsNullOrWhiteSpace(dto.ReferenceId))
             .WithMessage("ReferenceType and ReferenceId must either both be supplied or both be empty.");
+
+        RuleFor(x => x.Dto.IdempotencyKey)
+            .MaximumLength(200);
     }
 }

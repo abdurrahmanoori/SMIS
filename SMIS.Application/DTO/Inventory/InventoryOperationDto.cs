@@ -14,6 +14,7 @@ public class InventoryBatchOperationDto
     public DateTime? OccurredAtUtc { get; set; }
     public string? ReferenceType { get; set; }
     public string? ReferenceId { get; set; }
+    public string? IdempotencyKey { get; set; }
 }
 
 /// <summary>
@@ -38,4 +39,5 @@ public sealed class InventoryTransferDto
     public DateTime? OccurredAtUtc { get; set; }
     public string? ReferenceType { get; set; }
     public string? ReferenceId { get; set; }
+    public string? IdempotencyKey { get; set; }
 }

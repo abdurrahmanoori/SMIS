@@ -40,10 +40,10 @@ internal sealed class InventoryCurrentStockQueryHandler
         CancellationToken cancellationToken
     )
     {
-        if (request.OnlyLowStock && (!request.LowStockThresholdBase.HasValue || request.LowStockThresholdBase < 0))
+        if (request.LowStockThresholdBase < 0)
             return Result<List<CurrentStockReportDto>>.FailureResult(
-                "LowStockThresholdRequired",
-                "A non-negative base-unit threshold is required for the low-stock report.");
+                "InvalidLowStockThreshold",
+                "Low-stock threshold cannot be negative.");
 
         var products = await InventoryReportScope.Products(_db, _currentUser)
             .AsNoTracking()
@@ -51,7 +51,9 @@ internal sealed class InventoryCurrentStockQueryHandler
                 product.Id,
                 product.Name,
                 product.BaseUnitId,
-                product.BaseUnitName ?? product.UnitOfMeasure.Name))
+                product.BaseUnitName ?? product.UnitOfMeasure.Name,
+                product.ReorderPointBase,
+                product.ReorderQuantityBase))
             .ToListAsync(cancellationToken);
 
         var productIds = products.Select(product => product.ProductId).ToList();
@@ -63,7 +65,9 @@ internal sealed class InventoryCurrentStockQueryHandler
                 .Select(batch => new BatchBalanceProjection(
                     batch.ProductId,
                     batch.RemainingQuantityBase,
-                    batch.UnitCostBase))
+                    batch.UnitCostBase,
+                    batch.Status,
+                    batch.ExpirationDate))
                 .ToListAsync(cancellationToken);
 
         var presentationUnits = request.IncludePresentationUnits && productIds.Count > 0
@@ -93,13 +97,19 @@ internal sealed class InventoryCurrentStockQueryHandler
                 productBatches ??= new List<BatchBalanceProjection>();
 
                 var quantityBase = productBatches.Sum(batch => batch.RemainingQuantityBase);
+                var now = DateTime.UtcNow;
+                var availableQuantityBase = productBatches
+                    .Where(batch =>
+                        batch.Status == StatusEnum.Active &&
+                        (!batch.ExpirationDate.HasValue || batch.ExpirationDate.Value > now))
+                    .Sum(batch => batch.RemainingQuantityBase);
 
                 // Valuation is deliberately performed in normalized base units. A box,
                 // carton, or bottle conversion is presentation information and must not
                 // influence the stored inventory cost calculation.
                 var value = productBatches.Sum(batch => batch.RemainingQuantityBase * batch.UnitCostBase);
-                var isLowStock = request.LowStockThresholdBase.HasValue &&
-                                 quantityBase <= request.LowStockThresholdBase.Value;
+                var effectiveThreshold = request.LowStockThresholdBase ?? product.ReorderPointBase;
+                var isLowStock = availableQuantityBase <= effectiveThreshold;
 
                 unitsByProduct.TryGetValue(product.ProductId, out var productUnits);
                 return new CurrentStockReportDto
@@ -109,8 +119,12 @@ internal sealed class InventoryCurrentStockQueryHandler
                     BaseUnitId = product.BaseUnitId,
                     BaseUnitName = product.BaseUnitName,
                     QuantityBase = quantityBase,
+                    AvailableQuantityBase = availableQuantityBase,
+                    UnavailableQuantityBase = quantityBase - availableQuantityBase,
                     BatchCount = productBatches.Count,
                     InventoryValueMinor = InventoryReportMath.ToMinorUnits(value),
+                    ReorderPointBase = product.ReorderPointBase,
+                    ReorderQuantityBase = product.ReorderQuantityBase,
                     IsLowStock = isLowStock,
                     PresentationUnits = InventoryReportPresentation.Convert(
                         quantityBase,
@@ -161,7 +175,9 @@ internal sealed class InventoryExpirationReportQueryHandler
 
         query = request.OnlyExpired
             ? query.Where(batch => batch.ExpirationDate!.Value < now)
-            : query.Where(batch => batch.ExpirationDate!.Value <= through);
+            : query.Where(batch =>
+                batch.ExpirationDate!.Value >= now &&
+                batch.ExpirationDate.Value <= through);
 
         var raw = await query
             .OrderBy(batch => batch.ExpirationDate)
@@ -304,6 +320,7 @@ internal sealed class InventoryMovementHistoryQueryHandler
             .Select(movement => new InventoryMovementHistoryDto
             {
                 Id = movement.Id,
+                OperationId = movement.OperationId,
                 StockBatchId = movement.StockBatchId,
                 ProductId = movement.StockBatch.ProductId,
                 ProductName = movement.StockBatch.Product.Name,
@@ -491,13 +508,17 @@ internal sealed record ProductStockProjection(
     string ProductId,
     string ProductName,
     string BaseUnitId,
-    string? BaseUnitName
+    string? BaseUnitName,
+    decimal ReorderPointBase,
+    decimal ReorderQuantityBase
 );
 
 internal sealed record BatchBalanceProjection(
     string ProductId,
     decimal RemainingQuantityBase,
-    long UnitCostBase
+    long UnitCostBase,
+    StatusEnum Status,
+    DateTime? ExpirationDate
 );
 
 internal sealed record ProductUnitProjection(

@@ -31,6 +31,7 @@ public static class ApplicationServiceRegistration
         // All physical stock changes are orchestrated here. Feature handlers must not
         // update StockBatch balances or create StockMovement rows independently.
         services.AddScoped<IInventoryService, InventoryService>();
+        services.AddScoped<IIdempotencyService, IdempotencyService>();
 
         return services;
     }

@@ -17,6 +17,8 @@ public class Sale : BaseAuditableEntityWithoutName, IShopEntity
     public DateTime SaleDateUtc { get; private set; }
     public SalePaymentType PaymentType { get; private set; }
     public long TotalAmount { get; private set; }
+    public long ReturnedAmount { get; private set; }
+    public SaleStatus Status { get; private set; } = SaleStatus.Completed;
     public string? Notes { get; private set; }
 
     public Shop Shop { get; set; } = null!;
@@ -58,5 +60,30 @@ public class Sale : BaseAuditableEntityWithoutName, IShopEntity
     public void RecalculateTotal()
     {
         TotalAmount = Lines.Sum(line => line.LineTotal);
+    }
+
+    public long NetAmount => TotalAmount - ReturnedAmount;
+
+    public void RegisterReturn(long amount, bool allLinesReturned, bool markVoided = false)
+    {
+        if (amount < 0)
+            throw new DomainValidationException("Returned sale amount cannot be negative");
+        if (ReturnedAmount + amount > TotalAmount)
+            throw new DomainValidationException("Returned amount cannot exceed the original sale total");
+
+        ReturnedAmount += amount;
+
+        if (markVoided)
+        {
+            if (!allLinesReturned)
+                throw new DomainValidationException("A voided sale must return all remaining sale quantities");
+
+            Status = SaleStatus.Voided;
+            return;
+        }
+
+        Status = allLinesReturned
+            ? SaleStatus.Returned
+            : SaleStatus.PartiallyReturned;
     }
 }

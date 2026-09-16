@@ -41,6 +41,9 @@ namespace SMIS.Application.Features.StockBatches.Validators
             RuleFor(x => x.StockBatchCreateDto.ReferenceId)
                 .MaximumLength(450);
 
+            RuleFor(x => x.StockBatchCreateDto.IdempotencyKey)
+                .MaximumLength(200);
+
             RuleFor(x => x.StockBatchCreateDto)
                 .Must(dto => string.IsNullOrWhiteSpace(dto.ReferenceType) == string.IsNullOrWhiteSpace(dto.ReferenceId))
                 .WithMessage("ReferenceType and ReferenceId must either both be supplied or both be empty.");
