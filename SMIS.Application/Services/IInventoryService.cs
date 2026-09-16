@@ -30,6 +30,16 @@ public interface IInventoryService
         string movementId,
         CancellationToken cancellationToken = default
     );
+
+    /// <summary>
+    /// Moves stock between two existing compatible batches without allowing either
+    /// caller to manipulate RemainingQuantityBase directly. The returned list contains
+    /// the source OUT movement followed by the destination IN movement.
+    /// </summary>
+    Task<Result<IReadOnlyList<StockMovement>>> TransferAsync(
+        InventoryTransferRequest request,
+        CancellationToken cancellationToken = default
+    );
 }
 
 /// <summary>
@@ -74,6 +84,20 @@ public sealed record InventoryFifoIssueRequest(
     string ProductUnitId,
     decimal QuantityEntered,
     StockMovementReason Reason,
+    DateTime OccurredAtUtc,
+    string? ReferenceType = null,
+    string? ReferenceId = null
+);
+
+/// <summary>
+/// Transfers stock between existing batches of the same product. Both batches must
+/// use the same base-unit cost so moving quantity cannot silently change valuation.
+/// </summary>
+public sealed record InventoryTransferRequest(
+    string SourceStockBatchId,
+    string DestinationStockBatchId,
+    string ProductUnitId,
+    decimal QuantityEntered,
     DateTime OccurredAtUtc,
     string? ReferenceType = null,
     string? ReferenceId = null

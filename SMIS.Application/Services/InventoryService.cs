@@ -121,6 +121,22 @@ public sealed class InventoryService : IInventoryService
         var productUnit = contextResult.ProductUnit!;
         var quantityBase = ConvertToBaseQuantity(request.QuantityEntered, productUnit);
 
+        // Expiration is not merely another OUT reason. The batch itself must prove
+        // that it is actually expired at the time of the movement; otherwise callers
+        // could remove healthy stock simply by choosing the Expiration enum value.
+        if (request.Reason == StockMovementReason.Expiration)
+        {
+            if (!batch.ExpirationDate.HasValue)
+                return Result<StockMovement>.FailureResult(
+                    "BatchHasNoExpirationDate",
+                    "A batch without an expiration date cannot be posted as expired stock.");
+
+            if (batch.ExpirationDate.Value > request.OccurredAtUtc)
+                return Result<StockMovement>.FailureResult(
+                    "BatchNotExpired",
+                    "The selected batch has not reached its expiration date yet.");
+        }
+
         // Constructing the immutable movement first validates direction/reason before
         // the cached batch balance is touched.
         var movement = StockMovement.Create(
@@ -244,6 +260,109 @@ public sealed class InventoryService : IInventoryService
         await _movements.AddAsync(reversal);
 
         return Result<StockMovement>.SuccessResult(reversal);
+    }
+
+    public async Task<Result<IReadOnlyList<StockMovement>>> TransferAsync(
+        InventoryTransferRequest request,
+        CancellationToken cancellationToken = default
+    )
+    {
+        if (string.Equals(request.SourceStockBatchId, request.DestinationStockBatchId,
+                StringComparison.Ordinal))
+            return Result<IReadOnlyList<StockMovement>>.FailureResult(
+                "SameTransferBatch",
+                "Source and destination stock batches must be different.");
+
+        var referenceFailure = ValidateReference(request.ReferenceType, request.ReferenceId);
+        if (referenceFailure is not null)
+            return Failure<IReadOnlyList<StockMovement>>(referenceFailure);
+
+        var sourceResult = await GetExistingBatchContextAsync(
+            request.SourceStockBatchId,
+            request.ProductUnitId,
+            cancellationToken);
+        if (sourceResult.Failure is not null)
+            return Failure<IReadOnlyList<StockMovement>>(sourceResult.Failure);
+
+        var destinationResult = await GetExistingBatchContextAsync(
+            request.DestinationStockBatchId,
+            request.ProductUnitId,
+            cancellationToken);
+        if (destinationResult.Failure is not null)
+            return Failure<IReadOnlyList<StockMovement>>(destinationResult.Failure);
+
+        var source = sourceResult.Batch!;
+        var destination = destinationResult.Batch!;
+        var productUnit = sourceResult.ProductUnit!;
+
+        // A batch-to-batch transfer is intentionally conservative. Different products,
+        // shops, or costs would turn a physical move into an implicit product/cost
+        // transformation and would make inventory valuation lie rather enthusiastically.
+        if (!string.Equals(source.ProductId, destination.ProductId, StringComparison.Ordinal))
+            return Result<IReadOnlyList<StockMovement>>.FailureResult(
+                "TransferProductMismatch",
+                "Source and destination batches must belong to the same product.");
+
+        if (!string.Equals(source.ShopId, destination.ShopId, StringComparison.Ordinal))
+            return Result<IReadOnlyList<StockMovement>>.FailureResult(
+                "TransferShopMismatch",
+                "Source and destination batches must belong to the same shop.");
+
+        if (source.UnitCostBase != destination.UnitCostBase)
+            return Result<IReadOnlyList<StockMovement>>.FailureResult(
+                "TransferCostMismatch",
+                "Source and destination batches must have the same base-unit cost.");
+
+        // Transfers still accept the quantity in a user-facing ProductUnit, but both
+        // sides of the transfer are posted with the same normalized base quantity.
+        // This keeps the OUT and IN ledger entries exactly symmetrical.
+        var quantityBase = ConvertToBaseQuantity(request.QuantityEntered, productUnit);
+        if (source.RemainingQuantityBase < quantityBase)
+            return Result<IReadOnlyList<StockMovement>>.FailureResult(
+                "InsufficientStock",
+                "The source batch does not contain enough stock for this transfer.");
+
+        // If there is no higher-level transfer document yet, reference the opposite
+        // batch. ReferenceId therefore remains an actual entity ID rather than an
+        // invented correlation/document number.
+        var sourceReferenceType = request.ReferenceType ?? nameof(StockBatch);
+        var sourceReferenceId = request.ReferenceId ?? destination.Id;
+        var destinationReferenceType = request.ReferenceType ?? nameof(StockBatch);
+        var destinationReferenceId = request.ReferenceId ?? source.Id;
+
+        var sourceMovement = StockMovement.Create(
+            source.ShopId,
+            source.Id,
+            productUnit.Id,
+            request.QuantityEntered,
+            quantityBase,
+            StockMovementDirection.Out,
+            StockMovementReason.Transfer,
+            request.OccurredAtUtc,
+            sourceReferenceType,
+            sourceReferenceId);
+
+        var destinationMovement = StockMovement.Create(
+            destination.ShopId,
+            destination.Id,
+            productUnit.Id,
+            request.QuantityEntered,
+            quantityBase,
+            StockMovementDirection.In,
+            StockMovementReason.Transfer,
+            request.OccurredAtUtc,
+            destinationReferenceType,
+            destinationReferenceId);
+
+        // Both batch mutations are staged before the caller performs its single
+        // SaveChanges. EF Core makes that SaveChanges atomic.
+        ApplyBalance(source, StockMovementDirection.Out, quantityBase);
+        ApplyBalance(destination, StockMovementDirection.In, quantityBase);
+        await _movements.AddAsync(sourceMovement);
+        await _movements.AddAsync(destinationMovement);
+
+        return Result<IReadOnlyList<StockMovement>>.SuccessResult(
+            new[] { sourceMovement, destinationMovement });
     }
 
     private async Task<InventoryContextResult> GetExistingBatchContextAsync(
