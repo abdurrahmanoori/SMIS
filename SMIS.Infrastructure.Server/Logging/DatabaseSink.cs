@@ -8,6 +8,11 @@ using SMIS.Application.Repositories;
 
 namespace SMIS.Infrastructure.Server.Logging
 {
+    /// <summary>
+    /// Serilog batched sink that persists application log events through the normal
+    /// repository layer. A new DI scope is created per batch because sinks are long-lived
+    /// while repositories/DbContexts are scoped services.
+    /// </summary>
     public class DatabaseSink : IBatchedLogEventSink
     {
         private readonly IServiceProvider _serviceProvider;
@@ -19,6 +24,8 @@ namespace SMIS.Infrastructure.Server.Logging
 
         public async Task EmitBatchAsync(IEnumerable<LogEvent> batch)
         {
+            // Never hold a DbContext on the sink itself. Creating a scope here gives each
+            // batch an independent scoped repository/DbContext lifetime.
             using var scope = _serviceProvider.CreateScope();
             var logRepository = scope.ServiceProvider.GetRequiredService<ILogRepository>();
 
@@ -30,6 +37,8 @@ namespace SMIS.Infrastructure.Server.Logging
 
         private static AppLog MapLogEvent(LogEvent logEvent)
         {
+            // Preserve structured Serilog properties as JSON so diagnostics can recover
+            // request/user context without adding a database column for every property.
             var properties = logEvent.Properties.ToDictionary(
                 kvp => kvp.Key,
                 kvp => kvp.Value.ToString()

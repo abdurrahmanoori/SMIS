@@ -6,9 +6,9 @@ using SMIS.Infrastructure.Server.Context;
 namespace SMIS.Infrastructure.Server.Repositories.Base;
 
 /// <summary>
-/// Unit of work is deprecated and will be removed in future versions. Use the DbContext directly instead. or using dbContext from the repository
-/// which is basically in the Generic Repository. The Unit of Work pattern is not necessary
-/// when using Entity Framework Core, as it already implements the Unit of Work pattern internally.
+/// Compatibility wrapper around AppDbContext SaveChanges and explicit database transactions.
+/// EF Core already provides unit-of-work behavior for a single SaveChanges call, but this
+/// abstraction is still used by handlers that need an explicit multi-step transaction boundary.
 /// </summary>
 public sealed class UnitOfWork : IUnitOfWork
 {
@@ -26,6 +26,9 @@ public sealed class UnitOfWork : IUnitOfWork
         CancellationToken cancellationToken
     )
     {
+        // These ChangeTracker snapshots are diagnostic scaffolding. They make it easy to
+        // inspect what EF considers Added/Modified/Deleted while debugging persistence issues;
+        // they do not alter entity state or participate in the save itself.
         var entities = this._context.ChangeTracker.Entries();
         var result = new
         {
@@ -110,6 +113,8 @@ public sealed class UnitOfWork : IUnitOfWork
     {
         try
         {
+            // Save pending changes immediately before commit so all work performed since
+            // StartTransactionAsync is part of the same database transaction.
             await _context.SaveChangesAsync(cancellationToken);
             if (_currentTransaction is not null)
             {

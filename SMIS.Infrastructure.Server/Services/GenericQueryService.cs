@@ -9,6 +9,12 @@ using SMIS.Infrastructure.Server.Context;
 
 namespace SMIS.Infrastructure.Server.Services;
 
+/// <summary>
+/// Builds reusable paged EF queries from simple query DTOs using reflection.
+/// Query-property names are matched to entity-property names; properties marked with
+/// <see cref="ContainsFilterAttribute"/> use case-insensitive substring matching,
+/// while other compatible properties use equality.
+/// </summary>
 public sealed class GenericQueryService : IGenericQueryService
 {
     private readonly AppDbContext _context;
@@ -28,9 +34,13 @@ public sealed class GenericQueryService : IGenericQueryService
         ValidatePagination(query);
 
         IQueryable<TEntity> entities = _context.Set<TEntity>().AsNoTracking();
+        // Global EF query filters remain active here, so tenant and soft-delete rules
+        // are enforced before dynamic filters are added.
         entities = ApplyFilters(entities, query);
 
         var totalCount = await entities.CountAsync(cancellationToken);
+        // Always order by the primary key before Skip/Take. Without deterministic
+        // ordering, rows can jump between pages as the database chooses a plan.
         var orderedEntities = ApplyPrimaryKeyOrdering(entities);
         var offset = ((long)query.PageNumber - 1) * query.PageSize;
         var items = offset > int.MaxValue
@@ -187,6 +197,7 @@ public sealed class GenericQueryService : IGenericQueryService
         where TEntity : class
         where TQuery : PagedQuery
     {
+        // Reflection is performed once per closed TEntity/TQuery pair, not on every request.
         public static IReadOnlyList<PropertyPair> PropertyPairs { get; } = CreatePropertyPairs();
 
         private static IReadOnlyList<PropertyPair> CreatePropertyPairs()

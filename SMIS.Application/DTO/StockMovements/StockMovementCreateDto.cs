@@ -2,6 +2,10 @@ using SMIS.Domain.Enums;
 
 namespace SMIS.Application.DTO.StockMovements;
 
+/// <summary>
+/// Input for posting a movement against one specific batch. QuantityEntered uses
+/// ProductUnitId; QuantityBase is derived server-side and is never accepted from clients.
+/// </summary>
 public sealed class StockMovementCreateDto
 {
     public string StockBatchId { get; set; } = string.Empty;

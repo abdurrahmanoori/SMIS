@@ -12,6 +12,9 @@ using SMIS.Domain.Enums;
 
 namespace SMIS.Application.Features.StockMovements.Commands;
 
+// Issues inventory using FIFO. One request can consume several batches, producing
+// one immutable StockMovement per allocated batch while the user still sees one issue.
+
 public record StockMovementFifoIssueCommand(FifoStockIssueDto Dto)
     : IRequest<Result<List<StockMovementDto>>>;
 
@@ -31,7 +34,8 @@ internal sealed class StockMovementFifoIssueCommandHandler
         IProductUnitRepository productUnits,
         IUnitOfWork unitOfWork,
         ICurrentUser currentUser,
-        IMapper mapper)
+        IMapper mapper
+    )
     {
         _movements = movements;
         _batches = batches;
@@ -43,7 +47,8 @@ internal sealed class StockMovementFifoIssueCommandHandler
 
     public async Task<Result<List<StockMovementDto>>> Handle(
         StockMovementFifoIssueCommand request,
-        CancellationToken cancellationToken)
+        CancellationToken cancellationToken
+    )
     {
         var dto = request.Dto;
         var productUnit = await _productUnits.GetFirstOrDefaultAsync(
@@ -56,7 +61,8 @@ internal sealed class StockMovementFifoIssueCommandHandler
 
         var shopId = productUnit.Product.ShopId;
         if (!_currentUser.IsSuperAdmin() && shopId != _currentUser.GetShopId())
-            return Result<List<StockMovementDto>>.FailureResult("Forbidden", "The selected product belongs to another shop.");
+            return Result<List<StockMovementDto>>.FailureResult("Forbidden",
+                "The selected product belongs to another shop.");
 
         var totalBase = dto.QuantityEntered * productUnit.BaseUnitQuantity;
         var batches = await _batches.GetAvailableFifoAsync(shopId, dto.ProductId, cancellationToken);

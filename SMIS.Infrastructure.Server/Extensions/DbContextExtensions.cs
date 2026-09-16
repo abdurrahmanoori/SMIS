@@ -10,6 +10,11 @@ using SMIS.Infrastructure.Server.Interceptors;
 
 namespace SMIS.Infrastructure.Server.Extensions
 {
+    /// <summary>
+    /// Registers the application's EF Core context and persistence interceptors.
+    /// Audit and public-ID behavior is attached here so every SaveChanges path receives
+    /// the same cross-cutting rules.
+    /// </summary>
     public static class DbContextExtensions
     {
         public static IServiceCollection AddApplicationDbContext(
@@ -38,6 +43,8 @@ namespace SMIS.Infrastructure.Server.Extensions
                         .AddInterceptors(interceptor, pkEntityInterceptor).EnableSensitiveDataLogging();
                 }
 
+                // Sensitive-data logging is currently enabled for this context globally.
+                // Keep this line visible because it affects the contents of EF diagnostic logs.
                 options.EnableSensitiveDataLogging(true);
             });
             services.AddScoped<IApplicationDbContext>(provider => provider.GetRequiredService<AppDbContext>());

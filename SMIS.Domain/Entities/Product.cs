@@ -4,11 +4,22 @@ using SMIS.Domain.Common.Interfaces;
 
 namespace SMIS.Domain.Entities;
 
+/// <summary>
+/// Shop-owned catalog product. BaseUnitId defines the canonical unit used for
+/// inventory normalization; ProductUnit defines every supported transaction unit.
+/// </summary>
 public class Product : BaseSyncableAuditableEntity, IEntity, IShopEntity
 {
     public string Name { get; private set; } = string.Empty;
 
+    /// <summary>
+    /// Canonical inventory unit. Stock balances are ultimately expressed in this unit,
+    /// regardless of whether users receive or issue the product as boxes, cartons, etc.
+    /// </summary>
     public string BaseUnitId { get; private set; } = string.Empty;
+
+    // Denormalized display labels are convenience snapshots for DTO/sync flows.
+    // Their corresponding foreign-key IDs remain the source of relationship truth.
     public string? BaseUnitName { get; set; }
     public string? Description { get; private set; }
     public bool IsActive { get; private set; } = true;
@@ -82,6 +93,10 @@ public class Product : BaseSyncableAuditableEntity, IEntity, IShopEntity
     ) =>
         !string.Equals(BaseUnitId, NormalizeBaseUnitId(baseUnitId), StringComparison.Ordinal);
 
+    /// <summary>
+    /// Changes the canonical inventory unit only while the product has no stock or
+    /// meaningful conversion history. Changing it later would reinterpret historical quantities.
+    /// </summary>
     public void ChangeBaseUnit(
         string baseUnitId,
         bool hasStockOrConversions

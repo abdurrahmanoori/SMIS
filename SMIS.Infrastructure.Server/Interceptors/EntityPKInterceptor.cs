@@ -6,6 +6,11 @@ using SMIS.Domain.Common.Interfaces;
 using SMIS.Domain.Entities;
 namespace SMIS.Infrastructure.Server.Interceptors;
 
+/// <summary>
+/// Assigns public entity IDs immediately before persistence.
+/// Sync-capable entities keep valid client-supplied GUIDs so the same row has one stable
+/// identity on SQLite and SQL Server; other entities use the configured ID generator.
+/// </summary>
 public class EntityPKInterceptor : SaveChangesInterceptor
 {
     private readonly ICurrentUser _currentUser;
@@ -44,7 +49,7 @@ public class EntityPKInterceptor : SaveChangesInterceptor
                 if (preservesClientSyncId && Guid.TryParse(entry.Entity.Id, out _))
                     continue;
 
-// In DEBUG mode, we also replace auto-generated GUIDs (from EntityPK base class default)
+                // In DEBUG mode, we also replace auto-generated GUIDs (from EntityPK base class default)
                 // with sequential numeric IDs for easier testing and readability.
                 // In Release (production), we only generate an ID when it is truly empty,
                 // preserving any GUID set by either the client or the server.
@@ -104,6 +109,9 @@ public class EntityPKInterceptor : SaveChangesInterceptor
     }
     private async Task AssignSequenceNumber(IEntityPK entity, DbContext context)
     {
+        // Fallback used when PublicIdGenerator intentionally returns an empty value in
+        // Development. Both persisted and not-yet-saved entities are inspected to avoid
+        // assigning the same sequence number twice inside one SaveChanges call.
         var entityType = entity.GetType();
         var setMethod = typeof(DbContext).GetMethod("Set", new Type[0])?.MakeGenericMethod(entityType);
         var dbSet = setMethod?.Invoke(context, null) as IQueryable<IEntityPK>;

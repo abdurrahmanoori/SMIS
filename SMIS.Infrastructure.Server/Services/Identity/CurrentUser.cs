@@ -6,6 +6,11 @@ using System.Security.Claims;
 
 namespace SMIS.Infrastructure.Server.Services.Identity;
 
+/// <summary>
+/// Request-scoped access to identity claims embedded in the authenticated JWT.
+/// ShopId is especially important because EF global query filters use it to enforce
+/// tenant isolation for shop-owned entities.
+/// </summary>
 public class CurrentUser : ICurrentUser
 {
     private readonly IHttpContextAccessor _httpContextAccessor;
@@ -31,6 +36,8 @@ public class CurrentUser : ICurrentUser
 
     public string GetShopId()
     {
+        // The claim name deliberately matches ApplicationUser.ShopId so token creation
+        // and tenant filtering use the same contract.
         var user = _httpContextAccessor.HttpContext?.User;
         return user?.FindFirst(nameof(ApplicationUser.ShopId))?.Value ?? string.Empty;
     }

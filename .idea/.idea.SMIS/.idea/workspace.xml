@@ -341,14 +341,6 @@
       <option name="project" value="LOCAL" />
       <updated>1789462942314</updated>
     </task>
-    <task id="LOCAL-00023" summary="feat: implement synchronization support for Product, Customer, Shop, and UnitOfMeasure entities">
-      <option name="closed" value="true" />
-      <created>1788695259935</created>
-      <option name="number" value="00023" />
-      <option name="presentableId" value="LOCAL-00023" />
-      <option name="project" value="LOCAL" />
-      <updated>1788695259935</updated>
-    </task>
     <task id="LOCAL-00024" summary="feat: add validation rules and command validators for Customer, Product, ProductPrice, ProductUnit, and UnitOfMeasure synchronization">
       <option name="closed" value="true" />
       <created>1788696612467</created>
@@ -725,7 +717,15 @@
       <option name="project" value="LOCAL" />
       <updated>1789477728551</updated>
     </task>
-    <option name="localTasksCounter" value="71" />
+    <task id="LOCAL-00071" summary="feat: introduce StockMovement and related DTOs; implement StockMovementController and validation logic, and replace StockTransaction references with StockMovement">
+      <option name="closed" value="true" />
+      <created>1789480188351</created>
+      <option name="number" value="00071" />
+      <option name="presentableId" value="LOCAL-00071" />
+      <option name="project" value="LOCAL" />
+      <updated>1789480188351</updated>
+    </task>
+    <option name="localTasksCounter" value="72" />
     <option name="clearContext" value="false" />
     <option name="createChangelist" value="false" />
     <option name="createBranch" value="false" />
@@ -738,7 +738,6 @@
   <component name="UnityProjectConfiguration" hasMinimizedUI="false" />
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
-    <MESSAGE value="feat: add Wasil Shop roles and users, and update seed data for new shop" />
     <MESSAGE value="feat: implement generic entity dropdown and new paged list functionality" />
     <MESSAGE value="refactor: rename CategoryQuery to CategoryQueryDto and update related handlers to use HandleResultResponseOld" />
     <MESSAGE value="feat: update CategoryQuery to CategoryQueryCriteria and enhance filtering capabilities" />
@@ -763,6 +762,7 @@
     <MESSAGE value="domain layer code formated" />
     <MESSAGE value="just comment added" />
     <MESSAGE value="feat: update entity properties and validation; remove ShopId from multiple DTOs and entities, add ProductPrices collection to ProductUnit, and enhance ProductUnit repository with HasUsageAsync method" />
+    <MESSAGE value="feat: introduce StockMovement and related DTOs; implement StockMovementController and validation logic, and replace StockTransaction references with StockMovement" />
     <option name="LAST_COMMIT_MESSAGE" value="" />
   </component>
   <component name="XDebuggerManager">

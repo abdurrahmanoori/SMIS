@@ -4,19 +4,29 @@ using SMIS.Domain.ValueObjects;
 
 namespace SMIS.Domain.Entities;
 
+/// <summary>
+/// Global unit dictionary such as Piece, Kilogram, Box, or Bottle.
+/// A unit only supplies the label; product-specific meaning such as
+/// "1 Box = 12 Bottles" belongs to <see cref="ProductUnit"/>.
+/// </summary>
 public class UnitOfMeasure : BaseSyncableAuditableEntity
 {
     public string Name { get; private set; } = null!;
 
-    // Example: Piece, Gram, Milliliter, Liter, Box, Pack, Bottle
+    /// <summary>
+    /// Short display symbol such as pcs, kg, g, ml, or L.
+    /// This is reference data, not a conversion factor.
+    /// </summary>
     public string? Symbol { get; private set; } = null!;
 
-    // pcs, g, ml, l, box, pack
+    /// <summary>
+    /// Optional human-readable explanation of the unit.
+    /// </summary>
     public string? Description { get; private set; } = null!;
 
     public DateTime ConflictModifiedUtc => GetConflictModifiedUtc();
 
-    // Navigation Properties
+    // ProductUnit supplies the product-specific conversion semantics for this unit label.
     public virtual ICollection<ProductUnit> ProductUnits { get; set; } = new List<ProductUnit>();
 
     internal UnitOfMeasure()

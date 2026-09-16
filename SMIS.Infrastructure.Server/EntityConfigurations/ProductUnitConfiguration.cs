@@ -4,6 +4,8 @@ using SMIS.Domain.Entities;
 
 namespace SMIS.Infrastructure.Server.EntityConfigurations
 {
+    // ProductUnit is the product-specific conversion contract. Inventory stores the
+    // resulting normalized base quantity, so historical conversions must stay stable.
     public class ProductUnitConfiguration : IEntityTypeConfiguration<ProductUnit>
     {
         public void Configure(

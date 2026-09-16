@@ -14,7 +14,8 @@ namespace SMIS.Application.Features.StockBatches.Commands
 {
     public record StockBatchCreateCommand(StockBatchCreateDto StockBatchCreateDto) : IRequest<Result<StockBatchDto>>;
 
-    internal sealed class StockBatchCreateCommandHandler : IRequestHandler<StockBatchCreateCommand, Result<StockBatchDto>>
+    internal sealed class
+        StockBatchCreateCommandHandler : IRequestHandler<StockBatchCreateCommand, Result<StockBatchDto>>
     {
         private readonly IStockBatchRepository _stockBatchRepository;
         private readonly IStockMovementRepository _stockMovementRepository;
@@ -29,7 +30,8 @@ namespace SMIS.Application.Features.StockBatches.Commands
             IStockBatchRepository stockBatchRepository,
             IStockMovementRepository stockMovementRepository,
             IProductUnitRepository productUnitRepository,
-            ICurrentUser currentUser)
+            ICurrentUser currentUser
+        )
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
@@ -39,8 +41,13 @@ namespace SMIS.Application.Features.StockBatches.Commands
             _currentUser = currentUser;
         }
 
-        public async Task<Result<StockBatchDto>> Handle(StockBatchCreateCommand request, CancellationToken cancellationToken)
+        public async Task<Result<StockBatchDto>> Handle(
+            StockBatchCreateCommand request,
+            CancellationToken cancellationToken
+        )
         {
+            // Receiving inventory is one business operation: create the batch and
+            // create its opening PurchaseReceipt ledger entry in the same transaction.
             var dto = request.StockBatchCreateDto;
             var productUnit = await _productUnitRepository.GetFirstOrDefaultAsync(
                 unit => unit.Id == dto.ReceivedProductUnitId,
@@ -105,3 +112,6 @@ namespace SMIS.Application.Features.StockBatches.Commands
         }
     }
 }
+// Convert the received quantity once into the product's canonical stock unit.
+// The opening movement mirrors the initial batch balance. If either save
+// fails, the transaction is rolled back so batch and ledger cannot diverge.

@@ -5,11 +5,17 @@ using SMIS.Application.Common.Response;
 namespace SMIS.Api.Controllers.Base;
 
 [ApiController]
+/// <summary>
+/// Shared controller plumbing for MediatR dispatch and conversion of application
+/// Result objects into HTTP responses. Feature controllers should stay thin and
+/// delegate business behavior to their command/query handlers.
+/// </summary>
 public abstract class BaseApiController : ControllerBase
 {
     private IMediator? _mediator;
 
     protected IMediator Mediator =>
+        // Resolve lazily so controllers do not repeat an IMediator constructor dependency.
         _mediator ??= HttpContext.RequestServices.GetRequiredService<IMediator>();
 
 
@@ -61,6 +67,9 @@ public abstract class BaseApiController : ControllerBase
         Result<T> result
     )
     {
+        // Legacy response adapter retained for existing controllers. Unlike the newer
+        // handler above, it preserves structured validation errors and maps duplicate
+        // errors to HTTP 409 Conflict.
         try
         {
             if (result.Success)

@@ -5,6 +5,11 @@ using SMIS.Infrastructure.Server.Context;
 
 namespace SMIS.Infrastructure.Server.Repositories.Base;
 
+/// <summary>
+/// Thin EF Core repository used for common persistence operations.
+/// Methods intentionally do not call SaveChanges; the application handler controls
+/// the unit-of-work boundary so multiple repository operations can commit atomically.
+/// </summary>
 public class GenericRepository<TEntity> : IGenericRepository<TEntity>
     where TEntity : class
 {
@@ -55,6 +60,8 @@ public class GenericRepository<TEntity> : IGenericRepository<TEntity>
     public async Task<TEntity?> GetByIdAsync(
         string id
     ) =>
+        // FindAsync uses EF's change tracker first, then the database. Global query
+        // filters still apply when EF needs to query the database.
         await _context.Set<TEntity>().FindAsync(id);
 
 
@@ -108,6 +115,8 @@ public class GenericRepository<TEntity> : IGenericRepository<TEntity>
         var query = CreateQuery(tracked);
         if (ignoreQueryFilters)
         {
+            // This bypasses both soft-delete and tenant filters. Callers should use it
+            // only for infrastructure/synchronization scenarios that deliberately need tombstones.
             query = query.IgnoreQueryFilters();
         }
 
@@ -136,6 +145,8 @@ public class GenericRepository<TEntity> : IGenericRepository<TEntity>
     private IQueryable<TEntity> CreateQuery(
         bool tracked
     ) =>
+        // Read paths default to no tracking to avoid filling the DbContext with entities
+        // that will never be modified. Commands explicitly request tracking when needed.
         tracked ? _context.Set<TEntity>().AsTracking() : _context.Set<TEntity>().AsNoTracking();
 
     private static IQueryable<TEntity> ApplyFilter(

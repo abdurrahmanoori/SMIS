@@ -1,5 +1,10 @@
 namespace SMIS.Domain.Services;
 
+/// <summary>
+/// Centralizes the application's UTC convention. An Unspecified DateTime is treated
+/// as already-UTC rather than converted from the server machine's local timezone,
+/// which is important for timestamps coming from SQLite/offline payloads.
+/// </summary>
 public static class DateTimeService
 {
     public static DateTime NowUtc => DateTime.UtcNow;
@@ -24,6 +29,10 @@ public static class DateTimeService
             _ => value
         };
 
+    /// <summary>
+    /// Legacy compatibility switch retained for older code paths. New code should
+    /// prefer NowUtc and NormalizeUtc directly.
+    /// </summary>
     public static bool UseUtc { get; set; } = true;
     //
     // public static DateTime Now => UseUtc ? DateTime.UtcNow : DateTime.Now;

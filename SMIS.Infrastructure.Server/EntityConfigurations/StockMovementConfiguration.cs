@@ -6,7 +6,9 @@ namespace SMIS.Infrastructure.Server.EntityConfigurations;
 
 public sealed class StockMovementConfiguration : IEntityTypeConfiguration<StockMovement>
 {
-    public void Configure(EntityTypeBuilder<StockMovement> builder)
+    public void Configure(
+        EntityTypeBuilder<StockMovement> builder
+    )
     {
         builder.ConfigureAuditUserRelationships();
         builder.ToTable(nameof(StockMovement));
@@ -53,6 +55,9 @@ public sealed class StockMovementConfiguration : IEntityTypeConfiguration<StockM
             .HasForeignKey(m => new { m.StockBatchId, m.ShopId })
             .HasPrincipalKey(b => new { b.Id, b.ShopId })
             .OnDelete(DeleteBehavior.Restrict);
+
+        // Include ShopId in the FK so cross-tenant movement/batch references are
+        // rejected by SQL Server rather than relying only on query filters.
 
         builder.HasOne(m => m.ProductUnit)
             .WithMany()

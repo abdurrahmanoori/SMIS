@@ -7,16 +7,21 @@ using SMIS.Infrastructure.Server.Repositories.Base;
 
 namespace SMIS.Infrastructure.Server.Repositories.StockBatches
 {
+    // Keeps batch-specific persistence rules together, including the FIFO ordering
+    // used by every inventory issue workflow.
     public class StockBatchRepository : GenericRepository<StockBatch>, IStockBatchRepository
     {
-        public StockBatchRepository(AppDbContext context) : base(context)
+        public StockBatchRepository(
+            AppDbContext context
+        ) : base(context)
         {
         }
 
         public Task<List<StockBatch>> GetAvailableFifoAsync(
             string shopId,
             string productId,
-            CancellationToken cancellationToken = default) =>
+            CancellationToken cancellationToken = default
+        ) =>
             _context.StockBatches
                 .Where(batch =>
                     batch.ShopId == shopId &&

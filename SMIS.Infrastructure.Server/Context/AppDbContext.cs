@@ -16,6 +16,11 @@ using SMIS.Application.Services;
 
 namespace SMIS.Infrastructure.Server.Context;
 
+/// <summary>
+/// Main EF Core context for the API. Besides entity mappings, this context applies
+/// cross-cutting persistence rules such as tenant filters, soft-delete filters, and
+/// a portable timestamp representation shared with the offline SQLite model.
+/// </summary>
 public partial class AppDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, string,
         IdentityUserClaim<string>, ApplicationUserRole, IdentityUserLogin<string>, IdentityRoleClaim<string>,
         IdentityUserToken<string>>,
@@ -44,7 +49,8 @@ public partial class AppDbContext : IdentityDbContext<ApplicationUser, Applicati
         // Apply all IEntityTypeConfiguration classes from this assembly
         modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
 
-        // Configure EntityState as string for all entities
+        // Configure sync-state enums consistently without repeating conversion rules
+        // in every individual IEntityTypeConfiguration.
         foreach (var entityType in modelBuilder.Model.GetEntityTypes())
         {
             var entityStateProperty = entityType.FindProperty(nameof(BaseEntity.EntityState));
@@ -58,7 +64,9 @@ public partial class AppDbContext : IdentityDbContext<ApplicationUser, Applicati
             var lastModifiedProperty = entityType.FindProperty(nameof(BaseEntity.LastModifiedUtc));
             if (lastModifiedProperty != null)
             {
-                // Store as ISO-8601 string — compatible with both SQLite (TEXT) and SQL Server (nvarchar)
+                // Store as a fixed sortable string. The same representation works in
+                // SQL Server and SQLite and avoids provider-specific DateTime behavior
+                // for the synchronization cursor.
                 var converter = new ValueConverter<DateTime, string>(
                     v => v.ToString("yyyy-MM-dd HH:mm:ss.ffffff"),
                     v => DateTime.ParseExact(v, "yyyy-MM-dd HH:mm:ss.ffffff",

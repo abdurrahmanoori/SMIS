@@ -6,6 +6,11 @@ using SMIS.Infrastructure.Server.DatabaseSeeders;
 
 namespace SMIS.Api.Middleware;
 
+/// <summary>
+/// Development-only convenience middleware that injects a seeded SuperAdmin JWT when
+/// a request has no Authorization header. It never replaces an explicitly supplied token
+/// and is inactive outside the Development environment.
+/// </summary>
 public class DevelopmentJwtMiddleware
 {
     private readonly RequestDelegate _next;
@@ -23,6 +28,8 @@ public class DevelopmentJwtMiddleware
     {
         if (_environment.IsDevelopment() && !context.Request.Headers.ContainsKey("Authorization"))
         {
+            // This keeps local Swagger/manual API calls convenient while still allowing
+            // developers to test another user simply by supplying their own token.
             var token = GenerateDevelopmentToken();
             context.Request.Headers.Append("Authorization", $"Bearer {token}");
         }

@@ -39,9 +39,12 @@ public class JwtTokenGenerator : ITokenGenerator
         };
 
         if (!string.IsNullOrEmpty(user.ShopId))
+            // CurrentUser and DbContext tenant filters read this exact claim name.
             claims.Add(new Claim(nameof(ApplicationUser.ShopId), user.ShopId));
 
         if (!string.IsNullOrEmpty(user.LanguageId))
+            // Language preference travels with the token so request services do not
+            // need an extra user lookup merely to resolve the preferred language.
             claims.Add(new Claim(nameof(ApplicationUser.LanguageId), user.LanguageId));
 
         claims.AddRange(roles.Select(role => new Claim(ClaimTypes.Role, role)));

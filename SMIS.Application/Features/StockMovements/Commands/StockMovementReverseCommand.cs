@@ -10,6 +10,9 @@ using SMIS.Domain.Enums;
 
 namespace SMIS.Application.Features.StockMovements.Commands;
 
+// Corrects a posted movement by adding an opposite movement. The original ledger row
+// is preserved so inventory history remains auditable instead of being rewritten.
+
 public record StockMovementReverseCommand(string Id) : IRequest<Result<StockMovementDto>>;
 
 internal sealed class StockMovementReverseCommandHandler
@@ -24,7 +27,8 @@ internal sealed class StockMovementReverseCommandHandler
         IStockMovementRepository movements,
         IStockBatchRepository batches,
         IUnitOfWork unitOfWork,
-        IMapper mapper)
+        IMapper mapper
+    )
     {
         _movements = movements;
         _batches = batches;
@@ -34,7 +38,8 @@ internal sealed class StockMovementReverseCommandHandler
 
     public async Task<Result<StockMovementDto>> Handle(
         StockMovementReverseCommand request,
-        CancellationToken cancellationToken)
+        CancellationToken cancellationToken
+    )
     {
         var original = await _movements.GetByIdAsync(request.Id);
         if (original is null)

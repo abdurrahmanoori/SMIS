@@ -2,6 +2,11 @@ using System.Text;
 
 namespace SMIS.Api.Middleware
 {
+    /// <summary>
+    /// Captures request and response bodies for the later logging/enrichment middleware.
+    /// Streams are rewound/restored so diagnostics do not consume data that MVC or the
+    /// network response still needs to read.
+    /// </summary>
     public class RequestResponseLoggingMiddleware
     {
         private readonly RequestDelegate _next;
@@ -24,6 +29,8 @@ namespace SMIS.Api.Middleware
             context.Items["RequestBody"] = requestBody;
 
             var originalResponseBodyStream = context.Response.Body;
+            // ASP.NET response streams are write-only in the normal pipeline. Temporarily
+            // buffer into memory so the body can be inspected after downstream middleware runs.
             using var responseBodyStream = new MemoryStream();
             context.Response.Body = responseBodyStream;
 
@@ -46,6 +53,7 @@ namespace SMIS.Api.Middleware
         {
             if (!request.Body.CanSeek)
             {
+                // EnableBuffering allows us to inspect the body and then rewind it for MVC.
                 request.EnableBuffering();
             }
 

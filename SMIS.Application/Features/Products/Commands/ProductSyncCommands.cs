@@ -178,10 +178,18 @@ internal sealed class ProductSyncDeleteCommandHandler : IRequestHandler<ProductS
 
 internal static class ProductSyncRules
 {
+    /// <summary>
+    /// Normalizes client IDs to the canonical dashed GUID representation so the same
+    /// logical key is not treated as different merely because of formatting/casing.
+    /// </summary>
     public static string NormalizeGuid(
         string value
     ) => Guid.Parse(value).ToString("D");
 
+    /// <summary>
+    /// Client audit metadata may be omitted, but when supplied it must describe the
+    /// authenticated user. This prevents one offline device from impersonating another user.
+    /// </summary>
     public static bool UserMatches(
         string? value,
         ICurrentUser currentUser
@@ -197,6 +205,8 @@ internal static class ProductSyncRules
         ProductSyncUpdateDto dto
     )
     {
+        // The caller performs the stock/conversion lock check before this method.
+        // Passing false here avoids duplicating repository knowledge inside the domain object.
         product.SetName(dto.Name);
         product.ChangeBaseUnit(dto.BaseUnitId, hasStockOrConversions: false);
         product.SetSKU(dto.SKU);
@@ -214,6 +224,8 @@ internal static class ProductSyncRules
         IProductUnitRepository productUnits,
         CancellationToken cancellationToken)
     {
+        // Every Product must have exactly one ProductUnit that represents its base unit
+        // with a factor of 1. Sync creation/update repairs that invariant automatically.
         var baseProductUnit = await productUnits.GetFirstOrDefaultAsync(
             item => item.ProductId == product.Id && item.UnitOfMeasureId == oldBaseUnitId);
 
@@ -224,6 +236,8 @@ internal static class ProductSyncRules
         }
         else
         {
+            // When a base unit is changed before the product has stock/conversion history,
+            // reuse the old base ProductUnit instead of leaving a stale factor-1 row behind.
             baseProductUnit.SetUnitOfMeasureId(product.BaseUnitId);
             baseProductUnit.SetBaseUnitQuantity(1m);
         }

@@ -1,5 +1,9 @@
 namespace SMIS.Application.Common.Queries;
 
+/// <summary>
+/// Base contract for reflection-driven paged queries. Derived query DTOs add filter
+/// properties; GenericQueryService matches those properties to entity properties by name.
+/// </summary>
 public abstract class PagedQuery
 {
     public const int DefaultPageSize = 25;

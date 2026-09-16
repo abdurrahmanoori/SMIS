@@ -5,6 +5,11 @@ using SMIS.Domain.Exceptions;
 
 namespace SMIS.Domain.Entities;
 
+/// <summary>
+/// Customer receivable created when goods are taken on credit.
+/// Product/unit labels and monetary values act as transaction-time history so later
+/// catalog or price changes do not rewrite what the customer originally owed.
+/// </summary>
 public class LoanAccount : BaseAuditableEntity, IShopEntity
 {
     public string CustomerId { get; private set; } = string.Empty;
@@ -13,10 +18,23 @@ public class LoanAccount : BaseAuditableEntity, IShopEntity
     public string? ShopName { get; set; }
     public string ProductId { get; private set; } = string.Empty;
     public string? ProductName { get; set; }
+    /// <summary>
+    /// Commercial-document quantity entered in UnitId. This is not the normalized
+    /// base-unit inventory balance used by StockBatch and StockMovement.
+    /// </summary>
     public decimal Quantity { get; private set; }
     public string UnitId { get; private set; } = string.Empty;
     public string? UnitName { get; set; }
+    /// <summary>
+    /// Unit price captured when the credit transaction was created, stored in minor units.
+    /// It intentionally does not follow later ProductPrice changes.
+    /// </summary>
     public long PriceAtLoanTime { get; private set; }
+
+    /// <summary>
+    /// Original receivable principal in minor monetary units. Payments reduce
+    /// RemainingAmount but never rewrite this original amount.
+    /// </summary>
     public long TotalAmount { get; private set; }
     public DateTime LoanDate { get; private set; }
     public DateTime? DueDate { get; private set; } = null;
@@ -30,6 +48,9 @@ public class LoanAccount : BaseAuditableEntity, IShopEntity
     public UnitOfMeasure? UnitOfMeasure { get; set; }
     public ICollection<LoanAccountPayment> Payments { get; set; } = new List<LoanAccountPayment>();
 
+    /// <summary>
+    /// Derived from payment rows, making LoanAccountPayment the audit trail of money received.
+    /// </summary>
     public long PaidAmount => Payments?.Sum(p => p.Amount) ?? 0;
     public long RemainingAmount => TotalAmount - PaidAmount;
 

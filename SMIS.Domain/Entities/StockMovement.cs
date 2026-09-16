@@ -7,6 +7,8 @@ namespace SMIS.Domain.Entities;
 
 public class StockMovement : BaseAuditableEntityWithoutName, IShopEntity
 {
+    // StockMovement is intentionally immutable after posting. Corrections are made
+    // by posting an opposite movement so inventory history remains auditable.
     public string ShopId { get; private set; } = string.Empty;
     public string StockBatchId { get; private set; } = string.Empty;
     public string ProductUnitId { get; private set; } = string.Empty;
@@ -36,8 +38,11 @@ public class StockMovement : BaseAuditableEntityWithoutName, IShopEntity
         StockMovementReason reason,
         DateTime occurredAtUtc,
         string? referenceType = null,
-        string? referenceId = null)
+        string? referenceId = null
+    )
     {
+        // QuantityEntered preserves what the user transacted (e.g. 2 boxes), while
+        // QuantityBase is the normalized inventory impact (e.g. 24 bottles).
         if (string.IsNullOrWhiteSpace(shopId))
             throw new DomainValidationException("Shop ID cannot be empty");
         if (string.IsNullOrWhiteSpace(stockBatchId))
@@ -66,7 +71,9 @@ public class StockMovement : BaseAuditableEntityWithoutName, IShopEntity
         };
     }
 
-    private static DateTime NormalizeUtc(DateTime value)
+    private static DateTime NormalizeUtc(
+        DateTime value
+    )
     {
         if (value == default)
             throw new DomainValidationException("Movement time cannot be empty");
@@ -74,12 +81,15 @@ public class StockMovement : BaseAuditableEntityWithoutName, IShopEntity
         return value.Kind == DateTimeKind.Utc ? value : value.ToUniversalTime();
     }
 
-    private static string? NormalizeOptional(string? value) =>
+    private static string? NormalizeOptional(
+        string? value
+    ) =>
         string.IsNullOrWhiteSpace(value) ? null : value.Trim();
 
     private static void ValidateDirectionReason(
         StockMovementDirection direction,
-        StockMovementReason reason)
+        StockMovementReason reason
+    )
     {
         var valid = reason switch
         {

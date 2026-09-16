@@ -108,6 +108,8 @@ internal sealed class ProductPriceSyncUpdateCommandHandler : IRequestHandler<Pro
         if (productUnit is null) return ProductPriceCommandRules.ProductUnitNotFoundOrForbidden();
 
         var latest = await _repository.GetLatestForProductUnitAsync(existing.ProductUnitId, ct);
+        // Historical prices are immutable. A sync "update" is allowed only against
+        // the latest row and is implemented by adding a successor price below.
         if (latest is null || !string.Equals(latest.Id, existing.Id, StringComparison.Ordinal))
             return ProductPriceCommandRules.HistoricalPriceImmutable();
 
@@ -172,8 +174,11 @@ internal sealed class ProductPriceSyncDeleteCommandHandler : IRequestHandler<Pro
 
 internal static class ProductPriceSyncRules
 {
+    // Keep client/server identity stable by normalizing rather than regenerating the GUID.
     public static string Id(string value) => Guid.Parse(value).ToString("D");
 
+    // Audit metadata is optional for backwards compatibility, but a supplied user ID
+    // must match the authenticated principal to prevent cross-user sync impersonation.
     public static bool User(string? value, ICurrentUser user) =>
         string.IsNullOrWhiteSpace(value) ||
         string.Equals(value.Trim(), user.GetId(), StringComparison.Ordinal);

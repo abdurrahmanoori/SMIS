@@ -71,11 +71,17 @@ namespace SMIS.Infrastructure.Server.EntityConfigurations
                 .HasPrincipalKey(p => new { p.Id, p.ShopId })
                 .OnDelete(DeleteBehavior.Restrict);
 
+            // Composite FK makes shop isolation a database invariant: a batch cannot
+            // point at a product that belongs to another shop even if application code errs.
+
             builder.HasOne(s => s.ReceivedProductUnit)
                 .WithMany()
                 .HasForeignKey(s => new { s.ReceivedProductUnitId, s.ProductId })
                 .HasPrincipalKey(pu => new { pu.Id, pu.ProductId })
                 .OnDelete(DeleteBehavior.Restrict);
+
+            // The composite relationship guarantees the selected ProductUnit belongs
+            // to the same Product represented by this batch.
 
             builder.HasIndex(s => s.ShopId);
             builder.HasIndex(s => s.ProductId);

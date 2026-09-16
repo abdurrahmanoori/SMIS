@@ -8,6 +8,11 @@ using SMIS.Domain.Services;
 
 namespace SMIS.Infrastructure.Server.Interceptors
 {
+    /// <summary>
+    /// Central EF Core audit/soft-delete interceptor. It stamps server audit fields,
+    /// converts deletes into tombstones, and preserves client-provided sync timestamps
+    /// when an offline change is being replayed on the server.
+    /// </summary>
     public class AuditInterceptor : SaveChangesInterceptor
     {
         private readonly ICurrentUser _currentUser;
@@ -89,6 +94,8 @@ namespace SMIS.Infrastructure.Server.Interceptors
                     // Only stamp server time when the update originated directly on the server.
                     if (!entry.Property(e => e.LastModifiedUtc).IsModified || entry.Entity.LastModifiedUtc == default)
                     {
+                        // Direct API edits get a server timestamp. Sync handlers may mark
+                        // LastModifiedUtc themselves so the original client change time survives.
                         entry.Entity.LastModifiedUtc = DateTimeService.NowUtc;
                     }
 
@@ -105,6 +112,9 @@ namespace SMIS.Infrastructure.Server.Interceptors
             DbContext context
         )
         {
+            // Legacy fallback for numeric public IDs. This method is not part of normal
+            // GUID-based sync identity generation; it exists for environments that still
+            // request sequential human-readable identifiers.
             var entityType = entity.GetType();
             var setMethod = typeof(DbContext).GetMethod("Set", new Type[0])?.MakeGenericMethod(entityType);
             var dbSet = setMethod?.Invoke(context, null) as IQueryable<BaseAuditableEntity>;

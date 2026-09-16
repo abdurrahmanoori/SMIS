@@ -5,6 +5,10 @@ using System.Text.Json;
 
 namespace SMIS.Api.Middleware
 {
+    /// <summary>
+    /// Adds request/user context to Serilog and attaches captured bodies for failed
+    /// responses. RequestResponseLoggingMiddleware populates the body values in HttpContext.Items.
+    /// </summary>
     public class LogEnrichmentMiddleware
     {
         private readonly RequestDelegate _next;
@@ -27,7 +31,8 @@ namespace SMIS.Api.Middleware
             {
                 await _next(context);
 
-                // Log request/response details for error responses
+                // Bodies are only promoted into structured logs for failed requests to
+                // avoid duplicating large successful payloads in normal application logs.
                 if (context.Response.StatusCode >= 400)
                 {
                     var endpoint = context.GetEndpoint()?.DisplayName ?? "Unknown";

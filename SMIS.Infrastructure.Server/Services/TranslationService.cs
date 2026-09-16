@@ -6,6 +6,10 @@ using SMIS.Domain.Entities.Localization;
 
 namespace SMIS.Infrastructure.Server.Services
 {
+    /// <summary>
+    /// Coordinates translation keys and language-specific values.
+    /// A key is created once, then individual Translation rows are added or updated per language.
+    /// </summary>
     public class TranslationService : ITranslationService
     {
         private readonly ITranslationKeyRepository _translationKeyRepository;
@@ -24,6 +28,8 @@ namespace SMIS.Infrastructure.Server.Services
 
         public async Task<TranslationKey> CreateTranslationKeyAsync(string keyValue, CancellationToken cancellationToken = default)
         {
+            // Treat key creation as idempotent so callers can safely request the same key
+            // from multiple feature flows without intentionally creating duplicates.
             var existingKey = await _translationKeyRepository
                 .GetFirstOrDefaultAsync(tk => tk.Name == keyValue, tracked: false);
 
@@ -57,6 +63,8 @@ namespace SMIS.Infrastructure.Server.Services
 
             if (existingTranslation != null)
             {
+                // A key/language pair represents one logical value. Updating that row
+                // preserves the relationship instead of creating competing translations.
                 existingTranslation.Name = translatedValue;
                 await _translationRepository.UpdateAsync(existingTranslation);
             }
@@ -87,6 +95,8 @@ namespace SMIS.Infrastructure.Server.Services
                 .Select(t => t.Name)
                 .FirstOrDefaultAsync(cancellationToken);
 
+            // Falling back to the key keeps UI text usable when a language-specific
+            // translation has not been entered yet.
             return translation ?? keyValue;
         }
     }

@@ -12,6 +12,9 @@ using SMIS.Domain.Enums;
 
 namespace SMIS.Application.Features.StockMovements.Commands;
 
+// Handles one explicit stock movement against a specific batch. Quantities are
+// normalized through ProductUnit before the cached batch balance and ledger are saved.
+
 public record StockMovementCreateCommand(StockMovementCreateDto Dto) : IRequest<Result<StockMovementDto>>;
 
 internal sealed class StockMovementCreateCommandHandler
@@ -30,7 +33,8 @@ internal sealed class StockMovementCreateCommandHandler
         IProductUnitRepository productUnits,
         IUnitOfWork unitOfWork,
         ICurrentUser currentUser,
-        IMapper mapper)
+        IMapper mapper
+    )
     {
         _movements = movements;
         _batches = batches;
@@ -42,7 +46,8 @@ internal sealed class StockMovementCreateCommandHandler
 
     public async Task<Result<StockMovementDto>> Handle(
         StockMovementCreateCommand request,
-        CancellationToken cancellationToken)
+        CancellationToken cancellationToken
+    )
     {
         var dto = request.Dto;
         if (dto.Reason == StockMovementReason.PurchaseReceipt)
@@ -59,7 +64,8 @@ internal sealed class StockMovementCreateCommandHandler
 
         var productUnit = await _productUnits.GetByIdAsync(dto.ProductUnitId);
         if (productUnit is null)
-            return Result<StockMovementDto>.FailureResult("ProductUnitNotFound", "The selected product unit does not exist.");
+            return Result<StockMovementDto>.FailureResult("ProductUnitNotFound",
+                "The selected product unit does not exist.");
         if (productUnit.ProductId != batch.ProductId)
             return Result<StockMovementDto>.FailureResult(
                 "ProductUnitMismatch",

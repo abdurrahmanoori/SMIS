@@ -61,6 +61,10 @@ internal sealed class ProductPriceCreateCommandHandler : IRequestHandler<Product
 
 internal static class ProductPriceCommandRules
 {
+    /// <summary>
+    /// Loads the ProductUnit together with its Product and verifies tenant ownership.
+    /// ProductPrice itself does not contain ShopId, so authorization is inherited through ProductUnit -> Product.
+    /// </summary>
     public static async Task<ProductUnit?> GetAccessibleProductUnitAsync(
         string productUnitId,
         IProductUnitRepository productUnits,
@@ -82,6 +86,8 @@ internal static class ProductPriceCommandRules
     {
         if (latest is null) return null;
 
+        // Price history is append-only in chronological order. Reusing or backdating an
+        // effective timestamp would create overlapping/ambiguous price periods.
         if (newEffectiveDate <= latest.EffectiveDate)
         {
             return Result<ProductPriceDto>.FailureResult(
@@ -90,6 +96,8 @@ internal static class ProductPriceCommandRules
         }
 
         if (!latest.EndDate.HasValue || latest.EndDate.Value >= newEffectiveDate)
+            // Close the previous period immediately before the successor begins.
+            // AddTicks(-1) preserves a non-overlapping inclusive date-range model.
             latest.SetEndDate(newEffectiveDate.AddTicks(-1));
 
         return null;

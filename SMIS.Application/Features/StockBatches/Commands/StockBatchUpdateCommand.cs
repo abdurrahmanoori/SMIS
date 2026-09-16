@@ -7,29 +7,40 @@ using SMIS.Application.Repositories.StockBatches;
 
 namespace SMIS.Application.Features.StockBatches.Commands
 {
-    public record StockBatchUpdateCommand(string Id, StockBatchUpdateDto StockBatchUpdateDto) : IRequest<Result<StockBatchDto>>;
+    // Updates descriptive batch metadata only. Received/remaining quantities and the
+    // receiving ProductUnit are intentionally immutable after the receipt is posted.
+    public record StockBatchUpdateCommand(string Id, StockBatchUpdateDto StockBatchUpdateDto)
+        : IRequest<Result<StockBatchDto>>;
 
-    internal sealed class StockBatchUpdateCommandHandler : IRequestHandler<StockBatchUpdateCommand, Result<StockBatchDto>>
+    internal sealed class
+        StockBatchUpdateCommandHandler : IRequestHandler<StockBatchUpdateCommand, Result<StockBatchDto>>
     {
         private readonly IStockBatchRepository _stockBatchRepository;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
 
-        public StockBatchUpdateCommandHandler(IUnitOfWork unitOfWork, IMapper mapper, IStockBatchRepository stockBatchRepository)
+        public StockBatchUpdateCommandHandler(
+            IUnitOfWork unitOfWork,
+            IMapper mapper,
+            IStockBatchRepository stockBatchRepository
+        )
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _stockBatchRepository = stockBatchRepository;
         }
 
-        public async Task<Result<StockBatchDto>> Handle(StockBatchUpdateCommand request, CancellationToken cancellationToken)
+        public async Task<Result<StockBatchDto>> Handle(
+            StockBatchUpdateCommand request,
+            CancellationToken cancellationToken
+        )
         {
             var entity = await _stockBatchRepository.GetByIdAsync(request.Id);
             if (entity == null)
             {
                 return Result<StockBatchDto>.NotFoundResult(nameof(StockBatchDto.Id));
             }
-            
+
             entity.SetBatchNumber(request.StockBatchUpdateDto.BatchNumber);
             entity.SetExpirationDate(request.StockBatchUpdateDto.ExpirationDate);
 
@@ -48,7 +59,7 @@ namespace SMIS.Application.Features.StockBatches.Commands
                     entity.MarkAsCancelled();
                     break;
             }
-            
+
             await _unitOfWork.SaveChanges(cancellationToken);
 
             var dto = _mapper.Map<StockBatchDto>(entity);

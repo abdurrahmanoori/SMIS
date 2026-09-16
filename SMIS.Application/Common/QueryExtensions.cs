@@ -85,6 +85,8 @@ public static class QueryExtensions
     // }
     public static IQueryable<TResult> Select<TResult>(this IQueryable<TResult> source, string[]? columns)
     {
+        // Builds a projection expression dynamically so EF can translate the selected
+        // property list to SQL rather than materializing full entities first.
         if (columns == null || columns.Length == 0) return source;
 
         var resultType = typeof(TResult);
@@ -129,6 +131,9 @@ public static class QueryExtensions
         this IQueryable<TEntity> source,
         TFilter? filter)
     {
+        // Convention-based filtering: every non-null filter property must have a
+        // matching entity property with the same name. String filters use LIKE-style
+        // behavior while other values use equality.
         if (filter == null) return source;
 
         var filterProperties = typeof(TFilter)
@@ -223,6 +228,8 @@ public static class QueryExtensions
 
     public static Expression GetLikeExpression(MemberExpression property, string term)
     {
+        // Leading/trailing '%' controls EndsWith/StartsWith/Contains semantics.
+        // ID properties intentionally default to exact equality when no wildcard is supplied.
         var method = (term.StartsWith('%'), term.EndsWith('%')) switch
         {
             (true, true) => nameof(string.Contains),

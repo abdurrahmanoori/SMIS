@@ -7,6 +7,8 @@ namespace SMIS.Domain.Entities;
 
 public class StockBatch : BaseAuditableEntityWithoutName, IShopEntity
 {
+    // Stock is always tracked internally in the product's base unit. The original
+    // receiving unit/quantity are kept separately for audit and user-facing history.
     public string ShopId { get; private set; } = string.Empty;
     public string ProductId { get; private set; } = string.Empty;
     public string ReceivedProductUnitId { get; private set; } = string.Empty;
@@ -52,7 +54,9 @@ public class StockBatch : BaseAuditableEntityWithoutName, IShopEntity
         return batch;
     }
 
-    private void SetShopId(string shopId)
+    private void SetShopId(
+        string shopId
+    )
     {
         if (string.IsNullOrWhiteSpace(shopId))
             throw new DomainValidationException("Shop ID cannot be empty");
@@ -69,7 +73,9 @@ public class StockBatch : BaseAuditableEntityWithoutName, IShopEntity
         ProductId = productId.Trim();
     }
 
-    private void SetReceivedProductUnitId(string productUnitId)
+    private void SetReceivedProductUnitId(
+        string productUnitId
+    )
     {
         if (string.IsNullOrWhiteSpace(productUnitId))
             throw new DomainValidationException("Received product unit ID cannot be empty");
@@ -77,7 +83,10 @@ public class StockBatch : BaseAuditableEntityWithoutName, IShopEntity
         ReceivedProductUnitId = productUnitId.Trim();
     }
 
-    private void SetInitialQuantity(decimal receivedQuantity, decimal baseUnitQuantity)
+    private void SetInitialQuantity(
+        decimal receivedQuantity,
+        decimal baseUnitQuantity
+    )
     {
         if (receivedQuantity <= 0)
             throw new DomainValidationException("Received quantity must be greater than zero");
@@ -89,7 +98,9 @@ public class StockBatch : BaseAuditableEntityWithoutName, IShopEntity
         RemainingQuantityBase = ReceivedQuantityBase;
     }
 
-    private void SetUnitCostBase(long unitCostBase)
+    private void SetUnitCostBase(
+        long unitCostBase
+    )
     {
         if (unitCostBase < 0)
             throw new DomainValidationException("Unit cost in base units cannot be negative");
@@ -97,7 +108,9 @@ public class StockBatch : BaseAuditableEntityWithoutName, IShopEntity
         UnitCostBase = unitCostBase;
     }
 
-    private void SetReceivedAtUtc(DateTime receivedAtUtc)
+    private void SetReceivedAtUtc(
+        DateTime receivedAtUtc
+    )
     {
         var utc = receivedAtUtc.Kind == DateTimeKind.Utc
             ? receivedAtUtc
@@ -129,8 +142,12 @@ public class StockBatch : BaseAuditableEntityWithoutName, IShopEntity
     public void MarkAsCompleted() => Status = StatusEnum.Completed;
     public void MarkAsCancelled() => Status = StatusEnum.Cancelled;
 
-    public void ApplyOutMovement(decimal quantityBase)
+    public void ApplyOutMovement(
+        decimal quantityBase
+    )
     {
+        // Never subtract the entered transaction quantity directly. Callers must
+        // normalize it through ProductUnit.BaseUnitQuantity before reaching here.
         EnsureCanMove(quantityBase);
         if (quantityBase > RemainingQuantityBase)
             throw new DomainValidationException("Insufficient stock in this batch");
@@ -141,8 +158,12 @@ public class StockBatch : BaseAuditableEntityWithoutName, IShopEntity
             Status = StatusEnum.Completed;
     }
 
-    public void ApplyInMovement(decimal quantityBase)
+    public void ApplyInMovement(
+        decimal quantityBase
+    )
     {
+        // IN movements restore/increase the cached batch balance. The StockMovement
+        // ledger remains the historical source of truth for why the balance changed.
         EnsureCanMove(quantityBase);
         RemainingQuantityBase += quantityBase;
         Version++;
@@ -150,8 +171,12 @@ public class StockBatch : BaseAuditableEntityWithoutName, IShopEntity
             Status = StatusEnum.Active;
     }
 
-    private void EnsureCanMove(decimal quantityBase)
+    private void EnsureCanMove(
+        decimal quantityBase
+    )
     {
+        // Completed means the batch is currently exhausted, so an IN reversal may
+        // reactivate it. Inactive/cancelled batches, however, cannot accept movement.
         if (quantityBase <= 0)
             throw new DomainValidationException("Movement quantity in base units must be greater than zero");
         if (Status is StatusEnum.Cancelled or StatusEnum.Inactive)
