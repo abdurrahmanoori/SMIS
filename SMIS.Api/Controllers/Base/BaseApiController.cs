@@ -4,12 +4,14 @@ using SMIS.Application.Common.Response;
 
 namespace SMIS.Api.Controllers.Base;
 
-[ApiController]
 /// <summary>
-/// Shared controller plumbing for MediatR dispatch and conversion of application
-/// Result objects into HTTP responses. Feature controllers should stay thin and
-/// delegate business behavior to their command/query handlers.
+/// Provides shared request handling used by the API controllers.
 /// </summary>
+/// <remarks>
+/// Feature controllers send commands and queries through MediatR, while this base class converts the application result into an HTTP response.
+/// It is an internal controller base and does not expose its own API routes.
+/// </remarks>
+[ApiController]
 public abstract class BaseApiController : ControllerBase
 {
     private IMediator? _mediator;

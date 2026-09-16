@@ -344,14 +344,6 @@
       <option name="project" value="LOCAL" />
       <updated>1789462942314</updated>
     </task>
-    <task id="LOCAL-00029" summary="feat: update user profile management to include username and language selection">
-      <option name="closed" value="true" />
-      <created>1788700855080</created>
-      <option name="number" value="00029" />
-      <option name="presentableId" value="LOCAL-00029" />
-      <option name="project" value="LOCAL" />
-      <updated>1788700855080</updated>
-    </task>
     <task id="LOCAL-00030" summary="feat: implement multiple account switching functionality in authentication">
       <option name="closed" value="true" />
       <created>1788701144939</created>
@@ -728,7 +720,15 @@
       <option name="project" value="LOCAL" />
       <updated>1789542521044</updated>
     </task>
-    <option name="localTasksCounter" value="77" />
+    <task id="LOCAL-00077" summary="feat: add Sale, StockCount, and Idempotency domains with related DTOs, commands, and validation; implement return and void operations for sales">
+      <option name="closed" value="true" />
+      <created>1789559318866</created>
+      <option name="number" value="00077" />
+      <option name="presentableId" value="LOCAL-00077" />
+      <option name="project" value="LOCAL" />
+      <updated>1789559318866</updated>
+    </task>
+    <option name="localTasksCounter" value="78" />
     <option name="clearContext" value="false" />
     <option name="createChangelist" value="false" />
     <option name="createBranch" value="false" />
@@ -741,7 +741,6 @@
   <component name="UnityProjectConfiguration" hasMinimizedUI="false" />
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
-    <MESSAGE value="feat: implement pagination support in CategoryController and enhance Category API for page retrieval" />
     <MESSAGE value="feat: remove deprecated flutterDev.db data source and update pagination logic in Category API" />
     <MESSAGE value="feat: add search functionality to categories and update filtering in repository" />
     <MESSAGE value="feat: standardize user roles and update role assignments in the database" />
@@ -766,6 +765,7 @@
     <MESSAGE value="feat(Sale): implement Sale domain with related DTOs, commands, and validation; remove LoanAccount entities" />
     <MESSAGE value="feat: add Inventory domain with related DTOs, commands, and queries" />
     <MESSAGE value="feat: implement InventoryController with endpoints for stock operations and reporting" />
+    <MESSAGE value="feat: add Sale, StockCount, and Idempotency domains with related DTOs, commands, and validation; implement return and void operations for sales" />
     <option name="LAST_COMMIT_MESSAGE" value="" />
   </component>
   <component name="XDebuggerManager">

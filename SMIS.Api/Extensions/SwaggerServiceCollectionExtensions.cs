@@ -1,10 +1,13 @@
 using Microsoft.OpenApi.Models;
+using System.Reflection;
 
 namespace SMIS.Api.Extensions;
 
 public static class SwaggerServiceCollectionExtensions
 {
-    public static IServiceCollection AddSwaggerWithJwt(this IServiceCollection services)
+    public static IServiceCollection AddSwaggerWithJwt(
+        this IServiceCollection services
+    )
     {
         services.AddSwaggerGen(options =>
         {
@@ -13,6 +16,10 @@ public static class SwaggerServiceCollectionExtensions
                 Title = "SMIS API",
                 Version = "v1"
             });
+
+            var xmlFileName = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+            var xmlFilePath = Path.Combine(AppContext.BaseDirectory, xmlFileName);
+            options.IncludeXmlComments(xmlFilePath, includeControllerXmlComments: true);
 
             options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
             {

@@ -10,7 +10,10 @@ public sealed class IdempotencyService : IIdempotencyService
     private readonly IApplicationDbContext _db;
     private readonly ICurrentUser _currentUser;
 
-    public IdempotencyService(IApplicationDbContext db, ICurrentUser currentUser)
+    public IdempotencyService(
+        IApplicationDbContext db,
+        ICurrentUser currentUser
+    )
     {
         _db = db;
         _currentUser = currentUser;
@@ -19,7 +22,8 @@ public sealed class IdempotencyService : IIdempotencyService
     public async Task<Result<bool>> ReserveAsync(
         string scope,
         string? key,
-        CancellationToken cancellationToken = default)
+        CancellationToken cancellationToken = default
+    )
     {
         if (string.IsNullOrWhiteSpace(key))
             return Result<bool>.SuccessResult(false);
