@@ -2,37 +2,28 @@ using AutoMapper;
 using MediatR;
 using SMIS.Application.Common.Response;
 using SMIS.Application.DTO.StockMovements;
-using SMIS.Application.Repositories.Base;
-using SMIS.Application.Repositories.StockBatches;
-using SMIS.Application.Repositories.StockMovements;
-using SMIS.Domain.Entities;
-using SMIS.Domain.Enums;
+using SMIS.Application.Services;
 
 namespace SMIS.Application.Features.StockMovements.Commands;
 
-// Corrects a posted movement by adding an opposite movement. The original ledger row
-// is preserved so inventory history remains auditable instead of being rewritten.
-
+/// <summary>
+/// Reverses a posted movement through the shared inventory workflow. The original
+/// movement remains untouched and the workflow posts an opposite ledger entry.
+/// </summary>
 public record StockMovementReverseCommand(string Id) : IRequest<Result<StockMovementDto>>;
 
 internal sealed class StockMovementReverseCommandHandler
     : IRequestHandler<StockMovementReverseCommand, Result<StockMovementDto>>
 {
-    private readonly IStockMovementRepository _movements;
-    private readonly IStockBatchRepository _batches;
-    private readonly IUnitOfWork _unitOfWork;
+    private readonly IInventoryService _inventory;
     private readonly IMapper _mapper;
 
     public StockMovementReverseCommandHandler(
-        IStockMovementRepository movements,
-        IStockBatchRepository batches,
-        IUnitOfWork unitOfWork,
+        IInventoryService inventory,
         IMapper mapper
     )
     {
-        _movements = movements;
-        _batches = batches;
-        _unitOfWork = unitOfWork;
+        _inventory = inventory;
         _mapper = mapper;
     }
 
@@ -41,53 +32,15 @@ internal sealed class StockMovementReverseCommandHandler
         CancellationToken cancellationToken
     )
     {
-        var original = await _movements.GetByIdAsync(request.Id);
-        if (original is null)
-            return Result<StockMovementDto>.NotFoundResult(request.Id);
+        var result = await _inventory.ReverseMovementAsync(request.Id, cancellationToken);
+        if (!result.Success)
+            return new Result<StockMovementDto>
+            {
+                Success = false,
+                Message = result.Message,
+                Errors = result.Errors
+            };
 
-        if (await _movements.HasReversalAsync(original.Id, cancellationToken))
-            return Result<StockMovementDto>.FailureResult(
-                "MovementAlreadyReversed",
-                "This movement already has a reversal entry.");
-
-        var batch = await _batches.GetByIdAsync(original.StockBatchId);
-        if (batch is null)
-            return Result<StockMovementDto>.FailureResult("StockBatchNotFound", "The movement batch no longer exists.");
-
-        var reverseDirection = original.Direction == StockMovementDirection.In
-            ? StockMovementDirection.Out
-            : StockMovementDirection.In;
-
-        var reversal = StockMovement.Create(
-            original.ShopId,
-            original.StockBatchId,
-            original.ProductUnitId,
-            original.QuantityEntered,
-            original.QuantityBase,
-            reverseDirection,
-            StockMovementReason.Adjustment,
-            DateTime.UtcNow,
-            "StockMovementReversal",
-            original.Id);
-
-        await _unitOfWork.StartTransactionAsync(cancellationToken);
-        try
-        {
-            if (reverseDirection == StockMovementDirection.Out)
-                batch.ApplyOutMovement(original.QuantityBase);
-            else
-                batch.ApplyInMovement(original.QuantityBase);
-
-            await _movements.AddAsync(reversal);
-            await _unitOfWork.SaveChanges(cancellationToken);
-            await _unitOfWork.CommitTransactionAsync(cancellationToken);
-        }
-        catch
-        {
-            await _unitOfWork.RollbackTransactionAsync(cancellationToken);
-            throw;
-        }
-
-        return Result<StockMovementDto>.SuccessResult(_mapper.Map<StockMovementDto>(reversal));
+        return Result<StockMovementDto>.SuccessResult(_mapper.Map<StockMovementDto>(result.Response));
     }
 }

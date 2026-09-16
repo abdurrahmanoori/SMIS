@@ -15,5 +15,16 @@ namespace SMIS.Application.DTO.StockBatches
         public string? BatchNumber { get; set; }
         public DateTime? ReceivedAtUtc { get; set; }
         public DateTime? ExpirationDate { get; set; }
+
+        /// <summary>
+        /// Optional business entity type that caused the receipt, for example PurchaseOrder.
+        /// </summary>
+        public string? ReferenceType { get; set; }
+
+        /// <summary>
+        /// Primary key of the related business entity. Do not put invoice numbers,
+        /// receipt numbers, or other human-readable document numbers here.
+        /// </summary>
+        public string? ReferenceId { get; set; }
     }
 }

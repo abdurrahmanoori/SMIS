@@ -34,6 +34,16 @@ namespace SMIS.Application.Features.StockBatches.Validators
                 .GreaterThan(x => x.StockBatchCreateDto.ReceivedAtUtc ?? DateTime.UtcNow)
                 .WithMessage("Expiration date must be after received date")
                 .When(x => x.StockBatchCreateDto.ExpirationDate.HasValue);
+
+            RuleFor(x => x.StockBatchCreateDto.ReferenceType)
+                .MaximumLength(100);
+
+            RuleFor(x => x.StockBatchCreateDto.ReferenceId)
+                .MaximumLength(450);
+
+            RuleFor(x => x.StockBatchCreateDto)
+                .Must(dto => string.IsNullOrWhiteSpace(dto.ReferenceType) == string.IsNullOrWhiteSpace(dto.ReferenceId))
+                .WithMessage("ReferenceType and ReferenceId must either both be supplied or both be empty.");
         }
     }
 }

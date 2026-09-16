@@ -15,9 +15,24 @@ public class StockMovement : BaseAuditableEntityWithoutName, IShopEntity
     public decimal QuantityEntered { get; private set; }
     public decimal QuantityBase { get; private set; }
     public StockMovementDirection Direction { get; private set; }
+
+    /// <summary>
+    /// Business reason for the stock change, independent from IN/OUT direction.
+    /// </summary>
     public StockMovementReason Reason { get; private set; }
+
     public DateTime OccurredAtUtc { get; private set; }
+
+    /// <summary>
+    /// Type of the business entity that caused the movement, for example Sale,
+    /// PurchaseOrder, Return, or StockMovement when posting a reversal.
+    /// </summary>
     public string? ReferenceType { get; private set; }
+
+    /// <summary>
+    /// Actual primary key of the related entity. Human-readable invoice/document
+    /// numbers belong on their own business entity and must not be stored here.
+    /// </summary>
     public string? ReferenceId { get; private set; }
 
     public virtual Shop Shop { get; set; } = null!;
@@ -53,6 +68,12 @@ public class StockMovement : BaseAuditableEntityWithoutName, IShopEntity
             throw new DomainValidationException("Entered quantity must be greater than zero");
         if (quantityBase <= 0)
             throw new DomainValidationException("Base quantity must be greater than zero");
+
+        var hasReferenceType = !string.IsNullOrWhiteSpace(referenceType);
+        var hasReferenceId = !string.IsNullOrWhiteSpace(referenceId);
+        if (hasReferenceType != hasReferenceId)
+            throw new DomainValidationException(
+                "Reference type and reference ID must either both be supplied or both be empty");
 
         ValidateDirectionReason(direction, reason);
 

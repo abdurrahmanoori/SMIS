@@ -22,7 +22,8 @@ public sealed class StockMovementRepository : GenericRepository<StockMovement>, 
         CancellationToken cancellationToken = default
     ) =>
         _context.StockMovements.AnyAsync(
-            movement => movement.ReferenceType == "StockMovementReversal" &&
+            movement => (movement.ReferenceType == nameof(StockMovement) ||
+                         movement.ReferenceType == "StockMovementReversal") &&
                         movement.ReferenceId == movementId,
             cancellationToken);
 }

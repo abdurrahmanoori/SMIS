@@ -12,5 +12,8 @@ public sealed class StockMovementCreateCommandValidator : AbstractValidator<Stoc
         RuleFor(x => x.Dto.QuantityEntered).GreaterThan(0);
         RuleFor(x => x.Dto.ReferenceType).MaximumLength(100);
         RuleFor(x => x.Dto.ReferenceId).MaximumLength(450);
+        RuleFor(x => x.Dto)
+            .Must(dto => string.IsNullOrWhiteSpace(dto.ReferenceType) == string.IsNullOrWhiteSpace(dto.ReferenceId))
+            .WithMessage("ReferenceType and ReferenceId must either both be supplied or both be empty.");
     }
 }

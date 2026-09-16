@@ -146,6 +146,8 @@ public class StockBatch : BaseAuditableEntityWithoutName, IShopEntity
         decimal quantityBase
     )
     {
+        // Application features must reach this method through IInventoryService so the
+        // balance update and immutable StockMovement are always committed together.
         // Never subtract the entered transaction quantity directly. Callers must
         // normalize it through ProductUnit.BaseUnitQuantity before reaching here.
         EnsureCanMove(quantityBase);
@@ -162,6 +164,8 @@ public class StockBatch : BaseAuditableEntityWithoutName, IShopEntity
         decimal quantityBase
     )
     {
+        // Application features must reach this method through IInventoryService so the
+        // cached balance can never change without a matching ledger entry.
         // IN movements restore/increase the cached batch balance. The StockMovement
         // ledger remains the historical source of truth for why the balance changed.
         EnsureCanMove(quantityBase);
