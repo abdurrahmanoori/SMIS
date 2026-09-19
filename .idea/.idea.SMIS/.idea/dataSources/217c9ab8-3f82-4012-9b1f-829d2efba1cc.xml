@@ -16897,12 +16897,12 @@
     <schema id="5591" parent="5542" name="dbo">
       <AutoIntrospectionLevel>3</AutoIntrospectionLevel>
       <Current>1</Current>
-      <IntrospectionTimestamp>2026-09-16.13:57:15</IntrospectionTimestamp>
-      <LastIntrospectionL1Timestamp>2026-09-16.13:57:15</LastIntrospectionL1Timestamp>
-      <LastIntrospectionL2Timestamp>2026-09-16.13:57:15</LastIntrospectionL2Timestamp>
-      <LastIntrospectionL3Timestamp>2026-09-16.13:57:15</LastIntrospectionL3Timestamp>
+      <IntrospectionTimestamp>2026-09-19.09:30:50</IntrospectionTimestamp>
+      <LastIntrospectionL1Timestamp>2026-09-19.09:30:50</LastIntrospectionL1Timestamp>
+      <LastIntrospectionL2Timestamp>2026-09-19.09:30:50</LastIntrospectionL2Timestamp>
+      <LastIntrospectionL3Timestamp>2026-09-19.09:30:50</LastIntrospectionL3Timestamp>
       <LastIntrospectionLevel>3</LastIntrospectionLevel>
-      <LastIntrospectionLocalTimestamp>2026-09-16.07:27:33</LastIntrospectionLocalTimestamp>
+      <LastIntrospectionLocalTimestamp>2026-09-19.03:01:02</LastIntrospectionLocalTimestamp>
       <ObjectId>1</ObjectId>
     </schema>
     <schema id="5592" parent="5542" name="guest">
@@ -19349,42 +19349,42 @@ EffectiveDate</ColNames>
       <Unique>1</Unique>
       <PartitionDataSpaceId>1</PartitionDataSpaceId>
     </index>
-    <index id="6023" parent="5610" name="IX_ProductUnit_UnitOfMeasureId">
+    <index id="6023" parent="5610" name="AK_ProductUnit_Id_ProductId">
+      <ColNames>Id
+ProductId</ColNames>
+      <Position>2</Position>
+      <Unique>1</Unique>
+      <PartitionDataSpaceId>1</PartitionDataSpaceId>
+    </index>
+    <index id="6024" parent="5610" name="IX_ProductUnit_UnitOfMeasureId">
       <ColNames>UnitOfMeasureId</ColNames>
       <Position>3</Position>
       <PartitionDataSpaceId>1</PartitionDataSpaceId>
     </index>
-    <index id="6024" parent="5610" name="IX_ProductUnit_CreatedBy">
+    <index id="6025" parent="5610" name="IX_ProductUnit_CreatedBy">
       <ColNames>CreatedBy</ColNames>
       <Position>5</Position>
       <PartitionDataSpaceId>1</PartitionDataSpaceId>
     </index>
-    <index id="6025" parent="5610" name="IX_ProductUnit_UpdatedBy">
+    <index id="6026" parent="5610" name="IX_ProductUnit_UpdatedBy">
       <ColNames>UpdatedBy</ColNames>
       <Position>6</Position>
       <PartitionDataSpaceId>1</PartitionDataSpaceId>
     </index>
-    <index id="6026" parent="5610" name="IX_ProductUnit_ClientCreatedBy">
+    <index id="6027" parent="5610" name="IX_ProductUnit_ClientCreatedBy">
       <ColNames>ClientCreatedBy</ColNames>
       <Position>9</Position>
       <PartitionDataSpaceId>1</PartitionDataSpaceId>
     </index>
-    <index id="6027" parent="5610" name="IX_ProductUnit_ClientModifiedBy">
+    <index id="6028" parent="5610" name="IX_ProductUnit_ClientModifiedBy">
       <ColNames>ClientModifiedBy</ColNames>
       <Position>10</Position>
       <PartitionDataSpaceId>1</PartitionDataSpaceId>
     </index>
-    <index id="6028" parent="5610" name="AK_ProductUnit_ProductId_UnitOfMeasureId">
+    <index id="6029" parent="5610" name="AK_ProductUnit_ProductId_UnitOfMeasureId">
       <ColNames>ProductId
 UnitOfMeasureId</ColNames>
       <Position>11</Position>
-      <Unique>1</Unique>
-      <PartitionDataSpaceId>1</PartitionDataSpaceId>
-    </index>
-    <index id="6029" parent="5610" name="AK_ProductUnit_Id_ProductId">
-      <ColNames>Id
-ProductId</ColNames>
-      <Position>2</Position>
       <Unique>1</Unique>
       <PartitionDataSpaceId>1</PartitionDataSpaceId>
     </index>

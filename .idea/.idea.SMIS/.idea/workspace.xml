@@ -26,22 +26,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c1539008-1193-464d-b486-40cdba8ba5f6" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.SMIS/.idea/dataSources/8953dd4c-a13f-45bd-aa39-4b486bc39f97.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.SMIS/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.SMIS/.idea/dataSources.local.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.SMIS/.idea/dataSources.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.SMIS/.idea/dataSources.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.SMIS/.idea/dataSources/data_sources_history.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.SMIS/.idea/dataSources/data_sources_history.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.SMIS/.idea/db-forest-config.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.SMIS/.idea/db-forest-config.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.SMIS/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.SMIS/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMIS.Domain/Entities/AppLog.cs" beforeDir="false" afterPath="$PROJECT_DIR$/SMIS.Domain/Entities/AppLog.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMIS.Domain/Entities/ProductUnit.cs" beforeDir="false" afterPath="$PROJECT_DIR$/SMIS.Domain/Entities/ProductUnit.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMIS.Domain/Entities/ShopOwner.cs" beforeDir="false" afterPath="$PROJECT_DIR$/SMIS.Domain/Entities/ShopOwner.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMIS.Domain/Entities/StockBatch.cs" beforeDir="false" afterPath="$PROJECT_DIR$/SMIS.Domain/Entities/StockBatch.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMIS.Infrastructure.Server/EntityConfigurations/AppLogConfiguration.cs" beforeDir="false" afterPath="$PROJECT_DIR$/SMIS.Infrastructure.Server/EntityConfigurations/AppLogConfiguration.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMIS.Infrastructure.Server/EntityConfigurations/ShopOwnerConfiguration.cs" beforeDir="false" afterPath="$PROJECT_DIR$/SMIS.Infrastructure.Server/EntityConfigurations/ShopOwnerConfiguration.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMIS.Infrastructure.Server/EntityConfigurations/StockBatchConfiguration.cs" beforeDir="false" afterPath="$PROJECT_DIR$/SMIS.Infrastructure.Server/EntityConfigurations/StockBatchConfiguration.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMIS.Infrastructure.Server/Logging/DatabaseSink.cs" beforeDir="false" afterPath="$PROJECT_DIR$/SMIS.Infrastructure.Server/Logging/DatabaseSink.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMIS.Infrastructure.Server/Migrations/AppDbContextModelSnapshot.cs" beforeDir="false" afterPath="$PROJECT_DIR$/SMIS.Infrastructure.Server/Migrations/AppDbContextModelSnapshot.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/smis_flutter/lib/screens/categories_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/smis_flutter/lib/screens/categories_screen.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/smis_flutter/lib/screens/products_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/smis_flutter/lib/screens/products_screen.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/smis_flutter/lib/screens/profile_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/smis_flutter/lib/screens/profile_screen.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/smis_flutter/lib/screens/shops_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/smis_flutter/lib/screens/shops_screen.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/smis_flutter/lib/screens/unit_of_measures_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/smis_flutter/lib/screens/unit_of_measures_screen.dart" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -56,6 +45,7 @@
   <component name="DatabaseLocalColorSettings">
     <colors>
       <entry key="217c9ab8-3f82-4012-9b1f-829d2efba1cc" value="@0" />
+      <entry key="8efa3f65-ec7c-4776-a5e0-1831fa957b71" value="" />
       <entry key="ac5415fe-1e2d-4654-8634-a9fa83f2c4ba" value="yellow" />
       <entry key="c23083d1-ad9e-4a55-b047-06addaa567c3" value="green" />
     </colors>
@@ -115,61 +105,61 @@
   <component name="MetaFilesCheckinStateConfiguration" checkMetaFiles="true" />
   <component name="NextEditCompletionFeaturesState">
     <decayedCancelled>
-      <entry key="MS100" value="6.111678143924871E-6" />
-      <entry key="MS500" value="0.09197879987652485" />
-      <entry key="S2" value="1.1322984140789643" />
-      <entry key="S5" value="3.0915418285368563" />
-      <entry key="S10" value="4.590263554405341" />
-      <entry key="S30" value="6.06462263439" />
-      <entry key="S60" value="6.513363637198296" />
-      <entry key="M2" value="6.751739728699237" />
-      <entry key="M5" value="6.899485907861941" />
-      <entry key="M10" value="6.9556871268603535" />
-      <entry key="M15" value="7.040968390832387" />
-      <entry key="M30" value="7.8896289834522175" />
-      <entry key="H1" value="10.23248763967098" />
-      <entry key="H2" value="15.392651764961565" />
-      <entry key="H4" value="35.95008331250729" />
-      <entry key="D1" value="236.98471472991687" />
-      <entry key="W1" value="368.7673779774646" />
+      <entry key="MS100" value="9.370995861904355E-25" />
+      <entry key="MS500" value="1.5647944899577298E-5" />
+      <entry key="S2" value="0.07064158657120706" />
+      <entry key="S5" value="0.4738313561264199" />
+      <entry key="S10" value="0.953391739525525" />
+      <entry key="S30" value="1.5548338423143788" />
+      <entry key="S60" value="1.762353258884542" />
+      <entry key="M2" value="1.8771350389465529" />
+      <entry key="M5" value="1.962297717308046" />
+      <entry key="M10" value="2.3443409107879307" />
+      <entry key="M15" value="3.128148164570544" />
+      <entry key="M30" value="5.544359905812253" />
+      <entry key="H1" value="8.484380132698062" />
+      <entry key="H2" value="12.65104606449566" />
+      <entry key="H4" value="25.634953732289134" />
+      <entry key="D1" value="215.46790219358223" />
+      <entry key="W1" value="373.59537709064136" />
     </decayedCancelled>
     <decayedSelected>
-      <entry key="MS100" value="1.0000000186015747" />
-      <entry key="MS500" value="1.0284387132525281" />
-      <entry key="S2" value="1.4106553503760328" />
-      <entry key="S5" value="1.7004723456951578" />
-      <entry key="S10" value="1.8369422594750238" />
-      <entry key="S30" value="1.9423925243746303" />
-      <entry key="S60" value="1.9707690376060776" />
-      <entry key="M2" value="1.985276122519001" />
-      <entry key="M5" value="1.994084227633567" />
-      <entry key="M10" value="1.9970377415354843" />
-      <entry key="M15" value="1.9980303306273424" />
-      <entry key="M30" value="2.0016966761073665" />
-      <entry key="H1" value="2.1272067952431324" />
-      <entry key="H2" value="4.756395748253841" />
-      <entry key="H4" value="20.27768576048016" />
-      <entry key="D1" value="126.99452184843338" />
-      <entry key="W1" value="185.508372440148" />
+      <entry key="MS100" value="1.0" />
+      <entry key="MS500" value="1.0000008441484114" />
+      <entry key="S2" value="1.0303113096981793" />
+      <entry key="S5" value="1.2469686801273994" />
+      <entry key="S10" value="1.4969594350924424" />
+      <entry key="S30" value="1.7920883883708942" />
+      <entry key="S60" value="1.889993476588966" />
+      <entry key="M2" value="1.9433948796400817" />
+      <entry key="M5" value="1.9826236499949912" />
+      <entry key="M10" value="2.156258824172558" />
+      <entry key="M15" value="2.512286214025841" />
+      <entry key="M30" value="3.609282905052498" />
+      <entry key="H1" value="4.887069862561472" />
+      <entry key="H2" value="6.496804304487059" />
+      <entry key="H4" value="14.285393146283141" />
+      <entry key="D1" value="115.51856541078365" />
+      <entry key="W1" value="188.3992337318881" />
     </decayedSelected>
     <decayedShown>
-      <entry key="MS100" value="1.3352552911011843E-5" />
-      <entry key="MS500" value="0.17059799630958347" />
-      <entry key="S2" value="1.8798284403404968" />
-      <entry key="S5" value="4.3994896663195195" />
-      <entry key="S10" value="6.197256630174232" />
-      <entry key="S30" value="7.921057461512105" />
-      <entry key="S60" value="8.439852168300394" />
-      <entry key="M2" value="8.71453874473028" />
-      <entry key="M5" value="8.884496934505526" />
-      <entry key="M10" value="8.948174146085545" />
-      <entry key="M15" value="9.035959820748202" />
-      <entry key="M30" value="9.889790246031813" />
-      <entry key="H1" value="12.358841543366168" />
-      <entry key="H2" value="20.147848208734654" />
-      <entry key="H4" value="56.22488611951926" />
-      <entry key="D1" value="363.9761218452351" />
-      <entry key="W1" value="554.2750993261716" />
+      <entry key="MS100" value="5.667755851912961E-17" />
+      <entry key="MS500" value="5.654391565222207E-4" />
+      <entry key="S2" value="0.21183442953792295" />
+      <entry key="S5" value="1.0523279992501877" />
+      <entry key="S10" value="1.9910105753570169" />
+      <entry key="S30" value="3.1489935628955856" />
+      <entry key="S60" value="3.5461612314902506" />
+      <entry key="M2" value="3.7654806583243685" />
+      <entry key="M5" value="3.922378979774071" />
+      <entry key="M10" value="4.488780571918009" />
+      <entry key="M15" value="5.631862508534242" />
+      <entry key="M30" value="9.148300618432463" />
+      <entry key="H1" value="13.368168748984234" />
+      <entry key="H2" value="19.145812379369723" />
+      <entry key="H4" value="39.918221451921454" />
+      <entry key="D1" value="330.9836263204944" />
+      <entry key="W1" value="561.9939485457878" />
     </decayedShown>
   </component>
   <component name="ProblemsViewState">
@@ -188,48 +178,48 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;.NET Launch Settings Profile.SMIS.Api: http.executor&quot;: &quot;Run&quot;,
-    &quot;.NET Launch Settings Profile.SMIS.Api: https.executor&quot;: &quot;Run&quot;,
-    &quot;.NET Launch Settings Profile.SMIS.UI: Windows Machine.executor&quot;: &quot;Run&quot;,
-    &quot;ASKED_SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;DataGrid.QuickDoc.View&quot;: &quot;TRANSPOSED&quot;,
-    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.MCP Project settings loaded&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.cidr.known.project.marker&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.readMode.enableVisualFormatting&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
-    &quot;cidr.known.project.marker&quot;: &quot;true&quot;,
-    &quot;codeWithMe.voiceChat.enabledByDefault&quot;: &quot;false&quot;,
-    &quot;com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1&quot;: &quot;true&quot;,
-    &quot;copilot.chat.legacySessionMetadata.migrated&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;flutter-and-api-only&quot;,
-    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
-    &quot;junie.onboarding.icon.badge.shown&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;ml.llm.AcpAgentsConfigurable&quot;,
-    &quot;sqlserver_backup_path_localServer&quot;: &quot;E:&quot;,
-    &quot;to.speed.mode.migration.done&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    ".NET Launch Settings Profile.SMIS.Api: http.executor": "Run",
+    ".NET Launch Settings Profile.SMIS.Api: https.executor": "Run",
+    ".NET Launch Settings Profile.SMIS.UI: Windows Machine.executor": "Run",
+    "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "DataGrid.QuickDoc.View": "TRANSPOSED",
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.MCP Project settings loaded": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.cidr.known.project.marker": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "RunOnceActivity.readMode.enableVisualFormatting": "true",
+    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
+    "cidr.known.project.marker": "true",
+    "codeWithMe.voiceChat.enabledByDefault": "false",
+    "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
+    "copilot.chat.legacySessionMetadata.migrated": "true",
+    "git-widget-placeholder": "flutter-and-api-only",
+    "ignore.virus.scanning.warn.message": "true",
+    "junie.onboarding.icon.badge.shown": "true",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "preferences.pluginManager",
+    "sqlserver_backup_path_localServer": "E:",
+    "to.speed.mode.migration.done": "true"
   },
-  &quot;keyToStringList&quot;: {
-    &quot;DatabaseDriversLRU&quot;: [
-      &quot;sqlite&quot;,
-      &quot;postgresql&quot;
+  "keyToStringList": {
+    "DatabaseDriversLRU": [
+      "sqlite",
+      "postgresql"
     ],
-    &quot;GitStage.ChangesTree.GroupingKeys&quot;: [
-      &quot;directory&quot;,
-      &quot;module&quot;,
-      &quot;repository&quot;
+    "GitStage.ChangesTree.GroupingKeys": [
+      "directory",
+      "module",
+      "repository"
     ]
   }
-}</component>
+}]]></component>
   <component name="RunManager" selected=".NET Launch Settings Profile.SMIS.Api: http">
     <configuration name="SMIS.Api: Production" type="LaunchSettings" factoryName=".NET Launch Settings Profile">
       <option name="LAUNCH_PROFILE_PROJECT_FILE_PATH" value="$PROJECT_DIR$/SMIS.Api/SMIS.Api.csproj" />
@@ -343,14 +333,6 @@
       <option name="presentableId" value="LOCAL-00001" />
       <option name="project" value="LOCAL" />
       <updated>1789462942314</updated>
-    </task>
-    <task id="LOCAL-00030" summary="feat: implement multiple account switching functionality in authentication">
-      <option name="closed" value="true" />
-      <created>1788701144939</created>
-      <option name="number" value="00030" />
-      <option name="presentableId" value="LOCAL-00030" />
-      <option name="project" value="LOCAL" />
-      <updated>1788701144939</updated>
     </task>
     <task id="LOCAL-00031" summary="feat: add AppDrawer widget for improved navigation and user account management">
       <option name="closed" value="true" />
@@ -728,7 +710,15 @@
       <option name="project" value="LOCAL" />
       <updated>1789559318866</updated>
     </task>
-    <option name="localTasksCounter" value="78" />
+    <task id="LOCAL-00078" summary="feat: enhance API documentation with XML comments and improve code readability; add nullable reference types and suppress warnings">
+      <option name="closed" value="true" />
+      <created>1789562462463</created>
+      <option name="number" value="00078" />
+      <option name="presentableId" value="LOCAL-00078" />
+      <option name="project" value="LOCAL" />
+      <updated>1789562462463</updated>
+    </task>
+    <option name="localTasksCounter" value="79" />
     <option name="clearContext" value="false" />
     <option name="createChangelist" value="false" />
     <option name="createBranch" value="false" />
@@ -739,9 +729,15 @@
   </component>
   <component name="UnityCheckinConfiguration" checkUnsavedScenes="true" />
   <component name="UnityProjectConfiguration" hasMinimizedUI="false" />
+  <component name="UnknownFeatures">
+    <option featureType="dependencySupport" implementationName="dotnet:Microsoft.Identity.Client" />
+    <option featureType="dependencySupport" implementationName="dotnet:Microsoft.EntityFrameworkCore.Abstractions" />
+    <option featureType="dependencySupport" implementationName="dotnet:Microsoft.EntityFrameworkCore.Relational" />
+    <option featureType="dependencySupport" implementationName="dotnet:Serilog" />
+    <option featureType="dependencySupport" implementationName="dotnet:Microsoft.EntityFrameworkCore" />
+  </component>
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
-    <MESSAGE value="feat: remove deprecated flutterDev.db data source and update pagination logic in Category API" />
     <MESSAGE value="feat: add search functionality to categories and update filtering in repository" />
     <MESSAGE value="feat: standardize user roles and update role assignments in the database" />
     <MESSAGE value="feat: standardize user identities and update role assignments in seed data" />
@@ -766,6 +762,7 @@
     <MESSAGE value="feat: add Inventory domain with related DTOs, commands, and queries" />
     <MESSAGE value="feat: implement InventoryController with endpoints for stock operations and reporting" />
     <MESSAGE value="feat: add Sale, StockCount, and Idempotency domains with related DTOs, commands, and validation; implement return and void operations for sales" />
+    <MESSAGE value="feat: enhance API documentation with XML comments and improve code readability; add nullable reference types and suppress warnings" />
     <option name="LAST_COMMIT_MESSAGE" value="" />
   </component>
   <component name="XDebuggerManager">

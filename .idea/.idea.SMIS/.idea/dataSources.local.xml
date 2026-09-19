@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="dataSourceStorageLocal" created-in="RD-262.9437.287">
+  <component name="dataSourceStorageLocal" created-in="RD-262.10315.191">
     <data-source name="remote" uuid="217c9ab8-3f82-4012-9b1f-829d2efba1cc">
       <database-info product="Microsoft SQL Server" version="17.00.4085" jdbc-version="4.2" driver-name="JetBrains JDBC Driver for SQL Server" driver-version="1.0" dbms="MSSQL" exact-version="17.0.4085" exact-driver-version="1.0">
         <extra-name-characters>$#@</extra-name-characters>
@@ -46,6 +46,33 @@
         <introspection-scope>
           <node kind="database" qname="@">
             <node kind="schema" qname="@" />
+          </node>
+        </introspection-scope>
+      </schema-mapping>
+    </data-source>
+    <data-source name="smis-azure" uuid="8efa3f65-ec7c-4776-a5e0-1831fa957b71">
+      <database-info product="Microsoft SQL Server" version="12.00.0193" jdbc-version="4.2" driver-name="JetBrains JDBC Driver for SQL Server" driver-version="1.0" dbms="AZURE" exact-version="12.0.193" exact-driver-version="1.0">
+        <extra-name-characters>$#@</extra-name-characters>
+        <identifier-quote-string>&quot;</identifier-quote-string>
+      </database-info>
+      <case-sensitivity plain-identifiers="mixed" quoted-identifiers="mixed" />
+      <secret-storage>master_key</secret-storage>
+      <auth-provider>no-auth</auth-provider>
+      <schema-mapping>
+        <introspection-scope>
+          <node negative="1">
+            <node kind="database" negative="1" />
+            <node kind="database">
+              <name qname="@" />
+              <name qname="master" />
+              <node kind="schema" negative="1" />
+            </node>
+            <node kind="database" qname="smis">
+              <node kind="schema">
+                <name qname="cdc" />
+                <name qname="dbo" />
+              </node>
+            </node>
           </node>
         </introspection-scope>
       </schema-mapping>
