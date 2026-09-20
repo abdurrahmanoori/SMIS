@@ -1,0 +1,52 @@
+import 'package:powersync/powersync.dart';
+
+const _trackTimestamp = TrackPreviousValuesOptions(
+  columnFilter: ['last_modified_utc'],
+);
+
+/// Only entities that currently exist in the Flutter application are included.
+/// Adding a .NET entity does not automatically make it part of offline sync.
+const appPowerSyncSchema = Schema([
+  Table('shop', [
+    Column.text('name'),
+    Column.text('shop_type'),
+    Column.text('address'),
+    Column.text('phone_number'),
+    Column.text('email'),
+    Column.text('tax_number'),
+    Column.integer('is_active'),
+    Column.text('last_modified_utc'),
+  ], trackPreviousValues: _trackTimestamp),
+  Table('category', [
+    Column.text('name'),
+    Column.text('code'),
+    Column.text('description'),
+    Column.integer('is_active'),
+    Column.text('shop_id'),
+    Column.text('last_modified_utc'),
+  ], trackPreviousValues: _trackTimestamp),
+  Table('unit_of_measure', [
+    Column.text('name'),
+    Column.text('symbol'),
+    Column.text('description'),
+    Column.text('last_modified_utc'),
+  ], trackPreviousValues: _trackTimestamp),
+  Table('product', [
+    Column.text('name'),
+    Column.text('base_unit_id'),
+    Column.text('sku'),
+    Column.text('description'),
+    Column.integer('is_active'),
+    Column.text('barcode'),
+    Column.text('image_url'),
+    Column.text('category_id'),
+    Column.text('shop_id'),
+    Column.text('last_modified_utc'),
+  ], trackPreviousValues: _trackTimestamp),
+  Table('product_unit', [
+    Column.text('product_id'),
+    Column.text('unit_of_measure_id'),
+    Column.real('base_unit_quantity'),
+    Column.text('last_modified_utc'),
+  ], trackPreviousValues: _trackTimestamp),
+]);

@@ -1,7 +1,9 @@
-# Category PowerSync proof of concept
+# Flutter PowerSync gradual migration
 
-Category is the only SMIS entity currently moved to PowerSync. Other entities
-continue to use the existing synchronization implementation.
+PowerSync is intentionally scoped to the business entities that currently
+exist in the Flutter application: Shop, Category, UnitOfMeasure, Product and
+ProductUnit. Other .NET domain entities are not synchronized until a Flutter
+feature explicitly adopts them.
 
 ## Authentication flow
 
@@ -25,7 +27,9 @@ The PowerSync JWT contains:
 - `aud`: PowerSync Development instance URL
 - `iat` / `exp`: short-lived token timestamps
 
-The Category Sync Stream uses the trusted `ShopId` claim:
+Shop-scoped streams use the trusted `ShopId` claim. The Shop stream additionally
+uses the trusted `IsSuperAdmin` claim so platform administrators can receive all
+shops while ordinary users receive only their own shop.
 
 ```sql
 WHERE category."ShopId" = auth.parameter('ShopId')
@@ -45,8 +49,8 @@ the PowerSync service.
 The Development instance is configured with:
 
 - Azure SQL `smis` as the source database
-- Category CDC replication
-- `shop_categories` Sync Stream
+- CDC replication only for the five Flutter tables
+- explicit streams for Shop, Category, UnitOfMeasure, Product and ProductUnit
 - custom RS256 JWT verification with a public JWKS key
 - temporary/development PowerSync tokens disabled
 

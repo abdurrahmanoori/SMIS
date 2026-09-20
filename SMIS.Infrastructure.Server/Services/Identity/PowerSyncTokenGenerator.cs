@@ -27,7 +27,8 @@ public sealed class PowerSyncTokenGenerator : IPowerSyncTokenGenerator
 
     public PowerSyncCredentialsDto Generate(
         string userId,
-        string shopId
+        string shopId,
+        bool isSuperAdmin
     )
     {
         var endpoint = Required("PowerSync:Endpoint").TrimEnd('/');
@@ -50,6 +51,7 @@ public sealed class PowerSyncTokenGenerator : IPowerSyncTokenGenerator
         {
             new Claim(JwtRegisteredClaimNames.Sub, userId),
             new Claim(nameof(ApplicationUser.ShopId), shopId),
+            new Claim("IsSuperAdmin", isSuperAdmin ? "true" : "false"),
             new Claim(
                 JwtRegisteredClaimNames.Iat,
                 EpochTime.GetIntDate(now).ToString(),

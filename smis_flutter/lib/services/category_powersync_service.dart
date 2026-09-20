@@ -1,20 +1,22 @@
-import '../data/powersync/category_powersync_database.dart';
+import '../data/powersync/app_powersync_database.dart';
+import '../data/powersync/category_powersync_repository.dart';
 import 'category_sync_service.dart';
 
 /// Small adapter used by the existing Category UI's "Sync now" action.
 /// Normal PowerSync operation is continuous; this method mainly provides a
 /// visible connectivity/initial-sync check for the Category proof-of-concept.
 class CategoryPowerSyncService {
-  CategoryPowerSyncService(this._database);
+  CategoryPowerSyncService(this._database, this._repository);
 
-  final CategoryPowerSyncDatabase _database;
+  final AppPowerSyncDatabase _database;
+  final CategoryPowerSyncRepository _repository;
 
   Future<CategorySyncResult> synchronize({
     required String shopId,
     bool force = false,
   }) async {
     try {
-      final database = await _database.connectIfConfigured();
+      final database = await _database.connectForCurrentSession();
       var status = database.currentStatus;
       if (status.anyError != null) {
         throw StateError('PowerSync connection failed: ${status.anyError}');
@@ -32,7 +34,7 @@ class CategoryPowerSyncService {
         throw StateError('PowerSync connection failed: ${status.anyError}');
       }
 
-      final pending = (await database.getUploadQueueStats()).count;
+      final pending = await _repository.getPendingCount(shopId);
       return CategorySyncResult(
         success: true,
         message: pending == 0
@@ -41,11 +43,11 @@ class CategoryPowerSyncService {
         pending: pending,
       );
     } catch (error, stackTrace) {
-      final database = await _database.database;
+      await _database.databaseForCurrentSession();
       return CategorySyncResult(
         success: false,
         message: 'Category PowerSync could not complete the sync check.',
-        pending: (await database.getUploadQueueStats()).count,
+        pending: await _repository.getPendingCount(shopId),
         transientFailure: true,
         failures: [
           CategorySyncFailure(

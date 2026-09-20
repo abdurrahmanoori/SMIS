@@ -1,11 +1,13 @@
+import 'dart:async';
+
 import 'package:flutter/foundation.dart' show debugPrint, kDebugMode;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'app_dependencies.dart';
 import 'auth_controller.dart';
-import '../data/product_api.dart';
-import '../data/product_repository.dart';
+import '../data/powersync/product_powersync_repository.dart';
 import '../models/product.dart';
+import '../services/app_powersync_sync_services.dart';
 import '../services/product_sync_service.dart';
 
 class ProductScreenState {
@@ -38,8 +40,13 @@ class ProductScreenState {
 }
 
 class ProductController extends AsyncNotifier<ProductScreenState> {
-  ProductRepository get _repository => ref.read(productRepositoryProvider);
-  ProductSyncService get _syncService => ref.read(productSyncServiceProvider);
+  StreamSubscription<void>? _changesSubscription;
+  bool _refreshingFromPowerSync = false;
+
+  ProductPowerSyncRepository get _repository =>
+      ref.read(productRepositoryProvider);
+  ProductPowerSyncService get _syncService =>
+      ref.read(productSyncServiceProvider);
 
   String get _shopId {
     final session = ref.watch(authControllerProvider.select((s) => s.session));
@@ -48,9 +55,36 @@ class ProductController extends AsyncNotifier<ProductScreenState> {
   }
 
   @override
-  Future<ProductScreenState> build() {
-    _shopId;
+  Future<ProductScreenState> build() async {
+    final shopId = _shopId;
+    await _changesSubscription?.cancel();
+    final changes = await _repository.watchChanges(shopId);
+    _changesSubscription = changes
+        .skip(1)
+        .listen((_) => _refreshFromPowerSync());
+    ref.onDispose(() => _changesSubscription?.cancel());
     return _load();
+  }
+
+  Future<void> _refreshFromPowerSync() async {
+    if (_refreshingFromPowerSync || !state.hasValue) return;
+    _refreshingFromPowerSync = true;
+    try {
+      final current = state.value!;
+      state = AsyncData(
+        await _load(
+          searchQuery: current.searchQuery,
+          lastSyncResult: current.lastSyncResult,
+        ),
+      );
+      ref.invalidate(productLookupProvider);
+    } catch (error, stackTrace) {
+      if (kDebugMode) {
+        debugPrint('Product PowerSync refresh failed: $error\n$stackTrace');
+      }
+    } finally {
+      _refreshingFromPowerSync = false;
+    }
   }
 
   Future<void> reload() async {
@@ -135,17 +169,13 @@ class ProductController extends AsyncNotifier<ProductScreenState> {
   }
 }
 
-final productRepositoryProvider = Provider<ProductRepository>(
-  (ref) => ProductRepository(ref.watch(appDatabaseProvider)),
+final productRepositoryProvider = Provider<ProductPowerSyncRepository>(
+  (ref) => ProductPowerSyncRepository(ref.watch(appPowerSyncDatabaseProvider)),
 );
-final productApiProvider = Provider<ProductApi>(
-  (ref) => DioProductApi(sessionStore: ref.watch(authSessionStoreProvider)),
-);
-final productSyncServiceProvider = Provider<ProductSyncService>(
-  (ref) => ProductSyncService(
+final productSyncServiceProvider = Provider<ProductPowerSyncService>(
+  (ref) => ProductPowerSyncService(
+    ref.watch(appPowerSyncStatusServiceProvider),
     ref.watch(productRepositoryProvider),
-    ref.watch(productApiProvider),
-    ref.watch(connectivityProvider),
   ),
 );
 final productControllerProvider =

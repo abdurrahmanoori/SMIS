@@ -1,8 +1,11 @@
+import 'dart:async';
+
+import 'package:flutter/foundation.dart' show debugPrint, kDebugMode;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../data/product_unit_api.dart';
-import '../data/product_unit_repository.dart';
+import '../data/powersync/product_unit_powersync_repository.dart';
 import '../models/product_unit.dart';
+import '../services/app_powersync_sync_services.dart';
 import '../services/product_unit_sync_service.dart';
 import 'app_dependencies.dart';
 import 'auth_controller.dart';
@@ -58,10 +61,12 @@ class ProductUnitScreenState {
 
 class ProductUnitController extends AsyncNotifier<ProductUnitScreenState> {
   static const _pageSize = 25;
+  StreamSubscription<void>? _changesSubscription;
+  bool _refreshingFromPowerSync = false;
 
-  ProductUnitRepository get _repository =>
+  ProductUnitPowerSyncRepository get _repository =>
       ref.read(productUnitRepositoryProvider);
-  ProductUnitSyncService get _syncService =>
+  ProductUnitPowerSyncService get _syncService =>
       ref.read(productUnitSyncServiceProvider);
 
   String get _shopId {
@@ -73,9 +78,37 @@ class ProductUnitController extends AsyncNotifier<ProductUnitScreenState> {
   }
 
   @override
-  Future<ProductUnitScreenState> build() {
-    _shopId;
+  Future<ProductUnitScreenState> build() async {
+    final shopId = _shopId;
+    await _changesSubscription?.cancel();
+    final changes = await _repository.watchChanges(shopId);
+    _changesSubscription = changes
+        .skip(1)
+        .listen((_) => _refreshFromPowerSync());
+    ref.onDispose(() => _changesSubscription?.cancel());
     return _load();
+  }
+
+  Future<void> _refreshFromPowerSync() async {
+    if (_refreshingFromPowerSync || !state.hasValue) return;
+    _refreshingFromPowerSync = true;
+    try {
+      final current = state.value!;
+      state = AsyncData(
+        await _load(
+          searchQuery: current.searchQuery,
+          lastSyncResult: current.lastSyncResult,
+        ),
+      );
+    } catch (error, stackTrace) {
+      if (kDebugMode) {
+        debugPrint(
+          'Product unit PowerSync refresh failed: $error\n$stackTrace',
+        );
+      }
+    } finally {
+      _refreshingFromPowerSync = false;
+    }
   }
 
   Future<void> reload() async {
@@ -180,17 +213,14 @@ class ProductUnitController extends AsyncNotifier<ProductUnitScreenState> {
   }
 }
 
-final productUnitRepositoryProvider = Provider<ProductUnitRepository>(
-  (ref) => ProductUnitRepository(ref.watch(appDatabaseProvider)),
+final productUnitRepositoryProvider = Provider<ProductUnitPowerSyncRepository>(
+  (ref) =>
+      ProductUnitPowerSyncRepository(ref.watch(appPowerSyncDatabaseProvider)),
 );
-final productUnitApiProvider = Provider<ProductUnitApi>(
-  (ref) => DioProductUnitApi(sessionStore: ref.watch(authSessionStoreProvider)),
-);
-final productUnitSyncServiceProvider = Provider<ProductUnitSyncService>(
-  (ref) => ProductUnitSyncService(
+final productUnitSyncServiceProvider = Provider<ProductUnitPowerSyncService>(
+  (ref) => ProductUnitPowerSyncService(
+    ref.watch(appPowerSyncStatusServiceProvider),
     ref.watch(productUnitRepositoryProvider),
-    ref.watch(productUnitApiProvider),
-    ref.watch(connectivityProvider),
   ),
 );
 final productUnitControllerProvider =

@@ -1,28 +1,26 @@
 import 'package:powersync/powersync.dart';
-import 'package:sqflite/sqflite.dart';
 import 'package:uuid/uuid.dart';
 
 import '../../models/category.dart';
 import '../data_exception.dart';
-import '../database.dart';
-import 'category_powersync_database.dart';
+import 'app_powersync_database.dart';
+import 'powersync_repository_support.dart';
 
-class CategoryPowerSyncRepository {
+class CategoryPowerSyncRepository extends PowerSyncRepositorySupport {
   CategoryPowerSyncRepository(
-    this._powerSync,
-    this._legacyDatabase, {
+    AppPowerSyncDatabase powerSync, {
     String Function()? idGenerator,
-  }) : _idGenerator = idGenerator ?? const Uuid().v4;
+  }) : _idGenerator = idGenerator ?? const Uuid().v4,
+       super(powerSync);
 
-  final CategoryPowerSyncDatabase _powerSync;
-  final AppDatabase _legacyDatabase;
   final String Function() _idGenerator;
 
   Future<Stream<void>> watchChanges(String shopId) async {
-    final database = await _database();
+    final database = await this.database;
     return database
         .watch(
-          'SELECT id, name, code, description, is_active, shop_id '
+          'SELECT id, name, code, description, is_active, shop_id, '
+          'last_modified_utc '
           'FROM category WHERE shop_id = ?',
           parameters: [shopId],
           throttle: const Duration(milliseconds: 250),
@@ -36,7 +34,8 @@ class CategoryPowerSyncRepository {
     int? limit,
     int? offset,
   }) async {
-    final database = await _database();
+    final database = await this.database;
+    final pending = await pendingOperations('category');
     final args = <Object?>[shopId];
     var where = 'shop_id = ?';
 
@@ -47,7 +46,8 @@ class CategoryPowerSyncRepository {
     }
 
     var sql =
-        'SELECT id, name, code, description, is_active, shop_id '
+        'SELECT id, name, code, description, is_active, shop_id, '
+        'last_modified_utc '
         'FROM category WHERE $where ORDER BY name COLLATE NOCASE ASC';
     if (limit != null) {
       sql += ' LIMIT ?';
@@ -59,11 +59,13 @@ class CategoryPowerSyncRepository {
     }
 
     final rows = await database.getAll(sql, args);
-    return rows.map(_toCategory).toList(growable: false);
+    return rows
+        .map((row) => _toCategory(row, pending[row['id']]))
+        .toList(growable: false);
   }
 
   Future<int> getTotalCount(String shopId, {String? searchQuery}) async {
-    final database = await _database();
+    final database = await this.database;
     final args = <Object?>[shopId];
     var where = 'shop_id = ?';
 
@@ -82,14 +84,14 @@ class CategoryPowerSyncRepository {
 
   Future<Category> create(CategoryDraft draft, String shopId) async {
     final normalized = draft.normalized();
-    final database = await _database();
+    final database = await this.database;
     await _ensureUniqueName(database, shopId, normalized.name);
 
     final id = _idGenerator();
     await database.execute(
       'INSERT INTO category('
-      'id, name, code, description, is_active, shop_id'
-      ') VALUES (?, ?, ?, ?, ?, ?)',
+      'id, name, code, description, is_active, shop_id, last_modified_utc'
+      ') VALUES (?, ?, ?, ?, ?, ?, ?)',
       [
         id,
         normalized.name,
@@ -97,6 +99,7 @@ class CategoryPowerSyncRepository {
         normalized.description,
         normalized.isActive ? 1 : 0,
         shopId,
+        nowIso(),
       ],
     );
 
@@ -105,7 +108,7 @@ class CategoryPowerSyncRepository {
 
   Future<Category> update(String id, CategoryDraft draft) async {
     final normalized = draft.normalized();
-    final database = await _database();
+    final database = await this.database;
     final current = await database.getOptional(
       'SELECT shop_id FROM category WHERE id = ?',
       [id],
@@ -119,13 +122,14 @@ class CategoryPowerSyncRepository {
 
     await database.execute(
       'UPDATE category SET name = ?, code = ?, description = ?, '
-      'is_active = ?, shop_id = ? WHERE id = ?',
+      'is_active = ?, shop_id = ?, last_modified_utc = ? WHERE id = ?',
       [
         normalized.name,
         normalized.code,
         normalized.description,
         normalized.isActive ? 1 : 0,
         shopId,
+        nowIso(),
         id,
       ],
     );
@@ -137,47 +141,43 @@ class CategoryPowerSyncRepository {
     final productCount = await countProductsUsingCategory(id);
     if (productCount > 0) throw CategoryInUseException(productCount);
 
-    final database = await _database();
+    final database = await this.database;
+    if (await database.getOptional('SELECT id FROM category WHERE id = ?', [
+          id,
+        ]) ==
+        null) {
+      return;
+    }
+    await database.execute(
+      'UPDATE category SET last_modified_utc = ? WHERE id = ?',
+      [nowIso(), id],
+    );
     await database.execute('DELETE FROM category WHERE id = ?', [id]);
   }
 
-  Future<int> getPendingCount(String shopId) async {
-    // This proof-of-concept PowerSync database contains Category only, so the
-    // queue count is the Category pending-write count.
-    final database = await _database();
-    return (await database.getUploadQueueStats()).count;
-  }
+  Future<int> getPendingCount(String shopId) => pendingCount('category');
 
   Future<int> countProductsUsingCategory(String categoryId) async {
-    // Product has not moved to PowerSync yet. Reuse the existing local product
-    // table so Category deletion still protects current local relationships.
-    final database = await _legacyDatabase.instance;
-    final result = await database.rawQuery(
-      'SELECT COUNT(*) AS count FROM products '
-      'WHERE is_deleted = 0 AND category_id = ?',
+    final database = await this.database;
+    final result = await database.get(
+      'SELECT COUNT(*) AS count FROM product WHERE category_id = ?',
       [categoryId],
     );
-    return Sqflite.firstIntValue(result) ?? 0;
-  }
-
-  Future<PowerSyncDatabase> _database() async {
-    final database = await _powerSync.database;
-    // Start replication when configured, without making offline local reads
-    // depend on network availability.
-    _powerSync.connectIfConfigured().catchError((_) => database);
-    return database;
+    return result['count'] as int;
   }
 
   Future<Category> _byId(PowerSyncDatabase database, String id) async {
     final row = await database.getOptional(
-      'SELECT id, name, code, description, is_active, shop_id '
+      'SELECT id, name, code, description, is_active, shop_id, '
+      'last_modified_utc '
       'FROM category WHERE id = ?',
       [id],
     );
     if (row == null) {
       throw const LocalStorageException('Category was not found.');
     }
-    return _toCategory(row);
+    final pending = await pendingOperations('category');
+    return _toCategory(row, pending[id]);
   }
 
   Future<void> _ensureUniqueName(
@@ -201,8 +201,8 @@ class CategoryPowerSyncRepository {
     }
   }
 
-  Category _toCategory(Map<String, Object?> row) {
-    final now = DateTime.fromMillisecondsSinceEpoch(0, isUtc: true);
+  Category _toCategory(Map<String, Object?> row, String? operation) {
+    final changedAt = timestamp(row['last_modified_utc']);
     return Category(
       id: row['id']! as String,
       name: row['name']! as String,
@@ -210,10 +210,14 @@ class CategoryPowerSyncRepository {
       description: row['description'] as String?,
       isActive: row['is_active'] == 1,
       shopId: row['shop_id'] as String?,
-      createdAt: now,
-      updatedAt: now,
-      lastModifiedUtc: now,
-      syncStatus: CategorySyncStatus.synced,
+      createdAt: changedAt,
+      updatedAt: changedAt,
+      lastModifiedUtc: changedAt,
+      syncStatus: operation == null
+          ? CategorySyncStatus.synced
+          : operation == 'PUT'
+          ? CategorySyncStatus.pendingCreate
+          : CategorySyncStatus.pendingUpdate,
     );
   }
 }

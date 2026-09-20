@@ -5,7 +5,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'auth_controller.dart';
 import 'app_dependencies.dart';
-import '../data/powersync/category_powersync_database.dart';
 import '../data/powersync/category_powersync_repository.dart';
 import '../models/category.dart';
 import '../services/category_powersync_service.dart';
@@ -264,20 +263,15 @@ class CategoryController extends AsyncNotifier<CategoryScreenState> {
   }
 }
 
-final categoryPowerSyncDatabaseProvider = Provider<CategoryPowerSyncDatabase>(
-  (ref) => CategoryPowerSyncDatabase(ref.watch(authSessionStoreProvider)),
-);
-
 final categoryRepositoryProvider = Provider<CategoryPowerSyncRepository>(
-  (ref) => CategoryPowerSyncRepository(
-    ref.watch(categoryPowerSyncDatabaseProvider),
-    ref.watch(appDatabaseProvider),
-  ),
+  (ref) => CategoryPowerSyncRepository(ref.watch(appPowerSyncDatabaseProvider)),
 );
 
 final categorySyncServiceProvider = Provider<CategoryPowerSyncService>(
-  (ref) =>
-      CategoryPowerSyncService(ref.watch(categoryPowerSyncDatabaseProvider)),
+  (ref) => CategoryPowerSyncService(
+    ref.watch(appPowerSyncDatabaseProvider),
+    ref.watch(categoryRepositoryProvider),
+  ),
 );
 
 final categoryControllerProvider =

@@ -42,6 +42,6 @@ public sealed class PowerSyncController : ControllerBase
                 title: "A shop context is required for offline synchronization.");
         }
 
-        return Ok(_tokenGenerator.Generate(userId, shopId));
+        return Ok(_tokenGenerator.Generate(userId, shopId, _currentUser.IsSuperAdmin()));
     }
 }

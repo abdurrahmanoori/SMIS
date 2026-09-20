@@ -6,6 +6,7 @@ public interface IPowerSyncTokenGenerator
 {
     PowerSyncCredentialsDto Generate(
         string userId,
-        string shopId
+        string shopId,
+        bool isSuperAdmin
     );
 }

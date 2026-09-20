@@ -1,11 +1,13 @@
+import 'dart:async';
+
 import 'package:flutter/foundation.dart' show debugPrint, kDebugMode;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'app_dependencies.dart';
 import 'auth_controller.dart';
-import '../data/unit_of_measure_api.dart';
-import '../data/unit_of_measure_repository.dart';
+import '../data/powersync/unit_of_measure_powersync_repository.dart';
 import '../models/unit_of_measure.dart';
+import '../services/app_powersync_sync_services.dart';
 import '../services/unit_of_measure_sync_service.dart';
 
 class UnitOfMeasureScreenState {
@@ -39,9 +41,12 @@ class UnitOfMeasureScreenState {
 }
 
 class UnitOfMeasureController extends AsyncNotifier<UnitOfMeasureScreenState> {
-  UnitOfMeasureRepository get _repository =>
+  StreamSubscription<void>? _changesSubscription;
+  bool _refreshingFromPowerSync = false;
+
+  UnitOfMeasurePowerSyncRepository get _repository =>
       ref.read(unitOfMeasureRepositoryProvider);
-  UnitOfMeasureSyncService get _syncService =>
+  UnitOfMeasurePowerSyncService get _syncService =>
       ref.read(unitOfMeasureSyncServiceProvider);
 
   String get _shopId {
@@ -51,20 +56,51 @@ class UnitOfMeasureController extends AsyncNotifier<UnitOfMeasureScreenState> {
   }
 
   @override
-  Future<UnitOfMeasureScreenState> build() {
+  Future<UnitOfMeasureScreenState> build() async {
     _shopId;
+    await _changesSubscription?.cancel();
+    final changes = await _repository.watchChanges();
+    _changesSubscription = changes
+        .skip(1)
+        .listen((_) => _refreshFromPowerSync());
+    ref.onDispose(() => _changesSubscription?.cancel());
     return _load();
+  }
+
+  Future<void> _refreshFromPowerSync() async {
+    if (_refreshingFromPowerSync || !state.hasValue) return;
+    _refreshingFromPowerSync = true;
+    try {
+      final current = state.value!;
+      state = AsyncData(
+        await _load(
+          searchQuery: current.searchQuery,
+          lastSyncResult: current.lastSyncResult,
+        ),
+      );
+      ref.invalidate(unitOfMeasureLookupProvider);
+    } catch (error, stackTrace) {
+      if (kDebugMode) {
+        debugPrint('Unit PowerSync refresh failed: $error\n$stackTrace');
+      }
+    } finally {
+      _refreshingFromPowerSync = false;
+    }
   }
 
   Future<void> reload() async {
     final previousQuery = state.hasValue ? state.value?.searchQuery : null;
-    final previousSyncResult = state.hasValue ? state.value?.lastSyncResult : null;
-    
+    final previousSyncResult = state.hasValue
+        ? state.value?.lastSyncResult
+        : null;
+
     try {
-      state = AsyncData(await _load(
-        searchQuery: previousQuery,
-        lastSyncResult: previousSyncResult,
-      ));
+      state = AsyncData(
+        await _load(
+          searchQuery: previousQuery,
+          lastSyncResult: previousSyncResult,
+        ),
+      );
       ref.invalidate(unitOfMeasureLookupProvider);
     } catch (error, stackTrace) {
       state = AsyncError(error, stackTrace);
@@ -74,9 +110,16 @@ class UnitOfMeasureController extends AsyncNotifier<UnitOfMeasureScreenState> {
   Future<void> search(String query) async {
     final previous = state.value;
     if (previous?.searchQuery == query) return;
-    
-    state = AsyncData(previous?.copyWith(searchQuery: query, units: []) ?? UnitOfMeasureScreenState(units: [], pendingCount: 0, searchQuery: query));
-    
+
+    state = AsyncData(
+      previous?.copyWith(searchQuery: query, units: []) ??
+          UnitOfMeasureScreenState(
+            units: [],
+            pendingCount: 0,
+            searchQuery: query,
+          ),
+    );
+
     try {
       state = AsyncData(await _load(searchQuery: query));
     } catch (error, stackTrace) {
@@ -112,10 +155,9 @@ class UnitOfMeasureController extends AsyncNotifier<UnitOfMeasureScreenState> {
           .join('\n\n');
       debugPrint('${result.message}\n\n$details');
     }
-    state = AsyncData(await _load(
-      searchQuery: current.searchQuery,
-      lastSyncResult: result,
-    ));
+    state = AsyncData(
+      await _load(searchQuery: current.searchQuery, lastSyncResult: result),
+    );
     ref.invalidate(unitOfMeasureLookupProvider);
     return result;
   }
@@ -134,23 +176,20 @@ class UnitOfMeasureController extends AsyncNotifier<UnitOfMeasureScreenState> {
   }
 }
 
-final unitOfMeasureRepositoryProvider = Provider<UnitOfMeasureRepository>(
-  (ref) => UnitOfMeasureRepository(ref.watch(appDatabaseProvider)),
-);
+final unitOfMeasureRepositoryProvider =
+    Provider<UnitOfMeasurePowerSyncRepository>(
+      (ref) => UnitOfMeasurePowerSyncRepository(
+        ref.watch(appPowerSyncDatabaseProvider),
+      ),
+    );
 
-final unitOfMeasureApiProvider = Provider<UnitOfMeasureApi>(
-  (ref) => DioUnitOfMeasureApi(
-    sessionStore: ref.watch(authSessionStoreProvider),
-  ),
-);
-
-final unitOfMeasureSyncServiceProvider = Provider<UnitOfMeasureSyncService>(
-  (ref) => UnitOfMeasureSyncService(
-    ref.watch(unitOfMeasureRepositoryProvider),
-    ref.watch(unitOfMeasureApiProvider),
-    ref.watch(connectivityProvider),
-  ),
-);
+final unitOfMeasureSyncServiceProvider =
+    Provider<UnitOfMeasurePowerSyncService>(
+      (ref) => UnitOfMeasurePowerSyncService(
+        ref.watch(appPowerSyncStatusServiceProvider),
+        ref.watch(unitOfMeasureRepositoryProvider),
+      ),
+    );
 
 final unitOfMeasureControllerProvider =
     AsyncNotifierProvider<UnitOfMeasureController, UnitOfMeasureScreenState>(
@@ -158,8 +197,12 @@ final unitOfMeasureControllerProvider =
     );
 
 /// Complete local unit list for selectors, independent of screen searching.
-final unitOfMeasureLookupProvider = FutureProvider<List<UnitOfMeasure>>((ref) async {
-  final session = ref.watch(authControllerProvider.select((state) => state.session));
+final unitOfMeasureLookupProvider = FutureProvider<List<UnitOfMeasure>>((
+  ref,
+) async {
+  final session = ref.watch(
+    authControllerProvider.select((state) => state.session),
+  );
   if (session == null) return const <UnitOfMeasure>[];
   return ref.watch(unitOfMeasureRepositoryProvider).getAll(session.shopId);
 });
