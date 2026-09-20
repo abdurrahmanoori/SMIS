@@ -17,6 +17,9 @@
                   <Item>
                     <option name="path" value="SMIS.Api/appsettings.Development.json" />
                   </Item>
+                  <Item>
+                    <option name="path" value="SMIS.Api/appsettings.Production.json" />
+                  </Item>
                 </list>
               </option>
             </SchemaInfo>

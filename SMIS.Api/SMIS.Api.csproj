@@ -44,6 +44,9 @@
 	<ItemGroup>
 		<!-- Shared configuration — single source of truth across all projects -->
 		<Content Include="..\appsettings.shared.json" Link="appsettings.shared.json" CopyToOutputDirectory="PreserveNewest" />
+		<!-- Local production secrets are git-ignored but must be present in the
+		     publish artifact when this machine performs a production publish. -->
+		<Content Update="appsettings.Production.json" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" Condition="Exists('appsettings.Production.json')" />
 	</ItemGroup>
 
 </Project>

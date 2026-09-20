@@ -1,0 +1,17 @@
+config:
+  edition: 3
+
+streams:
+  shop_categories:
+    auto_subscribe: true
+    query: |
+      SELECT
+        category."Id" AS id,
+        category."Name" AS name,
+        category."Code" AS code,
+        category."Description" AS description,
+        category."IsActive" AS is_active,
+        category."ShopId" AS shop_id
+      FROM "Category" AS category
+      WHERE category."ShopId" = auth.parameter('ShopId')
+        AND category."IsDeleted" = 0

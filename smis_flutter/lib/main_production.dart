@@ -7,6 +7,6 @@ void main() {
     apiBaseUrl: 'http://api-smis.runasp.net',
     appTitle: 'SMIS',
   );
-  
+
   app.mainEntryPoint();
 }

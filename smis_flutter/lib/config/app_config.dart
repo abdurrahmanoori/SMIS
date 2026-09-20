@@ -12,10 +12,12 @@ class AppConfig {
   static const authToken = String.fromEnvironment('SMIS_AUTH_TOKEN');
 
   static const databaseName = 'smis_app.db';
+  static const powerSyncDatabaseName = 'smis_powersync.db';
 
   static const accountEndpoint = '/api/Account';
   static const languageEndpoint = '/api/Language';
   static const loginEndpoint = '/api/Account/login';
+  static const powerSyncCredentialsEndpoint = '/api/PowerSync/credentials';
   static const categoryEndpoint = '/api/Category';
   static const unitOfMeasureEndpoint = '/api/UnitOfMeasure';
   static const shopEndpoint = '/api/Shop';

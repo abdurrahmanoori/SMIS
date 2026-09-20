@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sqflite/sqflite.dart';
@@ -23,7 +22,7 @@ Future<void> main() async {
     apiBaseUrl: 'http://api-smis.runasp.net',
     appTitle: 'SMIS',
   );
-  
+
   await mainEntryPoint();
 }
 
@@ -55,6 +54,7 @@ Future<void> mainEntryPoint() async {
     ),
   );
 }
+
 class SmisApp extends ConsumerWidget {
   const SmisApp({super.key});
 
@@ -62,12 +62,12 @@ class SmisApp extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final themeMode = ref.watch(themeControllerProvider);
     final locale = ref.watch(localeControllerProvider);
-    
+
     final lightColorScheme = ColorScheme.fromSeed(
       seedColor: const Color(0xFF315C49),
       brightness: Brightness.light,
     );
-    
+
     final darkColorScheme = ColorScheme.fromSeed(
       seedColor: const Color(0xFF315C49),
       brightness: Brightness.dark,
@@ -79,7 +79,8 @@ class SmisApp extends ConsumerWidget {
       supportedLocales: AppLocalizations.supportedLocales,
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       builder: (context, child) => Directionality(
-        textDirection: locale.languageCode == 'fa' || locale.languageCode == 'ps'
+        textDirection:
+            locale.languageCode == 'fa' || locale.languageCode == 'ps'
             ? TextDirection.rtl
             : TextDirection.ltr,
         child: child ?? const SizedBox.shrink(),

@@ -1,12 +1,14 @@
+import 'dart:async';
+
 import 'package:flutter/foundation.dart' show debugPrint, kDebugMode;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'auth_controller.dart';
 import 'app_dependencies.dart';
-import '../data/category_api.dart';
-import '../data/data_exception.dart';
-import '../data/category_repository.dart';
+import '../data/powersync/category_powersync_database.dart';
+import '../data/powersync/category_powersync_repository.dart';
 import '../models/category.dart';
+import '../services/category_powersync_service.dart';
 import '../services/category_sync_service.dart';
 
 export 'app_dependencies.dart';
@@ -65,10 +67,14 @@ class CategoryScreenState {
 
 class CategoryController extends AsyncNotifier<CategoryScreenState> {
   static const _pageSize = 25;
+  StreamSubscription<void>? _changesSubscription;
+  bool _refreshingFromPowerSync = false;
 
-  CategoryRepository get _repository => ref.read(categoryRepositoryProvider);
+  CategoryPowerSyncRepository get _repository =>
+      ref.read(categoryRepositoryProvider);
 
-  CategorySyncService get _syncService => ref.read(categorySyncServiceProvider);
+  CategoryPowerSyncService get _syncService =>
+      ref.read(categorySyncServiceProvider);
 
   String get _shopId {
     final session = ref.watch(authControllerProvider.select((s) => s.session));
@@ -77,10 +83,36 @@ class CategoryController extends AsyncNotifier<CategoryScreenState> {
   }
 
   @override
-  Future<CategoryScreenState> build() {
-    // Watch shopId to rebuild when switching accounts
-    _shopId;
+  Future<CategoryScreenState> build() async {
+    final shopId = _shopId;
+    await _changesSubscription?.cancel();
+    final changes = await _repository.watchChanges(shopId);
+    _changesSubscription = changes.skip(1).listen((_) {
+      _refreshFromPowerSync();
+    });
+    ref.onDispose(() => _changesSubscription?.cancel());
     return _load();
+  }
+
+  Future<void> _refreshFromPowerSync() async {
+    if (_refreshingFromPowerSync || !state.hasValue) return;
+    _refreshingFromPowerSync = true;
+    try {
+      final current = state.value!;
+      state = AsyncData(
+        await _load(
+          searchQuery: current.searchQuery,
+          lastSyncResult: current.lastSyncResult,
+        ),
+      );
+      ref.invalidate(categoryLookupProvider);
+    } catch (error, stackTrace) {
+      if (kDebugMode) {
+        debugPrint('Category PowerSync refresh failed: $error\n$stackTrace');
+      }
+    } finally {
+      _refreshingFromPowerSync = false;
+    }
   }
 
   Future<void> reload() async {
@@ -100,10 +132,18 @@ class CategoryController extends AsyncNotifier<CategoryScreenState> {
   Future<void> search(String query) async {
     final previous = state.value;
     if (previous?.searchQuery == query) return;
-    
+
     // Defer the search slightly to avoid excessive rebuilding
-    state = AsyncData(previous?.copyWith(searchQuery: query, isLoadingMore: true) ?? CategoryScreenState(categories: [], pendingCount: 0, searchQuery: query, isLoadingMore: true));
-    
+    state = AsyncData(
+      previous?.copyWith(searchQuery: query, isLoadingMore: true) ??
+          CategoryScreenState(
+            categories: [],
+            pendingCount: 0,
+            searchQuery: query,
+            isLoadingMore: true,
+          ),
+    );
+
     try {
       final loaded = await _load(searchQuery: query);
       state = AsyncData(loaded);
@@ -140,10 +180,9 @@ class CategoryController extends AsyncNotifier<CategoryScreenState> {
       debugPrint(result.messageFor(includeDiagnostics: true));
     }
 
-    state = AsyncData(await _load(
-      searchQuery: current.searchQuery,
-      lastSyncResult: result,
-    ));
+    state = AsyncData(
+      await _load(searchQuery: current.searchQuery, lastSyncResult: result),
+    );
     ref.invalidate(categoryLookupProvider);
     return result;
   }
@@ -163,7 +202,7 @@ class CategoryController extends AsyncNotifier<CategoryScreenState> {
         searchQuery: current.searchQuery,
         lastSyncResult: current.lastSyncResult,
       );
-      
+
       state = AsyncData(
         current.copyWith(
           categories: [...current.categories, ...loaded.categories],
@@ -200,14 +239,17 @@ class CategoryController extends AsyncNotifier<CategoryScreenState> {
     bool isSyncing = false,
   }) async {
     final shopId = _shopId;
-    final totalCount = await _repository.getTotalCount(shopId, searchQuery: searchQuery);
+    final totalCount = await _repository.getTotalCount(
+      shopId,
+      searchQuery: searchQuery,
+    );
     final categories = await _repository.getAll(
       shopId,
       searchQuery: searchQuery,
       limit: pageSize,
       offset: (pageNumber - 1) * pageSize,
     );
-    
+
     return CategoryScreenState(
       categories: categories,
       pendingCount: await _repository.getPendingCount(shopId),
@@ -222,20 +264,20 @@ class CategoryController extends AsyncNotifier<CategoryScreenState> {
   }
 }
 
-final categoryRepositoryProvider = Provider<CategoryRepository>(
-  (ref) => CategoryRepository(ref.watch(appDatabaseProvider)),
+final categoryPowerSyncDatabaseProvider = Provider<CategoryPowerSyncDatabase>(
+  (ref) => CategoryPowerSyncDatabase(ref.watch(authSessionStoreProvider)),
 );
 
-final categoryApiProvider = Provider<CategoryApi>(
-  (ref) => DioCategoryApi(sessionStore: ref.watch(authSessionStoreProvider)),
-);
-
-final categorySyncServiceProvider = Provider<CategorySyncService>(
-  (ref) => CategorySyncService(
-    ref.watch(categoryRepositoryProvider),
-    ref.watch(categoryApiProvider),
-    ref.watch(connectivityProvider),
+final categoryRepositoryProvider = Provider<CategoryPowerSyncRepository>(
+  (ref) => CategoryPowerSyncRepository(
+    ref.watch(categoryPowerSyncDatabaseProvider),
+    ref.watch(appDatabaseProvider),
   ),
+);
+
+final categorySyncServiceProvider = Provider<CategoryPowerSyncService>(
+  (ref) =>
+      CategoryPowerSyncService(ref.watch(categoryPowerSyncDatabaseProvider)),
 );
 
 final categoryControllerProvider =
@@ -246,7 +288,9 @@ final categoryControllerProvider =
 /// All locally available categories for selectors and relationship labels.
 /// This is intentionally separate from the paginated Categories screen state.
 final categoryLookupProvider = FutureProvider<List<Category>>((ref) async {
-  final session = ref.watch(authControllerProvider.select((state) => state.session));
+  final session = ref.watch(
+    authControllerProvider.select((state) => state.session),
+  );
   if (session == null) return const <Category>[];
   return ref.watch(categoryRepositoryProvider).getAll(session.shopId);
 });

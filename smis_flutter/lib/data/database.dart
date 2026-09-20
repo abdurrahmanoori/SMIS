@@ -18,12 +18,29 @@ class AppDatabase {
     final path =
         databasePath ??
         p.join(await _factory.getDatabasesPath(), AppConfig.databaseName);
-    _database = await _factory.openDatabase(
+    var foreignKeysDisabledForUpgrade = false;
+    final openedDatabase = await _factory.openDatabase(
       path,
       options: OpenDatabaseOptions(
         version: 11,
         onConfigure: (database) async {
-          await database.execute('PRAGMA foreign_keys = ON');
+          final currentVersion =
+              Sqflite.firstIntValue(
+                await database.rawQuery('PRAGMA user_version'),
+              ) ??
+              0;
+
+          // Some historical migrations rebuild tables that are referenced by
+          // other tables. SQLite runs onUpgrade inside a transaction, where
+          // changing PRAGMA foreign_keys is a no-op. Disable enforcement here,
+          // before that transaction starts, then validate and re-enable it in
+          // onOpen after the migration commits.
+          foreignKeysDisabledForUpgrade =
+              currentVersion > 0 && currentVersion < 11;
+          await database.execute(
+            'PRAGMA foreign_keys = '
+            '${foreignKeysDisabledForUpgrade ? 'OFF' : 'ON'}',
+          );
           // Use rawQuery for journal_mode as it returns a result which some
           // Android versions require to be handled via query methods.
           await database.rawQuery('PRAGMA journal_mode = WAL');
@@ -32,7 +49,12 @@ class AppDatabase {
         onUpgrade: _upgradeSchema,
       ),
     );
-    return _database!;
+    // PRAGMA foreign_keys is connection-scoped. Re-enable it explicitly on the
+    // exact connection returned to repositories after a migration that needed
+    // enforcement disabled while rebuilding referenced tables.
+    await openedDatabase.execute('PRAGMA foreign_keys = ON');
+    _database = openedDatabase;
+    return openedDatabase;
   }
 
   Future<void> close() async {
@@ -118,6 +140,14 @@ class AppDatabase {
     if (oldVersion < 11) {
       await _migrateUnitOfMeasuresToGlobal(database);
       await _createProductIndexes(database);
+    }
+
+    final violations = await database.rawQuery('PRAGMA foreign_key_check');
+    if (violations.isNotEmpty) {
+      throw StateError(
+        'Local database upgrade produced ${violations.length} '
+        'foreign-key violation(s). The upgrade was rolled back.',
+      );
     }
   }
 
@@ -339,7 +369,6 @@ class AppDatabase {
   }
 
   static Future<void> _migrateUnitOfMeasuresToGlobal(Database database) async {
-    await database.execute('PRAGMA defer_foreign_keys = ON');
     await _createUnitOfMeasuresSchema(
       database,
       tableName: 'unit_of_measures_v11',

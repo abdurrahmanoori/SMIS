@@ -7,6 +7,10 @@ namespace SMIS.Application.Features.Categories.Validators
     {
         public CategoryCreateCommandValidator()
         {
+            RuleFor(x => x.CategoryCreateDto.Id)
+                .Must(id => string.IsNullOrWhiteSpace(id) || Guid.TryParse(id, out _))
+                .WithMessage("Id must be a valid GUID when provided");
+
             RuleFor(x => x.CategoryCreateDto.Name)
                 .NotEmpty().WithMessage("Categoyr Name is required")
                 .MaximumLength(200).WithMessage("Name must not exceed 200 characters");

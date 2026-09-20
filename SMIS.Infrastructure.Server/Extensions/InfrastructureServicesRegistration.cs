@@ -19,7 +19,9 @@ using SMIS.Infrastructure.Server.Services.Identity;
 
 namespace SMIS.Infrastructure.Server.Repositories
 {
-    internal sealed class NamespaceMarker { }
+    internal sealed class NamespaceMarker
+    {
+    }
 }
 
 namespace SMIS.Infrastructure.Server.Extensions
@@ -29,7 +31,8 @@ namespace SMIS.Infrastructure.Server.Extensions
         public static IServiceCollection ConfigurePersistenceServices(
             this IServiceCollection services,
             IConfiguration configuration,
-            IWebHostEnvironment environment)
+            IWebHostEnvironment environment
+        )
         {
             services.AddApplicationDbContext(configuration, environment);
             services.AddScoped<AuditInterceptor>();
@@ -48,14 +51,15 @@ namespace SMIS.Infrastructure.Server.Extensions
 
             // Register JWT token generator — only the infrastructure layer knows about JWT
             services.AddScoped<ITokenGenerator, JwtTokenGenerator>();
+            services.AddScoped<IPowerSyncTokenGenerator, PowerSyncTokenGenerator>();
 
             // Automatically register repositories with Scrutor (no magic strings)
             services.Scan(scan => scan
                 .FromAssemblies(typeof(InfrastructureServicesRegistration).Assembly)
-                    .AddClasses(c => c.InNamespaces(
-                        typeof(SMIS.Infrastructure.Server.Repositories.NamespaceMarker).Namespace!))
-                        .AsImplementedInterfaces()
-                        .WithScopedLifetime());
+                .AddClasses(c => c.InNamespaces(
+                    typeof(SMIS.Infrastructure.Server.Repositories.NamespaceMarker).Namespace!))
+                .AsImplementedInterfaces()
+                .WithScopedLifetime());
 
             services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
             services.AddScoped<IUnitOfWork, UnitOfWork>();
@@ -65,11 +69,11 @@ namespace SMIS.Infrastructure.Server.Extensions
             services.AddScoped<IGenericQueryService, GenericQueryService>();
             services.AddSingleton<IPublicIdGenerator, PublicIdGenerator>();
             services.AddAutoMapper((serviceProvider, cfg) =>
-            {
-                cfg.AddCollectionMappers();
-                cfg.UseEntityFrameworkCoreModel<AppDbContext>(serviceProvider);
-            },
-              typeof(MappingProfile).Assembly);
+                {
+                    cfg.AddCollectionMappers();
+                    cfg.UseEntityFrameworkCoreModel<AppDbContext>(serviceProvider);
+                },
+                typeof(MappingProfile).Assembly);
 
             return services;
         }
