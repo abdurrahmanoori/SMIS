@@ -3,9 +3,7 @@ import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../controllers/auth_controller.dart';
 import '../controllers/category_controller.dart';
-import '../controllers/profile_controller.dart';
 import '../data/data_exception.dart';
 import '../models/category.dart';
 import '../l10n/app_localizations.dart';
@@ -17,7 +15,6 @@ import '../widgets/theme_mode_action.dart';
 import '../widgets/category_form_dialog.dart';
 import '../widgets/locale_action.dart';
 import '../widgets/home_action.dart';
-import 'profile_screen.dart';
 import 'products_screen.dart';
 
 class CategoriesScreen extends ConsumerStatefulWidget {
@@ -55,6 +52,7 @@ class _CategoriesScreenState extends ConsumerState<CategoriesScreen>
   }
 
   void _stopSearching() {
+    _searchDebounce?.cancel();
     setState(() {
       _isSearching = false;
       _searchController.clear();
@@ -72,7 +70,6 @@ class _CategoriesScreenState extends ConsumerState<CategoriesScreen>
   @override
   Widget build(BuildContext context) {
     final categories = ref.watch(categoryControllerProvider);
-    final authenticatedUser = ref.watch(authControllerProvider).session;
 
     return Scaffold(
       appBar: AppBar(
@@ -159,7 +156,7 @@ class _CategoriesScreenState extends ConsumerState<CategoriesScreen>
       context: context,
       builder: (context) => const CategoryFormDialog(),
     );
-    if (draft == null) return;
+    if (draft == null || !mounted) return;
     await _runMutation(
       () => ref.read(categoryControllerProvider.notifier).create(draft),
       context.l10n.text('Category saved locally.'),
@@ -171,7 +168,7 @@ class _CategoriesScreenState extends ConsumerState<CategoriesScreen>
       context: context,
       builder: (context) => CategoryFormDialog(category: category),
     );
-    if (draft == null) return;
+    if (draft == null || !mounted) return;
     await _runMutation(
       () => ref
           .read(categoryControllerProvider.notifier)
@@ -245,7 +242,7 @@ class _CategoriesScreenState extends ConsumerState<CategoriesScreen>
         ],
       ),
     );
-    if (confirmed != true) return;
+    if (confirmed != true || !mounted) return;
     await _runMutation(
       () => ref.read(categoryControllerProvider.notifier).delete(category.id),
       context.l10n.text('Category deleted locally.'),

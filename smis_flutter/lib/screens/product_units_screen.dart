@@ -140,6 +140,7 @@ class _ProductUnitsScreenState extends ConsumerState<ProductUnitsScreen>
   }
 
   void _stopSearching() {
+    _searchDebounce?.cancel();
     setState(() {
       _isSearching = false;
       _searchController.clear();

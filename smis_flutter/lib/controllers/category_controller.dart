@@ -68,6 +68,7 @@ class CategoryController extends AsyncNotifier<CategoryScreenState> {
   static const _pageSize = 25;
   StreamSubscription<void>? _changesSubscription;
   bool _refreshingFromPowerSync = false;
+  int _searchRequestId = 0;
 
   CategoryPowerSyncRepository get _repository =>
       ref.read(categoryRepositoryProvider);
@@ -131,6 +132,7 @@ class CategoryController extends AsyncNotifier<CategoryScreenState> {
   Future<void> search(String query) async {
     final previous = state.value;
     if (previous?.searchQuery == query) return;
+    final requestId = ++_searchRequestId;
 
     // Defer the search slightly to avoid excessive rebuilding
     state = AsyncData(
@@ -145,8 +147,10 @@ class CategoryController extends AsyncNotifier<CategoryScreenState> {
 
     try {
       final loaded = await _load(searchQuery: query);
+      if (requestId != _searchRequestId) return;
       state = AsyncData(loaded);
     } catch (error, stackTrace) {
+      if (requestId != _searchRequestId) return;
       state = AsyncError(error, stackTrace);
     }
   }

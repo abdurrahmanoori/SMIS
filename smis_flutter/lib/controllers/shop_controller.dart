@@ -42,6 +42,7 @@ class ShopScreenState {
 class ShopController extends AsyncNotifier<ShopScreenState> {
   StreamSubscription<void>? _changesSubscription;
   bool _refreshingFromPowerSync = false;
+  int _searchRequestId = 0;
 
   ShopPowerSyncRepository get _repository => ref.read(shopRepositoryProvider);
   ShopPowerSyncService get _syncService => ref.read(shopSyncServiceProvider);
@@ -104,6 +105,7 @@ class ShopController extends AsyncNotifier<ShopScreenState> {
   Future<void> search(String query) async {
     final previous = state.value;
     if (previous?.searchQuery == query) return;
+    final requestId = ++_searchRequestId;
 
     state = AsyncData(
       previous?.copyWith(searchQuery: query, shops: []) ??
@@ -111,8 +113,11 @@ class ShopController extends AsyncNotifier<ShopScreenState> {
     );
 
     try {
-      state = AsyncData(await _load(searchQuery: query));
+      final loaded = await _load(searchQuery: query);
+      if (requestId != _searchRequestId) return;
+      state = AsyncData(loaded);
     } catch (error, stackTrace) {
+      if (requestId != _searchRequestId) return;
       state = AsyncError(error, stackTrace);
     }
   }

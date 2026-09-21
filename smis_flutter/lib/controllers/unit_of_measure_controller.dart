@@ -43,6 +43,7 @@ class UnitOfMeasureScreenState {
 class UnitOfMeasureController extends AsyncNotifier<UnitOfMeasureScreenState> {
   StreamSubscription<void>? _changesSubscription;
   bool _refreshingFromPowerSync = false;
+  int _searchRequestId = 0;
 
   UnitOfMeasurePowerSyncRepository get _repository =>
       ref.read(unitOfMeasureRepositoryProvider);
@@ -106,6 +107,7 @@ class UnitOfMeasureController extends AsyncNotifier<UnitOfMeasureScreenState> {
   Future<void> search(String query) async {
     final previous = state.value;
     if (previous?.searchQuery == query) return;
+    final requestId = ++_searchRequestId;
 
     state = AsyncData(
       previous?.copyWith(searchQuery: query, units: []) ??
@@ -117,8 +119,11 @@ class UnitOfMeasureController extends AsyncNotifier<UnitOfMeasureScreenState> {
     );
 
     try {
-      state = AsyncData(await _load(searchQuery: query));
+      final loaded = await _load(searchQuery: query);
+      if (requestId != _searchRequestId) return;
+      state = AsyncData(loaded);
     } catch (error, stackTrace) {
+      if (requestId != _searchRequestId) return;
       state = AsyncError(error, stackTrace);
     }
   }

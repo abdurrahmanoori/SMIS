@@ -47,7 +47,7 @@ class ProductUnitRepository {
       ${limit == null ? '' : 'LIMIT ?'}
       ${offset == null ? '' : 'OFFSET ?'}
     ''',
-      [...arguments, if (limit != null) limit, if (offset != null) offset],
+      [...arguments, ?limit, ?offset],
     );
     return rows
         .map(ProductUnitLocalRecord.fromMap)

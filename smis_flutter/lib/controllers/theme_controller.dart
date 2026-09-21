@@ -5,6 +5,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 class ThemeController extends Notifier<ThemeMode> {
   static const _themeKey = 'smis.theme.mode';
   final _storage = const FlutterSecureStorage();
+  bool _changedByUser = false;
 
   @override
   ThemeMode build() {
@@ -14,7 +15,7 @@ class ThemeController extends Notifier<ThemeMode> {
 
   Future<void> _loadTheme() async {
     final savedTheme = await _storage.read(key: _themeKey);
-    if (savedTheme == null) return;
+    if (_changedByUser || savedTheme == null) return;
 
     state = ThemeMode.values.firstWhere(
       (e) => e.name == savedTheme,
@@ -23,6 +24,7 @@ class ThemeController extends Notifier<ThemeMode> {
   }
 
   Future<void> setThemeMode(ThemeMode mode) async {
+    _changedByUser = true;
     state = mode;
     await _storage.write(key: _themeKey, value: mode.name);
   }

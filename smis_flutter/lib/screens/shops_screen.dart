@@ -51,6 +51,7 @@ class _ShopsScreenState extends ConsumerState<ShopsScreen>
   }
 
   void _stopSearching() {
+    _searchDebounce?.cancel();
     setState(() {
       _isSearching = false;
       _searchController.clear();
@@ -60,8 +61,9 @@ class _ShopsScreenState extends ConsumerState<ShopsScreen>
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (state == AppLifecycleState.resumed)
+    if (state == AppLifecycleState.resumed) {
       ref.read(shopControllerProvider.notifier).reload();
+    }
   }
 
   @override
@@ -168,11 +170,11 @@ class _ShopsScreenState extends ConsumerState<ShopsScreen>
       context: context,
       builder: (context) => const ShopFormDialog(),
     );
-    if (draft != null)
-      await _runMutation(
-        () => ref.read(shopControllerProvider.notifier).create(draft),
-        context.l10n.text('Shop saved locally.'),
-      );
+    if (draft == null || !mounted) return;
+    await _runMutation(
+      () => ref.read(shopControllerProvider.notifier).create(draft),
+      context.l10n.text('Shop saved locally.'),
+    );
   }
 
   Future<void> _edit(Shop shop) async {
@@ -180,13 +182,12 @@ class _ShopsScreenState extends ConsumerState<ShopsScreen>
       context: context,
       builder: (context) => ShopFormDialog(shop: shop),
     );
-    if (draft != null)
-      await _runMutation(
-        () => ref
-            .read(shopControllerProvider.notifier)
-            .updateShop(shop.id, draft),
-        context.l10n.text('Shop updated locally.'),
-      );
+    if (draft == null || !mounted) return;
+    await _runMutation(
+      () =>
+          ref.read(shopControllerProvider.notifier).updateShop(shop.id, draft),
+      context.l10n.text('Shop updated locally.'),
+    );
   }
 
   Future<void> _delete(Shop shop) async {
@@ -243,12 +244,11 @@ class _ShopsScreenState extends ConsumerState<ShopsScreen>
         ],
       ),
     );
-    if (confirmed == true) {
-      await _runMutation(
-        () => ref.read(shopControllerProvider.notifier).delete(shop.id),
-        context.l10n.text('Shop deleted locally.'),
-      );
-    }
+    if (confirmed != true || !mounted) return;
+    await _runMutation(
+      () => ref.read(shopControllerProvider.notifier).delete(shop.id),
+      context.l10n.text('Shop deleted locally.'),
+    );
   }
 
   Future<void> _sync() async {
@@ -274,10 +274,11 @@ class _ShopsScreenState extends ConsumerState<ShopsScreen>
   ) async {
     try {
       await action();
-      if (mounted)
+      if (mounted) {
         ScaffoldMessenger.of(
           context,
         ).showSnackBar(SnackBar(content: Text(message)));
+      }
     } catch (error, stackTrace) {
       if (mounted) AppErrorNotification.show(context, error, stackTrace);
     }

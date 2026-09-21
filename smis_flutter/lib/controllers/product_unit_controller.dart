@@ -63,6 +63,7 @@ class ProductUnitController extends AsyncNotifier<ProductUnitScreenState> {
   static const _pageSize = 25;
   StreamSubscription<void>? _changesSubscription;
   bool _refreshingFromPowerSync = false;
+  int _searchRequestId = 0;
 
   ProductUnitPowerSyncRepository get _repository =>
       ref.read(productUnitRepositoryProvider);
@@ -123,7 +124,10 @@ class ProductUnitController extends AsyncNotifier<ProductUnitScreenState> {
 
   Future<void> search(String query) async {
     if (state.value?.searchQuery == query) return;
-    state = AsyncData(await _load(searchQuery: query));
+    final requestId = ++_searchRequestId;
+    final loaded = await _load(searchQuery: query);
+    if (requestId != _searchRequestId) return;
+    state = AsyncData(loaded);
   }
 
   Future<void> create(ProductUnitDraft draft) async {

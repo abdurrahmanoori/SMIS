@@ -46,106 +46,173 @@ class _ProductFormDialogState extends State<ProductFormDialog> {
 
   @override
   void dispose() {
-    _name.dispose(); _sku.dispose(); _description.dispose(); _barcode.dispose(); _imageUrl.dispose();
+    _name.dispose();
+    _sku.dispose();
+    _description.dispose();
+    _barcode.dispose();
+    _imageUrl.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) => AlertDialog(
-    title: Text(context.l10n.text(widget.product == null ? 'New product' : 'Edit product')),
+    title: Text(
+      context.l10n.text(
+        widget.product == null ? 'New product' : 'Edit product',
+      ),
+    ),
     content: SizedBox(
       width: 520,
       child: Form(
         key: _formKey,
         child: SingleChildScrollView(
-          child: Column(mainAxisSize: MainAxisSize.min, children: [
-            TextFormField(
-              controller: _name, autofocus: true, maxLength: 200,
-              decoration: InputDecoration(labelText: context.l10n.text('Name *')),
-              validator: (value) => value == null || value.trim().isEmpty ? context.l10n.text('Name is required.') : null,
-            ),
-            const SizedBox(height: 12),
-            DropdownButtonFormField<String>(
-              value: _baseUnitId,
-              isExpanded: true,
-              decoration: InputDecoration(labelText: context.l10n.text('Base unit *')),
-              items: [
-                ...widget.units.map(
-                  (unit) => DropdownMenuItem(
-                    value: unit.id,
-                    child: Text('${unit.name} (${unit.symbol})'),
-                  ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextFormField(
+                controller: _name,
+                autofocus: true,
+                maxLength: 200,
+                decoration: InputDecoration(
+                  labelText: context.l10n.text('Name *'),
                 ),
-                if (_baseUnitId != null &&
-                    !widget.units.any((unit) => unit.id == _baseUnitId))
-                  DropdownMenuItem(
-                    value: _baseUnitId,
-                    child: Text(
-                      context.l10n.text(
-                        'Current unit unavailable ({id})',
-                        {'id': _baseUnitId!},
-                      ),
+                validator: (value) => value == null || value.trim().isEmpty
+                    ? context.l10n.text('Name is required.')
+                    : null,
+              ),
+              const SizedBox(height: 12),
+              DropdownButtonFormField<String>(
+                initialValue: _baseUnitId,
+                isExpanded: true,
+                decoration: InputDecoration(
+                  labelText: context.l10n.text('Base unit *'),
+                ),
+                items: [
+                  ...widget.units.map(
+                    (unit) => DropdownMenuItem(
+                      value: unit.id,
+                      child: Text('${unit.name} (${unit.symbol})'),
                     ),
                   ),
-              ],
-              onChanged: (value) => setState(() => _baseUnitId = value),
-              validator: (value) => value == null ? context.l10n.text('Select a base unit.') : null,
-            ),
-            const SizedBox(height: 12),
-            DropdownButtonFormField<String>(
-              value: _categoryId,
-              isExpanded: true,
-              decoration: InputDecoration(labelText: context.l10n.text('Category')),
-              items: [
-                DropdownMenuItem<String>(
-                  value: '',
-                  child: Text(context.l10n.text('No category')),
-                ),
-                ...widget.categories.map(
-                  (category) => DropdownMenuItem(
-                    value: category.id,
-                    child: Text(category.name),
-                  ),
-                ),
-                if (_categoryId != null &&
-                    !widget.categories.any(
-                      (category) => category.id == _categoryId,
-                    ))
-                  DropdownMenuItem(
-                    value: _categoryId,
-                    child: Text(
-                      context.l10n.text(
-                        'Current category unavailable ({id})',
-                        {'id': _categoryId!},
+                  if (_baseUnitId != null &&
+                      !widget.units.any((unit) => unit.id == _baseUnitId))
+                    DropdownMenuItem(
+                      value: _baseUnitId,
+                      child: Text(
+                        context.l10n.text('Current unit unavailable ({id})', {
+                          'id': _baseUnitId!,
+                        }),
                       ),
                     ),
+                ],
+                onChanged: (value) => setState(() => _baseUnitId = value),
+                validator: (value) => value == null
+                    ? context.l10n.text('Select a base unit.')
+                    : null,
+              ),
+              const SizedBox(height: 12),
+              DropdownButtonFormField<String>(
+                initialValue: _categoryId,
+                isExpanded: true,
+                decoration: InputDecoration(
+                  labelText: context.l10n.text('Category'),
+                ),
+                items: [
+                  DropdownMenuItem<String>(
+                    value: '',
+                    child: Text(context.l10n.text('No category')),
                   ),
-              ],
-              onChanged: (value) => setState(() => _categoryId = value?.isEmpty ?? true ? null : value),
-            ),
-            const SizedBox(height: 12),
-            TextFormField(controller: _sku, maxLength: 100, decoration: InputDecoration(labelText: context.l10n.text('SKU'))),
-            const SizedBox(height: 12),
-            TextFormField(controller: _barcode, maxLength: 100, decoration: InputDecoration(labelText: context.l10n.text('Barcode'))),
-            const SizedBox(height: 12),
-            TextFormField(controller: _imageUrl, maxLength: 500, keyboardType: TextInputType.url, decoration: InputDecoration(labelText: context.l10n.text('Image URL'))),
-            const SizedBox(height: 12),
-            TextFormField(controller: _description, maxLength: 500, minLines: 2, maxLines: 4, decoration: InputDecoration(labelText: context.l10n.text('Description'))),
-            SwitchListTile.adaptive(contentPadding: EdgeInsets.zero, title: Text(context.l10n.text('Active')), value: _isActive, onChanged: (value) => setState(() => _isActive = value)),
-          ]),
+                  ...widget.categories.map(
+                    (category) => DropdownMenuItem(
+                      value: category.id,
+                      child: Text(category.name),
+                    ),
+                  ),
+                  if (_categoryId != null &&
+                      !widget.categories.any(
+                        (category) => category.id == _categoryId,
+                      ))
+                    DropdownMenuItem(
+                      value: _categoryId,
+                      child: Text(
+                        context.l10n.text(
+                          'Current category unavailable ({id})',
+                          {'id': _categoryId!},
+                        ),
+                      ),
+                    ),
+                ],
+                onChanged: (value) => setState(
+                  () => _categoryId = value?.isEmpty ?? true ? null : value,
+                ),
+              ),
+              const SizedBox(height: 12),
+              TextFormField(
+                controller: _sku,
+                maxLength: 100,
+                decoration: InputDecoration(
+                  labelText: context.l10n.text('SKU'),
+                ),
+              ),
+              const SizedBox(height: 12),
+              TextFormField(
+                controller: _barcode,
+                maxLength: 100,
+                decoration: InputDecoration(
+                  labelText: context.l10n.text('Barcode'),
+                ),
+              ),
+              const SizedBox(height: 12),
+              TextFormField(
+                controller: _imageUrl,
+                maxLength: 500,
+                keyboardType: TextInputType.url,
+                decoration: InputDecoration(
+                  labelText: context.l10n.text('Image URL'),
+                ),
+              ),
+              const SizedBox(height: 12),
+              TextFormField(
+                controller: _description,
+                maxLength: 500,
+                minLines: 2,
+                maxLines: 4,
+                decoration: InputDecoration(
+                  labelText: context.l10n.text('Description'),
+                ),
+              ),
+              SwitchListTile.adaptive(
+                contentPadding: EdgeInsets.zero,
+                title: Text(context.l10n.text('Active')),
+                value: _isActive,
+                onChanged: (value) => setState(() => _isActive = value),
+              ),
+            ],
+          ),
         ),
       ),
     ),
     actions: [
-      TextButton(onPressed: () => Navigator.pop(context), child: Text(context.l10n.text('Cancel'))),
+      TextButton(
+        onPressed: () => Navigator.pop(context),
+        child: Text(context.l10n.text('Cancel')),
+      ),
       FilledButton(
         onPressed: () {
           if (!(_formKey.currentState?.validate() ?? false)) return;
-          Navigator.pop(context, ProductDraft(
-            name: _name.text, baseUnitId: _baseUnitId!, categoryId: _categoryId,
-            sku: _sku.text, description: _description.text, isActive: _isActive,
-            barcode: _barcode.text, imageUrl: _imageUrl.text,
-          ));
+          Navigator.pop(
+            context,
+            ProductDraft(
+              name: _name.text,
+              baseUnitId: _baseUnitId!,
+              categoryId: _categoryId,
+              sku: _sku.text,
+              description: _description.text,
+              isActive: _isActive,
+              barcode: _barcode.text,
+              imageUrl: _imageUrl.text,
+            ),
+          );
         },
         child: Text(context.l10n.text('Save offline')),
       ),

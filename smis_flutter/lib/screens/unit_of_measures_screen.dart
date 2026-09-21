@@ -52,6 +52,7 @@ class _UnitOfMeasuresScreenState extends ConsumerState<UnitOfMeasuresScreen>
   }
 
   void _stopSearching() {
+    _searchDebounce?.cancel();
     setState(() {
       _isSearching = false;
       _searchController.clear();
@@ -158,7 +159,7 @@ class _UnitOfMeasuresScreenState extends ConsumerState<UnitOfMeasuresScreen>
       context: context,
       builder: (context) => const UnitOfMeasureFormDialog(),
     );
-    if (draft == null) return;
+    if (draft == null || !mounted) return;
     await _runMutation(
       () => ref.read(unitOfMeasureControllerProvider.notifier).create(draft),
       context.l10n.text('Unit of measurement saved locally.'),
@@ -170,7 +171,7 @@ class _UnitOfMeasuresScreenState extends ConsumerState<UnitOfMeasuresScreen>
       context: context,
       builder: (context) => UnitOfMeasureFormDialog(unit: unit),
     );
-    if (draft == null) return;
+    if (draft == null || !mounted) return;
     await _runMutation(
       () => ref
           .read(unitOfMeasureControllerProvider.notifier)
@@ -235,7 +236,7 @@ class _UnitOfMeasuresScreenState extends ConsumerState<UnitOfMeasuresScreen>
         ],
       ),
     );
-    if (confirmed != true) return;
+    if (confirmed != true || !mounted) return;
     await _runMutation(
       () => ref.read(unitOfMeasureControllerProvider.notifier).delete(unit.id),
       context.l10n.text('Unit of measurement deleted locally.'),

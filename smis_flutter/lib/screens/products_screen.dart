@@ -55,6 +55,7 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen>
   }
 
   void _stopSearching() {
+    _searchDebounce?.cancel();
     setState(() {
       _isSearching = false;
       _searchController.clear();
@@ -178,7 +179,7 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen>
       builder: (context) =>
           ProductFormDialog(units: units, categories: categories),
     );
-    if (draft == null) return;
+    if (draft == null || !mounted) return;
     await _runMutation(
       () => ref.read(productControllerProvider.notifier).create(draft),
       context.l10n.text('Product saved locally.'),
@@ -197,7 +198,7 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen>
         categories: categories,
       ),
     );
-    if (draft == null) return;
+    if (draft == null || !mounted) return;
     await _runMutation(
       () => ref
           .read(productControllerProvider.notifier)
@@ -229,7 +230,7 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen>
         ],
       ),
     );
-    if (confirmed != true) return;
+    if (confirmed != true || !mounted) return;
     await _runMutation(
       () => ref.read(productControllerProvider.notifier).delete(product.id),
       context.l10n.text('Product deleted locally.'),
@@ -261,10 +262,11 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen>
   ) async {
     try {
       await action();
-      if (mounted)
+      if (mounted) {
         ScaffoldMessenger.of(
           context,
         ).showSnackBar(SnackBar(content: Text(message)));
+      }
     } catch (error, stackTrace) {
       if (mounted) AppErrorNotification.show(context, error, stackTrace);
     }

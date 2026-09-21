@@ -42,6 +42,7 @@ class ProductScreenState {
 class ProductController extends AsyncNotifier<ProductScreenState> {
   StreamSubscription<void>? _changesSubscription;
   bool _refreshingFromPowerSync = false;
+  int _searchRequestId = 0;
 
   ProductPowerSyncRepository get _repository =>
       ref.read(productRepositoryProvider);
@@ -108,6 +109,7 @@ class ProductController extends AsyncNotifier<ProductScreenState> {
   Future<void> search(String query) async {
     final previous = state.value;
     if (previous?.searchQuery == query) return;
+    final requestId = ++_searchRequestId;
 
     state = AsyncData(
       previous?.copyWith(searchQuery: query, products: []) ??
@@ -115,8 +117,11 @@ class ProductController extends AsyncNotifier<ProductScreenState> {
     );
 
     try {
-      state = AsyncData(await _load(searchQuery: query));
+      final loaded = await _load(searchQuery: query);
+      if (requestId != _searchRequestId) return;
+      state = AsyncData(loaded);
     } catch (error, stackTrace) {
+      if (requestId != _searchRequestId) return;
       state = AsyncError(error, stackTrace);
     }
   }

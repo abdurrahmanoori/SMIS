@@ -19,7 +19,7 @@ class FlavorConfig {
 
   static FlavorConfig get instance {
     if (_instance == null) {
-      throw Exception("FlavorConfig must be initialized before use.");
+      throw StateError('FlavorConfig must be initialized before use.');
     }
     return _instance!;
   }

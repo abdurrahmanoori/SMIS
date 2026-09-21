@@ -58,7 +58,7 @@ class _ProductUnitFormDialogState extends State<ProductUnitFormDialog> {
           mainAxisSize: MainAxisSize.min,
           children: [
             DropdownButtonFormField<String>(
-              value: _productId,
+              initialValue: _productId,
               isExpanded: true,
               decoration: InputDecoration(
                 labelText: context.l10n.text('Product *'),
@@ -77,7 +77,7 @@ class _ProductUnitFormDialogState extends State<ProductUnitFormDialog> {
             ),
             const SizedBox(height: 12),
             DropdownButtonFormField<String>(
-              value: _unitId,
+              initialValue: _unitId,
               isExpanded: true,
               decoration: InputDecoration(
                 labelText: context.l10n.text('Unit of measurement *'),

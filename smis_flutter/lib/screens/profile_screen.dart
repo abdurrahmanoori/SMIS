@@ -302,7 +302,8 @@ class _ProfileEditCardState extends ConsumerState<_ProfileEditCard> {
               ),
               const SizedBox(height: 16),
               DropdownButtonFormField<String>(
-                value: _languageId,
+                key: ValueKey(_languageId),
+                initialValue: _languageId,
                 isExpanded: true,
                 decoration: InputDecoration(
                   labelText: context.l10n.text('Language'),

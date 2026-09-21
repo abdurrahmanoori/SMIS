@@ -64,7 +64,11 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                           alignment: AlignmentDirectional.centerEnd,
                           child: LocaleAction(showLabel: true),
                         ),
-                        Icon(Icons.storefront_outlined, size: 48, color: colors.primary),
+                        Icon(
+                          Icons.storefront_outlined,
+                          size: 48,
+                          color: colors.primary,
+                        ),
                         const SizedBox(height: 16),
                         Text(
                           l10n.text('Sign in to SMIS'),
@@ -100,7 +104,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                             children: [
                               const Expanded(child: Divider()),
                               Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 16),
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 16,
+                                ),
                                 child: Text(
                                   l10n.text('OR SIGN IN WITH ANOTHER ACCOUNT'),
                                 ),
@@ -150,7 +156,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                               ),
                               onPressed: auth.isSigningIn
                                   ? null
-                                  : () => setState(() => _obscurePassword = !_obscurePassword),
+                                  : () => setState(
+                                      () =>
+                                          _obscurePassword = !_obscurePassword,
+                                    ),
                               icon: Icon(
                                 _obscurePassword
                                     ? Icons.visibility_outlined
@@ -168,7 +177,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                           child: auth.isSigningIn
                               ? const SizedBox.square(
                                   dimension: 20,
-                                  child: CircularProgressIndicator(strokeWidth: 2),
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 2,
+                                  ),
                                 )
                               : Text(l10n.text('Sign in')),
                         ),
@@ -221,7 +232,10 @@ class _LoginError extends StatelessWidget {
                 Icon(Icons.error_outline, color: colors.onErrorContainer),
                 const SizedBox(width: 10),
                 Expanded(
-                  child: Text(message, style: TextStyle(color: colors.onErrorContainer)),
+                  child: Text(
+                    message,
+                    style: TextStyle(color: colors.onErrorContainer),
+                  ),
                 ),
               ],
             ),
@@ -230,16 +244,17 @@ class _LoginError extends StatelessWidget {
               Text(
                 '${context.l10n.text('Debug')}: ${error.runtimeType}',
                 style: TextStyle(
-                  color: colors.onErrorContainer.withOpacity(0.7),
+                  color: colors.onErrorContainer.withValues(alpha: 0.7),
                   fontSize: 10,
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              if (error is AppException && (error as AppException).cause != null)
+              if (error is AppException &&
+                  (error as AppException).cause != null)
                 Text(
                   '${context.l10n.text('Cause')}: ${(error as AppException).cause}',
                   style: TextStyle(
-                    color: colors.onErrorContainer.withOpacity(0.7),
+                    color: colors.onErrorContainer.withValues(alpha: 0.7),
                     fontSize: 10,
                   ),
                 ),
@@ -280,7 +295,9 @@ class _SavedAccountsList extends StatelessWidget {
             elevation: isSelected ? 2 : 0,
             color: isSelected
                 ? Theme.of(context).colorScheme.primaryContainer
-                : Theme.of(context).colorScheme.surfaceContainerHighest.withOpacity(0.5),
+                : Theme.of(
+                    context,
+                  ).colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
             margin: const EdgeInsets.only(bottom: 8),
             child: ListTile(
               leading: CircleAvatar(

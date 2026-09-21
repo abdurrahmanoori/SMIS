@@ -3,15 +3,11 @@ import 'package:uuid/uuid.dart';
 
 import '../../models/category.dart';
 import '../data_exception.dart';
-import 'app_powersync_database.dart';
 import 'powersync_repository_support.dart';
 
 class CategoryPowerSyncRepository extends PowerSyncRepositorySupport {
-  CategoryPowerSyncRepository(
-    AppPowerSyncDatabase powerSync, {
-    String Function()? idGenerator,
-  }) : _idGenerator = idGenerator ?? const Uuid().v4,
-       super(powerSync);
+  CategoryPowerSyncRepository(super.powerSync, {String Function()? idGenerator})
+    : _idGenerator = idGenerator ?? const Uuid().v4;
 
   final String Function() _idGenerator;
 
