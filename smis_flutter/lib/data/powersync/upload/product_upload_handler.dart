@@ -28,10 +28,7 @@ class ProductUploadHandler implements PowerSyncUploadHandler {
   Future<void> update(String id, Map<String, dynamic> row) async {
     await _dio.put<void>(
       '${AppConfig.productEndpoint}/$id/sync',
-      data: {
-        ..._payload(row),
-        'clientModifiedDate': _timestamp(row),
-      },
+      data: {..._payload(row), 'clientModifiedDate': _timestamp(row)},
     );
   }
 
@@ -43,19 +40,19 @@ class ProductUploadHandler implements PowerSyncUploadHandler {
     );
   }
 
-  Map<String, Object?> _payload(Map<String, dynamic> row) =>
-      {
-        'name': row['name'] as String,
-        'baseUnitId': row['base_unit_id'] as String,
-        'description': row['description'] as String?,
-        'isActive': _asBool(row['is_active']),
-        'sku': row['sku'] as String?,
-        'barcode': row['barcode'] as String?,
-        'imageUrl': row['image_url'] as String?,
-        'categoryId': row['category_id'] as String?,
-        'reorderPointBase': 0,
-        'reorderQuantityBase': 0,
-      };
+  Map<String, Object?> _payload(Map<String, dynamic> row) => {
+    'name': row['name'] as String,
+    'baseUnitId': row['base_unit_id'] as String,
+    'description': row['description'] as String?,
+    'isActive': _asBool(row['is_active']),
+    'sku': row['sku'] as String?,
+    'barcode': row['barcode'] as String?,
+    'imageUrl': row['image_url'] as String?,
+    'categoryId': row['category_id'] as String?,
+    'reorderPointBase': (row['reorder_point_base'] as num?)?.toDouble() ?? 0,
+    'reorderQuantityBase':
+        (row['reorder_quantity_base'] as num?)?.toDouble() ?? 0,
+  };
 
   String _timestamp(Map<String, dynamic> row) =>
       row['last_modified_utc'] as String;

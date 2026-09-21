@@ -63,6 +63,8 @@ streams:
         product."ImageUrl" AS image_url,
         product."CategoryId" AS category_id,
         product."ShopId" AS shop_id,
+        product."ReorderPointBase" AS reorder_point_base,
+        product."ReorderQuantityBase" AS reorder_quantity_base,
         product."LastModifiedUtc" AS last_modified_utc
       FROM "Product" AS product
       WHERE product."ShopId" = auth.parameter('ShopId')

@@ -41,6 +41,8 @@ const appPowerSyncSchema = Schema([
     Column.text('image_url'),
     Column.text('category_id'),
     Column.text('shop_id'),
+    Column.real('reorder_point_base'),
+    Column.real('reorder_quantity_base'),
     Column.text('last_modified_utc'),
   ], trackPreviousValues: _trackTimestamp),
   Table('product_unit', [

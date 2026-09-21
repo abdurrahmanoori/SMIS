@@ -15,7 +15,8 @@ class ProductPowerSyncRepository extends PowerSyncRepositorySupport {
     return db
         .watch(
           'SELECT id, name, base_unit_id, sku, description, is_active, barcode, '
-          'image_url, category_id, shop_id, last_modified_utc '
+          'image_url, category_id, shop_id, reorder_point_base, '
+          'reorder_quantity_base, last_modified_utc '
           'FROM product WHERE shop_id = ?',
           parameters: [shopId],
           throttle: const Duration(milliseconds: 250),
@@ -41,7 +42,8 @@ class ProductPowerSyncRepository extends PowerSyncRepositorySupport {
     }
     var sql =
         'SELECT id, name, base_unit_id, sku, description, is_active, barcode, '
-        'image_url, category_id, shop_id, last_modified_utc '
+        'image_url, category_id, shop_id, reorder_point_base, '
+        'reorder_quantity_base, last_modified_utc '
         'FROM product WHERE $where ORDER BY name COLLATE NOCASE ASC';
     if (limit != null) {
       sql += ' LIMIT ?';
@@ -83,8 +85,9 @@ class ProductPowerSyncRepository extends PowerSyncRepositorySupport {
     final id = _idGenerator();
     await db.execute(
       'INSERT INTO product(id, name, base_unit_id, sku, description, is_active, '
-      'barcode, image_url, category_id, shop_id, last_modified_utc) '
-      'VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+      'barcode, image_url, category_id, shop_id, reorder_point_base, '
+      'reorder_quantity_base, last_modified_utc) '
+      'VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
       [
         id,
         normalized.name,
@@ -96,6 +99,8 @@ class ProductPowerSyncRepository extends PowerSyncRepositorySupport {
         normalized.imageUrl,
         normalized.categoryId,
         shopId,
+        0,
+        0,
         nowIso(),
       ],
     );
@@ -199,7 +204,8 @@ class ProductPowerSyncRepository extends PowerSyncRepositorySupport {
     final db = await database;
     final row = await db.getOptional(
       'SELECT id, name, base_unit_id, sku, description, is_active, barcode, '
-      'image_url, category_id, shop_id, last_modified_utc '
+      'image_url, category_id, shop_id, reorder_point_base, '
+      'reorder_quantity_base, last_modified_utc '
       'FROM product WHERE id = ?',
       [id],
     );
