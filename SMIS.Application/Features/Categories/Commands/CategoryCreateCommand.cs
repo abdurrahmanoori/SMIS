@@ -5,7 +5,6 @@ using SMIS.Application.DTO.Categories;
 using SMIS.Application.Identity.IServices;
 using SMIS.Application.Repositories.Base;
 using SMIS.Application.Repositories.Categories;
-using SMIS.Domain.Entities;
 
 namespace SMIS.Application.Features.Categories.Commands
 {
@@ -43,51 +42,15 @@ namespace SMIS.Application.Features.Categories.Commands
             // Get ShopId from authenticated user (secure)
             var shopId = _currentUser.GetShopId();
 
-            // PowerSync/offline clients create the entity locally first. Accepting
-            // their stable ID also makes a retried POST idempotent after a lost
-            // response: if the same row already exists, return it instead of
-            // creating a duplicate.
-            string? clientId = null;
-            if (!string.IsNullOrWhiteSpace(request.CategoryCreateDto.Id))
-            {
-                clientId = Guid.Parse(request.CategoryCreateDto.Id).ToString("D");
-                var existing = await _categoryRepository.GetByIdIncludingDeletedAsync(
-                    clientId,
-                    cancellationToken);
-
-                if (existing is not null)
-                {
-                    if (existing.ShopId != shopId)
-                    {
-                        return Result<CategoryDto>.FailureResult(
-                            "Forbidden",
-                            "You can only create categories for your own shop.");
-                    }
-
-                    return Result<CategoryDto>.SuccessResult(_mapper.Map<CategoryDto>(existing));
-                }
-            }
-
             if (await _categoryRepository.NameExistsInShopAsync(
                     shopId,
                     request.CategoryCreateDto.Name,
                     cancellationToken: cancellationToken))
             {
-                return Result<CategoryDto>.FailureResult(
-                    "CategoryNameAlreadyExists",
-                    "A category with this name already exists in this shop.");
+                return CategoryCommandRules.DuplicateName();
             }
 
-            var entity = Category.Create(
-                request.CategoryCreateDto.Name,
-                shopId,
-                request.CategoryCreateDto.Code,
-                request.CategoryCreateDto.Description,
-                request.CategoryCreateDto.IsActive
-            );
-
-            if (clientId is not null)
-                entity.Id = clientId;
+            var entity = CategoryCommandRules.Create(request.CategoryCreateDto, shopId);
 
             await _categoryRepository.AddAsync(entity);
             await _unitOfWork.SaveChanges(cancellationToken);

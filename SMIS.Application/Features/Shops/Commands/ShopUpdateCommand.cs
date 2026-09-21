@@ -15,14 +15,21 @@ namespace SMIS.Application.Features.Shops.Commands
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
 
-        public ShopUpdateCommandHandler(IUnitOfWork unitOfWork, IMapper mapper, IShopRepository shopRepository)
+        public ShopUpdateCommandHandler(
+            IUnitOfWork unitOfWork,
+            IMapper mapper,
+            IShopRepository shopRepository
+        )
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _shopRepository = shopRepository;
         }
 
-        public async Task<Result<ShopDto>> Handle(ShopUpdateCommand request, CancellationToken cancellationToken)
+        public async Task<Result<ShopDto>> Handle(
+            ShopUpdateCommand request,
+            CancellationToken cancellationToken
+        )
         {
             var entity = await _shopRepository.GetByIdAsync(request.Id);
             if (entity == null)
@@ -30,14 +37,7 @@ namespace SMIS.Application.Features.Shops.Commands
                 return Result<ShopDto>.NotFoundResult(nameof(ShopDto.Id));
             }
 
-            // Update using domain methods
-            entity.SetName(request.ShopUpdateDto.Name);
-            entity.SetShopType(request.ShopUpdateDto.ShopType);
-            entity.SetAddress(request.ShopUpdateDto.Address);
-            entity.SetPhoneNumber(request.ShopUpdateDto.PhoneNumber);
-            entity.SetEmail(request.ShopUpdateDto.Email);
-            entity.SetTaxNumber(request.ShopUpdateDto.TaxNumber);
-            if (request.ShopUpdateDto.IsActive) entity.Activate(); else entity.Deactivate();
+            ShopCommandRules.Apply(entity, request.ShopUpdateDto);
 
             entity.ClearClientModificationMetadata();
 

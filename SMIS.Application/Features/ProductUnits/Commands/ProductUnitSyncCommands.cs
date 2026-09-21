@@ -12,10 +12,13 @@ using SMIS.Domain.Services;
 namespace SMIS.Application.Features.ProductUnits.Commands;
 
 public record ProductUnitSyncCreateCommand(ProductUnitSyncCreateDto Dto) : IRequest<Result<ProductUnitDto>>;
+
 public record ProductUnitSyncUpdateCommand(string Id, ProductUnitSyncUpdateDto Dto) : IRequest<Result<ProductUnitDto>>;
+
 public record ProductUnitSyncDeleteCommand(string Id, ProductUnitSyncDeleteDto Dto) : IRequest<Result<ProductUnitDto>>;
 
-internal sealed class ProductUnitSyncCreateCommandHandler : IRequestHandler<ProductUnitSyncCreateCommand, Result<ProductUnitDto>>
+internal sealed class
+    ProductUnitSyncCreateCommandHandler : IRequestHandler<ProductUnitSyncCreateCommand, Result<ProductUnitDto>>
 {
     private readonly IProductUnitRepository _repository;
     private readonly IProductRepository _products;
@@ -28,7 +31,8 @@ internal sealed class ProductUnitSyncCreateCommandHandler : IRequestHandler<Prod
         IProductRepository products,
         IUnitOfWork uow,
         ICurrentUser user,
-        IMapper mapper)
+        IMapper mapper
+    )
     {
         _repository = repository;
         _products = products;
@@ -37,7 +41,10 @@ internal sealed class ProductUnitSyncCreateCommandHandler : IRequestHandler<Prod
         _mapper = mapper;
     }
 
-    public async Task<Result<ProductUnitDto>> Handle(ProductUnitSyncCreateCommand request, CancellationToken ct)
+    public async Task<Result<ProductUnitDto>> Handle(
+        ProductUnitSyncCreateCommand request,
+        CancellationToken ct
+    )
     {
         if (!ProductUnitSyncRules.User(request.Dto.ClientCreatedBy, _user) ||
             !ProductUnitSyncRules.User(request.Dto.ClientModifiedBy, _user))
@@ -45,8 +52,6 @@ internal sealed class ProductUnitSyncCreateCommandHandler : IRequestHandler<Prod
 
         var product = await ProductUnitSyncRules.GetAccessibleProductAsync(request.Dto.ProductId, _products, _user);
         if (product is null) return ProductUnitSyncRules.Forbidden();
-        if (ProductUnitSyncRules.IsInvalidBaseQuantity(product, request.Dto.UnitOfMeasureId, request.Dto.BaseUnitQuantity))
-            return ProductUnitCommandRules.BaseUnitMustEqualOne();
 
         var id = ProductUnitSyncRules.Id(request.Dto.Id);
         var modified = DateTimeService.NormalizeUtc(request.Dto.ClientModifiedDate);
@@ -57,10 +62,28 @@ internal sealed class ProductUnitSyncCreateCommandHandler : IRequestHandler<Prod
             if (modified <= value.GetConflictModifiedUtc())
                 return Result<ProductUnitDto>.SuccessResult(_mapper.Map<ProductUnitDto>(value));
 
-            var guard = await ProductUnitSyncRules.ValidateMutationAsync(value, request.Dto, _repository, _products, _user, ct);
+            var currentProduct =
+                await ProductUnitSyncRules.GetAccessibleProductAsync(value.ProductId, _products, _user);
+            var targetProduct =
+                await ProductUnitSyncRules.GetAccessibleProductAsync(request.Dto.ProductId, _products, _user);
+            if (currentProduct is null || targetProduct is null) return ProductUnitSyncRules.Forbidden();
+
+            var guard = await ProductUnitCommandRules.ValidateMutationAsync(
+                value,
+                currentProduct,
+                targetProduct,
+                request.Dto.ProductId,
+                request.Dto.UnitOfMeasureId,
+                request.Dto.BaseUnitQuantity,
+                _repository,
+                ct);
             if (guard is not null) return guard;
 
-            ProductUnitSyncRules.Apply(value, request.Dto);
+            ProductUnitCommandRules.Apply(
+                value,
+                request.Dto.ProductId,
+                request.Dto.UnitOfMeasureId,
+                request.Dto.BaseUnitQuantity);
             value.SetClientCreationMetadata(request.Dto.ClientCreatedDate, request.Dto.ClientCreatedBy);
             value.SetClientModificationMetadata(modified, request.Dto.ClientModifiedBy);
             value.Restore();
@@ -68,8 +91,14 @@ internal sealed class ProductUnitSyncCreateCommandHandler : IRequestHandler<Prod
             return Result<ProductUnitDto>.SuccessResult(_mapper.Map<ProductUnitDto>(value));
         }
 
-        if (await _repository.ExistsPairAsync(request.Dto.ProductId, request.Dto.UnitOfMeasureId, null, ct))
-            return ProductUnitSyncRules.DuplicatePair();
+        var createGuard = await ProductUnitCommandRules.ValidateCreateAsync(
+            product,
+            request.Dto.ProductId,
+            request.Dto.UnitOfMeasureId,
+            request.Dto.BaseUnitQuantity,
+            _repository,
+            ct);
+        if (createGuard is not null) return createGuard;
 
         value = ProductUnit.Create(request.Dto.ProductId, request.Dto.UnitOfMeasureId, request.Dto.BaseUnitQuantity);
         value.Id = id;
@@ -82,7 +111,8 @@ internal sealed class ProductUnitSyncCreateCommandHandler : IRequestHandler<Prod
     }
 }
 
-internal sealed class ProductUnitSyncUpdateCommandHandler : IRequestHandler<ProductUnitSyncUpdateCommand, Result<ProductUnitDto>>
+internal sealed class
+    ProductUnitSyncUpdateCommandHandler : IRequestHandler<ProductUnitSyncUpdateCommand, Result<ProductUnitDto>>
 {
     private readonly IProductUnitRepository _repository;
     private readonly IProductRepository _products;
@@ -95,7 +125,8 @@ internal sealed class ProductUnitSyncUpdateCommandHandler : IRequestHandler<Prod
         IProductRepository products,
         IUnitOfWork uow,
         ICurrentUser user,
-        IMapper mapper)
+        IMapper mapper
+    )
     {
         _repository = repository;
         _products = products;
@@ -104,7 +135,10 @@ internal sealed class ProductUnitSyncUpdateCommandHandler : IRequestHandler<Prod
         _mapper = mapper;
     }
 
-    public async Task<Result<ProductUnitDto>> Handle(ProductUnitSyncUpdateCommand request, CancellationToken ct)
+    public async Task<Result<ProductUnitDto>> Handle(
+        ProductUnitSyncUpdateCommand request,
+        CancellationToken ct
+    )
     {
         if (!ProductUnitSyncRules.User(request.Dto.ClientModifiedBy, _user))
             return ProductUnitSyncRules.InvalidUser();
@@ -116,10 +150,27 @@ internal sealed class ProductUnitSyncUpdateCommandHandler : IRequestHandler<Prod
         if (modified <= value.GetConflictModifiedUtc())
             return Result<ProductUnitDto>.SuccessResult(_mapper.Map<ProductUnitDto>(value));
 
-        var guard = await ProductUnitSyncRules.ValidateMutationAsync(value, request.Dto, _repository, _products, _user, ct);
+        var currentProduct = await ProductUnitSyncRules.GetAccessibleProductAsync(value.ProductId, _products, _user);
+        var targetProduct =
+            await ProductUnitSyncRules.GetAccessibleProductAsync(request.Dto.ProductId, _products, _user);
+        if (currentProduct is null || targetProduct is null) return ProductUnitSyncRules.Forbidden();
+
+        var guard = await ProductUnitCommandRules.ValidateMutationAsync(
+            value,
+            currentProduct,
+            targetProduct,
+            request.Dto.ProductId,
+            request.Dto.UnitOfMeasureId,
+            request.Dto.BaseUnitQuantity,
+            _repository,
+            ct);
         if (guard is not null) return guard;
 
-        ProductUnitSyncRules.Apply(value, request.Dto);
+        ProductUnitCommandRules.Apply(
+            value,
+            request.Dto.ProductId,
+            request.Dto.UnitOfMeasureId,
+            request.Dto.BaseUnitQuantity);
         value.SetClientModificationMetadata(modified, request.Dto.ClientModifiedBy);
         value.Restore();
         await _uow.SaveChanges(ct);
@@ -127,7 +178,8 @@ internal sealed class ProductUnitSyncUpdateCommandHandler : IRequestHandler<Prod
     }
 }
 
-internal sealed class ProductUnitSyncDeleteCommandHandler : IRequestHandler<ProductUnitSyncDeleteCommand, Result<ProductUnitDto>>
+internal sealed class
+    ProductUnitSyncDeleteCommandHandler : IRequestHandler<ProductUnitSyncDeleteCommand, Result<ProductUnitDto>>
 {
     private readonly IProductUnitRepository _repository;
     private readonly IProductRepository _products;
@@ -140,7 +192,8 @@ internal sealed class ProductUnitSyncDeleteCommandHandler : IRequestHandler<Prod
         IProductRepository products,
         IUnitOfWork uow,
         ICurrentUser user,
-        IMapper mapper)
+        IMapper mapper
+    )
     {
         _repository = repository;
         _products = products;
@@ -149,7 +202,10 @@ internal sealed class ProductUnitSyncDeleteCommandHandler : IRequestHandler<Prod
         _mapper = mapper;
     }
 
-    public async Task<Result<ProductUnitDto>> Handle(ProductUnitSyncDeleteCommand request, CancellationToken ct)
+    public async Task<Result<ProductUnitDto>> Handle(
+        ProductUnitSyncDeleteCommand request,
+        CancellationToken ct
+    )
     {
         if (!ProductUnitSyncRules.User(request.Dto.ClientModifiedBy, _user))
             return ProductUnitSyncRules.InvalidUser();
@@ -177,63 +233,27 @@ internal sealed class ProductUnitSyncDeleteCommandHandler : IRequestHandler<Prod
 
 internal static class ProductUnitSyncRules
 {
-    public static string Id(string value) => Guid.Parse(value).ToString("D");
+    public static string Id(
+        string value
+    ) => Guid.Parse(value).ToString("D");
 
-    public static bool User(string? value, ICurrentUser user) =>
+    public static bool User(
+        string? value,
+        ICurrentUser user
+    ) =>
         string.IsNullOrWhiteSpace(value) ||
         string.Equals(value.Trim(), user.GetId(), StringComparison.Ordinal);
 
     public static async Task<Product?> GetAccessibleProductAsync(
         string productId,
         IProductRepository products,
-        ICurrentUser user)
+        ICurrentUser user
+    )
     {
         var product = await products.GetByIdAsync(productId);
         return product is not null && product.ShopId == user.GetShopId()
             ? product
             : null;
-    }
-
-    public static bool IsInvalidBaseQuantity(Product product, string unitOfMeasureId, decimal baseUnitQuantity) =>
-        string.Equals(product.BaseUnitId, unitOfMeasureId, StringComparison.Ordinal) && baseUnitQuantity != 1m;
-
-    public static async Task<Result<ProductUnitDto>?> ValidateMutationAsync(
-        ProductUnit value,
-        ProductUnitSyncUpdateDto dto,
-        IProductUnitRepository repository,
-        IProductRepository products,
-        ICurrentUser user,
-        CancellationToken ct)
-    {
-        var currentProduct = await GetAccessibleProductAsync(value.ProductId, products, user);
-        var targetProduct = await GetAccessibleProductAsync(dto.ProductId, products, user);
-        if (currentProduct is null || targetProduct is null) return Forbidden();
-
-        var changed =
-            !string.Equals(value.ProductId, dto.ProductId, StringComparison.Ordinal) ||
-            !string.Equals(value.UnitOfMeasureId, dto.UnitOfMeasureId, StringComparison.Ordinal) ||
-            value.BaseUnitQuantity != dto.BaseUnitQuantity;
-
-        if (string.Equals(currentProduct.BaseUnitId, value.UnitOfMeasureId, StringComparison.Ordinal) && changed)
-            return ProductUnitCommandRules.BaseUnitProtected();
-
-        if (changed && await repository.HasUsageAsync(value.Id, ct))
-            return ProductUnitCommandRules.ConversionInUse();
-
-        if (IsInvalidBaseQuantity(targetProduct, dto.UnitOfMeasureId, dto.BaseUnitQuantity))
-            return ProductUnitCommandRules.BaseUnitMustEqualOne();
-
-        if (await repository.ExistsPairAsync(dto.ProductId, dto.UnitOfMeasureId, value.Id, ct))
-            return DuplicatePair();
-
-        return null;
-    }
-
-    public static void Apply(ProductUnit value, ProductUnitSyncUpdateDto dto)
-    {
-        value.SetProductId(dto.ProductId);
-        value.SetUnitOfMeasureId(dto.UnitOfMeasureId);
-        value.SetBaseUnitQuantity(dto.BaseUnitQuantity);
     }
 
     public static Result<ProductUnitDto> InvalidUser() =>
@@ -245,9 +265,4 @@ internal static class ProductUnitSyncRules
         Result<ProductUnitDto>.FailureResult(
             "Forbidden",
             "You can only synchronize product units from your own shop.");
-
-    public static Result<ProductUnitDto> DuplicatePair() =>
-        Result<ProductUnitDto>.FailureResult(
-            "ProductUnitAlreadyExists",
-            "This unit of measurement is already configured for the selected product.");
 }

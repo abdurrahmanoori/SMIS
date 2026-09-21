@@ -10,9 +10,11 @@ using SMIS.Domain.Entities;
 
 namespace SMIS.Application.Features.ProductUnits.Commands
 {
-    public record ProductUnitCreateCommand(ProductUnitCreateDto ProductUnitCreateDto) : IRequest<Result<ProductUnitDto>>;
+    public record ProductUnitCreateCommand(ProductUnitCreateDto ProductUnitCreateDto)
+        : IRequest<Result<ProductUnitDto>>;
 
-    internal sealed class ProductUnitCreateCommandHandler : IRequestHandler<ProductUnitCreateCommand, Result<ProductUnitDto>>
+    internal sealed class
+        ProductUnitCreateCommandHandler : IRequestHandler<ProductUnitCreateCommand, Result<ProductUnitDto>>
     {
         private readonly IProductUnitRepository _productUnitRepository;
         private readonly IProductRepository _productRepository;
@@ -20,7 +22,13 @@ namespace SMIS.Application.Features.ProductUnits.Commands
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
 
-        public ProductUnitCreateCommandHandler(IUnitOfWork unitOfWork, IMapper mapper, IProductUnitRepository productUnitRepository, IProductRepository productRepository, IUnitOfMeasureRepository unitOfMeasureRepository)
+        public ProductUnitCreateCommandHandler(
+            IUnitOfWork unitOfWork,
+            IMapper mapper,
+            IProductUnitRepository productUnitRepository,
+            IProductRepository productRepository,
+            IUnitOfMeasureRepository unitOfMeasureRepository
+        )
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
@@ -29,7 +37,10 @@ namespace SMIS.Application.Features.ProductUnits.Commands
             _unitOfMeasureRepository = unitOfMeasureRepository;
         }
 
-        public async Task<Result<ProductUnitDto>> Handle(ProductUnitCreateCommand request, CancellationToken cancellationToken)
+        public async Task<Result<ProductUnitDto>> Handle(
+            ProductUnitCreateCommand request,
+            CancellationToken cancellationToken
+        )
         {
             var product = await _productRepository.GetByIdAsync(request.ProductUnitCreateDto.ProductId);
             if (product == null)
@@ -37,55 +48,27 @@ namespace SMIS.Application.Features.ProductUnits.Commands
                 return Result<ProductUnitDto>.NotFoundResult(nameof(ProductUnitCreateDto.ProductId));
             }
 
-            if (string.Equals(product.BaseUnitId, request.ProductUnitCreateDto.UnitOfMeasureId, StringComparison.Ordinal) &&
-                request.ProductUnitCreateDto.BaseUnitQuantity != 1m)
-            {
-                return ProductUnitCommandRules.BaseUnitMustEqualOne();
-            }
-
-            if (await _productUnitRepository.ExistsPairAsync(
+            var guard = await ProductUnitCommandRules.ValidateCreateAsync(
+                product,
                 request.ProductUnitCreateDto.ProductId,
                 request.ProductUnitCreateDto.UnitOfMeasureId,
-                cancellationToken: cancellationToken))
-            {
-                return ProductUnitCommandRules.DuplicatePair();
-            }
+                request.ProductUnitCreateDto.BaseUnitQuantity,
+                _productUnitRepository,
+                cancellationToken);
+            if (guard is not null) return guard;
 
             var entity = _mapper.Map<ProductUnit>(request.ProductUnitCreateDto);
-            
+
             // Populate name fields using domain methods
-            entity.SetProductName(product?.Name);
-            
+            entity.SetProductName(product.Name);
+
             var unit = await _unitOfMeasureRepository.GetByIdAsync(request.ProductUnitCreateDto.UnitOfMeasureId);
             entity.SetUnitName(unit?.Name);
-            
+
             await _productUnitRepository.AddAsync(entity);
             await _unitOfWork.SaveChanges(cancellationToken);
 
             return Result<ProductUnitDto>.SuccessResult(_mapper.Map<ProductUnitDto>(entity));
         }
-    }
-
-    internal static class ProductUnitCommandRules
-    {
-        public static Result<ProductUnitDto> DuplicatePair() =>
-            Result<ProductUnitDto>.FailureResult(
-                "ProductUnitAlreadyExists",
-                "This unit of measurement is already configured for the selected product.");
-
-        public static Result<ProductUnitDto> BaseUnitProtected() =>
-            Result<ProductUnitDto>.FailureResult(
-                "BaseProductUnitProtected",
-                "The product's base-unit mapping is managed by the product and cannot be changed or deleted directly.");
-
-        public static Result<ProductUnitDto> BaseUnitMustEqualOne() =>
-            Result<ProductUnitDto>.FailureResult(
-                "InvalidBaseUnitQuantity",
-                "The product's base unit must have BaseUnitQuantity = 1.");
-
-        public static Result<ProductUnitDto> ConversionInUse() =>
-            Result<ProductUnitDto>.FailureResult(
-                "ProductUnitInUse",
-                "This product-unit conversion has pricing or inventory history and cannot be changed or deleted.");
     }
 }

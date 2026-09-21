@@ -4,7 +4,6 @@ using SMIS.Application.Common.Response;
 using SMIS.Application.DTO.Shops;
 using SMIS.Application.Repositories.Base;
 using SMIS.Application.Repositories.Shops;
-using SMIS.Domain.Entities;
 
 namespace SMIS.Application.Features.Shops.Commands
 {
@@ -16,24 +15,23 @@ namespace SMIS.Application.Features.Shops.Commands
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
 
-        public ShopCreateCommandHandler(IUnitOfWork unitOfWork, IMapper mapper, IShopRepository shopRepository)
+        public ShopCreateCommandHandler(
+            IUnitOfWork unitOfWork,
+            IMapper mapper,
+            IShopRepository shopRepository
+        )
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _shopRepository = shopRepository;
         }
 
-        public async Task<Result<ShopDto>> Handle(ShopCreateCommand request, CancellationToken cancellationToken)
+        public async Task<Result<ShopDto>> Handle(
+            ShopCreateCommand request,
+            CancellationToken cancellationToken
+        )
         {
-            var entity = Shop.Create(
-                request.ShopCreateDto.Name,
-                request.ShopCreateDto.ShopType,
-                request.ShopCreateDto.Address,
-                request.ShopCreateDto.PhoneNumber,
-                request.ShopCreateDto.Email,
-                request.ShopCreateDto.TaxNumber,
-                request.ShopCreateDto.IsActive
-            );
+            var entity = ShopCommandRules.Create(request.ShopCreateDto);
 
             await _shopRepository.AddAsync(entity);
             await _unitOfWork.SaveChanges(cancellationToken);

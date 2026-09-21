@@ -13,7 +13,7 @@ using SMIS.Application.Repositories.UnitOfMeasures;
 using SMIS.Application.Identity.IServices;
 using SMIS.Domain.Entities;
 
-namespace SMIS.Application.Features.Produmscts.Commands;
+namespace SMIS.Application.Features.Products.Commands;
 
 public record ProductCreateCommand(ProductCreateDto ProductCreateDto) : IRequest<Result<ProductDto>>;
 
@@ -29,7 +29,17 @@ internal sealed class ProductCreateCommandHandler : IRequestHandler<ProductCreat
     private readonly IMapper _mapper;
     private readonly ICurrentUser _currentUser;
 
-    public ProductCreateCommandHandler(IUnitOfWork unitOfWork, IMapper mapper, IProductRepository productRepository, ITranslationKeyRepository translationKeyRepository, IShopRepository shopRepository, IUnitOfMeasureRepository unitOfMeasureRepository, ICategoryRepository categoryRepository, IProductUnitRepository productUnitRepository, ICurrentUser currentUser)
+    public ProductCreateCommandHandler(
+        IUnitOfWork unitOfWork,
+        IMapper mapper,
+        IProductRepository productRepository,
+        ITranslationKeyRepository translationKeyRepository,
+        IShopRepository shopRepository,
+        IUnitOfMeasureRepository unitOfMeasureRepository,
+        ICategoryRepository categoryRepository,
+        IProductUnitRepository productUnitRepository,
+        ICurrentUser currentUser
+    )
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
@@ -42,7 +52,10 @@ internal sealed class ProductCreateCommandHandler : IRequestHandler<ProductCreat
         _currentUser = currentUser;
     }
 
-    public async Task<Result<ProductDto>> Handle(ProductCreateCommand request, CancellationToken cancellationToken)
+    public async Task<Result<ProductDto>> Handle(
+        ProductCreateCommand request,
+        CancellationToken cancellationToken
+    )
     {
         await _translationKeyRepository.AddTranslationKeysForEntity(request.ProductCreateDto, _unitOfWork);
 
@@ -50,33 +63,21 @@ internal sealed class ProductCreateCommandHandler : IRequestHandler<ProductCreat
         if (string.IsNullOrWhiteSpace(activeShopId))
             return Result<ProductDto>.FailureResult("ShopContextRequired", "An active shop is required.");
 
-        var entity = Product.Create(
-            request.ProductCreateDto.Name,
-            activeShopId,
-            request.ProductCreateDto.BaseUnitId,
-            request.ProductCreateDto.SKU,
-            request.ProductCreateDto.IsActive,
-            request.ProductCreateDto.Description,
-            request.ProductCreateDto.Barcode,
-            request.ProductCreateDto.ImageUrl,
-            request.ProductCreateDto.CategoryId);
-        entity.SetReorderPolicy(
-            request.ProductCreateDto.ReorderPointBase,
-            request.ProductCreateDto.ReorderQuantityBase);
-        
+        var entity = ProductCommandRules.Create(request.ProductCreateDto, activeShopId);
+
         // Populate name fields
         var shop = await _shopRepository.GetByIdAsync(activeShopId);
         entity.ShopName = shop?.Name;
-        
+
         var unit = await _unitOfMeasureRepository.GetByIdAsync(request.ProductCreateDto.BaseUnitId);
         entity.BaseUnitName = unit?.Name;
-        
+
         if (!string.IsNullOrWhiteSpace(request.ProductCreateDto.CategoryId))
         {
             var category = await _categoryRepository.GetByIdAsync(request.ProductCreateDto.CategoryId);
             entity.CategoryName = category?.Name;
         }
-        
+
         await _productRepository.AddAsync(entity);
 
         var baseProductUnit = ProductUnit.Create(entity.Id, entity.BaseUnitId, 1m);

@@ -52,10 +52,10 @@ internal sealed class ProductSyncCreateCommandHandler : IRequestHandler<ProductS
                 return Result<ProductDto>.SuccessResult(_mapper.Map<ProductDto>(existing));
             if (existing.IsBaseUnitChange(request.Dto.BaseUnitId) &&
                 await _repository.HasStockOrConversionsAsync(existing.Id, cancellationToken))
-                return ProductSyncRules.BaseUnitIsLocked();
+                return ProductCommandRules.BaseUnitIsLocked();
             var oldBaseUnitId = existing.BaseUnitId;
-            ProductSyncRules.Apply(existing, request.Dto);
-            await ProductSyncRules.EnsureBaseProductUnitAsync(
+            ProductCommandRules.Apply(existing, request.Dto);
+            await ProductCommandRules.EnsureBaseProductUnitAsync(
                 existing,
                 oldBaseUnitId,
                 _productUnitRepository,
@@ -67,15 +67,12 @@ internal sealed class ProductSyncCreateCommandHandler : IRequestHandler<ProductS
             return Result<ProductDto>.SuccessResult(_mapper.Map<ProductDto>(existing));
         }
 
-        var product = Product.Create(request.Dto.Name, _currentUser.GetShopId(), request.Dto.BaseUnitId,
-            request.Dto.SKU, request.Dto.IsActive, request.Dto.Description, request.Dto.Barcode, request.Dto.ImageUrl,
-            request.Dto.CategoryId);
-        product.SetReorderPolicy(request.Dto.ReorderPointBase, request.Dto.ReorderQuantityBase);
+        var product = ProductCommandRules.Create(request.Dto, _currentUser.GetShopId());
         product.Id = id;
         product.SetClientCreationMetadata(request.Dto.ClientCreatedDate, request.Dto.ClientCreatedBy);
         product.SetClientModificationMetadata(modified, request.Dto.ClientModifiedBy);
         await _repository.AddAsync(product);
-        await ProductSyncRules.EnsureBaseProductUnitAsync(
+        await ProductCommandRules.EnsureBaseProductUnitAsync(
             product,
             product.BaseUnitId,
             _productUnitRepository,
@@ -119,10 +116,10 @@ internal sealed class ProductSyncUpdateCommandHandler : IRequestHandler<ProductS
             return Result<ProductDto>.SuccessResult(_mapper.Map<ProductDto>(product));
         if (product.IsBaseUnitChange(request.Dto.BaseUnitId) &&
             await _repository.HasStockOrConversionsAsync(product.Id, cancellationToken))
-            return ProductSyncRules.BaseUnitIsLocked();
+            return ProductCommandRules.BaseUnitIsLocked();
         var oldBaseUnitId = product.BaseUnitId;
-        ProductSyncRules.Apply(product, request.Dto);
-        await ProductSyncRules.EnsureBaseProductUnitAsync(
+        ProductCommandRules.Apply(product, request.Dto);
+        await ProductCommandRules.EnsureBaseProductUnitAsync(
             product,
             oldBaseUnitId,
             _productUnitRepository,
@@ -201,60 +198,9 @@ internal static class ProductSyncRules
         ICurrentUser currentUser
     ) => product.ShopId == currentUser.GetShopId();
 
-    public static void Apply(
-        Product product,
-        ProductSyncUpdateDto dto
-    )
-    {
-        // The caller performs the stock/conversion lock check before this method.
-        // Passing false here avoids duplicating repository knowledge inside the domain object.
-        product.SetName(dto.Name);
-        product.ChangeBaseUnit(dto.BaseUnitId, hasStockOrConversions: false);
-        product.SetSKU(dto.SKU);
-        product.SetDescription(dto.Description);
-        product.SetBarcode(dto.Barcode);
-        product.SetImageUrl(dto.ImageUrl);
-        product.SetCategoryId(dto.CategoryId);
-        product.SetReorderPolicy(dto.ReorderPointBase, dto.ReorderQuantityBase);
-        if (dto.IsActive) product.Activate();
-        else product.Deactivate();
-    }
-
-    public static async Task EnsureBaseProductUnitAsync(
-        Product product,
-        string oldBaseUnitId,
-        IProductUnitRepository productUnits,
-        CancellationToken cancellationToken)
-    {
-        // Every Product must have exactly one ProductUnit that represents its base unit
-        // with a factor of 1. Sync creation/update repairs that invariant automatically.
-        var baseProductUnit = await productUnits.GetFirstOrDefaultAsync(
-            item => item.ProductId == product.Id && item.UnitOfMeasureId == oldBaseUnitId);
-
-        if (baseProductUnit is null)
-        {
-            baseProductUnit = ProductUnit.Create(product.Id, product.BaseUnitId, 1m);
-            await productUnits.AddAsync(baseProductUnit);
-        }
-        else
-        {
-            // When a base unit is changed before the product has stock/conversion history,
-            // reuse the old base ProductUnit instead of leaving a stale factor-1 row behind.
-            baseProductUnit.SetUnitOfMeasureId(product.BaseUnitId);
-            baseProductUnit.SetBaseUnitQuantity(1m);
-        }
-
-        baseProductUnit.SetProductName(product.Name);
-    }
-
     public static Result<ProductDto> InvalidUser() => Result<ProductDto>.FailureResult("InvalidClientUser",
         "Client user metadata must match the authenticated user.");
 
     public static Result<ProductDto> Forbidden() =>
         Result<ProductDto>.FailureResult("Forbidden", "You can only synchronize products from your own shop.");
-
-    public static Result<ProductDto> BaseUnitIsLocked() =>
-        Result<ProductDto>.FailureResult(
-            "BaseUnitChangeNotAllowed",
-            "Base unit cannot be changed after stock or product-unit conversions exist.");
 }

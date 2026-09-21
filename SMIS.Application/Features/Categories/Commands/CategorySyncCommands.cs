@@ -92,10 +92,10 @@ internal sealed class CategorySyncCreateCommandHandler
                     existing.Id,
                     cancellationToken))
             {
-                return CategorySyncRules.DuplicateName();
+                return CategoryCommandRules.DuplicateName();
             }
 
-            CategorySyncRules.Apply(existing, request.Dto);
+            CategoryCommandRules.Apply(existing, request.Dto);
 
             existing.SetClientCreationMetadata(
                 clientCreated,
@@ -119,15 +119,10 @@ internal sealed class CategorySyncCreateCommandHandler
                 request.Dto.Name,
                 cancellationToken: cancellationToken))
         {
-            return CategorySyncRules.DuplicateName();
+            return CategoryCommandRules.DuplicateName();
         }
 
-        var category = Category.Create(
-            request.Dto.Name,
-            shopId,
-            request.Dto.Code,
-            request.Dto.Description,
-            request.Dto.IsActive);
+        var category = CategoryCommandRules.Create(request.Dto, shopId);
 
         category.Id = id;
 
@@ -212,10 +207,10 @@ internal sealed class CategorySyncUpdateCommandHandler
                 category.Id,
                 cancellationToken))
         {
-            return CategorySyncRules.DuplicateName();
+            return CategoryCommandRules.DuplicateName();
         }
 
-        CategorySyncRules.Apply(category, request.Dto);
+        CategoryCommandRules.Apply(category, request.Dto);
 
         category.SetClientModificationMetadata(
             clientModified,
@@ -345,36 +340,6 @@ internal static class CategorySyncRules
         return category.ShopId == currentUser.GetShopId();
     }
 
-    public static void Apply(
-        Category category,
-        CategoryCreateDto dto
-    )
-    {
-        category.SetName(dto.Name);
-        category.SetCode(dto.Code);
-        category.SetDescription(dto.Description);
-
-        if (dto.IsActive)
-            category.Activate();
-        else
-            category.Deactivate();
-    }
-
-    public static void Apply(
-        Category category,
-        CategoryUpdateDto dto
-    )
-    {
-        category.SetName(dto.Name);
-        category.SetCode(dto.Code);
-        category.SetDescription(dto.Description);
-
-        if (dto.IsActive)
-            category.Activate();
-        else
-            category.Deactivate();
-    }
-
     public static Result<CategoryDto> InvalidUser() =>
         Result<CategoryDto>.FailureResult(
             "InvalidClientUser",
@@ -384,9 +349,4 @@ internal static class CategorySyncRules
         Result<CategoryDto>.FailureResult(
             "Forbidden",
             "You can only synchronize categories from your own shop.");
-
-    public static Result<CategoryDto> DuplicateName() =>
-        Result<CategoryDto>.FailureResult(
-            "CategoryNameAlreadyExists",
-            "A category with this name already exists in this shop.");
 }

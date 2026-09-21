@@ -224,7 +224,7 @@
     "RunOnceActivity.git.unshallow": "true",
     "RunOnceActivity.readMode.enableVisualFormatting": "true",
     "RunOnceActivity.typescript.service.memoryLimit.init": "true",
-    "Shell Script.Run Flutter App.executor": "Debug",
+    "Shell Script.Run Flutter App.executor": "Run",
     "cidr.known.project.marker": "true",
     "codeWithMe.voiceChat.enabledByDefault": "false",
     "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
@@ -397,14 +397,6 @@
       <option name="presentableId" value="LOCAL-00001" />
       <option name="project" value="LOCAL" />
       <updated>1789462942314</updated>
-    </task>
-    <task id="LOCAL-00035" summary="feat: implement offline-first flow for Unit of Measurement with local storage and synchronization">
-      <option name="closed" value="true" />
-      <created>1788751902800</created>
-      <option name="number" value="00035" />
-      <option name="presentableId" value="LOCAL-00035" />
-      <option name="project" value="LOCAL" />
-      <updated>1788751902801</updated>
     </task>
     <task id="LOCAL-00036" summary="feat: enhance authentication flow with AuthenticationGate and improve logout handling">
       <option name="closed" value="true" />
@@ -782,7 +774,15 @@
       <option name="project" value="LOCAL" />
       <updated>1789971609031</updated>
     </task>
-    <option name="localTasksCounter" value="83" />
+    <task id="LOCAL-00083" summary="feat: remove unused database and API files; clean up project dependencies and configurations">
+      <option name="closed" value="true" />
+      <created>1789995986037</created>
+      <option name="number" value="00083" />
+      <option name="presentableId" value="LOCAL-00083" />
+      <option name="project" value="LOCAL" />
+      <updated>1789995986038</updated>
+    </task>
+    <option name="localTasksCounter" value="84" />
     <option name="clearContext" value="false" />
     <option name="createChangelist" value="false" />
     <option name="createBranch" value="false" />
@@ -803,7 +803,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
-    <MESSAGE value="feat: implement product count check before category deletion and update related error handling" />
     <MESSAGE value="feat: add reference count checks before deleting products, shops, and units of measurement" />
     <MESSAGE value="feat: enforce unique category names per shop and enhance related error handling" />
     <MESSAGE value="feat: enforce foreign key relationships and improve navigation properties across entities" />
@@ -828,6 +827,7 @@
     <MESSAGE value="feat: implement shop context management; remove ShopId from various DTOs and commands, and enforce active shop validation in related operations" />
     <MESSAGE value="feat: enhance search functionality across controllers; implement request ID tracking to prevent stale responses" />
     <MESSAGE value="feat: add PowerSync upload handlers for categories, products, units of measure, and shops; streamline synchronization process and improve error handling" />
+    <MESSAGE value="feat: remove unused database and API files; clean up project dependencies and configurations" />
     <option name="LAST_COMMIT_MESSAGE" value="" />
   </component>
   <component name="XDebuggerManager">

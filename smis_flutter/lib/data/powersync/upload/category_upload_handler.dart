@@ -14,31 +14,41 @@ class CategoryUploadHandler implements PowerSyncUploadHandler {
   @override
   Future<void> create(String id, Map<String, dynamic> row) async {
     await _dio.post<void>(
-      AppConfig.categoryEndpoint,
-      data: {'id': id, ..._payload(row)},
+      '${AppConfig.categoryEndpoint}/sync',
+      data: {
+        'id': id,
+        ..._payload(row),
+        'clientCreatedDate': _timestamp(row),
+        'clientModifiedDate': _timestamp(row),
+      },
     );
   }
 
   @override
   Future<void> update(String id, Map<String, dynamic> row) async {
     await _dio.put<void>(
-      '${AppConfig.categoryEndpoint}/$id',
-      data: _payload(row),
+      '${AppConfig.categoryEndpoint}/$id/sync',
+      data: {..._payload(row), 'clientModifiedDate': _timestamp(row)},
     );
   }
 
   @override
   Future<void> delete(String id, String lastModifiedUtc) async {
-    await _dio.delete<void>('${AppConfig.categoryEndpoint}/$id');
+    await _dio.delete<void>(
+      '${AppConfig.categoryEndpoint}/$id/sync',
+      data: {'clientModifiedDate': lastModifiedUtc},
+    );
   }
 
-  Map<String, Object?> _payload(Map<String, dynamic> row) =>
-      {
-        'name': row['name'] as String,
-        'code': row['code'] as String?,
-        'description': row['description'] as String?,
-        'isActive': _asBool(row['is_active']),
-      };
+  Map<String, Object?> _payload(Map<String, dynamic> row) => {
+    'name': row['name'] as String,
+    'code': row['code'] as String?,
+    'description': row['description'] as String?,
+    'isActive': _asBool(row['is_active']),
+  };
 
   bool _asBool(Object? value) => value == true || value == 1;
+
+  String _timestamp(Map<String, dynamic> row) =>
+      row['last_modified_utc'] as String;
 }
