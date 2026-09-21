@@ -25,7 +25,8 @@ public class JwtTokenGenerator : ITokenGenerator
 
     public string Generate(
         ApplicationUser user,
-        IList<string> roles
+        IList<string> roles,
+        string? shopIdOverride = null
     )
     {
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JwtSettings:Key"]!));
@@ -38,9 +39,13 @@ public class JwtTokenGenerator : ITokenGenerator
             new(ClaimTypes.Name, user.UserName!)
         };
 
-        if (!string.IsNullOrEmpty(user.ShopId))
+        var effectiveShopId = !string.IsNullOrWhiteSpace(shopIdOverride)
+            ? shopIdOverride
+            : user.ShopId;
+
+        if (!string.IsNullOrEmpty(effectiveShopId))
             // CurrentUser and DbContext tenant filters read this exact claim name.
-            claims.Add(new Claim(nameof(ApplicationUser.ShopId), user.ShopId));
+            claims.Add(new Claim(nameof(ApplicationUser.ShopId), effectiveShopId));
 
         if (!string.IsNullOrEmpty(user.LanguageId))
             // Language preference travels with the token so request services do not

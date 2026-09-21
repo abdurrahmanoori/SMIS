@@ -7,7 +7,6 @@ public sealed class StockCountStartCommandValidator : AbstractValidator<StockCou
 {
     public StockCountStartCommandValidator()
     {
-        RuleFor(command => command.Dto.ShopId).MaximumLength(450);
         RuleFor(command => command.Dto.Notes).MaximumLength(500);
         RuleForEach(command => command.Dto.StockBatchIds)
             .NotEmpty()

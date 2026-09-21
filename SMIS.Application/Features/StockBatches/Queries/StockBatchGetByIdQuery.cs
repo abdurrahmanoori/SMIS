@@ -30,7 +30,7 @@ namespace SMIS.Application.Features.StockBatches.Queries
             var shopId = _currentUser.GetShopId();
             var entity = await _stockBatchRepository.GetFirstOrDefaultAsync(batch =>
                 batch.Id == request.Id &&
-                (_currentUser.IsSuperAdmin() || batch.ShopId == shopId));
+                batch.ShopId == shopId);
             if (entity == null)
             {
                 return Result<StockBatchDto>.NotFoundResult(request.Id);

@@ -49,17 +49,18 @@ internal sealed class PurchasingCommandHandler :
         SupplierCreateCommand request,
         CancellationToken cancellationToken)
     {
-        if (!CanAccessShop(request.Dto.ShopId))
-            return Result<SupplierDto>.FailureResult("Forbidden", "You can only create suppliers for your own shop.");
+        var shopId = _currentUser.GetShopId();
+        if (string.IsNullOrWhiteSpace(shopId))
+            return Result<SupplierDto>.FailureResult("ShopContextRequired", "An active shop is required.");
 
         var duplicate = await _db.Suppliers.AnyAsync(
-            supplier => supplier.ShopId == request.Dto.ShopId && supplier.Name == request.Dto.Name,
+            supplier => supplier.ShopId == shopId && supplier.Name == request.Dto.Name,
             cancellationToken);
         if (duplicate)
             return Result<SupplierDto>.FailureResult("DuplicateSupplier", "A supplier with this name already exists in the shop.");
 
         var supplier = Supplier.Create(
-            request.Dto.ShopId,
+            shopId,
             request.Dto.Name,
             request.Dto.PhoneNumber,
             request.Dto.Notes);
@@ -74,8 +75,9 @@ internal sealed class PurchasingCommandHandler :
         CancellationToken cancellationToken)
     {
         var dto = request.Dto;
-        if (!CanAccessShop(dto.ShopId))
-            return Result<PurchaseOrderDto>.FailureResult("Forbidden", "You can only create purchase orders for your own shop.");
+        var shopId = _currentUser.GetShopId();
+        if (string.IsNullOrWhiteSpace(shopId))
+            return Result<PurchaseOrderDto>.FailureResult("ShopContextRequired", "An active shop is required.");
 
         var reservation = await _idempotency.ReserveAsync(
             "purchase-order:create",
@@ -85,7 +87,7 @@ internal sealed class PurchasingCommandHandler :
             return Failure<PurchaseOrderDto, bool>(reservation);
 
         var supplier = await _db.Suppliers.FirstOrDefaultAsync(
-            item => item.Id == dto.SupplierId && item.ShopId == dto.ShopId,
+            item => item.Id == dto.SupplierId && item.ShopId == shopId,
             cancellationToken);
         if (supplier is null || !supplier.IsActive)
             return Result<PurchaseOrderDto>.FailureResult(
@@ -101,7 +103,7 @@ internal sealed class PurchasingCommandHandler :
                 "A product unit can appear only once in a purchase order.");
 
         var order = PurchaseOrder.Create(
-            dto.ShopId,
+            shopId,
             dto.SupplierId,
             dto.OrderedAtUtc ?? DateTime.UtcNow,
             dto.ReferenceNumber,
@@ -116,7 +118,7 @@ internal sealed class PurchasingCommandHandler :
                         unit.ProductId == lineDto.ProductId,
                     cancellationToken);
 
-            if (productUnit?.Product is null || productUnit.Product.ShopId != dto.ShopId)
+            if (productUnit?.Product is null || productUnit.Product.ShopId != shopId)
                 return Result<PurchaseOrderDto>.FailureResult(
                     "PurchaseOrderProductMismatch",
                     "Every purchase-order product unit must belong to a product in the selected shop.");
@@ -283,7 +285,7 @@ internal sealed class PurchasingCommandHandler :
             .FirstOrDefaultAsync(order => order.Id == id, cancellationToken);
 
     private bool CanAccessShop(string shopId) =>
-        _currentUser.IsSuperAdmin() || string.Equals(shopId, _currentUser.GetShopId(), StringComparison.Ordinal);
+        string.Equals(shopId, _currentUser.GetShopId(), StringComparison.Ordinal);
 
     private static Result<TTarget> Failure<TTarget, TSource>(Result<TSource> source) => new()
     {

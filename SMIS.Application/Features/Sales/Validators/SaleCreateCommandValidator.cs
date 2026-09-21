@@ -8,10 +8,6 @@ public sealed class SaleCreateCommandValidator : AbstractValidator<SaleCreateCom
 {
     public SaleCreateCommandValidator()
     {
-        RuleFor(command => command.Dto.ShopId)
-            .NotEmpty()
-            .MaximumLength(450);
-
         RuleFor(command => command.Dto.Lines)
             .NotEmpty()
             .WithMessage("A sale must contain at least one line.");

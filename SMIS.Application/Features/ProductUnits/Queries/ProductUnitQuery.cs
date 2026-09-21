@@ -36,9 +36,8 @@ internal sealed class ProductUnitQueryHandler
     )
     {
         var shopId = _currentUser.GetShopId();
-        var isSuperAdmin = _currentUser.IsSuperAdmin();
         var query = _context.ProductUnits
-            .Where(x => isSuperAdmin || x.Product.ShopId == shopId)
+            .Where(x => x.Product.ShopId == shopId)
             .OrderBy(x => x.Product.Name)
             .ThenBy(x => x.UnitOfMeasure.Name)
             .Select(x => new ProductUnitDto

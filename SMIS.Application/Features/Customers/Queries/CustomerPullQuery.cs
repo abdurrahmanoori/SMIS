@@ -15,8 +15,8 @@ internal sealed class CustomerPullQueryHandler : IRequestHandler<CustomerPullQue
     public CustomerPullQueryHandler(ICustomerRepository repository, ICurrentUser currentUser, IMapper mapper) => (_repository, _currentUser, _mapper) = (repository, currentUser, mapper);
     public async Task<Result<List<CustomerDto>>> Handle(CustomerPullQuery request, CancellationToken cancellationToken)
     {
-        var shopId = _currentUser.GetShopId(); var isSuperAdmin = _currentUser.IsSuperAdmin(); var since = DateTimeService.NormalizeUtc(request.ChangedSince);
-        var customers = await _repository.GetAllAsync(c => c.LastModifiedUtc > since && (isSuperAdmin || c.ShopId == shopId), ignoreQueryFilters: true);
+        var shopId = _currentUser.GetShopId(); var since = DateTimeService.NormalizeUtc(request.ChangedSince);
+        var customers = await _repository.GetAllAsync(c => c.LastModifiedUtc > since && c.ShopId == shopId, ignoreQueryFilters: true);
         return Result<List<CustomerDto>>.SuccessResult(_mapper.Map<List<CustomerDto>>(customers));
     }
 }

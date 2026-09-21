@@ -48,7 +48,13 @@ class ShopController extends AsyncNotifier<ShopScreenState> {
 
   @override
   Future<ShopScreenState> build() async {
-    ref.watch(authControllerProvider.select((state) => state.session?.userId));
+    ref.watch(
+      authControllerProvider.select(
+        (state) => state.session == null
+            ? null
+            : '${state.session!.userId}:${state.session!.shopId}',
+      ),
+    );
     await _changesSubscription?.cancel();
     final changes = await _repository.watchChanges();
     _changesSubscription = changes

@@ -33,8 +33,7 @@ internal sealed class SaleGetByIdQueryHandler : IRequestHandler<SaleGetByIdQuery
     {
         var sale = await _sales.GetByIdWithDetailsAsync(request.Id, cancellationToken);
         if (sale is null ||
-            (!_currentUser.IsSuperAdmin() &&
-             !string.Equals(sale.ShopId, _currentUser.GetShopId(), StringComparison.Ordinal)))
+            !string.Equals(sale.ShopId, _currentUser.GetShopId(), StringComparison.Ordinal))
             return Result<SaleDto>.NotFoundResult(request.Id);
 
         var dto = _mapper.Map<SaleDto>(sale);

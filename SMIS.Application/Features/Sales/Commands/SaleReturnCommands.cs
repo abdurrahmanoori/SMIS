@@ -86,8 +86,7 @@ internal sealed class SaleReturnCommandHandler :
         if (sale is null)
             return Result<SaleReturnResultDto>.NotFoundResult(saleId);
 
-        if (!_currentUser.IsSuperAdmin() &&
-            !string.Equals(sale.ShopId, _currentUser.GetShopId(), StringComparison.Ordinal))
+        if (!string.Equals(sale.ShopId, _currentUser.GetShopId(), StringComparison.Ordinal))
             return Result<SaleReturnResultDto>.NotFoundResult(saleId);
 
         if (sale.Status == SaleStatus.Voided)

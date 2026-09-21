@@ -33,13 +33,17 @@ class UserProfile {
         .map((part) => part.trim())
         .where((part) => part.isNotEmpty)
         .join(' ');
-    return name.isNotEmpty ? name : (userName?.trim().isNotEmpty ?? false)
+    return name.isNotEmpty
+        ? name
+        : (userName?.trim().isNotEmpty ?? false)
         ? userName!
         : email ?? 'SMIS user';
   }
 
   String get initials {
-    final words = displayName.split(RegExp(r'\s+')).where((word) => word.isNotEmpty);
+    final words = displayName
+        .split(RegExp(r'\s+'))
+        .where((word) => word.isNotEmpty);
     final letters = words.take(2).map((word) => word[0].toUpperCase()).join();
     return letters.isEmpty ? '?' : letters;
   }
@@ -130,7 +134,6 @@ class ProfileUpdateDraft {
     required this.userName,
     required this.email,
     required this.languageId,
-    required this.shopId,
     this.phoneNumber,
     this.firstName,
     this.lastName,
@@ -139,7 +142,6 @@ class ProfileUpdateDraft {
   final String userName;
   final String email;
   final String languageId;
-  final String shopId;
   final String? phoneNumber;
   final String? firstName;
   final String? lastName;
@@ -147,7 +149,9 @@ class ProfileUpdateDraft {
   ProfileUpdateDraft normalized() {
     final normalizedUserName = userName.trim();
     if (normalizedUserName.isEmpty || normalizedUserName.length > 256) {
-      throw const ProfileValidationException('Username must be between 1 and 256 characters.');
+      throw const ProfileValidationException(
+        'Username must be between 1 and 256 characters.',
+      );
     }
     final normalizedEmail = email.trim();
     if (normalizedEmail.isEmpty || !normalizedEmail.contains('@')) {
@@ -157,15 +161,15 @@ class ProfileUpdateDraft {
     if (normalizedLanguageId.isEmpty) {
       throw const ProfileValidationException('Select a language.');
     }
-    final normalizedShopId = shopId.trim();
-    if (normalizedShopId.isEmpty) {
-      throw const ProfileValidationException('Your account does not have a shop assigned.');
-    }
     if (firstName != null && firstName!.trim().length > 100) {
-      throw const ProfileValidationException('First name must not exceed 100 characters.');
+      throw const ProfileValidationException(
+        'First name must not exceed 100 characters.',
+      );
     }
     if (lastName != null && lastName!.trim().length > 100) {
-      throw const ProfileValidationException('Last name must not exceed 100 characters.');
+      throw const ProfileValidationException(
+        'Last name must not exceed 100 characters.',
+      );
     }
     final normalizedPhone = phoneNumber?.trim();
     if (normalizedPhone != null && normalizedPhone.isNotEmpty) {
@@ -179,7 +183,6 @@ class ProfileUpdateDraft {
       userName: normalizedUserName,
       email: normalizedEmail,
       languageId: normalizedLanguageId,
-      shopId: normalizedShopId,
       phoneNumber: normalizedPhone,
       firstName: firstName?.trim(),
       lastName: lastName?.trim(),
@@ -190,7 +193,6 @@ class ProfileUpdateDraft {
     'userName': userName,
     'email': email,
     'languageId': languageId,
-    'shopId': shopId,
     if (phoneNumber?.isNotEmpty ?? false) 'phoneNumber': phoneNumber,
     if (firstName?.isNotEmpty ?? false) 'firstName': firstName,
     if (lastName?.isNotEmpty ?? false) 'lastName': lastName,
@@ -235,7 +237,9 @@ class ChangePasswordDraft {
       throw const ProfileValidationException('Current password is required.');
     }
     if (newPassword.length < 6) {
-      throw const ProfileValidationException('New password must be at least 6 characters.');
+      throw const ProfileValidationException(
+        'New password must be at least 6 characters.',
+      );
     }
     return ChangePasswordDraft(
       currentPassword: currentPassword,

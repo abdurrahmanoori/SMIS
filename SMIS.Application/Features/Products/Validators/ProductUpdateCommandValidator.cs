@@ -14,9 +14,6 @@ namespace SMIS.Application.Features.Products.Validators
                 .NotEmpty().WithMessage("Name is required")
                 .MaximumLength(200).WithMessage("Name must not exceed 200 characters");
 
-            RuleFor(x => x.ProductCreateDto.ShopId)
-                .NotEmpty().WithMessage("ShopId is required");
-
             RuleFor(x => x.ProductCreateDto.BaseUnitId)
                 .NotEmpty().WithMessage("BaseUnitId is required");
 

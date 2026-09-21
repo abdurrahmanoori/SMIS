@@ -12,5 +12,8 @@ public interface ITokenGenerator
     /// Generates a token (JWT, cookie ticket, etc.) for the authenticated user.
     /// Returns an empty string when the host does not use token-based auth.
     /// </summary>
-    string Generate(ApplicationUser user, IList<string> roles);
+    string Generate(
+        ApplicationUser user,
+        IList<string> roles,
+        string? shopIdOverride = null);
 }

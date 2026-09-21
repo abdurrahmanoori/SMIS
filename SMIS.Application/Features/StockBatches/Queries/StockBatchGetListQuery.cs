@@ -30,11 +30,8 @@ namespace SMIS.Application.Features.StockBatches.Queries
         public async Task<Result<PagedList<StockBatchDto>>> Handle(StockBatchGetListQuery request, CancellationToken cancellationToken)
         {
             var query = _stockBatchRepository.GetAllQueryable();
-            if (!_currentUser.IsSuperAdmin())
-            {
-                var shopId = _currentUser.GetShopId();
-                query = query.Where(batch => batch.ShopId == shopId);
-            }
+            var shopId = _currentUser.GetShopId();
+            query = query.Where(batch => batch.ShopId == shopId);
 
             var stockBatches = await query
                 .ToPagedList(request.PageNumber, request.PageSize);

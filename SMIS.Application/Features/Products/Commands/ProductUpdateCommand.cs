@@ -60,7 +60,6 @@ namespace SMIS.Application.Features.Products.Commands
 
             // Update existing entity using domain methods
             entity.SetName(request.ProductCreateDto.Name);
-            entity.SetShopId(request.ProductCreateDto.ShopId);
             if (baseUnitChanged)
             {
                 entity.ChangeBaseUnit(request.ProductCreateDto.BaseUnitId, hasStockOrConversions: false);
@@ -76,7 +75,7 @@ namespace SMIS.Application.Features.Products.Commands
             if (request.ProductCreateDto.IsActive) entity.Activate(); else entity.Deactivate();
             
             // Update name fields
-            var shop = await _shopRepository.GetByIdAsync(request.ProductCreateDto.ShopId);
+            var shop = await _shopRepository.GetByIdAsync(entity.ShopId);
             entity.ShopName = shop?.Name;
             
             var unit = await _unitOfMeasureRepository.GetByIdAsync(request.ProductCreateDto.BaseUnitId);

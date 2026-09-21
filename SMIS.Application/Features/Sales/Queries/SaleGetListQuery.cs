@@ -35,11 +35,8 @@ internal sealed class SaleGetListQueryHandler : IRequestHandler<SaleGetListQuery
     )
     {
         var query = _sales.GetAllQueryable(includeProperties: "Lines,Receivable.Payments");
-        if (!_currentUser.IsSuperAdmin())
-        {
-            var shopId = _currentUser.GetShopId();
-            query = query.Where(sale => sale.ShopId == shopId);
-        }
+        var shopId = _currentUser.GetShopId();
+        query = query.Where(sale => sale.ShopId == shopId);
 
         var page = await query
             .ToPagedList(request.PageNumber, request.PageSize);

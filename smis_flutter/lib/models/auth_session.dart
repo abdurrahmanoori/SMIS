@@ -15,6 +15,9 @@ class AuthSession {
   final List<String> roles;
   final String shopId;
 
+  bool get isSuperAdmin =>
+      roles.any((role) => role.trim().toLowerCase() == 'superadmin');
+
   AuthSession copyWith({String? userName, String? email}) => AuthSession(
     token: token,
     userId: userId,

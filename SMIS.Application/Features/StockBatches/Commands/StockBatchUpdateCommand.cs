@@ -45,8 +45,7 @@ namespace SMIS.Application.Features.StockBatches.Commands
                 return Result<StockBatchDto>.NotFoundResult(nameof(StockBatchDto.Id));
             }
 
-            if (!_currentUser.IsSuperAdmin() &&
-                !string.Equals(entity.ShopId, _currentUser.GetShopId(), StringComparison.Ordinal))
+            if (!string.Equals(entity.ShopId, _currentUser.GetShopId(), StringComparison.Ordinal))
             {
                 return Result<StockBatchDto>.NotFoundResult(nameof(StockBatchDto.Id));
             }

@@ -34,7 +34,7 @@ namespace SMIS.Application.Features.Categories.Commands
             if (entity == null)
                 return Result<Unit>.NotFoundResult(request?.Id);
 
-            if (!_currentUser.IsSuperAdmin() && entity.ShopId != _currentUser.GetShopId())
+            if (entity.ShopId != _currentUser.GetShopId())
                 return Result<Unit>.FailureResult("Forbidden", "You can only delete categories from your own shop");
 
             var productCount = await _productRepository.CountByCategoryIdAsync(

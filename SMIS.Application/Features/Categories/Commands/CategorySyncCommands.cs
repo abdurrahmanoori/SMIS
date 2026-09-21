@@ -342,8 +342,7 @@ internal static class CategorySyncRules
         ICurrentUser currentUser
     )
     {
-        return currentUser.IsSuperAdmin() ||
-               category.ShopId == currentUser.GetShopId();
+        return category.ShopId == currentUser.GetShopId();
     }
 
     public static void Apply(

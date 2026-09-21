@@ -4,7 +4,6 @@ namespace SMIS.Application.DTO.Sales;
 
 public sealed class SaleCreateDto
 {
-    public string ShopId { get; set; } = string.Empty;
     public string? CustomerId { get; set; }
     public SalePaymentType PaymentType { get; set; } = SalePaymentType.Cash;
     public DateTime? SaleDateUtc { get; set; }

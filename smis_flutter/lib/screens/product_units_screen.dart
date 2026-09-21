@@ -10,6 +10,7 @@ import '../data/data_exception.dart';
 import '../l10n/app_localizations.dart';
 import '../models/product_unit.dart';
 import '../widgets/app_drawer.dart';
+import '../widgets/active_shop_context.dart';
 import '../widgets/app_error_view.dart';
 import '../widgets/home_action.dart';
 import '../widgets/locale_action.dart';
@@ -76,6 +77,7 @@ class _ProductUnitsScreenState extends ConsumerState<ProductUnitsScreen>
                 ],
               ),
         actions: [
+          const ActiveShopAction(),
           IconButton(
             icon: Icon(_isSearching ? Icons.close : Icons.search),
             onPressed: _isSearching

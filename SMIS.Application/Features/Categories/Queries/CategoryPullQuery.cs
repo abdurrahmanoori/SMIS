@@ -26,11 +26,10 @@ namespace SMIS.Application.Features.Categories.Queries
         public async Task<Result<List<CategoryDto>>> Handle(CategoryPullQuery request, CancellationToken cancellationToken)
         {
             var shopId = _currentUser.GetShopId();
-            var isSuperAdmin = _currentUser.IsSuperAdmin();
             var changedSinceUtc =DateTimeService.NormalizeUtc(request.ChangedSince);
             var categories = await _categoryRepository.GetAllAsync(
                 filter: c => c.LastModifiedUtc > changedSinceUtc &&
-                             (isSuperAdmin || c.ShopId == shopId),
+                             c.ShopId == shopId,
                 ignoreQueryFilters: true);
 
             return Result<List<CategoryDto>>.SuccessResult(_mapper.Map<List<CategoryDto>>(categories));

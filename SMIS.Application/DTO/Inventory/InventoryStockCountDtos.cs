@@ -4,7 +4,6 @@ namespace SMIS.Application.DTO.Inventory;
 
 public sealed class StockCountStartDto
 {
-    public string? ShopId { get; set; }
     public List<string> StockBatchIds { get; set; } = [];
     public string? Notes { get; set; }
 }

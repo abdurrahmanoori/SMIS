@@ -432,17 +432,13 @@ internal sealed class InventoryReconciliationQueryHandler
 internal static class InventoryReportScope
 {
     // Reports repeat the same tenant boundary in one place. This prevents individual
-    // report handlers from accidentally omitting ShopId filtering while still allowing
-    // super administrators to inspect all shops.
+    // report handlers from accidentally omitting the active ShopId filtering.
     public static IQueryable<Product> Products(
         IApplicationDbContext db,
         ICurrentUser currentUser
     )
     {
-        var query = db.Products.AsQueryable();
-        return currentUser.IsSuperAdmin()
-            ? query
-            : query.Where(product => product.ShopId == currentUser.GetShopId());
+        return db.Products.Where(product => product.ShopId == currentUser.GetShopId());
     }
 
     public static IQueryable<StockBatch> Batches(
@@ -450,10 +446,7 @@ internal static class InventoryReportScope
         ICurrentUser currentUser
     )
     {
-        var query = db.StockBatches.AsQueryable();
-        return currentUser.IsSuperAdmin()
-            ? query
-            : query.Where(batch => batch.ShopId == currentUser.GetShopId());
+        return db.StockBatches.Where(batch => batch.ShopId == currentUser.GetShopId());
     }
 
     public static IQueryable<StockMovement> Movements(
@@ -461,10 +454,7 @@ internal static class InventoryReportScope
         ICurrentUser currentUser
     )
     {
-        var query = db.StockMovements.AsQueryable();
-        return currentUser.IsSuperAdmin()
-            ? query
-            : query.Where(movement => movement.ShopId == currentUser.GetShopId());
+        return db.StockMovements.Where(movement => movement.ShopId == currentUser.GetShopId());
     }
 }
 

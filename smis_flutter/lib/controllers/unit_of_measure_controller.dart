@@ -49,15 +49,11 @@ class UnitOfMeasureController extends AsyncNotifier<UnitOfMeasureScreenState> {
   UnitOfMeasurePowerSyncService get _syncService =>
       ref.read(unitOfMeasureSyncServiceProvider);
 
-  String get _shopId {
-    final session = ref.watch(authControllerProvider.select((s) => s.session));
-    if (session == null) throw StateError('User is not authenticated.');
-    return session.shopId;
-  }
-
   @override
   Future<UnitOfMeasureScreenState> build() async {
-    _shopId;
+    // UOM is global, but watch the active session context because PowerSync uses
+    // a separate SQLite file per user/shop to keep all local caches isolated.
+    ref.watch(authControllerProvider.select((s) => s.session?.shopId));
     await _changesSubscription?.cancel();
     final changes = await _repository.watchChanges();
     _changesSubscription = changes
@@ -128,7 +124,7 @@ class UnitOfMeasureController extends AsyncNotifier<UnitOfMeasureScreenState> {
   }
 
   Future<void> create(UnitOfMeasureDraft draft) async {
-    await _repository.create(draft, _shopId);
+    await _repository.create(draft);
     await reload();
   }
 
@@ -148,7 +144,7 @@ class UnitOfMeasureController extends AsyncNotifier<UnitOfMeasureScreenState> {
   Future<UnitOfMeasureSyncResult> syncNow() async {
     final current = state.value ?? await _load();
     state = AsyncData(current.copyWith(isSyncing: true));
-    final result = await _syncService.synchronize(shopId: _shopId, force: true);
+    final result = await _syncService.synchronize(force: true);
     if (kDebugMode && !result.success) {
       final details = result.failures
           .map((failure) => failure.toDevelopmentString())
@@ -166,10 +162,9 @@ class UnitOfMeasureController extends AsyncNotifier<UnitOfMeasureScreenState> {
     String? searchQuery,
     UnitOfMeasureSyncResult? lastSyncResult,
   }) async {
-    final shopId = _shopId;
     return UnitOfMeasureScreenState(
-      units: await _repository.getAll(shopId, searchQuery: searchQuery),
-      pendingCount: await _repository.getPendingCount(shopId),
+      units: await _repository.getAll(searchQuery: searchQuery),
+      pendingCount: await _repository.getPendingCount(),
       searchQuery: searchQuery ?? '',
       lastSyncResult: lastSyncResult,
     );
@@ -204,5 +199,5 @@ final unitOfMeasureLookupProvider = FutureProvider<List<UnitOfMeasure>>((
     authControllerProvider.select((state) => state.session),
   );
   if (session == null) return const <UnitOfMeasure>[];
-  return ref.watch(unitOfMeasureRepositoryProvider).getAll(session.shopId);
+  return ref.watch(unitOfMeasureRepositoryProvider).getAll();
 });

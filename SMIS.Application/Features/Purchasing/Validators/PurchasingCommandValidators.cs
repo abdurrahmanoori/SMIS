@@ -7,7 +7,6 @@ public sealed class SupplierCreateCommandValidator : AbstractValidator<SupplierC
 {
     public SupplierCreateCommandValidator()
     {
-        RuleFor(command => command.Dto.ShopId).NotEmpty().MaximumLength(450);
         RuleFor(command => command.Dto.Name).NotEmpty().MaximumLength(200);
         RuleFor(command => command.Dto.PhoneNumber).MaximumLength(50);
         RuleFor(command => command.Dto.Notes).MaximumLength(500);
@@ -18,7 +17,6 @@ public sealed class PurchaseOrderCreateCommandValidator : AbstractValidator<Purc
 {
     public PurchaseOrderCreateCommandValidator()
     {
-        RuleFor(command => command.Dto.ShopId).NotEmpty().MaximumLength(450);
         RuleFor(command => command.Dto.SupplierId).NotEmpty().MaximumLength(450);
         RuleFor(command => command.Dto.ReferenceNumber).MaximumLength(100);
         RuleFor(command => command.Dto.Notes).MaximumLength(500);

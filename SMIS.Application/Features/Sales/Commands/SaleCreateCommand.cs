@@ -61,6 +61,10 @@ internal sealed class SaleCreateCommandHandler : IRequestHandler<SaleCreateComma
     )
     {
         var dto = request.Dto;
+        var shopId = _currentUser.GetShopId();
+        if (string.IsNullOrWhiteSpace(shopId))
+            return Result<SaleDto>.FailureResult("ShopContextRequired", "An active shop is required.");
+
         var reservation = await _idempotency.ReserveAsync(
             "sale:create",
             dto.IdempotencyKey,
@@ -73,19 +77,15 @@ internal sealed class SaleCreateCommandHandler : IRequestHandler<SaleCreateComma
                 Errors = reservation.Errors
             };
 
-        var shop = await _shops.GetByIdAsync(dto.ShopId);
+        var shop = await _shops.GetByIdAsync(shopId);
         if (shop is null)
-            return Result<SaleDto>.FailureResult("ShopNotFound", "The selected shop does not exist.");
-
-        if (!_currentUser.IsSuperAdmin() &&
-            !string.Equals(dto.ShopId, _currentUser.GetShopId(), StringComparison.Ordinal))
-            return Result<SaleDto>.FailureResult("Forbidden", "You can only create sales for your own shop.");
+            return Result<SaleDto>.FailureResult("ShopNotFound", "The active shop does not exist.");
 
         Customer? customer = null;
         if (!string.IsNullOrWhiteSpace(dto.CustomerId))
         {
             customer = await _customers.GetByIdAsync(dto.CustomerId);
-            if (customer is null || customer.ShopId != dto.ShopId)
+            if (customer is null || customer.ShopId != shopId)
                 return Result<SaleDto>.FailureResult(
                     "CustomerNotFoundOrForbidden",
                     "The selected customer does not belong to the sale shop.");
@@ -108,14 +108,14 @@ internal sealed class SaleCreateCommandHandler : IRequestHandler<SaleCreateComma
                     "ProductUnitMismatch",
                     "A selected product unit does not belong to its sale-line product.");
 
-            if (productUnit.Product.ShopId != dto.ShopId)
+            if (productUnit.Product.ShopId != shopId)
                 return Result<SaleDto>.FailureResult(
                     "SaleLineShopMismatch",
                     "All sale-line products must belong to the sale shop.");
         }
 
         var saleDate = dto.SaleDateUtc ?? DateTime.UtcNow;
-        var sale = Sale.Create(dto.ShopId, dto.CustomerId, dto.PaymentType, saleDate, dto.Notes);
+        var sale = Sale.Create(shopId, dto.CustomerId, dto.PaymentType, saleDate, dto.Notes);
 
         foreach (var lineDto in dto.Lines)
         {

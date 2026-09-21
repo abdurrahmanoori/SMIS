@@ -4,7 +4,6 @@ namespace SMIS.Application.DTO.Purchasing;
 
 public sealed class SupplierCreateDto
 {
-    public string ShopId { get; set; } = string.Empty;
     public string Name { get; set; } = string.Empty;
     public string? PhoneNumber { get; set; }
     public string? Notes { get; set; }
@@ -22,7 +21,6 @@ public sealed class SupplierDto
 
 public sealed class PurchaseOrderCreateDto
 {
-    public string ShopId { get; set; } = string.Empty;
     public string SupplierId { get; set; } = string.Empty;
     public string? ReferenceNumber { get; set; }
     public DateTime? OrderedAtUtc { get; set; }

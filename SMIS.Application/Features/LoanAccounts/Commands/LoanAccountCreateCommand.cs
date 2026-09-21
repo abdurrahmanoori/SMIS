@@ -50,7 +50,7 @@ internal sealed class LoanAccountCreateCommandHandler
         if (sale is null)
             return Result<LoanAccountDto>.FailureResult("SaleNotFound", "The related sale does not exist.");
 
-        if (!_currentUser.IsSuperAdmin() && sale.ShopId != _currentUser.GetShopId())
+        if (sale.ShopId != _currentUser.GetShopId())
             return Result<LoanAccountDto>.FailureResult("Forbidden", "The sale belongs to another shop.");
 
         if (sale.PaymentType != SalePaymentType.Credit || string.IsNullOrWhiteSpace(sale.CustomerId))

@@ -29,7 +29,7 @@ internal sealed class StockMovementGetByIdQueryHandler
         var shopId = _currentUser.GetShopId();
         var movement = await _repository.GetFirstOrDefaultAsync(item =>
             item.Id == request.Id &&
-            (_currentUser.IsSuperAdmin() || item.ShopId == shopId));
+            item.ShopId == shopId);
         return movement is null
             ? Result<StockMovementDto>.NotFoundResult(request.Id)
             : Result<StockMovementDto>.SuccessResult(_mapper.Map<StockMovementDto>(movement));

@@ -11,6 +11,7 @@ class AuthState {
     this.savedSessions = const [],
     this.isRestoring = false,
     this.isSigningIn = false,
+    this.isSwitchingShop = false,
     this.error,
   });
 
@@ -18,17 +19,21 @@ class AuthState {
   final List<AuthSession> savedSessions;
   final bool isRestoring;
   final bool isSigningIn;
+  final bool isSwitchingShop;
   final Object? error;
 
   bool get isAuthenticated => session != null;
 
-  String? get errorMessage => error is AppException ? (error as AppException).message : error?.toString();
+  String? get errorMessage => error is AppException
+      ? (error as AppException).message
+      : error?.toString();
 
   AuthState copyWith({
     AuthSession? session,
     List<AuthSession>? savedSessions,
     bool? isRestoring,
     bool? isSigningIn,
+    bool? isSwitchingShop,
     Object? error,
     bool clearError = false,
     bool clearSession = false,
@@ -37,6 +42,7 @@ class AuthState {
     savedSessions: savedSessions ?? this.savedSessions,
     isRestoring: isRestoring ?? this.isRestoring,
     isSigningIn: isSigningIn ?? this.isSigningIn,
+    isSwitchingShop: isSwitchingShop ?? this.isSwitchingShop,
     error: clearError ? null : (error ?? this.error),
   );
 }
@@ -58,9 +64,12 @@ class AuthController extends Notifier<AuthState> {
       state = AuthState(session: session, savedSessions: savedSessions);
     } catch (error) {
       state = AuthState(
-        error: error is AppException 
-            ? error 
-            : RemotePermanentException('Unable to restore the saved login. Please sign in again.', cause: error),
+        error: error is AppException
+            ? error
+            : RemotePermanentException(
+                'Unable to restore the saved login. Please sign in again.',
+                cause: error,
+              ),
       );
     }
   }
@@ -80,7 +89,10 @@ class AuthController extends Notifier<AuthState> {
       state = state.copyWith(error: error, isSigningIn: false);
     } catch (error) {
       state = state.copyWith(
-        error: RemoteTransientException('Unable to sign in. Please try again.', cause: error),
+        error: RemoteTransientException(
+          'Unable to sign in. Please try again.',
+          cause: error,
+        ),
         isSigningIn: false,
       );
     }
@@ -92,10 +104,43 @@ class AuthController extends Notifier<AuthState> {
     state = state.copyWith(session: session);
   }
 
+  Future<AuthSession> switchShop(String shopId) async {
+    final current = state.session;
+    if (current == null) {
+      throw const AuthenticationException(
+        'You must be signed in to switch shops.',
+      );
+    }
+    if (!current.isSuperAdmin) {
+      throw const AuthenticationException(
+        'Only a SuperAdmin can switch the active shop.',
+      );
+    }
+    if (current.shopId == shopId) return current;
+
+    state = state.copyWith(isSwitchingShop: true, clearError: true);
+    try {
+      final session = await _api.switchShop(shopId);
+      await _sessionStore.save(session);
+      final savedSessions = await _sessionStore.readAll();
+      state = state.copyWith(
+        session: session,
+        savedSessions: savedSessions,
+        isSwitchingShop: false,
+      );
+      return session;
+    } catch (error) {
+      state = state.copyWith(error: error, isSwitchingShop: false);
+      rethrow;
+    }
+  }
+
   Future<void> removeAccount(String userId) async {
     await _sessionStore.deleteSession(userId);
     final savedSessions = await _sessionStore.readAll();
-    final activeSession = state.session?.userId == userId ? null : state.session;
+    final activeSession = state.session?.userId == userId
+        ? null
+        : state.session;
     state = state.copyWith(
       session: activeSession,
       savedSessions: savedSessions,
@@ -131,7 +176,10 @@ class AuthController extends Notifier<AuthState> {
     );
     await _sessionStore.save(updatedSession);
     final savedSessions = await _sessionStore.readAll();
-    state = state.copyWith(session: updatedSession, savedSessions: savedSessions);
+    state = state.copyWith(
+      session: updatedSession,
+      savedSessions: savedSessions,
+    );
   }
 }
 

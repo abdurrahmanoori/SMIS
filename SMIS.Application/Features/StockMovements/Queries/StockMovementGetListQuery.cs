@@ -30,11 +30,8 @@ internal sealed class StockMovementGetListQueryHandler
         CancellationToken cancellationToken)
     {
         var query = _repository.GetAllQueryable();
-        if (!_currentUser.IsSuperAdmin())
-        {
-            var shopId = _currentUser.GetShopId();
-            query = query.Where(movement => movement.ShopId == shopId);
-        }
+        var shopId = _currentUser.GetShopId();
+        query = query.Where(movement => movement.ShopId == shopId);
 
         var page = await query
             .OrderByDescending(movement => movement.OccurredAtUtc)

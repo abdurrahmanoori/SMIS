@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../controllers/profile_controller.dart';
-import '../data/profile_api.dart';
 import '../data/data_exception.dart';
 import '../models/user_profile.dart';
 import '../l10n/app_localizations.dart';
 import '../widgets/app_drawer.dart';
+import '../widgets/active_shop_context.dart';
 import '../widgets/app_error_view.dart';
 import '../widgets/theme_mode_action.dart';
 import '../widgets/locale_action.dart';
@@ -23,9 +23,11 @@ class ProfileScreen extends ConsumerWidget {
       appBar: AppBar(
         title: Text(context.l10n.text('My profile')),
         actions: [
+          const ActiveShopAction(),
           IconButton(
             tooltip: context.l10n.text('Refresh profile'),
-            onPressed: () => ref.read(profileControllerProvider.notifier).reload(),
+            onPressed: () =>
+                ref.read(profileControllerProvider.notifier).reload(),
             icon: const Icon(Icons.refresh),
           ),
           const HomeAction(),
@@ -41,7 +43,8 @@ class ProfileScreen extends ConsumerWidget {
           error: (error, stackTrace) => AppErrorView(
             error: error,
             stackTrace: stackTrace,
-            onRetry: () => ref.read(profileControllerProvider.notifier).reload(),
+            onRetry: () =>
+                ref.read(profileControllerProvider.notifier).reload(),
           ),
           data: (user) => _ProfileContent(user: user),
         ),
@@ -199,7 +202,6 @@ class _ProfileEditCardState extends ConsumerState<_ProfileEditCard> {
               userName: _userName.text,
               email: _email.text,
               languageId: _languageId,
-              shopId: widget.user.shopId,
               firstName: _firstName.text,
               lastName: _lastName.text,
               phoneNumber: _phoneNumber.text,
@@ -221,10 +223,12 @@ class _ProfileEditCardState extends ConsumerState<_ProfileEditCard> {
     final languageState = ref.watch(profileLanguagesProvider);
     final languages = [...?languageState.value];
     if (!languages.any((language) => language.id == _languageId)) {
-      languages.add(ProfileLanguage(
-        id: _languageId,
-        name: context.l10n.text('Current language'),
-      ));
+      languages.add(
+        ProfileLanguage(
+          id: _languageId,
+          name: context.l10n.text('Current language'),
+        ),
+      );
     }
 
     return Card(
@@ -235,132 +239,143 @@ class _ProfileEditCardState extends ConsumerState<_ProfileEditCard> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-            Text(context.l10n.text('Personal details'), style: Theme.of(context).textTheme.titleLarge),
-            const SizedBox(height: 4),
-            Text(
-              context.l10n.text('Update the contact information associated with your account.'),
-              style: Theme.of(context).textTheme.bodyMedium,
-            ),
-            const SizedBox(height: 20),
-            LayoutBuilder(
-              builder: (context, constraints) {
-                final twoColumns = constraints.maxWidth >= 600;
-                final firstNameField = _NameField(
-                  controller: _firstName,
-                  label: context.l10n.text('First name'),
-                  enabled: !_isSaving,
-                );
-                final lastNameField = _NameField(
-                  controller: _lastName,
-                  label: context.l10n.text('Last name'),
-                  enabled: !_isSaving,
-                );
-                return twoColumns
-                    ? Row(
-                        children: [
-                          Expanded(child: firstNameField),
-                          const SizedBox(width: 16),
-                          Expanded(child: lastNameField),
-                        ],
-                      )
-                    : Column(
-                        children: [
-                          firstNameField,
-                          const SizedBox(height: 16),
-                          lastNameField,
-                        ],
-                      );
-              },
-            ),
-            const SizedBox(height: 16),
-            TextFormField(
-              controller: _userName,
-              enabled: !_isSaving,
-              autofillHints: const [AutofillHints.username],
-              decoration: InputDecoration(
-                labelText: context.l10n.text('Username'),
-                prefixIcon: const Icon(Icons.account_circle_outlined),
+              Text(
+                context.l10n.text('Personal details'),
+                style: Theme.of(context).textTheme.titleLarge,
               ),
-              validator: (value) {
-                final userName = value?.trim() ?? '';
-                if (userName.isEmpty || userName.length > 256) {
-                  return context.l10n.text('Username must be between 1 and 256 characters.');
-                }
-                return null;
-              },
-            ),
-            const SizedBox(height: 16),
-            DropdownButtonFormField<String>(
-              value: _languageId,
-              isExpanded: true,
-              decoration: InputDecoration(
-                labelText: context.l10n.text('Language'),
-                prefixIcon: const Icon(Icons.language_outlined),
-                helperText: languageState.hasError
-                    ? context.l10n.text('Unable to load languages. Your current selection will be kept.')
+              const SizedBox(height: 4),
+              Text(
+                context.l10n.text(
+                  'Update the contact information associated with your account.',
+                ),
+                style: Theme.of(context).textTheme.bodyMedium,
+              ),
+              const SizedBox(height: 20),
+              LayoutBuilder(
+                builder: (context, constraints) {
+                  final twoColumns = constraints.maxWidth >= 600;
+                  final firstNameField = _NameField(
+                    controller: _firstName,
+                    label: context.l10n.text('First name'),
+                    enabled: !_isSaving,
+                  );
+                  final lastNameField = _NameField(
+                    controller: _lastName,
+                    label: context.l10n.text('Last name'),
+                    enabled: !_isSaving,
+                  );
+                  return twoColumns
+                      ? Row(
+                          children: [
+                            Expanded(child: firstNameField),
+                            const SizedBox(width: 16),
+                            Expanded(child: lastNameField),
+                          ],
+                        )
+                      : Column(
+                          children: [
+                            firstNameField,
+                            const SizedBox(height: 16),
+                            lastNameField,
+                          ],
+                        );
+                },
+              ),
+              const SizedBox(height: 16),
+              TextFormField(
+                controller: _userName,
+                enabled: !_isSaving,
+                autofillHints: const [AutofillHints.username],
+                decoration: InputDecoration(
+                  labelText: context.l10n.text('Username'),
+                  prefixIcon: const Icon(Icons.account_circle_outlined),
+                ),
+                validator: (value) {
+                  final userName = value?.trim() ?? '';
+                  if (userName.isEmpty || userName.length > 256) {
+                    return context.l10n.text(
+                      'Username must be between 1 and 256 characters.',
+                    );
+                  }
+                  return null;
+                },
+              ),
+              const SizedBox(height: 16),
+              DropdownButtonFormField<String>(
+                value: _languageId,
+                isExpanded: true,
+                decoration: InputDecoration(
+                  labelText: context.l10n.text('Language'),
+                  prefixIcon: const Icon(Icons.language_outlined),
+                  helperText: languageState.hasError
+                      ? context.l10n.text(
+                          'Unable to load languages. Your current selection will be kept.',
+                        )
+                      : null,
+                ),
+                items: languages
+                    .map(
+                      (language) => DropdownMenuItem<String>(
+                        value: language.id,
+                        child: Text(context.l10n.text(language.label)),
+                      ),
+                    )
+                    .toList(growable: false),
+                onChanged: _isSaving || languageState.isLoading
+                    ? null
+                    : (value) {
+                        if (value != null) setState(() => _languageId = value);
+                      },
+                validator: (value) => value == null || value.isEmpty
+                    ? context.l10n.text('Select a language.')
                     : null,
               ),
-              items: languages
-                  .map(
-                    (language) => DropdownMenuItem<String>(
-                      value: language.id,
-                      child: Text(context.l10n.text(language.label)),
-                    ),
-                  )
-                  .toList(growable: false),
-              onChanged: _isSaving || languageState.isLoading
-                  ? null
-                  : (value) {
-                      if (value != null) setState(() => _languageId = value);
-                    },
-              validator: (value) => value == null || value.isEmpty
-                  ? context.l10n.text('Select a language.')
-                  : null,
-            ),
-            const SizedBox(height: 16),
-            TextFormField(
-              controller: _email,
-              enabled: !_isSaving,
-              keyboardType: TextInputType.emailAddress,
-              autofillHints: const [AutofillHints.email],
-              decoration: InputDecoration(
-                labelText: context.l10n.text('Email'),
-                prefixIcon: const Icon(Icons.email_outlined),
+              const SizedBox(height: 16),
+              TextFormField(
+                controller: _email,
+                enabled: !_isSaving,
+                keyboardType: TextInputType.emailAddress,
+                autofillHints: const [AutofillHints.email],
+                decoration: InputDecoration(
+                  labelText: context.l10n.text('Email'),
+                  prefixIcon: const Icon(Icons.email_outlined),
+                ),
+                validator: (value) {
+                  final email = value?.trim() ?? '';
+                  if (email.isEmpty || !email.contains('@')) {
+                    return context.l10n.text('Enter a valid email address.');
+                  }
+                  return null;
+                },
               ),
-              validator: (value) {
-                final email = value?.trim() ?? '';
-                if (email.isEmpty || !email.contains('@')) {
-                  return context.l10n.text('Enter a valid email address.');
-                }
-                return null;
-              },
-            ),
-            const SizedBox(height: 16),
-            TextFormField(
-              controller: _phoneNumber,
-              enabled: !_isSaving,
-              keyboardType: TextInputType.phone,
-              autofillHints: const [AutofillHints.telephoneNumber],
-              decoration: InputDecoration(
-                labelText: context.l10n.text('Phone number'),
-                prefixIcon: const Icon(Icons.phone_outlined),
-                helperText: context.l10n.text('Optional. The server keeps the current value when left blank.'),
+              const SizedBox(height: 16),
+              TextFormField(
+                controller: _phoneNumber,
+                enabled: !_isSaving,
+                keyboardType: TextInputType.phone,
+                autofillHints: const [AutofillHints.telephoneNumber],
+                decoration: InputDecoration(
+                  labelText: context.l10n.text('Phone number'),
+                  prefixIcon: const Icon(Icons.phone_outlined),
+                  helperText: context.l10n.text(
+                    'Optional. The server keeps the current value when left blank.',
+                  ),
+                ),
               ),
-            ),
-            const SizedBox(height: 20),
-            Align(
-              alignment: AlignmentDirectional.centerEnd,
-              child: FilledButton.icon(
-                onPressed: _isSaving ? null : _save,
-                icon: _isSaving
-                    ? const SizedBox.square(
-                        dimension: 18,
-                        child: CircularProgressIndicator(strokeWidth: 2),
-                      )
-                    : const Icon(Icons.save_outlined),
-                label: Text(context.l10n.text('Save changes')),
+              const SizedBox(height: 20),
+              Align(
+                alignment: AlignmentDirectional.centerEnd,
+                child: FilledButton.icon(
+                  onPressed: _isSaving ? null : _save,
+                  icon: _isSaving
+                      ? const SizedBox.square(
+                          dimension: 18,
+                          child: CircularProgressIndicator(strokeWidth: 2),
+                        )
+                      : const Icon(Icons.save_outlined),
+                  label: Text(context.l10n.text('Save changes')),
+                ),
               ),
-            ),
             ],
           ),
         ),
@@ -387,10 +402,9 @@ class _NameField extends StatelessWidget {
     textCapitalization: TextCapitalization.words,
     decoration: InputDecoration(labelText: label),
     validator: (value) => (value?.trim().length ?? 0) > 100
-        ? context.l10n.text(
-            '{field} must not exceed 100 characters.',
-            {'field': label},
-          )
+        ? context.l10n.text('{field} must not exceed 100 characters.', {
+            'field': label,
+          })
         : null,
   );
 }
@@ -422,7 +436,8 @@ class _ChangePasswordDialog extends ConsumerStatefulWidget {
   const _ChangePasswordDialog();
 
   @override
-  ConsumerState<_ChangePasswordDialog> createState() => _ChangePasswordDialogState();
+  ConsumerState<_ChangePasswordDialog> createState() =>
+      _ChangePasswordDialogState();
 }
 
 class _ChangePasswordDialogState extends ConsumerState<_ChangePasswordDialog> {
@@ -485,7 +500,9 @@ class _ChangePasswordDialogState extends ConsumerState<_ChangePasswordDialog> {
               label: context.l10n.text('New password'),
               enabled: !_isSaving,
               validator: (value) => (value?.length ?? 0) < 6
-                  ? context.l10n.text('New password must be at least 6 characters.')
+                  ? context.l10n.text(
+                      'New password must be at least 6 characters.',
+                    )
                   : null,
             ),
             const SizedBox(height: 16),
@@ -508,7 +525,9 @@ class _ChangePasswordDialogState extends ConsumerState<_ChangePasswordDialog> {
       ),
       FilledButton(
         onPressed: _isSaving ? null : _save,
-        child: Text(context.l10n.text(_isSaving ? 'Saving…' : 'Change password')),
+        child: Text(
+          context.l10n.text(_isSaving ? 'Saving…' : 'Change password'),
+        ),
       ),
     ],
   );
@@ -533,7 +552,8 @@ class _PasswordField extends StatelessWidget {
     enabled: enabled,
     obscureText: true,
     decoration: InputDecoration(labelText: label),
-    validator: validator ??
+    validator:
+        validator ??
         (value) => (value?.isEmpty ?? true)
             ? context.l10n.text('{field} is required.', {'field': label})
             : null,
@@ -552,26 +572,53 @@ class _AccountDetailsCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(context.l10n.text('Account information'), style: Theme.of(context).textTheme.titleLarge),
+          Text(
+            context.l10n.text('Account information'),
+            style: Theme.of(context).textTheme.titleLarge,
+          ),
           const SizedBox(height: 12),
-          _DetailRow(label: context.l10n.text('User ID'), value: user.id, selectable: true),
-          _DetailRow(label: context.l10n.text('Username'), value: user.userName ?? context.l10n.text('Not set')),
-          _DetailRow(label: context.l10n.text('Language ID'), value: user.languageId),
+          _DetailRow(
+            label: context.l10n.text('User ID'),
+            value: user.id,
+            selectable: true,
+          ),
+          _DetailRow(
+            label: context.l10n.text('Username'),
+            value: user.userName ?? context.l10n.text('Not set'),
+          ),
+          _DetailRow(
+            label: context.l10n.text('Language ID'),
+            value: user.languageId,
+          ),
           _DetailRow(
             label: context.l10n.text('Email verification'),
-            value: context.l10n.text(user.emailConfirmed ? 'Confirmed' : 'Not confirmed'),
-            icon: user.emailConfirmed ? Icons.verified_outlined : Icons.pending_outlined,
+            value: context.l10n.text(
+              user.emailConfirmed ? 'Confirmed' : 'Not confirmed',
+            ),
+            icon: user.emailConfirmed
+                ? Icons.verified_outlined
+                : Icons.pending_outlined,
           ),
           _DetailRow(
             label: context.l10n.text('Phone verification'),
-            value: context.l10n.text(user.phoneNumberConfirmed ? 'Confirmed' : 'Not confirmed'),
-            icon: user.phoneNumberConfirmed ? Icons.verified_outlined : Icons.pending_outlined,
+            value: context.l10n.text(
+              user.phoneNumberConfirmed ? 'Confirmed' : 'Not confirmed',
+            ),
+            icon: user.phoneNumberConfirmed
+                ? Icons.verified_outlined
+                : Icons.pending_outlined,
           ),
           _DetailRow(
             label: context.l10n.text('Roles'),
-            value: user.roles.isEmpty ? context.l10n.text('No assigned roles') : user.roles.join(', '),
+            value: user.roles.isEmpty
+                ? context.l10n.text('No assigned roles')
+                : user.roles.join(', '),
           ),
-          _DetailRow(label: context.l10n.text('Shop ID'), value: user.shopId, selectable: true),
+          _DetailRow(
+            label: context.l10n.text('Shop ID'),
+            value: user.shopId,
+            selectable: true,
+          ),
         ],
       ),
     ),
@@ -590,18 +637,28 @@ class _ShopDetailsCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(context.l10n.text('Shop'), style: Theme.of(context).textTheme.titleLarge),
+          Text(
+            context.l10n.text('Shop'),
+            style: Theme.of(context).textTheme.titleLarge,
+          ),
           const SizedBox(height: 12),
           _DetailRow(label: context.l10n.text('Name'), value: shop.name),
-          _DetailRow(label: context.l10n.text('Shop ID'), value: shop.id, selectable: true),
+          _DetailRow(
+            label: context.l10n.text('Shop ID'),
+            value: shop.id,
+            selectable: true,
+          ),
           if (shop.shopType case final value?)
             _DetailRow(
               label: context.l10n.text('Type'),
               value: _localizedShopType(context, value),
             ),
-          if (shop.address case final value?) _DetailRow(label: context.l10n.text('Address'), value: value),
-          if (shop.phoneNumber case final value?) _DetailRow(label: context.l10n.text('Phone'), value: value),
-          if (shop.email case final value?) _DetailRow(label: context.l10n.text('Email'), value: value),
+          if (shop.address case final value?)
+            _DetailRow(label: context.l10n.text('Address'), value: value),
+          if (shop.phoneNumber case final value?)
+            _DetailRow(label: context.l10n.text('Phone'), value: value),
+          if (shop.email case final value?)
+            _DetailRow(label: context.l10n.text('Email'), value: value),
           if (shop.taxNumber case final value?)
             _DetailRow(label: context.l10n.text('Tax number'), value: value),
           if (shop.isActive case final value?)
@@ -654,9 +711,7 @@ class _DetailRow extends StatelessWidget {
                 Icon(icon, size: 18),
                 const SizedBox(width: 6),
               ],
-              Expanded(
-                child: selectable ? SelectableText(value) : Text(value),
-              ),
+              Expanded(child: selectable ? SelectableText(value) : Text(value)),
             ],
           ),
         ),

@@ -9,7 +9,6 @@ namespace SMIS.Application.DTO.Customers
         public string FirstName { get; set; } = string.Empty;
         [Translatable]
         public string? LastName { get; set; }
-        public string ShopId { get; set; } = string.Empty;
         public CustomerType CustomerType { get; set; } = CustomerType.Individual;
         [Translatable]
         public string? FatherName { get; set; }

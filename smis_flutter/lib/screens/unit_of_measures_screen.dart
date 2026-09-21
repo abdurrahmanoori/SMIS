@@ -9,6 +9,7 @@ import '../models/unit_of_measure.dart';
 import '../l10n/app_localizations.dart';
 import '../services/unit_of_measure_sync_service.dart';
 import '../widgets/app_drawer.dart';
+import '../widgets/active_shop_context.dart';
 import '../widgets/app_error_view.dart';
 import '../widgets/theme_mode_action.dart';
 import '../widgets/locale_action.dart';
@@ -19,7 +20,8 @@ class UnitOfMeasuresScreen extends ConsumerStatefulWidget {
   const UnitOfMeasuresScreen({super.key});
 
   @override
-  ConsumerState<UnitOfMeasuresScreen> createState() => _UnitOfMeasuresScreenState();
+  ConsumerState<UnitOfMeasuresScreen> createState() =>
+      _UnitOfMeasuresScreenState();
 }
 
 class _UnitOfMeasuresScreenState extends ConsumerState<UnitOfMeasuresScreen>
@@ -83,15 +85,19 @@ class _UnitOfMeasuresScreenState extends ConsumerState<UnitOfMeasuresScreen>
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(context.l10n.text('Units of measurement')),
-                  Text(context.l10n.text('Local-first inventory setup'), style: const TextStyle(fontSize: 12, fontWeight: FontWeight.normal)),
+                  Text(
+                    context.l10n.text('Local-first inventory setup'),
+                    style: const TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.normal,
+                    ),
+                  ),
                 ],
               ),
         actions: [
+          const ActiveShopAction(),
           if (_isSearching)
-            IconButton(
-              icon: const Icon(Icons.close),
-              onPressed: _stopSearching,
-            )
+            IconButton(icon: const Icon(Icons.close), onPressed: _stopSearching)
           else
             IconButton(
               icon: const Icon(Icons.search),
@@ -105,7 +111,10 @@ class _UnitOfMeasuresScreenState extends ConsumerState<UnitOfMeasuresScreen>
                 tooltip: context.l10n.text('Sync units of measurement'),
                 onPressed: value.isSyncing ? null : _sync,
                 icon: value.isSyncing
-                    ? const SizedBox.square(dimension: 18, child: CircularProgressIndicator(strokeWidth: 2))
+                    ? const SizedBox.square(
+                        dimension: 18,
+                        child: CircularProgressIndicator(strokeWidth: 2),
+                      )
                     : const Icon(Icons.sync),
               ),
             ),
@@ -127,13 +136,11 @@ class _UnitOfMeasuresScreenState extends ConsumerState<UnitOfMeasuresScreen>
               error: (error, stackTrace) => AppErrorView(
                 error: error,
                 stackTrace: stackTrace,
-                onRetry: () => ref.read(unitOfMeasureControllerProvider.notifier).reload(),
+                onRetry: () =>
+                    ref.read(unitOfMeasureControllerProvider.notifier).reload(),
               ),
-              data: (value) => _Content(
-                state: value, 
-                onEdit: _edit, 
-                onDelete: _delete,
-              ),
+              data: (value) =>
+                  _Content(state: value, onEdit: _edit, onDelete: _delete),
             ),
           ),
         ),
@@ -165,7 +172,9 @@ class _UnitOfMeasuresScreenState extends ConsumerState<UnitOfMeasuresScreen>
     );
     if (draft == null) return;
     await _runMutation(
-      () => ref.read(unitOfMeasureControllerProvider.notifier).updateUnit(unit.id, draft),
+      () => ref
+          .read(unitOfMeasureControllerProvider.notifier)
+          .updateUnit(unit.id, draft),
       context.l10n.text('Unit of measurement updated locally.'),
     );
   }
@@ -208,10 +217,21 @@ class _UnitOfMeasuresScreenState extends ConsumerState<UnitOfMeasuresScreen>
       context: context,
       builder: (context) => AlertDialog(
         title: Text(context.l10n.text('Delete unit of measurement?')),
-        content: Text(context.l10n.text('“{name}” will disappear now and its deletion will sync later.', {'name': unit.name})),
+        content: Text(
+          context.l10n.text(
+            '“{name}” will disappear now and its deletion will sync later.',
+            {'name': unit.name},
+          ),
+        ),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(context, false), child: Text(context.l10n.text('Cancel'))),
-          FilledButton.tonal(onPressed: () => Navigator.pop(context, true), child: Text(context.l10n.text('Delete offline'))),
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: Text(context.l10n.text('Cancel')),
+          ),
+          FilledButton.tonal(
+            onPressed: () => Navigator.pop(context, true),
+            child: Text(context.l10n.text('Delete offline')),
+          ),
         ],
       ),
     );
@@ -224,7 +244,9 @@ class _UnitOfMeasuresScreenState extends ConsumerState<UnitOfMeasuresScreen>
 
   Future<void> _sync() async {
     try {
-      final result = await ref.read(unitOfMeasureControllerProvider.notifier).syncNow();
+      final result = await ref
+          .read(unitOfMeasureControllerProvider.notifier)
+          .syncNow();
       if (!mounted || !result.success) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -240,11 +262,16 @@ class _UnitOfMeasuresScreenState extends ConsumerState<UnitOfMeasuresScreen>
     }
   }
 
-  Future<void> _runMutation(Future<void> Function() action, String successMessage) async {
+  Future<void> _runMutation(
+    Future<void> Function() action,
+    String successMessage,
+  ) async {
     try {
       await action();
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(successMessage)));
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(successMessage)));
     } catch (error, stackTrace) {
       if (mounted) AppErrorNotification.show(context, error, stackTrace);
     }
@@ -252,7 +279,11 @@ class _UnitOfMeasuresScreenState extends ConsumerState<UnitOfMeasuresScreen>
 }
 
 class _Content extends StatelessWidget {
-  const _Content({required this.state, required this.onEdit, required this.onDelete});
+  const _Content({
+    required this.state,
+    required this.onEdit,
+    required this.onDelete,
+  });
   final UnitOfMeasureScreenState state;
   final ValueChanged<UnitOfMeasure> onEdit;
   final ValueChanged<UnitOfMeasure> onDelete;
@@ -270,7 +301,11 @@ class _Content extends StatelessWidget {
                 separatorBuilder: (_, _) => const SizedBox(height: 10),
                 itemBuilder: (context, index) {
                   final unit = state.units[index];
-                  return _UnitCard(unit: unit, onEdit: () => onEdit(unit), onDelete: () => onDelete(unit));
+                  return _UnitCard(
+                    unit: unit,
+                    onEdit: () => onEdit(unit),
+                    onDelete: () => onDelete(unit),
+                  );
                 },
               ),
       ),
@@ -286,15 +321,7 @@ class _SyncSummary extends StatelessWidget {
     final colors = Theme.of(context).colorScheme;
     final summary =
         '${context.l10n.syncMessage(result.message)} '
-        '${context.l10n.text(
-          'Pulled {pulled}, pushed {pushed}, conflicts resolved {conflicts}, pending {pending}.',
-          {
-            'pulled': result.pulled,
-            'pushed': result.pushed,
-            'conflicts': result.conflictsResolved,
-            'pending': result.pending,
-          },
-        )}';
+        '${context.l10n.text('Pulled {pulled}, pushed {pushed}, conflicts resolved {conflicts}, pending {pending}.', {'pulled': result.pulled, 'pushed': result.pushed, 'conflicts': result.conflictsResolved, 'pending': result.pending})}';
     final message = kDebugMode && result.failures.isNotEmpty
         ? '$summary\n\n${result.failures.map((failure) => failure.toDevelopmentString()).join('\n\n')}'
         : summary;
@@ -302,11 +329,23 @@ class _SyncSummary extends StatelessWidget {
       width: double.infinity,
       margin: const EdgeInsets.fromLTRB(16, 12, 16, 0),
       padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(color: result.success ? colors.primaryContainer : colors.errorContainer, borderRadius: BorderRadius.circular(12)),
+      decoration: BoxDecoration(
+        color: result.success ? colors.primaryContainer : colors.errorContainer,
+        borderRadius: BorderRadius.circular(12),
+      ),
       child: ConstrainedBox(
-        constraints: BoxConstraints(maxHeight: kDebugMode && !result.success ? 280 : double.infinity),
+        constraints: BoxConstraints(
+          maxHeight: kDebugMode && !result.success ? 280 : double.infinity,
+        ),
         child: SingleChildScrollView(
-          child: SelectableText(message, style: TextStyle(color: result.success ? colors.onPrimaryContainer : colors.onErrorContainer)),
+          child: SelectableText(
+            message,
+            style: TextStyle(
+              color: result.success
+                  ? colors.onPrimaryContainer
+                  : colors.onErrorContainer,
+            ),
+          ),
         ),
       ),
     );
@@ -314,25 +353,44 @@ class _SyncSummary extends StatelessWidget {
 }
 
 class _UnitCard extends StatelessWidget {
-  const _UnitCard({required this.unit, required this.onEdit, required this.onDelete});
+  const _UnitCard({
+    required this.unit,
+    required this.onEdit,
+    required this.onDelete,
+  });
   final UnitOfMeasure unit;
   final VoidCallback onEdit;
   final VoidCallback onDelete;
   @override
   Widget build(BuildContext context) => Card(
     child: ListTile(
-      leading: CircleAvatar(child: Text(unit.symbol.characters.first.toUpperCase())),
-      title: Row(children: [Flexible(child: Text(unit.name)), const SizedBox(width: 8), _SyncStateIcon(unit: unit)]),
+      leading: CircleAvatar(
+        child: Text(unit.symbol.characters.first.toUpperCase()),
+      ),
+      title: Row(
+        children: [
+          Flexible(child: Text(unit.name)),
+          const SizedBox(width: 8),
+          _SyncStateIcon(unit: unit),
+        ],
+      ),
       subtitle: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: [Text(unit.symbol), if (unit.description case final description?) Text(description, maxLines: 2, overflow: TextOverflow.ellipsis)],
+        children: [
+          Text(unit.symbol),
+          if (unit.description case final description?)
+            Text(description, maxLines: 2, overflow: TextOverflow.ellipsis),
+        ],
       ),
       isThreeLine: unit.description != null,
       trailing: PopupMenuButton<String>(
         onSelected: (value) => value == 'edit' ? onEdit() : onDelete(),
         itemBuilder: (context) => [
           PopupMenuItem(value: 'edit', child: Text(context.l10n.text('Edit'))),
-          PopupMenuItem(value: 'delete', child: Text(context.l10n.text('Delete'))),
+          PopupMenuItem(
+            value: 'delete',
+            child: Text(context.l10n.text('Delete')),
+          ),
         ],
       ),
     ),
@@ -347,8 +405,26 @@ class _SyncStateIcon extends StatelessWidget {
     final failed = unit.syncStatus == UnitOfMeasureSyncStatus.failed;
     final synced = unit.syncStatus == UnitOfMeasureSyncStatus.synced;
     return Tooltip(
-      message: unit.lastSyncError ?? context.l10n.text(synced ? 'Synced' : failed ? 'Sync failed' : 'Waiting to sync'),
-      child: Icon(failed ? Icons.cloud_off_outlined : synced ? Icons.cloud_done_outlined : Icons.cloud_upload_outlined, size: 18, color: failed ? Theme.of(context).colorScheme.error : Theme.of(context).colorScheme.outline),
+      message:
+          unit.lastSyncError ??
+          context.l10n.text(
+            synced
+                ? 'Synced'
+                : failed
+                ? 'Sync failed'
+                : 'Waiting to sync',
+          ),
+      child: Icon(
+        failed
+            ? Icons.cloud_off_outlined
+            : synced
+            ? Icons.cloud_done_outlined
+            : Icons.cloud_upload_outlined,
+        size: 18,
+        color: failed
+            ? Theme.of(context).colorScheme.error
+            : Theme.of(context).colorScheme.outline,
+      ),
     );
   }
 }
@@ -365,11 +441,24 @@ class _EmptyView extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(isSearch ? Icons.search_off : Icons.straighten_outlined, size: 56),
+          Icon(
+            isSearch ? Icons.search_off : Icons.straighten_outlined,
+            size: 56,
+          ),
           const SizedBox(height: 12),
-          Text(context.l10n.text(isSearch ? 'No matching units' : 'No units of measurement yet')),
+          Text(
+            context.l10n.text(
+              isSearch ? 'No matching units' : 'No units of measurement yet',
+            ),
+          ),
           const SizedBox(height: 4),
-          Text(context.l10n.text(isSearch ? 'Try a different search term.' : 'Add one now—even while completely offline.')),
+          Text(
+            context.l10n.text(
+              isSearch
+                  ? 'Try a different search term.'
+                  : 'Add one now—even while completely offline.',
+            ),
+          ),
         ],
       ),
     ),

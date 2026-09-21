@@ -102,12 +102,9 @@ class UnitOfMeasurePowerSyncService {
   final AppPowerSyncStatusService _status;
   final UnitOfMeasurePowerSyncRepository _repository;
 
-  Future<UnitOfMeasureSyncResult> synchronize({
-    required String shopId,
-    bool force = false,
-  }) async {
+  Future<UnitOfMeasureSyncResult> synchronize({bool force = false}) async {
     final check = await _status.check();
-    final pending = await _repository.getPendingCount(shopId);
+    final pending = await _repository.getPendingCount();
     if (check.success) {
       return UnitOfMeasureSyncResult(
         success: true,

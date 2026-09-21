@@ -87,7 +87,7 @@ internal static class CustomerSyncRules
 {
     public static string NormalizeGuid(string value) => Guid.Parse(value).ToString("D");
     public static bool UserMatches(string? value, ICurrentUser currentUser) => string.IsNullOrWhiteSpace(value) || string.Equals(value.Trim(), currentUser.GetId(), StringComparison.Ordinal);
-    public static bool CanAccess(Customer customer, ICurrentUser currentUser) => currentUser.IsSuperAdmin() || customer.ShopId == currentUser.GetShopId();
+    public static bool CanAccess(Customer customer, ICurrentUser currentUser) => customer.ShopId == currentUser.GetShopId();
     public static void Apply(Customer customer, CustomerCreateDto dto)
     {
         customer.SetFirstName(dto.FirstName); customer.SetCustomerType(dto.CustomerType); customer.SetLastName(dto.LastName); customer.SetFatherName(dto.FatherName); customer.SetEmail(dto.Email); customer.SetPhoneNumber(dto.PhoneNumber); customer.SetAddress(dto.Address); customer.SetTaxNumber(dto.TaxNumber); customer.SetProvinceId(dto.ProvinceId); customer.SetDistrictId(dto.DistrictId);

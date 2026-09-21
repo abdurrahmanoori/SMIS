@@ -7,6 +7,7 @@ using SMIS.Application.DTO.Auth;
 using SMIS.Application.Features.Identity.Users.Commands;
 using SMIS.Application.Features.Identity.Users.Queries;
 using SMIS.Application.Features.Auth.Commands;
+using SMIS.Application.Common.Contants;
 using SMIS.Api.Controllers.Base;
 
 namespace SMIS.Api.Controllers
@@ -47,6 +48,17 @@ namespace SMIS.Api.Controllers
             HandleResultResponseOld(await Mediator.Send(new LoginCommand(dto)));
 
         /// <summary>
+        /// Changes the active shop context for a SuperAdmin and returns a fresh
+        /// access token whose ShopId claim is the selected shop.
+        /// </summary>
+        [Authorize(Roles = SD.Role_Super_Admin)]
+        [HttpPost("switch-shop")]
+        public async Task<ActionResult<LoginResponseDto>> SwitchShop(
+            SwitchShopDto dto
+        ) =>
+            HandleResultResponseOld(await Mediator.Send(new SwitchShopCommand(dto.ShopId)));
+
+        /// <summary>
         /// Creates a new user account.
         /// </summary>
         /// <remarks>
@@ -65,6 +77,7 @@ namespace SMIS.Api.Controllers
         /// <remarks>
         /// Set <c>includeShop</c> to true when shop information should be included with each user.
         /// </remarks>
+        [Authorize(Roles = SD.Role_Super_Admin)]
         [HttpGet]
         public async Task<ActionResult<PagedList<UserDto>>> GetAll(
             [FromQuery] int pageNumber = 1,
@@ -79,6 +92,7 @@ namespace SMIS.Api.Controllers
         /// <remarks>
         /// Set <c>includeShop</c> to true to include the related shop information.
         /// </remarks>
+        [Authorize(Roles = SD.Role_Super_Admin)]
         [HttpGet("{id}")]
         public async Task<ActionResult<UserDto>> GetById(
             string id,
@@ -99,6 +113,7 @@ namespace SMIS.Api.Controllers
         /// <summary>
         /// Deletes a user account.
         /// </summary>
+        [Authorize(Roles = SD.Role_Super_Admin)]
         [HttpDelete("{id}")]
         public async Task<ActionResult<Unit>> Delete(
             string id
@@ -125,6 +140,7 @@ namespace SMIS.Api.Controllers
         /// This is not an "add one role" endpoint. Roles missing from the submitted list are removed, and new names in the list are added.
         /// If a submitted role name does not already exist, the current implementation creates that role before assigning it.
         /// </remarks>
+        [Authorize(Roles = SD.Role_Super_Admin)]
         [HttpPost("{id}/roles")]
         public async Task<ActionResult<Unit>> AssignRoles(
             string id,
@@ -135,6 +151,7 @@ namespace SMIS.Api.Controllers
         /// <summary>
         /// Gets all roles currently assigned to a user.
         /// </summary>
+        [Authorize(Roles = SD.Role_Super_Admin)]
         [HttpGet("{id}/roles")]
         public async Task<ActionResult<IList<string>>> GetUserRoles(
             string id
@@ -146,6 +163,7 @@ namespace SMIS.Api.Controllers
         /// </summary>
         /// <param name="id">The user ID.</param>
         /// <param name="role">The role name to remove.</param>
+        [Authorize(Roles = SD.Role_Super_Admin)]
         [HttpDelete("{id}/roles/{role}")]
         public async Task<ActionResult<Unit>> RemoveRole(
             string id,

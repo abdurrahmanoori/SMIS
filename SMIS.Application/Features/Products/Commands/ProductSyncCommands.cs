@@ -199,7 +199,7 @@ internal static class ProductSyncRules
     public static bool CanAccess(
         Product product,
         ICurrentUser currentUser
-    ) => currentUser.IsSuperAdmin() || product.ShopId == currentUser.GetShopId();
+    ) => product.ShopId == currentUser.GetShopId();
 
     public static void Apply(
         Product product,

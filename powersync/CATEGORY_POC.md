@@ -27,6 +27,31 @@ The PowerSync JWT contains:
 - `aud`: PowerSync Development instance URL
 - `iat` / `exp`: short-lived token timestamps
 
+## Active shop context
+
+Regular users are permanently scoped to the `ShopId` in their normal SMIS
+access token. A SuperAdmin may change that context through the authenticated
+`POST /api/Account/switch-shop` endpoint. The backend validates that the target
+shop exists and is active, then issues a fresh normal SMIS access token whose
+`ShopId` claim is the selected shop. Flutter never edits JWT claims locally and
+the persisted `ApplicationUser.ShopId` is not changed by switching context.
+
+Shop-owned EF Core query filters always use the active token `ShopId`, including
+for SuperAdmin users. SuperAdmin privilege grants the ability to choose a shop;
+it does not bypass tenant filtering for ordinary Category/Product/ProductUnit
+operations.
+
+Flutter stores PowerSync databases per user and active shop:
+
+`smis_powersync_<userId>_<shopId>.db`
+
+Before switching, Flutter refuses the operation while the current context has
+pending PowerSync writes. It then closes the previous sync database, stores the
+new server-issued access token, opens the selected shop's database, reconnects
+PowerSync, waits for the new context to synchronize, and refreshes shop-scoped
+controllers. Global UnitOfMeasure data remains global even though each shop
+context has its own isolated local cache.
+
 Shop-scoped streams use the trusted `ShopId` claim. The Shop stream additionally
 uses the trusted `IsSuperAdmin` claim so platform administrators can receive all
 shops while ordinary users receive only their own shop.

@@ -14,19 +14,21 @@ class AppPowerSyncDatabase {
 
   final AuthSessionStore _sessionStore;
   PowerSyncDatabase? _database;
-  String? _databaseUserId;
-  String? _connectedUserId;
+  String? _databaseContextKey;
+  String? _connectedContextKey;
   Future<void>? _switchFuture;
 
   Future<PowerSyncDatabase> databaseForCurrentSession() async {
     final session = await _sessionStore.read();
     if (session == null) throw StateError('User is not authenticated.');
-    if (_database != null && _databaseUserId == session.userId) {
+    final contextKey = _contextKey(session.userId, session.shopId);
+    if (_database != null && _databaseContextKey == contextKey) {
       return _database!;
     }
 
     await (_switchFuture ??= _switchToUser(
       session.userId,
+      session.shopId,
     )).whenComplete(() => _switchFuture = null);
     return _database!;
   }
@@ -35,36 +37,46 @@ class AppPowerSyncDatabase {
     final session = await _sessionStore.read();
     if (session == null) throw StateError('User is not authenticated.');
     final database = await databaseForCurrentSession();
-    if (_connectedUserId == session.userId) return database;
+    final contextKey = _contextKey(session.userId, session.shopId);
+    if (_connectedContextKey == contextKey) return database;
 
     final authApi = PowerSyncAuthApi(sessionStore: _sessionStore);
     final writeApi = AppPowerSyncWriteApi(sessionStore: _sessionStore);
     await database.connect(
       connector: AppPowerSyncConnector(_sessionStore, authApi, writeApi),
     );
-    _connectedUserId = session.userId;
+    _connectedContextKey = contextKey;
     return database;
   }
 
-  Future<void> _switchToUser(String userId) async {
+  Future<int> pendingCountForCurrentContext() async {
+    final database = await databaseForCurrentSession();
+    return (await database.getUploadQueueStats()).count;
+  }
+
+  Future<void> _switchToUser(String userId, String shopId) async {
     final existing = _database;
     if (existing != null) await existing.close();
 
-    final fileName = 'smis_powersync_$userId.db';
+    final contextKey = _contextKey(userId, shopId);
+    final fileName = 'smis_powersync_$contextKey.db';
     final path = kIsWeb
         ? fileName
         : p.join((await getApplicationSupportDirectory()).path, fileName);
     final database = PowerSyncDatabase(schema: appPowerSyncSchema, path: path);
     await database.initialize();
     _database = database;
-    _databaseUserId = userId;
-    _connectedUserId = null;
+    _databaseContextKey = contextKey;
+    _connectedContextKey = null;
   }
+
+  String _contextKey(String userId, String shopId) =>
+      '${userId}_$shopId'.replaceAll(RegExp(r'[^A-Za-z0-9_-]'), '_');
 
   Future<void> close() async {
     await _database?.close();
     _database = null;
-    _databaseUserId = null;
-    _connectedUserId = null;
+    _databaseContextKey = null;
+    _connectedContextKey = null;
   }
 }

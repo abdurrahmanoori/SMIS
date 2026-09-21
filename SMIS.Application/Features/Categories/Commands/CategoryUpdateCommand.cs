@@ -40,7 +40,7 @@ namespace SMIS.Application.Features.Categories.Commands
 
             // Verify user can only update their own shop's categories
             var userShopId = _currentUser.GetShopId();
-            if (!_currentUser.IsSuperAdmin() && entity.ShopId != userShopId)
+            if (entity.ShopId != userShopId)
             {
                 return Result<CategoryDto>.FailureResult("You can only update categories from your own shop");
             }

@@ -11,6 +11,7 @@ import '../models/category.dart';
 import '../l10n/app_localizations.dart';
 import '../services/category_sync_service.dart';
 import '../widgets/app_drawer.dart';
+import '../widgets/active_shop_context.dart';
 import '../widgets/app_error_view.dart';
 import '../widgets/theme_mode_action.dart';
 import '../widgets/category_form_dialog.dart';
@@ -91,16 +92,17 @@ class _CategoriesScreenState extends ConsumerState<CategoriesScreen>
                   Text(context.l10n.text('Categories')),
                   Text(
                     context.l10n.text('Local-first inventory setup'),
-                    style: const TextStyle(fontSize: 12, fontWeight: FontWeight.normal),
+                    style: const TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.normal,
+                    ),
                   ),
                 ],
               ),
         actions: [
+          const ActiveShopAction(),
           if (_isSearching)
-            IconButton(
-              icon: const Icon(Icons.close),
-              onPressed: _stopSearching,
-            )
+            IconButton(icon: const Icon(Icons.close), onPressed: _stopSearching)
           else
             IconButton(
               icon: const Icon(Icons.search),
@@ -379,15 +381,7 @@ class _SyncSummary extends StatelessWidget {
     final successful = result.success;
     final summary =
         '${context.l10n.syncMessage(result.message)} '
-        '${context.l10n.text(
-          'Pulled {pulled}, pushed {pushed}, conflicts resolved {conflicts}, pending {pending}.',
-          {
-            'pulled': result.pulled,
-            'pushed': result.pushed,
-            'conflicts': result.conflictsResolved,
-            'pending': result.pending,
-          },
-        )}';
+        '${context.l10n.text('Pulled {pulled}, pushed {pushed}, conflicts resolved {conflicts}, pending {pending}.', {'pulled': result.pulled, 'pushed': result.pushed, 'conflicts': result.conflictsResolved, 'pending': result.pending})}';
     final displayMessage = kDebugMode && result.failures.isNotEmpty
         ? '$summary\n\n${result.failures.map((failure) => failure.toDevelopmentString()).join('\n\n')}'
         : summary;
@@ -474,7 +468,9 @@ class _CategoryCard extends StatelessWidget {
                     ),
                   const SizedBox(height: 4),
                   Text(
-                    context.l10n.text(category.isActive ? 'Active' : 'Inactive'),
+                    context.l10n.text(
+                      category.isActive ? 'Active' : 'Inactive',
+                    ),
                     style: TextStyle(
                       color: category.isActive
                           ? colors.primary
@@ -550,9 +546,19 @@ class _EmptyView extends StatelessWidget {
         children: [
           Icon(isSearch ? Icons.search_off : Icons.category_outlined, size: 56),
           const SizedBox(height: 12),
-          Text(context.l10n.text(isSearch ? 'No matching categories' : 'No categories yet')),
+          Text(
+            context.l10n.text(
+              isSearch ? 'No matching categories' : 'No categories yet',
+            ),
+          ),
           const SizedBox(height: 4),
-          Text(context.l10n.text(isSearch ? 'Try a different search term.' : 'Add one now—even while completely offline.')),
+          Text(
+            context.l10n.text(
+              isSearch
+                  ? 'Try a different search term.'
+                  : 'Add one now—even while completely offline.',
+            ),
+          ),
         ],
       ),
     ),

@@ -49,9 +49,7 @@ internal sealed class StockCountCommandHandler :
         StockCountStartCommand request,
         CancellationToken cancellationToken)
     {
-        var shopId = _currentUser.IsSuperAdmin()
-            ? request.Dto.ShopId
-            : _currentUser.GetShopId();
+        var shopId = _currentUser.GetShopId();
 
         if (string.IsNullOrWhiteSpace(shopId))
             return Result<StockCountSessionDto>.FailureResult(

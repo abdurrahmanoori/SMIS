@@ -7,6 +7,7 @@ using SMIS.Application.Extensions;
 using SMIS.Application.Repositories.Base;
 using SMIS.Application.Repositories.Localization;
 using SMIS.Application.Repositories.Shops;
+using SMIS.Application.Identity.IServices;
 using SMIS.Domain.Entities.Identity.Entity;
 
 namespace SMIS.Application.Features.Identity.Users.Commands
@@ -21,6 +22,7 @@ namespace SMIS.Application.Features.Identity.Users.Commands
         private readonly RoleManager<ApplicationRole> _roleManager;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
+        private readonly ICurrentUser _currentUser;
 
         public UserUpdateCommandHandler(
             ITranslationKeyRepository translationKeyRepository,
@@ -28,7 +30,8 @@ namespace SMIS.Application.Features.Identity.Users.Commands
             UserManager<ApplicationUser> userManager,
             RoleManager<ApplicationRole> roleManager,
             IUnitOfWork unitOfWork,
-            IMapper mapper)
+            IMapper mapper,
+            ICurrentUser currentUser)
         {
             _translationKeyRepository = translationKeyRepository;
             _shopRepository = shopRepository;
@@ -36,10 +39,34 @@ namespace SMIS.Application.Features.Identity.Users.Commands
             _roleManager = roleManager;
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _currentUser = currentUser;
         }
 
         public async Task<Result<UserDto>> Handle(UserUpdateCommand request, CancellationToken cancellationToken)
         {
+            var isSuperAdmin = _currentUser.IsSuperAdmin();
+            if (!isSuperAdmin &&
+                !string.Equals(request.UserId, _currentUser.GetId(), StringComparison.Ordinal))
+            {
+                return Result<UserDto>.FailureResult(
+                    "Forbidden",
+                    "You can only update your own profile.");
+            }
+
+            if (!isSuperAdmin && request.UserUpdateDto.Roles is not null)
+            {
+                return Result<UserDto>.FailureResult(
+                    "Forbidden",
+                    "Only a SuperAdmin can change user roles.");
+            }
+
+            if (!isSuperAdmin && !string.IsNullOrWhiteSpace(request.UserUpdateDto.ShopId))
+            {
+                return Result<UserDto>.FailureResult(
+                    "Forbidden",
+                    "Only a SuperAdmin can change a user's assigned shop.");
+            }
+
             var user = await _userManager.FindByIdAsync(request.UserId);
             if (user == null) return Result<UserDto>.NotFoundResult(request.UserId);
 
@@ -50,7 +77,19 @@ namespace SMIS.Application.Features.Identity.Users.Commands
             if (!string.IsNullOrWhiteSpace(request.UserUpdateDto.PhoneNumber)) user.SetPhoneNumber(request.UserUpdateDto.PhoneNumber);
             if (!string.IsNullOrWhiteSpace(request.UserUpdateDto.FirstName)) user.SetFirstName(request.UserUpdateDto.FirstName);
             if (!string.IsNullOrWhiteSpace(request.UserUpdateDto.LastName)) user.SetLastName(request.UserUpdateDto.LastName);
-            if (!string.IsNullOrWhiteSpace(request.UserUpdateDto.ShopId)) user.SetShopId(request.UserUpdateDto.ShopId);
+            if (isSuperAdmin && !string.IsNullOrWhiteSpace(request.UserUpdateDto.ShopId))
+            {
+                var assignedShop = await _shopRepository.GetByIdIncludingDeletedAsync(
+                    request.UserUpdateDto.ShopId,
+                    cancellationToken);
+                if (assignedShop is null || assignedShop.IsDeleted || !assignedShop.IsActive)
+                {
+                    return Result<UserDto>.FailureResult(
+                        "InvalidShop",
+                        "The assigned shop does not exist or is inactive.");
+                }
+                user.SetShopId(assignedShop.Id);
+            }
             if (!string.IsNullOrWhiteSpace(request.UserUpdateDto.LanguageId)) user.SetLanguageId(request.UserUpdateDto.LanguageId);
 
             // Update shop name
@@ -67,7 +106,7 @@ namespace SMIS.Application.Features.Identity.Users.Commands
                 }).ToList());
             }
 
-            if (request.UserUpdateDto.Roles != null)
+            if (isSuperAdmin && request.UserUpdateDto.Roles != null)
             {
                 var currentRoles = await _userManager.GetRolesAsync(user);
                 var toRemove = currentRoles.Except(request.UserUpdateDto.Roles).ToArray();

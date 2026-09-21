@@ -28,10 +28,9 @@ internal sealed class ProductPullQueryHandler : IRequestHandler<ProductPullQuery
     )
     {
         var shopId = _currentUser.GetShopId();
-        var isSuperAdmin = _currentUser.IsSuperAdmin();
         var since = DateTimeService.NormalizeUtc(request.ChangedSince);
         var products =
-            await _repository.GetAllAsync(p => p.LastModifiedUtc > since && (isSuperAdmin || p.ShopId == shopId),
+            await _repository.GetAllAsync(p => p.LastModifiedUtc > since && p.ShopId == shopId,
                 ignoreQueryFilters: true);
         return Result<List<ProductDto>>.SuccessResult(_mapper.Map<List<ProductDto>>(products));
     }

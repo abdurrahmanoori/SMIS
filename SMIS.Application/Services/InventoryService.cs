@@ -499,7 +499,7 @@ public sealed class InventoryService : IInventoryService
     private bool CanAccessShop(
         string shopId
     ) =>
-        _currentUser.IsSuperAdmin() || string.Equals(shopId, _currentUser.GetShopId(), StringComparison.Ordinal);
+        string.Equals(shopId, _currentUser.GetShopId(), StringComparison.Ordinal);
 
     private static decimal ConvertToBaseQuantity(
         decimal quantityEntered,

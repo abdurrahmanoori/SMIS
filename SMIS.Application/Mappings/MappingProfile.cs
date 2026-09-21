@@ -127,19 +127,6 @@ public class MappingProfile : Profile
                 opt => opt.MapFrom(src => AsUtc(src.LastModifiedUtc)))
             .ForMember(dest => dest.ConflictModifiedUtc,
                 opt => opt.MapFrom(src => src.GetConflictModifiedUtc()));
-        CreateMap<ProductCreateDto, Product>()
-            .ConstructUsing(src => Product.Create(
-                src.Name,
-                src.ShopId,
-                src.BaseUnitId,
-                src.SKU,
-                src.IsActive,
-                src.Description,
-                src.Barcode,
-                src.ImageUrl,
-                src.CategoryId
-            ));
-
         // UnitOfMeasure mapping
         CreateMap<UnitOfMeasure, UnitOfMeasureDto>()
             .ForMember(dest => dest.ClientCreatedDate, opt => opt.MapFrom(src => AsUtc(src.ClientCreatedDate)))
@@ -233,42 +220,8 @@ public class MappingProfile : Profile
                 opt => opt.MapFrom(src => AsUtc(src.LastModifiedUtc)))
             .ForMember(dest => dest.ConflictModifiedUtc,
                 opt => opt.MapFrom(src => src.GetConflictModifiedUtc()));
-        CreateMap<CustomerCreateDto, Customer>()
-            .ConstructUsing(src => Customer.Create(
-                src.FirstName,
-                src.ShopId,
-                src.CustomerType,
-                src.LastName,
-                src.FatherName,
-                src.Email,
-                src.PhoneNumber,
-                src.Address,
-                src.TaxNumber,
-                src.ProvinceId,
-                src.DistrictId,
-                src.IsActive
-            ));
-
         // ShopOwner mapping
         CreateMap<ShopOwner, ShopOwnerDto>().ReverseMap();
-        CreateMap<ShopOwnerCreateDto, ShopOwner>()
-            .ConstructUsing(src => ShopOwner.Create(
-                src.ApplicationUserId,
-                src.ShopId,
-                src.FirstName,
-                src.LastName,
-                src.PhoneNumber,
-                src.Email,
-                src.Address,
-                src.OwnershipPercentage
-            ))
-            .AfterMap((src, dest) =>
-            {
-                dest.SetNationalIdCardNumber(src.NationalIdCardNumber);
-                if (src.IsActive) dest.Activate();
-                else dest.Deactivate();
-            });
-
         // LoanAccount is a receivable linked to a sale. Product/unit details live on SaleLine.
         CreateMap<LoanAccount, LoanAccountDto>()
             .ForMember(dest => dest.PaidAmount, opt => opt.MapFrom(src => src.PaidAmount))

@@ -57,7 +57,7 @@ namespace SMIS.Application.Features.Categories.Commands
 
                 if (existing is not null)
                 {
-                    if (!_currentUser.IsSuperAdmin() && existing.ShopId != shopId)
+                    if (existing.ShopId != shopId)
                     {
                         return Result<CategoryDto>.FailureResult(
                             "Forbidden",

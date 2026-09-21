@@ -16,6 +16,7 @@ import '../screens/product_units_screen.dart';
 import '../screens/shops_screen.dart';
 import '../screens/unit_of_measures_screen.dart';
 import '../l10n/app_localizations.dart';
+import 'active_shop_context.dart';
 
 class AppDrawer extends ConsumerWidget {
   const AppDrawer({super.key});
@@ -55,6 +56,8 @@ class AppDrawer extends ConsumerWidget {
               ),
             ),
           ),
+          const ActiveShopDrawerTile(),
+          const Divider(height: 1),
           ListTile(
             leading: const Icon(Icons.home_outlined),
             title: Text(l10n.text('Home')),

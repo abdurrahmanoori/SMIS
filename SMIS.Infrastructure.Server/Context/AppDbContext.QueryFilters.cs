@@ -13,7 +13,7 @@ public partial class AppDbContext
     {
         modelBuilder.Entity<TEntity>().HasQueryFilter(e =>
             !e.IsDeleted &&
-            (_currentUser.IsSuperAdmin() || e.ShopId == _currentUser.GetShopId()));
+            e.ShopId == _currentUser.GetShopId());
     }
 
     private void SetSoftDeleteFilter<TEntity>(ModelBuilder modelBuilder)

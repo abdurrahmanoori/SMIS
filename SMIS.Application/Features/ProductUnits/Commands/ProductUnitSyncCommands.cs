@@ -189,7 +189,7 @@ internal static class ProductUnitSyncRules
         ICurrentUser user)
     {
         var product = await products.GetByIdAsync(productId);
-        return product is not null && (user.IsSuperAdmin() || product.ShopId == user.GetShopId())
+        return product is not null && product.ShopId == user.GetShopId()
             ? product
             : null;
     }

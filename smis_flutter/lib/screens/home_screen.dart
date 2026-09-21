@@ -8,6 +8,7 @@ import '../controllers/product_unit_controller.dart';
 import '../controllers/shop_controller.dart';
 import '../controllers/unit_of_measure_controller.dart';
 import '../widgets/app_drawer.dart';
+import '../widgets/active_shop_context.dart';
 import '../widgets/locale_action.dart';
 import '../widgets/theme_mode_action.dart';
 import '../l10n/app_localizations.dart';
@@ -49,7 +50,12 @@ class HomeScreen extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('SMIS'),
-        actions: const [LocaleAction(), ThemeModeAction(), SizedBox(width: 8)],
+        actions: const [
+          ActiveShopAction(),
+          LocaleAction(),
+          ThemeModeAction(),
+          SizedBox(width: 8),
+        ],
       ),
       drawer: const AppDrawer(),
       body: SafeArea(

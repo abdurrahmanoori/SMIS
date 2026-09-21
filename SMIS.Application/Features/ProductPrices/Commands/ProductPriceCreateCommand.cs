@@ -75,7 +75,7 @@ internal static class ProductPriceCommandRules
             includeProperties: "Product");
 
         if (productUnit?.Product is null) return null;
-        return currentUser.IsSuperAdmin() || productUnit.Product.ShopId == currentUser.GetShopId()
+        return productUnit.Product.ShopId == currentUser.GetShopId()
             ? productUnit
             : null;
     }

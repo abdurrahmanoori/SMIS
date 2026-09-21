@@ -25,8 +25,7 @@ class UnitOfMeasurePowerSyncRepository extends PowerSyncRepositorySupport {
         .map((_) {});
   }
 
-  Future<List<UnitOfMeasure>> getAll(
-    String shopId, {
+  Future<List<UnitOfMeasure>> getAll({
     String? searchQuery,
     int? limit,
     int? offset,
@@ -55,7 +54,7 @@ class UnitOfMeasurePowerSyncRepository extends PowerSyncRepositorySupport {
     return rows.map((row) => _toUnit(row, pending[row['id']])).toList();
   }
 
-  Future<int> getTotalCount(String shopId, {String? searchQuery}) async {
+  Future<int> getTotalCount({String? searchQuery}) async {
     final db = await database;
     final args = <Object?>[];
     var where = '1 = 1';
@@ -71,7 +70,7 @@ class UnitOfMeasurePowerSyncRepository extends PowerSyncRepositorySupport {
     return row['count'] as int;
   }
 
-  Future<UnitOfMeasure> create(UnitOfMeasureDraft draft, String shopId) async {
+  Future<UnitOfMeasure> create(UnitOfMeasureDraft draft) async {
     final normalized = draft.normalized();
     final db = await database;
     final id = _idGenerator();
@@ -129,7 +128,7 @@ class UnitOfMeasurePowerSyncRepository extends PowerSyncRepositorySupport {
     await db.execute('DELETE FROM unit_of_measure WHERE id = ?', [id]);
   }
 
-  Future<int> getPendingCount(String shopId) => pendingCount('unit_of_measure');
+  Future<int> getPendingCount() => pendingCount('unit_of_measure');
 
   Future<int> countProductsUsingUnit(String unitId) async {
     final db = await database;
