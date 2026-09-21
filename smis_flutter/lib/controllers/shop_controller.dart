@@ -7,35 +7,25 @@ import 'app_dependencies.dart';
 import 'auth_controller.dart';
 import '../data/powersync/shop_powersync_repository.dart';
 import '../models/shop.dart';
-import '../services/app_powersync_sync_services.dart';
-import '../services/shop_sync_service.dart';
 
 class ShopScreenState {
   const ShopScreenState({
     required this.shops,
     required this.pendingCount,
     this.searchQuery = '',
-    this.isSyncing = false,
-    this.lastSyncResult,
   });
   final List<Shop> shops;
   final int pendingCount;
   final String searchQuery;
-  final bool isSyncing;
-  final ShopSyncResult? lastSyncResult;
 
   ShopScreenState copyWith({
     List<Shop>? shops,
     int? pendingCount,
     String? searchQuery,
-    bool? isSyncing,
-    ShopSyncResult? lastSyncResult,
   }) => ShopScreenState(
     shops: shops ?? this.shops,
     pendingCount: pendingCount ?? this.pendingCount,
     searchQuery: searchQuery ?? this.searchQuery,
-    isSyncing: isSyncing ?? this.isSyncing,
-    lastSyncResult: lastSyncResult ?? this.lastSyncResult,
   );
 }
 
@@ -45,7 +35,6 @@ class ShopController extends AsyncNotifier<ShopScreenState> {
   int _searchRequestId = 0;
 
   ShopPowerSyncRepository get _repository => ref.read(shopRepositoryProvider);
-  ShopPowerSyncService get _syncService => ref.read(shopSyncServiceProvider);
 
   @override
   Future<ShopScreenState> build() async {
@@ -71,10 +60,7 @@ class ShopController extends AsyncNotifier<ShopScreenState> {
     try {
       final current = state.value!;
       state = AsyncData(
-        await _load(
-          searchQuery: current.searchQuery,
-          lastSyncResult: current.lastSyncResult,
-        ),
+        await _load(searchQuery: current.searchQuery),
       );
     } catch (error, stackTrace) {
       if (kDebugMode) {
@@ -87,16 +73,8 @@ class ShopController extends AsyncNotifier<ShopScreenState> {
 
   Future<void> reload() async {
     final previousQuery = state.hasValue ? state.value?.searchQuery : null;
-    final previousSyncResult = state.hasValue
-        ? state.value?.lastSyncResult
-        : null;
     try {
-      state = AsyncData(
-        await _load(
-          searchQuery: previousQuery,
-          lastSyncResult: previousSyncResult,
-        ),
-      );
+      state = AsyncData(await _load(searchQuery: previousQuery));
     } catch (error, stackTrace) {
       state = AsyncError(error, stackTrace);
     }
@@ -139,40 +117,15 @@ class ShopController extends AsyncNotifier<ShopScreenState> {
 
   Future<int> countLocalRecords(String id) => _repository.countLocalRecords(id);
 
-  Future<ShopSyncResult> syncNow() async {
-    final current = state.value ?? await _load();
-    state = AsyncData(current.copyWith(isSyncing: true));
-    final result = await _syncService.synchronize(force: true);
-    if (kDebugMode && !result.success) {
-      debugPrint(
-        '${result.message}\n\n${result.failures.map((failure) => failure.toDevelopmentString()).join('\n\n')}',
-      );
-    }
-    state = AsyncData(
-      await _load(searchQuery: current.searchQuery, lastSyncResult: result),
-    );
-    return result;
-  }
-
-  Future<ShopScreenState> _load({
-    String? searchQuery,
-    ShopSyncResult? lastSyncResult,
-  }) async => ShopScreenState(
+  Future<ShopScreenState> _load({String? searchQuery}) async => ShopScreenState(
     shops: await _repository.getAll(searchQuery: searchQuery),
     pendingCount: await _repository.getPendingCount(),
     searchQuery: searchQuery ?? '',
-    lastSyncResult: lastSyncResult,
   );
 }
 
 final shopRepositoryProvider = Provider<ShopPowerSyncRepository>(
   (ref) => ShopPowerSyncRepository(ref.watch(appPowerSyncDatabaseProvider)),
-);
-final shopSyncServiceProvider = Provider<ShopPowerSyncService>(
-  (ref) => ShopPowerSyncService(
-    ref.watch(appPowerSyncStatusServiceProvider),
-    ref.watch(shopRepositoryProvider),
-  ),
 );
 final shopControllerProvider =
     AsyncNotifierProvider<ShopController, ShopScreenState>(ShopController.new);

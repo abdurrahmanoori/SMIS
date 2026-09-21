@@ -295,7 +295,7 @@ class CategoryRepository {
     );
     if (rows.isEmpty) {
       throw const LocalStorageException(
-        'The selected shop is not available in local storage. Sync shops before creating a category.',
+        'The selected shop is not available in local storage yet.',
       );
     }
   }

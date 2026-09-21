@@ -84,23 +84,6 @@ class _ProductUnitsScreenState extends ConsumerState<ProductUnitsScreen>
                 ? _stopSearching
                 : () => setState(() => _isSearching = true),
           ),
-          state.maybeWhen(
-            data: (value) => Badge(
-              isLabelVisible: value.pendingCount > 0,
-              label: Text('${value.pendingCount}'),
-              child: IconButton.filledTonal(
-                tooltip: context.l10n.text('Sync product units'),
-                onPressed: value.isSyncing ? null : _sync,
-                icon: value.isSyncing
-                    ? const SizedBox.square(
-                        dimension: 18,
-                        child: CircularProgressIndicator(strokeWidth: 2),
-                      )
-                    : const Icon(Icons.sync),
-              ),
-            ),
-            orElse: () => const SizedBox.shrink(),
-          ),
           const HomeAction(),
           const LocaleAction(),
           const ThemeModeAction(),
@@ -211,20 +194,6 @@ class _ProductUnitsScreenState extends ConsumerState<ProductUnitsScreen>
     );
   }
 
-  Future<void> _sync() async {
-    try {
-      final result = await ref
-          .read(productUnitControllerProvider.notifier)
-          .syncNow();
-      if (!mounted || !result.success) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(context.l10n.syncMessage(result.message))),
-      );
-    } catch (error, stackTrace) {
-      if (mounted) AppErrorNotification.show(context, error, stackTrace);
-    }
-  }
-
   Future<void> _runMutation(
     Future<void> Function() action,
     String message,
@@ -287,11 +256,6 @@ class _Content extends ConsumerWidget {
 
     return Column(
       children: [
-        if (state.lastSyncResult case final result?)
-          Padding(
-            padding: const EdgeInsets.all(12),
-            child: Text(context.l10n.text(result.message)),
-          ),
         Expanded(
           child: state.items.isEmpty
               ? Center(

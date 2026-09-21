@@ -153,7 +153,7 @@ class ProductUnitPowerSyncRepository extends PowerSyncRepositorySupport {
         ) ==
         null) {
       throw const LocalStorageException(
-        'The selected product is not available locally. Sync products first.',
+        'The selected product is not available locally yet.',
       );
     }
     if (await db.getOptional('SELECT id FROM unit_of_measure WHERE id = ?', [
@@ -161,7 +161,7 @@ class ProductUnitPowerSyncRepository extends PowerSyncRepositorySupport {
         ]) ==
         null) {
       throw const LocalStorageException(
-        'The selected unit is not available locally. Sync units first.',
+        'The selected unit is not available locally yet.',
       );
     }
   }

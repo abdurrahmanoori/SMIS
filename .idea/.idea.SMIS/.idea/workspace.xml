@@ -236,7 +236,7 @@
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "preferences.pluginManager",
+    "settings.editor.selected.configurable": "dart.settings",
     "sqlserver_backup_path_localServer": "E:",
     "to.speed.mode.migration.done": "true"
   },
@@ -365,14 +365,6 @@
       <option name="presentableId" value="LOCAL-00001" />
       <option name="project" value="LOCAL" />
       <updated>1789462942314</updated>
-    </task>
-    <task id="LOCAL-00033" summary="feat: enhance error handling with AppErrorView and refactor error management in authentication and profile APIs">
-      <option name="closed" value="true" />
-      <created>1788702665728</created>
-      <option name="number" value="00033" />
-      <option name="presentableId" value="LOCAL-00033" />
-      <option name="project" value="LOCAL" />
-      <updated>1788702665728</updated>
     </task>
     <task id="LOCAL-00034" summary="feat: add WebDeploy configurations for site48297 and site62669 in workspace settings">
       <option name="closed" value="true" />
@@ -750,7 +742,15 @@
       <option name="project" value="LOCAL" />
       <updated>1789958606476</updated>
     </task>
-    <option name="localTasksCounter" value="81" />
+    <task id="LOCAL-00081" summary="feat: enhance search functionality across controllers; implement request ID tracking to prevent stale responses">
+      <option name="closed" value="true" />
+      <created>1789969973090</created>
+      <option name="number" value="00081" />
+      <option name="presentableId" value="LOCAL-00081" />
+      <option name="project" value="LOCAL" />
+      <updated>1789969973093</updated>
+    </task>
+    <option name="localTasksCounter" value="82" />
     <option name="clearContext" value="false" />
     <option name="createChangelist" value="false" />
     <option name="createBranch" value="false" />
@@ -771,7 +771,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
-    <MESSAGE value="feat: standardize user identities and update role assignments in seed data" />
     <MESSAGE value="feat: implement search functionality for products, shops, and units of measurement" />
     <MESSAGE value="feat: implement product count check before category deletion and update related error handling" />
     <MESSAGE value="feat: add reference count checks before deleting products, shops, and units of measurement" />
@@ -796,6 +795,7 @@
     <MESSAGE value="feat: enhance API documentation with XML comments and improve code readability; add nullable reference types and suppress warnings" />
     <MESSAGE value="feat: enhance PowerSync integration with new repositories and services; add support for super admin claims in token generation" />
     <MESSAGE value="feat: implement shop context management; remove ShopId from various DTOs and commands, and enforce active shop validation in related operations" />
+    <MESSAGE value="feat: enhance search functionality across controllers; implement request ID tracking to prevent stale responses" />
     <option name="LAST_COMMIT_MESSAGE" value="" />
   </component>
   <component name="XDebuggerManager">

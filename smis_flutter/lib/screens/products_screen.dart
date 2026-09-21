@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -11,7 +10,6 @@ import '../models/category.dart';
 import '../models/product.dart';
 import '../models/unit_of_measure.dart';
 import '../l10n/app_localizations.dart';
-import '../services/product_sync_service.dart';
 import '../widgets/app_drawer.dart';
 import '../widgets/active_shop_context.dart';
 import '../widgets/app_error_view.dart';
@@ -114,23 +112,6 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen>
               icon: const Icon(Icons.search),
               onPressed: () => setState(() => _isSearching = true),
             ),
-          productState.maybeWhen(
-            data: (state) => Badge(
-              isLabelVisible: state.pendingCount > 0,
-              label: Text('${state.pendingCount}'),
-              child: IconButton.filledTonal(
-                tooltip: context.l10n.text('Sync products'),
-                onPressed: state.isSyncing ? null : _sync,
-                icon: state.isSyncing
-                    ? const SizedBox.square(
-                        dimension: 18,
-                        child: CircularProgressIndicator(strokeWidth: 2),
-                      )
-                    : const Icon(Icons.sync),
-              ),
-            ),
-            orElse: () => const SizedBox.shrink(),
-          ),
           const HomeAction(),
           const LocaleAction(),
           const ThemeModeAction(),
@@ -237,25 +218,6 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen>
     );
   }
 
-  Future<void> _sync() async {
-    try {
-      final result = await ref
-          .read(productControllerProvider.notifier)
-          .syncNow();
-      if (!mounted || !result.success) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(context.l10n.syncMessage(result.message)),
-          backgroundColor: Theme.of(context).colorScheme.primary,
-        ),
-      );
-    } catch (error, stackTrace) {
-      if (!mounted) return;
-      AppErrorNotification.show(context, error, stackTrace);
-      await ref.read(productControllerProvider.notifier).reload();
-    }
-  }
-
   Future<void> _runMutation(
     Future<void> Function() action,
     String message,
@@ -309,7 +271,6 @@ class _Content extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Column(
     children: [
-      if (state.lastSyncResult case final result?) _SyncSummary(result: result),
       if (!hasUnits) const _MissingUnitNotice(),
       Expanded(
         child: state.products.isEmpty
@@ -345,44 +306,6 @@ class _Content extends StatelessWidget {
       if (category.id == id) return category.name;
     }
     return null;
-  }
-}
-
-class _SyncSummary extends StatelessWidget {
-  const _SyncSummary({required this.result});
-  final ProductSyncResult result;
-  @override
-  Widget build(BuildContext context) {
-    final colors = Theme.of(context).colorScheme;
-    final summary =
-        '${context.l10n.syncMessage(result.message)} ${context.l10n.text('Pulled {pulled}, pushed {pushed}, conflicts resolved {conflicts}, pending {pending}.', {'pulled': result.pulled, 'pushed': result.pushed, 'conflicts': result.conflictsResolved, 'pending': result.pending})}';
-    final message = kDebugMode && result.failures.isNotEmpty
-        ? '$summary\n\n${result.failures.map((failure) => failure.toDevelopmentString()).join('\n\n')}'
-        : summary;
-    return Container(
-      width: double.infinity,
-      margin: const EdgeInsets.fromLTRB(16, 12, 16, 0),
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: result.success ? colors.primaryContainer : colors.errorContainer,
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: ConstrainedBox(
-        constraints: BoxConstraints(
-          maxHeight: kDebugMode && !result.success ? 280 : double.infinity,
-        ),
-        child: SingleChildScrollView(
-          child: SelectableText(
-            message,
-            style: TextStyle(
-              color: result.success
-                  ? colors.onPrimaryContainer
-                  : colors.onErrorContainer,
-            ),
-          ),
-        ),
-      ),
-    );
   }
 }
 
@@ -517,7 +440,7 @@ class _MissingUnitNotice extends StatelessWidget {
     child: MaterialBanner(
       content: Text(
         context.l10n.text(
-          'Create or sync a unit of measurement before adding a product.',
+          'Create a unit of measurement before adding a product.',
         ),
       ),
       leading: const Icon(Icons.info_outline),

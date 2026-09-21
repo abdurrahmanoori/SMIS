@@ -4,78 +4,46 @@ import '../../config/app_config.dart';
 import '../../services/auth_session_store.dart';
 import '../../services/bearer_token_interceptor.dart';
 import '../data_exception.dart';
+import 'upload/category_upload_handler.dart';
+import 'upload/powersync_upload_handler.dart';
+import 'upload/product_unit_upload_handler.dart';
+import 'upload/product_upload_handler.dart';
+import 'upload/shop_upload_handler.dart';
+import 'upload/unit_of_measure_upload_handler.dart';
 
 class AppPowerSyncWriteApi {
   AppPowerSyncWriteApi({Dio? dio, AuthSessionStore? sessionStore})
-    : _sessionStore = sessionStore ?? SecureAuthSessionStore(),
-      _dio =
-          dio ??
-          Dio(
-            BaseOptions(
-              baseUrl: AppConfig.apiBaseUrl,
-              connectTimeout: const Duration(seconds: 10),
-              receiveTimeout: const Duration(seconds: 20),
-              sendTimeout: const Duration(seconds: 20),
-              headers: const {'Accept': 'application/json'},
-            ),
-          ) {
+      : _sessionStore = sessionStore ?? SecureAuthSessionStore(),
+        _dio =
+            dio ??
+                Dio(
+                  BaseOptions(
+                    baseUrl: AppConfig.apiBaseUrl,
+                    connectTimeout: const Duration(seconds: 10),
+                    receiveTimeout: const Duration(seconds: 20),
+                    sendTimeout: const Duration(seconds: 20),
+                    headers: const {'Accept': 'application/json'},
+                  ),
+                ) {
     _dio.interceptors.add(BearerTokenInterceptor(_sessionStore));
+
+    final handlers = <PowerSyncUploadHandler>[
+      CategoryUploadHandler(_dio),
+      ShopUploadHandler(_dio),
+      UnitOfMeasureUploadHandler(_dio),
+      ProductUploadHandler(_dio),
+      ProductUnitUploadHandler(_dio),
+    ];
+    _handlers = {for (final handler in handlers) handler.table: handler};
   }
 
   final Dio _dio;
   final AuthSessionStore _sessionStore;
+  late final Map<String, PowerSyncUploadHandler> _handlers;
 
   Future<void> create(String table, String id, Map<String, dynamic> row) async {
     try {
-      switch (table) {
-        case 'category':
-          await _dio.post<void>(
-            AppConfig.categoryEndpoint,
-            data: {'id': id, ..._categoryPayload(row)},
-          );
-        case 'shop':
-          await _dio.post<void>(
-            '${AppConfig.shopEndpoint}/sync',
-            data: {
-              'id': id,
-              ..._shopPayload(row),
-              'clientCreatedDate': _timestamp(row),
-              'clientModifiedDate': _timestamp(row),
-            },
-          );
-        case 'unit_of_measure':
-          await _dio.post<void>(
-            '${AppConfig.unitOfMeasureEndpoint}/sync',
-            data: {
-              'id': id,
-              ..._unitPayload(row),
-              'clientCreatedDate': _timestamp(row),
-              'clientModifiedDate': _timestamp(row),
-            },
-          );
-        case 'product':
-          await _dio.post<void>(
-            '${AppConfig.productEndpoint}/sync',
-            data: {
-              'id': id,
-              ..._productPayload(row),
-              'clientCreatedDate': _timestamp(row),
-              'clientModifiedDate': _timestamp(row),
-            },
-          );
-        case 'product_unit':
-          await _dio.post<void>(
-            '${AppConfig.productUnitEndpoint}/sync',
-            data: {
-              'id': id,
-              ..._productUnitPayload(row),
-              'clientCreatedDate': _timestamp(row),
-              'clientModifiedDate': _timestamp(row),
-            },
-          );
-        default:
-          throw StateError('Unsupported PowerSync table: $table');
-      }
+      await _handler(table).create(id, row);
     } catch (error, stackTrace) {
       ApiErrorParser.mapAndThrow(
         error,
@@ -87,41 +55,7 @@ class AppPowerSyncWriteApi {
 
   Future<void> update(String table, String id, Map<String, dynamic> row) async {
     try {
-      switch (table) {
-        case 'category':
-          await _dio.put<void>(
-            '${AppConfig.categoryEndpoint}/$id',
-            data: _categoryPayload(row),
-          );
-        case 'shop':
-          await _dio.put<void>(
-            '${AppConfig.shopEndpoint}/$id/sync',
-            data: {..._shopPayload(row), 'clientModifiedDate': _timestamp(row)},
-          );
-        case 'unit_of_measure':
-          await _dio.put<void>(
-            '${AppConfig.unitOfMeasureEndpoint}/$id/sync',
-            data: {..._unitPayload(row), 'clientModifiedDate': _timestamp(row)},
-          );
-        case 'product':
-          await _dio.put<void>(
-            '${AppConfig.productEndpoint}/$id/sync',
-            data: {
-              ..._productPayload(row),
-              'clientModifiedDate': _timestamp(row),
-            },
-          );
-        case 'product_unit':
-          await _dio.put<void>(
-            '${AppConfig.productUnitEndpoint}/$id/sync',
-            data: {
-              ..._productUnitPayload(row),
-              'clientModifiedDate': _timestamp(row),
-            },
-          );
-        default:
-          throw StateError('Unsupported PowerSync table: $table');
-      }
+      await _handler(table).update(id, row);
     } catch (error, stackTrace) {
       ApiErrorParser.mapAndThrow(
         error,
@@ -133,32 +67,7 @@ class AppPowerSyncWriteApi {
 
   Future<void> delete(String table, String id, String lastModifiedUtc) async {
     try {
-      switch (table) {
-        case 'category':
-          await _dio.delete<void>('${AppConfig.categoryEndpoint}/$id');
-        case 'shop':
-          await _dio.delete<void>(
-            '${AppConfig.shopEndpoint}/$id/sync',
-            data: {'clientModifiedDate': lastModifiedUtc},
-          );
-        case 'unit_of_measure':
-          await _dio.delete<void>(
-            '${AppConfig.unitOfMeasureEndpoint}/$id/sync',
-            data: {'clientModifiedDate': lastModifiedUtc},
-          );
-        case 'product':
-          await _dio.delete<void>(
-            '${AppConfig.productEndpoint}/$id/sync',
-            data: {'clientModifiedDate': lastModifiedUtc},
-          );
-        case 'product_unit':
-          await _dio.delete<void>(
-            '${AppConfig.productUnitEndpoint}/$id/sync',
-            data: {'clientModifiedDate': lastModifiedUtc},
-          );
-        default:
-          throw StateError('Unsupported PowerSync table: $table');
-      }
+      await _handler(table).delete(id, lastModifiedUtc);
     } on DioException catch (error, stackTrace) {
       if (error.response?.statusCode == 404) return;
       ApiErrorParser.mapAndThrow(error, stackTrace);
@@ -167,57 +76,11 @@ class AppPowerSyncWriteApi {
     }
   }
 
-  Map<String, Object?> _categoryPayload(Map<String, dynamic> row) => {
-    'name': row['name'] as String,
-    'code': row['code'] as String?,
-    'description': row['description'] as String?,
-    'isActive': _asBool(row['is_active']),
-  };
-
-  Map<String, Object?> _shopPayload(Map<String, dynamic> row) => {
-    'name': row['name'] as String,
-    'shopType': _shopType(row['shop_type']),
-    'address': row['address'] as String?,
-    'phoneNumber': row['phone_number'] as String?,
-    'email': row['email'] as String?,
-    'taxNumber': row['tax_number'] as String?,
-    'isActive': _asBool(row['is_active']),
-  };
-
-  Map<String, Object?> _unitPayload(Map<String, dynamic> row) => {
-    'name': row['name'] as String,
-    'symbol': row['symbol'] as String?,
-    'description': row['description'] as String?,
-  };
-
-  Map<String, Object?> _productPayload(Map<String, dynamic> row) => {
-    'name': row['name'] as String,
-    'baseUnitId': row['base_unit_id'] as String,
-    'description': row['description'] as String?,
-    'isActive': _asBool(row['is_active']),
-    'sku': row['sku'] as String?,
-    'barcode': row['barcode'] as String?,
-    'imageUrl': row['image_url'] as String?,
-    'categoryId': row['category_id'] as String?,
-    'reorderPointBase': 0,
-    'reorderQuantityBase': 0,
-  };
-
-  Map<String, Object?> _productUnitPayload(Map<String, dynamic> row) => {
-    'productId': row['product_id'] as String,
-    'unitOfMeasureId': row['unit_of_measure_id'] as String,
-    'baseUnitQuantity': (row['base_unit_quantity'] as num).toDouble(),
-  };
-
-  String _timestamp(Map<String, dynamic> row) =>
-      row['last_modified_utc'] as String;
-
-  bool _asBool(Object? value) => value == true || value == 1;
-
-  String _shopType(Object? value) {
-    final normalized = value?.toString().trim().toLowerCase();
-    return normalized == 'wholesaleshop' || normalized == 'wholesale_shop'
-        ? 'wholesaleShop'
-        : 'retailShop';
+  PowerSyncUploadHandler _handler(String table) {
+    final handler = _handlers[table];
+    if (handler == null) {
+      throw StateError('Unsupported PowerSync table: $table');
+    }
+    return handler;
   }
 }

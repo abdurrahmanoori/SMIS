@@ -7,35 +7,25 @@ import 'app_dependencies.dart';
 import 'auth_controller.dart';
 import '../data/powersync/product_powersync_repository.dart';
 import '../models/product.dart';
-import '../services/app_powersync_sync_services.dart';
-import '../services/product_sync_service.dart';
 
 class ProductScreenState {
   const ProductScreenState({
     required this.products,
     required this.pendingCount,
     this.searchQuery = '',
-    this.isSyncing = false,
-    this.lastSyncResult,
   });
   final List<Product> products;
   final int pendingCount;
   final String searchQuery;
-  final bool isSyncing;
-  final ProductSyncResult? lastSyncResult;
 
   ProductScreenState copyWith({
     List<Product>? products,
     int? pendingCount,
     String? searchQuery,
-    bool? isSyncing,
-    ProductSyncResult? lastSyncResult,
   }) => ProductScreenState(
     products: products ?? this.products,
     pendingCount: pendingCount ?? this.pendingCount,
     searchQuery: searchQuery ?? this.searchQuery,
-    isSyncing: isSyncing ?? this.isSyncing,
-    lastSyncResult: lastSyncResult ?? this.lastSyncResult,
   );
 }
 
@@ -46,8 +36,6 @@ class ProductController extends AsyncNotifier<ProductScreenState> {
 
   ProductPowerSyncRepository get _repository =>
       ref.read(productRepositoryProvider);
-  ProductPowerSyncService get _syncService =>
-      ref.read(productSyncServiceProvider);
 
   String get _shopId {
     final session = ref.watch(authControllerProvider.select((s) => s.session));
@@ -73,10 +61,7 @@ class ProductController extends AsyncNotifier<ProductScreenState> {
     try {
       final current = state.value!;
       state = AsyncData(
-        await _load(
-          searchQuery: current.searchQuery,
-          lastSyncResult: current.lastSyncResult,
-        ),
+        await _load(searchQuery: current.searchQuery),
       );
       ref.invalidate(productLookupProvider);
     } catch (error, stackTrace) {
@@ -90,16 +75,10 @@ class ProductController extends AsyncNotifier<ProductScreenState> {
 
   Future<void> reload() async {
     final previousQuery = state.hasValue ? state.value?.searchQuery : null;
-    final previousSyncResult = state.hasValue
-        ? state.value?.lastSyncResult
-        : null;
 
     try {
       state = AsyncData(
-        await _load(
-          searchQuery: previousQuery,
-          lastSyncResult: previousSyncResult,
-        ),
+        await _load(searchQuery: previousQuery),
       );
     } catch (error, stackTrace) {
       state = AsyncError(error, stackTrace);
@@ -144,44 +123,18 @@ class ProductController extends AsyncNotifier<ProductScreenState> {
     ref.invalidate(productLookupProvider);
   }
 
-  Future<ProductSyncResult> syncNow() async {
-    final current = state.value ?? await _load();
-    state = AsyncData(current.copyWith(isSyncing: true));
-    final result = await _syncService.synchronize(shopId: _shopId, force: true);
-    if (kDebugMode && !result.success) {
-      debugPrint(
-        '${result.message}\n\n${result.failures.map((failure) => failure.toDevelopmentString()).join('\n\n')}',
-      );
-    }
-    state = AsyncData(
-      await _load(searchQuery: current.searchQuery, lastSyncResult: result),
-    );
-    ref.invalidate(productLookupProvider);
-    return result;
-  }
-
-  Future<ProductScreenState> _load({
-    String? searchQuery,
-    ProductSyncResult? lastSyncResult,
-  }) async {
+  Future<ProductScreenState> _load({String? searchQuery}) async {
     final shopId = _shopId;
     return ProductScreenState(
       products: await _repository.getAll(shopId, searchQuery: searchQuery),
       pendingCount: await _repository.getPendingCount(shopId),
       searchQuery: searchQuery ?? '',
-      lastSyncResult: lastSyncResult,
     );
   }
 }
 
 final productRepositoryProvider = Provider<ProductPowerSyncRepository>(
   (ref) => ProductPowerSyncRepository(ref.watch(appPowerSyncDatabaseProvider)),
-);
-final productSyncServiceProvider = Provider<ProductPowerSyncService>(
-  (ref) => ProductPowerSyncService(
-    ref.watch(appPowerSyncStatusServiceProvider),
-    ref.watch(productRepositoryProvider),
-  ),
 );
 final productControllerProvider =
     AsyncNotifierProvider<ProductController, ProductScreenState>(

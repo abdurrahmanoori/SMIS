@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -7,7 +6,6 @@ import '../controllers/category_controller.dart';
 import '../data/data_exception.dart';
 import '../models/category.dart';
 import '../l10n/app_localizations.dart';
-import '../services/category_sync_service.dart';
 import '../widgets/app_drawer.dart';
 import '../widgets/active_shop_context.dart';
 import '../widgets/app_error_view.dart';
@@ -105,13 +103,6 @@ class _CategoriesScreenState extends ConsumerState<CategoriesScreen>
               icon: const Icon(Icons.search),
               onPressed: () => setState(() => _isSearching = true),
             ),
-          categories.maybeWhen(
-            data: (value) => _SyncButton(
-              state: value,
-              onPressed: value.isSyncing ? null : _sync,
-            ),
-            orElse: () => const SizedBox.shrink(),
-          ),
           const HomeAction(),
           const LocaleAction(),
           const ThemeModeAction(),
@@ -249,30 +240,6 @@ class _CategoriesScreenState extends ConsumerState<CategoriesScreen>
     );
   }
 
-  Future<void> _sync() async {
-    try {
-      final result = await ref
-          .read(categoryControllerProvider.notifier)
-          .syncNow();
-
-      if (!mounted) return;
-
-      if (result.success) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(context.l10n.syncMessage(result.message)),
-            duration: const Duration(seconds: 4),
-            backgroundColor: Theme.of(context).colorScheme.primary,
-          ),
-        );
-      }
-    } catch (error, stackTrace) {
-      if (!mounted) return;
-      AppErrorNotification.show(context, error, stackTrace);
-      await ref.read(categoryControllerProvider.notifier).reload();
-    }
-  }
-
   Future<void> _runMutation(
     Future<void> Function() action,
     String successMessage,
@@ -287,29 +254,6 @@ class _CategoriesScreenState extends ConsumerState<CategoriesScreen>
       if (mounted) AppErrorNotification.show(context, error, stackTrace);
     }
   }
-}
-
-class _SyncButton extends StatelessWidget {
-  const _SyncButton({required this.state, required this.onPressed});
-
-  final CategoryScreenState state;
-  final VoidCallback? onPressed;
-
-  @override
-  Widget build(BuildContext context) => Badge(
-    isLabelVisible: state.pendingCount > 0,
-    label: Text('${state.pendingCount}'),
-    child: IconButton.filledTonal(
-      tooltip: context.l10n.text('Sync categories'),
-      onPressed: onPressed,
-      icon: state.isSyncing
-          ? const SizedBox.square(
-              dimension: 18,
-              child: CircularProgressIndicator(strokeWidth: 2),
-            )
-          : const Icon(Icons.sync),
-    ),
-  );
 }
 
 class _CategoryContent extends StatelessWidget {
@@ -328,7 +272,6 @@ class _CategoryContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Column(
     children: [
-      if (state.lastSyncResult case final result?) _SyncSummary(result: result),
       Expanded(
         child: state.categories.isEmpty
             ? _EmptyView(isSearch: state.searchQuery.isNotEmpty)
@@ -365,48 +308,6 @@ class _CategoryContent extends StatelessWidget {
         ),
     ],
   );
-}
-
-class _SyncSummary extends StatelessWidget {
-  const _SyncSummary({required this.result});
-
-  final CategorySyncResult result;
-
-  @override
-  Widget build(BuildContext context) {
-    final colors = Theme.of(context).colorScheme;
-    final successful = result.success;
-    final summary =
-        '${context.l10n.syncMessage(result.message)} '
-        '${context.l10n.text('Pulled {pulled}, pushed {pushed}, conflicts resolved {conflicts}, pending {pending}.', {'pulled': result.pulled, 'pushed': result.pushed, 'conflicts': result.conflictsResolved, 'pending': result.pending})}';
-    final displayMessage = kDebugMode && result.failures.isNotEmpty
-        ? '$summary\n\n${result.failures.map((failure) => failure.toDevelopmentString()).join('\n\n')}'
-        : summary;
-    return Container(
-      width: double.infinity,
-      margin: const EdgeInsets.fromLTRB(16, 12, 16, 0),
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: successful ? colors.primaryContainer : colors.errorContainer,
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: ConstrainedBox(
-        constraints: BoxConstraints(
-          maxHeight: kDebugMode && !successful ? 280 : double.infinity,
-        ),
-        child: SingleChildScrollView(
-          child: SelectableText(
-            displayMessage,
-            style: TextStyle(
-              color: successful
-                  ? colors.onPrimaryContainer
-                  : colors.onErrorContainer,
-            ),
-          ),
-        ),
-      ),
-    );
-  }
 }
 
 class _CategoryCard extends StatelessWidget {

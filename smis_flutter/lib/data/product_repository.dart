@@ -275,7 +275,7 @@ class ProductRepository {
     );
     if (shop.isEmpty) {
       throw const LocalStorageException(
-        'The selected shop is not available in local storage. Sync shops before creating or updating a product.',
+        'The selected shop is not available in local storage yet.',
       );
     }
 

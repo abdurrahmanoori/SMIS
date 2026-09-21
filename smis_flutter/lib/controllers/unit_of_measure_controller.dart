@@ -7,36 +7,26 @@ import 'app_dependencies.dart';
 import 'auth_controller.dart';
 import '../data/powersync/unit_of_measure_powersync_repository.dart';
 import '../models/unit_of_measure.dart';
-import '../services/app_powersync_sync_services.dart';
-import '../services/unit_of_measure_sync_service.dart';
 
 class UnitOfMeasureScreenState {
   const UnitOfMeasureScreenState({
     required this.units,
     required this.pendingCount,
     this.searchQuery = '',
-    this.isSyncing = false,
-    this.lastSyncResult,
   });
 
   final List<UnitOfMeasure> units;
   final int pendingCount;
   final String searchQuery;
-  final bool isSyncing;
-  final UnitOfMeasureSyncResult? lastSyncResult;
 
   UnitOfMeasureScreenState copyWith({
     List<UnitOfMeasure>? units,
     int? pendingCount,
     String? searchQuery,
-    bool? isSyncing,
-    UnitOfMeasureSyncResult? lastSyncResult,
   }) => UnitOfMeasureScreenState(
     units: units ?? this.units,
     pendingCount: pendingCount ?? this.pendingCount,
     searchQuery: searchQuery ?? this.searchQuery,
-    isSyncing: isSyncing ?? this.isSyncing,
-    lastSyncResult: lastSyncResult ?? this.lastSyncResult,
   );
 }
 
@@ -47,8 +37,6 @@ class UnitOfMeasureController extends AsyncNotifier<UnitOfMeasureScreenState> {
 
   UnitOfMeasurePowerSyncRepository get _repository =>
       ref.read(unitOfMeasureRepositoryProvider);
-  UnitOfMeasurePowerSyncService get _syncService =>
-      ref.read(unitOfMeasureSyncServiceProvider);
 
   @override
   Future<UnitOfMeasureScreenState> build() async {
@@ -70,10 +58,7 @@ class UnitOfMeasureController extends AsyncNotifier<UnitOfMeasureScreenState> {
     try {
       final current = state.value!;
       state = AsyncData(
-        await _load(
-          searchQuery: current.searchQuery,
-          lastSyncResult: current.lastSyncResult,
-        ),
+        await _load(searchQuery: current.searchQuery),
       );
       ref.invalidate(unitOfMeasureLookupProvider);
     } catch (error, stackTrace) {
@@ -87,17 +72,9 @@ class UnitOfMeasureController extends AsyncNotifier<UnitOfMeasureScreenState> {
 
   Future<void> reload() async {
     final previousQuery = state.hasValue ? state.value?.searchQuery : null;
-    final previousSyncResult = state.hasValue
-        ? state.value?.lastSyncResult
-        : null;
 
     try {
-      state = AsyncData(
-        await _load(
-          searchQuery: previousQuery,
-          lastSyncResult: previousSyncResult,
-        ),
-      );
+      state = AsyncData(await _load(searchQuery: previousQuery));
       ref.invalidate(unitOfMeasureLookupProvider);
     } catch (error, stackTrace) {
       state = AsyncError(error, stackTrace);
@@ -146,32 +123,11 @@ class UnitOfMeasureController extends AsyncNotifier<UnitOfMeasureScreenState> {
   Future<int> countProductsUsingUnit(String id) =>
       _repository.countProductsUsingUnit(id);
 
-  Future<UnitOfMeasureSyncResult> syncNow() async {
-    final current = state.value ?? await _load();
-    state = AsyncData(current.copyWith(isSyncing: true));
-    final result = await _syncService.synchronize(force: true);
-    if (kDebugMode && !result.success) {
-      final details = result.failures
-          .map((failure) => failure.toDevelopmentString())
-          .join('\n\n');
-      debugPrint('${result.message}\n\n$details');
-    }
-    state = AsyncData(
-      await _load(searchQuery: current.searchQuery, lastSyncResult: result),
-    );
-    ref.invalidate(unitOfMeasureLookupProvider);
-    return result;
-  }
-
-  Future<UnitOfMeasureScreenState> _load({
-    String? searchQuery,
-    UnitOfMeasureSyncResult? lastSyncResult,
-  }) async {
+  Future<UnitOfMeasureScreenState> _load({String? searchQuery}) async {
     return UnitOfMeasureScreenState(
       units: await _repository.getAll(searchQuery: searchQuery),
       pendingCount: await _repository.getPendingCount(),
       searchQuery: searchQuery ?? '',
-      lastSyncResult: lastSyncResult,
     );
   }
 }
@@ -180,14 +136,6 @@ final unitOfMeasureRepositoryProvider =
     Provider<UnitOfMeasurePowerSyncRepository>(
       (ref) => UnitOfMeasurePowerSyncRepository(
         ref.watch(appPowerSyncDatabaseProvider),
-      ),
-    );
-
-final unitOfMeasureSyncServiceProvider =
-    Provider<UnitOfMeasurePowerSyncService>(
-      (ref) => UnitOfMeasurePowerSyncService(
-        ref.watch(appPowerSyncStatusServiceProvider),
-        ref.watch(unitOfMeasureRepositoryProvider),
       ),
     );
 

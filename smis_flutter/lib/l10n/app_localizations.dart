@@ -70,10 +70,6 @@ class AppLocalizations {
           '{count} تغییر محلی با امنیت ذخیره شده و منتظر همگام‌سازی است.',
       'Local-first inventory setup': 'تنظیمات موجودی آفلاین‌محور',
       'Local-first administration': 'مدیریت آفلاین‌محور',
-      'Sync categories': 'همگام‌سازی دسته‌بندی‌ها',
-      'Sync units of measurement': 'همگام‌سازی واحدهای اندازه‌گیری',
-      'Sync products': 'همگام‌سازی محصولات',
-      'Sync shops': 'همگام‌سازی فروشگاه‌ها',
       'Add category': 'افزودن دسته‌بندی',
       'Add unit': 'افزودن واحد',
       'Add product': 'افزودن محصول',
@@ -302,10 +298,6 @@ class AppLocalizations {
           '{count} ځايي بدلونونه خوندي ساتل شوي او همغږۍ ته منتظر دي.',
       'Local-first inventory setup': 'آفلاین-لومړی د زېرمتون امستنه',
       'Local-first administration': 'آفلاین-لومړی اداره',
-      'Sync categories': 'کټګورۍ همغږي کړئ',
-      'Sync units of measurement': 'اندازه واحدونه همغږي کړئ',
-      'Sync products': 'محصولات همغږي کړئ',
-      'Sync shops': 'دوکانونه همغږي کړئ',
       'Add category': 'کټګوري زیاته کړئ',
       'Add unit': 'واحد زیات کړئ',
       'Add product': 'محصول زیات کړئ',
@@ -487,35 +479,6 @@ class AppLocalizations {
       value = value.replaceAll('{${entry.key}}', entry.value.toString());
     }
     return value;
-  }
-
-  String syncMessage(String message) {
-    if (locale.languageCode == 'en') return message;
-
-    if (message.contains('already active') ||
-        message.contains('already running')) {
-      return text('A synchronization is already running.');
-    }
-    if (message.startsWith('Offline.')) {
-      return text('Offline. Local changes are saved and will retry later.');
-    }
-    if (message.endsWith('sync completed.')) {
-      return text('Synchronization completed.');
-    }
-
-    final failedCount = RegExp(r'completed with (\d+) failed request')
-        .firstMatch(message)
-        ?.group(1);
-    if (failedCount != null) {
-      return text(
-        'Synchronization completed with {count} failed requests.',
-        {'count': failedCount},
-      );
-    }
-
-    // Server validation and development diagnostics stay verbatim so useful
-    // technical information is never hidden by a broad translation.
-    return message;
   }
 
   String errorMessage(String message) {

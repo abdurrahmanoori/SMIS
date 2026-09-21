@@ -292,7 +292,7 @@ class ProductUnitRepository {
     );
     if (products.isEmpty) {
       throw const LocalStorageException(
-        'The selected product is not available locally. Sync products first.',
+        'The selected product is not available locally yet.',
       );
     }
     final units = await database.query(
@@ -304,7 +304,7 @@ class ProductUnitRepository {
     );
     if (units.isEmpty) {
       throw const LocalStorageException(
-        'The selected unit is not available locally. Sync units first.',
+        'The selected unit is not available locally yet.',
       );
     }
   }

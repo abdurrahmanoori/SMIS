@@ -7,8 +7,6 @@ import 'auth_controller.dart';
 import 'app_dependencies.dart';
 import '../data/powersync/category_powersync_repository.dart';
 import '../models/category.dart';
-import '../services/category_powersync_service.dart';
-import '../services/category_sync_service.dart';
 
 export 'app_dependencies.dart';
 
@@ -21,9 +19,7 @@ class CategoryScreenState {
     this.pageSize = 25,
     this.totalCount = 0,
     this.totalPages = 1,
-    this.isSyncing = false,
     this.isLoadingMore = false,
-    this.lastSyncResult,
   });
 
   final List<Category> categories;
@@ -33,9 +29,7 @@ class CategoryScreenState {
   final int pageSize;
   final int totalCount;
   final int totalPages;
-  final bool isSyncing;
   final bool isLoadingMore;
-  final CategorySyncResult? lastSyncResult;
 
   bool get hasNextPage => pageNumber < totalPages;
 
@@ -47,9 +41,7 @@ class CategoryScreenState {
     int? pageSize,
     int? totalCount,
     int? totalPages,
-    bool? isSyncing,
     bool? isLoadingMore,
-    CategorySyncResult? lastSyncResult,
   }) => CategoryScreenState(
     categories: categories ?? this.categories,
     pendingCount: pendingCount ?? this.pendingCount,
@@ -58,9 +50,7 @@ class CategoryScreenState {
     pageSize: pageSize ?? this.pageSize,
     totalCount: totalCount ?? this.totalCount,
     totalPages: totalPages ?? this.totalPages,
-    isSyncing: isSyncing ?? this.isSyncing,
     isLoadingMore: isLoadingMore ?? this.isLoadingMore,
-    lastSyncResult: lastSyncResult ?? this.lastSyncResult,
   );
 }
 
@@ -72,9 +62,6 @@ class CategoryController extends AsyncNotifier<CategoryScreenState> {
 
   CategoryPowerSyncRepository get _repository =>
       ref.read(categoryRepositoryProvider);
-
-  CategoryPowerSyncService get _syncService =>
-      ref.read(categorySyncServiceProvider);
 
   String get _shopId {
     final session = ref.watch(authControllerProvider.select((s) => s.session));
@@ -100,10 +87,7 @@ class CategoryController extends AsyncNotifier<CategoryScreenState> {
     try {
       final current = state.value!;
       state = AsyncData(
-        await _load(
-          searchQuery: current.searchQuery,
-          lastSyncResult: current.lastSyncResult,
-        ),
+        await _load(searchQuery: current.searchQuery),
       );
       ref.invalidate(categoryLookupProvider);
     } catch (error, stackTrace) {
@@ -120,7 +104,6 @@ class CategoryController extends AsyncNotifier<CategoryScreenState> {
     try {
       final loaded = await _load(
         searchQuery: previous?.searchQuery,
-        lastSyncResult: previous?.lastSyncResult,
       );
       state = AsyncData(loaded);
       ref.invalidate(categoryLookupProvider);
@@ -173,23 +156,6 @@ class CategoryController extends AsyncNotifier<CategoryScreenState> {
   Future<int> countProductsUsingCategory(String id) =>
       _repository.countProductsUsingCategory(id);
 
-  Future<CategorySyncResult> syncNow() async {
-    final current = state.value ?? await _load();
-    state = AsyncData(current.copyWith(isSyncing: true));
-
-    final result = await _syncService.synchronize(shopId: _shopId, force: true);
-
-    if (kDebugMode && !result.success) {
-      debugPrint(result.messageFor(includeDiagnostics: true));
-    }
-
-    state = AsyncData(
-      await _load(searchQuery: current.searchQuery, lastSyncResult: result),
-    );
-    ref.invalidate(categoryLookupProvider);
-    return result;
-  }
-
   Future<void> loadNextPage() async {
     final current = state.value;
     if (current == null || current.isLoadingMore || !current.hasNextPage) {
@@ -203,7 +169,6 @@ class CategoryController extends AsyncNotifier<CategoryScreenState> {
         pageNumber: nextPage,
         pageSize: current.pageSize,
         searchQuery: current.searchQuery,
-        lastSyncResult: current.lastSyncResult,
       );
 
       state = AsyncData(
@@ -222,15 +187,11 @@ class CategoryController extends AsyncNotifier<CategoryScreenState> {
 
   Future<CategoryScreenState> _load({
     String? searchQuery,
-    CategorySyncResult? lastSyncResult,
-    bool isSyncing = false,
   }) async {
     return _readLocal(
       pageNumber: 1,
       pageSize: _pageSize,
       searchQuery: searchQuery,
-      lastSyncResult: lastSyncResult,
-      isSyncing: isSyncing,
     );
   }
 
@@ -238,8 +199,6 @@ class CategoryController extends AsyncNotifier<CategoryScreenState> {
     required int pageNumber,
     required int pageSize,
     String? searchQuery,
-    CategorySyncResult? lastSyncResult,
-    bool isSyncing = false,
   }) async {
     final shopId = _shopId;
     final totalCount = await _repository.getTotalCount(
@@ -261,21 +220,12 @@ class CategoryController extends AsyncNotifier<CategoryScreenState> {
       pageSize: pageSize,
       totalCount: totalCount,
       totalPages: (totalCount / pageSize).ceil(),
-      isSyncing: isSyncing,
-      lastSyncResult: lastSyncResult,
     );
   }
 }
 
 final categoryRepositoryProvider = Provider<CategoryPowerSyncRepository>(
   (ref) => CategoryPowerSyncRepository(ref.watch(appPowerSyncDatabaseProvider)),
-);
-
-final categorySyncServiceProvider = Provider<CategoryPowerSyncService>(
-  (ref) => CategoryPowerSyncService(
-    ref.watch(appPowerSyncDatabaseProvider),
-    ref.watch(categoryRepositoryProvider),
-  ),
 );
 
 final categoryControllerProvider =
