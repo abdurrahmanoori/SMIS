@@ -213,6 +213,7 @@
     ".NET Launch Settings Profile.SMIS.Api: https.executor": "Run",
     ".NET Launch Settings Profile.SMIS.UI: Windows Machine.executor": "Run",
     "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "Dart Command Line App.Run & Debug Flutter.executor": "Run",
     "DataGrid.QuickDoc.View": "TRANSPOSED",
     "ModuleVcsDetector.initialDetectionPerformed": "true",
     "Notification.DisplayName-DoNotAsk-Rider": "Rider",
@@ -223,6 +224,7 @@
     "RunOnceActivity.git.unshallow": "true",
     "RunOnceActivity.readMode.enableVisualFormatting": "true",
     "RunOnceActivity.typescript.service.memoryLimit.init": "true",
+    "Shell Script.Run Flutter App.executor": "Debug",
     "cidr.known.project.marker": "true",
     "codeWithMe.voiceChat.enabledByDefault": "false",
     "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
@@ -236,7 +238,7 @@
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "dart.settings",
+    "settings.editor.selected.configurable": "preferences.lookFeel",
     "sqlserver_backup_path_localServer": "E:",
     "to.speed.mode.migration.done": "true"
   },
@@ -252,7 +254,12 @@
     ]
   }
 }]]></component>
-  <component name="RunManager" selected=".NET Launch Settings Profile.SMIS.Api: http">
+  <component name="RunManager" selected="Shell Script.Run Flutter App">
+    <configuration name="Run &amp; Debug Flutter" type="DartCommandLineRunConfigurationType" factoryName="Dart Command Line Application">
+      <option name="filePath" value="$PROJECT_DIR$/smis_flutter/lib/main.dart" />
+      <option name="workingDirectory" value="$PROJECT_DIR$/smis_flutter" />
+      <method v="2" />
+    </configuration>
     <configuration name="SMIS.Api: Production" type="LaunchSettings" factoryName=".NET Launch Settings Profile">
       <option name="LAUNCH_PROFILE_PROJECT_FILE_PATH" value="$PROJECT_DIR$/SMIS.Api/SMIS.Api.csproj" />
       <option name="LAUNCH_PROFILE_TFM" value="net9.0" />
@@ -349,6 +356,31 @@
         <option name="Build" />
       </method>
     </configuration>
+    <configuration name="Run Flutter App" type="ShConfigurationType">
+      <option name="SCRIPT_TEXT" value="flutter run -d windows" />
+      <option name="INDEPENDENT_SCRIPT_PATH" value="true" />
+      <option name="SCRIPT_PATH" value="" />
+      <option name="SCRIPT_OPTIONS" value="" />
+      <option name="INDEPENDENT_SCRIPT_WORKING_DIRECTORY" value="true" />
+      <option name="SCRIPT_WORKING_DIRECTORY" value="$PROJECT_DIR$/smis_flutter" />
+      <option name="INDEPENDENT_INTERPRETER_PATH" value="true" />
+      <option name="INTERPRETER_PATH" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="EXECUTE_IN_TERMINAL" value="true" />
+      <option name="EXECUTE_SCRIPT_FILE" value="false" />
+      <envs />
+      <method v="2" />
+    </configuration>
+    <list>
+      <item itemvalue=".NET Launch Settings Profile.SMIS.Api: http" />
+      <item itemvalue=".NET Launch Settings Profile.SMIS.Api: https" />
+      <item itemvalue=".NET Launch Settings Profile.SMIS.Api: Production" />
+      <item itemvalue=".NET Launch Settings Profile.SMIS.WebMaui: http" />
+      <item itemvalue=".NET Launch Settings Profile.SMIS.WebMaui: https" />
+      <item itemvalue=".NET Launch Settings Profile.SMIS.WebMaui: Production" />
+      <item itemvalue="Dart Command Line App.Run &amp; Debug Flutter" />
+      <item itemvalue="Shell Script.Run Flutter App" />
+    </list>
   </component>
   <component name="TaskManager">
     <task id="Default" summary="Default task">
@@ -365,14 +397,6 @@
       <option name="presentableId" value="LOCAL-00001" />
       <option name="project" value="LOCAL" />
       <updated>1789462942314</updated>
-    </task>
-    <task id="LOCAL-00034" summary="feat: add WebDeploy configurations for site48297 and site62669 in workspace settings">
-      <option name="closed" value="true" />
-      <created>1788702761468</created>
-      <option name="number" value="00034" />
-      <option name="presentableId" value="LOCAL-00034" />
-      <option name="project" value="LOCAL" />
-      <updated>1788702761468</updated>
     </task>
     <task id="LOCAL-00035" summary="feat: implement offline-first flow for Unit of Measurement with local storage and synchronization">
       <option name="closed" value="true" />
@@ -750,7 +774,15 @@
       <option name="project" value="LOCAL" />
       <updated>1789969973093</updated>
     </task>
-    <option name="localTasksCounter" value="82" />
+    <task id="LOCAL-00082" summary="feat: add PowerSync upload handlers for categories, products, units of measure, and shops; streamline synchronization process and improve error handling">
+      <option name="closed" value="true" />
+      <created>1789971609031</created>
+      <option name="number" value="00082" />
+      <option name="presentableId" value="LOCAL-00082" />
+      <option name="project" value="LOCAL" />
+      <updated>1789971609031</updated>
+    </task>
+    <option name="localTasksCounter" value="83" />
     <option name="clearContext" value="false" />
     <option name="createChangelist" value="false" />
     <option name="createBranch" value="false" />
@@ -771,7 +803,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
-    <MESSAGE value="feat: implement search functionality for products, shops, and units of measurement" />
     <MESSAGE value="feat: implement product count check before category deletion and update related error handling" />
     <MESSAGE value="feat: add reference count checks before deleting products, shops, and units of measurement" />
     <MESSAGE value="feat: enforce unique category names per shop and enhance related error handling" />
@@ -796,6 +827,7 @@
     <MESSAGE value="feat: enhance PowerSync integration with new repositories and services; add support for super admin claims in token generation" />
     <MESSAGE value="feat: implement shop context management; remove ShopId from various DTOs and commands, and enforce active shop validation in related operations" />
     <MESSAGE value="feat: enhance search functionality across controllers; implement request ID tracking to prevent stale responses" />
+    <MESSAGE value="feat: add PowerSync upload handlers for categories, products, units of measure, and shops; streamline synchronization process and improve error handling" />
     <option name="LAST_COMMIT_MESSAGE" value="" />
   </component>
   <component name="XDebuggerManager">

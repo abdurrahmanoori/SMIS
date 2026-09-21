@@ -11,7 +11,6 @@ class AppConfig {
   // background tooling. Normal app requests use the securely stored login token.
   static const authToken = String.fromEnvironment('SMIS_AUTH_TOKEN');
 
-  static const databaseName = 'smis_app.db';
   static const powerSyncDatabaseName = 'smis_powersync.db';
 
   static const accountEndpoint = '/api/Account';
@@ -24,6 +23,4 @@ class AppConfig {
   static const shopEndpoint = '/api/Shop';
   static const productEndpoint = '/api/Product';
   static const productUnitEndpoint = '/api/ProductUnit';
-  static const backgroundTaskIdentifier =
-      'com.example.smisFlutter.categorySync';
 }

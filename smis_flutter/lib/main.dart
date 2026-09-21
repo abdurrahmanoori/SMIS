@@ -1,15 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:sqflite/sqflite.dart';
 
 import 'config/app_config.dart';
-import 'controllers/app_dependencies.dart';
-import 'data/database.dart';
-import 'data/database_factory_init.dart'
-    if (dart.library.io) 'data/database_factory_native.dart'
-    if (dart.library.html) 'data/database_factory_web.dart';
 import 'screens/authentication_gate.dart';
-import 'services/background_sync.dart';
 import 'controllers/theme_controller.dart';
 import 'controllers/locale_controller.dart';
 import 'l10n/app_localizations.dart';
@@ -29,29 +22,8 @@ Future<void> main() async {
 Future<void> mainEntryPoint() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  final dbConfig = await initDatabasePlatform(AppConfig.databaseName);
-  databaseFactory = dbConfig.factory;
-
-  final database = AppDatabase(databasePath: dbConfig.path);
-  await database.instance;
-
-  try {
-    await BackgroundSyncScheduler.initialize();
-  } catch (error, stackTrace) {
-    FlutterError.reportError(
-      FlutterErrorDetails(
-        exception: error,
-        stack: stackTrace,
-        library: 'background synchronization',
-      ),
-    );
-  }
-
   runApp(
-    ProviderScope(
-      overrides: [appDatabaseProvider.overrideWithValue(database)],
-      child: const SmisApp(),
-    ),
+    const ProviderScope(child: SmisApp()),
   );
 }
 
