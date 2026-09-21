@@ -33,8 +33,8 @@ namespace SMIS.Application.Features.Products.Validators
                 .When(x => !string.IsNullOrEmpty(x.ProductCreateDto.ImageUrl));
 
             RuleFor(x => x.ProductCreateDto.CategoryId)
-                .MaximumLength(50).WithMessage("CategoryId must not exceed 50 characters")
-                .When(x => !string.IsNullOrEmpty(x.ProductCreateDto.CategoryId));
+                .NotEmpty().WithMessage("CategoryId is required")
+                .MaximumLength(450).WithMessage("CategoryId must not exceed 450 characters");
 
             RuleFor(x => x.ProductCreateDto.ReorderPointBase)
                 .GreaterThanOrEqualTo(0);

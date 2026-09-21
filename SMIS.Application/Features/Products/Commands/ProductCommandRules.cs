@@ -20,11 +20,11 @@ internal static class ProductCommandRules
             shopId,
             dto.BaseUnitId,
             dto.SKU,
+            dto.CategoryId,
             dto.IsActive,
             dto.Description,
             dto.Barcode,
             dto.ImageUrl,
-            dto.CategoryId,
             dto.ReorderPointBase,
             dto.ReorderQuantityBase);
 
@@ -37,11 +37,11 @@ internal static class ProductCommandRules
             shopId,
             dto.BaseUnitId,
             dto.SKU,
+            dto.CategoryId,
             dto.IsActive,
             dto.Description,
             dto.Barcode,
             dto.ImageUrl,
-            dto.CategoryId,
             dto.ReorderPointBase,
             dto.ReorderQuantityBase);
 
@@ -114,11 +114,11 @@ internal static class ProductCommandRules
         string shopId,
         string baseUnitId,
         string sku,
+        string categoryId,
         bool isActive,
         string? description,
         string? barcode,
         string? imageUrl,
-        string? categoryId,
         decimal reorderPointBase,
         decimal reorderQuantityBase
     )
@@ -128,11 +128,11 @@ internal static class ProductCommandRules
             shopId,
             baseUnitId,
             sku,
+            categoryId,
             isActive,
             description,
             barcode,
-            imageUrl,
-            categoryId);
+            imageUrl);
 
         product.SetReorderPolicy(reorderPointBase, reorderQuantityBase);
         return product;
@@ -147,7 +147,7 @@ internal static class ProductCommandRules
         string? description,
         string? barcode,
         string? imageUrl,
-        string? categoryId,
+        string categoryId,
         decimal reorderPointBase,
         decimal reorderQuantityBase
     )

@@ -87,15 +87,8 @@ namespace SMIS.Application.Features.Products.Commands
                 baseProductUnit.ClearClientModificationMetadata();
             }
 
-            if (!string.IsNullOrWhiteSpace(request.ProductCreateDto.CategoryId))
-            {
-                var category = await _categoryRepository.GetByIdAsync(request.ProductCreateDto.CategoryId);
-                entity.CategoryName = category?.Name;
-            }
-            else
-            {
-                entity.CategoryName = null;
-            }
+            var category = await _categoryRepository.GetByIdAsync(request.ProductCreateDto.CategoryId);
+            entity.CategoryName = category?.Name;
 
             // A direct API edit becomes the current server-originated version.
             entity.ClearClientModificationMetadata();

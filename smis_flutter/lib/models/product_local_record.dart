@@ -7,6 +7,7 @@ class ProductLocalRecord {
     required this.id,
     required this.name,
     required this.baseUnitId,
+    required this.categoryId,
     required this.isActive,
     required this.createdAt,
     required this.updatedAt,
@@ -19,7 +20,6 @@ class ProductLocalRecord {
     this.description,
     this.barcode,
     this.imageUrl,
-    this.categoryId,
     this.shopId,
     this.nextRetryAt,
     this.lastSyncError,
@@ -38,7 +38,7 @@ class ProductLocalRecord {
   final bool isActive;
   final String? barcode;
   final String? imageUrl;
-  final String? categoryId;
+  final String categoryId;
   final String? shopId;
   final DateTime createdAt;
   final DateTime updatedAt;
@@ -86,7 +86,6 @@ class ProductLocalRecord {
     String? imageUrl,
     bool clearImageUrl = false,
     String? categoryId,
-    bool clearCategoryId = false,
     String? shopId,
     DateTime? updatedAt,
     DateTime? lastModifiedUtc,
@@ -112,7 +111,7 @@ class ProductLocalRecord {
     isActive: isActive ?? this.isActive,
     barcode: clearBarcode ? null : barcode ?? this.barcode,
     imageUrl: clearImageUrl ? null : imageUrl ?? this.imageUrl,
-    categoryId: clearCategoryId ? null : categoryId ?? this.categoryId,
+    categoryId: categoryId ?? this.categoryId,
     shopId: shopId ?? this.shopId,
     createdAt: createdAt,
     updatedAt: updatedAt ?? this.updatedAt,
@@ -166,7 +165,7 @@ class ProductLocalRecord {
     isActive: map['is_active'] == 1,
     barcode: map['barcode'] as String?,
     imageUrl: map['image_url'] as String?,
-    categoryId: map['category_id'] as String?,
+    categoryId: map['category_id']! as String,
     shopId: map['shop_id'] as String?,
     createdAt: DateTime.parse(map['created_at']! as String).toUtc(),
     updatedAt: DateTime.parse(map['updated_at']! as String).toUtc(),

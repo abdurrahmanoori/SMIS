@@ -62,6 +62,7 @@ namespace SMIS.Infrastructure.Server.EntityConfigurations
                 .HasPrecision(18, 4);
 
             builder.Property(p => p.CategoryId)
+                .IsRequired()
                 .HasMaxLength(450);
 
             builder.Property(p => p.CategoryName)
@@ -97,7 +98,7 @@ namespace SMIS.Infrastructure.Server.EntityConfigurations
             builder.HasOne(p => p.Category)
                 .WithMany(c => c.Products)
                 .HasForeignKey(p => p.CategoryId)
-                .OnDelete(DeleteBehavior.SetNull);
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

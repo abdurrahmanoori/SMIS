@@ -13,6 +13,7 @@ class Product {
     required this.id,
     required this.name,
     required this.baseUnitId,
+    required this.categoryId,
     required this.isActive,
     required this.createdAt,
     required this.updatedAt,
@@ -22,7 +23,6 @@ class Product {
     this.description,
     this.barcode,
     this.imageUrl,
-    this.categoryId,
     this.shopId,
     this.lastSyncError,
   });
@@ -35,7 +35,7 @@ class Product {
   final bool isActive;
   final String? barcode;
   final String? imageUrl;
-  final String? categoryId;
+  final String categoryId;
   final String? shopId;
   final DateTime createdAt;
   final DateTime updatedAt;
@@ -48,12 +48,12 @@ class ProductDraft {
   const ProductDraft({
     required this.name,
     required this.baseUnitId,
+    required this.categoryId,
     required this.isActive,
     this.sku,
     this.description,
     this.barcode,
     this.imageUrl,
-    this.categoryId,
   });
 
   final String name;
@@ -63,7 +63,7 @@ class ProductDraft {
   final bool isActive;
   final String? barcode;
   final String? imageUrl;
-  final String? categoryId;
+  final String categoryId;
 
   ProductDraft normalized() {
     final normalizedName = name.trim();
@@ -72,7 +72,7 @@ class ProductDraft {
     final normalizedDescription = description?.trim();
     final normalizedBarcode = barcode?.trim();
     final normalizedImageUrl = imageUrl?.trim();
-    final normalizedCategoryId = categoryId?.trim();
+    final normalizedCategoryId = categoryId.trim();
 
     if (normalizedName.isEmpty) {
       throw const ProductValidationException('Name is required.');
@@ -98,7 +98,10 @@ class ProductDraft {
     if (normalizedImageUrl != null && normalizedImageUrl.length > 500) {
       throw const ProductValidationException('Image URL cannot exceed 500 characters.');
     }
-    if (normalizedCategoryId != null && normalizedCategoryId.length > 450) {
+    if (normalizedCategoryId.isEmpty) {
+      throw const ProductValidationException('Select a category.');
+    }
+    if (normalizedCategoryId.length > 450) {
       throw const ProductValidationException('Category ID cannot exceed 450 characters.');
     }
 
@@ -110,7 +113,7 @@ class ProductDraft {
       isActive: isActive,
       barcode: _emptyToNull(normalizedBarcode),
       imageUrl: _emptyToNull(normalizedImageUrl),
-      categoryId: _emptyToNull(normalizedCategoryId),
+      categoryId: normalizedCategoryId,
     );
   }
 

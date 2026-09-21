@@ -115,13 +115,9 @@ class _ProductFormDialogState extends State<ProductFormDialog> {
                 initialValue: _categoryId,
                 isExpanded: true,
                 decoration: InputDecoration(
-                  labelText: context.l10n.text('Category'),
+                  labelText: context.l10n.text('Category *'),
                 ),
                 items: [
-                  DropdownMenuItem<String>(
-                    value: '',
-                    child: Text(context.l10n.text('No category')),
-                  ),
                   ...widget.categories.map(
                     (category) => DropdownMenuItem(
                       value: category.id,
@@ -142,9 +138,10 @@ class _ProductFormDialogState extends State<ProductFormDialog> {
                       ),
                     ),
                 ],
-                onChanged: (value) => setState(
-                  () => _categoryId = value?.isEmpty ?? true ? null : value,
-                ),
+                onChanged: (value) => setState(() => _categoryId = value),
+                validator: (value) => value == null
+                    ? context.l10n.text('Select a category.')
+                    : null,
               ),
               const SizedBox(height: 12),
               TextFormField(
@@ -205,7 +202,7 @@ class _ProductFormDialogState extends State<ProductFormDialog> {
             ProductDraft(
               name: _name.text,
               baseUnitId: _baseUnitId!,
-              categoryId: _categoryId,
+              categoryId: _categoryId!,
               sku: _sku.text,
               description: _description.text,
               isActive: _isActive,

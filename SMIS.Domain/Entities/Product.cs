@@ -29,7 +29,7 @@ public class Product : BaseSyncableAuditableEntity, IEntity, IShopEntity
     public decimal ReorderPointBase { get; private set; }
     public decimal ReorderQuantityBase { get; private set; }
 
-    public string? CategoryId { get; private set; }
+    public string CategoryId { get; private set; } = string.Empty;
     public string? CategoryName { get; set; }
     public string ShopId { get; private set; } = string.Empty;
 
@@ -38,7 +38,7 @@ public class Product : BaseSyncableAuditableEntity, IEntity, IShopEntity
     // Navigation Properties
     public Shop Shop { get; set; } = null!;
     public UnitOfMeasure UnitOfMeasure { get; set; } = null!;
-    public Category? Category { get; set; }
+    public Category Category { get; set; } = null!;
     public ICollection<ProductUnit> ProductUnits { get; set; } = new List<ProductUnit>();
 
     internal Product()
@@ -50,11 +50,11 @@ public class Product : BaseSyncableAuditableEntity, IEntity, IShopEntity
         string shopId,
         string baseUnitId,
         string sku,
+        string categoryId,
         bool isActive = true,
         string? description = null,
         string? barcode = null,
-        string? imageUrl = null,
-        string? categoryId = null
+        string? imageUrl = null
     )
     {
         var product = new Product();
@@ -168,10 +168,13 @@ public class Product : BaseSyncableAuditableEntity, IEntity, IShopEntity
     }
 
     public void SetCategoryId(
-        string? categoryId
+        string categoryId
     )
     {
-        CategoryId = categoryId;
+        if (string.IsNullOrWhiteSpace(categoryId))
+            throw new DomainValidationException("Category ID cannot be empty");
+
+        CategoryId = categoryId.Trim();
     }
 
     public void Activate() => IsActive = true;

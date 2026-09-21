@@ -9,7 +9,7 @@ public class ProductSyncUpdateDto
     public string SKU { get; set; } = string.Empty;
     public string? Barcode { get; set; }
     public string? ImageUrl { get; set; }
-    public string? CategoryId { get; set; }
+    public string CategoryId { get; set; } = string.Empty;
     public decimal ReorderPointBase { get; set; }
     public decimal ReorderQuantityBase { get; set; }
     public DateTime ClientModifiedDate { get; set; }

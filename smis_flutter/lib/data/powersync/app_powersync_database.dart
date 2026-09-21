@@ -65,6 +65,7 @@ class AppPowerSyncDatabase {
         : p.join((await getApplicationSupportDirectory()).path, fileName);
     final database = PowerSyncDatabase(schema: appPowerSyncSchema, path: path);
     await database.initialize();
+    await _repairMissingProductCategories(database);
     _database = database;
     _databaseContextKey = contextKey;
     _connectedContextKey = null;
@@ -72,6 +73,31 @@ class AppPowerSyncDatabase {
 
   String _contextKey(String userId, String shopId) =>
       '${userId}_$shopId'.replaceAll(RegExp(r'[^A-Za-z0-9_-]'), '_');
+
+  Future<void> _repairMissingProductCategories(PowerSyncDatabase database) async {
+    await database.execute(
+      'UPDATE product '
+      'SET category_id = ('
+      'SELECT category.id FROM category '
+      'WHERE category.shop_id = product.shop_id '
+      'ORDER BY RANDOM() LIMIT 1'
+      ') '
+      'WHERE category_id IS NULL '
+      'AND EXISTS ('
+      'SELECT 1 FROM category WHERE category.shop_id = product.shop_id'
+      ')',
+    );
+
+    final unresolved = await database.get(
+      'SELECT COUNT(*) AS count FROM product WHERE category_id IS NULL',
+    );
+    if ((unresolved['count'] as int) > 0) {
+      throw StateError(
+        'Every product requires a category, but at least one local product '
+        'belongs to a shop with no available category.',
+      );
+    }
+  }
 
   Future<void> close() async {
     await _database?.close();

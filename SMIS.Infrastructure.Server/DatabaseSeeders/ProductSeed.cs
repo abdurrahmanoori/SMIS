@@ -39,9 +39,9 @@ public static class ProductSeed
         );
     }
 
-    private static Product CreateProduct(string id, string name, string shopId, string baseUnitId, string sku, string? description, string? barcode, string? imageUrl, string? categoryId, bool isActive)
+    private static Product CreateProduct(string id, string name, string shopId, string baseUnitId, string sku, string? description, string? barcode, string? imageUrl, string categoryId, bool isActive)
     {
-        var product = Product.Create(name, shopId, baseUnitId, sku, isActive, description, barcode, imageUrl, categoryId);
+        var product = Product.Create(name, shopId, baseUnitId, sku, categoryId, isActive, description, barcode, imageUrl);
 
         // Set ID and Name fields for seeding
         typeof(Product).GetProperty(nameof(Product.Id))!.SetValue(product, id);

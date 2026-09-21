@@ -15,7 +15,7 @@ namespace SMIS.Application.DTO.Products
         public string SKU { get; set; } = string.Empty; // Unique identifier
         public string? Barcode { get; set; }
         public string? ImageUrl { get; set; }
-        public string? CategoryId { get; set; }
+        public string CategoryId { get; set; } = string.Empty;
         public decimal ReorderPointBase { get; set; }
         public decimal ReorderQuantityBase { get; set; }
     }

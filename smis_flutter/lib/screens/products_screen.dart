@@ -300,8 +300,7 @@ class _Content extends StatelessWidget {
     return id;
   }
 
-  String? _categoryName(String? id) {
-    if (id == null) return null;
+  String? _categoryName(String id) {
     for (final category in categories) {
       if (category.id == id) return category.name;
     }

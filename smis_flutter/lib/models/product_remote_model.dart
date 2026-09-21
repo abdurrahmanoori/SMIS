@@ -5,6 +5,7 @@ class ProductRemoteModel {
     required this.id,
     required this.name,
     required this.baseUnitId,
+    required this.categoryId,
     required this.isActive,
     required this.shopId,
     required this.lastModifiedUtc,
@@ -13,7 +14,6 @@ class ProductRemoteModel {
     this.description,
     this.barcode,
     this.imageUrl,
-    this.categoryId,
     this.createdDate,
     this.updatedDate,
     this.createdBy,
@@ -33,7 +33,7 @@ class ProductRemoteModel {
   final bool isActive;
   final String? barcode;
   final String? imageUrl;
-  final String? categoryId;
+  final String categoryId;
   final String shopId;
   final DateTime lastModifiedUtc;
   final bool isDeleted;
@@ -62,7 +62,7 @@ class ProductRemoteModel {
       isActive: json['isActive'] as bool? ?? true,
       barcode: json['barcode'] as String?,
       imageUrl: json['imageUrl'] as String?,
-      categoryId: json['categoryId'] as String?,
+      categoryId: json['categoryId'] as String,
       shopId: json['shopId'] as String? ?? '',
       lastModifiedUtc: lastModifiedUtc,
       isDeleted: json['isDeleted'] as bool? ?? false,

@@ -72,11 +72,8 @@ internal sealed class ProductCreateCommandHandler : IRequestHandler<ProductCreat
         var unit = await _unitOfMeasureRepository.GetByIdAsync(request.ProductCreateDto.BaseUnitId);
         entity.BaseUnitName = unit?.Name;
 
-        if (!string.IsNullOrWhiteSpace(request.ProductCreateDto.CategoryId))
-        {
-            var category = await _categoryRepository.GetByIdAsync(request.ProductCreateDto.CategoryId);
-            entity.CategoryName = category?.Name;
-        }
+        var category = await _categoryRepository.GetByIdAsync(request.ProductCreateDto.CategoryId);
+        entity.CategoryName = category?.Name;
 
         await _productRepository.AddAsync(entity);
 

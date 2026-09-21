@@ -167,7 +167,7 @@ class ProductPowerSyncRepository extends PowerSyncRepositorySupport {
   Future<void> _ensureReferences(
     String shopId,
     String baseUnitId,
-    String? categoryId,
+    String categoryId,
   ) async {
     final db = await database;
     if (await db.getOptional('SELECT id FROM unit_of_measure WHERE id = ?', [
@@ -178,16 +178,14 @@ class ProductPowerSyncRepository extends PowerSyncRepositorySupport {
         'The selected base unit does not exist in local storage.',
       );
     }
-    if (categoryId != null && categoryId.trim().isNotEmpty) {
-      if (await db.getOptional(
-            'SELECT id FROM category WHERE id = ? AND shop_id = ?',
-            [categoryId, shopId],
-          ) ==
-          null) {
-        throw const LocalStorageException(
-          'The selected category does not exist in local storage.',
-        );
-      }
+    if (await db.getOptional(
+          'SELECT id FROM category WHERE id = ? AND shop_id = ?',
+          [categoryId, shopId],
+        ) ==
+        null) {
+      throw const LocalStorageException(
+        'The selected category does not exist in local storage.',
+      );
     }
   }
 
@@ -227,7 +225,7 @@ class ProductPowerSyncRepository extends PowerSyncRepositorySupport {
       isActive: row['is_active'] == 1,
       barcode: row['barcode'] as String?,
       imageUrl: row['image_url'] as String?,
-      categoryId: row['category_id'] as String?,
+      categoryId: row['category_id']! as String,
       shopId: row['shop_id'] as String?,
       createdAt: changedAt,
       updatedAt: changedAt,
