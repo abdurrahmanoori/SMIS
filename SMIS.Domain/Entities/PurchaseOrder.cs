@@ -131,6 +131,7 @@ public sealed class PurchaseOrderLine : BaseAuditableEntity
             throw new DomainValidationException("Received quantity cannot exceed the remaining purchase-order quantity");
 
         ReceivedQuantityEntered += quantityEntered;
+        Version++;
     }
 
     public void RegisterSupplierReturn(decimal quantityEntered)
@@ -141,5 +142,6 @@ public sealed class PurchaseOrderLine : BaseAuditableEntity
             throw new DomainValidationException("Supplier-return quantity cannot exceed net received quantity");
 
         ReturnedQuantityEntered += quantityEntered;
+        Version++;
     }
 }

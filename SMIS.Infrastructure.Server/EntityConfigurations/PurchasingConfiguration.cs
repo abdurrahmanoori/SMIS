@@ -83,6 +83,7 @@ public sealed class PurchaseOrderLineConfiguration : IEntityTypeConfiguration<Pu
         builder.Property(line => line.ReceivedQuantityEntered).IsRequired().HasPrecision(18, 4);
         builder.Property(line => line.ReturnedQuantityEntered).IsRequired().HasPrecision(18, 4);
         builder.Property(line => line.UnitCostBase).IsRequired();
+        builder.Property(line => line.Version).IsConcurrencyToken();
 
         builder.HasOne(line => line.Product)
             .WithMany()
