@@ -1,11 +1,13 @@
 ﻿using AutoMapper;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using SMIS.Application.Common.Response;
 using SMIS.Application.DTO.ProductUnits;
 using SMIS.Application.Identity.IServices;
 using SMIS.Application.Repositories.Base;
 using SMIS.Application.Repositories.Products;
 using SMIS.Application.Repositories.ProductUnits;
+using SMIS.Application.Services;
 using SMIS.Domain.Entities;
 using SMIS.Domain.Services;
 
@@ -21,6 +23,7 @@ internal sealed class
     ProductUnitSyncCreateCommandHandler : IRequestHandler<ProductUnitSyncCreateCommand, Result<ProductUnitDto>>
 {
     private readonly IProductUnitRepository _repository;
+    private readonly IApplicationDbContext _db;
     private readonly IProductRepository _products;
     private readonly IUnitOfWork _uow;
     private readonly ICurrentUser _user;
@@ -28,6 +31,7 @@ internal sealed class
 
     public ProductUnitSyncCreateCommandHandler(
         IProductUnitRepository repository,
+        IApplicationDbContext db,
         IProductRepository products,
         IUnitOfWork uow,
         ICurrentUser user,
@@ -35,6 +39,7 @@ internal sealed class
     )
     {
         _repository = repository;
+        _db = db;
         _products = products;
         _uow = uow;
         _user = user;
@@ -55,7 +60,9 @@ internal sealed class
 
         var id = ProductUnitSyncRules.Id(request.Dto.Id);
         var modified = DateTimeService.NormalizeUtc(request.Dto.ClientModifiedDate);
-        var value = await _repository.GetByIdIncludingDeletedAsync(id, ct);
+        var value = await _db.ProductUnits
+            .IgnoreQueryFilters()
+            .FirstOrDefaultAsync(productUnit => productUnit.Id == id, ct);
 
         if (value is not null)
         {
@@ -115,6 +122,7 @@ internal sealed class
     ProductUnitSyncUpdateCommandHandler : IRequestHandler<ProductUnitSyncUpdateCommand, Result<ProductUnitDto>>
 {
     private readonly IProductUnitRepository _repository;
+    private readonly IApplicationDbContext _db;
     private readonly IProductRepository _products;
     private readonly IUnitOfWork _uow;
     private readonly ICurrentUser _user;
@@ -122,6 +130,7 @@ internal sealed class
 
     public ProductUnitSyncUpdateCommandHandler(
         IProductUnitRepository repository,
+        IApplicationDbContext db,
         IProductRepository products,
         IUnitOfWork uow,
         ICurrentUser user,
@@ -129,6 +138,7 @@ internal sealed class
     )
     {
         _repository = repository;
+        _db = db;
         _products = products;
         _uow = uow;
         _user = user;
@@ -143,7 +153,10 @@ internal sealed class
         if (!ProductUnitSyncRules.User(request.Dto.ClientModifiedBy, _user))
             return ProductUnitSyncRules.InvalidUser();
 
-        var value = await _repository.GetByIdIncludingDeletedAsync(ProductUnitSyncRules.Id(request.Id), ct);
+        var id = ProductUnitSyncRules.Id(request.Id);
+        var value = await _db.ProductUnits
+            .IgnoreQueryFilters()
+            .FirstOrDefaultAsync(productUnit => productUnit.Id == id, ct);
         if (value is null) return Result<ProductUnitDto>.NotFoundResult(request.Id);
 
         var modified = DateTimeService.NormalizeUtc(request.Dto.ClientModifiedDate);
@@ -182,6 +195,7 @@ internal sealed class
     ProductUnitSyncDeleteCommandHandler : IRequestHandler<ProductUnitSyncDeleteCommand, Result<ProductUnitDto>>
 {
     private readonly IProductUnitRepository _repository;
+    private readonly IApplicationDbContext _db;
     private readonly IProductRepository _products;
     private readonly IUnitOfWork _uow;
     private readonly ICurrentUser _user;
@@ -189,6 +203,7 @@ internal sealed class
 
     public ProductUnitSyncDeleteCommandHandler(
         IProductUnitRepository repository,
+        IApplicationDbContext db,
         IProductRepository products,
         IUnitOfWork uow,
         ICurrentUser user,
@@ -196,6 +211,7 @@ internal sealed class
     )
     {
         _repository = repository;
+        _db = db;
         _products = products;
         _uow = uow;
         _user = user;
@@ -210,7 +226,10 @@ internal sealed class
         if (!ProductUnitSyncRules.User(request.Dto.ClientModifiedBy, _user))
             return ProductUnitSyncRules.InvalidUser();
 
-        var value = await _repository.GetByIdIncludingDeletedAsync(ProductUnitSyncRules.Id(request.Id), ct);
+        var id = ProductUnitSyncRules.Id(request.Id);
+        var value = await _db.ProductUnits
+            .IgnoreQueryFilters()
+            .FirstOrDefaultAsync(productUnit => productUnit.Id == id, ct);
         if (value is null) return Result<ProductUnitDto>.NotFoundResult(request.Id);
 
         var product = await ProductUnitSyncRules.GetAccessibleProductAsync(value.ProductId, _products, _user);

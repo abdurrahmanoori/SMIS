@@ -14,12 +14,6 @@ namespace SMIS.Infrastructure.Server.Repositories.ProductUnits
         {
         }
 
-        public Task<ProductUnit?> GetByIdIncludingDeletedAsync(
-            string id,
-            CancellationToken cancellationToken = default
-        ) =>
-            _context.ProductUnits.IgnoreQueryFilters().FirstOrDefaultAsync(unit => unit.Id == id, cancellationToken);
-
         public Task<bool> ExistsPairAsync(
             string productId,
             string unitOfMeasureId,

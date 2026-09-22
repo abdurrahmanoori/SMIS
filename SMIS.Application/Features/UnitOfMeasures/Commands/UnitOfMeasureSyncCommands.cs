@@ -1,10 +1,12 @@
 using AutoMapper;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using SMIS.Application.Common.Response;
 using SMIS.Application.DTO.UnitOfMeasures;
 using SMIS.Application.Identity.IServices;
 using SMIS.Application.Repositories.Base;
 using SMIS.Application.Repositories.UnitOfMeasures;
+using SMIS.Application.Services;
 using SMIS.Domain.Services;
 
 namespace SMIS.Application.Features.UnitOfMeasures.Commands;
@@ -21,16 +23,18 @@ internal sealed class
     UnitOfMeasureSyncCreateCommandHandler : IRequestHandler<UnitOfMeasureSyncCreateCommand, Result<UnitOfMeasureDto>>
 {
     private readonly IUnitOfMeasureRepository _repository;
+    private readonly IApplicationDbContext _db;
     private readonly IUnitOfWork _unitOfWork;
     private readonly ICurrentUser _currentUser;
     private readonly IMapper _mapper;
 
     public UnitOfMeasureSyncCreateCommandHandler(
         IUnitOfMeasureRepository repository,
+        IApplicationDbContext db,
         IUnitOfWork unitOfWork,
         ICurrentUser currentUser,
         IMapper mapper
-    ) => (_repository, _unitOfWork, _currentUser, _mapper) = (repository, unitOfWork, currentUser, mapper);
+    ) => (_repository, _db, _unitOfWork, _currentUser, _mapper) = (repository, db, unitOfWork, currentUser, mapper);
 
     public async Task<Result<UnitOfMeasureDto>> Handle(
         UnitOfMeasureSyncCreateCommand request,
@@ -41,7 +45,9 @@ internal sealed class
         if (!UnitOfMeasureSyncRules.User(request.Dto.ClientCreatedBy, _currentUser) ||
             !UnitOfMeasureSyncRules.User(request.Dto.ClientModifiedBy, _currentUser))
             return UnitOfMeasureSyncRules.InvalidUser();
-        var unit = await _repository.GetByIdIncludingDeletedAsync(id, cancellationToken);
+        var unit = await _db.UnitOfMeasures
+            .IgnoreQueryFilters()
+            .FirstOrDefaultAsync(value => value.Id == id, cancellationToken);
         var modified = DateTimeService.NormalizeUtc(request.Dto.ClientModifiedDate);
         if (unit is not null)
         {
@@ -69,16 +75,18 @@ internal sealed class
     UnitOfMeasureSyncUpdateCommandHandler : IRequestHandler<UnitOfMeasureSyncUpdateCommand, Result<UnitOfMeasureDto>>
 {
     private readonly IUnitOfMeasureRepository _repository;
+    private readonly IApplicationDbContext _db;
     private readonly IUnitOfWork _unitOfWork;
     private readonly ICurrentUser _currentUser;
     private readonly IMapper _mapper;
 
     public UnitOfMeasureSyncUpdateCommandHandler(
         IUnitOfMeasureRepository repository,
+        IApplicationDbContext db,
         IUnitOfWork unitOfWork,
         ICurrentUser currentUser,
         IMapper mapper
-    ) => (_repository, _unitOfWork, _currentUser, _mapper) = (repository, unitOfWork, currentUser, mapper);
+    ) => (_repository, _db, _unitOfWork, _currentUser, _mapper) = (repository, db, unitOfWork, currentUser, mapper);
 
     public async Task<Result<UnitOfMeasureDto>> Handle(
         UnitOfMeasureSyncUpdateCommand request,
@@ -87,8 +95,10 @@ internal sealed class
     {
         if (!UnitOfMeasureSyncRules.User(request.Dto.ClientModifiedBy, _currentUser))
             return UnitOfMeasureSyncRules.InvalidUser();
-        var unit = await _repository.GetByIdIncludingDeletedAsync(UnitOfMeasureSyncRules.Id(request.Id),
-            cancellationToken);
+        var id = UnitOfMeasureSyncRules.Id(request.Id);
+        var unit = await _db.UnitOfMeasures
+            .IgnoreQueryFilters()
+            .FirstOrDefaultAsync(value => value.Id == id, cancellationToken);
         if (unit is null) return Result<UnitOfMeasureDto>.NotFoundResult(request.Id);
         var modified = DateTimeService.NormalizeUtc(request.Dto.ClientModifiedDate);
         if (modified <= unit.GetConflictModifiedUtc())
@@ -105,16 +115,18 @@ internal sealed class
     UnitOfMeasureSyncDeleteCommandHandler : IRequestHandler<UnitOfMeasureSyncDeleteCommand, Result<UnitOfMeasureDto>>
 {
     private readonly IUnitOfMeasureRepository _repository;
+    private readonly IApplicationDbContext _db;
     private readonly IUnitOfWork _unitOfWork;
     private readonly ICurrentUser _currentUser;
     private readonly IMapper _mapper;
 
     public UnitOfMeasureSyncDeleteCommandHandler(
         IUnitOfMeasureRepository repository,
+        IApplicationDbContext db,
         IUnitOfWork unitOfWork,
         ICurrentUser currentUser,
         IMapper mapper
-    ) => (_repository, _unitOfWork, _currentUser, _mapper) = (repository, unitOfWork, currentUser, mapper);
+    ) => (_repository, _db, _unitOfWork, _currentUser, _mapper) = (repository, db, unitOfWork, currentUser, mapper);
 
     public async Task<Result<UnitOfMeasureDto>> Handle(
         UnitOfMeasureSyncDeleteCommand request,
@@ -123,8 +135,10 @@ internal sealed class
     {
         if (!UnitOfMeasureSyncRules.User(request.Dto.ClientModifiedBy, _currentUser))
             return UnitOfMeasureSyncRules.InvalidUser();
-        var unit = await _repository.GetByIdIncludingDeletedAsync(
-            UnitOfMeasureSyncRules.Id(request.Id), cancellationToken);
+        var id = UnitOfMeasureSyncRules.Id(request.Id);
+        var unit = await _db.UnitOfMeasures
+            .IgnoreQueryFilters()
+            .FirstOrDefaultAsync(value => value.Id == id, cancellationToken);
         if (unit is null) return Result<UnitOfMeasureDto>.NotFoundResult(request.Id);
         var modified = DateTimeService.NormalizeUtc(request.Dto.ClientModifiedDate);
         if (modified <= unit.GetConflictModifiedUtc())

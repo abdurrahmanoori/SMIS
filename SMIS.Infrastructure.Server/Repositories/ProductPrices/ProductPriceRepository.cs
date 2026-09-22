@@ -14,12 +14,6 @@ public class ProductPriceRepository : GenericRepository<ProductPrice>, IProductP
     {
     }
 
-    public Task<ProductPrice?> GetByIdIncludingDeletedAsync(
-        string id,
-        CancellationToken cancellationToken = default
-    ) =>
-        _context.ProductPrices.IgnoreQueryFilters().FirstOrDefaultAsync(price => price.Id == id, cancellationToken);
-
     public Task<ProductPrice?> GetLatestForProductUnitAsync(
         string productUnitId,
         CancellationToken cancellationToken = default

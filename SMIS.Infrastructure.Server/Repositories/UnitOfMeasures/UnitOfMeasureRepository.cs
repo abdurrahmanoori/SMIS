@@ -14,12 +14,6 @@ namespace SMIS.Infrastructure.Server.Repositories.UnitOfMeasures
         {
         }
 
-        public Task<UnitOfMeasure?> GetByIdIncludingDeletedAsync(
-            string id,
-            CancellationToken cancellationToken = default
-        ) =>
-            _context.UnitOfMeasures.IgnoreQueryFilters().FirstOrDefaultAsync(unit => unit.Id == id, cancellationToken);
-
         public async Task<int> CountReferencesAsync(
             string id,
             CancellationToken cancellationToken = default

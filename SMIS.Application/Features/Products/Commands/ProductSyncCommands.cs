@@ -1,11 +1,13 @@
 using AutoMapper;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using SMIS.Application.Common.Response;
 using SMIS.Application.DTO.Products;
 using SMIS.Application.Identity.IServices;
 using SMIS.Application.Repositories.Base;
 using SMIS.Application.Repositories.Products;
 using SMIS.Application.Repositories.ProductUnits;
+using SMIS.Application.Services;
 using SMIS.Domain.Entities;
 using SMIS.Domain.Services;
 
@@ -20,6 +22,7 @@ public record ProductSyncDeleteCommand(string Id, ProductSyncDeleteDto Dto) : IR
 internal sealed class ProductSyncCreateCommandHandler : IRequestHandler<ProductSyncCreateCommand, Result<ProductDto>>
 {
     private readonly IProductRepository _repository;
+    private readonly IApplicationDbContext _db;
     private readonly IProductUnitRepository _productUnitRepository;
     private readonly IUnitOfWork _unitOfWork;
     private readonly ICurrentUser _currentUser;
@@ -27,12 +30,13 @@ internal sealed class ProductSyncCreateCommandHandler : IRequestHandler<ProductS
 
     public ProductSyncCreateCommandHandler(
         IProductRepository repository,
+        IApplicationDbContext db,
         IProductUnitRepository productUnitRepository,
         IUnitOfWork unitOfWork,
         ICurrentUser currentUser,
         IMapper mapper
-    ) => (_repository, _productUnitRepository, _unitOfWork, _currentUser, _mapper) =
-        (repository, productUnitRepository, unitOfWork, currentUser, mapper);
+    ) => (_repository, _db, _productUnitRepository, _unitOfWork, _currentUser, _mapper) =
+        (repository, db, productUnitRepository, unitOfWork, currentUser, mapper);
 
     public async Task<Result<ProductDto>> Handle(
         ProductSyncCreateCommand request,
@@ -43,7 +47,9 @@ internal sealed class ProductSyncCreateCommandHandler : IRequestHandler<ProductS
         if (!ProductSyncRules.UserMatches(request.Dto.ClientCreatedBy, _currentUser) ||
             !ProductSyncRules.UserMatches(request.Dto.ClientModifiedBy, _currentUser))
             return ProductSyncRules.InvalidUser();
-        var existing = await _repository.GetByIdIncludingDeletedAsync(id, cancellationToken);
+        var existing = await _db.Products
+            .IgnoreQueryFilters()
+            .FirstOrDefaultAsync(product => product.Id == id, cancellationToken);
         var modified = DateTimeService.NormalizeUtc(request.Dto.ClientModifiedDate);
         if (existing is not null)
         {
@@ -85,6 +91,7 @@ internal sealed class ProductSyncCreateCommandHandler : IRequestHandler<ProductS
 internal sealed class ProductSyncUpdateCommandHandler : IRequestHandler<ProductSyncUpdateCommand, Result<ProductDto>>
 {
     private readonly IProductRepository _repository;
+    private readonly IApplicationDbContext _db;
     private readonly IProductUnitRepository _productUnitRepository;
     private readonly IUnitOfWork _unitOfWork;
     private readonly ICurrentUser _currentUser;
@@ -92,12 +99,13 @@ internal sealed class ProductSyncUpdateCommandHandler : IRequestHandler<ProductS
 
     public ProductSyncUpdateCommandHandler(
         IProductRepository repository,
+        IApplicationDbContext db,
         IProductUnitRepository productUnitRepository,
         IUnitOfWork unitOfWork,
         ICurrentUser currentUser,
         IMapper mapper
-    ) => (_repository, _productUnitRepository, _unitOfWork, _currentUser, _mapper) =
-        (repository, productUnitRepository, unitOfWork, currentUser, mapper);
+    ) => (_repository, _db, _productUnitRepository, _unitOfWork, _currentUser, _mapper) =
+        (repository, db, productUnitRepository, unitOfWork, currentUser, mapper);
 
     public async Task<Result<ProductDto>> Handle(
         ProductSyncUpdateCommand request,
@@ -106,9 +114,10 @@ internal sealed class ProductSyncUpdateCommandHandler : IRequestHandler<ProductS
     {
         if (!ProductSyncRules.UserMatches(request.Dto.ClientModifiedBy, _currentUser))
             return ProductSyncRules.InvalidUser();
-        var product =
-            await _repository.GetByIdIncludingDeletedAsync(ProductSyncRules.NormalizeGuid(request.Id),
-                cancellationToken);
+        var id = ProductSyncRules.NormalizeGuid(request.Id);
+        var product = await _db.Products
+            .IgnoreQueryFilters()
+            .FirstOrDefaultAsync(value => value.Id == id, cancellationToken);
         if (product is null) return Result<ProductDto>.NotFoundResult(request.Id);
         if (!ProductSyncRules.CanAccess(product, _currentUser)) return ProductSyncRules.Forbidden();
         var modified = DateTimeService.NormalizeUtc(request.Dto.ClientModifiedDate);
@@ -134,16 +143,18 @@ internal sealed class ProductSyncUpdateCommandHandler : IRequestHandler<ProductS
 internal sealed class ProductSyncDeleteCommandHandler : IRequestHandler<ProductSyncDeleteCommand, Result<ProductDto>>
 {
     private readonly IProductRepository _repository;
+    private readonly IApplicationDbContext _db;
     private readonly IUnitOfWork _unitOfWork;
     private readonly ICurrentUser _currentUser;
     private readonly IMapper _mapper;
 
     public ProductSyncDeleteCommandHandler(
         IProductRepository repository,
+        IApplicationDbContext db,
         IUnitOfWork unitOfWork,
         ICurrentUser currentUser,
         IMapper mapper
-    ) => (_repository, _unitOfWork, _currentUser, _mapper) = (repository, unitOfWork, currentUser, mapper);
+    ) => (_repository, _db, _unitOfWork, _currentUser, _mapper) = (repository, db, unitOfWork, currentUser, mapper);
 
     public async Task<Result<ProductDto>> Handle(
         ProductSyncDeleteCommand request,
@@ -152,9 +163,10 @@ internal sealed class ProductSyncDeleteCommandHandler : IRequestHandler<ProductS
     {
         if (!ProductSyncRules.UserMatches(request.Dto.ClientModifiedBy, _currentUser))
             return ProductSyncRules.InvalidUser();
-        var product =
-            await _repository.GetByIdIncludingDeletedAsync(ProductSyncRules.NormalizeGuid(request.Id),
-                cancellationToken);
+        var id = ProductSyncRules.NormalizeGuid(request.Id);
+        var product = await _db.Products
+            .IgnoreQueryFilters()
+            .FirstOrDefaultAsync(value => value.Id == id, cancellationToken);
         if (product is null) return Result<ProductDto>.NotFoundResult(request.Id);
         if (!ProductSyncRules.CanAccess(product, _currentUser)) return ProductSyncRules.Forbidden();
         var modified = DateTimeService.NormalizeUtc(request.Dto.ClientModifiedDate);

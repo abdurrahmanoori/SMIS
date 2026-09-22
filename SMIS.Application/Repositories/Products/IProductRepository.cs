@@ -5,11 +5,6 @@ namespace SMIS.Application.Repositories.Products
 {
     public interface IProductRepository : IGenericRepository<Product>
     {
-        Task<Product?> GetByIdIncludingDeletedAsync(
-            string id,
-            CancellationToken cancellationToken = default
-        );
-
         Task<int> CountByCategoryIdAsync(
             string categoryId,
             CancellationToken cancellationToken = default

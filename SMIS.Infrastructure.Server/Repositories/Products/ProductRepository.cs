@@ -14,16 +14,6 @@ namespace SMIS.Infrastructure.Server.Repositories.Products
         {
         }
 
-        public Task<Product?> GetByIdIncludingDeletedAsync(
-            string id,
-            CancellationToken cancellationToken = default
-        )
-        {
-            return _context.Products
-                .IgnoreQueryFilters()
-                .FirstOrDefaultAsync(product => product.Id == id, cancellationToken);
-        }
-
         public Task<int> CountByCategoryIdAsync(
             string categoryId,
             CancellationToken cancellationToken = default

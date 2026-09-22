@@ -1,11 +1,13 @@
 using AutoMapper;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using SMIS.Application.Common.Response;
 using SMIS.Application.DTO.ProductPrices;
 using SMIS.Application.Identity.IServices;
 using SMIS.Application.Repositories.Base;
 using SMIS.Application.Repositories.ProductPrices;
 using SMIS.Application.Repositories.ProductUnits;
+using SMIS.Application.Services;
 using SMIS.Domain.Entities;
 using SMIS.Domain.Services;
 
@@ -23,6 +25,7 @@ internal sealed class
     ProductPriceSyncCreateCommandHandler : IRequestHandler<ProductPriceSyncCreateCommand, Result<ProductPriceDto>>
 {
     private readonly IProductPriceRepository _repository;
+    private readonly IApplicationDbContext _db;
     private readonly IProductUnitRepository _productUnits;
     private readonly IUnitOfWork _uow;
     private readonly ICurrentUser _user;
@@ -30,6 +33,7 @@ internal sealed class
 
     public ProductPriceSyncCreateCommandHandler(
         IProductPriceRepository repository,
+        IApplicationDbContext db,
         IProductUnitRepository productUnits,
         IUnitOfWork uow,
         ICurrentUser user,
@@ -37,6 +41,7 @@ internal sealed class
     )
     {
         _repository = repository;
+        _db = db;
         _productUnits = productUnits;
         _uow = uow;
         _user = user;
@@ -53,7 +58,9 @@ internal sealed class
             return ProductPriceSyncRules.InvalidUser();
 
         var id = ProductPriceSyncRules.Id(request.Dto.Id);
-        var existing = await _repository.GetByIdIncludingDeletedAsync(id, ct);
+        var existing = await _db.ProductPrices
+            .IgnoreQueryFilters()
+            .FirstOrDefaultAsync(price => price.Id == id, ct);
         if (existing is not null)
             return Result<ProductPriceDto>.SuccessResult(_mapper.Map<ProductPriceDto>(existing));
 
@@ -82,6 +89,7 @@ internal sealed class
     ProductPriceSyncUpdateCommandHandler : IRequestHandler<ProductPriceSyncUpdateCommand, Result<ProductPriceDto>>
 {
     private readonly IProductPriceRepository _repository;
+    private readonly IApplicationDbContext _db;
     private readonly IProductUnitRepository _productUnits;
     private readonly IUnitOfWork _uow;
     private readonly ICurrentUser _user;
@@ -89,6 +97,7 @@ internal sealed class
 
     public ProductPriceSyncUpdateCommandHandler(
         IProductPriceRepository repository,
+        IApplicationDbContext db,
         IProductUnitRepository productUnits,
         IUnitOfWork uow,
         ICurrentUser user,
@@ -96,6 +105,7 @@ internal sealed class
     )
     {
         _repository = repository;
+        _db = db;
         _productUnits = productUnits;
         _uow = uow;
         _user = user;
@@ -110,7 +120,10 @@ internal sealed class
         if (!ProductPriceSyncRules.User(request.Dto.ClientModifiedBy, _user))
             return ProductPriceSyncRules.InvalidUser();
 
-        var existing = await _repository.GetByIdIncludingDeletedAsync(ProductPriceSyncRules.Id(request.Id), ct);
+        var id = ProductPriceSyncRules.Id(request.Id);
+        var existing = await _db.ProductPrices
+            .IgnoreQueryFilters()
+            .FirstOrDefaultAsync(price => price.Id == id, ct);
         if (existing is null) return Result<ProductPriceDto>.NotFoundResult(request.Id);
         if (!string.Equals(existing.ProductUnitId, request.Dto.ProductUnitId, StringComparison.Ordinal))
             return ProductPriceCommandRules.ProductUnitCannotChange();
@@ -143,6 +156,7 @@ internal sealed class
     ProductPriceSyncDeleteCommandHandler : IRequestHandler<ProductPriceSyncDeleteCommand, Result<ProductPriceDto>>
 {
     private readonly IProductPriceRepository _repository;
+    private readonly IApplicationDbContext _db;
     private readonly IProductUnitRepository _productUnits;
     private readonly IUnitOfWork _uow;
     private readonly ICurrentUser _user;
@@ -150,6 +164,7 @@ internal sealed class
 
     public ProductPriceSyncDeleteCommandHandler(
         IProductPriceRepository repository,
+        IApplicationDbContext db,
         IProductUnitRepository productUnits,
         IUnitOfWork uow,
         ICurrentUser user,
@@ -157,6 +172,7 @@ internal sealed class
     )
     {
         _repository = repository;
+        _db = db;
         _productUnits = productUnits;
         _uow = uow;
         _user = user;
@@ -171,7 +187,10 @@ internal sealed class
         if (!ProductPriceSyncRules.User(request.Dto.ClientModifiedBy, _user))
             return ProductPriceSyncRules.InvalidUser();
 
-        var value = await _repository.GetByIdIncludingDeletedAsync(ProductPriceSyncRules.Id(request.Id), ct);
+        var id = ProductPriceSyncRules.Id(request.Id);
+        var value = await _db.ProductPrices
+            .IgnoreQueryFilters()
+            .FirstOrDefaultAsync(price => price.Id == id, ct);
         if (value is null) return Result<ProductPriceDto>.NotFoundResult(request.Id);
 
         var productUnit = await ProductPriceCommandRules.GetAccessibleProductUnitAsync(
