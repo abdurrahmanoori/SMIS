@@ -1,7 +1,7 @@
 using MediatR;
 using SMIS.Application.Common.Response;
-using SMIS.Application.Repositories.Base;
 using SMIS.Application.Repositories.Products;
+using SMIS.Application.Services;
 
 namespace SMIS.Application.Features.Products.Commands
 {
@@ -10,14 +10,14 @@ namespace SMIS.Application.Features.Products.Commands
     internal sealed class ProductDeleteCommandHandler : IRequestHandler<ProductDeleteCommand, Result<Unit>>
     {
         private readonly IProductRepository _productRepository;
-        private readonly IUnitOfWork _unitOfWork;
+        private readonly IApplicationDbContext _db;
 
         public ProductDeleteCommandHandler(
-            IUnitOfWork unitOfWork,
+            IApplicationDbContext db,
             IProductRepository productRepository
         )
         {
-            _unitOfWork = unitOfWork;
+            _db = db;
             _productRepository = productRepository;
         }
 
@@ -42,7 +42,7 @@ namespace SMIS.Application.Features.Products.Commands
 
             entity.ClearClientModificationMetadata();
             await _productRepository.RemoveAsync(entity);
-            await _unitOfWork.SaveChanges(cancellationToken);
+            await _db.SaveChangesAsync(cancellationToken);
             return Result<Unit>.SuccessResult(Unit.Value);
         }
     }

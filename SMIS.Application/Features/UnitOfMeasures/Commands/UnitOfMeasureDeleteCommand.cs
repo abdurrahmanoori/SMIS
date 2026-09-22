@@ -1,7 +1,7 @@
 using MediatR;
 using SMIS.Application.Common.Response;
-using SMIS.Application.Repositories.Base;
 using SMIS.Application.Repositories.UnitOfMeasures;
+using SMIS.Application.Services;
 
 namespace SMIS.Application.Features.UnitOfMeasures.Commands
 {
@@ -10,14 +10,14 @@ namespace SMIS.Application.Features.UnitOfMeasures.Commands
     internal sealed class UnitOfMeasureDeleteCommandHandler : IRequestHandler<UnitOfMeasureDeleteCommand, Result<Unit>>
     {
         private readonly IUnitOfMeasureRepository _unitOfMeasureRepository;
-        private readonly IUnitOfWork _unitOfWork;
+        private readonly IApplicationDbContext _db;
 
         public UnitOfMeasureDeleteCommandHandler(
-            IUnitOfWork unitOfWork,
+            IApplicationDbContext db,
             IUnitOfMeasureRepository unitOfMeasureRepository
         )
         {
-            _unitOfWork = unitOfWork;
+            _db = db;
             _unitOfMeasureRepository = unitOfMeasureRepository;
         }
 
@@ -42,7 +42,7 @@ namespace SMIS.Application.Features.UnitOfMeasures.Commands
 
             entity.ClearClientModificationMetadata();
             await _unitOfMeasureRepository.RemoveAsync(entity);
-            await _unitOfWork.SaveChanges(cancellationToken);
+            await _db.SaveChangesAsync(cancellationToken);
             return Result<Unit>.SuccessResult(Unit.Value);
         }
     }

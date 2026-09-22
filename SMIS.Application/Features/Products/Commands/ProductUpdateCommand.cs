@@ -3,13 +3,13 @@ using MediatR;
 using SMIS.Application.Common.Response;
 using SMIS.Application.DTO.Products;
 using SMIS.Application.Extensions;
-using SMIS.Application.Repositories.Base;
 using SMIS.Application.Repositories.Categories;
 using SMIS.Application.Repositories.Localization;
 using SMIS.Application.Repositories.Products;
 using SMIS.Application.Repositories.ProductUnits;
 using SMIS.Application.Repositories.Shops;
 using SMIS.Application.Repositories.UnitOfMeasures;
+using SMIS.Application.Services;
 
 namespace SMIS.Application.Features.Products.Commands
 {
@@ -23,11 +23,11 @@ namespace SMIS.Application.Features.Products.Commands
         private readonly IUnitOfMeasureRepository _unitOfMeasureRepository;
         private readonly IProductUnitRepository _productUnitRepository;
         private readonly ICategoryRepository _categoryRepository;
-        private readonly IUnitOfWork _unitOfWork;
+        private readonly IApplicationDbContext _db;
         private readonly IMapper _mapper;
 
         public ProductUpdateCommandHandler(
-            IUnitOfWork unitOfWork,
+            IApplicationDbContext db,
             IMapper mapper,
             IProductRepository productRepository,
             ITranslationKeyRepository translationKeyRepository,
@@ -37,7 +37,7 @@ namespace SMIS.Application.Features.Products.Commands
             IProductUnitRepository productUnitRepository
         )
         {
-            _unitOfWork = unitOfWork;
+            _db = db;
             _mapper = mapper;
             _productRepository = productRepository;
             _translationKeyRepository = translationKeyRepository;
@@ -93,7 +93,7 @@ namespace SMIS.Application.Features.Products.Commands
             // A direct API edit becomes the current server-originated version.
             entity.ClearClientModificationMetadata();
 
-            await _unitOfWork.SaveChanges(cancellationToken);
+            await _db.SaveChangesAsync(cancellationToken);
 
             var dto = _mapper.Map<ProductDto>(entity);
             return Result<ProductDto>.SuccessResult(dto);

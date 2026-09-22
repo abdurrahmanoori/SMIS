@@ -10,8 +10,7 @@ namespace SMIS.Application.Extensions
     {
         public static async Task AddTranslationKeysForEntity<T>(
             this ITranslationKeyRepository repository,
-            T entity,
-            IUnitOfWork unitOfWork
+            T entity
         )
         {
             var properties = typeof(T).GetProperties()
@@ -31,10 +30,18 @@ namespace SMIS.Application.Extensions
                             MessageCode = typeof(T).Name,
                         };
                         await repository.AddAsync(translationKey);
-                        //await unitOfWork.SaveChanges(default);
                     }
                 }
             }
+        }
+
+        public static async Task AddTranslationKeysForEntity<T>(
+            this ITranslationKeyRepository repository,
+            T entity,
+            IUnitOfWork unitOfWork
+        )
+        {
+            await repository.AddTranslationKeysForEntity(entity);
         }
     }
 }

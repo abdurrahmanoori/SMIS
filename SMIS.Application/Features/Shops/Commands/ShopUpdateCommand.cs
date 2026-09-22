@@ -2,8 +2,8 @@ using AutoMapper;
 using MediatR;
 using SMIS.Application.Common.Response;
 using SMIS.Application.DTO.Shops;
-using SMIS.Application.Repositories.Base;
 using SMIS.Application.Repositories.Shops;
+using SMIS.Application.Services;
 
 namespace SMIS.Application.Features.Shops.Commands
 {
@@ -12,16 +12,16 @@ namespace SMIS.Application.Features.Shops.Commands
     internal sealed class ShopUpdateCommandHandler : IRequestHandler<ShopUpdateCommand, Result<ShopDto>>
     {
         private readonly IShopRepository _shopRepository;
-        private readonly IUnitOfWork _unitOfWork;
+        private readonly IApplicationDbContext _db;
         private readonly IMapper _mapper;
 
         public ShopUpdateCommandHandler(
-            IUnitOfWork unitOfWork,
+            IApplicationDbContext db,
             IMapper mapper,
             IShopRepository shopRepository
         )
         {
-            _unitOfWork = unitOfWork;
+            _db = db;
             _mapper = mapper;
             _shopRepository = shopRepository;
         }
@@ -41,7 +41,7 @@ namespace SMIS.Application.Features.Shops.Commands
 
             entity.ClearClientModificationMetadata();
 
-            await _unitOfWork.SaveChanges(cancellationToken);
+            await _db.SaveChangesAsync(cancellationToken);
 
             var dto = _mapper.Map<ShopDto>(entity);
             return Result<ShopDto>.SuccessResult(dto);

@@ -3,8 +3,8 @@ using MediatR;
 using SMIS.Application.Common.Response;
 using SMIS.Application.DTO.Categories;
 using SMIS.Application.Identity.IServices;
-using SMIS.Application.Repositories.Base;
 using SMIS.Application.Repositories.Categories;
+using SMIS.Application.Services;
 
 namespace SMIS.Application.Features.Categories.Commands
 {
@@ -15,18 +15,18 @@ namespace SMIS.Application.Features.Categories.Commands
         private readonly ICategoryRepository _categoryRepository;
 
         //private readonly ITranslationKeyRepository _translationKeyRepository;
-        private readonly IUnitOfWork _unitOfWork;
+        private readonly IApplicationDbContext _db;
         private readonly ICurrentUser _currentUser;
         private readonly IMapper _mapper;
 
         public CategoryCreateCommandHandler(
-            IUnitOfWork unitOfWork,
+            IApplicationDbContext db,
             IMapper mapper,
             ICategoryRepository categoryRepository, /*ITranslationKeyRepository translationKeyRepository,*/
             ICurrentUser currentUser
         )
         {
-            _unitOfWork = unitOfWork;
+            _db = db;
             _mapper = mapper;
             _categoryRepository = categoryRepository;
             //_translationKeyRepository = translationKeyRepository;
@@ -53,7 +53,7 @@ namespace SMIS.Application.Features.Categories.Commands
             var entity = CategoryCommandRules.Create(request.CategoryCreateDto, shopId);
 
             await _categoryRepository.AddAsync(entity);
-            await _unitOfWork.SaveChanges(cancellationToken);
+            await _db.SaveChangesAsync(cancellationToken);
 
             return Result<CategoryDto>.SuccessResult(_mapper.Map<CategoryDto>(entity),
                 "Category Created Successfully.");

@@ -2,8 +2,8 @@ using AutoMapper;
 using MediatR;
 using SMIS.Application.Common.Response;
 using SMIS.Application.DTO.UnitOfMeasures;
-using SMIS.Application.Repositories.Base;
 using SMIS.Application.Repositories.UnitOfMeasures;
+using SMIS.Application.Services;
 
 namespace SMIS.Application.Features.UnitOfMeasures.Commands
 {
@@ -14,16 +14,16 @@ namespace SMIS.Application.Features.UnitOfMeasures.Commands
         UnitOfMeasureUpdateCommandHandler : IRequestHandler<UnitOfMeasureUpdateCommand, Result<UnitOfMeasureDto>>
     {
         private readonly IUnitOfMeasureRepository _unitOfMeasureRepository;
-        private readonly IUnitOfWork _unitOfWork;
+        private readonly IApplicationDbContext _db;
         private readonly IMapper _mapper;
 
         public UnitOfMeasureUpdateCommandHandler(
-            IUnitOfWork unitOfWork,
+            IApplicationDbContext db,
             IMapper mapper,
             IUnitOfMeasureRepository unitOfMeasureRepository
         )
         {
-            _unitOfWork = unitOfWork;
+            _db = db;
             _mapper = mapper;
             _unitOfMeasureRepository = unitOfMeasureRepository;
         }
@@ -47,7 +47,7 @@ namespace SMIS.Application.Features.UnitOfMeasures.Commands
                 input.Description);
             entity.ClearClientModificationMetadata();
 
-            await _unitOfWork.SaveChanges(cancellationToken);
+            await _db.SaveChangesAsync(cancellationToken);
 
             var dto = _mapper.Map<UnitOfMeasureDto>(entity);
             return Result<UnitOfMeasureDto>.SuccessResult(dto);

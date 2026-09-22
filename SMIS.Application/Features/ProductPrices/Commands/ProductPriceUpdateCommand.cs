@@ -3,9 +3,9 @@ using MediatR;
 using SMIS.Application.Common.Response;
 using SMIS.Application.DTO.ProductPrices;
 using SMIS.Application.Identity.IServices;
-using SMIS.Application.Repositories.Base;
 using SMIS.Application.Repositories.ProductPrices;
 using SMIS.Application.Repositories.ProductUnits;
+using SMIS.Application.Services;
 using SMIS.Domain.Entities;
 
 namespace SMIS.Application.Features.ProductPrices.Commands;
@@ -18,19 +18,19 @@ internal sealed class
 {
     private readonly IProductPriceRepository _productPriceRepository;
     private readonly IProductUnitRepository _productUnitRepository;
-    private readonly IUnitOfWork _unitOfWork;
+    private readonly IApplicationDbContext _db;
     private readonly ICurrentUser _currentUser;
     private readonly IMapper _mapper;
 
     public ProductPriceUpdateCommandHandler(
-        IUnitOfWork unitOfWork,
+        IApplicationDbContext db,
         IMapper mapper,
         IProductPriceRepository productPriceRepository,
         IProductUnitRepository productUnitRepository,
         ICurrentUser currentUser
     )
     {
-        _unitOfWork = unitOfWork;
+        _db = db;
         _mapper = mapper;
         _productPriceRepository = productPriceRepository;
         _productUnitRepository = productUnitRepository;
@@ -70,7 +70,7 @@ internal sealed class
         successor.ClearClientModificationMetadata();
 
         await _productPriceRepository.AddAsync(successor);
-        await _unitOfWork.SaveChanges(cancellationToken);
+        await _db.SaveChangesAsync(cancellationToken);
 
         return Result<ProductPriceDto>.SuccessResult(_mapper.Map<ProductPriceDto>(successor));
     }

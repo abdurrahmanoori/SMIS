@@ -2,10 +2,10 @@ using AutoMapper;
 using MediatR;
 using SMIS.Application.Common.Response;
 using SMIS.Application.DTO.ProductUnits;
-using SMIS.Application.Repositories.Base;
 using SMIS.Application.Repositories.Products;
 using SMIS.Application.Repositories.ProductUnits;
 using SMIS.Application.Repositories.UnitOfMeasures;
+using SMIS.Application.Services;
 
 namespace SMIS.Application.Features.ProductUnits.Commands
 {
@@ -18,18 +18,18 @@ namespace SMIS.Application.Features.ProductUnits.Commands
         private readonly IProductUnitRepository _productUnitRepository;
         private readonly IProductRepository _productRepository;
         private readonly IUnitOfMeasureRepository _unitOfMeasureRepository;
-        private readonly IUnitOfWork _unitOfWork;
+        private readonly IApplicationDbContext _db;
         private readonly IMapper _mapper;
 
         public ProductUnitUpdateCommandHandler(
-            IUnitOfWork unitOfWork,
+            IApplicationDbContext db,
             IMapper mapper,
             IProductUnitRepository productUnitRepository,
             IProductRepository productRepository,
             IUnitOfMeasureRepository unitOfMeasureRepository
         )
         {
-            _unitOfWork = unitOfWork;
+            _db = db;
             _mapper = mapper;
             _productUnitRepository = productUnitRepository;
             _productRepository = productRepository;
@@ -83,7 +83,7 @@ namespace SMIS.Application.Features.ProductUnits.Commands
             entity.SetUnitName(unit?.Name);
             entity.ClearClientModificationMetadata();
 
-            await _unitOfWork.SaveChanges(cancellationToken);
+            await _db.SaveChangesAsync(cancellationToken);
 
             var dto = _mapper.Map<ProductUnitDto>(entity);
             return Result<ProductUnitDto>.SuccessResult(dto);

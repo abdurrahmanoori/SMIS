@@ -2,8 +2,8 @@ using AutoMapper;
 using MediatR;
 using SMIS.Application.Common.Response;
 using SMIS.Application.DTO.Shops;
-using SMIS.Application.Repositories.Base;
 using SMIS.Application.Repositories.Shops;
+using SMIS.Application.Services;
 
 namespace SMIS.Application.Features.Shops.Commands
 {
@@ -12,16 +12,16 @@ namespace SMIS.Application.Features.Shops.Commands
     internal sealed class ShopCreateCommandHandler : IRequestHandler<ShopCreateCommand, Result<ShopDto>>
     {
         private readonly IShopRepository _shopRepository;
-        private readonly IUnitOfWork _unitOfWork;
+        private readonly IApplicationDbContext _db;
         private readonly IMapper _mapper;
 
         public ShopCreateCommandHandler(
-            IUnitOfWork unitOfWork,
+            IApplicationDbContext db,
             IMapper mapper,
             IShopRepository shopRepository
         )
         {
-            _unitOfWork = unitOfWork;
+            _db = db;
             _mapper = mapper;
             _shopRepository = shopRepository;
         }
@@ -34,7 +34,7 @@ namespace SMIS.Application.Features.Shops.Commands
             var entity = ShopCommandRules.Create(request.ShopCreateDto);
 
             await _shopRepository.AddAsync(entity);
-            await _unitOfWork.SaveChanges(cancellationToken);
+            await _db.SaveChangesAsync(cancellationToken);
 
             return Result<ShopDto>.SuccessResult(_mapper.Map<ShopDto>(entity), "Shop Created Successfully.");
         }

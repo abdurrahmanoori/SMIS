@@ -3,7 +3,6 @@ using MediatR;
 using SMIS.Application.Common.Response;
 using SMIS.Application.DTO.Products;
 using SMIS.Application.Extensions;
-using SMIS.Application.Repositories.Base;
 using SMIS.Application.Repositories.Categories;
 using SMIS.Application.Repositories.Localization;
 using SMIS.Application.Repositories.Products;
@@ -11,6 +10,7 @@ using SMIS.Application.Repositories.ProductUnits;
 using SMIS.Application.Repositories.Shops;
 using SMIS.Application.Repositories.UnitOfMeasures;
 using SMIS.Application.Identity.IServices;
+using SMIS.Application.Services;
 using SMIS.Domain.Entities;
 
 namespace SMIS.Application.Features.Products.Commands;
@@ -25,12 +25,12 @@ internal sealed class ProductCreateCommandHandler : IRequestHandler<ProductCreat
     private readonly IUnitOfMeasureRepository _unitOfMeasureRepository;
     private readonly IProductUnitRepository _productUnitRepository;
     private readonly ICategoryRepository _categoryRepository;
-    private readonly IUnitOfWork _unitOfWork;
+    private readonly IApplicationDbContext _db;
     private readonly IMapper _mapper;
     private readonly ICurrentUser _currentUser;
 
     public ProductCreateCommandHandler(
-        IUnitOfWork unitOfWork,
+        IApplicationDbContext db,
         IMapper mapper,
         IProductRepository productRepository,
         ITranslationKeyRepository translationKeyRepository,
@@ -41,7 +41,7 @@ internal sealed class ProductCreateCommandHandler : IRequestHandler<ProductCreat
         ICurrentUser currentUser
     )
     {
-        _unitOfWork = unitOfWork;
+        _db = db;
         _mapper = mapper;
         _productRepository = productRepository;
         _translationKeyRepository = translationKeyRepository;
@@ -57,7 +57,7 @@ internal sealed class ProductCreateCommandHandler : IRequestHandler<ProductCreat
         CancellationToken cancellationToken
     )
     {
-        await _translationKeyRepository.AddTranslationKeysForEntity(request.ProductCreateDto, _unitOfWork);
+        await _translationKeyRepository.AddTranslationKeysForEntity(request.ProductCreateDto);
 
         var activeShopId = _currentUser.GetShopId();
         if (string.IsNullOrWhiteSpace(activeShopId))
@@ -82,7 +82,7 @@ internal sealed class ProductCreateCommandHandler : IRequestHandler<ProductCreat
         baseProductUnit.SetUnitName(unit?.Name);
         await _productUnitRepository.AddAsync(baseProductUnit);
 
-        await _unitOfWork.SaveChanges(cancellationToken);
+        await _db.SaveChangesAsync(cancellationToken);
 
         return Result<ProductDto>.SuccessResult(_mapper.Map<ProductDto>(entity));
     }

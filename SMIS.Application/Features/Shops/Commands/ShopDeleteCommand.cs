@@ -1,7 +1,7 @@
 using MediatR;
 using SMIS.Application.Common.Response;
-using SMIS.Application.Repositories.Base;
 using SMIS.Application.Repositories.Shops;
+using SMIS.Application.Services;
 
 namespace SMIS.Application.Features.Shops.Commands
 {
@@ -10,14 +10,14 @@ namespace SMIS.Application.Features.Shops.Commands
     internal sealed class ShopDeleteCommandHandler : IRequestHandler<ShopDeleteCommand, Result<Unit>>
     {
         private readonly IShopRepository _shopRepository;
-        private readonly IUnitOfWork _unitOfWork;
+        private readonly IApplicationDbContext _db;
 
         public ShopDeleteCommandHandler(
-            IUnitOfWork unitOfWork,
+            IApplicationDbContext db,
             IShopRepository shopRepository
         )
         {
-            _unitOfWork = unitOfWork;
+            _db = db;
             _shopRepository = shopRepository;
         }
 
@@ -42,7 +42,7 @@ namespace SMIS.Application.Features.Shops.Commands
 
             entity.ClearClientModificationMetadata();
             await _shopRepository.RemoveAsync(entity);
-            await _unitOfWork.SaveChanges(cancellationToken);
+            await _db.SaveChangesAsync(cancellationToken);
             return Result<Unit>.SuccessResult(Unit.Value);
         }
     }
