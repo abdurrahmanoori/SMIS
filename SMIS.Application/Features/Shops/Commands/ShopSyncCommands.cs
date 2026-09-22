@@ -3,8 +3,8 @@ using MediatR;
 using SMIS.Application.Common.Response;
 using SMIS.Application.DTO.Shops;
 using SMIS.Application.Identity.IServices;
-using SMIS.Application.Repositories.Base;
 using SMIS.Application.Repositories.Shops;
+using SMIS.Application.Services;
 using SMIS.Domain.Entities;
 using SMIS.Domain.Services;
 
@@ -19,19 +19,19 @@ public record ShopSyncDeleteCommand(string Id, ShopSyncDeleteDto Dto) : IRequest
 internal sealed class ShopSyncCreateCommandHandler : IRequestHandler<ShopSyncCreateCommand, Result<ShopDto>>
 {
     private readonly IShopRepository _repository;
-    private readonly IUnitOfWork _unitOfWork;
+    private readonly IApplicationDbContext _db;
     private readonly ICurrentUser _currentUser;
     private readonly IMapper _mapper;
 
     public ShopSyncCreateCommandHandler(
         IShopRepository repository,
-        IUnitOfWork unitOfWork,
+        IApplicationDbContext db,
         ICurrentUser currentUser,
         IMapper mapper
     )
     {
         _repository = repository;
-        _unitOfWork = unitOfWork;
+        _db = db;
         _currentUser = currentUser;
         _mapper = mapper;
     }
@@ -64,7 +64,7 @@ internal sealed class ShopSyncCreateCommandHandler : IRequestHandler<ShopSyncCre
                 request.Dto.ClientCreatedBy);
             existing.SetClientModificationMetadata(clientModified, request.Dto.ClientModifiedBy);
             existing.Restore();
-            await _unitOfWork.SaveChanges(cancellationToken);
+            await _db.SaveChangesAsync(cancellationToken);
             return Result<ShopDto>.SuccessResult(_mapper.Map<ShopDto>(existing));
         }
 
@@ -75,7 +75,7 @@ internal sealed class ShopSyncCreateCommandHandler : IRequestHandler<ShopSyncCre
         shop.SetClientModificationMetadata(DateTimeService.NormalizeUtc(request.Dto.ClientModifiedDate),
             request.Dto.ClientModifiedBy);
         await _repository.AddAsync(shop);
-        await _unitOfWork.SaveChanges(cancellationToken);
+        await _db.SaveChangesAsync(cancellationToken);
         return Result<ShopDto>.SuccessResult(_mapper.Map<ShopDto>(shop));
     }
 }
@@ -83,19 +83,19 @@ internal sealed class ShopSyncCreateCommandHandler : IRequestHandler<ShopSyncCre
 internal sealed class ShopSyncUpdateCommandHandler : IRequestHandler<ShopSyncUpdateCommand, Result<ShopDto>>
 {
     private readonly IShopRepository _repository;
-    private readonly IUnitOfWork _unitOfWork;
+    private readonly IApplicationDbContext _db;
     private readonly ICurrentUser _currentUser;
     private readonly IMapper _mapper;
 
     public ShopSyncUpdateCommandHandler(
         IShopRepository repository,
-        IUnitOfWork unitOfWork,
+        IApplicationDbContext db,
         ICurrentUser currentUser,
         IMapper mapper
     )
     {
         _repository = repository;
-        _unitOfWork = unitOfWork;
+        _db = db;
         _currentUser = currentUser;
         _mapper = mapper;
     }
@@ -122,7 +122,7 @@ internal sealed class ShopSyncUpdateCommandHandler : IRequestHandler<ShopSyncUpd
         ShopCommandRules.Apply(shop, request.Dto);
         shop.SetClientModificationMetadata(clientModified, request.Dto.ClientModifiedBy);
         shop.Restore();
-        await _unitOfWork.SaveChanges(cancellationToken);
+        await _db.SaveChangesAsync(cancellationToken);
         return Result<ShopDto>.SuccessResult(_mapper.Map<ShopDto>(shop));
     }
 }
@@ -130,19 +130,19 @@ internal sealed class ShopSyncUpdateCommandHandler : IRequestHandler<ShopSyncUpd
 internal sealed class ShopSyncDeleteCommandHandler : IRequestHandler<ShopSyncDeleteCommand, Result<ShopDto>>
 {
     private readonly IShopRepository _repository;
-    private readonly IUnitOfWork _unitOfWork;
+    private readonly IApplicationDbContext _db;
     private readonly ICurrentUser _currentUser;
     private readonly IMapper _mapper;
 
     public ShopSyncDeleteCommandHandler(
         IShopRepository repository,
-        IUnitOfWork unitOfWork,
+        IApplicationDbContext db,
         ICurrentUser currentUser,
         IMapper mapper
     )
     {
         _repository = repository;
-        _unitOfWork = unitOfWork;
+        _db = db;
         _currentUser = currentUser;
         _mapper = mapper;
     }
@@ -176,7 +176,7 @@ internal sealed class ShopSyncDeleteCommandHandler : IRequestHandler<ShopSyncDel
 
         shop.SetClientModificationMetadata(clientModified, request.Dto.ClientModifiedBy);
         await _repository.RemoveAsync(shop);
-        await _unitOfWork.SaveChanges(cancellationToken);
+        await _db.SaveChangesAsync(cancellationToken);
         return Result<ShopDto>.SuccessResult(_mapper.Map<ShopDto>(shop));
     }
 }

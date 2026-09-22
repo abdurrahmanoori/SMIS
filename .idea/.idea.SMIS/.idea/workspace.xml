@@ -406,14 +406,6 @@
       <option name="project" value="LOCAL" />
       <updated>1789462942314</updated>
     </task>
-    <task id="LOCAL-00041" summary="feat: associate shopId with authentication and synchronization processes across various services">
-      <option name="closed" value="true" />
-      <created>1788955295374</created>
-      <option name="number" value="00041" />
-      <option name="presentableId" value="LOCAL-00041" />
-      <option name="project" value="LOCAL" />
-      <updated>1788955295374</updated>
-    </task>
     <task id="LOCAL-00042" summary="feat: update database schema for multi-tenancy support and adjust database configurations">
       <option name="closed" value="true" />
       <created>1788956734295</created>
@@ -782,7 +774,15 @@
       <option name="project" value="LOCAL" />
       <updated>1790078332405</updated>
     </task>
-    <option name="localTasksCounter" value="88" />
+    <task id="LOCAL-00088" summary="refactor: remove GetByIdIncludingDeletedAsync methods and update repositories to use IApplicationDbContext for data access">
+      <option name="closed" value="true" />
+      <created>1790079115145</created>
+      <option name="number" value="00088" />
+      <option name="presentableId" value="LOCAL-00088" />
+      <option name="project" value="LOCAL" />
+      <updated>1790079115145</updated>
+    </task>
+    <option name="localTasksCounter" value="89" />
     <option name="clearContext" value="false" />
     <option name="createChangelist" value="false" />
     <option name="createBranch" value="false" />
@@ -803,7 +803,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
-    <MESSAGE value="feat: add ProductUnit API, controller, and synchronization logic; update database schema and UI components" />
     <MESSAGE value="feat: rename ConversionFactor to BaseUnitQuantity and enforce unique product-unit pairs; update related mappings and validations" />
     <MESSAGE value="feat: rename ExistsActiveAsync to ExistsPairAsync for consistency; enforce unique product-unit pairs in repository and database schema" />
     <MESSAGE value="feat: implement base unit change validation; prevent changes if stock or conversions exist" />
@@ -828,6 +827,7 @@
     <MESSAGE value="fix: replace DateTime.UtcNow with DateTimeService.NowUtc for consistent time handling" />
     <MESSAGE value="feat: integrate DateTimeService for consistent UTC time handling across repositories" />
     <MESSAGE value="refactor: remove GetByIdIncludingDeletedAsync method and update CategorySync command handlers to use IApplicationDbContext" />
+    <MESSAGE value="refactor: remove GetByIdIncludingDeletedAsync methods and update repositories to use IApplicationDbContext for data access" />
     <option name="LAST_COMMIT_MESSAGE" value="" />
   </component>
   <component name="XDebuggerManager">

@@ -4,7 +4,6 @@ using Microsoft.EntityFrameworkCore;
 using SMIS.Application.Common.Response;
 using SMIS.Application.DTO.UnitOfMeasures;
 using SMIS.Application.Identity.IServices;
-using SMIS.Application.Repositories.Base;
 using SMIS.Application.Repositories.UnitOfMeasures;
 using SMIS.Application.Services;
 using SMIS.Domain.Services;
@@ -24,17 +23,15 @@ internal sealed class
 {
     private readonly IUnitOfMeasureRepository _repository;
     private readonly IApplicationDbContext _db;
-    private readonly IUnitOfWork _unitOfWork;
     private readonly ICurrentUser _currentUser;
     private readonly IMapper _mapper;
 
     public UnitOfMeasureSyncCreateCommandHandler(
         IUnitOfMeasureRepository repository,
         IApplicationDbContext db,
-        IUnitOfWork unitOfWork,
         ICurrentUser currentUser,
         IMapper mapper
-    ) => (_repository, _db, _unitOfWork, _currentUser, _mapper) = (repository, db, unitOfWork, currentUser, mapper);
+    ) => (_repository, _db, _currentUser, _mapper) = (repository, db, currentUser, mapper);
 
     public async Task<Result<UnitOfMeasureDto>> Handle(
         UnitOfMeasureSyncCreateCommand request,
@@ -57,7 +54,7 @@ internal sealed class
             unit.SetClientCreationMetadata(request.Dto.ClientCreatedDate, request.Dto.ClientCreatedBy);
             unit.SetClientModificationMetadata(modified, request.Dto.ClientModifiedBy);
             unit.Restore();
-            await _unitOfWork.SaveChanges(cancellationToken);
+            await _db.SaveChangesAsync(cancellationToken);
             return Result<UnitOfMeasureDto>.SuccessResult(_mapper.Map<UnitOfMeasureDto>(unit));
         }
 
@@ -66,7 +63,7 @@ internal sealed class
         unit.SetClientCreationMetadata(request.Dto.ClientCreatedDate, request.Dto.ClientCreatedBy);
         unit.SetClientModificationMetadata(modified, request.Dto.ClientModifiedBy);
         await _repository.AddAsync(unit);
-        await _unitOfWork.SaveChanges(cancellationToken);
+        await _db.SaveChangesAsync(cancellationToken);
         return Result<UnitOfMeasureDto>.SuccessResult(_mapper.Map<UnitOfMeasureDto>(unit));
     }
 }
@@ -76,17 +73,15 @@ internal sealed class
 {
     private readonly IUnitOfMeasureRepository _repository;
     private readonly IApplicationDbContext _db;
-    private readonly IUnitOfWork _unitOfWork;
     private readonly ICurrentUser _currentUser;
     private readonly IMapper _mapper;
 
     public UnitOfMeasureSyncUpdateCommandHandler(
         IUnitOfMeasureRepository repository,
         IApplicationDbContext db,
-        IUnitOfWork unitOfWork,
         ICurrentUser currentUser,
         IMapper mapper
-    ) => (_repository, _db, _unitOfWork, _currentUser, _mapper) = (repository, db, unitOfWork, currentUser, mapper);
+    ) => (_repository, _db, _currentUser, _mapper) = (repository, db, currentUser, mapper);
 
     public async Task<Result<UnitOfMeasureDto>> Handle(
         UnitOfMeasureSyncUpdateCommand request,
@@ -106,7 +101,7 @@ internal sealed class
         UnitOfMeasureCommandRules.Apply(unit, request.Dto.Name, request.Dto.Symbol, request.Dto.Description);
         unit.SetClientModificationMetadata(modified, request.Dto.ClientModifiedBy);
         unit.Restore();
-        await _unitOfWork.SaveChanges(cancellationToken);
+        await _db.SaveChangesAsync(cancellationToken);
         return Result<UnitOfMeasureDto>.SuccessResult(_mapper.Map<UnitOfMeasureDto>(unit));
     }
 }
@@ -116,17 +111,15 @@ internal sealed class
 {
     private readonly IUnitOfMeasureRepository _repository;
     private readonly IApplicationDbContext _db;
-    private readonly IUnitOfWork _unitOfWork;
     private readonly ICurrentUser _currentUser;
     private readonly IMapper _mapper;
 
     public UnitOfMeasureSyncDeleteCommandHandler(
         IUnitOfMeasureRepository repository,
         IApplicationDbContext db,
-        IUnitOfWork unitOfWork,
         ICurrentUser currentUser,
         IMapper mapper
-    ) => (_repository, _db, _unitOfWork, _currentUser, _mapper) = (repository, db, unitOfWork, currentUser, mapper);
+    ) => (_repository, _db, _currentUser, _mapper) = (repository, db, currentUser, mapper);
 
     public async Task<Result<UnitOfMeasureDto>> Handle(
         UnitOfMeasureSyncDeleteCommand request,
@@ -154,7 +147,7 @@ internal sealed class
 
         unit.SetClientModificationMetadata(modified, request.Dto.ClientModifiedBy);
         await _repository.RemoveAsync(unit);
-        await _unitOfWork.SaveChanges(cancellationToken);
+        await _db.SaveChangesAsync(cancellationToken);
         return Result<UnitOfMeasureDto>.SuccessResult(_mapper.Map<UnitOfMeasureDto>(unit));
     }
 }

@@ -4,7 +4,6 @@ using Microsoft.EntityFrameworkCore;
 using SMIS.Application.Common.Response;
 using SMIS.Application.DTO.ProductUnits;
 using SMIS.Application.Identity.IServices;
-using SMIS.Application.Repositories.Base;
 using SMIS.Application.Repositories.Products;
 using SMIS.Application.Repositories.ProductUnits;
 using SMIS.Application.Services;
@@ -25,7 +24,6 @@ internal sealed class
     private readonly IProductUnitRepository _repository;
     private readonly IApplicationDbContext _db;
     private readonly IProductRepository _products;
-    private readonly IUnitOfWork _uow;
     private readonly ICurrentUser _user;
     private readonly IMapper _mapper;
 
@@ -33,7 +31,6 @@ internal sealed class
         IProductUnitRepository repository,
         IApplicationDbContext db,
         IProductRepository products,
-        IUnitOfWork uow,
         ICurrentUser user,
         IMapper mapper
     )
@@ -41,7 +38,6 @@ internal sealed class
         _repository = repository;
         _db = db;
         _products = products;
-        _uow = uow;
         _user = user;
         _mapper = mapper;
     }
@@ -94,7 +90,7 @@ internal sealed class
             value.SetClientCreationMetadata(request.Dto.ClientCreatedDate, request.Dto.ClientCreatedBy);
             value.SetClientModificationMetadata(modified, request.Dto.ClientModifiedBy);
             value.Restore();
-            await _uow.SaveChanges(ct);
+            await _db.SaveChangesAsync(ct);
             return Result<ProductUnitDto>.SuccessResult(_mapper.Map<ProductUnitDto>(value));
         }
 
@@ -113,7 +109,7 @@ internal sealed class
         value.SetClientCreationMetadata(request.Dto.ClientCreatedDate, request.Dto.ClientCreatedBy);
         value.SetClientModificationMetadata(modified, request.Dto.ClientModifiedBy);
         await _repository.AddAsync(value);
-        await _uow.SaveChanges(ct);
+        await _db.SaveChangesAsync(ct);
         return Result<ProductUnitDto>.SuccessResult(_mapper.Map<ProductUnitDto>(value));
     }
 }
@@ -124,7 +120,6 @@ internal sealed class
     private readonly IProductUnitRepository _repository;
     private readonly IApplicationDbContext _db;
     private readonly IProductRepository _products;
-    private readonly IUnitOfWork _uow;
     private readonly ICurrentUser _user;
     private readonly IMapper _mapper;
 
@@ -132,7 +127,6 @@ internal sealed class
         IProductUnitRepository repository,
         IApplicationDbContext db,
         IProductRepository products,
-        IUnitOfWork uow,
         ICurrentUser user,
         IMapper mapper
     )
@@ -140,7 +134,6 @@ internal sealed class
         _repository = repository;
         _db = db;
         _products = products;
-        _uow = uow;
         _user = user;
         _mapper = mapper;
     }
@@ -186,7 +179,7 @@ internal sealed class
             request.Dto.BaseUnitQuantity);
         value.SetClientModificationMetadata(modified, request.Dto.ClientModifiedBy);
         value.Restore();
-        await _uow.SaveChanges(ct);
+        await _db.SaveChangesAsync(ct);
         return Result<ProductUnitDto>.SuccessResult(_mapper.Map<ProductUnitDto>(value));
     }
 }
@@ -197,7 +190,6 @@ internal sealed class
     private readonly IProductUnitRepository _repository;
     private readonly IApplicationDbContext _db;
     private readonly IProductRepository _products;
-    private readonly IUnitOfWork _uow;
     private readonly ICurrentUser _user;
     private readonly IMapper _mapper;
 
@@ -205,7 +197,6 @@ internal sealed class
         IProductUnitRepository repository,
         IApplicationDbContext db,
         IProductRepository products,
-        IUnitOfWork uow,
         ICurrentUser user,
         IMapper mapper
     )
@@ -213,7 +204,6 @@ internal sealed class
         _repository = repository;
         _db = db;
         _products = products;
-        _uow = uow;
         _user = user;
         _mapper = mapper;
     }
@@ -245,7 +235,7 @@ internal sealed class
 
         value.SetClientModificationMetadata(modified, request.Dto.ClientModifiedBy);
         await _repository.RemoveAsync(value);
-        await _uow.SaveChanges(ct);
+        await _db.SaveChangesAsync(ct);
         return Result<ProductUnitDto>.SuccessResult(_mapper.Map<ProductUnitDto>(value));
     }
 }

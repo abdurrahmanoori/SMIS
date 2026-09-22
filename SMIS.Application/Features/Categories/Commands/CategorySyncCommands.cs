@@ -4,7 +4,6 @@ using Microsoft.EntityFrameworkCore;
 using SMIS.Application.Common.Response;
 using SMIS.Application.DTO.Categories;
 using SMIS.Application.Identity.IServices;
-using SMIS.Application.Repositories.Base;
 using SMIS.Application.Repositories.Categories;
 using SMIS.Application.Repositories.Products;
 using SMIS.Application.Services;
@@ -31,21 +30,18 @@ internal sealed class CategorySyncCreateCommandHandler : IRequestHandler<Categor
 {
     private readonly ICategoryRepository _repository;
     private readonly IApplicationDbContext _db;
-    private readonly IUnitOfWork _unitOfWork;
     private readonly ICurrentUser _currentUser;
     private readonly IMapper _mapper;
 
     public CategorySyncCreateCommandHandler(
         ICategoryRepository repository,
         IApplicationDbContext db,
-        IUnitOfWork unitOfWork,
         ICurrentUser currentUser,
         IMapper mapper
     )
     {
         _repository = repository;
         _db = db;
-        _unitOfWork = unitOfWork;
         _currentUser = currentUser;
         _mapper = mapper;
     }
@@ -108,7 +104,7 @@ internal sealed class CategorySyncCreateCommandHandler : IRequestHandler<Categor
 
             existing.Restore();
 
-            await _unitOfWork.SaveChanges(cancellationToken);
+            await _db.SaveChangesAsync(cancellationToken);
 
             return Result<CategoryDto>.SuccessResult(
                 _mapper.Map<CategoryDto>(existing));
@@ -137,7 +133,7 @@ internal sealed class CategorySyncCreateCommandHandler : IRequestHandler<Categor
 
         await _repository.AddAsync(category);
 
-        await _unitOfWork.SaveChanges(cancellationToken);
+        await _db.SaveChangesAsync(cancellationToken);
 
         return Result<CategoryDto>.SuccessResult(
             _mapper.Map<CategoryDto>(category));
@@ -153,21 +149,18 @@ internal sealed class CategorySyncUpdateCommandHandler
 {
     private readonly ICategoryRepository _repository;
     private readonly IApplicationDbContext _db;
-    private readonly IUnitOfWork _unitOfWork;
     private readonly ICurrentUser _currentUser;
     private readonly IMapper _mapper;
 
     public CategorySyncUpdateCommandHandler(
         ICategoryRepository repository,
         IApplicationDbContext db,
-        IUnitOfWork unitOfWork,
         ICurrentUser currentUser,
         IMapper mapper
     )
     {
         _repository = repository;
         _db = db;
-        _unitOfWork = unitOfWork;
         _currentUser = currentUser;
         _mapper = mapper;
     }
@@ -222,7 +215,7 @@ internal sealed class CategorySyncUpdateCommandHandler
 
         category.Restore();
 
-        await _unitOfWork.SaveChanges(cancellationToken);
+        await _db.SaveChangesAsync(cancellationToken);
 
         return Result<CategoryDto>.SuccessResult(
             _mapper.Map<CategoryDto>(category));
@@ -238,7 +231,6 @@ internal sealed class CategorySyncDeleteCommandHandler
 {
     private readonly ICategoryRepository _repository;
     private readonly IApplicationDbContext _db;
-    private readonly IUnitOfWork _unitOfWork;
     private readonly ICurrentUser _currentUser;
     private readonly IMapper _mapper;
     private readonly IProductRepository _productRepository;
@@ -247,7 +239,6 @@ internal sealed class CategorySyncDeleteCommandHandler
         ICategoryRepository repository,
         IApplicationDbContext db,
         IProductRepository productRepository,
-        IUnitOfWork unitOfWork,
         ICurrentUser currentUser,
         IMapper mapper
     )
@@ -255,7 +246,6 @@ internal sealed class CategorySyncDeleteCommandHandler
         _repository = repository;
         _db = db;
         _productRepository = productRepository;
-        _unitOfWork = unitOfWork;
         _currentUser = currentUser;
         _mapper = mapper;
     }
@@ -309,7 +299,7 @@ internal sealed class CategorySyncDeleteCommandHandler
 
         await _repository.RemoveAsync(category);
 
-        await _unitOfWork.SaveChanges(cancellationToken);
+        await _db.SaveChangesAsync(cancellationToken);
 
         return Result<CategoryDto>.SuccessResult(
             _mapper.Map<CategoryDto>(category));

@@ -4,7 +4,6 @@ using Microsoft.EntityFrameworkCore;
 using SMIS.Application.Common.Response;
 using SMIS.Application.DTO.ProductPrices;
 using SMIS.Application.Identity.IServices;
-using SMIS.Application.Repositories.Base;
 using SMIS.Application.Repositories.ProductPrices;
 using SMIS.Application.Repositories.ProductUnits;
 using SMIS.Application.Services;
@@ -27,7 +26,6 @@ internal sealed class
     private readonly IProductPriceRepository _repository;
     private readonly IApplicationDbContext _db;
     private readonly IProductUnitRepository _productUnits;
-    private readonly IUnitOfWork _uow;
     private readonly ICurrentUser _user;
     private readonly IMapper _mapper;
 
@@ -35,7 +33,6 @@ internal sealed class
         IProductPriceRepository repository,
         IApplicationDbContext db,
         IProductUnitRepository productUnits,
-        IUnitOfWork uow,
         ICurrentUser user,
         IMapper mapper
     )
@@ -43,7 +40,6 @@ internal sealed class
         _repository = repository;
         _db = db;
         _productUnits = productUnits;
-        _uow = uow;
         _user = user;
         _mapper = mapper;
     }
@@ -80,7 +76,7 @@ internal sealed class
         value.SetClientCreationMetadata(request.Dto.ClientCreatedDate, request.Dto.ClientCreatedBy);
         value.SetClientModificationMetadata(request.Dto.ClientModifiedDate, request.Dto.ClientModifiedBy);
         await _repository.AddAsync(value);
-        await _uow.SaveChanges(ct);
+        await _db.SaveChangesAsync(ct);
         return Result<ProductPriceDto>.SuccessResult(_mapper.Map<ProductPriceDto>(value));
     }
 }
@@ -91,7 +87,6 @@ internal sealed class
     private readonly IProductPriceRepository _repository;
     private readonly IApplicationDbContext _db;
     private readonly IProductUnitRepository _productUnits;
-    private readonly IUnitOfWork _uow;
     private readonly ICurrentUser _user;
     private readonly IMapper _mapper;
 
@@ -99,7 +94,6 @@ internal sealed class
         IProductPriceRepository repository,
         IApplicationDbContext db,
         IProductUnitRepository productUnits,
-        IUnitOfWork uow,
         ICurrentUser user,
         IMapper mapper
     )
@@ -107,7 +101,6 @@ internal sealed class
         _repository = repository;
         _db = db;
         _productUnits = productUnits;
-        _uow = uow;
         _user = user;
         _mapper = mapper;
     }
@@ -147,7 +140,7 @@ internal sealed class
         successor.SetEndDate(request.Dto.EndDate);
         successor.SetClientModificationMetadata(request.Dto.ClientModifiedDate, request.Dto.ClientModifiedBy);
         await _repository.AddAsync(successor);
-        await _uow.SaveChanges(ct);
+        await _db.SaveChangesAsync(ct);
         return Result<ProductPriceDto>.SuccessResult(_mapper.Map<ProductPriceDto>(successor));
     }
 }
@@ -158,7 +151,6 @@ internal sealed class
     private readonly IProductPriceRepository _repository;
     private readonly IApplicationDbContext _db;
     private readonly IProductUnitRepository _productUnits;
-    private readonly IUnitOfWork _uow;
     private readonly ICurrentUser _user;
     private readonly IMapper _mapper;
 
@@ -166,7 +158,6 @@ internal sealed class
         IProductPriceRepository repository,
         IApplicationDbContext db,
         IProductUnitRepository productUnits,
-        IUnitOfWork uow,
         ICurrentUser user,
         IMapper mapper
     )
@@ -174,7 +165,6 @@ internal sealed class
         _repository = repository;
         _db = db;
         _productUnits = productUnits;
-        _uow = uow;
         _user = user;
         _mapper = mapper;
     }
@@ -205,7 +195,7 @@ internal sealed class
 
         value.SetClientModificationMetadata(modified, request.Dto.ClientModifiedBy);
         await _repository.RemoveAsync(value);
-        await _uow.SaveChanges(ct);
+        await _db.SaveChangesAsync(ct);
         return Result<ProductPriceDto>.SuccessResult(_mapper.Map<ProductPriceDto>(value));
     }
 }

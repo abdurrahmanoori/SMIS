@@ -4,7 +4,6 @@ using Microsoft.EntityFrameworkCore;
 using SMIS.Application.Common.Response;
 using SMIS.Application.DTO.Products;
 using SMIS.Application.Identity.IServices;
-using SMIS.Application.Repositories.Base;
 using SMIS.Application.Repositories.Products;
 using SMIS.Application.Repositories.ProductUnits;
 using SMIS.Application.Services;
@@ -24,7 +23,6 @@ internal sealed class ProductSyncCreateCommandHandler : IRequestHandler<ProductS
     private readonly IProductRepository _repository;
     private readonly IApplicationDbContext _db;
     private readonly IProductUnitRepository _productUnitRepository;
-    private readonly IUnitOfWork _unitOfWork;
     private readonly ICurrentUser _currentUser;
     private readonly IMapper _mapper;
 
@@ -32,11 +30,10 @@ internal sealed class ProductSyncCreateCommandHandler : IRequestHandler<ProductS
         IProductRepository repository,
         IApplicationDbContext db,
         IProductUnitRepository productUnitRepository,
-        IUnitOfWork unitOfWork,
         ICurrentUser currentUser,
         IMapper mapper
-    ) => (_repository, _db, _productUnitRepository, _unitOfWork, _currentUser, _mapper) =
-        (repository, db, productUnitRepository, unitOfWork, currentUser, mapper);
+    ) => (_repository, _db, _productUnitRepository, _currentUser, _mapper) =
+        (repository, db, productUnitRepository, currentUser, mapper);
 
     public async Task<Result<ProductDto>> Handle(
         ProductSyncCreateCommand request,
@@ -69,7 +66,7 @@ internal sealed class ProductSyncCreateCommandHandler : IRequestHandler<ProductS
             existing.SetClientCreationMetadata(request.Dto.ClientCreatedDate, request.Dto.ClientCreatedBy);
             existing.SetClientModificationMetadata(modified, request.Dto.ClientModifiedBy);
             existing.Restore();
-            await _unitOfWork.SaveChanges(cancellationToken);
+            await _db.SaveChangesAsync(cancellationToken);
             return Result<ProductDto>.SuccessResult(_mapper.Map<ProductDto>(existing));
         }
 
@@ -83,7 +80,7 @@ internal sealed class ProductSyncCreateCommandHandler : IRequestHandler<ProductS
             product.BaseUnitId,
             _productUnitRepository,
             cancellationToken);
-        await _unitOfWork.SaveChanges(cancellationToken);
+        await _db.SaveChangesAsync(cancellationToken);
         return Result<ProductDto>.SuccessResult(_mapper.Map<ProductDto>(product));
     }
 }
@@ -93,7 +90,6 @@ internal sealed class ProductSyncUpdateCommandHandler : IRequestHandler<ProductS
     private readonly IProductRepository _repository;
     private readonly IApplicationDbContext _db;
     private readonly IProductUnitRepository _productUnitRepository;
-    private readonly IUnitOfWork _unitOfWork;
     private readonly ICurrentUser _currentUser;
     private readonly IMapper _mapper;
 
@@ -101,11 +97,10 @@ internal sealed class ProductSyncUpdateCommandHandler : IRequestHandler<ProductS
         IProductRepository repository,
         IApplicationDbContext db,
         IProductUnitRepository productUnitRepository,
-        IUnitOfWork unitOfWork,
         ICurrentUser currentUser,
         IMapper mapper
-    ) => (_repository, _db, _productUnitRepository, _unitOfWork, _currentUser, _mapper) =
-        (repository, db, productUnitRepository, unitOfWork, currentUser, mapper);
+    ) => (_repository, _db, _productUnitRepository, _currentUser, _mapper) =
+        (repository, db, productUnitRepository, currentUser, mapper);
 
     public async Task<Result<ProductDto>> Handle(
         ProductSyncUpdateCommand request,
@@ -135,7 +130,7 @@ internal sealed class ProductSyncUpdateCommandHandler : IRequestHandler<ProductS
             cancellationToken);
         product.SetClientModificationMetadata(modified, request.Dto.ClientModifiedBy);
         product.Restore();
-        await _unitOfWork.SaveChanges(cancellationToken);
+        await _db.SaveChangesAsync(cancellationToken);
         return Result<ProductDto>.SuccessResult(_mapper.Map<ProductDto>(product));
     }
 }
@@ -144,17 +139,15 @@ internal sealed class ProductSyncDeleteCommandHandler : IRequestHandler<ProductS
 {
     private readonly IProductRepository _repository;
     private readonly IApplicationDbContext _db;
-    private readonly IUnitOfWork _unitOfWork;
     private readonly ICurrentUser _currentUser;
     private readonly IMapper _mapper;
 
     public ProductSyncDeleteCommandHandler(
         IProductRepository repository,
         IApplicationDbContext db,
-        IUnitOfWork unitOfWork,
         ICurrentUser currentUser,
         IMapper mapper
-    ) => (_repository, _db, _unitOfWork, _currentUser, _mapper) = (repository, db, unitOfWork, currentUser, mapper);
+    ) => (_repository, _db, _currentUser, _mapper) = (repository, db, currentUser, mapper);
 
     public async Task<Result<ProductDto>> Handle(
         ProductSyncDeleteCommand request,
@@ -181,7 +174,7 @@ internal sealed class ProductSyncDeleteCommandHandler : IRequestHandler<ProductS
                 $"Product is used by {referenceCount} record(s). Remove those references before deleting the product.");
         product.SetClientModificationMetadata(modified, request.Dto.ClientModifiedBy);
         await _repository.RemoveAsync(product);
-        await _unitOfWork.SaveChanges(cancellationToken);
+        await _db.SaveChangesAsync(cancellationToken);
         return Result<ProductDto>.SuccessResult(_mapper.Map<ProductDto>(product));
     }
 }
