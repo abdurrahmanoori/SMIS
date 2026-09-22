@@ -17,15 +17,6 @@ namespace SMIS.Infrastructure.Server.Repositories.Categories
             // _context = context;
         }
 
-        public Task<Category?> GetByIdIncludingDeletedAsync(
-            string id,
-            CancellationToken cancellationToken = default
-        )
-        {
-            return _context.Categories.IgnoreQueryFilters()
-                .FirstOrDefaultAsync(category => category.Id == id, cancellationToken);
-        }
-
         public Task<bool> NameExistsInShopAsync(
             string shopId,
             string name,

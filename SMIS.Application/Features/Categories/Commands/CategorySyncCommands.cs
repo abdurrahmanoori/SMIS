@@ -1,11 +1,13 @@
 using AutoMapper;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using SMIS.Application.Common.Response;
 using SMIS.Application.DTO.Categories;
 using SMIS.Application.Identity.IServices;
 using SMIS.Application.Repositories.Base;
 using SMIS.Application.Repositories.Categories;
 using SMIS.Application.Repositories.Products;
+using SMIS.Application.Services;
 using SMIS.Domain.Entities;
 using SMIS.Domain.Services;
 
@@ -28,18 +30,21 @@ public record CategorySyncDeleteCommand(string Id, CategorySyncDeleteDto Dto) : 
 internal sealed class CategorySyncCreateCommandHandler : IRequestHandler<CategorySyncCreateCommand, Result<CategoryDto>>
 {
     private readonly ICategoryRepository _repository;
+    private readonly IApplicationDbContext _db;
     private readonly IUnitOfWork _unitOfWork;
     private readonly ICurrentUser _currentUser;
     private readonly IMapper _mapper;
 
     public CategorySyncCreateCommandHandler(
         ICategoryRepository repository,
+        IApplicationDbContext db,
         IUnitOfWork unitOfWork,
         ICurrentUser currentUser,
         IMapper mapper
     )
     {
         _repository = repository;
+        _db = db;
         _unitOfWork = unitOfWork;
         _currentUser = currentUser;
         _mapper = mapper;
@@ -55,7 +60,6 @@ internal sealed class CategorySyncCreateCommandHandler : IRequestHandler<Categor
 
         if (!CategorySyncRules.UserMetadataMatches(
                 request.Dto.ClientCreatedBy, _currentUser) ||
-
             !CategorySyncRules.UserMetadataMatches(request.Dto.ClientModifiedBy, _currentUser))
         {
             return CategorySyncRules.InvalidUser();
@@ -67,9 +71,9 @@ internal sealed class CategorySyncCreateCommandHandler : IRequestHandler<Categor
         var clientModified =
             DateTimeService.NormalizeUtc(request.Dto.ClientModifiedDate);
 
-        var existing = await _repository.GetByIdIncludingDeletedAsync(
-            id,
-            cancellationToken);
+        var existing = await _db.Categories
+            .IgnoreQueryFilters()
+            .FirstOrDefaultAsync(category => category.Id == id, cancellationToken);
 
         if (existing is not null)
         {
@@ -148,18 +152,21 @@ internal sealed class CategorySyncUpdateCommandHandler
     : IRequestHandler<CategorySyncUpdateCommand, Result<CategoryDto>>
 {
     private readonly ICategoryRepository _repository;
+    private readonly IApplicationDbContext _db;
     private readonly IUnitOfWork _unitOfWork;
     private readonly ICurrentUser _currentUser;
     private readonly IMapper _mapper;
 
     public CategorySyncUpdateCommandHandler(
         ICategoryRepository repository,
+        IApplicationDbContext db,
         IUnitOfWork unitOfWork,
         ICurrentUser currentUser,
         IMapper mapper
     )
     {
         _repository = repository;
+        _db = db;
         _unitOfWork = unitOfWork;
         _currentUser = currentUser;
         _mapper = mapper;
@@ -179,9 +186,9 @@ internal sealed class CategorySyncUpdateCommandHandler
             return CategorySyncRules.InvalidUser();
         }
 
-        var category = await _repository.GetByIdIncludingDeletedAsync(
-            id,
-            cancellationToken);
+        var category = await _db.Categories
+            .IgnoreQueryFilters()
+            .FirstOrDefaultAsync(entity => entity.Id == id, cancellationToken);
 
         if (category is null)
             return Result<CategoryDto>.NotFoundResult(id);
@@ -230,6 +237,7 @@ internal sealed class CategorySyncDeleteCommandHandler
     : IRequestHandler<CategorySyncDeleteCommand, Result<CategoryDto>>
 {
     private readonly ICategoryRepository _repository;
+    private readonly IApplicationDbContext _db;
     private readonly IUnitOfWork _unitOfWork;
     private readonly ICurrentUser _currentUser;
     private readonly IMapper _mapper;
@@ -237,6 +245,7 @@ internal sealed class CategorySyncDeleteCommandHandler
 
     public CategorySyncDeleteCommandHandler(
         ICategoryRepository repository,
+        IApplicationDbContext db,
         IProductRepository productRepository,
         IUnitOfWork unitOfWork,
         ICurrentUser currentUser,
@@ -244,6 +253,7 @@ internal sealed class CategorySyncDeleteCommandHandler
     )
     {
         _repository = repository;
+        _db = db;
         _productRepository = productRepository;
         _unitOfWork = unitOfWork;
         _currentUser = currentUser;
@@ -264,9 +274,9 @@ internal sealed class CategorySyncDeleteCommandHandler
             return CategorySyncRules.InvalidUser();
         }
 
-        var category = await _repository.GetByIdIncludingDeletedAsync(
-            id,
-            cancellationToken);
+        var category = await _db.Categories
+            .IgnoreQueryFilters()
+            .FirstOrDefaultAsync(entity => entity.Id == id, cancellationToken);
 
         if (category is null)
             return Result<CategoryDto>.NotFoundResult(id);
