@@ -5,6 +5,7 @@ import '../models/product.dart';
 import '../models/product_price.dart';
 import '../models/product_unit.dart';
 import '../models/unit_of_measure.dart';
+import '../services/date_time_service.dart';
 
 class ProductPriceFormDialog extends StatefulWidget {
   const ProductPriceFormDialog({
@@ -12,12 +13,14 @@ class ProductPriceFormDialog extends StatefulWidget {
     required this.productUnits,
     required this.products,
     required this.units,
+    required this.dateTimeService,
     this.productPrice,
   });
 
   final List<ProductUnit> productUnits;
   final List<Product> products;
   final List<UnitOfMeasure> units;
+  final DateTimeService dateTimeService;
   final ProductPrice? productPrice;
 
   @override
@@ -42,7 +45,7 @@ class _ProductPriceFormDialogState extends State<ProductPriceFormDialog> {
     );
     _effectiveDate =
         widget.productPrice?.effectiveDate.add(const Duration(seconds: 1)) ??
-        DateTime.now().toUtc();
+        widget.dateTimeService.nowUtc;
     _endDate = null;
   }
 

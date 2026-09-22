@@ -6,7 +6,8 @@ import 'powersync_repository_support.dart';
 
 class ProductUnitPowerSyncRepository extends PowerSyncRepositorySupport {
   ProductUnitPowerSyncRepository(
-    super.powerSync, {
+    super.powerSync,
+    super.dateTimeService, {
     String Function()? idGenerator,
   }) : _idGenerator = idGenerator ?? const Uuid().v4;
 

@@ -4,15 +4,17 @@ import 'package:path_provider/path_provider.dart';
 import 'package:powersync/powersync.dart';
 
 import '../../services/auth_session_store.dart';
+import '../../services/date_time_service.dart';
 import 'app_powersync_connector.dart';
 import 'app_powersync_schema.dart';
 import 'app_powersync_write_api.dart';
 import 'powersync_auth_api.dart';
 
 class AppPowerSyncDatabase {
-  AppPowerSyncDatabase(this._sessionStore);
+  AppPowerSyncDatabase(this._sessionStore, this._dateTimeService);
 
   final AuthSessionStore _sessionStore;
+  final DateTimeService _dateTimeService;
   PowerSyncDatabase? _database;
   String? _databaseContextKey;
   String? _connectedContextKey;
@@ -43,7 +45,12 @@ class AppPowerSyncDatabase {
     final authApi = PowerSyncAuthApi(sessionStore: _sessionStore);
     final writeApi = AppPowerSyncWriteApi(sessionStore: _sessionStore);
     await database.connect(
-      connector: AppPowerSyncConnector(_sessionStore, authApi, writeApi),
+      connector: AppPowerSyncConnector(
+        _sessionStore,
+        authApi,
+        writeApi,
+        _dateTimeService,
+      ),
     );
     _connectedContextKey = contextKey;
     return database;

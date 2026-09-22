@@ -6,8 +6,11 @@ import '../data_exception.dart';
 import 'powersync_repository_support.dart';
 
 class CategoryPowerSyncRepository extends PowerSyncRepositorySupport {
-  CategoryPowerSyncRepository(super.powerSync, {String Function()? idGenerator})
-    : _idGenerator = idGenerator ?? const Uuid().v4;
+  CategoryPowerSyncRepository(
+    super.powerSync,
+    super.dateTimeService, {
+    String Function()? idGenerator,
+  }) : _idGenerator = idGenerator ?? const Uuid().v4;
 
   final String Function() _idGenerator;
 

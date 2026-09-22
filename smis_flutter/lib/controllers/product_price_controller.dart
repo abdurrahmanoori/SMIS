@@ -181,6 +181,7 @@ final productPriceRepositoryProvider =
     Provider<ProductPricePowerSyncRepository>(
       (ref) => ProductPricePowerSyncRepository(
         ref.watch(appPowerSyncDatabaseProvider),
+        ref.watch(dateTimeServiceProvider),
       ),
     );
 

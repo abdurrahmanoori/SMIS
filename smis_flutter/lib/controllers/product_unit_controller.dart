@@ -178,8 +178,10 @@ class ProductUnitController extends AsyncNotifier<ProductUnitScreenState> {
 }
 
 final productUnitRepositoryProvider = Provider<ProductUnitPowerSyncRepository>(
-  (ref) =>
-      ProductUnitPowerSyncRepository(ref.watch(appPowerSyncDatabaseProvider)),
+  (ref) => ProductUnitPowerSyncRepository(
+    ref.watch(appPowerSyncDatabaseProvider),
+    ref.watch(dateTimeServiceProvider),
+  ),
 );
 final productUnitControllerProvider =
     AsyncNotifierProvider<ProductUnitController, ProductUnitScreenState>(

@@ -2,12 +2,14 @@ import 'dart:convert';
 
 import 'package:powersync/powersync.dart';
 
+import '../../services/date_time_service.dart';
 import 'app_powersync_database.dart';
 
 abstract class PowerSyncRepositorySupport {
-  PowerSyncRepositorySupport(this.powerSync);
+  PowerSyncRepositorySupport(this.powerSync, this.dateTimeService);
 
   final AppPowerSyncDatabase powerSync;
+  final DateTimeService dateTimeService;
 
   Future<PowerSyncDatabase> get database =>
       powerSync.connectForCurrentSession();
@@ -44,5 +46,5 @@ abstract class PowerSyncRepositorySupport {
     return DateTime.fromMillisecondsSinceEpoch(0, isUtc: true);
   }
 
-  String nowIso() => DateTime.now().toUtc().toIso8601String();
+  String nowIso() => dateTimeService.nowUtc.toIso8601String();
 }

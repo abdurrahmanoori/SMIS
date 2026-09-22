@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../controllers/app_dependencies.dart';
 import '../controllers/product_controller.dart';
 import '../controllers/product_price_controller.dart';
 import '../controllers/product_unit_controller.dart';
@@ -168,6 +169,7 @@ class _ProductPricesScreenState extends ConsumerState<ProductPricesScreen>
           products: products,
           units: units,
           productPrice: productPrice,
+          dateTimeService: ref.read(dateTimeServiceProvider),
         ),
       );
     } catch (error, stackTrace) {

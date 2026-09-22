@@ -1,15 +1,22 @@
 import 'package:powersync/powersync.dart';
 
 import '../../services/auth_session_store.dart';
+import '../../services/date_time_service.dart';
 import 'app_powersync_write_api.dart';
 import 'powersync_auth_api.dart';
 
 class AppPowerSyncConnector extends PowerSyncBackendConnector {
-  AppPowerSyncConnector(this._sessionStore, this._authApi, this._writeApi);
+  AppPowerSyncConnector(
+    this._sessionStore,
+    this._authApi,
+    this._writeApi,
+    this._dateTimeService,
+  );
 
   final AuthSessionStore _sessionStore;
   final PowerSyncAuthApi _authApi;
   final AppPowerSyncWriteApi _writeApi;
+  final DateTimeService _dateTimeService;
 
   @override
   Future<PowerSyncCredentials?> fetchCredentials() async {
@@ -45,7 +52,7 @@ class AppPowerSyncConnector extends PowerSyncBackendConnector {
         case UpdateType.delete:
           final timestamp =
               operation.previousValues?['last_modified_utc']?.toString() ??
-              DateTime.now().toUtc().toIso8601String();
+              _dateTimeService.nowUtc.toIso8601String();
           await _writeApi.delete(table, operation.id, timestamp);
       }
     }

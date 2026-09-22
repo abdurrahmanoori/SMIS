@@ -134,6 +134,7 @@ final unitOfMeasureRepositoryProvider =
     Provider<UnitOfMeasurePowerSyncRepository>(
       (ref) => UnitOfMeasurePowerSyncRepository(
         ref.watch(appPowerSyncDatabaseProvider),
+        ref.watch(dateTimeServiceProvider),
       ),
     );
 

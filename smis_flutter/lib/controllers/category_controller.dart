@@ -219,7 +219,10 @@ class CategoryController extends AsyncNotifier<CategoryScreenState> {
 }
 
 final categoryRepositoryProvider = Provider<CategoryPowerSyncRepository>(
-  (ref) => CategoryPowerSyncRepository(ref.watch(appPowerSyncDatabaseProvider)),
+  (ref) => CategoryPowerSyncRepository(
+    ref.watch(appPowerSyncDatabaseProvider),
+    ref.watch(dateTimeServiceProvider),
+  ),
 );
 
 final categoryControllerProvider =

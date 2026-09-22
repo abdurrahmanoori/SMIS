@@ -124,7 +124,10 @@ class ShopController extends AsyncNotifier<ShopScreenState> {
 }
 
 final shopRepositoryProvider = Provider<ShopPowerSyncRepository>(
-  (ref) => ShopPowerSyncRepository(ref.watch(appPowerSyncDatabaseProvider)),
+  (ref) => ShopPowerSyncRepository(
+    ref.watch(appPowerSyncDatabaseProvider),
+    ref.watch(dateTimeServiceProvider),
+  ),
 );
 final shopControllerProvider =
     AsyncNotifierProvider<ShopController, ShopScreenState>(ShopController.new);
