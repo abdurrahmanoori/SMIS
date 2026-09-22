@@ -398,14 +398,6 @@
       <option name="project" value="LOCAL" />
       <updated>1789462942314</updated>
     </task>
-    <task id="LOCAL-00036" summary="feat: enhance authentication flow with AuthenticationGate and improve logout handling">
-      <option name="closed" value="true" />
-      <created>1788752130275</created>
-      <option name="number" value="00036" />
-      <option name="presentableId" value="LOCAL-00036" />
-      <option name="project" value="LOCAL" />
-      <updated>1788752130275</updated>
-    </task>
     <task id="LOCAL-00037" summary="feat: implement shop and product management with corresponding APIs, controllers, and UI components">
       <option name="closed" value="true" />
       <created>1788874966242</created>
@@ -782,7 +774,15 @@
       <option name="project" value="LOCAL" />
       <updated>1789995986038</updated>
     </task>
-    <option name="localTasksCounter" value="84" />
+    <task id="LOCAL-00084" summary="fix: add missing newlines at the end of multiple files">
+      <option name="closed" value="true" />
+      <created>1790073833789</created>
+      <option name="number" value="00084" />
+      <option name="presentableId" value="LOCAL-00084" />
+      <option name="project" value="LOCAL" />
+      <updated>1790073833790</updated>
+    </task>
+    <option name="localTasksCounter" value="85" />
     <option name="clearContext" value="false" />
     <option name="createChangelist" value="false" />
     <option name="createBranch" value="false" />
@@ -803,7 +803,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
-    <MESSAGE value="feat: enforce unique category names per shop and enhance related error handling" />
     <MESSAGE value="feat: enforce foreign key relationships and improve navigation properties across entities" />
     <MESSAGE value="feat: enhance entity configurations with audit user relationships and improve code formatting" />
     <MESSAGE value="feat: update workspace configuration to skip highlighting for migration files and clean up task entries" />
@@ -828,6 +827,7 @@
     <MESSAGE value="feat: add PowerSync upload handlers for categories, products, units of measure, and shops; streamline synchronization process and improve error handling" />
     <MESSAGE value="feat: remove unused database and API files; clean up project dependencies and configurations" />
     <MESSAGE value="Add product price CRUD and flexible query" />
+    <MESSAGE value="fix: add missing newlines at the end of multiple files" />
     <option name="LAST_COMMIT_MESSAGE" value="" />
   </component>
   <component name="XDebuggerManager">

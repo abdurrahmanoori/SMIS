@@ -1,5 +1,6 @@
 using FluentValidation;
 using SMIS.Application.Features.LoanAccounts.Commands;
+using SMIS.Domain.Services;
 
 namespace SMIS.Application.Features.LoanAccounts.Validators;
 
@@ -11,7 +12,7 @@ public class LoanAccountUpdateCommandValidator : AbstractValidator<LoanAccountUp
             .NotEmpty();
 
         RuleFor(command => command.Dto.DueDate)
-            .GreaterThan(DateTime.UtcNow)
+            .GreaterThan(DateTimeService.NowUtc)
             .When(command => command.Dto.DueDate.HasValue)
             .WithMessage("Due date must be in the future.");
 

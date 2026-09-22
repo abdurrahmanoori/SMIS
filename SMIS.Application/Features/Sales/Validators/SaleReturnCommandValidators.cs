@@ -1,5 +1,6 @@
 using FluentValidation;
 using SMIS.Application.Features.Sales.Commands;
+using SMIS.Domain.Services;
 
 namespace SMIS.Application.Features.Sales.Validators;
 
@@ -16,7 +17,7 @@ public sealed class SaleReturnCommandValidator : AbstractValidator<SaleReturnCom
         });
         RuleFor(command => command.Dto.IdempotencyKey).MaximumLength(200);
         RuleFor(command => command.Dto.OccurredAtUtc)
-            .LessThanOrEqualTo(DateTime.UtcNow.AddMinutes(5))
+            .LessThanOrEqualTo(DateTimeService.NowUtc.AddMinutes(5))
             .When(command => command.Dto.OccurredAtUtc.HasValue);
     }
 }
@@ -28,7 +29,7 @@ public sealed class SaleVoidCommandValidator : AbstractValidator<SaleVoidCommand
         RuleFor(command => command.SaleId).NotEmpty().MaximumLength(450);
         RuleFor(command => command.Dto.IdempotencyKey).MaximumLength(200);
         RuleFor(command => command.Dto.OccurredAtUtc)
-            .LessThanOrEqualTo(DateTime.UtcNow.AddMinutes(5))
+            .LessThanOrEqualTo(DateTimeService.NowUtc.AddMinutes(5))
             .When(command => command.Dto.OccurredAtUtc.HasValue);
     }
 }

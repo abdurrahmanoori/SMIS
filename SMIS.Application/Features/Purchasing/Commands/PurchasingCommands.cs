@@ -7,6 +7,7 @@ using SMIS.Application.Repositories.Base;
 using SMIS.Application.Services;
 using SMIS.Domain.Entities;
 using SMIS.Domain.Enums;
+using SMIS.Domain.Services;
 
 namespace SMIS.Application.Features.Purchasing.Commands;
 
@@ -114,7 +115,7 @@ internal sealed class PurchasingCommandHandler :
         var order = PurchaseOrder.Create(
             shopId,
             dto.SupplierId,
-            dto.OrderedAtUtc ?? DateTime.UtcNow,
+            dto.OrderedAtUtc ?? DateTimeService.NowUtc,
             dto.ReferenceNumber,
             dto.Notes);
 
@@ -177,7 +178,7 @@ internal sealed class PurchasingCommandHandler :
             return Result<PurchaseOrderDto>.FailureResult("DuplicateReceiptLine",
                 "A purchase-order line can appear only once per receipt.");
 
-        var occurredAtUtc = request.Dto.OccurredAtUtc ?? DateTime.UtcNow;
+        var occurredAtUtc = request.Dto.OccurredAtUtc ?? DateTimeService.NowUtc;
         var operationId = Guid.NewGuid().ToString();
         foreach (var receipt in request.Dto.Lines)
         {
@@ -265,7 +266,7 @@ internal sealed class PurchasingCommandHandler :
                 dto.QuantityEntered,
                 StockMovementDirection.Out,
                 StockMovementReason.SupplierReturn,
-                dto.OccurredAtUtc ?? DateTime.UtcNow,
+                dto.OccurredAtUtc ?? DateTimeService.NowUtc,
                 nameof(PurchaseOrderLine),
                 line.Id,
                 Guid.NewGuid().ToString()),

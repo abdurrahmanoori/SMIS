@@ -4,6 +4,7 @@ using SMIS.Application.Common.Response;
 using SMIS.Application.DTO.StockBatches;
 using SMIS.Application.Repositories.Base;
 using SMIS.Application.Services;
+using SMIS.Domain.Services;
 
 namespace SMIS.Application.Features.StockBatches.Commands;
 
@@ -55,7 +56,7 @@ internal sealed class StockBatchCreateCommandHandler
                 dto.ReceivedProductUnitId,
                 dto.ReceivedQuantity,
                 dto.UnitCostBase,
-                dto.ReceivedAtUtc ?? DateTime.UtcNow,
+                dto.ReceivedAtUtc ?? DateTimeService.NowUtc,
                 dto.BatchNumber,
                 dto.ExpirationDate,
                 dto.ReferenceType,

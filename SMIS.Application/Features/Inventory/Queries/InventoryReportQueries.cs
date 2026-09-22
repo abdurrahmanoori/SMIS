@@ -6,6 +6,7 @@ using SMIS.Application.Identity.IServices;
 using SMIS.Application.Services;
 using SMIS.Domain.Entities;
 using SMIS.Domain.Enums;
+using SMIS.Domain.Services;
 
 namespace SMIS.Application.Features.Inventory.Queries;
 
@@ -97,7 +98,7 @@ internal sealed class InventoryCurrentStockQueryHandler
                 productBatches ??= new List<BatchBalanceProjection>();
 
                 var quantityBase = productBatches.Sum(batch => batch.RemainingQuantityBase);
-                var now = DateTime.UtcNow;
+                var now = DateTimeService.NowUtc;
                 var availableQuantityBase = productBatches
                     .Where(batch =>
                         batch.Status == StatusEnum.Active &&
@@ -167,7 +168,7 @@ internal sealed class InventoryExpirationReportQueryHandler
                 "InvalidExpirationWindow",
                 "DaysAhead cannot be negative.");
 
-        var now = DateTime.UtcNow;
+        var now = DateTimeService.NowUtc;
         var through = now.AddDays(request.DaysAhead);
         var query = InventoryReportScope.Batches(_db, _currentUser)
             .AsNoTracking()

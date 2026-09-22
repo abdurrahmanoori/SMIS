@@ -4,6 +4,7 @@ using SMIS.Application.Common.Response;
 using SMIS.Application.DTO.StockMovements;
 using SMIS.Application.Repositories.Base;
 using SMIS.Application.Services;
+using SMIS.Domain.Services;
 
 namespace SMIS.Application.Features.StockMovements.Commands;
 
@@ -46,7 +47,7 @@ internal sealed class StockMovementCreateCommandHandler
                 dto.QuantityEntered,
                 dto.Direction,
                 dto.Reason,
-                dto.OccurredAtUtc ?? DateTime.UtcNow,
+                dto.OccurredAtUtc ?? DateTimeService.NowUtc,
                 dto.ReferenceType,
                 dto.ReferenceId),
             cancellationToken);

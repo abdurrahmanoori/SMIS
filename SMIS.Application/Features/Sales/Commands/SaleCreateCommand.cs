@@ -12,6 +12,7 @@ using SMIS.Application.Repositories.Shops;
 using SMIS.Application.Services;
 using SMIS.Domain.Entities;
 using SMIS.Domain.Enums;
+using SMIS.Domain.Services;
 
 namespace SMIS.Application.Features.Sales.Commands;
 
@@ -114,7 +115,7 @@ internal sealed class SaleCreateCommandHandler : IRequestHandler<SaleCreateComma
                     "All sale-line products must belong to the sale shop.");
         }
 
-        var saleDate = dto.SaleDateUtc ?? DateTime.UtcNow;
+        var saleDate = dto.SaleDateUtc ?? DateTimeService.NowUtc;
         var sale = Sale.Create(shopId, dto.CustomerId, dto.PaymentType, saleDate, dto.Notes);
 
         foreach (var lineDto in dto.Lines)

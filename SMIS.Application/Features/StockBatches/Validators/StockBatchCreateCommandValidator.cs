@@ -1,5 +1,6 @@
 using FluentValidation;
 using SMIS.Application.Features.StockBatches.Commands;
+using SMIS.Domain.Services;
 
 namespace SMIS.Application.Features.StockBatches.Validators
 {
@@ -22,7 +23,7 @@ namespace SMIS.Application.Features.StockBatches.Validators
                 .GreaterThanOrEqualTo(0).WithMessage("Base-unit cost cannot be negative");
 
             RuleFor(x => x.StockBatchCreateDto.ReceivedAtUtc)
-                .LessThanOrEqualTo(DateTime.UtcNow.AddMinutes(5))
+                .LessThanOrEqualTo(DateTimeService.NowUtc.AddMinutes(5))
                 .WithMessage("Received time cannot be in the future")
                 .When(x => x.StockBatchCreateDto.ReceivedAtUtc.HasValue);
 
@@ -31,7 +32,7 @@ namespace SMIS.Application.Features.StockBatches.Validators
                 .When(x => !string.IsNullOrWhiteSpace(x.StockBatchCreateDto.BatchNumber));
 
             RuleFor(x => x.StockBatchCreateDto.ExpirationDate)
-                .GreaterThan(x => x.StockBatchCreateDto.ReceivedAtUtc ?? DateTime.UtcNow)
+                .GreaterThan(x => x.StockBatchCreateDto.ReceivedAtUtc ?? DateTimeService.NowUtc)
                 .WithMessage("Expiration date must be after received date")
                 .When(x => x.StockBatchCreateDto.ExpirationDate.HasValue);
 

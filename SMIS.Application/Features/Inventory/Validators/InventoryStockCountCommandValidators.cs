@@ -1,5 +1,6 @@
 using FluentValidation;
 using SMIS.Application.Features.Inventory.Commands;
+using SMIS.Domain.Services;
 
 namespace SMIS.Application.Features.Inventory.Validators;
 
@@ -27,7 +28,7 @@ public sealed class StockCountCompleteCommandValidator : AbstractValidator<Stock
         });
         RuleFor(command => command.Dto.IdempotencyKey).MaximumLength(200);
         RuleFor(command => command.Dto.OccurredAtUtc)
-            .LessThanOrEqualTo(DateTime.UtcNow.AddMinutes(5))
+            .LessThanOrEqualTo(DateTimeService.NowUtc.AddMinutes(5))
             .When(command => command.Dto.OccurredAtUtc.HasValue);
     }
 }

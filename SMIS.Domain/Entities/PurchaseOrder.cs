@@ -2,6 +2,7 @@ using SMIS.Domain.Common.BaseAbstract;
 using SMIS.Domain.Common.Interfaces;
 using SMIS.Domain.Enums;
 using SMIS.Domain.Exceptions;
+using SMIS.Domain.Services;
 
 namespace SMIS.Domain.Entities;
 
@@ -36,7 +37,7 @@ public sealed class PurchaseOrder : BaseAuditableEntity, IShopEntity
             throw new DomainValidationException("Supplier ID cannot be empty");
 
         var utc = orderedAtUtc.Kind == DateTimeKind.Utc ? orderedAtUtc : orderedAtUtc.ToUniversalTime();
-        if (utc > DateTime.UtcNow.AddMinutes(5))
+        if (utc > DateTimeService.NowUtc.AddMinutes(5))
             throw new DomainValidationException("Purchase order time cannot be in the future");
 
         return new PurchaseOrder

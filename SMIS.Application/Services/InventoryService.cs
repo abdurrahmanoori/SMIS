@@ -6,6 +6,7 @@ using SMIS.Application.Repositories.StockBatches;
 using SMIS.Application.Repositories.StockMovements;
 using SMIS.Domain.Entities;
 using SMIS.Domain.Enums;
+using SMIS.Domain.Services;
 
 namespace SMIS.Application.Services;
 
@@ -307,7 +308,7 @@ public sealed class InventoryService : IInventoryService
                 movement.QuantityBase,
                 reverseDirection,
                 StockMovementReason.Adjustment,
-                DateTime.UtcNow,
+                DateTimeService.NowUtc,
                 "StockMovementReversal",
                 movement.Id,
                 reversalOperationId);

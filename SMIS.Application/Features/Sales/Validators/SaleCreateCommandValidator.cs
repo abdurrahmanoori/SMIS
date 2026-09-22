@@ -1,6 +1,7 @@
 using FluentValidation;
 using SMIS.Application.Features.Sales.Commands;
 using SMIS.Domain.Enums;
+using SMIS.Domain.Services;
 
 namespace SMIS.Application.Features.Sales.Validators;
 
@@ -26,7 +27,7 @@ public sealed class SaleCreateCommandValidator : AbstractValidator<SaleCreateCom
             .WithMessage("Credit sales require a customer.");
 
         RuleFor(command => command.Dto.DueDate)
-            .GreaterThan(command => command.Dto.SaleDateUtc ?? DateTime.UtcNow)
+            .GreaterThan(command => command.Dto.SaleDateUtc ?? DateTimeService.NowUtc)
             .When(command => command.Dto.DueDate.HasValue)
             .WithMessage("Due date must be after the sale date.");
 
@@ -37,7 +38,7 @@ public sealed class SaleCreateCommandValidator : AbstractValidator<SaleCreateCom
             .MaximumLength(200);
 
         RuleFor(command => command.Dto.SaleDateUtc)
-            .LessThanOrEqualTo(DateTime.UtcNow.AddMinutes(5))
+            .LessThanOrEqualTo(DateTimeService.NowUtc.AddMinutes(5))
             .When(command => command.Dto.SaleDateUtc.HasValue)
             .WithMessage("Sale date cannot be in the future.");
     }

@@ -6,6 +6,7 @@ using SMIS.Application.DTO.StockMovements;
 using SMIS.Application.Repositories.Base;
 using SMIS.Application.Services;
 using SMIS.Domain.Enums;
+using SMIS.Domain.Services;
 
 namespace SMIS.Application.Features.Inventory.Commands;
 
@@ -61,7 +62,7 @@ internal sealed class InventoryBatchOperationCommandHandler
                 dto.QuantityEntered,
                 request.Direction,
                 request.Reason,
-                dto.OccurredAtUtc ?? DateTime.UtcNow,
+                dto.OccurredAtUtc ?? DateTimeService.NowUtc,
                 dto.ReferenceType,
                 dto.ReferenceId),
             cancellationToken);
@@ -133,7 +134,7 @@ internal sealed class InventoryTransferCommandHandler
                 dto.DestinationStockBatchId,
                 dto.ProductUnitId,
                 dto.QuantityEntered,
-                dto.OccurredAtUtc ?? DateTime.UtcNow,
+                dto.OccurredAtUtc ?? DateTimeService.NowUtc,
                 dto.ReferenceType,
                 dto.ReferenceId),
             cancellationToken);

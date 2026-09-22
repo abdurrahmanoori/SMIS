@@ -2,6 +2,7 @@ using SMIS.Domain.Common.BaseAbstract;
 using SMIS.Domain.Common.Interfaces;
 using SMIS.Domain.Enums;
 using SMIS.Domain.Exceptions;
+using SMIS.Domain.Services;
 
 namespace SMIS.Domain.Entities;
 
@@ -30,7 +31,7 @@ public sealed class StockCountSession : BaseAuditableEntity, IShopEntity
             throw new DomainValidationException("Shop ID cannot be empty");
 
         var utc = startedAtUtc.Kind == DateTimeKind.Utc ? startedAtUtc : startedAtUtc.ToUniversalTime();
-        if (utc > DateTime.UtcNow.AddMinutes(5))
+        if (utc > DateTimeService.NowUtc.AddMinutes(5))
             throw new DomainValidationException("Stock count start time cannot be in the future");
 
         return new StockCountSession
@@ -53,7 +54,7 @@ public sealed class StockCountSession : BaseAuditableEntity, IShopEntity
         var utc = completedAtUtc.Kind == DateTimeKind.Utc ? completedAtUtc : completedAtUtc.ToUniversalTime();
         if (utc < StartedAtUtc)
             throw new DomainValidationException("Stock count completion time cannot be before its start time");
-        if (utc > DateTime.UtcNow.AddMinutes(5))
+        if (utc > DateTimeService.NowUtc.AddMinutes(5))
             throw new DomainValidationException("Stock count completion time cannot be in the future");
 
         CompletedAtUtc = utc;

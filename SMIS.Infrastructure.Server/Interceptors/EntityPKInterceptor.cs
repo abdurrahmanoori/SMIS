@@ -1,9 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using SMIS.Application.Identity.IServices;
 using SMIS.Application.Services;
 using SMIS.Domain.Common.Interfaces;
 using SMIS.Domain.Entities;
+using SMIS.Domain.Services;
 
 namespace SMIS.Infrastructure.Server.Interceptors;
 
@@ -74,7 +75,7 @@ public class EntityPKInterceptor : SaveChangesInterceptor
 
             //if (entry.State == EntityStateEnum.Modified)
             //{
-            //    entry.Entity.UpdatedDate = DateTime.UtcNow;
+            //    entry.Entity.UpdatedDate = DateTimeService.NowUtc;
             //    entry.Entity.UpdatedBy = _currentUser.GetId();
             //    entry.Property(e => e.CreatedDate).IsModified = false; // Ensure CreatedDate is not updated
             //}
@@ -82,7 +83,7 @@ public class EntityPKInterceptor : SaveChangesInterceptor
             //{
             //    //entry.State = EntityStateEnum.Modified; // Soft-delete the entity
             //    //entry.Entity.IsDeleted = true;
-            //    //entry.Entity.DeletedAt = DateTime.UtcNow;
+            //    //entry.Entity.DeletedAt = DateTimeService.NowUtc;
             //    //entry.Entity.DeletedBy = _currentUser.GetId();
             //}
         }
@@ -91,13 +92,13 @@ public class EntityPKInterceptor : SaveChangesInterceptor
         //{
         //    if (entry.State == EntityStateEnum.Added)
         //    {
-        //        entry.Entity.CreatedAt = DateTime.UtcNow;
+        //        entry.Entity.CreatedAt = DateTimeService.NowUtc;
         //        entry.Entity.CreatedBy = _currentUser.GetId();
         //    }
 
         //    if (entry.State == EntityStateEnum.Modified)
         //    {
-        //        entry.Entity.UpdatedAt = DateTime.UtcNow;
+        //        entry.Entity.UpdatedAt = DateTimeService.NowUtc;
         //        entry.Entity.UpdatedBy = _currentUser.GetId();
         //        entry.Property(e => e.CreatedAt).IsModified = false; // Ensure CreatedDate is not updated
         //    }
@@ -105,7 +106,7 @@ public class EntityPKInterceptor : SaveChangesInterceptor
         //    {
         //        entry.State = EntityStateEnum.Modified; // Soft-delete the entity
         //        entry.Entity.IsDeleted = true;
-        //        entry.Entity.DeletedAt = DateTime.UtcNow;
+        //        entry.Entity.DeletedAt = DateTimeService.NowUtc;
         //        entry.Entity.DeletedBy = _currentUser.GetId();
         //    }
         //}

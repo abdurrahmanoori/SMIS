@@ -7,6 +7,7 @@ using SMIS.Application.Repositories.Base;
 using SMIS.Application.Services;
 using SMIS.Domain.Entities;
 using SMIS.Domain.Enums;
+using SMIS.Domain.Services;
 
 namespace SMIS.Application.Features.Inventory.Commands;
 
@@ -85,7 +86,7 @@ internal sealed class StockCountCommandHandler :
                 "NoStockBatches",
                 "No stock batches are available to count.");
 
-        var session = StockCountSession.Create(shopId, DateTime.UtcNow, request.Dto.Notes);
+        var session = StockCountSession.Create(shopId, DateTimeService.NowUtc, request.Dto.Notes);
         foreach (var batch in batches)
         {
             session.Lines.Add(StockCountLine.Create(
@@ -139,7 +140,7 @@ internal sealed class StockCountCommandHandler :
                 "IncompleteStockCount",
                 "The submitted count set does not match the stock-count snapshot.");
 
-        var occurredAtUtc = request.Dto.OccurredAtUtc ?? DateTime.UtcNow;
+        var occurredAtUtc = request.Dto.OccurredAtUtc ?? DateTimeService.NowUtc;
         var operationId = Guid.NewGuid().ToString();
 
         foreach (var line in session.Lines)

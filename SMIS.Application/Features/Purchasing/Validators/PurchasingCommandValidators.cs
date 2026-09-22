@@ -1,5 +1,6 @@
 using FluentValidation;
 using SMIS.Application.Features.Purchasing.Commands;
+using SMIS.Domain.Services;
 
 namespace SMIS.Application.Features.Purchasing.Validators;
 
@@ -22,7 +23,7 @@ public sealed class PurchaseOrderCreateCommandValidator : AbstractValidator<Purc
         RuleFor(command => command.Dto.Notes).MaximumLength(500);
         RuleFor(command => command.Dto.IdempotencyKey).MaximumLength(200);
         RuleFor(command => command.Dto.OrderedAtUtc)
-            .LessThanOrEqualTo(DateTime.UtcNow.AddMinutes(5))
+            .LessThanOrEqualTo(DateTimeService.NowUtc.AddMinutes(5))
             .When(command => command.Dto.OrderedAtUtc.HasValue);
         RuleFor(command => command.Dto.Lines).NotEmpty();
         RuleForEach(command => command.Dto.Lines).ChildRules(line =>
@@ -42,7 +43,7 @@ public sealed class PurchaseOrderReceiveCommandValidator : AbstractValidator<Pur
         RuleFor(command => command.Id).NotEmpty().MaximumLength(450);
         RuleFor(command => command.Dto.IdempotencyKey).MaximumLength(200);
         RuleFor(command => command.Dto.OccurredAtUtc)
-            .LessThanOrEqualTo(DateTime.UtcNow.AddMinutes(5))
+            .LessThanOrEqualTo(DateTimeService.NowUtc.AddMinutes(5))
             .When(command => command.Dto.OccurredAtUtc.HasValue);
         RuleFor(command => command.Dto.Lines).NotEmpty();
         RuleForEach(command => command.Dto.Lines).ChildRules(line =>
@@ -64,7 +65,7 @@ public sealed class PurchaseOrderSupplierReturnCommandValidator : AbstractValida
         RuleFor(command => command.Dto.QuantityEntered).GreaterThan(0);
         RuleFor(command => command.Dto.IdempotencyKey).MaximumLength(200);
         RuleFor(command => command.Dto.OccurredAtUtc)
-            .LessThanOrEqualTo(DateTime.UtcNow.AddMinutes(5))
+            .LessThanOrEqualTo(DateTimeService.NowUtc.AddMinutes(5))
             .When(command => command.Dto.OccurredAtUtc.HasValue);
     }
 }

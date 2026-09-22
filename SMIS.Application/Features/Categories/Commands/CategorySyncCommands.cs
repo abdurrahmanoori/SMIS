@@ -15,21 +15,17 @@ namespace SMIS.Application.Features.Categories.Commands;
 // Commands
 // ------------------------------------------------------------
 
-public record CategorySyncCreateCommand(CategorySyncCreateDto Dto)
-    : IRequest<Result<CategoryDto>>;
+public record CategorySyncCreateCommand(CategorySyncCreateDto Dto) : IRequest<Result<CategoryDto>>;
 
-public record CategorySyncUpdateCommand(string Id, CategorySyncUpdateDto Dto)
-    : IRequest<Result<CategoryDto>>;
+public record CategorySyncUpdateCommand(string Id, CategorySyncUpdateDto Dto) : IRequest<Result<CategoryDto>>;
 
-public record CategorySyncDeleteCommand(string Id, CategorySyncDeleteDto Dto)
-    : IRequest<Result<CategoryDto>>;
+public record CategorySyncDeleteCommand(string Id, CategorySyncDeleteDto Dto) : IRequest<Result<CategoryDto>>;
 
 // ------------------------------------------------------------
 // Create Handler
 // ------------------------------------------------------------
 
-internal sealed class CategorySyncCreateCommandHandler
-    : IRequestHandler<CategorySyncCreateCommand, Result<CategoryDto>>
+internal sealed class CategorySyncCreateCommandHandler : IRequestHandler<CategorySyncCreateCommand, Result<CategoryDto>>
 {
     private readonly ICategoryRepository _repository;
     private readonly IUnitOfWork _unitOfWork;
@@ -59,6 +55,7 @@ internal sealed class CategorySyncCreateCommandHandler
 
         if (!CategorySyncRules.UserMetadataMatches(
                 request.Dto.ClientCreatedBy, _currentUser) ||
+
             !CategorySyncRules.UserMetadataMatches(request.Dto.ClientModifiedBy, _currentUser))
         {
             return CategorySyncRules.InvalidUser();

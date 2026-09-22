@@ -3,6 +3,7 @@ using SMIS.Domain.Common.Interfaces;
 using SMIS.Domain.Entities.LocationEntities;
 using SMIS.Domain.Enums;
 using SMIS.Domain.Exceptions;
+using SMIS.Domain.Services;
 
 namespace SMIS.Domain.Entities;
 
@@ -178,7 +179,7 @@ public class Customer : BaseSyncableAuditableEntity, IShopEntity
     )
     {
         IsDeleted = true;
-        DeletedAt = DateTime.UtcNow;
+        DeletedAt = DateTimeService.NowUtc;
         DeletedBy = deletedBy;
         Deactivate();
     }

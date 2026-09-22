@@ -5,6 +5,7 @@ using SMIS.Domain.Entities.Identity.Entity;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using SMIS.Domain.Services;
 
 namespace SMIS.Infrastructure.Server.Services.Identity;
 
@@ -58,7 +59,7 @@ public class JwtTokenGenerator : ITokenGenerator
             issuer: _configuration["JwtSettings:Issuer"],
             audience: _configuration["JwtSettings:Audience"],
             claims: claims,
-            expires: DateTime.UtcNow.AddMonths(2),
+            expires: DateTimeService.NowUtc.AddMonths(2),
             signingCredentials: credentials
         );
 

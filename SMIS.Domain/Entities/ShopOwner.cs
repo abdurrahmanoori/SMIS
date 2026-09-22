@@ -3,6 +3,7 @@ using SMIS.Domain.Common.Interfaces;
 using SMIS.Domain.Entities.Identity.Entity;
 using SMIS.Domain.Entities.LocationEntities;
 using SMIS.Domain.Exceptions;
+using SMIS.Domain.Services;
 
 namespace SMIS.Domain.Entities;
 
@@ -21,7 +22,7 @@ public class ShopOwner : BaseAuditableEntity, IShopEntity
     public decimal OwnershipPercentage { get; private set; } = 100.0m;
 
     // Tracks ownership period
-    public DateTime StartDate { get; private set; } = DateTime.Now;
+    public DateTime StartDate { get; private set; } = DateTimeService.NowLocal;
 
     // Tracks ownership period
     public DateTime? EndDate { get; private set; }
@@ -169,7 +170,7 @@ public class ShopOwner : BaseAuditableEntity, IShopEntity
     public void Deactivate()
     {
         IsActive = false;
-        EndDate = DateTime.Now;
+        EndDate = DateTimeService.NowLocal;
     }
 
     public string GetFullName() => $"{FirstName} {LastName}".Trim();

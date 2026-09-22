@@ -3,6 +3,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using SMIS.Infrastructure.Server.DatabaseSeeders;
+using SMIS.Domain.Services;
 
 namespace SMIS.Api.Middleware;
 
@@ -61,7 +62,7 @@ public class DevelopmentJwtMiddleware
             issuer: _configuration["JwtSettings:Issuer"],
             audience: _configuration["JwtSettings:Audience"],
             claims: claims,
-            expires: DateTime.UtcNow.AddHours(24),
+            expires: DateTimeService.NowUtc.AddHours(24),
             signingCredentials: credentials
         );
 

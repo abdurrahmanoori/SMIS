@@ -1,7 +1,8 @@
-﻿using SMIS.Domain.Common.BaseAbstract;
+using SMIS.Domain.Common.BaseAbstract;
 using SMIS.Domain.Common.Interfaces;
 using SMIS.Domain.Enums;
 using SMIS.Domain.Exceptions;
+using SMIS.Domain.Services;
 
 namespace SMIS.Domain.Entities;
 
@@ -48,7 +49,7 @@ public class StockBatch : BaseAuditableEntityWithoutName, IShopEntity
         batch.SetReceivedProductUnitId(receivedProductUnitId);
         batch.SetInitialQuantity(receivedQuantity, baseUnitQuantity);
         batch.SetUnitCostBase(unitCostBase);
-        batch.SetReceivedAtUtc(receivedAtUtc ?? DateTime.UtcNow);
+        batch.SetReceivedAtUtc(receivedAtUtc ?? DateTimeService.NowUtc);
         batch.SetBatchNumber(batchNumber);
         batch.SetExpirationDate(expirationDate);
         return batch;
@@ -115,7 +116,7 @@ public class StockBatch : BaseAuditableEntityWithoutName, IShopEntity
         var utc = receivedAtUtc.Kind == DateTimeKind.Utc
             ? receivedAtUtc
             : receivedAtUtc.ToUniversalTime();
-        if (utc > DateTime.UtcNow.AddMinutes(5))
+        if (utc > DateTimeService.NowUtc.AddMinutes(5))
             throw new DomainValidationException("Received time cannot be in the future");
 
         ReceivedAtUtc = utc;

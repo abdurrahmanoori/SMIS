@@ -9,6 +9,7 @@ using SMIS.Application.Services;
 using SMIS.Application.Identity.IServices;
 using SMIS.Domain.Entities;
 using SMIS.Domain.Enums;
+using SMIS.Domain.Services;
 
 namespace SMIS.Application.Features.Sales.Commands;
 
@@ -54,7 +55,7 @@ internal sealed class SaleReturnCommandHandler :
         ExecuteAsync(
             request.SaleId,
             request.Dto.Lines,
-            request.Dto.OccurredAtUtc ?? DateTime.UtcNow,
+            request.Dto.OccurredAtUtc ?? DateTimeService.NowUtc,
             request.Dto.IdempotencyKey,
             isVoid: false,
             cancellationToken);
@@ -66,7 +67,7 @@ internal sealed class SaleReturnCommandHandler :
         ExecuteAsync(
             request.SaleId,
             requestedLines: null,
-            request.Dto.OccurredAtUtc ?? DateTime.UtcNow,
+            request.Dto.OccurredAtUtc ?? DateTimeService.NowUtc,
             request.Dto.IdempotencyKey,
             isVoid: true,
             cancellationToken);

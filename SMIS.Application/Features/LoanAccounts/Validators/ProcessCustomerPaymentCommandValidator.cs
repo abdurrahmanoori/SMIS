@@ -1,5 +1,6 @@
 using FluentValidation;
 using SMIS.Application.Features.LoanAccounts.Commands;
+using SMIS.Domain.Services;
 
 namespace SMIS.Application.Features.LoanAccounts.Validators;
 
@@ -15,7 +16,7 @@ public class ProcessCustomerPaymentCommandValidator : AbstractValidator<ProcessC
 
         RuleFor(x => x.PaymentDate)
             .NotEmpty().WithMessage("Payment date is required")
-            .LessThanOrEqualTo(DateTime.UtcNow).WithMessage("Payment date cannot be in the future");
+            .LessThanOrEqualTo(DateTimeService.NowUtc).WithMessage("Payment date cannot be in the future");
 
         RuleFor(x => x.PaymentMethod)
             .NotEmpty().WithMessage("Payment method is required");

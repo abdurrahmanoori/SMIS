@@ -2,6 +2,7 @@ using SMIS.Domain.Common.BaseAbstract;
 using SMIS.Domain.Common.Interfaces;
 using SMIS.Domain.Enums;
 using SMIS.Domain.Exceptions;
+using SMIS.Domain.Services;
 
 namespace SMIS.Domain.Entities;
 
@@ -105,7 +106,7 @@ public class StockMovement : BaseAuditableEntityWithoutName, IShopEntity
             throw new DomainValidationException("Movement time cannot be empty");
 
         var utc = value.Kind == DateTimeKind.Utc ? value : value.ToUniversalTime();
-        if (utc > DateTime.UtcNow.AddMinutes(5))
+        if (utc > DateTimeService.NowUtc.AddMinutes(5))
             throw new DomainValidationException("Movement time cannot be in the future");
 
         return utc;
