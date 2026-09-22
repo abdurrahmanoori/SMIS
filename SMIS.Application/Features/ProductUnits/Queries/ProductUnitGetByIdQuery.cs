@@ -6,20 +6,28 @@ using SMIS.Application.Repositories.ProductUnits;
 
 namespace SMIS.Application.Features.ProductUnits.Queries
 {
-    public record ProductUnitGetByIdQuery(string Id, bool IncludeProduct = false, bool IncludeUnitOfMeasure = false) : IRequest<Result<ProductUnitDto>>;
+    public record ProductUnitGetByIdQuery(string Id, bool IncludeProduct = false, bool IncludeUnitOfMeasure = false)
+        : IRequest<Result<ProductUnitDto>>;
 
-    internal sealed class ProductUnitGetByIdQueryHandler : IRequestHandler<ProductUnitGetByIdQuery, Result<ProductUnitDto>>
+    internal sealed class
+        ProductUnitGetByIdQueryHandler : IRequestHandler<ProductUnitGetByIdQuery, Result<ProductUnitDto>>
     {
         private readonly IProductUnitRepository _productUnitRepository;
         private readonly IMapper _mapper;
 
-        public ProductUnitGetByIdQueryHandler(IProductUnitRepository productUnitRepository, IMapper mapper)
+        public ProductUnitGetByIdQueryHandler(
+            IProductUnitRepository productUnitRepository,
+            IMapper mapper
+        )
         {
             _productUnitRepository = productUnitRepository;
             _mapper = mapper;
         }
 
-        public async Task<Result<ProductUnitDto>> Handle(ProductUnitGetByIdQuery request, CancellationToken cancellationToken)
+        public async Task<Result<ProductUnitDto>> Handle(
+            ProductUnitGetByIdQuery request,
+            CancellationToken cancellationToken
+        )
         {
             var includeProperties = new List<string>();
             if (request.IncludeProduct) includeProperties.Add("Product");

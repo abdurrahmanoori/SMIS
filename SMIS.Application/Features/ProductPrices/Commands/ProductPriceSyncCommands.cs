@@ -12,10 +12,15 @@ using SMIS.Domain.Services;
 namespace SMIS.Application.Features.ProductPrices.Commands;
 
 public record ProductPriceSyncCreateCommand(ProductPriceSyncCreateDto Dto) : IRequest<Result<ProductPriceDto>>;
-public record ProductPriceSyncUpdateCommand(string Id, ProductPriceSyncUpdateDto Dto) : IRequest<Result<ProductPriceDto>>;
-public record ProductPriceSyncDeleteCommand(string Id, ProductPriceSyncDeleteDto Dto) : IRequest<Result<ProductPriceDto>>;
 
-internal sealed class ProductPriceSyncCreateCommandHandler : IRequestHandler<ProductPriceSyncCreateCommand, Result<ProductPriceDto>>
+public record ProductPriceSyncUpdateCommand(string Id, ProductPriceSyncUpdateDto Dto)
+    : IRequest<Result<ProductPriceDto>>;
+
+public record ProductPriceSyncDeleteCommand(string Id, ProductPriceSyncDeleteDto Dto)
+    : IRequest<Result<ProductPriceDto>>;
+
+internal sealed class
+    ProductPriceSyncCreateCommandHandler : IRequestHandler<ProductPriceSyncCreateCommand, Result<ProductPriceDto>>
 {
     private readonly IProductPriceRepository _repository;
     private readonly IProductUnitRepository _productUnits;
@@ -28,7 +33,8 @@ internal sealed class ProductPriceSyncCreateCommandHandler : IRequestHandler<Pro
         IProductUnitRepository productUnits,
         IUnitOfWork uow,
         ICurrentUser user,
-        IMapper mapper)
+        IMapper mapper
+    )
     {
         _repository = repository;
         _productUnits = productUnits;
@@ -37,7 +43,10 @@ internal sealed class ProductPriceSyncCreateCommandHandler : IRequestHandler<Pro
         _mapper = mapper;
     }
 
-    public async Task<Result<ProductPriceDto>> Handle(ProductPriceSyncCreateCommand request, CancellationToken ct)
+    public async Task<Result<ProductPriceDto>> Handle(
+        ProductPriceSyncCreateCommand request,
+        CancellationToken ct
+    )
     {
         if (!ProductPriceSyncRules.User(request.Dto.ClientCreatedBy, _user) ||
             !ProductPriceSyncRules.User(request.Dto.ClientModifiedBy, _user))
@@ -69,7 +78,8 @@ internal sealed class ProductPriceSyncCreateCommandHandler : IRequestHandler<Pro
     }
 }
 
-internal sealed class ProductPriceSyncUpdateCommandHandler : IRequestHandler<ProductPriceSyncUpdateCommand, Result<ProductPriceDto>>
+internal sealed class
+    ProductPriceSyncUpdateCommandHandler : IRequestHandler<ProductPriceSyncUpdateCommand, Result<ProductPriceDto>>
 {
     private readonly IProductPriceRepository _repository;
     private readonly IProductUnitRepository _productUnits;
@@ -82,7 +92,8 @@ internal sealed class ProductPriceSyncUpdateCommandHandler : IRequestHandler<Pro
         IProductUnitRepository productUnits,
         IUnitOfWork uow,
         ICurrentUser user,
-        IMapper mapper)
+        IMapper mapper
+    )
     {
         _repository = repository;
         _productUnits = productUnits;
@@ -91,7 +102,10 @@ internal sealed class ProductPriceSyncUpdateCommandHandler : IRequestHandler<Pro
         _mapper = mapper;
     }
 
-    public async Task<Result<ProductPriceDto>> Handle(ProductPriceSyncUpdateCommand request, CancellationToken ct)
+    public async Task<Result<ProductPriceDto>> Handle(
+        ProductPriceSyncUpdateCommand request,
+        CancellationToken ct
+    )
     {
         if (!ProductPriceSyncRules.User(request.Dto.ClientModifiedBy, _user))
             return ProductPriceSyncRules.InvalidUser();
@@ -125,7 +139,8 @@ internal sealed class ProductPriceSyncUpdateCommandHandler : IRequestHandler<Pro
     }
 }
 
-internal sealed class ProductPriceSyncDeleteCommandHandler : IRequestHandler<ProductPriceSyncDeleteCommand, Result<ProductPriceDto>>
+internal sealed class
+    ProductPriceSyncDeleteCommandHandler : IRequestHandler<ProductPriceSyncDeleteCommand, Result<ProductPriceDto>>
 {
     private readonly IProductPriceRepository _repository;
     private readonly IProductUnitRepository _productUnits;
@@ -138,7 +153,8 @@ internal sealed class ProductPriceSyncDeleteCommandHandler : IRequestHandler<Pro
         IProductUnitRepository productUnits,
         IUnitOfWork uow,
         ICurrentUser user,
-        IMapper mapper)
+        IMapper mapper
+    )
     {
         _repository = repository;
         _productUnits = productUnits;
@@ -147,7 +163,10 @@ internal sealed class ProductPriceSyncDeleteCommandHandler : IRequestHandler<Pro
         _mapper = mapper;
     }
 
-    public async Task<Result<ProductPriceDto>> Handle(ProductPriceSyncDeleteCommand request, CancellationToken ct)
+    public async Task<Result<ProductPriceDto>> Handle(
+        ProductPriceSyncDeleteCommand request,
+        CancellationToken ct
+    )
     {
         if (!ProductPriceSyncRules.User(request.Dto.ClientModifiedBy, _user))
             return ProductPriceSyncRules.InvalidUser();
@@ -175,11 +194,16 @@ internal sealed class ProductPriceSyncDeleteCommandHandler : IRequestHandler<Pro
 internal static class ProductPriceSyncRules
 {
     // Keep client/server identity stable by normalizing rather than regenerating the GUID.
-    public static string Id(string value) => Guid.Parse(value).ToString("D");
+    public static string Id(
+        string value
+    ) => Guid.Parse(value).ToString("D");
 
     // Audit metadata is optional for backwards compatibility, but a supplied user ID
     // must match the authenticated principal to prevent cross-user sync impersonation.
-    public static bool User(string? value, ICurrentUser user) =>
+    public static bool User(
+        string? value,
+        ICurrentUser user
+    ) =>
         string.IsNullOrWhiteSpace(value) ||
         string.Equals(value.Trim(), user.GetId(), StringComparison.Ordinal);
 

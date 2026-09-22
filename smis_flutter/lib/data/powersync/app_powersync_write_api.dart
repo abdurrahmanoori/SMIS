@@ -14,18 +14,18 @@ import 'upload/unit_of_measure_upload_handler.dart';
 
 class AppPowerSyncWriteApi {
   AppPowerSyncWriteApi({Dio? dio, AuthSessionStore? sessionStore})
-      : _sessionStore = sessionStore ?? SecureAuthSessionStore(),
-        _dio =
-            dio ??
-                Dio(
-                  BaseOptions(
-                    baseUrl: AppConfig.apiBaseUrl,
-                    connectTimeout: const Duration(seconds: 10),
-                    receiveTimeout: const Duration(seconds: 20),
-                    sendTimeout: const Duration(seconds: 20),
-                    headers: const {'Accept': 'application/json'},
-                  ),
-                ) {
+    : _sessionStore = sessionStore ?? SecureAuthSessionStore(),
+      _dio =
+          dio ??
+          Dio(
+            BaseOptions(
+              baseUrl: AppConfig.apiBaseUrl,
+              connectTimeout: const Duration(seconds: 10),
+              receiveTimeout: const Duration(seconds: 20),
+              sendTimeout: const Duration(seconds: 20),
+              headers: const {'Accept': 'application/json'},
+            ),
+          ) {
     _dio.interceptors.add(BearerTokenInterceptor(_sessionStore));
 
     final handlers = <PowerSyncUploadHandler>[

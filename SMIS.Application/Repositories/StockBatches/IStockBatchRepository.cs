@@ -9,6 +9,7 @@ namespace SMIS.Application.Repositories.StockBatches
             string shopId,
             string productId,
             DateTime occurredAtUtc,
-            CancellationToken cancellationToken = default);
+            CancellationToken cancellationToken = default
+        );
     }
 }

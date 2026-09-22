@@ -9,9 +9,13 @@ public sealed class Barcode
 
     public string Value { get; }
 
-    private Barcode(string value) => Value = value;
+    private Barcode(
+        string value
+    ) => Value = value;
 
-    public static Barcode Create(string barcode)
+    public static Barcode Create(
+        string barcode
+    )
     {
         var cleaned = barcode.Trim();
 
@@ -24,6 +28,9 @@ public sealed class Barcode
         return new Barcode(cleaned);
     }
 
-    public static implicit operator string(Barcode barcode) => barcode.Value;
+    public static implicit operator string(
+        Barcode barcode
+    ) => barcode.Value;
+
     public override string ToString() => Value;
 }

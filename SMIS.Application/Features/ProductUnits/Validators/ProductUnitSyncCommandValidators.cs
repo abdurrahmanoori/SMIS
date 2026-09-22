@@ -14,16 +14,23 @@ public sealed class ProductUnitSyncCreateCommandValidator : AbstractValidator<Pr
             AddProductUnitRules(x => x.Dto);
             RuleFor(x => x.Dto.ClientCreatedDate).NotEmpty().Must(SyncValidationRules.BeReasonableUtcTimestamp);
             RuleFor(x => x.Dto.ClientModifiedDate).NotEmpty().Must(SyncValidationRules.BeReasonableUtcTimestamp);
-            RuleFor(x => x.Dto).Must(dto => SyncValidationRules.IsModifiedDateValid(dto.ClientCreatedDate, dto.ClientModifiedDate)).WithMessage("ClientModifiedDate cannot be earlier than ClientCreatedDate.");
+            RuleFor(x => x.Dto)
+                .Must(dto => SyncValidationRules.IsModifiedDateValid(dto.ClientCreatedDate, dto.ClientModifiedDate))
+                .WithMessage("ClientModifiedDate cannot be earlier than ClientCreatedDate.");
             RuleFor(x => x.Dto.ClientCreatedBy).MaximumLength(450);
             RuleFor(x => x.Dto.ClientModifiedBy).MaximumLength(450);
         });
     }
 
-    private void AddProductUnitRules(System.Linq.Expressions.Expression<Func<ProductUnitSyncCreateCommand, DTO.ProductUnits.ProductUnitSyncUpdateDto>> dto) =>
+    private void AddProductUnitRules(
+        System.Linq.Expressions.Expression<
+            Func<ProductUnitSyncCreateCommand, DTO.ProductUnits.ProductUnitSyncUpdateDto>> dto
+    ) =>
         RuleFor(dto).ChildRules(rules => AddProductUnitRules(rules));
 
-    private static void AddProductUnitRules(InlineValidator<DTO.ProductUnits.ProductUnitSyncUpdateDto> rules)
+    private static void AddProductUnitRules(
+        InlineValidator<DTO.ProductUnits.ProductUnitSyncUpdateDto> rules
+    )
     {
         rules.RuleFor(x => x.ProductId).NotEmpty().MaximumLength(450);
         rules.RuleFor(x => x.UnitOfMeasureId).NotEmpty().MaximumLength(450);

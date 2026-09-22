@@ -6,7 +6,9 @@ namespace SMIS.Infrastructure.Server.EntityConfigurations;
 
 public sealed class SupplierConfiguration : IEntityTypeConfiguration<Supplier>
 {
-    public void Configure(EntityTypeBuilder<Supplier> builder)
+    public void Configure(
+        EntityTypeBuilder<Supplier> builder
+    )
     {
         builder.ConfigureAuditUserRelationships();
         builder.ToTable(nameof(Supplier));
@@ -32,7 +34,9 @@ public sealed class SupplierConfiguration : IEntityTypeConfiguration<Supplier>
 
 public sealed class PurchaseOrderConfiguration : IEntityTypeConfiguration<PurchaseOrder>
 {
-    public void Configure(EntityTypeBuilder<PurchaseOrder> builder)
+    public void Configure(
+        EntityTypeBuilder<PurchaseOrder> builder
+    )
     {
         builder.ConfigureAuditUserRelationships();
         builder.ToTable(nameof(PurchaseOrder));
@@ -70,7 +74,9 @@ public sealed class PurchaseOrderConfiguration : IEntityTypeConfiguration<Purcha
 
 public sealed class PurchaseOrderLineConfiguration : IEntityTypeConfiguration<PurchaseOrderLine>
 {
-    public void Configure(EntityTypeBuilder<PurchaseOrderLine> builder)
+    public void Configure(
+        EntityTypeBuilder<PurchaseOrderLine> builder
+    )
     {
         builder.ConfigureAuditUserRelationships();
         builder.ToTable(nameof(PurchaseOrderLine));

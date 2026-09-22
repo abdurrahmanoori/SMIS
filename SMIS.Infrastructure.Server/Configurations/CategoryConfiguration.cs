@@ -6,7 +6,9 @@ namespace SMIS.Infrastructure.Server.Configurations;
 
 public sealed class CategoryConfiguration : IEntityTypeConfiguration<Category>
 {
-    public void Configure(EntityTypeBuilder<Category> builder)
+    public void Configure(
+        EntityTypeBuilder<Category> builder
+    )
     {
         builder.Property(category => category.Name)
             .IsRequired()

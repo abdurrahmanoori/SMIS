@@ -15,16 +15,22 @@ public sealed class CustomerSyncCreateCommandValidator : AbstractValidator<Custo
             AddCustomerRules(x => x.Dto);
             RuleFor(x => x.Dto.ClientCreatedDate).NotEmpty().Must(SyncValidationRules.BeReasonableUtcTimestamp);
             RuleFor(x => x.Dto.ClientModifiedDate).NotEmpty().Must(SyncValidationRules.BeReasonableUtcTimestamp);
-            RuleFor(x => x.Dto).Must(dto => SyncValidationRules.IsModifiedDateValid(dto.ClientCreatedDate, dto.ClientModifiedDate)).WithMessage("ClientModifiedDate cannot be earlier than ClientCreatedDate.");
+            RuleFor(x => x.Dto)
+                .Must(dto => SyncValidationRules.IsModifiedDateValid(dto.ClientCreatedDate, dto.ClientModifiedDate))
+                .WithMessage("ClientModifiedDate cannot be earlier than ClientCreatedDate.");
             RuleFor(x => x.Dto.ClientCreatedBy).MaximumLength(450);
             RuleFor(x => x.Dto.ClientModifiedBy).MaximumLength(450);
         });
     }
 
-    private void AddCustomerRules(System.Linq.Expressions.Expression<Func<CustomerSyncCreateCommand, CustomerCreateDto>> dto) =>
+    private void AddCustomerRules(
+        System.Linq.Expressions.Expression<Func<CustomerSyncCreateCommand, CustomerCreateDto>> dto
+    ) =>
         RuleFor(dto).ChildRules(rules => AddCustomerRules(rules));
 
-    private static void AddCustomerRules(InlineValidator<CustomerCreateDto> rules)
+    private static void AddCustomerRules(
+        InlineValidator<CustomerCreateDto> rules
+    )
     {
         rules.RuleFor(x => x.FirstName).NotEmpty().MaximumLength(100);
         rules.RuleFor(x => x.CustomerType).IsInEnum();
@@ -48,7 +54,8 @@ public sealed class CustomerSyncUpdateCommandValidator : AbstractValidator<Custo
             RuleFor(x => x.Dto.CustomerType).IsInEnum();
             RuleFor(x => x.Dto.LastName).MaximumLength(100);
             RuleFor(x => x.Dto.FatherName).MaximumLength(100);
-            RuleFor(x => x.Dto.Email).EmailAddress().MaximumLength(100).When(x => !string.IsNullOrWhiteSpace(x.Dto.Email));
+            RuleFor(x => x.Dto.Email).EmailAddress().MaximumLength(100)
+                .When(x => !string.IsNullOrWhiteSpace(x.Dto.Email));
             RuleFor(x => x.Dto.PhoneNumber).MaximumLength(20);
             RuleFor(x => x.Dto.Address).MaximumLength(500);
             RuleFor(x => x.Dto.TaxNumber).MaximumLength(20);

@@ -5,8 +5,12 @@ namespace SMIS.Application.Repositories
     public interface ILogRepository
 
     {
-        Task SaveLogAsync(AppLog log);
-        Task SaveLogsAsync(List<AppLog> logs);
-    }
+        Task SaveLogAsync(
+            AppLog log
+        );
 
+        Task SaveLogsAsync(
+            List<AppLog> logs
+        );
+    }
 }

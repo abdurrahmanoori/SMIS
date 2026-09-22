@@ -13,13 +13,19 @@ internal sealed class ShopOwnerGetByIdQueryHandler : IRequestHandler<ShopOwnerGe
     private readonly IShopOwnerRepository _shopOwnerRepository;
     private readonly IMapper _mapper;
 
-    public ShopOwnerGetByIdQueryHandler(IShopOwnerRepository shopOwnerRepository, IMapper mapper)
+    public ShopOwnerGetByIdQueryHandler(
+        IShopOwnerRepository shopOwnerRepository,
+        IMapper mapper
+    )
     {
         _shopOwnerRepository = shopOwnerRepository;
         _mapper = mapper;
     }
 
-    public async Task<Result<ShopOwnerDto>> Handle(ShopOwnerGetByIdQuery request, CancellationToken cancellationToken)
+    public async Task<Result<ShopOwnerDto>> Handle(
+        ShopOwnerGetByIdQuery request,
+        CancellationToken cancellationToken
+    )
     {
         var entity = await _shopOwnerRepository.GetByIdAsync(request.Id);
         if (entity == null)

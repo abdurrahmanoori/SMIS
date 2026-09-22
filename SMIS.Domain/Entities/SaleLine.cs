@@ -62,7 +62,9 @@ public class SaleLine : BaseAuditableEntityWithoutName
 
     public decimal ReturnableQuantityEntered => QuantityEntered - ReturnedQuantityEntered;
 
-    public long RegisterReturn(decimal quantityEntered)
+    public long RegisterReturn(
+        decimal quantityEntered
+    )
     {
         if (quantityEntered <= 0)
             throw new DomainValidationException("Return quantity must be greater than zero");

@@ -10,7 +10,7 @@ class ThemeModeAction extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final themeMode = ref.watch(themeControllerProvider);
     final l10n = context.l10n;
-    
+
     IconData icon;
     switch (themeMode) {
       case ThemeMode.light:
@@ -25,7 +25,8 @@ class ThemeModeAction extends ConsumerWidget {
       icon: Icon(icon),
       tooltip: l10n.text('Appearance'),
       initialValue: themeMode,
-      onSelected: (mode) => ref.read(themeControllerProvider.notifier).setThemeMode(mode),
+      onSelected: (mode) =>
+          ref.read(themeControllerProvider.notifier).setThemeMode(mode),
       itemBuilder: (context) => [
         PopupMenuItem(
           value: ThemeMode.system,

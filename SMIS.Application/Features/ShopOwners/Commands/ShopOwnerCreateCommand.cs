@@ -20,7 +20,13 @@ internal sealed class ShopOwnerCreateCommandHandler : IRequestHandler<ShopOwnerC
     private readonly IMapper _mapper;
     private readonly ICurrentUser _currentUser;
 
-    public ShopOwnerCreateCommandHandler(IUnitOfWork unitOfWork, IMapper mapper, IShopOwnerRepository shopOwnerRepository, IShopRepository shopRepository, ICurrentUser currentUser)
+    public ShopOwnerCreateCommandHandler(
+        IUnitOfWork unitOfWork,
+        IMapper mapper,
+        IShopOwnerRepository shopOwnerRepository,
+        IShopRepository shopRepository,
+        ICurrentUser currentUser
+    )
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
@@ -29,7 +35,10 @@ internal sealed class ShopOwnerCreateCommandHandler : IRequestHandler<ShopOwnerC
         _currentUser = currentUser;
     }
 
-    public async Task<Result<ShopOwnerDto>> Handle(ShopOwnerCreateCommand request, CancellationToken cancellationToken)
+    public async Task<Result<ShopOwnerDto>> Handle(
+        ShopOwnerCreateCommand request,
+        CancellationToken cancellationToken
+    )
     {
         var shopId = _currentUser.GetShopId();
         if (string.IsNullOrWhiteSpace(shopId))
@@ -47,11 +56,11 @@ internal sealed class ShopOwnerCreateCommandHandler : IRequestHandler<ShopOwnerC
             dto.OwnershipPercentage);
         entity.SetNationalIdCardNumber(dto.NationalIdCardNumber);
         if (!dto.IsActive) entity.Deactivate();
-        
+
         // Populate name fields
         var shop = await _shopRepository.GetByIdAsync(shopId);
         entity.ShopName = shop?.Name ?? string.Empty;
-        
+
         await _shopOwnerRepository.AddAsync(entity);
         await _unitOfWork.SaveChanges(cancellationToken);
 

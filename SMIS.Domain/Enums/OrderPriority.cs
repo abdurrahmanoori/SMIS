@@ -2,7 +2,7 @@
 
 public enum OrderPriority
 {
-   High =1,
-   Normal=2,
-   Low=3,
+    High = 1,
+    Normal = 2,
+    Low = 3,
 }

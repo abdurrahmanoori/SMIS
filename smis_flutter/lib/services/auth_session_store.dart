@@ -54,7 +54,7 @@ class SecureAuthSessionStore implements AuthSessionStore {
     try {
       final decoded = jsonDecode(rawSessions);
       if (decoded is! Map<String, dynamic>) return const [];
-      
+
       return decoded.values
           .map((e) => AuthSession.fromJson(e as Map<String, dynamic>))
           .toList();

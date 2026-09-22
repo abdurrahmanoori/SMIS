@@ -246,6 +246,7 @@ class _Content extends StatelessWidget {
     required this.onEdit,
     required this.onDelete,
   });
+
   final UnitOfMeasureScreenState state;
   final ValueChanged<UnitOfMeasure> onEdit;
   final ValueChanged<UnitOfMeasure> onDelete;
@@ -280,9 +281,11 @@ class _UnitCard extends StatelessWidget {
     required this.onEdit,
     required this.onDelete,
   });
+
   final UnitOfMeasure unit;
   final VoidCallback onEdit;
   final VoidCallback onDelete;
+
   @override
   Widget build(BuildContext context) => Card(
     child: ListTile(
@@ -321,7 +324,9 @@ class _UnitCard extends StatelessWidget {
 
 class _SyncStateIcon extends StatelessWidget {
   const _SyncStateIcon({required this.unit});
+
   final UnitOfMeasure unit;
+
   @override
   Widget build(BuildContext context) {
     final failed = unit.syncStatus == UnitOfMeasureSyncStatus.failed;

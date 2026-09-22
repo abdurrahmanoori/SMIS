@@ -31,7 +31,8 @@ namespace SMIS.Application.Features.Identity.Users.Commands
             RoleManager<ApplicationRole> roleManager,
             IUnitOfWork unitOfWork,
             IMapper mapper,
-            ICurrentUser currentUser)
+            ICurrentUser currentUser
+        )
         {
             _translationKeyRepository = translationKeyRepository;
             _shopRepository = shopRepository;
@@ -42,7 +43,10 @@ namespace SMIS.Application.Features.Identity.Users.Commands
             _currentUser = currentUser;
         }
 
-        public async Task<Result<UserDto>> Handle(UserUpdateCommand request, CancellationToken cancellationToken)
+        public async Task<Result<UserDto>> Handle(
+            UserUpdateCommand request,
+            CancellationToken cancellationToken
+        )
         {
             var isSuperAdmin = _currentUser.IsSuperAdmin();
             if (!isSuperAdmin &&
@@ -72,11 +76,15 @@ namespace SMIS.Application.Features.Identity.Users.Commands
 
             await _translationKeyRepository.AddTranslationKeysForEntity(request.UserUpdateDto, _unitOfWork);
 
-            if (!string.IsNullOrWhiteSpace(request.UserUpdateDto.UserName)) user.SetUserName(request.UserUpdateDto.UserName);
+            if (!string.IsNullOrWhiteSpace(request.UserUpdateDto.UserName))
+                user.SetUserName(request.UserUpdateDto.UserName);
             if (!string.IsNullOrWhiteSpace(request.UserUpdateDto.Email)) user.SetEmail(request.UserUpdateDto.Email);
-            if (!string.IsNullOrWhiteSpace(request.UserUpdateDto.PhoneNumber)) user.SetPhoneNumber(request.UserUpdateDto.PhoneNumber);
-            if (!string.IsNullOrWhiteSpace(request.UserUpdateDto.FirstName)) user.SetFirstName(request.UserUpdateDto.FirstName);
-            if (!string.IsNullOrWhiteSpace(request.UserUpdateDto.LastName)) user.SetLastName(request.UserUpdateDto.LastName);
+            if (!string.IsNullOrWhiteSpace(request.UserUpdateDto.PhoneNumber))
+                user.SetPhoneNumber(request.UserUpdateDto.PhoneNumber);
+            if (!string.IsNullOrWhiteSpace(request.UserUpdateDto.FirstName))
+                user.SetFirstName(request.UserUpdateDto.FirstName);
+            if (!string.IsNullOrWhiteSpace(request.UserUpdateDto.LastName))
+                user.SetLastName(request.UserUpdateDto.LastName);
             if (isSuperAdmin && !string.IsNullOrWhiteSpace(request.UserUpdateDto.ShopId))
             {
                 var assignedShop = await _shopRepository.GetByIdIncludingDeletedAsync(
@@ -88,9 +96,12 @@ namespace SMIS.Application.Features.Identity.Users.Commands
                         "InvalidShop",
                         "The assigned shop does not exist or is inactive.");
                 }
+
                 user.SetShopId(assignedShop.Id);
             }
-            if (!string.IsNullOrWhiteSpace(request.UserUpdateDto.LanguageId)) user.SetLanguageId(request.UserUpdateDto.LanguageId);
+
+            if (!string.IsNullOrWhiteSpace(request.UserUpdateDto.LanguageId))
+                user.SetLanguageId(request.UserUpdateDto.LanguageId);
 
             // Update shop name
             var shop = await _shopRepository.GetByIdAsync(user.ShopId);
@@ -111,14 +122,15 @@ namespace SMIS.Application.Features.Identity.Users.Commands
                 var currentRoles = await _userManager.GetRolesAsync(user);
                 var toRemove = currentRoles.Except(request.UserUpdateDto.Roles).ToArray();
                 var toAdd = request.UserUpdateDto.Roles.Except(currentRoles).ToArray();
-                
+
                 if (toRemove.Length > 0)
                 {
                     var removeResult = await _userManager.RemoveFromRolesAsync(user, toRemove);
                     if (!removeResult.Succeeded)
-                        return Result<UserDto>.WithErrors(removeResult.Errors.Select(e => new ValidationError { Code = e.Code, Description = e.Description }).ToList());
+                        return Result<UserDto>.WithErrors(removeResult.Errors.Select(e => new ValidationError
+                            { Code = e.Code, Description = e.Description }).ToList());
                 }
-                
+
                 if (toAdd.Length > 0)
                 {
                     foreach (var role in toAdd)
@@ -126,9 +138,11 @@ namespace SMIS.Application.Features.Identity.Users.Commands
                         if (!await _roleManager.RoleExistsAsync(role))
                             await _roleManager.CreateAsync(new ApplicationRole { Name = role });
                     }
+
                     var addResult = await _userManager.AddToRolesAsync(user, toAdd);
                     if (!addResult.Succeeded)
-                        return Result<UserDto>.WithErrors(addResult.Errors.Select(e => new ValidationError { Code = e.Code, Description = e.Description }).ToList());
+                        return Result<UserDto>.WithErrors(addResult.Errors.Select(e => new ValidationError
+                            { Code = e.Code, Description = e.Description }).ToList());
                 }
             }
 

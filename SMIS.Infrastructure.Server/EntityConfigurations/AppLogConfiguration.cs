@@ -6,27 +6,29 @@ namespace SMIS.Infrastructure.Server.EntityConfigurations;
 
 public class AppLogConfiguration : IEntityTypeConfiguration<AppLog>
 {
-    public void Configure(EntityTypeBuilder<AppLog> builder)
+    public void Configure(
+        EntityTypeBuilder<AppLog> builder
+    )
     {
         builder.HasKey(x => x.Id);
-        
+
         builder.Property(x => x.Name)
             .IsRequired();
-        
+
         builder.Property(x => x.Level)
             .IsRequired()
             .HasMaxLength(50);
-            
+
         builder.Property(x => x.Message)
             .IsRequired();
-            
+
         builder.Property(x => x.Exception);
-        
+
         builder.Property(x => x.Properties);
-        
+
         builder.Property(x => x.UserId)
             .HasMaxLength(450);
-        
+
         builder.Property(x => x.CreatedAt)
             .IsRequired();
 

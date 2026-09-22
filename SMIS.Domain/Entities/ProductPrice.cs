@@ -25,6 +25,7 @@ public class ProductPrice : BaseSyncableAuditableEntity
     /// Start of this price period. EndDate stays null while the price remains open-ended.
     /// </summary>
     public DateTime EffectiveDate { get; private set; }
+
     public DateTime? EndDate { get; private set; }
 
     public DateTime ConflictModifiedUtc => GetConflictModifiedUtc();
@@ -85,5 +86,4 @@ public class ProductPrice : BaseSyncableAuditableEntity
 
         EndDate = endDate;
     }
-
 }

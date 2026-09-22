@@ -74,7 +74,9 @@ class AppPowerSyncDatabase {
   String _contextKey(String userId, String shopId) =>
       '${userId}_$shopId'.replaceAll(RegExp(r'[^A-Za-z0-9_-]'), '_');
 
-  Future<void> _repairMissingProductCategories(PowerSyncDatabase database) async {
+  Future<void> _repairMissingProductCategories(
+    PowerSyncDatabase database,
+  ) async {
     await database.execute(
       'UPDATE product '
       'SET category_id = ('

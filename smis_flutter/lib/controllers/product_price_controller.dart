@@ -28,6 +28,7 @@ class ProductPriceScreenState {
   final bool isLoadingMore;
 
   int get totalPages => (totalCount / pageSize).ceil();
+
   bool get hasNextPage => pageNumber < totalPages;
 
   ProductPriceScreenState copyWith({
@@ -86,7 +87,9 @@ class ProductPriceController extends AsyncNotifier<ProductPriceScreenState> {
       state = AsyncData(await _load(searchQuery: current.searchQuery));
     } catch (error, stackTrace) {
       if (kDebugMode) {
-        debugPrint('Product price PowerSync refresh failed: $error\n$stackTrace');
+        debugPrint(
+          'Product price PowerSync refresh failed: $error\n$stackTrace',
+        );
       }
     } finally {
       _refreshingFromPowerSync = false;
@@ -123,7 +126,8 @@ class ProductPriceController extends AsyncNotifier<ProductPriceScreenState> {
 
   Future<void> loadNextPage() async {
     final current = state.value;
-    if (current == null || current.isLoadingMore || !current.hasNextPage) return;
+    if (current == null || current.isLoadingMore || !current.hasNextPage)
+      return;
 
     state = AsyncData(current.copyWith(isLoadingMore: true));
     try {
@@ -173,10 +177,12 @@ class ProductPriceController extends AsyncNotifier<ProductPriceScreenState> {
   }
 }
 
-final productPriceRepositoryProvider = Provider<ProductPricePowerSyncRepository>(
-  (ref) =>
-      ProductPricePowerSyncRepository(ref.watch(appPowerSyncDatabaseProvider)),
-);
+final productPriceRepositoryProvider =
+    Provider<ProductPricePowerSyncRepository>(
+      (ref) => ProductPricePowerSyncRepository(
+        ref.watch(appPowerSyncDatabaseProvider),
+      ),
+    );
 
 final productPriceControllerProvider =
     AsyncNotifierProvider<ProductPriceController, ProductPriceScreenState>(

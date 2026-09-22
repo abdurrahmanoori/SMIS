@@ -7,7 +7,9 @@ namespace SMIS.Infrastructure.Server.DatabaseSeeders;
 
 public static class StockMovementSeed
 {
-    public static void DataSeed(ModelBuilder modelBuilder)
+    public static void DataSeed(
+        ModelBuilder modelBuilder
+    )
     {
         var now = DateTimeService.NowUtc;
         modelBuilder.Entity<StockMovement>().HasData(
@@ -24,7 +26,8 @@ public static class StockMovementSeed
         string batchId,
         string productUnitId,
         decimal quantity,
-        DateTime occurredAtUtc)
+        DateTime occurredAtUtc
+    )
     {
         var movement = StockMovement.Create(
             shopId,
@@ -39,9 +42,12 @@ public static class StockMovementSeed
             batchId);
 
         typeof(StockMovement).GetProperty(nameof(StockMovement.Id))!.SetValue(movement, id);
-        typeof(StockMovement).GetProperty(nameof(StockMovement.CreatedDate))!.SetValue(movement, DateTimeService.NowUtc);
-        typeof(StockMovement).GetProperty(nameof(StockMovement.UpdatedDate))!.SetValue(movement, DateTimeService.NowUtc);
-        typeof(StockMovement).GetProperty(nameof(StockMovement.LastModifiedUtc))!.SetValue(movement, DateTimeService.NowUtc);
+        typeof(StockMovement).GetProperty(nameof(StockMovement.CreatedDate))!.SetValue(movement,
+            DateTimeService.NowUtc);
+        typeof(StockMovement).GetProperty(nameof(StockMovement.UpdatedDate))!.SetValue(movement,
+            DateTimeService.NowUtc);
+        typeof(StockMovement).GetProperty(nameof(StockMovement.LastModifiedUtc))!.SetValue(movement,
+            DateTimeService.NowUtc);
         return movement;
     }
 }

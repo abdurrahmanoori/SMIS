@@ -19,14 +19,18 @@ namespace SMIS.Infrastructure.Server.Services
         public TranslationService(
             ITranslationKeyRepository translationKeyRepository,
             IGenericRepository<Translation> translationRepository,
-            IUnitOfWork unitOfWork)
+            IUnitOfWork unitOfWork
+        )
         {
             _translationKeyRepository = translationKeyRepository;
             _translationRepository = translationRepository;
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<TranslationKey> CreateTranslationKeyAsync(string keyValue, CancellationToken cancellationToken = default)
+        public async Task<TranslationKey> CreateTranslationKeyAsync(
+            string keyValue,
+            CancellationToken cancellationToken = default
+        )
         {
             // Treat key creation as idempotent so callers can safely request the same key
             // from multiple feature flows without intentionally creating duplicates.
@@ -48,7 +52,12 @@ namespace SMIS.Infrastructure.Server.Services
             return translationKey;
         }
 
-        public async Task<Translation> AddTranslationAsync(string keyValue, string languageNo, string translatedValue, CancellationToken cancellationToken = default)
+        public async Task<Translation> AddTranslationAsync(
+            string keyValue,
+            string languageNo,
+            string translatedValue,
+            CancellationToken cancellationToken = default
+        )
         {
             var translationKey = await _translationKeyRepository
                 .GetFirstOrDefaultAsync(tk => tk.Name == keyValue);
@@ -86,7 +95,11 @@ namespace SMIS.Infrastructure.Server.Services
                 .GetFirstOrDefaultAsync(t => t.TranslationKeyId == translationKey.Id && t.LanguageNo == languageNo);
         }
 
-        public async Task<string> GetTranslationAsync(string keyValue, string languageNo, CancellationToken cancellationToken = default)
+        public async Task<string> GetTranslationAsync(
+            string keyValue,
+            string languageNo,
+            CancellationToken cancellationToken = default
+        )
         {
             var translation = await _translationKeyRepository.GetAllQueryable()
                 .Where(tk => tk.Name == keyValue)

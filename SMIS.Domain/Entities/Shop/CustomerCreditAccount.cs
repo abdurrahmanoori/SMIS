@@ -9,7 +9,7 @@
 //        public int ShopId { get; set; }
 //        public DateTime AccountOpenDate { get; set; }
 //        public decimal CreditLimit { get; set; }
-        
+
 //        // Removed derived fields - calculate from Transactions/Payments
 //        // public decimal TotalCreditAmount { get; set; }
 //        // public decimal PaidAmount { get; set; }
@@ -26,3 +26,4 @@
 //        public virtual ICollection<CustomerCreditTransaction> Transactions { get; set; } = new List<CustomerCreditTransaction>();
 //    }
 //}
+

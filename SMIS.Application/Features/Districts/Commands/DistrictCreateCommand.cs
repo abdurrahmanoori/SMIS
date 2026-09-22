@@ -14,13 +14,17 @@ namespace SMIS.Application.Features.Districts.Commands
 
     internal sealed class DistrictCreateCommandHandler : IRequestHandler<DistrictCreateCommand, Result<DistrictDto>>
     {
-
         private readonly IDistrictRepository _districtRepository;
         private readonly ITranslationKeyRepository _translationKeyRepository;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
 
-        public DistrictCreateCommandHandler(IUnitOfWork unitOfWork, IMapper mapper, IDistrictRepository districtRepository, ITranslationKeyRepository translationKeyRepository)
+        public DistrictCreateCommandHandler(
+            IUnitOfWork unitOfWork,
+            IMapper mapper,
+            IDistrictRepository districtRepository,
+            ITranslationKeyRepository translationKeyRepository
+        )
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
@@ -28,8 +32,10 @@ namespace SMIS.Application.Features.Districts.Commands
             _translationKeyRepository = translationKeyRepository;
         }
 
-        public async Task<Result<DistrictDto>> Handle(DistrictCreateCommand request,
-            CancellationToken cancellationToken)
+        public async Task<Result<DistrictDto>> Handle(
+            DistrictCreateCommand request,
+            CancellationToken cancellationToken
+        )
         {
             var translationKey = new TranslationKey
             {

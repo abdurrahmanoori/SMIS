@@ -74,8 +74,13 @@ class ProductRemoteModel {
       clientModifiedDate: clientModifiedDate,
       clientCreatedBy: json['clientCreatedBy'] as String?,
       clientModifiedBy: json['clientModifiedBy'] as String?,
-      conflictModifiedUtc: _optionalDate(json['conflictModifiedUtc']) ??
-          clientModifiedDate ?? updatedDate ?? clientCreatedDate ?? createdDate ?? lastModifiedUtc,
+      conflictModifiedUtc:
+          _optionalDate(json['conflictModifiedUtc']) ??
+          clientModifiedDate ??
+          updatedDate ??
+          clientCreatedDate ??
+          createdDate ??
+          lastModifiedUtc,
     );
   }
 
@@ -103,6 +108,7 @@ class ProductRemoteModel {
 
   static DateTime _requiredDate(Map<String, dynamic> json, String key) =>
       DateTime.parse(json[key] as String).toUtc();
+
   static DateTime? _optionalDate(Object? value) =>
       value == null ? null : DateTime.parse(value as String).toUtc();
 }

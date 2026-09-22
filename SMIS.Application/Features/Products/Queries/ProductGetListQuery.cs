@@ -10,16 +10,23 @@ using SMIS.Application.Repositories.Products;
 
 namespace SMIS.Application.Features.Products.Queries
 {
-    public record ProductGetListQuery(int PageNumber = 1, int PageSize = 25, bool IncludeCategory = false) : IRequest<Result<PagedList<ProductDto>>>;
+    public record ProductGetListQuery(int PageNumber = 1, int PageSize = 25, bool IncludeCategory = false)
+        : IRequest<Result<PagedList<ProductDto>>>;
 
-    internal sealed class ProductGetListQueryHandler : IRequestHandler<ProductGetListQuery, Result<PagedList<ProductDto>>>
+    internal sealed class
+        ProductGetListQueryHandler : IRequestHandler<ProductGetListQuery, Result<PagedList<ProductDto>>>
     {
         private readonly IProductRepository _productRepository;
         private readonly ITranslationKeyRepository _translationKeyRepository;
         private readonly ICurrentUser _currentUser;
         private readonly IMapper _mapper;
 
-        public ProductGetListQueryHandler(IProductRepository productRepository, ITranslationKeyRepository translationKeyRepository, ICurrentUser currentUser, IMapper mapper)
+        public ProductGetListQueryHandler(
+            IProductRepository productRepository,
+            ITranslationKeyRepository translationKeyRepository,
+            ICurrentUser currentUser,
+            IMapper mapper
+        )
         {
             _productRepository = productRepository;
             _translationKeyRepository = translationKeyRepository;
@@ -27,11 +34,13 @@ namespace SMIS.Application.Features.Products.Queries
             _mapper = mapper;
         }
 
-        public async Task<Result<PagedList<ProductDto>>> Handle(ProductGetListQuery request, CancellationToken cancellationToken)
+        public async Task<Result<PagedList<ProductDto>>> Handle(
+            ProductGetListQuery request,
+            CancellationToken cancellationToken
+        )
         {
-
-
-            var query = _productRepository.GetAllQueryable(includeProperties: request.IncludeCategory ? "Category" : null);
+            var query = _productRepository.GetAllQueryable(
+                includeProperties: request.IncludeCategory ? "Category" : null);
             var products = await query.ToPagedList(request.PageNumber, request.PageSize);
 
             if (!products.Items.Any())

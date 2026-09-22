@@ -15,20 +15,23 @@ internal sealed class StockCountGetByIdQueryHandler
 {
     private readonly IApplicationDbContext _db;
 
-    public StockCountGetByIdQueryHandler(IApplicationDbContext db)
+    public StockCountGetByIdQueryHandler(
+        IApplicationDbContext db
+    )
     {
         _db = db;
     }
 
     public async Task<Result<StockCountSessionDto>> Handle(
         StockCountGetByIdQuery request,
-        CancellationToken cancellationToken)
+        CancellationToken cancellationToken
+    )
     {
         var session = await _db.StockCountSessions
             .AsNoTracking()
             .Include(item => item.Lines)
-                .ThenInclude(line => line.StockBatch)
-                    .ThenInclude(batch => batch.Product)
+            .ThenInclude(line => line.StockBatch)
+            .ThenInclude(batch => batch.Product)
             .FirstOrDefaultAsync(item => item.Id == request.Id, cancellationToken);
 
         if (session is null)
@@ -40,5 +43,3 @@ internal sealed class StockCountGetByIdQueryHandler
                 session.Lines.Select(line => line.StockBatch).ToList()));
     }
 }
-
-

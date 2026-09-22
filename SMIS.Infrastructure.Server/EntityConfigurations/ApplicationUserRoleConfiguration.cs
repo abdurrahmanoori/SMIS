@@ -6,7 +6,9 @@ namespace SMIS.Infrastructure.Server.EntityConfigurations
 {
     public class ApplicationUserRoleConfiguration : IEntityTypeConfiguration<ApplicationUserRole>
     {
-        public void Configure(EntityTypeBuilder<ApplicationUserRole> builder)
+        public void Configure(
+            EntityTypeBuilder<ApplicationUserRole> builder
+        )
         {
             builder.ToTable("AspNetUserRoles");
 

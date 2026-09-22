@@ -22,12 +22,14 @@ internal sealed class StockMovementGetListQueryHandler
     public StockMovementGetListQueryHandler(
         IStockMovementRepository repository,
         IMapper mapper,
-        ICurrentUser currentUser) =>
+        ICurrentUser currentUser
+    ) =>
         (_repository, _mapper, _currentUser) = (repository, mapper, currentUser);
 
     public async Task<Result<PagedList<StockMovementDto>>> Handle(
         StockMovementGetListQuery request,
-        CancellationToken cancellationToken)
+        CancellationToken cancellationToken
+    )
     {
         var query = _repository.GetAllQueryable();
         var shopId = _currentUser.GetShopId();

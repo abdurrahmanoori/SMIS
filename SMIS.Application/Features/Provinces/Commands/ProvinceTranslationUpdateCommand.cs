@@ -9,23 +9,38 @@ using SMIS.Domain.Entities.LocationEntities;
 
 namespace SMIS.Application.Features.Provinces.Commands
 {
-    public record ProvinceTranslationUpdateCommand(string Id, ProvinceTranslationDto Dto) : IRequest<Result<ProvinceTranslationDto>>;
+    public record ProvinceTranslationUpdateCommand(string Id, ProvinceTranslationDto Dto)
+        : IRequest<Result<ProvinceTranslationDto>>;
 
-    internal sealed class ProvinceTranslationUpdateCommandHandler : IRequestHandler<ProvinceTranslationUpdateCommand, Result<ProvinceTranslationDto>>
+    internal sealed class
+        ProvinceTranslationUpdateCommandHandler : IRequestHandler<ProvinceTranslationUpdateCommand,
+        Result<ProvinceTranslationDto>>
     {
         private readonly IProvinceRepository _repo;
         private readonly IUnitOfWork _uow;
         private readonly IMapper _mapper;
         private readonly ILanguageRepository _languageRepo;
 
-        public ProvinceTranslationUpdateCommandHandler(IProvinceRepository repo, IUnitOfWork uow, IMapper mapper, ILanguageRepository languageRepo)
+        public ProvinceTranslationUpdateCommandHandler(
+            IProvinceRepository repo,
+            IUnitOfWork uow,
+            IMapper mapper,
+            ILanguageRepository languageRepo
+        )
         {
-            _repo = repo; _uow = uow; _mapper = mapper; _languageRepo = languageRepo;
+            _repo = repo;
+            _uow = uow;
+            _mapper = mapper;
+            _languageRepo = languageRepo;
         }
 
-        public async Task<Result<ProvinceTranslationDto>> Handle(ProvinceTranslationUpdateCommand request, CancellationToken cancellationToken)
+        public async Task<Result<ProvinceTranslationDto>> Handle(
+            ProvinceTranslationUpdateCommand request,
+            CancellationToken cancellationToken
+        )
         {
-            var province = await _repo.GetFirstOrDefaultAsync(x => x.Translations.Any(t => t.Id == request.Id), includeProperties: nameof(Province.Translations));
+            var province = await _repo.GetFirstOrDefaultAsync(x => x.Translations.Any(t => t.Id == request.Id),
+                includeProperties: nameof(Province.Translations));
             if (province is null) return Result<ProvinceTranslationDto>.NotFoundResult(request.Id);
 
             var trans = province.Translations.FirstOrDefault(t => t.Id == request.Id);

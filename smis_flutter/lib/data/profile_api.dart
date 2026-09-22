@@ -49,7 +49,9 @@ class DioProfileApi implements ProfileApi {
       }
       final profile = UserProfile.fromJson(data);
       if (profile.id.isEmpty) {
-        throw const RemotePermanentException('The profile response did not contain a user ID.');
+        throw const RemotePermanentException(
+          'The profile response did not contain a user ID.',
+        );
       }
       return profile;
     } catch (error, stackTrace) {
@@ -69,8 +71,12 @@ class DioProfileApi implements ProfileApi {
       if (items is! List) return const <ProfileLanguage>[];
       return items
           .whereType<Map>()
-          .map((item) => ProfileLanguage.fromJson(Map<String, dynamic>.from(item)))
-          .where((language) => language.id.isNotEmpty && language.name.isNotEmpty)
+          .map(
+            (item) => ProfileLanguage.fromJson(Map<String, dynamic>.from(item)),
+          )
+          .where(
+            (language) => language.id.isNotEmpty && language.name.isNotEmpty,
+          )
           .toList(growable: false);
     } catch (error, stackTrace) {
       ApiErrorParser.mapAndThrow(error, stackTrace);
@@ -89,7 +95,9 @@ class DioProfileApi implements ProfileApi {
       );
       final data = response.data;
       if (data == null) {
-        throw const RemotePermanentException('The profile update response was empty.');
+        throw const RemotePermanentException(
+          'The profile update response was empty.',
+        );
       }
       return UserProfile.fromJson(data);
     } catch (error, stackTrace) {
@@ -98,10 +106,7 @@ class DioProfileApi implements ProfileApi {
   }
 
   @override
-  Future<void> changePassword(
-    String userId,
-    ChangePasswordDraft draft,
-  ) async {
+  Future<void> changePassword(String userId, ChangePasswordDraft draft) async {
     try {
       await _dio.post<void>(
         '${AppConfig.accountEndpoint}/$userId/change-password',

@@ -1,29 +1,29 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net9.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-  </PropertyGroup>
+    <PropertyGroup>
+        <TargetFramework>net9.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
 
-  <ItemGroup>
-	  <PackageReference Include="AutoMapper" />
-	  <!--<PackageReference Include="AutoMapper.Collection" Version="9.0.0" />-->
-	  <PackageReference Include="AutoMapper.Collection.EntityFrameworkCore" />
-	  <PackageReference Include="FluentValidation" />
-	  <PackageReference Include="FluentValidation.DependencyInjectionExtensions" />
-	  <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" />
-	  <PackageReference Include="Microsoft.Extensions.Configuration" />
-	  <PackageReference Include="Microsoft.Extensions.DependencyInjection" />
-	  <PackageReference Include="Microsoft.AspNetCore.Identity" />
-	  <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" />
-	  <PackageReference Include="Modern.FluentValidation.Extensions" />
-	  <PackageReference Include="MediatR" />
-	  <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" />
-  </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="AutoMapper"/>
+        <!--<PackageReference Include="AutoMapper.Collection" Version="9.0.0" />-->
+        <PackageReference Include="AutoMapper.Collection.EntityFrameworkCore"/>
+        <PackageReference Include="FluentValidation"/>
+        <PackageReference Include="FluentValidation.DependencyInjectionExtensions"/>
+        <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions"/>
+        <PackageReference Include="Microsoft.Extensions.Configuration"/>
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection"/>
+        <PackageReference Include="Microsoft.AspNetCore.Identity"/>
+        <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore"/>
+        <PackageReference Include="Modern.FluentValidation.Extensions"/>
+        <PackageReference Include="MediatR"/>
+        <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection"/>
+    </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\SMIS.Domain\SMIS.Domain.csproj" />
-  </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\SMIS.Domain\SMIS.Domain.csproj"/>
+    </ItemGroup>
 
 </Project>

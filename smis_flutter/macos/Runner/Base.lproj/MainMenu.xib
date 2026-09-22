@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="14490.70"
+          targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES"
+          customObjectInstantitationMethod="direct">
     <dependencies>
         <deployment identifier="macosx"/>
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="14490.70"/>
@@ -139,14 +141,16 @@
                                                 <action selector="performFindPanelAction:" target="-1" id="HOh-sY-3ay"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Use Selection for Find" tag="7" keyEquivalent="e" id="buJ-ug-pKt">
+                                        <menuItem title="Use Selection for Find" tag="7" keyEquivalent="e"
+                                                  id="buJ-ug-pKt">
                                             <connections>
                                                 <action selector="performFindPanelAction:" target="-1" id="U76-nv-p5D"/>
                                             </connections>
                                         </menuItem>
                                         <menuItem title="Jump to Selection" keyEquivalent="j" id="S0p-oC-mLd">
                                             <connections>
-                                                <action selector="centerSelectionInVisibleArea:" target="-1" id="IOG-6D-g5B"/>
+                                                <action selector="centerSelectionInVisibleArea:" target="-1"
+                                                        id="IOG-6D-g5B"/>
                                             </connections>
                                         </menuItem>
                                     </items>
@@ -170,7 +174,8 @@
                                         <menuItem title="Check Spelling While Typing" id="rbD-Rh-wIN">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
-                                                <action selector="toggleContinuousSpellChecking:" target="-1" id="7w6-Qz-0kB"/>
+                                                <action selector="toggleContinuousSpellChecking:" target="-1"
+                                                        id="7w6-Qz-0kB"/>
                                             </connections>
                                         </menuItem>
                                         <menuItem title="Check Grammar With Spelling" id="mK6-2p-4JG">
@@ -182,7 +187,8 @@
                                         <menuItem title="Correct Spelling Automatically" id="78Y-hA-62v">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
-                                                <action selector="toggleAutomaticSpellingCorrection:" target="-1" id="2lM-Qi-WAP"/>
+                                                <action selector="toggleAutomaticSpellingCorrection:" target="-1"
+                                                        id="2lM-Qi-WAP"/>
                                             </connections>
                                         </menuItem>
                                     </items>
@@ -195,44 +201,51 @@
                                         <menuItem title="Show Substitutions" id="z6F-FW-3nz">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
-                                                <action selector="orderFrontSubstitutionsPanel:" target="-1" id="oku-mr-iSq"/>
+                                                <action selector="orderFrontSubstitutionsPanel:" target="-1"
+                                                        id="oku-mr-iSq"/>
                                             </connections>
                                         </menuItem>
                                         <menuItem isSeparatorItem="YES" id="gPx-C9-uUO"/>
                                         <menuItem title="Smart Copy/Paste" id="9yt-4B-nSM">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
-                                                <action selector="toggleSmartInsertDelete:" target="-1" id="3IJ-Se-DZD"/>
+                                                <action selector="toggleSmartInsertDelete:" target="-1"
+                                                        id="3IJ-Se-DZD"/>
                                             </connections>
                                         </menuItem>
                                         <menuItem title="Smart Quotes" id="hQb-2v-fYv">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
-                                                <action selector="toggleAutomaticQuoteSubstitution:" target="-1" id="ptq-xd-QOA"/>
+                                                <action selector="toggleAutomaticQuoteSubstitution:" target="-1"
+                                                        id="ptq-xd-QOA"/>
                                             </connections>
                                         </menuItem>
                                         <menuItem title="Smart Dashes" id="rgM-f4-ycn">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
-                                                <action selector="toggleAutomaticDashSubstitution:" target="-1" id="oCt-pO-9gS"/>
+                                                <action selector="toggleAutomaticDashSubstitution:" target="-1"
+                                                        id="oCt-pO-9gS"/>
                                             </connections>
                                         </menuItem>
                                         <menuItem title="Smart Links" id="cwL-P1-jid">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
-                                                <action selector="toggleAutomaticLinkDetection:" target="-1" id="Gip-E3-Fov"/>
+                                                <action selector="toggleAutomaticLinkDetection:" target="-1"
+                                                        id="Gip-E3-Fov"/>
                                             </connections>
                                         </menuItem>
                                         <menuItem title="Data Detectors" id="tRr-pd-1PS">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
-                                                <action selector="toggleAutomaticDataDetection:" target="-1" id="R1I-Nq-Kbl"/>
+                                                <action selector="toggleAutomaticDataDetection:" target="-1"
+                                                        id="R1I-Nq-Kbl"/>
                                             </connections>
                                         </menuItem>
                                         <menuItem title="Text Replacement" id="HFQ-gK-NFA">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
-                                                <action selector="toggleAutomaticTextReplacement:" target="-1" id="DvP-Fe-Py6"/>
+                                                <action selector="toggleAutomaticTextReplacement:" target="-1"
+                                                        id="DvP-Fe-Py6"/>
                                             </connections>
                                         </menuItem>
                                     </items>
@@ -330,7 +343,9 @@
             </items>
             <point key="canvasLocation" x="142" y="-258"/>
         </menu>
-        <window title="APP_NAME" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" animationBehavior="default" id="QvC-M9-y7g" customClass="MainFlutterWindow" customModule="Runner" customModuleProvider="target">
+        <window title="APP_NAME" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO"
+                releasedWhenClosed="NO" animationBehavior="default" id="QvC-M9-y7g" customClass="MainFlutterWindow"
+                customModule="Runner" customModuleProvider="target">
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
             <rect key="contentRect" x="335" y="390" width="800" height="600"/>
             <rect key="screenRect" x="0.0" y="0.0" width="2560" height="1577"/>

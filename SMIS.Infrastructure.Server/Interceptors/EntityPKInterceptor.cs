@@ -4,6 +4,7 @@ using SMIS.Application.Identity.IServices;
 using SMIS.Application.Services;
 using SMIS.Domain.Common.Interfaces;
 using SMIS.Domain.Entities;
+
 namespace SMIS.Infrastructure.Server.Interceptors;
 
 /// <summary>
@@ -16,7 +17,10 @@ public class EntityPKInterceptor : SaveChangesInterceptor
     private readonly ICurrentUser _currentUser;
     private readonly IPublicIdGenerator _publicIdGenerator;
 
-    public EntityPKInterceptor(ICurrentUser currentUser, IPublicIdGenerator publicIdGenerator)
+    public EntityPKInterceptor(
+        ICurrentUser currentUser,
+        IPublicIdGenerator publicIdGenerator
+    )
     {
         _currentUser = currentUser;
         _publicIdGenerator = publicIdGenerator;
@@ -25,7 +29,8 @@ public class EntityPKInterceptor : SaveChangesInterceptor
     public override async ValueTask<InterceptionResult<int>> SavingChangesAsync(
         DbContextEventData eventData,
         InterceptionResult<int> result,
-        CancellationToken cancellationToken = default)
+        CancellationToken cancellationToken = default
+    )
     {
         var context = eventData.Context;
 
@@ -58,7 +63,7 @@ public class EntityPKInterceptor : SaveChangesInterceptor
 #else
                 if (string.IsNullOrEmpty(entry.Entity.Id))
 #endif
-        {
+                {
                     var generated = _publicIdGenerator.Generate();
                     if (!string.IsNullOrEmpty(generated))
                         entry.Entity.Id = generated;
@@ -107,7 +112,11 @@ public class EntityPKInterceptor : SaveChangesInterceptor
 
         return await base.SavingChangesAsync(eventData, result, cancellationToken);
     }
-    private async Task AssignSequenceNumber(IEntityPK entity, DbContext context)
+
+    private async Task AssignSequenceNumber(
+        IEntityPK entity,
+        DbContext context
+    )
     {
         // Fallback used when PublicIdGenerator intentionally returns an empty value in
         // Development. Both persisted and not-yet-saved entities are inspected to avoid
@@ -141,9 +150,9 @@ public class EntityPKInterceptor : SaveChangesInterceptor
 
             // Get max ID from pending entities in change tracker
             var pendingEntities = context.ChangeTracker.Entries<IEntityPK>()
-                .Where(e => e.State == EntityState.Added && 
-                           e.Entity.GetType() == entityType && 
-                           !string.IsNullOrEmpty(e.Entity.Id))
+                .Where(e => e.State == EntityState.Added &&
+                            e.Entity.GetType() == entityType &&
+                            !string.IsNullOrEmpty(e.Entity.Id))
                 .Select(e => e.Entity.Id)
                 .Where(id => int.TryParse(id, out _))
                 .Select(id => int.Parse(id))

@@ -36,7 +36,8 @@ internal sealed class StockCountCommandHandler :
         IInventoryService inventory,
         IIdempotencyService idempotency,
         ICurrentUser currentUser,
-        IUnitOfWork unitOfWork)
+        IUnitOfWork unitOfWork
+    )
     {
         _db = db;
         _inventory = inventory;
@@ -47,7 +48,8 @@ internal sealed class StockCountCommandHandler :
 
     public async Task<Result<StockCountSessionDto>> Handle(
         StockCountStartCommand request,
-        CancellationToken cancellationToken)
+        CancellationToken cancellationToken
+    )
     {
         var shopId = _currentUser.GetShopId();
 
@@ -100,12 +102,13 @@ internal sealed class StockCountCommandHandler :
 
     public async Task<Result<StockCountSessionDto>> Handle(
         StockCountCompleteCommand request,
-        CancellationToken cancellationToken)
+        CancellationToken cancellationToken
+    )
     {
         var session = await _db.StockCountSessions
             .Include(item => item.Lines)
-                .ThenInclude(line => line.StockBatch)
-                    .ThenInclude(batch => batch.Product)
+            .ThenInclude(line => line.StockBatch)
+            .ThenInclude(batch => batch.Product)
             .FirstOrDefaultAsync(item => item.Id == request.Id, cancellationToken);
 
         if (session is null)
@@ -191,12 +194,13 @@ internal sealed class StockCountCommandHandler :
 
     public async Task<Result<StockCountSessionDto>> Handle(
         StockCountCancelCommand request,
-        CancellationToken cancellationToken)
+        CancellationToken cancellationToken
+    )
     {
         var session = await _db.StockCountSessions
             .Include(item => item.Lines)
-                .ThenInclude(line => line.StockBatch)
-                    .ThenInclude(batch => batch.Product)
+            .ThenInclude(line => line.StockBatch)
+            .ThenInclude(batch => batch.Product)
             .FirstOrDefaultAsync(item => item.Id == request.Id, cancellationToken);
 
         if (session is null)
@@ -211,7 +215,9 @@ internal sealed class StockCountCommandHandler :
                 session.Lines.Select(line => line.StockBatch).ToList()));
     }
 
-    private static Result<StockCountSessionDto> Failure<T>(Result<T> source) => new()
+    private static Result<StockCountSessionDto> Failure<T>(
+        Result<T> source
+    ) => new()
     {
         Success = false,
         Message = source.Message,
@@ -223,7 +229,8 @@ internal static class StockCountDtoMapper
 {
     public static StockCountSessionDto ToDto(
         StockCountSession session,
-        IReadOnlyCollection<StockBatch> batches)
+        IReadOnlyCollection<StockBatch> batches
+    )
     {
         var batchById = batches.ToDictionary(batch => batch.Id, StringComparer.Ordinal);
         return new StockCountSessionDto

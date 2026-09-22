@@ -12,6 +12,7 @@ class ProductFormDialog extends StatefulWidget {
     required this.categories,
     this.product,
   });
+
   final List<UnitOfMeasure> units;
   final List<Category> categories;
   final Product? product;

@@ -46,8 +46,7 @@ namespace SMIS.Application.Features.Auth.Commands
                     SD.Role_Super_Admin,
                     StringComparison.OrdinalIgnoreCase)))
             {
-                var defaultShop = await _shopRepository.GetFirstOrDefaultAsync(
-                    shop => shop.IsActive);
+                var defaultShop = await _shopRepository.GetFirstOrDefaultAsync(shop => shop.IsActive);
                 activeShopId = defaultShop?.Id;
             }
 

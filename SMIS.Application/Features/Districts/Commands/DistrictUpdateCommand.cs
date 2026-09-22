@@ -17,7 +17,12 @@ namespace SMIS.Application.Features.Districts.Commands
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
 
-        public DistrictUpdateCommandHandler(IUnitOfWork unitOfWork, IMapper mapper, IDistrictRepository districtRepository, ITranslationKeyRepository translationKeyRepository)
+        public DistrictUpdateCommandHandler(
+            IUnitOfWork unitOfWork,
+            IMapper mapper,
+            IDistrictRepository districtRepository,
+            ITranslationKeyRepository translationKeyRepository
+        )
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
@@ -25,7 +30,10 @@ namespace SMIS.Application.Features.Districts.Commands
             _translationKeyRepository = translationKeyRepository;
         }
 
-        public async Task<Result<DistrictDto>> Handle(DistrictUpdateCommand request, CancellationToken cancellationToken)
+        public async Task<Result<DistrictDto>> Handle(
+            DistrictUpdateCommand request,
+            CancellationToken cancellationToken
+        )
         {
             var entity = await _districtRepository.GetByIdAsync(request.Id);
             if (entity == null)

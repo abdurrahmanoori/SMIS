@@ -12,11 +12,9 @@ namespace SMIS.Application.DTO.Users
         public string? Email { get; set; }
         public string? PhoneNumber { get; set; }
 
-        [Translatable]
-        public string? FirstName { get; set; }
+        [Translatable] public string? FirstName { get; set; }
 
-        [Translatable]
-        public string? LastName { get; set; }
+        [Translatable] public string? LastName { get; set; }
 
         public string? ShopId { get; set; }
         public string? LanguageId { get; set; }

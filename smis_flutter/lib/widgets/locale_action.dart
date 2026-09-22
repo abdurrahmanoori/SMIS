@@ -53,9 +53,8 @@ class LocaleAction extends ConsumerWidget {
     );
   }
 
-  String _labelFor(AppLocalizations l10n, String languageCode) => switch (
-        languageCode
-      ) {
+  String _labelFor(AppLocalizations l10n, String languageCode) =>
+      switch (languageCode) {
         'fa' => l10n.text('Dari'),
         'ps' => l10n.text('Pashto'),
         _ => l10n.text('English'),

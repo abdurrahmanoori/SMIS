@@ -27,6 +27,7 @@ public sealed class CurrentStockReportDto
     /// Authoritative normalized stock quantity expressed in the product's base unit.
     /// </summary>
     public decimal QuantityBase { get; set; }
+
     public decimal AvailableQuantityBase { get; set; }
     public decimal UnavailableQuantityBase { get; set; }
 

@@ -7,7 +7,9 @@ namespace SMIS.Infrastructure.Server.Repositories.Localization
 {
     public class TranslationRepository : GenericRepository<Translation>, ITranslationRepository
     {
-        public TranslationRepository(AppDbContext context) : base(context)
+        public TranslationRepository(
+            AppDbContext context
+        ) : base(context)
         {
         }
     }

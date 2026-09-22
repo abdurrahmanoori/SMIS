@@ -11,12 +11,17 @@ namespace SMIS.Application.Features.Identity.Users.Commands
     {
         private readonly UserManager<ApplicationUser> _userManager;
 
-        public UserDeleteCommandHandler(UserManager<ApplicationUser> userManager)
+        public UserDeleteCommandHandler(
+            UserManager<ApplicationUser> userManager
+        )
         {
             _userManager = userManager;
         }
 
-        public async Task<Result<Unit>> Handle(UserDeleteCommand request, CancellationToken cancellationToken)
+        public async Task<Result<Unit>> Handle(
+            UserDeleteCommand request,
+            CancellationToken cancellationToken
+        )
         {
             var user = await _userManager.FindByIdAsync(request.UserId);
             if (user == null) return Result<Unit>.NotFoundResult(request.UserId);

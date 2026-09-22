@@ -14,6 +14,7 @@ class ProductScreenState {
     required this.pendingCount,
     this.searchQuery = '',
   });
+
   final List<Product> products;
   final int pendingCount;
   final String searchQuery;
@@ -60,9 +61,7 @@ class ProductController extends AsyncNotifier<ProductScreenState> {
     _refreshingFromPowerSync = true;
     try {
       final current = state.value!;
-      state = AsyncData(
-        await _load(searchQuery: current.searchQuery),
-      );
+      state = AsyncData(await _load(searchQuery: current.searchQuery));
       ref.invalidate(productLookupProvider);
     } catch (error, stackTrace) {
       if (kDebugMode) {
@@ -77,9 +76,7 @@ class ProductController extends AsyncNotifier<ProductScreenState> {
     final previousQuery = state.hasValue ? state.value?.searchQuery : null;
 
     try {
-      state = AsyncData(
-        await _load(searchQuery: previousQuery),
-      );
+      state = AsyncData(await _load(searchQuery: previousQuery));
     } catch (error, stackTrace) {
       state = AsyncError(error, stackTrace);
     }

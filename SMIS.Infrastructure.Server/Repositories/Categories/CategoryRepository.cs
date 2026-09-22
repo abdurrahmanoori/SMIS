@@ -30,7 +30,8 @@ namespace SMIS.Infrastructure.Server.Repositories.Categories
             string shopId,
             string name,
             string? excludeId = null,
-            CancellationToken cancellationToken = default)
+            CancellationToken cancellationToken = default
+        )
         {
             var normalizedName = name.Trim().ToUpperInvariant();
             return _context.Categories

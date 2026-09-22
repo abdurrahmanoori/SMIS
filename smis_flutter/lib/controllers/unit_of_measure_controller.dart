@@ -57,9 +57,7 @@ class UnitOfMeasureController extends AsyncNotifier<UnitOfMeasureScreenState> {
     _refreshingFromPowerSync = true;
     try {
       final current = state.value!;
-      state = AsyncData(
-        await _load(searchQuery: current.searchQuery),
-      );
+      state = AsyncData(await _load(searchQuery: current.searchQuery));
       ref.invalidate(unitOfMeasureLookupProvider);
     } catch (error, stackTrace) {
       if (kDebugMode) {

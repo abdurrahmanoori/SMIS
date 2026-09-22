@@ -16,13 +16,15 @@ namespace SMIS.Domain.Common.BaseAbstract
         /// Stable public identifier. Sync-capable entities may receive this ID from
         /// an offline client, so persistence interceptors must not blindly replace it.
         /// </summary>
-        [Key] public virtual string Id { get; set; } = Guid.NewGuid().ToString();
+        [Key]
+        public virtual string Id { get; set; } = Guid.NewGuid().ToString();
 
         /// <summary>
         /// Visibility metadata. Authorization still decides whether a caller may
         /// actually access the row.
         /// </summary>
-        [Required] public bool IsPublic { get; set; } = false;
+        [Required]
+        public bool IsPublic { get; set; } = false;
 
         /// <summary>
         /// Logical version used by synchronization/concurrency workflows.

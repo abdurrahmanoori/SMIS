@@ -68,7 +68,6 @@ public class UnitOfMeasure : BaseSyncableAuditableEntity
     {
         Description = description?.Trim();
     }
-
 }
 
 /*

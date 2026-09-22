@@ -5,7 +5,9 @@ import '../l10n/app_localizations.dart';
 
 class ShopFormDialog extends StatefulWidget {
   const ShopFormDialog({super.key, this.shop});
+
   final Shop? shop;
+
   @override
   State<ShopFormDialog> createState() => _ShopFormDialogState();
 }
@@ -19,6 +21,7 @@ class _ShopFormDialogState extends State<ShopFormDialog> {
   late final TextEditingController _tax;
   late ShopType _shopType;
   late bool _isActive;
+
   @override
   void initState() {
     super.initState();

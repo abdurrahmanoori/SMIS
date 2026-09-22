@@ -7,8 +7,7 @@ namespace SMIS.Application.DTO.Products
     {
         public string Id { get; set; } = string.Empty;
 
-        [Translatable]
-        public string Name { get; set; } = string.Empty;
+        [Translatable] public string Name { get; set; } = string.Empty;
 
         public string ShopId { get; set; } = string.Empty;
         public string BaseUnitId { get; set; } = string.Empty;

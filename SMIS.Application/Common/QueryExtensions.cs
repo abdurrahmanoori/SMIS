@@ -3,7 +3,6 @@ using System.Reflection;
 
 namespace SMIS.Application.Common;
 
-
 public static class QueryExtensions
 {
     // public static async Task<List<T>> QueryListAsync<T>(
@@ -83,7 +82,10 @@ public static class QueryExtensions
     //
     //     return await connection.QuerySingleAsync<T>(commandDefinition);
     // }
-    public static IQueryable<TResult> Select<TResult>(this IQueryable<TResult> source, string[]? columns)
+    public static IQueryable<TResult> Select<TResult>(
+        this IQueryable<TResult> source,
+        string[]? columns
+    )
     {
         // Builds a projection expression dynamically so EF can translate the selected
         // property list to SQL rather than materializing full entities first.
@@ -129,7 +131,8 @@ public static class QueryExtensions
 
     public static IQueryable<TEntity> Filter<TEntity, TFilter>(
         this IQueryable<TEntity> source,
-        TFilter? filter)
+        TFilter? filter
+    )
     {
         // Convention-based filtering: every non-null filter property must have a
         // matching entity property with the same name. String filters use LIKE-style
@@ -190,8 +193,11 @@ public static class QueryExtensions
         return source.Where(lambda);
     }
 
-    public static IQueryable<TEntity> WhereIf<TEntity>(this IQueryable<TEntity> queryable, bool condition,
-        Expression<Func<TEntity, bool>> expression)
+    public static IQueryable<TEntity> WhereIf<TEntity>(
+        this IQueryable<TEntity> queryable,
+        bool condition,
+        Expression<Func<TEntity, bool>> expression
+    )
     {
         return condition ? queryable.Where(expression) : queryable;
     }
@@ -226,7 +232,10 @@ public static class QueryExtensions
         );
     }
 
-    public static Expression GetLikeExpression(MemberExpression property, string term)
+    public static Expression GetLikeExpression(
+        MemberExpression property,
+        string term
+    )
     {
         // Leading/trailing '%' controls EndsWith/StartsWith/Contains semantics.
         // ID properties intentionally default to exact equality when no wildcard is supplied.

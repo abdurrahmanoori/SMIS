@@ -12,13 +12,19 @@ internal sealed class ShopOwnerDeleteCommandHandler : IRequestHandler<ShopOwnerD
     private readonly IShopOwnerRepository _shopOwnerRepository;
     private readonly IUnitOfWork _unitOfWork;
 
-    public ShopOwnerDeleteCommandHandler(IUnitOfWork unitOfWork, IShopOwnerRepository shopOwnerRepository)
+    public ShopOwnerDeleteCommandHandler(
+        IUnitOfWork unitOfWork,
+        IShopOwnerRepository shopOwnerRepository
+    )
     {
         _unitOfWork = unitOfWork;
         _shopOwnerRepository = shopOwnerRepository;
     }
 
-    public async Task<Result<Unit>> Handle(ShopOwnerDeleteCommand request, CancellationToken cancellationToken)
+    public async Task<Result<Unit>> Handle(
+        ShopOwnerDeleteCommand request,
+        CancellationToken cancellationToken
+    )
     {
         var entity = await _shopOwnerRepository.GetByIdAsync(request.Id);
         if (entity == null)

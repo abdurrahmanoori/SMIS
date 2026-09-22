@@ -2,7 +2,9 @@ namespace SMIS.Api.Extensions;
 
 public static class ApplicationBuilderExtensions
 {
-    public static IApplicationBuilder UseSwaggerWithUI(this IApplicationBuilder app)
+    public static IApplicationBuilder UseSwaggerWithUI(
+        this IApplicationBuilder app
+    )
     {
         app.UseSwagger();
         app.UseSwaggerUI(options =>

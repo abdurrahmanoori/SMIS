@@ -6,9 +6,13 @@ public sealed class UnitSymbol
 {
     public string? Value { get; }
 
-    private UnitSymbol(string? value) => Value = value;
+    private UnitSymbol(
+        string? value
+    ) => Value = value;
 
-    public static UnitSymbol Create(string? symbol)
+    public static UnitSymbol Create(
+        string? symbol
+    )
     {
         var cleaned = symbol?.Trim();
 
@@ -18,6 +22,9 @@ public sealed class UnitSymbol
         return new UnitSymbol(cleaned);
     }
 
-    public static implicit operator string?(UnitSymbol unitSymbol) => unitSymbol?.Value;
+    public static implicit operator string?(
+        UnitSymbol unitSymbol
+    ) => unitSymbol?.Value;
+
     public override string? ToString() => Value;
 }

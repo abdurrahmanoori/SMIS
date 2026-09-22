@@ -28,6 +28,7 @@ class ProductUnitScreenState {
   final bool isLoadingMore;
 
   int get totalPages => (totalCount / pageSize).ceil();
+
   bool get hasNextPage => pageNumber < totalPages;
 
   ProductUnitScreenState copyWith({
@@ -83,9 +84,7 @@ class ProductUnitController extends AsyncNotifier<ProductUnitScreenState> {
     _refreshingFromPowerSync = true;
     try {
       final current = state.value!;
-      state = AsyncData(
-        await _load(searchQuery: current.searchQuery),
-      );
+      state = AsyncData(await _load(searchQuery: current.searchQuery));
     } catch (error, stackTrace) {
       if (kDebugMode) {
         debugPrint(
@@ -150,10 +149,8 @@ class ProductUnitController extends AsyncNotifier<ProductUnitScreenState> {
     }
   }
 
-  Future<ProductUnitScreenState> _load({String? searchQuery}) => _readLocal(
-    pageNumber: 1,
-    searchQuery: searchQuery,
-  );
+  Future<ProductUnitScreenState> _load({String? searchQuery}) =>
+      _readLocal(pageNumber: 1, searchQuery: searchQuery);
 
   Future<ProductUnitScreenState> _readLocal({
     required int pageNumber,
@@ -189,7 +186,9 @@ final productUnitControllerProvider =
       ProductUnitController.new,
     );
 
-final productUnitLookupProvider = FutureProvider<List<ProductUnit>>((ref) async {
+final productUnitLookupProvider = FutureProvider<List<ProductUnit>>((
+  ref,
+) async {
   final session = ref.watch(
     authControllerProvider.select((state) => state.session),
   );

@@ -22,6 +22,7 @@ public class LoanAccount : BaseAuditableEntity, IShopEntity
     /// Original receivable principal in minor monetary units. Payments never rewrite it.
     /// </summary>
     public long TotalAmount { get; private set; }
+
     public long CreditAmount { get; private set; }
 
     public DateTime LoanDate { get; private set; }
@@ -148,7 +149,9 @@ public class LoanAccount : BaseAuditableEntity, IShopEntity
         UpdateStatus();
     }
 
-    public void ApplyCredit(long amount)
+    public void ApplyCredit(
+        long amount
+    )
     {
         if (amount <= 0)
             throw new DomainValidationException("Receivable credit must be greater than zero");

@@ -50,13 +50,15 @@ class AppLocalizations {
       'Welcome back, {name}': 'خوش آمدید، {name}',
       'Choose an area to continue managing your shop.':
           'برای ادامه مدیریت فروشگاه، یک بخش را انتخاب کنید.',
-      'Manage your local category list.': 'فهرست دسته‌بندی‌های محلی را مدیریت کنید.',
+      'Manage your local category list.':
+          'فهرست دسته‌بندی‌های محلی را مدیریت کنید.',
       'View your account, shop details, and profile settings.':
           'حساب، جزئیات فروشگاه و تنظیمات پروفایل را ببینید.',
       'Manage your local measurement units.':
           'واحدهای اندازه‌گیری محلی را مدیریت کنید.',
       'Manage locally available shops.': 'فروشگاه‌های محلی را مدیریت کنید.',
-      'Manage your local product catalog.': 'فهرست محصولات محلی را مدیریت کنید.',
+      'Manage your local product catalog.':
+          'فهرست محصولات محلی را مدیریت کنید.',
       '{count} local change waiting to sync.':
           '{count} تغییر محلی در انتظار همگام‌سازی است.',
       '{count} local changes waiting to sync.':
@@ -98,8 +100,7 @@ class AppLocalizations {
       'No category': 'بدون دسته‌بندی',
       'Current category unavailable ({id})':
           'دسته‌بندی فعلی در دسترس نیست ({id})',
-      'Current unit unavailable ({id})':
-          'واحد فعلی در دسترس نیست ({id})',
+      'Current unit unavailable ({id})': 'واحد فعلی در دسترس نیست ({id})',
       'SKU': 'کُد کالا',
       'Barcode': 'بارکد',
       'Image URL': 'نشانی تصویر',
@@ -140,9 +141,12 @@ class AppLocalizations {
       'Category deleted locally.': 'دسته‌بندی به‌صورت محلی حذف شد.',
       'A category with this name already exists in this shop.':
           'یک دسته‌بندی با این نام از قبل در این فروشگاه وجود دارد.',
-      'Unit of measurement saved locally.': 'واحد اندازه‌گیری به‌صورت محلی ذخیره شد.',
-      'Unit of measurement updated locally.': 'واحد اندازه‌گیری به‌صورت محلی به‌روز شد.',
-      'Unit of measurement deleted locally.': 'واحد اندازه‌گیری به‌صورت محلی حذف شد.',
+      'Unit of measurement saved locally.':
+          'واحد اندازه‌گیری به‌صورت محلی ذخیره شد.',
+      'Unit of measurement updated locally.':
+          'واحد اندازه‌گیری به‌صورت محلی به‌روز شد.',
+      'Unit of measurement deleted locally.':
+          'واحد اندازه‌گیری به‌صورت محلی حذف شد.',
       'Product saved locally.': 'محصول به‌صورت محلی ذخیره شد.',
       'Product updated locally.': 'محصول به‌صورت محلی به‌روز شد.',
       'Product deleted locally.': 'محصول به‌صورت محلی حذف شد.',
@@ -324,8 +328,7 @@ class AppLocalizations {
       'Select a base unit.': 'اصلي واحد وټاکئ.',
       'Category': 'کټګوري',
       'No category': 'بې کټګورۍ',
-      'Current category unavailable ({id})':
-          'اوسنۍ کټګوري نشته ({id})',
+      'Current category unavailable ({id})': 'اوسنۍ کټګوري نشته ({id})',
       'Current unit unavailable ({id})': 'اوسنی واحد نشته ({id})',
       'SKU': 'د توکي کوډ',
       'Barcode': 'بارکوډ',
@@ -367,9 +370,12 @@ class AppLocalizations {
       'Category deleted locally.': 'کټګوري په ځايي ډول ړنګه شوه.',
       'A category with this name already exists in this shop.':
           'په دې دوکان کې په دې نوم کټګوري له مخکې شته.',
-      'Unit of measurement saved locally.': 'د اندازه کولو واحد په ځايي ډول وساتل شو.',
-      'Unit of measurement updated locally.': 'د اندازه کولو واحد په ځايي ډول تازه شو.',
-      'Unit of measurement deleted locally.': 'د اندازه کولو واحد په ځايي ډول ړنګ شو.',
+      'Unit of measurement saved locally.':
+          'د اندازه کولو واحد په ځايي ډول وساتل شو.',
+      'Unit of measurement updated locally.':
+          'د اندازه کولو واحد په ځايي ډول تازه شو.',
+      'Unit of measurement deleted locally.':
+          'د اندازه کولو واحد په ځايي ډول ړنګ شو.',
       'Product saved locally.': 'محصول په ځايي ډول وساتل شو.',
       'Product updated locally.': 'محصول په ځايي ډول تازه شو.',
       'Product deleted locally.': 'محصول په ځايي ډول ړنګ شو.',
@@ -384,8 +390,7 @@ class AppLocalizations {
           'همغږي د {count} ناکامو غوښتنو سره بشپړه شوه.',
       'Offline. Local changes are saved and will retry later.':
           'آفلاین یاست. ځايي بدلونونه ساتل شوي او وروسته به بیا هڅه وشي.',
-      'A synchronization is already running.':
-          'یوه همغږي لا دمخه روانه ده.',
+      'A synchronization is already running.': 'یوه همغږي لا دمخه روانه ده.',
       'Pulled {pulled}, pushed {pushed}, conflicts resolved {conflicts}, pending {pending}.':
           'ترلاسه {pulled}، لېږل {pushed}، حل شوې شخړې {conflicts}، منتظر {pending}.',
       'No categories yet': 'تر اوسه کټګورۍ نشته',

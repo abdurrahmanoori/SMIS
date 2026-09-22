@@ -12,7 +12,7 @@ public class Customer : BaseSyncableAuditableEntity, IShopEntity
     public string? LastName { get; private set; }
     public string ShopId { get; private set; } = string.Empty;
     public string? ShopName { get; private set; }
-    public CustomerType CustomerType { get; private set; } 
+    public CustomerType CustomerType { get; private set; }
     public string? FatherName { get; private set; }
     public string? Email { get; private set; }
     public string? PhoneNumber { get; private set; }
@@ -27,11 +27,24 @@ public class Customer : BaseSyncableAuditableEntity, IShopEntity
     public Province? Province { get; set; }
     public District? District { get; set; }
 
-    internal Customer() { } // EF Core & Seeding
+    internal Customer()
+    {
+    } // EF Core & Seeding
 
-    public static Customer Create(string firstName, string shopId, CustomerType customerType = CustomerType.Individual, string? lastName = null, string? fatherName = null, 
-        string? email = null, string? phoneNumber = null, string? address = null, string? taxNumber = null, 
-        string? provinceId = null, string? districtId = null, bool isActive = true)
+    public static Customer Create(
+        string firstName,
+        string shopId,
+        CustomerType customerType = CustomerType.Individual,
+        string? lastName = null,
+        string? fatherName = null,
+        string? email = null,
+        string? phoneNumber = null,
+        string? address = null,
+        string? taxNumber = null,
+        string? provinceId = null,
+        string? districtId = null,
+        bool isActive = true
+    )
     {
         var customer = new Customer();
         customer.SetFirstName(firstName);
@@ -49,12 +62,16 @@ public class Customer : BaseSyncableAuditableEntity, IShopEntity
         return customer;
     }
 
-    public void SetFirstName(string firstName)
+    public void SetFirstName(
+        string firstName
+    )
     {
         FirstName = firstName.Trim();
     }
 
-    public void SetShopId(string shopId)
+    public void SetShopId(
+        string shopId
+    )
     {
         if (string.IsNullOrWhiteSpace(shopId))
             throw new DomainValidationException("Shop ID cannot be empty");
@@ -62,22 +79,30 @@ public class Customer : BaseSyncableAuditableEntity, IShopEntity
         ShopId = shopId.Trim();
     }
 
-    public void SetCustomerType(CustomerType customerType)
+    public void SetCustomerType(
+        CustomerType customerType
+    )
     {
         CustomerType = customerType;
     }
 
-    public void SetLastName(string? lastName)
+    public void SetLastName(
+        string? lastName
+    )
     {
         LastName = string.IsNullOrWhiteSpace(lastName) ? null : lastName.Trim();
     }
 
-    public void SetFatherName(string? fatherName)
+    public void SetFatherName(
+        string? fatherName
+    )
     {
         FatherName = string.IsNullOrWhiteSpace(fatherName) ? null : fatherName.Trim();
     }
 
-    public void SetEmail(string? email)
+    public void SetEmail(
+        string? email
+    )
     {
         if (string.IsNullOrWhiteSpace(email))
         {
@@ -89,7 +114,9 @@ public class Customer : BaseSyncableAuditableEntity, IShopEntity
         Email = emailVO;
     }
 
-    public void SetPhoneNumber(string? phoneNumber)
+    public void SetPhoneNumber(
+        string? phoneNumber
+    )
     {
         if (string.IsNullOrWhiteSpace(phoneNumber))
         {
@@ -101,12 +128,16 @@ public class Customer : BaseSyncableAuditableEntity, IShopEntity
         PhoneNumber = phone;
     }
 
-    public void SetAddress(string? address)
+    public void SetAddress(
+        string? address
+    )
     {
         Address = string.IsNullOrWhiteSpace(address) ? null : address.Trim();
     }
 
-    public void SetTaxNumber(string? taxNumber)
+    public void SetTaxNumber(
+        string? taxNumber
+    )
     {
         if (string.IsNullOrWhiteSpace(taxNumber))
         {
@@ -118,17 +149,23 @@ public class Customer : BaseSyncableAuditableEntity, IShopEntity
         TaxNumber = tax;
     }
 
-    public void SetProvinceId(string? provinceId)
+    public void SetProvinceId(
+        string? provinceId
+    )
     {
         ProvinceId = string.IsNullOrWhiteSpace(provinceId) ? null : provinceId.Trim();
     }
 
-    public void SetDistrictId(string? districtId)
+    public void SetDistrictId(
+        string? districtId
+    )
     {
         DistrictId = string.IsNullOrWhiteSpace(districtId) ? null : districtId.Trim();
     }
 
-    public void SetShopName(string? shopName)
+    public void SetShopName(
+        string? shopName
+    )
     {
         ShopName = string.IsNullOrWhiteSpace(shopName) ? null : shopName.Trim();
     }
@@ -136,7 +173,9 @@ public class Customer : BaseSyncableAuditableEntity, IShopEntity
     public void Activate() => IsActive = true;
     public void Deactivate() => IsActive = false;
 
-    public void Delete(string deletedBy)
+    public void Delete(
+        string deletedBy
+    )
     {
         IsDeleted = true;
         DeletedAt = DateTime.UtcNow;
@@ -151,5 +190,4 @@ public class Customer : BaseSyncableAuditableEntity, IShopEntity
         DeletedBy = null;
         Activate();
     }
-
 }

@@ -7,18 +7,22 @@ namespace SMIS.Application.Repositories.Products
     {
         Task<Product?> GetByIdIncludingDeletedAsync(
             string id,
-            CancellationToken cancellationToken = default);
+            CancellationToken cancellationToken = default
+        );
 
         Task<int> CountByCategoryIdAsync(
             string categoryId,
-            CancellationToken cancellationToken = default);
+            CancellationToken cancellationToken = default
+        );
 
         Task<int> CountReferencesAsync(
             string id,
-            CancellationToken cancellationToken = default);
+            CancellationToken cancellationToken = default
+        );
 
         Task<bool> HasStockOrConversionsAsync(
             string id,
-            CancellationToken cancellationToken = default);
+            CancellationToken cancellationToken = default
+        );
     }
 }

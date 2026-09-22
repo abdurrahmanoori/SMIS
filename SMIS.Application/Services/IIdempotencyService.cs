@@ -7,5 +7,6 @@ public interface IIdempotencyService
     Task<Result<bool>> ReserveAsync(
         string scope,
         string? key,
-        CancellationToken cancellationToken = default);
+        CancellationToken cancellationToken = default
+    );
 }

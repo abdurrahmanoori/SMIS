@@ -18,7 +18,6 @@ namespace SMIS.Application.Features.Products.Validators
                 .NotEmpty().WithMessage("BaseUnitId is required");
 
 
-
             RuleFor(x => x.ProductCreateDto.Description)
                 .MaximumLength(1000).WithMessage("Description must not exceed 1000 characters")
                 .When(x => !string.IsNullOrEmpty(x.ProductCreateDto.Description));

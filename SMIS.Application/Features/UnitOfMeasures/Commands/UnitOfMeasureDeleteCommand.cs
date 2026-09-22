@@ -12,13 +12,19 @@ namespace SMIS.Application.Features.UnitOfMeasures.Commands
         private readonly IUnitOfMeasureRepository _unitOfMeasureRepository;
         private readonly IUnitOfWork _unitOfWork;
 
-        public UnitOfMeasureDeleteCommandHandler(IUnitOfWork unitOfWork, IUnitOfMeasureRepository unitOfMeasureRepository)
+        public UnitOfMeasureDeleteCommandHandler(
+            IUnitOfWork unitOfWork,
+            IUnitOfMeasureRepository unitOfMeasureRepository
+        )
         {
             _unitOfWork = unitOfWork;
             _unitOfMeasureRepository = unitOfMeasureRepository;
         }
 
-        public async Task<Result<Unit>> Handle(UnitOfMeasureDeleteCommand request, CancellationToken cancellationToken)
+        public async Task<Result<Unit>> Handle(
+            UnitOfMeasureDeleteCommand request,
+            CancellationToken cancellationToken
+        )
         {
             var entity = await _unitOfMeasureRepository.GetByIdAsync(request.Id);
             if (entity == null)

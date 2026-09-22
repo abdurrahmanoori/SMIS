@@ -8,7 +8,9 @@ public partial class AppDbContext
     // Shop-scoped entities: exclude soft-deleted rows AND scope to current shop.
     // EF Core allows only one HasQueryFilter per entity type, so both conditions
     // are combined here rather than applied separately.
-    private void SetShopEntityFilter<TEntity>(ModelBuilder modelBuilder)
+    private void SetShopEntityFilter<TEntity>(
+        ModelBuilder modelBuilder
+    )
         where TEntity : class, IShopEntity, ISoftDeletable
     {
         modelBuilder.Entity<TEntity>().HasQueryFilter(e =>
@@ -16,7 +18,9 @@ public partial class AppDbContext
             e.ShopId == _currentUser.GetShopId());
     }
 
-    private void SetSoftDeleteFilter<TEntity>(ModelBuilder modelBuilder)
+    private void SetSoftDeleteFilter<TEntity>(
+        ModelBuilder modelBuilder
+    )
         where TEntity : class, ISoftDeletable
     {
         modelBuilder.Entity<TEntity>().HasQueryFilter(e => !e.IsDeleted);

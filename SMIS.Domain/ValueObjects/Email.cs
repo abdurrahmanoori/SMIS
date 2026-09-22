@@ -9,9 +9,13 @@ public sealed class Email
 
     public string Value { get; }
 
-    private Email(string value) => Value = value;
+    private Email(
+        string value
+    ) => Value = value;
 
-    public static Email Create(string email)
+    public static Email Create(
+        string email
+    )
     {
         //if (string.IsNullOrWhiteSpace(email))
         //    throw new DomainValidationException("Email cannot be empty");
@@ -25,6 +29,9 @@ public sealed class Email
         return new Email(email.Trim().ToLowerInvariant());
     }
 
-    public static implicit operator string(Email email) => email.Value;
+    public static implicit operator string(
+        Email email
+    ) => email.Value;
+
     public override string ToString() => Value;
 }

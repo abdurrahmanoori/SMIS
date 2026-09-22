@@ -158,7 +158,8 @@ public class StockBatch : BaseAuditableEntityWithoutName, IShopEntity
     public void MarkAsCompleted()
     {
         if (RemainingQuantityBase != 0)
-            throw new DomainValidationException("A stock batch can only be completed when its remaining quantity is zero");
+            throw new DomainValidationException(
+                "A stock batch can only be completed when its remaining quantity is zero");
 
         Status = StatusEnum.Completed;
     }

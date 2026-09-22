@@ -7,7 +7,9 @@ namespace SMIS.Infrastructure.Server.Repositories.Districts
 {
     public class DistrictRepository : GenericRepository<District>, IDistrictRepository
     {
-        public DistrictRepository(AppDbContext context) : base(context)
+        public DistrictRepository(
+            AppDbContext context
+        ) : base(context)
         {
         }
     }

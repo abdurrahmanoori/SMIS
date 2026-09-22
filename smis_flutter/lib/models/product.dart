@@ -78,31 +78,45 @@ class ProductDraft {
       throw const ProductValidationException('Name is required.');
     }
     if (normalizedName.length > 200) {
-      throw const ProductValidationException('Name cannot exceed 200 characters.');
+      throw const ProductValidationException(
+        'Name cannot exceed 200 characters.',
+      );
     }
     if (normalizedBaseUnitId.isEmpty) {
       throw const ProductValidationException('Select a base unit.');
     }
     if (normalizedBaseUnitId.length > 450) {
-      throw const ProductValidationException('Base unit ID cannot exceed 450 characters.');
+      throw const ProductValidationException(
+        'Base unit ID cannot exceed 450 characters.',
+      );
     }
     if (normalizedDescription != null && normalizedDescription.length > 500) {
-      throw const ProductValidationException('Description cannot exceed 500 characters.');
+      throw const ProductValidationException(
+        'Description cannot exceed 500 characters.',
+      );
     }
     if (normalizedSku != null && normalizedSku.length > 100) {
-      throw const ProductValidationException('SKU cannot exceed 100 characters.');
+      throw const ProductValidationException(
+        'SKU cannot exceed 100 characters.',
+      );
     }
     if (normalizedBarcode != null && normalizedBarcode.length > 100) {
-      throw const ProductValidationException('Barcode cannot exceed 100 characters.');
+      throw const ProductValidationException(
+        'Barcode cannot exceed 100 characters.',
+      );
     }
     if (normalizedImageUrl != null && normalizedImageUrl.length > 500) {
-      throw const ProductValidationException('Image URL cannot exceed 500 characters.');
+      throw const ProductValidationException(
+        'Image URL cannot exceed 500 characters.',
+      );
     }
     if (normalizedCategoryId.isEmpty) {
       throw const ProductValidationException('Select a category.');
     }
     if (normalizedCategoryId.length > 450) {
-      throw const ProductValidationException('Category ID cannot exceed 450 characters.');
+      throw const ProductValidationException(
+        'Category ID cannot exceed 450 characters.',
+      );
     }
 
     return ProductDraft(

@@ -17,7 +17,12 @@ internal sealed class ShopOwnerUpdateCommandHandler : IRequestHandler<ShopOwnerU
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
 
-    public ShopOwnerUpdateCommandHandler(IUnitOfWork unitOfWork, IMapper mapper, IShopOwnerRepository shopOwnerRepository, IShopRepository shopRepository)
+    public ShopOwnerUpdateCommandHandler(
+        IUnitOfWork unitOfWork,
+        IMapper mapper,
+        IShopOwnerRepository shopOwnerRepository,
+        IShopRepository shopRepository
+    )
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
@@ -25,7 +30,10 @@ internal sealed class ShopOwnerUpdateCommandHandler : IRequestHandler<ShopOwnerU
         _shopRepository = shopRepository;
     }
 
-    public async Task<Result<ShopOwnerDto>> Handle(ShopOwnerUpdateCommand request, CancellationToken cancellationToken)
+    public async Task<Result<ShopOwnerDto>> Handle(
+        ShopOwnerUpdateCommand request,
+        CancellationToken cancellationToken
+    )
     {
         var entity = await _shopOwnerRepository.GetByIdAsync(request.Id);
         if (entity == null)
@@ -40,8 +48,9 @@ internal sealed class ShopOwnerUpdateCommandHandler : IRequestHandler<ShopOwnerU
         entity.SetEmail(request.ShopOwnerCreateDto.Email);
         entity.SetAddress(request.ShopOwnerCreateDto.Address);
         entity.SetOwnershipPercentage(request.ShopOwnerCreateDto.OwnershipPercentage);
-        
-        if (request.ShopOwnerCreateDto.IsActive) entity.Activate(); else entity.Deactivate();
+
+        if (request.ShopOwnerCreateDto.IsActive) entity.Activate();
+        else entity.Deactivate();
 
         // Update name fields
         var shop = await _shopRepository.GetByIdAsync(entity.ShopId);

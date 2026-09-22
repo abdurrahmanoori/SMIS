@@ -10,9 +10,11 @@ using SMIS.Domain.Entities;
 
 namespace SMIS.Application.Features.ProductPrices.Commands;
 
-public record ProductPriceUpdateCommand(string Id, ProductPriceCreateDto ProductPriceCreateDto) : IRequest<Result<ProductPriceDto>>;
+public record ProductPriceUpdateCommand(string Id, ProductPriceCreateDto ProductPriceCreateDto)
+    : IRequest<Result<ProductPriceDto>>;
 
-internal sealed class ProductPriceUpdateCommandHandler : IRequestHandler<ProductPriceUpdateCommand, Result<ProductPriceDto>>
+internal sealed class
+    ProductPriceUpdateCommandHandler : IRequestHandler<ProductPriceUpdateCommand, Result<ProductPriceDto>>
 {
     private readonly IProductPriceRepository _productPriceRepository;
     private readonly IProductUnitRepository _productUnitRepository;
@@ -25,7 +27,8 @@ internal sealed class ProductPriceUpdateCommandHandler : IRequestHandler<Product
         IMapper mapper,
         IProductPriceRepository productPriceRepository,
         IProductUnitRepository productUnitRepository,
-        ICurrentUser currentUser)
+        ICurrentUser currentUser
+    )
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
@@ -34,7 +37,10 @@ internal sealed class ProductPriceUpdateCommandHandler : IRequestHandler<Product
         _currentUser = currentUser;
     }
 
-    public async Task<Result<ProductPriceDto>> Handle(ProductPriceUpdateCommand request, CancellationToken cancellationToken)
+    public async Task<Result<ProductPriceDto>> Handle(
+        ProductPriceUpdateCommand request,
+        CancellationToken cancellationToken
+    )
     {
         var existing = await _productPriceRepository.GetByIdAsync(request.Id);
         if (existing == null)
@@ -51,7 +57,8 @@ internal sealed class ProductPriceUpdateCommandHandler : IRequestHandler<Product
         if (productUnit is null)
             return ProductPriceCommandRules.ProductUnitNotFoundOrForbidden();
 
-        var latest = await _productPriceRepository.GetLatestForProductUnitAsync(existing.ProductUnitId, cancellationToken);
+        var latest =
+            await _productPriceRepository.GetLatestForProductUnitAsync(existing.ProductUnitId, cancellationToken);
         if (latest is null || !string.Equals(latest.Id, existing.Id, StringComparison.Ordinal))
             return ProductPriceCommandRules.HistoricalPriceImmutable();
 

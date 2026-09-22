@@ -19,12 +19,14 @@ internal sealed class StockMovementGetByIdQueryHandler
     public StockMovementGetByIdQueryHandler(
         IStockMovementRepository repository,
         IMapper mapper,
-        ICurrentUser currentUser) =>
+        ICurrentUser currentUser
+    ) =>
         (_repository, _mapper, _currentUser) = (repository, mapper, currentUser);
 
     public async Task<Result<StockMovementDto>> Handle(
         StockMovementGetByIdQuery request,
-        CancellationToken cancellationToken)
+        CancellationToken cancellationToken
+    )
     {
         var shopId = _currentUser.GetShopId();
         var movement = await _repository.GetFirstOrDefaultAsync(item =>

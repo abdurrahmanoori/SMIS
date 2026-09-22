@@ -7,7 +7,8 @@ public interface IGenericQueryService
 {
     Task<PagedList<TEntity>> QueryAsync<TEntity, TQuery>(
         TQuery query,
-        CancellationToken cancellationToken = default)
+        CancellationToken cancellationToken = default
+    )
         where TEntity : class
         where TQuery : PagedQuery;
 }

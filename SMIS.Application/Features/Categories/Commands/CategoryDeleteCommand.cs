@@ -20,7 +20,8 @@ namespace SMIS.Application.Features.Categories.Commands
             IUnitOfWork unitOfWork,
             ICategoryRepository categoryRepository,
             IProductRepository productRepository,
-            ICurrentUser currentUser)
+            ICurrentUser currentUser
+        )
         {
             _unitOfWork = unitOfWork;
             _categoryRepository = categoryRepository;
@@ -28,7 +29,10 @@ namespace SMIS.Application.Features.Categories.Commands
             _currentUser = currentUser;
         }
 
-        public async Task<Result<Unit>> Handle(CategoryDeleteCommand request, CancellationToken cancellationToken)
+        public async Task<Result<Unit>> Handle(
+            CategoryDeleteCommand request,
+            CancellationToken cancellationToken
+        )
         {
             var entity = await _categoryRepository.GetByIdAsync(request.Id);
             if (entity == null)

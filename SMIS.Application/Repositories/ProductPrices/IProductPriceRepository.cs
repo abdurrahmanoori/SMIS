@@ -5,8 +5,13 @@ namespace SMIS.Application.Repositories.ProductPrices;
 
 public interface IProductPriceRepository : IGenericRepository<ProductPrice>
 {
-    Task<ProductPrice?> GetByIdIncludingDeletedAsync(string id, CancellationToken cancellationToken = default);
+    Task<ProductPrice?> GetByIdIncludingDeletedAsync(
+        string id,
+        CancellationToken cancellationToken = default
+    );
+
     Task<ProductPrice?> GetLatestForProductUnitAsync(
         string productUnitId,
-        CancellationToken cancellationToken = default);
+        CancellationToken cancellationToken = default
+    );
 }

@@ -7,7 +7,9 @@ using SMIS.Application.Services;
 namespace SMIS.Application.Features.Purchasing.Queries;
 
 public sealed record SupplierGetListQuery : IRequest<Result<List<SupplierDto>>>;
+
 public sealed record PurchaseOrderGetListQuery : IRequest<Result<List<PurchaseOrderDto>>>;
+
 public sealed record PurchaseOrderGetByIdQuery(string Id) : IRequest<Result<PurchaseOrderDto>>;
 
 internal sealed class PurchasingQueryHandler :
@@ -17,14 +19,17 @@ internal sealed class PurchasingQueryHandler :
 {
     private readonly IApplicationDbContext _db;
 
-    public PurchasingQueryHandler(IApplicationDbContext db)
+    public PurchasingQueryHandler(
+        IApplicationDbContext db
+    )
     {
         _db = db;
     }
 
     public async Task<Result<List<SupplierDto>>> Handle(
         SupplierGetListQuery request,
-        CancellationToken cancellationToken)
+        CancellationToken cancellationToken
+    )
     {
         var suppliers = await _db.Suppliers
             .AsNoTracking()
@@ -37,7 +42,8 @@ internal sealed class PurchasingQueryHandler :
 
     public async Task<Result<List<PurchaseOrderDto>>> Handle(
         PurchaseOrderGetListQuery request,
-        CancellationToken cancellationToken)
+        CancellationToken cancellationToken
+    )
     {
         var orders = await OrderQuery()
             .AsNoTracking()
@@ -50,7 +56,8 @@ internal sealed class PurchasingQueryHandler :
 
     public async Task<Result<PurchaseOrderDto>> Handle(
         PurchaseOrderGetByIdQuery request,
-        CancellationToken cancellationToken)
+        CancellationToken cancellationToken
+    )
     {
         var order = await OrderQuery()
             .AsNoTracking()
@@ -65,5 +72,5 @@ internal sealed class PurchasingQueryHandler :
         _db.PurchaseOrders
             .Include(order => order.Supplier)
             .Include(order => order.Lines)
-                .ThenInclude(line => line.Product);
+            .ThenInclude(line => line.Product);
 }

@@ -19,14 +19,17 @@ public sealed class GenericQueryService : IGenericQueryService
 {
     private readonly AppDbContext _context;
 
-    public GenericQueryService(AppDbContext context)
+    public GenericQueryService(
+        AppDbContext context
+    )
     {
         _context = context;
     }
 
     public async Task<PagedList<TEntity>> QueryAsync<TEntity, TQuery>(
         TQuery query,
-        CancellationToken cancellationToken = default)
+        CancellationToken cancellationToken = default
+    )
         where TEntity : class
         where TQuery : PagedQuery
     {
@@ -62,7 +65,8 @@ public sealed class GenericQueryService : IGenericQueryService
 
     private static IQueryable<TEntity> ApplyFilters<TEntity, TQuery>(
         IQueryable<TEntity> entities,
-        TQuery query)
+        TQuery query
+    )
         where TEntity : class
         where TQuery : PagedQuery
     {
@@ -95,7 +99,8 @@ public sealed class GenericQueryService : IGenericQueryService
 
     private static Expression CreateStringContainsFilter(
         MemberExpression entityProperty,
-        string suppliedValue)
+        string suppliedValue
+    )
     {
         var propertyIsNotNull = Expression.NotEqual(
             entityProperty,
@@ -115,7 +120,8 @@ public sealed class GenericQueryService : IGenericQueryService
 
     private static Expression CreateEqualityFilter(
         MemberExpression entityProperty,
-        object suppliedValue)
+        object suppliedValue
+    )
     {
         Expression value = Expression.Constant(suppliedValue, suppliedValue.GetType());
         if (value.Type != entityProperty.Type)
@@ -127,15 +133,16 @@ public sealed class GenericQueryService : IGenericQueryService
     }
 
     private IQueryable<TEntity> ApplyPrimaryKeyOrdering<TEntity>(
-        IQueryable<TEntity> entities)
+        IQueryable<TEntity> entities
+    )
         where TEntity : class
     {
         var entityType = _context.Model.FindEntityType(typeof(TEntity))
-            ?? throw new InvalidOperationException(
-                $"{typeof(TEntity).Name} is not part of the EF Core model.");
+                         ?? throw new InvalidOperationException(
+                             $"{typeof(TEntity).Name} is not part of the EF Core model.");
         var primaryKey = entityType.FindPrimaryKey()
-            ?? throw new InvalidOperationException(
-                $"{typeof(TEntity).Name} does not define a primary key.");
+                         ?? throw new InvalidOperationException(
+                             $"{typeof(TEntity).Name} does not define a primary key.");
 
         IQueryable<TEntity> ordered = entities;
         var firstKey = true;
@@ -152,7 +159,8 @@ public sealed class GenericQueryService : IGenericQueryService
     private static IQueryable<TEntity> ApplyOrdering<TEntity>(
         IQueryable<TEntity> entities,
         IProperty keyProperty,
-        bool firstKey)
+        bool firstKey
+    )
         where TEntity : class
     {
         var parameter = Expression.Parameter(typeof(TEntity), "entity");
@@ -176,7 +184,9 @@ public sealed class GenericQueryService : IGenericQueryService
         return entities.Provider.CreateQuery<TEntity>(orderedExpression);
     }
 
-    private static void ValidatePagination(PagedQuery query)
+    private static void ValidatePagination(
+        PagedQuery query
+    )
     {
         if (query.PageNumber < 1)
         {
@@ -224,17 +234,21 @@ public sealed class GenericQueryService : IGenericQueryService
                     pair.QueryProperty.PropertyType,
                     pair.EntityProperty.PropertyType))
                 .Where(pair => !pair.UseContains
-                    || pair.EntityProperty.PropertyType == typeof(string))
+                               || pair.EntityProperty.PropertyType == typeof(string))
                 .ToArray();
         }
 
-        private static bool HaveCompatibleTypes(Type queryType, Type entityType) =>
+        private static bool HaveCompatibleTypes(
+            Type queryType,
+            Type entityType
+        ) =>
             (Nullable.GetUnderlyingType(queryType) ?? queryType)
-                == (Nullable.GetUnderlyingType(entityType) ?? entityType);
+            == (Nullable.GetUnderlyingType(entityType) ?? entityType);
     }
 
     private sealed record PropertyPair(
         PropertyInfo QueryProperty,
         PropertyInfo EntityProperty,
-        bool UseContains);
+        bool UseContains
+    );
 }

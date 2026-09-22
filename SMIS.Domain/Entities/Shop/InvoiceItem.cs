@@ -1,4 +1,3 @@
-
 //using SMIS.Domain.Common.BaseAbstract;
 
 //namespace SMIS.Domain.Entities.Shopp
@@ -18,3 +17,4 @@
 //        public virtual Product Product { get; set; }
 //    }
 //}
+

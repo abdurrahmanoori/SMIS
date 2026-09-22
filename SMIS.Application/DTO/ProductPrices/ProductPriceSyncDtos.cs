@@ -9,5 +9,16 @@ public class ProductPriceSyncUpdateDto
     public DateTime ClientModifiedDate { get; set; }
     public string? ClientModifiedBy { get; set; }
 }
-public sealed class ProductPriceSyncCreateDto : ProductPriceSyncUpdateDto { public string Id { get; set; } = string.Empty; public DateTime ClientCreatedDate { get; set; } public string? ClientCreatedBy { get; set; } }
-public sealed class ProductPriceSyncDeleteDto { public DateTime ClientModifiedDate { get; set; } public string? ClientModifiedBy { get; set; } }
+
+public sealed class ProductPriceSyncCreateDto : ProductPriceSyncUpdateDto
+{
+    public string Id { get; set; } = string.Empty;
+    public DateTime ClientCreatedDate { get; set; }
+    public string? ClientCreatedBy { get; set; }
+}
+
+public sealed class ProductPriceSyncDeleteDto
+{
+    public DateTime ClientModifiedDate { get; set; }
+    public string? ClientModifiedBy { get; set; }
+}

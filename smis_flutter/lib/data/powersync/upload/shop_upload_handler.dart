@@ -28,10 +28,7 @@ class ShopUploadHandler implements PowerSyncUploadHandler {
   Future<void> update(String id, Map<String, dynamic> row) async {
     await _dio.put<void>(
       '${AppConfig.shopEndpoint}/$id/sync',
-      data: {
-        ..._payload(row),
-        'clientModifiedDate': _timestamp(row),
-      },
+      data: {..._payload(row), 'clientModifiedDate': _timestamp(row)},
     );
   }
 
@@ -43,16 +40,15 @@ class ShopUploadHandler implements PowerSyncUploadHandler {
     );
   }
 
-  Map<String, Object?> _payload(Map<String, dynamic> row) =>
-      {
-        'name': row['name'] as String,
-        'shopType': _shopType(row['shop_type']),
-        'address': row['address'] as String?,
-        'phoneNumber': row['phone_number'] as String?,
-        'email': row['email'] as String?,
-        'taxNumber': row['tax_number'] as String?,
-        'isActive': _asBool(row['is_active']),
-      };
+  Map<String, Object?> _payload(Map<String, dynamic> row) => {
+    'name': row['name'] as String,
+    'shopType': _shopType(row['shop_type']),
+    'address': row['address'] as String?,
+    'phoneNumber': row['phone_number'] as String?,
+    'email': row['email'] as String?,
+    'taxNumber': row['tax_number'] as String?,
+    'isActive': _asBool(row['is_active']),
+  };
 
   String _timestamp(Map<String, dynamic> row) =>
       row['last_modified_utc'] as String;

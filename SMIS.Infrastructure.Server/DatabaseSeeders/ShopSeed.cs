@@ -7,20 +7,35 @@ namespace SMIS.Infrastructure.Server.DatabaseSeeders;
 
 public static class ShopSeed
 {
-    public static void DataSeed(ModelBuilder modelBuilder)
+    public static void DataSeed(
+        ModelBuilder modelBuilder
+    )
     {
         var shops = new[]
         {
-            CreateShop(SeedIds.Shop1, "Main Store",    ShopType.RetailShop,    "Kabul Center",    "0700000001", "main@store.local",      "TAX001", true),
-            CreateShop(SeedIds.Shop2, "Branch Store",  ShopType.WholesaleShop, "Herat Center",    "0700000002", "branch@store.local",    "TAX002", true),
-            CreateShop(SeedIds.Shop3, "Warehouse",     ShopType.RetailShop,    "Kandahar Center", "0700000003", "warehouse@store.local", "TAX003", true),
-            CreateShop(SeedIds.ShopWasil, "Wasil Shop", ShopType.RetailShop,   "Kabul Center",    "0700000004", "wasil@wasilshop.com",  "TAX004", true)
+            CreateShop(SeedIds.Shop1, "Main Store", ShopType.RetailShop, "Kabul Center", "0700000001",
+                "main@store.local", "TAX001", true),
+            CreateShop(SeedIds.Shop2, "Branch Store", ShopType.WholesaleShop, "Herat Center", "0700000002",
+                "branch@store.local", "TAX002", true),
+            CreateShop(SeedIds.Shop3, "Warehouse", ShopType.RetailShop, "Kandahar Center", "0700000003",
+                "warehouse@store.local", "TAX003", true),
+            CreateShop(SeedIds.ShopWasil, "Wasil Shop", ShopType.RetailShop, "Kabul Center", "0700000004",
+                "wasil@wasilshop.com", "TAX004", true)
         };
 
         modelBuilder.Entity<Shop>().HasData(shops);
     }
 
-    private static Shop CreateShop(string id, string name, ShopType shopType, string address, string phoneNumber, string email, string taxNumber, bool isActive)
+    private static Shop CreateShop(
+        string id,
+        string name,
+        ShopType shopType,
+        string address,
+        string phoneNumber,
+        string email,
+        string taxNumber,
+        bool isActive
+    )
     {
         var shop = Shop.Create(name, shopType, address, phoneNumber, email, taxNumber);
 

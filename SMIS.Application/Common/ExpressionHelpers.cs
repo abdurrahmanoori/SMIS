@@ -5,7 +5,9 @@ namespace SMIS.Application.Common;
 
 public class ExpressionHelpers
 {
-    public static MemberInfo? GetMember<T, TType>(Expression<Func<T, TType?>> property)
+    public static MemberInfo? GetMember<T, TType>(
+        Expression<Func<T, TType?>> property
+    )
     {
         var member = property.Body switch
         {

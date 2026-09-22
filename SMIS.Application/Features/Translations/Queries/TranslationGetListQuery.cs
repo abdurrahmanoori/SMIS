@@ -8,20 +8,29 @@ using SMIS.Application.Repositories.Localization;
 
 namespace SMIS.Application.Features.Translations.Queries
 {
-    public record TranslationGetListQuery(int PageNumber = 1, int PageSize = 25) : IRequest<Result<PagedList<TranslationEntityDto>>>;
+    public record TranslationGetListQuery(int PageNumber = 1, int PageSize = 25)
+        : IRequest<Result<PagedList<TranslationEntityDto>>>;
 
-    internal sealed class TranslationGetListQueryHandler : IRequestHandler<TranslationGetListQuery, Result<PagedList<TranslationEntityDto>>>
+    internal sealed class
+        TranslationGetListQueryHandler : IRequestHandler<TranslationGetListQuery,
+        Result<PagedList<TranslationEntityDto>>>
     {
         private readonly ITranslationRepository _translationRepository;
         private readonly IMapper _mapper;
 
-        public TranslationGetListQueryHandler(ITranslationRepository translationRepository, IMapper mapper)
+        public TranslationGetListQueryHandler(
+            ITranslationRepository translationRepository,
+            IMapper mapper
+        )
         {
             _translationRepository = translationRepository;
             _mapper = mapper;
         }
 
-        public async Task<Result<PagedList<TranslationEntityDto>>> Handle(TranslationGetListQuery request, CancellationToken cancellationToken)
+        public async Task<Result<PagedList<TranslationEntityDto>>> Handle(
+            TranslationGetListQuery request,
+            CancellationToken cancellationToken
+        )
         {
             var translations = await _translationRepository.GetAllQueryable()
                 .ToPagedList(request.PageNumber, request.PageSize);

@@ -6,7 +6,9 @@ namespace SMIS.Infrastructure.Server.EntityConfigurations
 {
     public class ApplicationUserConfiguration : IEntityTypeConfiguration<ApplicationUser>
     {
-        public void Configure(EntityTypeBuilder<ApplicationUser> builder)
+        public void Configure(
+            EntityTypeBuilder<ApplicationUser> builder
+        )
         {
             builder.ToTable("AspNetUsers");
 

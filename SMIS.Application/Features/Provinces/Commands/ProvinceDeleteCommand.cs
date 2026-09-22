@@ -12,13 +12,19 @@ namespace SMIS.Application.Features.Provinces.Commands
         private readonly IProvinceRepository _provinceRepository;
         private readonly IUnitOfWork _unitOfWork;
 
-        public ProvinceDeleteCommandHandler(IUnitOfWork unitOfWork, IProvinceRepository provinceRepository)
+        public ProvinceDeleteCommandHandler(
+            IUnitOfWork unitOfWork,
+            IProvinceRepository provinceRepository
+        )
         {
             _unitOfWork = unitOfWork;
             _provinceRepository = provinceRepository;
         }
 
-        public async Task<Result<Unit>> Handle(ProvinceDeleteCommand request, CancellationToken cancellationToken)
+        public async Task<Result<Unit>> Handle(
+            ProvinceDeleteCommand request,
+            CancellationToken cancellationToken
+        )
         {
             var entity = await _provinceRepository.GetByIdAsync(request.Id);
             if (entity is null)

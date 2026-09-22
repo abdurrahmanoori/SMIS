@@ -7,6 +7,7 @@ namespace SMIS.Application.Repositories.Customers
     {
         Task<Customer?> GetByIdIncludingDeletedAsync(
             string id,
-            CancellationToken cancellationToken = default);
+            CancellationToken cancellationToken = default
+        );
     }
 }

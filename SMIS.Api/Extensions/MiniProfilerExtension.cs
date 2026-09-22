@@ -7,7 +7,9 @@ namespace SMIS.Api.Extensions;
 
 public static class MiniProfilerExtension
 {
-    public static IServiceCollection AddMiniProfilerServices(this IServiceCollection services)
+    public static IServiceCollection AddMiniProfilerServices(
+        this IServiceCollection services
+    )
     {
         services.AddMiniProfiler(options =>
         {
@@ -16,6 +18,7 @@ public static class MiniProfilerExtension
             {
                 memoryStorage.CacheDuration = TimeSpan.FromMinutes(60);
             }
+
             options.SqlFormatter = new StackExchange.Profiling.SqlFormatters.InlineFormatter();
             options.TrackConnectionOpenClose = true;
             options.ColorScheme = ColorScheme.Auto;

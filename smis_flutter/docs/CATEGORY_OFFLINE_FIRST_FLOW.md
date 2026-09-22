@@ -35,19 +35,19 @@ normal operation without an internet connection.
 
 ## 2. Flutter terms used in this project
 
-| Term | Meaning in this application |
-| --- | --- |
-| Widget | A piece of UI, such as the Category page or edit dialog. |
-| Provider | A Riverpod registration that creates and supplies a dependency. |
-| Controller | Presentation state and actions used by the UI. |
-| Entity | The business representation of a Category. |
-| Draft | Name, code, description, and active state entered in the form. |
-| Repository | Code that saves and reads Categories in SQLite. |
-| API | Code that communicates with the SMIS HTTP API. |
-| Sync queue | Durable state stored on Category rows that records unsent work. |
-| Tombstone | A locally deleted row retained until its server deletion succeeds. |
-| Pull cursor | The latest server-change time already processed by this device. |
-| Last-write-wins | The copy with the newer UTC modification time is kept. |
+| Term            | Meaning in this application                                        |
+|-----------------|--------------------------------------------------------------------|
+| Widget          | A piece of UI, such as the Category page or edit dialog.           |
+| Provider        | A Riverpod registration that creates and supplies a dependency.    |
+| Controller      | Presentation state and actions used by the UI.                     |
+| Entity          | The business representation of a Category.                         |
+| Draft           | Name, code, description, and active state entered in the form.     |
+| Repository      | Code that saves and reads Categories in SQLite.                    |
+| API             | Code that communicates with the SMIS HTTP API.                     |
+| Sync queue      | Durable state stored on Category rows that records unsent work.    |
+| Tombstone       | A locally deleted row retained until its server deletion succeeds. |
+| Pull cursor     | The latest server-change time already processed by this device.    |
+| Last-write-wins | The copy with the newer UTC modification time is kept.             |
 
 ## 3. Project layout
 
@@ -186,15 +186,15 @@ migration adds nullable server-audit columns without deleting existing rows.
 
 ### `categories`
 
-| Column group | Purpose |
-| --- | --- |
-| `id`, `name`, `code`, `description`, `is_active`, `shop_id` | Category data |
-| `created_at`, `updated_at`, `last_modified_utc` | Client-originated UTC conflict data |
+| Column group                                                                                                       | Purpose                                        |
+|--------------------------------------------------------------------------------------------------------------------|------------------------------------------------|
+| `id`, `name`, `code`, `description`, `is_active`, `shop_id`                                                        | Category data                                  |
+| `created_at`, `updated_at`, `last_modified_utc`                                                                    | Client-originated UTC conflict data            |
 | `server_created_date`, `server_updated_date`, `server_created_by`, `server_updated_by`, `server_last_modified_utc` | Trusted server audit and incremental-pull data |
-| `is_deleted` | Hides a local tombstone from the UI |
-| `pending_operation` | `none`, `create`, `update`, or `delete` |
-| `sync_status` | UI-facing synchronization status |
-| `retry_count`, `next_retry_at`, `last_sync_error` | Durable failure/retry data |
+| `is_deleted`                                                                                                       | Hides a local tombstone from the UI            |
+| `pending_operation`                                                                                                | `none`, `create`, `update`, or `delete`        |
+| `sync_status`                                                                                                      | UI-facing synchronization status               |
+| `retry_count`, `next_retry_at`, `last_sync_error`                                                                  | Durable failure/retry data                     |
 
 ### `sync_metadata`
 
@@ -342,14 +342,14 @@ Eligible pending records are processed oldest first. Before changing the
 server, the service calls `GET /api/Category/{id}` so it can compare the latest
 server timestamp again.
 
-| Local operation | Server state | Action |
-| --- | --- | --- |
-| Create/update | Missing | `POST` with the client UUID and local timestamps |
-| Create/update | Older than local | `PUT` the local version |
-| Create/update | Newer/equal | Apply server version locally |
-| Delete | Missing | Remove the local tombstone |
-| Delete | Older than local | Send `DELETE`, then remove tombstone |
-| Delete | Newer/equal | Restore/apply the server version locally |
+| Local operation | Server state     | Action                                           |
+|-----------------|------------------|--------------------------------------------------|
+| Create/update   | Missing          | `POST` with the client UUID and local timestamps |
+| Create/update   | Older than local | `PUT` the local version                          |
+| Create/update   | Newer/equal      | Apply server version locally                     |
+| Delete          | Missing          | Remove the local tombstone                       |
+| Delete          | Older than local | Send `DELETE`, then remove tombstone             |
+| Delete          | Newer/equal      | Restore/apply the server version locally         |
 
 ### Phase E: publish the result
 
@@ -381,10 +381,10 @@ environments where device clocks cannot be trusted.
 
 The Category API separates failures into two categories:
 
-| Type | Examples | Behavior |
-| --- | --- | --- |
-| Transient | timeout, connection loss, HTTP 408/429/5xx | Save failure and retry later; stop the current push loop to avoid repeated failing calls. |
-| Permanent | validation, authentication, most other 4xx responses | Save the error and continue with other records when possible. |
+| Type      | Examples                                             | Behavior                                                                                  |
+|-----------|------------------------------------------------------|-------------------------------------------------------------------------------------------|
+| Transient | timeout, connection loss, HTTP 408/429/5xx           | Save failure and retry later; stop the current push loop to avoid repeated failing calls. |
+| Permanent | validation, authentication, most other 4xx responses | Save the error and continue with other records when possible.                             |
 
 Failed rows store the error, retry count, and next eligible time. Automatic
 delays are 1, 2, 4, 8, 16, and 32 minutes. Background selection stops picking a
@@ -431,14 +431,14 @@ The implementation was derived from
 [`CategoryController.cs`](../../SMIS.Api/Controllers/CategoryController.cs) and
 the DTOs under `SMIS.Application/DTO/Categories`.
 
-| Method | Endpoint | Flutter use |
-| --- | --- | --- |
-| `POST` | `/api/Category/sync` | Push a local create with client metadata |
-| `GET` | `/api/Category` | Available but not used for incremental sync |
-| `GET` | `/api/Category/{id}` | Read the current server conflict version before push |
-| `PUT` | `/api/Category/{id}/sync` | Push a newer local update with client metadata |
-| `DELETE` | `/api/Category/{id}/sync` | Push a local tombstone with client metadata |
-| `GET` | `/api/Category/pull?changedSince=...` | Pull incremental updates/deletions |
+| Method   | Endpoint                              | Flutter use                                          |
+|----------|---------------------------------------|------------------------------------------------------|
+| `POST`   | `/api/Category/sync`                  | Push a local create with client metadata             |
+| `GET`    | `/api/Category`                       | Available but not used for incremental sync          |
+| `GET`    | `/api/Category/{id}`                  | Read the current server conflict version before push |
+| `PUT`    | `/api/Category/{id}/sync`             | Push a newer local update with client metadata       |
+| `DELETE` | `/api/Category/{id}/sync`             | Push a local tombstone with client metadata          |
+| `GET`    | `/api/Category/pull?changedSince=...` | Pull incremental updates/deletions                   |
 
 The backend derives `ShopId` from the authenticated user. Flutter does not let
 the Category form choose or send a shop ID.

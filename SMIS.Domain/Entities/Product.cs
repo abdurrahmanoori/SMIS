@@ -180,7 +180,10 @@ public class Product : BaseSyncableAuditableEntity, IEntity, IShopEntity
     public void Activate() => IsActive = true;
     public void Deactivate() => IsActive = false;
 
-    public void SetReorderPolicy(decimal reorderPointBase, decimal reorderQuantityBase)
+    public void SetReorderPolicy(
+        decimal reorderPointBase,
+        decimal reorderQuantityBase
+    )
     {
         if (reorderPointBase < 0)
             throw new DomainValidationException("Reorder point cannot be negative");

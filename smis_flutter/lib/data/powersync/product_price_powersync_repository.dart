@@ -65,9 +65,7 @@ class ProductPricePowerSyncRepository extends PowerSyncRepositorySupport {
     }
 
     final rows = await db.getAll(sql, args);
-    return rows
-        .map((row) => _toProductPrice(row, pending[row['id']]))
-        .toList();
+    return rows.map((row) => _toProductPrice(row, pending[row['id']])).toList();
   }
 
   Future<int> getTotalCount(String shopId, {String? searchQuery}) async {
@@ -156,8 +154,9 @@ class ProductPricePowerSyncRepository extends PowerSyncRepositorySupport {
       );
     }
 
-    final currentEffectiveDate =
-        DateTime.parse(current['effective_date']! as String).toUtc();
+    final currentEffectiveDate = DateTime.parse(
+      current['effective_date']! as String,
+    ).toUtc();
     if (!normalized.effectiveDate.isAfter(currentEffectiveDate)) {
       throw const LocalStorageException(
         'A new price must become effective after the latest price for this product unit.',
@@ -169,7 +168,9 @@ class ProductPricePowerSyncRepository extends PowerSyncRepositorySupport {
 
   Future<void> delete(String id) async {
     final db = await database;
-    if (await db.getOptional('SELECT id FROM product_price WHERE id = ?', [id]) ==
+    if (await db.getOptional('SELECT id FROM product_price WHERE id = ?', [
+          id,
+        ]) ==
         null) {
       return;
     }
@@ -210,8 +211,9 @@ class ProductPricePowerSyncRepository extends PowerSyncRepositorySupport {
     );
     if (latest == null) return;
 
-    final latestEffectiveDate =
-        DateTime.parse(latest['effective_date']! as String).toUtc();
+    final latestEffectiveDate = DateTime.parse(
+      latest['effective_date']! as String,
+    ).toUtc();
     if (!effectiveDate.isAfter(latestEffectiveDate)) {
       throw const LocalStorageException(
         'A new price must become effective after the latest price for this product unit.',
@@ -233,10 +235,7 @@ class ProductPricePowerSyncRepository extends PowerSyncRepositorySupport {
     return _toProductPrice(row, pending[id]);
   }
 
-  ProductPrice _toProductPrice(
-    Map<String, Object?> row,
-    String? operation,
-  ) {
+  ProductPrice _toProductPrice(Map<String, Object?> row, String? operation) {
     return ProductPrice(
       id: row['id']! as String,
       productUnitId: row['product_unit_id']! as String,

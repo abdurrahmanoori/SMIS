@@ -7,7 +7,9 @@ namespace SMIS.Application.Features.TranslationKeys.Validators
 {
     public class TranslationKeyUpdateCommandValidator : AbstractValidator<TranslationKeyUpdateCommand>
     {
-        public TranslationKeyUpdateCommandValidator(IValidator<TranslationEntityCreateDto> translationEntityCreateDtoValidator)
+        public TranslationKeyUpdateCommandValidator(
+            IValidator<TranslationEntityCreateDto> translationEntityCreateDtoValidator
+        )
         {
             RuleFor(x => x.Id)
                 .NotEmpty().WithMessage("Id is required");

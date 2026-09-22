@@ -12,14 +12,20 @@ namespace SMIS.Application.Features.ShopOwners.Queries;
 
 public record ShopOwnerGetListQuery(int PageNumber = 1, int PageSize = 25) : IRequest<Result<PagedList<ShopOwnerDto>>>;
 
-internal sealed class ShopOwnerGetListQueryHandler : IRequestHandler<ShopOwnerGetListQuery, Result<PagedList<ShopOwnerDto>>>
+internal sealed class
+    ShopOwnerGetListQueryHandler : IRequestHandler<ShopOwnerGetListQuery, Result<PagedList<ShopOwnerDto>>>
 {
     private readonly IShopOwnerRepository _shopOwnerRepository;
     private readonly ITranslationKeyRepository _translationKeyRepository;
     private readonly ICurrentUser _currentUser;
     private readonly IMapper _mapper;
 
-    public ShopOwnerGetListQueryHandler(IShopOwnerRepository shopOwnerRepository, ITranslationKeyRepository translationKeyRepository, ICurrentUser currentUser, IMapper mapper)
+    public ShopOwnerGetListQueryHandler(
+        IShopOwnerRepository shopOwnerRepository,
+        ITranslationKeyRepository translationKeyRepository,
+        ICurrentUser currentUser,
+        IMapper mapper
+    )
     {
         _shopOwnerRepository = shopOwnerRepository;
         _translationKeyRepository = translationKeyRepository;
@@ -27,7 +33,10 @@ internal sealed class ShopOwnerGetListQueryHandler : IRequestHandler<ShopOwnerGe
         _mapper = mapper;
     }
 
-    public async Task<Result<PagedList<ShopOwnerDto>>> Handle(ShopOwnerGetListQuery request, CancellationToken cancellationToken)
+    public async Task<Result<PagedList<ShopOwnerDto>>> Handle(
+        ShopOwnerGetListQuery request,
+        CancellationToken cancellationToken
+    )
     {
         var query = _shopOwnerRepository.GetAllQueryable();
         var shopOwners = await query.ToPagedList(request.PageNumber, request.PageSize);

@@ -27,7 +27,8 @@ public sealed class PurchaseOrder : BaseAuditableEntity, IShopEntity
         string supplierId,
         DateTime orderedAtUtc,
         string? referenceNumber = null,
-        string? notes = null)
+        string? notes = null
+    )
     {
         if (string.IsNullOrWhiteSpace(shopId))
             throw new DomainValidationException("Shop ID cannot be empty");
@@ -97,7 +98,8 @@ public sealed class PurchaseOrderLine : BaseAuditableEntity
         string productId,
         string productUnitId,
         decimal orderedQuantityEntered,
-        long unitCostBase)
+        long unitCostBase
+    )
     {
         if (string.IsNullOrWhiteSpace(purchaseOrderId))
             throw new DomainValidationException("Purchase order ID cannot be empty");
@@ -123,18 +125,23 @@ public sealed class PurchaseOrderLine : BaseAuditableEntity
     public decimal RemainingToReceiveQuantityEntered => OrderedQuantityEntered - ReceivedQuantityEntered;
     public decimal NetReceivedQuantityEntered => ReceivedQuantityEntered - ReturnedQuantityEntered;
 
-    public void RegisterReceipt(decimal quantityEntered)
+    public void RegisterReceipt(
+        decimal quantityEntered
+    )
     {
         if (quantityEntered <= 0)
             throw new DomainValidationException("Received quantity must be greater than zero");
         if (quantityEntered > RemainingToReceiveQuantityEntered)
-            throw new DomainValidationException("Received quantity cannot exceed the remaining purchase-order quantity");
+            throw new DomainValidationException(
+                "Received quantity cannot exceed the remaining purchase-order quantity");
 
         ReceivedQuantityEntered += quantityEntered;
         Version++;
     }
 
-    public void RegisterSupplierReturn(decimal quantityEntered)
+    public void RegisterSupplierReturn(
+        decimal quantityEntered
+    )
     {
         if (quantityEntered <= 0)
             throw new DomainValidationException("Supplier-return quantity must be greater than zero");

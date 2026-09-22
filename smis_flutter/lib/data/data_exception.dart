@@ -63,7 +63,11 @@ class ShopInUseException extends ValidationException {
 }
 
 class ApiErrorParser {
-  static Never mapAndThrow(Object error, StackTrace stackTrace, {String? fallbackMessage}) {
+  static Never mapAndThrow(
+    Object error,
+    StackTrace stackTrace, {
+    String? fallbackMessage,
+  }) {
     if (error is AppException) {
       Error.throwWithStackTrace(error, stackTrace);
     }
@@ -105,7 +109,7 @@ class ApiErrorParser {
     final mapped = isTransient
         ? RemoteTransientException(message, cause: error)
         : RemotePermanentException(message, cause: error);
-    
+
     Error.throwWithStackTrace(mapped, stackTrace);
   }
 
@@ -118,7 +122,7 @@ class ApiErrorParser {
 
       final message = data['message'] ?? data['Message'] ?? data['title'];
       if (message is String && message.trim().isNotEmpty) return message;
-      
+
       final description = data['description'] ?? data['Description'];
       if (description is String && description.trim().isNotEmpty) {
         return description;
@@ -137,7 +141,10 @@ class ApiErrorParser {
     }
     if (value is Map) {
       final directMessage =
-          value['message'] ?? value['Message'] ?? value['description'] ?? value['Description'];
+          value['message'] ??
+          value['Message'] ??
+          value['description'] ??
+          value['Description'];
       if (directMessage is String && directMessage.trim().isNotEmpty) {
         return directMessage;
       }
@@ -151,7 +158,11 @@ class ApiErrorParser {
 }
 
 class AppErrorNotification {
-  static void show(BuildContext context, Object error, [StackTrace? stackTrace]) {
+  static void show(
+    BuildContext context,
+    Object error, [
+    StackTrace? stackTrace,
+  ]) {
     final colors = Theme.of(context).colorScheme;
     final rawMessage = error is AppException ? error.message : error.toString();
     late final String message;
@@ -177,7 +188,7 @@ class AppErrorNotification {
     } else {
       message = context.l10n.errorMessage(rawMessage);
     }
-    
+
     final content = Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,

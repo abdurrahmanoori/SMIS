@@ -7,7 +7,9 @@ namespace SMIS.Infrastructure.Server.Repositories.ShopOwners
 {
     public class ShopOwnerRepository : GenericRepository<ShopOwner>, IShopOwnerRepository
     {
-        public ShopOwnerRepository(AppDbContext context) : base(context)
+        public ShopOwnerRepository(
+            AppDbContext context
+        ) : base(context)
         {
         }
     }

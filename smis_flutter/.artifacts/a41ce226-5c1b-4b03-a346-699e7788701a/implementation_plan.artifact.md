@@ -1,23 +1,27 @@
 # Implement Multiple Account Switching
 
-Support multiple account login and switching, allowing users to switch between saved sessions without re-entering credentials.
+Support multiple account login and switching, allowing users to switch between saved sessions without re-entering
+credentials.
 
 ## Proposed Changes
 
 ### [Authentication Service]
 
 #### [MODIFY] [auth_session_store.dart](file:///E:/Repo/SMIS/smis_flutter/lib/services/auth_session_store.dart)
+
 - Update `AuthSessionStore` interface to include:
     - `getAllSavedSessions()`: Retrieves all previously logged-in sessions.
     - `removeSession(String userId)`: Deletes a specific session.
     - `activateSession(String userId)`: Sets a saved session as the active one.
 - Update `SecureAuthSessionStore` to persist the list of saved sessions using a new storage key.
 - Update `save()` to automatically add/update the session in the saved list.
-- Update `clear()` to only clear the active session, renamed to `clearActiveSession()` (or kept as `clear()` for logout, while keeping saved ones).
+- Update `clear()` to only clear the active session, renamed to `clearActiveSession()` (or kept as `clear()` for logout,
+  while keeping saved ones).
 
 ### [Authentication Controller]
 
 #### [MODIFY] [auth_controller.dart](file:///E:/Repo/SMIS/smis_flutter/lib/controllers/auth_controller.dart)
+
 - Update `AuthState` to include `savedSessions`.
 - Update `AuthController` to:
     - Load saved sessions on initialization.
@@ -29,6 +33,7 @@ Support multiple account login and switching, allowing users to switch between s
 ## Verification Plan
 
 ### Manual Verification
+
 - Log in with Account A -> Verify it's saved.
 - Log in with Account B -> Verify it's saved.
 - Switch back to Account A -> Verify Account A is active without password prompt.

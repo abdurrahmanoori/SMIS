@@ -64,7 +64,11 @@ public class Sale : BaseAuditableEntityWithoutName, IShopEntity
 
     public long NetAmount => TotalAmount - ReturnedAmount;
 
-    public void RegisterReturn(long amount, bool allLinesReturned, bool markVoided = false)
+    public void RegisterReturn(
+        long amount,
+        bool allLinesReturned,
+        bool markVoided = false
+    )
     {
         if (amount < 0)
             throw new DomainValidationException("Returned sale amount cannot be negative");

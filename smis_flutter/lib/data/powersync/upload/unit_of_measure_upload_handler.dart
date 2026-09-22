@@ -28,10 +28,7 @@ class UnitOfMeasureUploadHandler implements PowerSyncUploadHandler {
   Future<void> update(String id, Map<String, dynamic> row) async {
     await _dio.put<void>(
       '${AppConfig.unitOfMeasureEndpoint}/$id/sync',
-      data: {
-        ..._payload(row),
-        'clientModifiedDate': _timestamp(row),
-      },
+      data: {..._payload(row), 'clientModifiedDate': _timestamp(row)},
     );
   }
 
@@ -43,12 +40,11 @@ class UnitOfMeasureUploadHandler implements PowerSyncUploadHandler {
     );
   }
 
-  Map<String, Object?> _payload(Map<String, dynamic> row) =>
-      {
-        'name': row['name'] as String,
-        'symbol': row['symbol'] as String?,
-        'description': row['description'] as String?,
-      };
+  Map<String, Object?> _payload(Map<String, dynamic> row) => {
+    'name': row['name'] as String,
+    'symbol': row['symbol'] as String?,
+    'description': row['description'] as String?,
+  };
 
   String _timestamp(Map<String, dynamic> row) =>
       row['last_modified_utc'] as String;

@@ -18,6 +18,5 @@ namespace SMIS.Application.Common
         public string? DeletedBy { get; set; }
 
         public bool IsDeleted { get; set; }
-
     }
 }

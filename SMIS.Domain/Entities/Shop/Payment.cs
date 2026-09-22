@@ -1,4 +1,3 @@
-
 //using SMIS.Domain.Common.BaseAbstract;
 //using SMIS.Domain.Enums;
 
@@ -8,7 +7,7 @@
 //    {
 //        public string PaymentNumber { get; set; }
 //        public TransactionType PaymentType { get; set; }
-        
+
 //        // Only ONE of these should be set - enforced by business logic
 //        public int? InvoiceId { get; set; }
 //        public int? CustomerCreditAccountId { get; set; }
@@ -25,3 +24,4 @@
 //        public virtual ShopCreditAccount ShopCreditAccount { get; set; }
 //    }
 //}
+

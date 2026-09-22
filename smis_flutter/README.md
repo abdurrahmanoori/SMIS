@@ -34,13 +34,13 @@ database and a fake Category API.
 The implementation follows `SMIS.Api/Controllers/CategoryController.cs` and the
 Category DTOs in `SMIS.Application`:
 
-| Operation | Endpoint |
-| --- | --- |
-| Create | `POST /api/Category` |
-| List | `GET /api/Category` |
-| Read | `GET /api/Category/{id}` |
-| Update | `PUT /api/Category/{id}` |
-| Delete | `DELETE /api/Category/{id}` |
+| Operation        | Endpoint                                    |
+|------------------|---------------------------------------------|
+| Create           | `POST /api/Category`                        |
+| List             | `GET /api/Category`                         |
+| Read             | `GET /api/Category/{id}`                    |
+| Update           | `PUT /api/Category/{id}`                    |
+| Delete           | `DELETE /api/Category/{id}`                 |
 | Incremental pull | `GET /api/Category/pull?changedSince={utc}` |
 
 Client-generated UUIDs, `CreatedDate`, `UpdatedDate`, and `LastModifiedUtc` are

@@ -49,6 +49,7 @@ class AuthState {
 
 class AuthController extends Notifier<AuthState> {
   AuthApi get _api => ref.read(authApiProvider);
+
   AuthSessionStore get _sessionStore => ref.read(authSessionStoreProvider);
 
   @override

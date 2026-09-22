@@ -12,13 +12,19 @@ namespace SMIS.Application.Features.Shops.Commands
         private readonly IShopRepository _shopRepository;
         private readonly IUnitOfWork _unitOfWork;
 
-        public ShopDeleteCommandHandler(IUnitOfWork unitOfWork, IShopRepository shopRepository)
+        public ShopDeleteCommandHandler(
+            IUnitOfWork unitOfWork,
+            IShopRepository shopRepository
+        )
         {
             _unitOfWork = unitOfWork;
             _shopRepository = shopRepository;
         }
 
-        public async Task<Result<Unit>> Handle(ShopDeleteCommand request, CancellationToken cancellationToken)
+        public async Task<Result<Unit>> Handle(
+            ShopDeleteCommand request,
+            CancellationToken cancellationToken
+        )
         {
             var entity = await _shopRepository.GetByIdAsync(request.Id);
             if (entity == null)

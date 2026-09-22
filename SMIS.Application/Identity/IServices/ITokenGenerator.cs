@@ -15,5 +15,6 @@ public interface ITokenGenerator
     string Generate(
         ApplicationUser user,
         IList<string> roles,
-        string? shopIdOverride = null);
+        string? shopIdOverride = null
+    );
 }

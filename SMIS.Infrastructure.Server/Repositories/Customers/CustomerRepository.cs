@@ -8,13 +8,16 @@ namespace SMIS.Infrastructure.Server.Repositories.Customers
 {
     public class CustomerRepository : GenericRepository<Customer>, ICustomerRepository
     {
-        public CustomerRepository(AppDbContext context) : base(context)
+        public CustomerRepository(
+            AppDbContext context
+        ) : base(context)
         {
         }
 
         public Task<Customer?> GetByIdIncludingDeletedAsync(
             string id,
-            CancellationToken cancellationToken = default)
+            CancellationToken cancellationToken = default
+        )
         {
             return _context.Customers
                 .IgnoreQueryFilters()

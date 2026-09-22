@@ -14,13 +14,17 @@ namespace SMIS.Application.Features.Identity.Users.Commands
 
         public UserAssignRolesCommandHandler(
             UserManager<ApplicationUser> userManager,
-            RoleManager<ApplicationRole> roleManager)
+            RoleManager<ApplicationRole> roleManager
+        )
         {
             _userManager = userManager;
             _roleManager = roleManager;
         }
 
-        public async Task<Result<Unit>> Handle(UserAssignRolesCommand request, CancellationToken cancellationToken)
+        public async Task<Result<Unit>> Handle(
+            UserAssignRolesCommand request,
+            CancellationToken cancellationToken
+        )
         {
             var user = await _userManager.FindByIdAsync(request.UserId);
             if (user == null) return Result<Unit>.NotFoundResult(request.UserId);
@@ -33,7 +37,8 @@ namespace SMIS.Application.Features.Identity.Users.Commands
             {
                 var removeResult = await _userManager.RemoveFromRolesAsync(user, toRemove);
                 if (!removeResult.Succeeded)
-                    return Result<Unit>.WithErrors(removeResult.Errors.Select(e => new ValidationError { Code = e.Code, Description = e.Description }).ToList());
+                    return Result<Unit>.WithErrors(removeResult.Errors.Select(e => new ValidationError
+                        { Code = e.Code, Description = e.Description }).ToList());
             }
 
             if (toAdd.Length > 0)
@@ -44,12 +49,15 @@ namespace SMIS.Application.Features.Identity.Users.Commands
                     {
                         var createRoleResult = await _roleManager.CreateAsync(new ApplicationRole { Name = role });
                         if (!createRoleResult.Succeeded)
-                            return Result<Unit>.WithErrors(createRoleResult.Errors.Select(e => new ValidationError { Code = e.Code, Description = e.Description }).ToList());
+                            return Result<Unit>.WithErrors(createRoleResult.Errors.Select(e => new ValidationError
+                                { Code = e.Code, Description = e.Description }).ToList());
                     }
                 }
+
                 var addResult = await _userManager.AddToRolesAsync(user, toAdd);
                 if (!addResult.Succeeded)
-                    return Result<Unit>.WithErrors(addResult.Errors.Select(e => new ValidationError { Code = e.Code, Description = e.Description }).ToList());
+                    return Result<Unit>.WithErrors(addResult.Errors.Select(e => new ValidationError
+                        { Code = e.Code, Description = e.Description }).ToList());
             }
 
             return Result<Unit>.SuccessResult(Unit.Value, "Roles assigned successfully");

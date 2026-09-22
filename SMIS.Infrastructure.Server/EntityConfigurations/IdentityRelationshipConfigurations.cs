@@ -7,7 +7,9 @@ namespace SMIS.Infrastructure.Server.EntityConfigurations;
 
 public sealed class IdentityRoleClaimConfiguration : IEntityTypeConfiguration<IdentityRoleClaim<string>>
 {
-    public void Configure(EntityTypeBuilder<IdentityRoleClaim<string>> builder)
+    public void Configure(
+        EntityTypeBuilder<IdentityRoleClaim<string>> builder
+    )
     {
         builder.HasOne<ApplicationRole>()
             .WithMany()
@@ -18,7 +20,9 @@ public sealed class IdentityRoleClaimConfiguration : IEntityTypeConfiguration<Id
 
 public sealed class IdentityUserClaimConfiguration : IEntityTypeConfiguration<IdentityUserClaim<string>>
 {
-    public void Configure(EntityTypeBuilder<IdentityUserClaim<string>> builder)
+    public void Configure(
+        EntityTypeBuilder<IdentityUserClaim<string>> builder
+    )
     {
         builder.HasOne<ApplicationUser>()
             .WithMany()
@@ -29,7 +33,9 @@ public sealed class IdentityUserClaimConfiguration : IEntityTypeConfiguration<Id
 
 public sealed class IdentityUserLoginConfiguration : IEntityTypeConfiguration<IdentityUserLogin<string>>
 {
-    public void Configure(EntityTypeBuilder<IdentityUserLogin<string>> builder)
+    public void Configure(
+        EntityTypeBuilder<IdentityUserLogin<string>> builder
+    )
     {
         builder.HasOne<ApplicationUser>()
             .WithMany()
@@ -40,7 +46,9 @@ public sealed class IdentityUserLoginConfiguration : IEntityTypeConfiguration<Id
 
 public sealed class IdentityUserTokenConfiguration : IEntityTypeConfiguration<IdentityUserToken<string>>
 {
-    public void Configure(EntityTypeBuilder<IdentityUserToken<string>> builder)
+    public void Configure(
+        EntityTypeBuilder<IdentityUserToken<string>> builder
+    )
     {
         builder.HasOne<ApplicationUser>()
             .WithMany()

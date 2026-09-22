@@ -20,7 +20,11 @@ public sealed class StockCountSession : BaseAuditableEntity, IShopEntity
     {
     }
 
-    public static StockCountSession Create(string shopId, DateTime startedAtUtc, string? notes = null)
+    public static StockCountSession Create(
+        string shopId,
+        DateTime startedAtUtc,
+        string? notes = null
+    )
     {
         if (string.IsNullOrWhiteSpace(shopId))
             throw new DomainValidationException("Shop ID cannot be empty");
@@ -37,7 +41,9 @@ public sealed class StockCountSession : BaseAuditableEntity, IShopEntity
         };
     }
 
-    public void Complete(DateTime completedAtUtc)
+    public void Complete(
+        DateTime completedAtUtc
+    )
     {
         if (Status != StockCountStatus.Draft)
             throw new DomainValidationException("Only a draft stock count can be completed");
@@ -81,7 +87,8 @@ public sealed class StockCountLine : BaseAuditableEntity
     public static StockCountLine Create(
         string stockCountSessionId,
         string stockBatchId,
-        decimal expectedQuantityBase)
+        decimal expectedQuantityBase
+    )
     {
         if (string.IsNullOrWhiteSpace(stockCountSessionId))
             throw new DomainValidationException("Stock count session ID cannot be empty");
@@ -98,7 +105,9 @@ public sealed class StockCountLine : BaseAuditableEntity
         };
     }
 
-    public void RecordCount(decimal countedQuantityBase)
+    public void RecordCount(
+        decimal countedQuantityBase
+    )
     {
         if (countedQuantityBase < 0)
             throw new DomainValidationException("Counted stock quantity cannot be negative");

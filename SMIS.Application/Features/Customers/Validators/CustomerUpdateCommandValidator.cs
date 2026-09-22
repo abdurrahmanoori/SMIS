@@ -45,8 +45,6 @@ namespace SMIS.Application.Features.Customers.Validators
                 .MaximumLength(20).WithMessage("Tax number must not exceed 20 characters")
                 .Matches(@"^[A-Z0-9\\-]+$").WithMessage("Tax number can only contain letters, numbers, and hyphens")
                 .When(x => !string.IsNullOrEmpty(x.CustomerCreateDto.TaxNumber));
-
-
         }
     }
 }

@@ -121,7 +121,9 @@ class ProductLocalRecord {
     syncStatus: syncStatus ?? this.syncStatus,
     retryCount: retryCount ?? this.retryCount,
     nextRetryAt: clearNextRetryAt ? null : nextRetryAt ?? this.nextRetryAt,
-    lastSyncError: clearLastSyncError ? null : lastSyncError ?? this.lastSyncError,
+    lastSyncError: clearLastSyncError
+        ? null
+        : lastSyncError ?? this.lastSyncError,
     serverCreatedDate: serverCreatedDate ?? this.serverCreatedDate,
     serverUpdatedDate: serverUpdatedDate ?? this.serverUpdatedDate,
     serverCreatedBy: serverCreatedBy ?? this.serverCreatedBy,
@@ -153,35 +155,44 @@ class ProductLocalRecord {
     'server_updated_date': serverUpdatedDate?.toUtc().toIso8601String(),
     'server_created_by': serverCreatedBy,
     'server_updated_by': serverUpdatedBy,
-    'server_last_modified_utc': serverLastModifiedUtc?.toUtc().toIso8601String(),
+    'server_last_modified_utc': serverLastModifiedUtc
+        ?.toUtc()
+        .toIso8601String(),
   };
 
-  factory ProductLocalRecord.fromMap(Map<String, Object?> map) => ProductLocalRecord(
-    id: map['id']! as String,
-    name: map['name']! as String,
-    baseUnitId: map['base_unit_id']! as String,
-    sku: map['sku'] as String?,
-    description: map['description'] as String?,
-    isActive: map['is_active'] == 1,
-    barcode: map['barcode'] as String?,
-    imageUrl: map['image_url'] as String?,
-    categoryId: map['category_id']! as String,
-    shopId: map['shop_id'] as String?,
-    createdAt: DateTime.parse(map['created_at']! as String).toUtc(),
-    updatedAt: DateTime.parse(map['updated_at']! as String).toUtc(),
-    lastModifiedUtc: DateTime.parse(map['last_modified_utc']! as String).toUtc(),
-    isDeleted: map['is_deleted'] == 1,
-    pendingOperation: ProductPendingOperation.values.byName(map['pending_operation']! as String),
-    syncStatus: ProductSyncStatus.values.byName(map['sync_status']! as String),
-    retryCount: map['retry_count']! as int,
-    nextRetryAt: _optionalDate(map['next_retry_at']),
-    lastSyncError: map['last_sync_error'] as String?,
-    serverCreatedDate: _optionalDate(map['server_created_date']),
-    serverUpdatedDate: _optionalDate(map['server_updated_date']),
-    serverCreatedBy: map['server_created_by'] as String?,
-    serverUpdatedBy: map['server_updated_by'] as String?,
-    serverLastModifiedUtc: _optionalDate(map['server_last_modified_utc']),
-  );
+  factory ProductLocalRecord.fromMap(Map<String, Object?> map) =>
+      ProductLocalRecord(
+        id: map['id']! as String,
+        name: map['name']! as String,
+        baseUnitId: map['base_unit_id']! as String,
+        sku: map['sku'] as String?,
+        description: map['description'] as String?,
+        isActive: map['is_active'] == 1,
+        barcode: map['barcode'] as String?,
+        imageUrl: map['image_url'] as String?,
+        categoryId: map['category_id']! as String,
+        shopId: map['shop_id'] as String?,
+        createdAt: DateTime.parse(map['created_at']! as String).toUtc(),
+        updatedAt: DateTime.parse(map['updated_at']! as String).toUtc(),
+        lastModifiedUtc: DateTime.parse(
+          map['last_modified_utc']! as String,
+        ).toUtc(),
+        isDeleted: map['is_deleted'] == 1,
+        pendingOperation: ProductPendingOperation.values.byName(
+          map['pending_operation']! as String,
+        ),
+        syncStatus: ProductSyncStatus.values.byName(
+          map['sync_status']! as String,
+        ),
+        retryCount: map['retry_count']! as int,
+        nextRetryAt: _optionalDate(map['next_retry_at']),
+        lastSyncError: map['last_sync_error'] as String?,
+        serverCreatedDate: _optionalDate(map['server_created_date']),
+        serverUpdatedDate: _optionalDate(map['server_updated_date']),
+        serverCreatedBy: map['server_created_by'] as String?,
+        serverUpdatedBy: map['server_updated_by'] as String?,
+        serverLastModifiedUtc: _optionalDate(map['server_last_modified_utc']),
+      );
 
   static DateTime? _optionalDate(Object? value) =>
       value == null ? null : DateTime.parse(value as String).toUtc();

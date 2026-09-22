@@ -14,26 +14,30 @@ namespace SMIS.Application.Features.Shops.Queries
     internal sealed class ShopPullQueryHandler : IRequestHandler<ShopPullQuery, Result<List<ShopDto>>>
     {
         private readonly IShopRepository _shopRepository;
-    private readonly IMapper _mapper;
-    private readonly ICurrentUser _currentUser;
+        private readonly IMapper _mapper;
+        private readonly ICurrentUser _currentUser;
 
-    public ShopPullQueryHandler(
-        IShopRepository shopRepository,
-        IMapper mapper,
-        ICurrentUser currentUser)
-    {
-        _shopRepository = shopRepository;
-        _mapper = mapper;
-        _currentUser = currentUser;
+        public ShopPullQueryHandler(
+            IShopRepository shopRepository,
+            IMapper mapper,
+            ICurrentUser currentUser
+        )
+        {
+            _shopRepository = shopRepository;
+            _mapper = mapper;
+            _currentUser = currentUser;
         }
 
-        public async Task<Result<List<ShopDto>>> Handle(ShopPullQuery request, CancellationToken cancellationToken)
+        public async Task<Result<List<ShopDto>>> Handle(
+            ShopPullQuery request,
+            CancellationToken cancellationToken
+        )
         {
-        var userShopId = _currentUser.GetShopId();
-        var isSuperAdmin = _currentUser.IsSuperAdmin();
-        var changedSinceUtc = DateTimeService.NormalizeUtc(request.ChangedSince);
+            var userShopId = _currentUser.GetShopId();
+            var isSuperAdmin = _currentUser.IsSuperAdmin();
+            var changedSinceUtc = DateTimeService.NormalizeUtc(request.ChangedSince);
 
-        var shops = await _shopRepository.GetAllQueryable()
+            var shops = await _shopRepository.GetAllQueryable()
                 .IgnoreQueryFilters() // Include soft-deleted records
                 .Where(e => e.LastModifiedUtc > changedSinceUtc &&
                             (isSuperAdmin || e.Id == userShopId))

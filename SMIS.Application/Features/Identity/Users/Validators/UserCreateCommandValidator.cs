@@ -9,7 +9,9 @@ namespace SMIS.Application.Features.Identity.Users.Validators
     {
         private readonly UserManager<ApplicationUser> _userManager;
 
-        public UserCreateCommandValidator(UserManager<ApplicationUser> userManager)
+        public UserCreateCommandValidator(
+            UserManager<ApplicationUser> userManager
+        )
         {
             _userManager = userManager;
             RuleFor(x => x.UserCreateDto.UserName)
@@ -45,7 +47,9 @@ namespace SMIS.Application.Features.Identity.Users.Validators
                 .When(x => !string.IsNullOrEmpty(x.UserCreateDto.PhoneNumber));
         }
 
-        private async Task<bool> BeUniqueEmail(string email)
+        private async Task<bool> BeUniqueEmail(
+            string email
+        )
         {
             var existingUser = await _userManager.FindByEmailAsync(email);
             return existingUser == null;

@@ -7,22 +7,31 @@ using SMIS.Application.Repositories.Localization;
 
 namespace SMIS.Application.Features.Translations.Commands
 {
-    public record TranslationUpdateCommand(string Id, TranslationEntityCreateDto TranslationCreateDto) : IRequest<Result<TranslationEntityDto>>;
+    public record TranslationUpdateCommand(string Id, TranslationEntityCreateDto TranslationCreateDto)
+        : IRequest<Result<TranslationEntityDto>>;
 
-    internal sealed class TranslationUpdateCommandHandler : IRequestHandler<TranslationUpdateCommand, Result<TranslationEntityDto>>
+    internal sealed class
+        TranslationUpdateCommandHandler : IRequestHandler<TranslationUpdateCommand, Result<TranslationEntityDto>>
     {
         private readonly ITranslationRepository _translationRepository;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
 
-        public TranslationUpdateCommandHandler(IUnitOfWork unitOfWork, IMapper mapper, ITranslationRepository translationRepository)
+        public TranslationUpdateCommandHandler(
+            IUnitOfWork unitOfWork,
+            IMapper mapper,
+            ITranslationRepository translationRepository
+        )
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _translationRepository = translationRepository;
         }
 
-        public async Task<Result<TranslationEntityDto>> Handle(TranslationUpdateCommand request, CancellationToken cancellationToken)
+        public async Task<Result<TranslationEntityDto>> Handle(
+            TranslationUpdateCommand request,
+            CancellationToken cancellationToken
+        )
         {
             var entity = await _translationRepository.GetByIdAsync(request.Id);
             if (entity == null)

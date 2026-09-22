@@ -18,7 +18,12 @@ namespace SMIS.Application.Features.Products.Queries
         private readonly ICurrentUser _currentUser;
         private readonly IMapper _mapper;
 
-        public ProductGetByIdQueryHandler(IProductRepository productRepository, ITranslationKeyRepository translationKeyRepository, ICurrentUser currentUser, IMapper mapper)
+        public ProductGetByIdQueryHandler(
+            IProductRepository productRepository,
+            ITranslationKeyRepository translationKeyRepository,
+            ICurrentUser currentUser,
+            IMapper mapper
+        )
         {
             _productRepository = productRepository;
             _translationKeyRepository = translationKeyRepository;
@@ -26,7 +31,10 @@ namespace SMIS.Application.Features.Products.Queries
             _mapper = mapper;
         }
 
-        public async Task<Result<ProductDto>> Handle(ProductGetByIdQuery request, CancellationToken cancellationToken)
+        public async Task<Result<ProductDto>> Handle(
+            ProductGetByIdQuery request,
+            CancellationToken cancellationToken
+        )
         {
             var dbProduct = await _productRepository.GetFirstOrDefaultAsync(
                 x => x.Id == request.Id,

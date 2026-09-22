@@ -17,16 +17,24 @@ namespace SMIS.Application.Features.Provinces.Commands
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
 
-        public ProvinceUpdateCommandHandler(IUnitOfWork unitOfWork, IProvinceRepository provinceRepository, IMapper mapper)
+        public ProvinceUpdateCommandHandler(
+            IUnitOfWork unitOfWork,
+            IProvinceRepository provinceRepository,
+            IMapper mapper
+        )
         {
             _unitOfWork = unitOfWork;
             _provinceRepository = provinceRepository;
             _mapper = mapper;
         }
 
-        public async Task<Result<ProvinceDto>> Handle(ProvinceUpdateCommand request, CancellationToken cancellationToken)
+        public async Task<Result<ProvinceDto>> Handle(
+            ProvinceUpdateCommand request,
+            CancellationToken cancellationToken
+        )
         {
-            var existing = await _provinceRepository.GetFirstOrDefaultAsync(x => x.Id == request.Id, includeProperties: nameof(Province.Translations));
+            var existing = await _provinceRepository.GetFirstOrDefaultAsync(x => x.Id == request.Id,
+                includeProperties: nameof(Province.Translations));
             if (existing is null)
             {
                 return Result<ProvinceDto>.NotFoundResult(request.Id);
@@ -57,6 +65,7 @@ namespace SMIS.Application.Features.Provinces.Commands
                 {
                     foreach (var t in defaults.Skip(1)) t.IsDefault = false;
                 }
+
                 if (defaults.Count == 0 && existing.Translations.Count > 0)
                 {
                     existing.Translations.First().IsDefault = true;
@@ -69,7 +78,8 @@ namespace SMIS.Application.Features.Provinces.Commands
                 {
                     existing.Translations = new List<ProvinceTranslation>
                     {
-                        new ProvinceTranslation { LanguageCode = "en", LanguageId = "1", IsDefault = true, Name = request.ProvinceDto.Name }
+                        new ProvinceTranslation
+                            { LanguageCode = "en", LanguageId = "1", IsDefault = true, Name = request.ProvinceDto.Name }
                     };
                 }
                 else

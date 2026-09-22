@@ -22,7 +22,8 @@ internal sealed class SwitchShopCommandHandler
         ICurrentUser currentUser,
         IShopRepository shopRepository,
         UserManager<ApplicationUser> userManager,
-        ITokenGenerator tokenGenerator)
+        ITokenGenerator tokenGenerator
+    )
     {
         _currentUser = currentUser;
         _shopRepository = shopRepository;
@@ -32,7 +33,8 @@ internal sealed class SwitchShopCommandHandler
 
     public async Task<Result<LoginResponseDto>> Handle(
         SwitchShopCommand request,
-        CancellationToken cancellationToken)
+        CancellationToken cancellationToken
+    )
     {
         if (!_currentUser.IsSuperAdmin())
         {

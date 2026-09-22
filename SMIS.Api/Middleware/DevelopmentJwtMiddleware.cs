@@ -17,14 +17,20 @@ public class DevelopmentJwtMiddleware
     private readonly IConfiguration _configuration;
     private readonly IWebHostEnvironment _environment;
 
-    public DevelopmentJwtMiddleware(RequestDelegate next, IConfiguration configuration, IWebHostEnvironment environment)
+    public DevelopmentJwtMiddleware(
+        RequestDelegate next,
+        IConfiguration configuration,
+        IWebHostEnvironment environment
+    )
     {
         _next = next;
         _configuration = configuration;
         _environment = environment;
     }
 
-    public async Task InvokeAsync(HttpContext context)
+    public async Task InvokeAsync(
+        HttpContext context
+    )
     {
         if (_environment.IsDevelopment() && !context.Request.Headers.ContainsKey("Authorization"))
         {

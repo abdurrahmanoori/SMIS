@@ -8,16 +8,22 @@ namespace SMIS.Infrastructure.Server.Repositories.ProductPrices;
 
 public class ProductPriceRepository : GenericRepository<ProductPrice>, IProductPriceRepository
 {
-    public ProductPriceRepository(AppDbContext context) : base(context)
+    public ProductPriceRepository(
+        AppDbContext context
+    ) : base(context)
     {
     }
 
-    public Task<ProductPrice?> GetByIdIncludingDeletedAsync(string id, CancellationToken cancellationToken = default) =>
+    public Task<ProductPrice?> GetByIdIncludingDeletedAsync(
+        string id,
+        CancellationToken cancellationToken = default
+    ) =>
         _context.ProductPrices.IgnoreQueryFilters().FirstOrDefaultAsync(price => price.Id == id, cancellationToken);
 
     public Task<ProductPrice?> GetLatestForProductUnitAsync(
         string productUnitId,
-        CancellationToken cancellationToken = default) =>
+        CancellationToken cancellationToken = default
+    ) =>
         _context.ProductPrices
             .Where(price => price.ProductUnitId == productUnitId)
             .OrderByDescending(price => price.EffectiveDate)

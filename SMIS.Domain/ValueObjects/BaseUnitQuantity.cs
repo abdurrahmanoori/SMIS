@@ -6,9 +6,13 @@ public sealed class BaseUnitQuantity
 {
     public decimal Value { get; }
 
-    private BaseUnitQuantity(decimal value) => Value = value;
+    private BaseUnitQuantity(
+        decimal value
+    ) => Value = value;
 
-    public static BaseUnitQuantity Create(decimal baseUnitQuantity)
+    public static BaseUnitQuantity Create(
+        decimal baseUnitQuantity
+    )
     {
         if (baseUnitQuantity <= 0)
             throw new DomainValidationException("Base unit quantity must be greater than zero");
@@ -19,6 +23,9 @@ public sealed class BaseUnitQuantity
         return new BaseUnitQuantity(baseUnitQuantity);
     }
 
-    public static implicit operator decimal(BaseUnitQuantity baseUnitQuantity) => baseUnitQuantity.Value;
+    public static implicit operator decimal(
+        BaseUnitQuantity baseUnitQuantity
+    ) => baseUnitQuantity.Value;
+
     public override string ToString() => Value.ToString();
 }

@@ -21,7 +21,13 @@ namespace SMIS.Application.Features.Customers.Commands
         private readonly IMapper _mapper;
         private readonly ICurrentUser _currentUser;
 
-        public CustomerCreateCommandHandler(IUnitOfWork unitOfWork, IMapper mapper, ICustomerRepository customerRepository, ITranslationKeyRepository translationKeyRepository, ICurrentUser currentUser)
+        public CustomerCreateCommandHandler(
+            IUnitOfWork unitOfWork,
+            IMapper mapper,
+            ICustomerRepository customerRepository,
+            ITranslationKeyRepository translationKeyRepository,
+            ICurrentUser currentUser
+        )
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
@@ -30,7 +36,10 @@ namespace SMIS.Application.Features.Customers.Commands
             _currentUser = currentUser;
         }
 
-        public async Task<Result<CustomerDto>> Handle(CustomerCreateCommand request, CancellationToken cancellationToken)
+        public async Task<Result<CustomerDto>> Handle(
+            CustomerCreateCommand request,
+            CancellationToken cancellationToken
+        )
         {
             await _translationKeyRepository.AddTranslationKeysForEntity(request.CustomerCreateDto, _unitOfWork);
 
@@ -52,7 +61,7 @@ namespace SMIS.Application.Features.Customers.Commands
                 dto.ProvinceId,
                 dto.DistrictId,
                 dto.IsActive);
-            
+
             await _customerRepository.AddAsync(entity);
             await _unitOfWork.SaveChanges(cancellationToken);
 

@@ -6,7 +6,9 @@ namespace SMIS.Infrastructure.Server.EntityConfigurations;
 
 public sealed class IdempotencyRecordConfiguration : IEntityTypeConfiguration<IdempotencyRecord>
 {
-    public void Configure(EntityTypeBuilder<IdempotencyRecord> builder)
+    public void Configure(
+        EntityTypeBuilder<IdempotencyRecord> builder
+    )
     {
         builder.ConfigureAuditUserRelationships();
         builder.ToTable(nameof(IdempotencyRecord));

@@ -15,10 +15,15 @@ public class ApplicationUserClaimsPrincipalFactory : UserClaimsPrincipalFactory<
     public ApplicationUserClaimsPrincipalFactory(
         UserManager<ApplicationUser> userManager,
         RoleManager<ApplicationRole> roleManager,
-        IOptions<IdentityOptions> options)
-        : base(userManager, roleManager, options) { }
+        IOptions<IdentityOptions> options
+    )
+        : base(userManager, roleManager, options)
+    {
+    }
 
-    protected override async Task<ClaimsIdentity> GenerateClaimsAsync(ApplicationUser user)
+    protected override async Task<ClaimsIdentity> GenerateClaimsAsync(
+        ApplicationUser user
+    )
     {
         var identity = await base.GenerateClaimsAsync(user);
 

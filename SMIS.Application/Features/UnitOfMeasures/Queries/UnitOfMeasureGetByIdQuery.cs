@@ -8,18 +8,25 @@ namespace SMIS.Application.Features.UnitOfMeasures.Queries
 {
     public record UnitOfMeasureGetByIdQuery(string Id) : IRequest<Result<UnitOfMeasureDto>>;
 
-    internal sealed class UnitOfMeasureGetByIdQueryHandler : IRequestHandler<UnitOfMeasureGetByIdQuery, Result<UnitOfMeasureDto>>
+    internal sealed class
+        UnitOfMeasureGetByIdQueryHandler : IRequestHandler<UnitOfMeasureGetByIdQuery, Result<UnitOfMeasureDto>>
     {
         private readonly IUnitOfMeasureRepository _unitOfMeasureRepository;
         private readonly IMapper _mapper;
 
-        public UnitOfMeasureGetByIdQueryHandler(IUnitOfMeasureRepository unitOfMeasureRepository, IMapper mapper)
+        public UnitOfMeasureGetByIdQueryHandler(
+            IUnitOfMeasureRepository unitOfMeasureRepository,
+            IMapper mapper
+        )
         {
             _unitOfMeasureRepository = unitOfMeasureRepository;
             _mapper = mapper;
         }
 
-        public async Task<Result<UnitOfMeasureDto>> Handle(UnitOfMeasureGetByIdQuery request, CancellationToken cancellationToken)
+        public async Task<Result<UnitOfMeasureDto>> Handle(
+            UnitOfMeasureGetByIdQuery request,
+            CancellationToken cancellationToken
+        )
         {
             var dbUnitOfMeasure = await _unitOfMeasureRepository.GetFirstOrDefaultAsync(x => x.Id == request.Id);
 

@@ -5,7 +5,11 @@ namespace SMIS.Api.Converters
 {
     public class StringEnumConverter<TEnum> : JsonConverter<TEnum> where TEnum : struct, Enum
     {
-        public override TEnum Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+        public override TEnum Read(
+            ref Utf8JsonReader reader,
+            Type typeToConvert,
+            JsonSerializerOptions options
+        )
         {
             var value = reader.GetString();
             if (string.IsNullOrEmpty(value))
@@ -14,7 +18,11 @@ namespace SMIS.Api.Converters
             return Enum.TryParse<TEnum>(value, true, out var result) ? result : default;
         }
 
-        public override void Write(Utf8JsonWriter writer, TEnum value, JsonSerializerOptions options)
+        public override void Write(
+            Utf8JsonWriter writer,
+            TEnum value,
+            JsonSerializerOptions options
+        )
         {
             writer.WriteStringValue(value.ToString());
         }

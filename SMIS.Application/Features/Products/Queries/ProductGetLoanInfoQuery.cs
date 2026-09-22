@@ -11,20 +11,25 @@ namespace SMIS.Application.Features.Products.Queries;
 
 public record ProductGetLoanInfoQuery(string ProductId) : IRequest<Result<ProductLoanInfoDto>>;
 
-internal sealed class ProductGetLoanInfoQueryHandler : IRequestHandler<ProductGetLoanInfoQuery, Result<ProductLoanInfoDto>>
+internal sealed class
+    ProductGetLoanInfoQueryHandler : IRequestHandler<ProductGetLoanInfoQuery, Result<ProductLoanInfoDto>>
 {
     private readonly IProductRepository _productRepository;
     private readonly IStockBatchRepository _stockBatchRepository;
 
     public ProductGetLoanInfoQueryHandler(
         IProductRepository productRepository,
-        IStockBatchRepository stockBatchRepository)
+        IStockBatchRepository stockBatchRepository
+    )
     {
         _productRepository = productRepository;
         _stockBatchRepository = stockBatchRepository;
     }
 
-    public async Task<Result<ProductLoanInfoDto>> Handle(ProductGetLoanInfoQuery request, CancellationToken cancellationToken)
+    public async Task<Result<ProductLoanInfoDto>> Handle(
+        ProductGetLoanInfoQuery request,
+        CancellationToken cancellationToken
+    )
     {
         var product = await _productRepository.GetFirstOrDefaultAsync(
             x => x.Id == request.ProductId,

@@ -35,10 +35,7 @@ builder.Services.AddControllers()
 builder.Services.AddFluentValidationAutoValidation();
 builder.Services.AddEndpointsApiExplorer();
 
-builder.Services.AddHttpClient("ApiClient", client =>
-{
-    client.BaseAddress = new Uri("https://localhost:7216");
-});
+builder.Services.AddHttpClient("ApiClient", client => { client.BaseAddress = new Uri("https://localhost:7216"); });
 
 builder.Services.AddReactAppCors();
 builder.Services.AddSwaggerWithJwt();
@@ -83,4 +80,6 @@ app.MapControllers();
 
 app.Run();
 
-public partial class Program { }
+public partial class Program
+{
+}

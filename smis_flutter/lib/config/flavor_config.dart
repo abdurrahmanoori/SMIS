@@ -25,5 +25,6 @@ class FlavorConfig {
   }
 
   static bool get isDevelopment => instance.flavor == Flavor.development;
+
   static bool get isProduction => instance.flavor == Flavor.production;
 }

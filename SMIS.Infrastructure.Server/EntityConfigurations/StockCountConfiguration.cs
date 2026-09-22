@@ -6,7 +6,9 @@ namespace SMIS.Infrastructure.Server.EntityConfigurations;
 
 public sealed class StockCountSessionConfiguration : IEntityTypeConfiguration<StockCountSession>
 {
-    public void Configure(EntityTypeBuilder<StockCountSession> builder)
+    public void Configure(
+        EntityTypeBuilder<StockCountSession> builder
+    )
     {
         builder.ConfigureAuditUserRelationships();
         builder.ToTable(nameof(StockCountSession));
@@ -36,7 +38,9 @@ public sealed class StockCountSessionConfiguration : IEntityTypeConfiguration<St
 
 public sealed class StockCountLineConfiguration : IEntityTypeConfiguration<StockCountLine>
 {
-    public void Configure(EntityTypeBuilder<StockCountLine> builder)
+    public void Configure(
+        EntityTypeBuilder<StockCountLine> builder
+    )
     {
         builder.ConfigureAuditUserRelationships();
         builder.ToTable(nameof(StockCountLine));

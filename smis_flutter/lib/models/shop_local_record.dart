@@ -102,8 +102,7 @@ class ShopLocalRecord {
     lastSyncError: clearLastSyncError
         ? null
         : lastSyncError ?? this.lastSyncError,
-    serverLastModifiedUtc:
-        serverLastModifiedUtc ?? this.serverLastModifiedUtc,
+    serverLastModifiedUtc: serverLastModifiedUtc ?? this.serverLastModifiedUtc,
   );
 
   Map<String, Object?> toMap() => {

@@ -16,7 +16,9 @@ public sealed class UnitOfMeasureSyncCreateCommandValidator : AbstractValidator<
             RuleFor(x => x.Dto.Description).MaximumLength(500);
             RuleFor(x => x.Dto.ClientCreatedDate).NotEmpty().Must(SyncValidationRules.BeReasonableUtcTimestamp);
             RuleFor(x => x.Dto.ClientModifiedDate).NotEmpty().Must(SyncValidationRules.BeReasonableUtcTimestamp);
-            RuleFor(x => x.Dto).Must(dto => SyncValidationRules.IsModifiedDateValid(dto.ClientCreatedDate, dto.ClientModifiedDate)).WithMessage("ClientModifiedDate cannot be earlier than ClientCreatedDate.");
+            RuleFor(x => x.Dto)
+                .Must(dto => SyncValidationRules.IsModifiedDateValid(dto.ClientCreatedDate, dto.ClientModifiedDate))
+                .WithMessage("ClientModifiedDate cannot be earlier than ClientCreatedDate.");
             RuleFor(x => x.Dto.ClientCreatedBy).MaximumLength(450);
             RuleFor(x => x.Dto.ClientModifiedBy).MaximumLength(450);
         });

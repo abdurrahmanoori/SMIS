@@ -8,10 +8,12 @@ namespace SMIS.Application.Extensions
 {
     public static class TranslationKeyExtensions
     {
-        public static async Task AddTranslationKeysForEntity<T>(this ITranslationKeyRepository repository, T entity, IUnitOfWork unitOfWork)
+        public static async Task AddTranslationKeysForEntity<T>(
+            this ITranslationKeyRepository repository,
+            T entity,
+            IUnitOfWork unitOfWork
+        )
         {
-           
-
             var properties = typeof(T).GetProperties()
                 .Where(p => p.GetCustomAttribute<TranslatableAttribute>() != null && p.PropertyType == typeof(string));
             foreach (var property in properties)

@@ -7,7 +7,9 @@ namespace SMIS.Api.Extensions
 {
     public static class SerilogExtension
     {
-        public static WebApplicationBuilder AddSerilogService(this WebApplicationBuilder builder)
+        public static WebApplicationBuilder AddSerilogService(
+            this WebApplicationBuilder builder
+        )
         {
             // DatabaseSink is wired here after the host is built so IServiceProvider is available.
             // We use a deferred sink pattern: the actual sink is created lazily on first use.

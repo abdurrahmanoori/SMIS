@@ -10,9 +10,11 @@ using SMIS.Domain.Entities;
 
 namespace SMIS.Application.Features.ProductPrices.Commands;
 
-public record ProductPriceCreateCommand(ProductPriceCreateDto ProductPriceCreateDto) : IRequest<Result<ProductPriceDto>>;
+public record ProductPriceCreateCommand(ProductPriceCreateDto ProductPriceCreateDto)
+    : IRequest<Result<ProductPriceDto>>;
 
-internal sealed class ProductPriceCreateCommandHandler : IRequestHandler<ProductPriceCreateCommand, Result<ProductPriceDto>>
+internal sealed class
+    ProductPriceCreateCommandHandler : IRequestHandler<ProductPriceCreateCommand, Result<ProductPriceDto>>
 {
     private readonly IProductPriceRepository _productPriceRepository;
     private readonly IProductUnitRepository _productUnitRepository;
@@ -25,7 +27,8 @@ internal sealed class ProductPriceCreateCommandHandler : IRequestHandler<Product
         IMapper mapper,
         IProductPriceRepository productPriceRepository,
         IProductUnitRepository productUnitRepository,
-        ICurrentUser currentUser)
+        ICurrentUser currentUser
+    )
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
@@ -34,7 +37,10 @@ internal sealed class ProductPriceCreateCommandHandler : IRequestHandler<Product
         _currentUser = currentUser;
     }
 
-    public async Task<Result<ProductPriceDto>> Handle(ProductPriceCreateCommand request, CancellationToken cancellationToken)
+    public async Task<Result<ProductPriceDto>> Handle(
+        ProductPriceCreateCommand request,
+        CancellationToken cancellationToken
+    )
     {
         var dto = request.ProductPriceCreateDto;
         var productUnit = await ProductPriceCommandRules.GetAccessibleProductUnitAsync(
@@ -68,7 +74,8 @@ internal static class ProductPriceCommandRules
     public static async Task<ProductUnit?> GetAccessibleProductUnitAsync(
         string productUnitId,
         IProductUnitRepository productUnits,
-        ICurrentUser currentUser)
+        ICurrentUser currentUser
+    )
     {
         var productUnit = await productUnits.GetFirstOrDefaultAsync(
             item => item.Id == productUnitId,
@@ -82,7 +89,8 @@ internal static class ProductPriceCommandRules
 
     public static Result<ProductPriceDto>? ValidateAndCloseLatest(
         ProductPrice? latest,
-        DateTime newEffectiveDate)
+        DateTime newEffectiveDate
+    )
     {
         if (latest is null) return null;
 

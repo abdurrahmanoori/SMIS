@@ -18,14 +18,18 @@ namespace SMIS.Application.Features.StockBatches.Queries
         public StockBatchGetByIdQueryHandler(
             IStockBatchRepository stockBatchRepository,
             IMapper mapper,
-            ICurrentUser currentUser)
+            ICurrentUser currentUser
+        )
         {
             _stockBatchRepository = stockBatchRepository;
             _mapper = mapper;
             _currentUser = currentUser;
         }
 
-        public async Task<Result<StockBatchDto>> Handle(StockBatchGetByIdQuery request, CancellationToken cancellationToken)
+        public async Task<Result<StockBatchDto>> Handle(
+            StockBatchGetByIdQuery request,
+            CancellationToken cancellationToken
+        )
         {
             var shopId = _currentUser.GetShopId();
             var entity = await _stockBatchRepository.GetFirstOrDefaultAsync(batch =>

@@ -21,8 +21,7 @@ class ProductPriceFormDialog extends StatefulWidget {
   final ProductPrice? productPrice;
 
   @override
-  State<ProductPriceFormDialog> createState() =>
-      _ProductPriceFormDialogState();
+  State<ProductPriceFormDialog> createState() => _ProductPriceFormDialogState();
 }
 
 class _ProductPriceFormDialogState extends State<ProductPriceFormDialog> {

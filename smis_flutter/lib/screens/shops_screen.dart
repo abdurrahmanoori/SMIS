@@ -17,6 +17,7 @@ import '../widgets/home_action.dart';
 
 class ShopsScreen extends ConsumerStatefulWidget {
   const ShopsScreen({super.key});
+
   @override
   ConsumerState<ShopsScreen> createState() => _ShopsScreenState();
 }
@@ -256,10 +257,12 @@ class _Content extends StatelessWidget {
     required this.onEdit,
     required this.onDelete,
   });
+
   final ShopScreenState state;
   final bool canCreate;
   final ValueChanged<Shop> onEdit;
   final ValueChanged<Shop> onDelete;
+
   @override
   Widget build(BuildContext context) => Column(
     children: [
@@ -291,9 +294,11 @@ class _ShopCard extends StatelessWidget {
     required this.onEdit,
     required this.onDelete,
   });
+
   final Shop shop;
   final VoidCallback onEdit;
   final VoidCallback onDelete;
+
   @override
   Widget build(BuildContext context) => Card(
     child: ListTile(
@@ -339,7 +344,9 @@ class _ShopCard extends StatelessWidget {
 
 class _SyncStateIcon extends StatelessWidget {
   const _SyncStateIcon({required this.shop});
+
   final Shop shop;
+
   @override
   Widget build(BuildContext context) {
     final failed = shop.syncStatus == ShopSyncStatus.failed;
@@ -405,6 +412,7 @@ class _EmptyView extends StatelessWidget {
 
 class _ShopPermissionNotice extends StatelessWidget {
   const _ShopPermissionNotice();
+
   @override
   Widget build(BuildContext context) => Padding(
     padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),

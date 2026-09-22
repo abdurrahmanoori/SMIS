@@ -6,9 +6,13 @@ public sealed class SKU
 {
     public string? Value { get; }
 
-    private SKU(string? value) => Value = value;
+    private SKU(
+        string? value
+    ) => Value = value;
 
-    public static SKU Create(string? sku)
+    public static SKU Create(
+        string? sku
+    )
     {
         //if (string.IsNullOrWhiteSpace(sku))
         //    throw new DomainValidationException("SKU cannot be empty");
@@ -21,6 +25,9 @@ public sealed class SKU
         return new SKU(cleaned);
     }
 
-    public static implicit operator string?(SKU sku) => sku?.Value;
+    public static implicit operator string?(
+        SKU sku
+    ) => sku?.Value;
+
     public override string? ToString() => Value;
 }

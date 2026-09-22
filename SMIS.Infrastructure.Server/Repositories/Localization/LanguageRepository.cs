@@ -7,7 +7,9 @@ namespace SMIS.Infrastructure.Server.Repositories.Localization
 {
     public class LanguageRepository : GenericRepository<Language>, ILanguageRepository
     {
-        public LanguageRepository(AppDbContext context) : base(context)
+        public LanguageRepository(
+            AppDbContext context
+        ) : base(context)
         {
         }
     }

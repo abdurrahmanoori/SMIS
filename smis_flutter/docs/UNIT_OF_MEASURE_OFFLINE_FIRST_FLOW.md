@@ -10,8 +10,7 @@ or when the supported background task runs.
 1. The user opens **Units of measurement** from Home or the navigation drawer.
    `lib/screens/unit_of_measures_screen.dart` reads state from
    `UnitOfMeasureController`.
-2. The add/edit dialog validates the backend limits locally: name (100), symbol
-   (20, required), and description (500).
+2. The add/edit dialog validates the backend limits locally: name (100), symbol (20, required), and description (500).
    `lib/widgets/unit_of_measure_form_dialog.dart`
 3. `UnitOfMeasureController` delegates the action to
    `UnitOfMeasureRepository`. The repository writes one record to
@@ -30,13 +29,13 @@ or when the supported background task runs.
 The implementation was matched to `SMIS.Api/Controllers/UnitOfMeasureController.cs`
 and `SMIS.Application/DTO/UnitOfMeasures/UnitOfMeasureSyncDtos.cs`.
 
-| Purpose | Route |
-| --- | --- |
-| Pull changed records | `GET /api/UnitOfMeasure/pull?changedSince=...` |
-| Read one record before pushing | `GET /api/UnitOfMeasure/{id}` |
-| Sync create | `POST /api/UnitOfMeasure/sync` |
-| Sync update | `PUT /api/UnitOfMeasure/{id}/sync` |
-| Sync delete | `DELETE /api/UnitOfMeasure/{id}/sync` |
+| Purpose                        | Route                                          |
+|--------------------------------|------------------------------------------------|
+| Pull changed records           | `GET /api/UnitOfMeasure/pull?changedSince=...` |
+| Read one record before pushing | `GET /api/UnitOfMeasure/{id}`                  |
+| Sync create                    | `POST /api/UnitOfMeasure/sync`                 |
+| Sync update                    | `PUT /api/UnitOfMeasure/{id}/sync`             |
+| Sync delete                    | `DELETE /api/UnitOfMeasure/{id}/sync`          |
 
 The regular create/update endpoints accept `shopId`, but the sync endpoints
 derive the shop from the authenticated user. Therefore the Flutter sync payload
@@ -61,14 +60,14 @@ stored locally for display/audit purposes.
 
 ## Files by responsibility
 
-| Responsibility | Files |
-| --- | --- |
-| Presentation | `screens/unit_of_measures_screen.dart`, `widgets/unit_of_measure_form_dialog.dart` |
-| State | `controllers/unit_of_measure_controller.dart` |
-| Domain/local record | `models/unit_of_measure*.dart` |
-| Local storage | `data/unit_of_measure_repository.dart`, `data/database.dart` |
-| Remote API | `data/unit_of_measure_api.dart` |
-| Synchronization | `services/unit_of_measure_sync_service.dart`, `services/background_sync.dart` |
+| Responsibility      | Files                                                                              |
+|---------------------|------------------------------------------------------------------------------------|
+| Presentation        | `screens/unit_of_measures_screen.dart`, `widgets/unit_of_measure_form_dialog.dart` |
+| State               | `controllers/unit_of_measure_controller.dart`                                      |
+| Domain/local record | `models/unit_of_measure*.dart`                                                     |
+| Local storage       | `data/unit_of_measure_repository.dart`, `data/database.dart`                       |
+| Remote API          | `data/unit_of_measure_api.dart`                                                    |
+| Synchronization     | `services/unit_of_measure_sync_service.dart`, `services/background_sync.dart`      |
 
 The database schema is version 3. Existing installations migrate additively: no
 Category data is removed or rewritten.

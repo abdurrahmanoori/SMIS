@@ -24,7 +24,9 @@ public class EntityDropdown<T>
         return (GetPageNumber() - 1) * GetPageSize();
     }
 
-    public void SetDefaultColumns(params Expression<Func<T, object?>>[] properties)
+    public void SetDefaultColumns(
+        params Expression<Func<T, object?>>[] properties
+    )
     {
         if ((Columns == null || Columns.Length == 0) && properties.Length > 0)
         {
@@ -32,7 +34,10 @@ public class EntityDropdown<T>
         }
     }
 
-    public bool PopCriteriaFor<TType>(Expression<Func<T, TType?>> property, out TType? value)
+    public bool PopCriteriaFor<TType>(
+        Expression<Func<T, TType?>> property,
+        out TType? value
+    )
     {
         var member = ExpressionHelpers.GetMember(property);
         value = (TType?)this.Criteria.GetType().GetProperty(member.Name).GetValue(this, null);
@@ -41,7 +46,10 @@ public class EntityDropdown<T>
         return true;
     }
 
-    public bool PopSelectFor<TType>(Expression<Func<T, TType?>> property, out string? value)
+    public bool PopSelectFor<TType>(
+        Expression<Func<T, TType?>> property,
+        out string? value
+    )
     {
         var member = ExpressionHelpers.GetMember(property);
         value = this.Columns?.FirstOrDefault(x => string.Equals(
@@ -55,7 +63,9 @@ public class EntityDropdown<T>
         return true;
     }
 
-    public bool HasCriteriaFor<TType>(Expression<Func<T, TType?>> property)
+    public bool HasCriteriaFor<TType>(
+        Expression<Func<T, TType?>> property
+    )
     {
         return (TType?)Criteria
             .GetType()
@@ -63,7 +73,9 @@ public class EntityDropdown<T>
             .GetValue(Criteria, null) != null;
     }
 
-    public bool HasSelectFor<TType>(Expression<Func<T, TType?>> property)
+    public bool HasSelectFor<TType>(
+        Expression<Func<T, TType?>> property
+    )
     {
         return Columns?.FirstOrDefault(x => x.Equals(
                 ExpressionHelpers.GetMember(property).Name,
@@ -72,7 +84,9 @@ public class EntityDropdown<T>
         ) != null;
     }
 
-    public bool HasCriteriaOrSelectFor<TType>(Expression<Func<T, TType?>> property)
+    public bool HasCriteriaOrSelectFor<TType>(
+        Expression<Func<T, TType?>> property
+    )
     {
         var member = ExpressionHelpers.GetMember(property);
         return (TType?)Criteria.GetType().GetProperty(member.Name).GetValue(Criteria, null) != null ||

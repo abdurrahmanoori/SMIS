@@ -12,13 +12,19 @@ namespace SMIS.Application.Features.Products.Commands
         private readonly IProductRepository _productRepository;
         private readonly IUnitOfWork _unitOfWork;
 
-        public ProductDeleteCommandHandler(IUnitOfWork unitOfWork, IProductRepository productRepository)
+        public ProductDeleteCommandHandler(
+            IUnitOfWork unitOfWork,
+            IProductRepository productRepository
+        )
         {
             _unitOfWork = unitOfWork;
             _productRepository = productRepository;
         }
 
-        public async Task<Result<Unit>> Handle(ProductDeleteCommand request, CancellationToken cancellationToken)
+        public async Task<Result<Unit>> Handle(
+            ProductDeleteCommand request,
+            CancellationToken cancellationToken
+        )
         {
             var entity = await _productRepository.GetByIdAsync(request.Id);
             if (entity == null)

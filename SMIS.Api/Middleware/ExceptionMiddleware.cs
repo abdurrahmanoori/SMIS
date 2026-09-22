@@ -10,12 +10,16 @@ namespace SMIS.Api.Middleware
     {
         private readonly RequestDelegate _next;
 
-        public ExceptionMiddleware(RequestDelegate next)
+        public ExceptionMiddleware(
+            RequestDelegate next
+        )
         {
             _next = next;
         }
 
-        public async Task InvokeAsync(HttpContext context)
+        public async Task InvokeAsync(
+            HttpContext context
+        )
         {
             try
             {
@@ -27,10 +31,13 @@ namespace SMIS.Api.Middleware
             }
         }
 
-        private static async Task HandleExceptionAsync(HttpContext context, Exception exception)
+        private static async Task HandleExceptionAsync(
+            HttpContext context,
+            Exception exception
+        )
         {
             var hostEnvironment = context.RequestServices.GetRequiredService<IHostEnvironment>();
-            
+
             var log = ExceptionLog.CreateLog(exception);
             context.Items[nameof(ExceptionLog)] = log;
 
@@ -45,9 +52,11 @@ namespace SMIS.Api.Middleware
                 DbUpdateConcurrencyException => StatusCodes.Status409Conflict,
                 DbUpdateException dbEx
                     when dbEx.InnerException?.Message.Contains("FOREIGN KEY constraint failed") == true
-                      || dbEx.InnerException?.Message.Contains("UNIQUE constraint failed") == true
-                      || dbEx.InnerException?.Message.Contains("Cannot insert duplicate key", StringComparison.OrdinalIgnoreCase) == true
-                      || dbEx.InnerException?.Message.Contains("duplicate key row", StringComparison.OrdinalIgnoreCase) == true
+                         || dbEx.InnerException?.Message.Contains("UNIQUE constraint failed") == true
+                         || dbEx.InnerException?.Message.Contains("Cannot insert duplicate key",
+                             StringComparison.OrdinalIgnoreCase) == true
+                         || dbEx.InnerException?.Message.Contains("duplicate key row",
+                             StringComparison.OrdinalIgnoreCase) == true
                     => StatusCodes.Status409Conflict,
                 _ => StatusCodes.Status500InternalServerError
             };
@@ -68,7 +77,8 @@ namespace SMIS.Api.Middleware
                         new
                         {
                             Code = "InventoryConcurrencyConflict",
-                            Description = "Inventory changed while this operation was being processed. Refresh the stock state and retry."
+                            Description =
+                                "Inventory changed while this operation was being processed. Refresh the stock state and retry."
                         }
                     }
                 }),

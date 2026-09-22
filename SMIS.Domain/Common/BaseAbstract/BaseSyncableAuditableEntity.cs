@@ -19,6 +19,7 @@ public abstract class BaseSyncableAuditableEntity : BaseAuditableEntity
     /// It participates in last-write-wins conflict comparison.
     /// </summary>
     public DateTime? ClientModifiedDate { get; private set; }
+
     public string? ClientCreatedBy { get; private set; }
     public string? ClientModifiedBy { get; private set; }
 

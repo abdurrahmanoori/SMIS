@@ -21,6 +21,7 @@ import 'unit_of_measures_screen.dart';
 
 class ProductsScreen extends ConsumerStatefulWidget {
   const ProductsScreen({super.key});
+
   @override
   ConsumerState<ProductsScreen> createState() => _ProductsScreenState();
 }
@@ -262,12 +263,14 @@ class _Content extends StatelessWidget {
     required this.onEdit,
     required this.onDelete,
   });
+
   final ProductScreenState state;
   final bool hasUnits;
   final List<UnitOfMeasure> units;
   final List<Category> categories;
   final ValueChanged<Product> onEdit;
   final ValueChanged<Product> onDelete;
+
   @override
   Widget build(BuildContext context) => Column(
     children: [
@@ -293,6 +296,7 @@ class _Content extends StatelessWidget {
       ),
     ],
   );
+
   String _unitName(String id) {
     for (final unit in units) {
       if (unit.id == id) return unit.name;
@@ -316,11 +320,13 @@ class _ProductCard extends StatelessWidget {
     required this.onEdit,
     required this.onDelete,
   });
+
   final Product product;
   final String unitName;
   final String? categoryName;
   final VoidCallback onEdit;
   final VoidCallback onDelete;
+
   @override
   Widget build(BuildContext context) => Card(
     child: ListTile(
@@ -365,7 +371,9 @@ class _ProductCard extends StatelessWidget {
 
 class _SyncStateIcon extends StatelessWidget {
   const _SyncStateIcon({required this.product});
+
   final Product product;
+
   @override
   Widget build(BuildContext context) {
     final failed = product.syncStatus == ProductSyncStatus.failed;
@@ -433,6 +441,7 @@ class _EmptyView extends StatelessWidget {
 
 class _MissingUnitNotice extends StatelessWidget {
   const _MissingUnitNotice();
+
   @override
   Widget build(BuildContext context) => Padding(
     padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),

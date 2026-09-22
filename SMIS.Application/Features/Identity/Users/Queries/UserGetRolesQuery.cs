@@ -11,12 +11,17 @@ namespace SMIS.Application.Features.Identity.Users.Queries
     {
         private readonly UserManager<ApplicationUser> _userManager;
 
-        public UserGetRolesQueryHandler(UserManager<ApplicationUser> userManager)
+        public UserGetRolesQueryHandler(
+            UserManager<ApplicationUser> userManager
+        )
         {
             _userManager = userManager;
         }
 
-        public async Task<Result<IList<string>>> Handle(UserGetRolesQuery request, CancellationToken cancellationToken)
+        public async Task<Result<IList<string>>> Handle(
+            UserGetRolesQuery request,
+            CancellationToken cancellationToken
+        )
         {
             var user = await _userManager.FindByIdAsync(request.UserId);
             if (user == null) return Result<IList<string>>.NotFoundResult(request.UserId);

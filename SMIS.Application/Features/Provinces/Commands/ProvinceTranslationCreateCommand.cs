@@ -9,21 +9,35 @@ using SMIS.Domain.Entities.LocationEntities;
 
 namespace SMIS.Application.Features.Provinces.Commands
 {
-    public record ProvinceTranslationCreateCommand(ProvinceTranslationDto Dto) : IRequest<Result<ProvinceTranslationDto>>;
+    public record ProvinceTranslationCreateCommand(ProvinceTranslationDto Dto)
+        : IRequest<Result<ProvinceTranslationDto>>;
 
-    internal sealed class ProvinceTranslationCreateCommandHandler : IRequestHandler<ProvinceTranslationCreateCommand, Result<ProvinceTranslationDto>>
+    internal sealed class
+        ProvinceTranslationCreateCommandHandler : IRequestHandler<ProvinceTranslationCreateCommand,
+        Result<ProvinceTranslationDto>>
     {
         private readonly IProvinceRepository _repo;
         private readonly IUnitOfWork _uow;
         private readonly IMapper _mapper;
         private readonly ILanguageRepository _languageRepo;
 
-        public ProvinceTranslationCreateCommandHandler(IProvinceRepository repo, IUnitOfWork uow, IMapper mapper, ILanguageRepository languageRepo)
+        public ProvinceTranslationCreateCommandHandler(
+            IProvinceRepository repo,
+            IUnitOfWork uow,
+            IMapper mapper,
+            ILanguageRepository languageRepo
+        )
         {
-            _repo = repo; _uow = uow; _mapper = mapper; _languageRepo = languageRepo;
+            _repo = repo;
+            _uow = uow;
+            _mapper = mapper;
+            _languageRepo = languageRepo;
         }
 
-        public async Task<Result<ProvinceTranslationDto>> Handle(ProvinceTranslationCreateCommand request, CancellationToken cancellationToken)
+        public async Task<Result<ProvinceTranslationDto>> Handle(
+            ProvinceTranslationCreateCommand request,
+            CancellationToken cancellationToken
+        )
         {
             var province = await _repo.GetByIdAsync(request.Dto.ProvinceId);
             if (province is null) return Result<ProvinceTranslationDto>.NotFoundResult(request.Dto.ProvinceId);
@@ -41,7 +55,8 @@ namespace SMIS.Application.Features.Provinces.Commands
                 }
                 else
                 {
-                    return Result<ProvinceTranslationDto>.FailureResult($"Language with code '{request.Dto.LanguageCode}' not found");
+                    return Result<ProvinceTranslationDto>.FailureResult(
+                        $"Language with code '{request.Dto.LanguageCode}' not found");
                 }
             }
             else if (!string.IsNullOrEmpty(request.Dto.LanguageId))
@@ -49,13 +64,16 @@ namespace SMIS.Application.Features.Provinces.Commands
                 var lang = await _languageRepo.GetByIdAsync(request.Dto.LanguageId);
                 if (lang == null)
                 {
-                    return Result<ProvinceTranslationDto>.FailureResult($"Language with ID '{request.Dto.LanguageId}' not found");
+                    return Result<ProvinceTranslationDto>.FailureResult(
+                        $"Language with ID '{request.Dto.LanguageId}' not found");
                 }
+
                 entity.LanguageId = request.Dto.LanguageId;
             }
             else
             {
-                return Result<ProvinceTranslationDto>.FailureResult("Either LanguageId or LanguageCode must be provided");
+                return Result<ProvinceTranslationDto>.FailureResult(
+                    "Either LanguageId or LanguageCode must be provided");
             }
 
             // ensure LanguageCode is copied

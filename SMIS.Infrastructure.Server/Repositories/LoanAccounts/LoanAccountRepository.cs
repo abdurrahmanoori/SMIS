@@ -7,7 +7,9 @@ namespace SMIS.Infrastructure.Server.Repositories.LoanAccounts;
 
 public class LoanAccountRepository : GenericRepository<LoanAccount>, ILoanAccountRepository
 {
-    public LoanAccountRepository(AppDbContext context) : base(context)
+    public LoanAccountRepository(
+        AppDbContext context
+    ) : base(context)
     {
     }
 }

@@ -14,6 +14,7 @@ class ShopScreenState {
     required this.pendingCount,
     this.searchQuery = '',
   });
+
   final List<Shop> shops;
   final int pendingCount;
   final String searchQuery;
@@ -59,9 +60,7 @@ class ShopController extends AsyncNotifier<ShopScreenState> {
     _refreshingFromPowerSync = true;
     try {
       final current = state.value!;
-      state = AsyncData(
-        await _load(searchQuery: current.searchQuery),
-      );
+      state = AsyncData(await _load(searchQuery: current.searchQuery));
     } catch (error, stackTrace) {
       if (kDebugMode) {
         debugPrint('Shop PowerSync refresh failed: $error\n$stackTrace');

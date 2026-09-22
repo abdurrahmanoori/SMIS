@@ -23,7 +23,8 @@ public sealed class Supplier : BaseAuditableEntity, IShopEntity
         string shopId,
         string name,
         string? phoneNumber = null,
-        string? notes = null)
+        string? notes = null
+    )
     {
         if (string.IsNullOrWhiteSpace(shopId))
             throw new DomainValidationException("Shop ID cannot be empty");
@@ -39,7 +40,12 @@ public sealed class Supplier : BaseAuditableEntity, IShopEntity
         };
     }
 
-    public void Update(string name, string? phoneNumber, string? notes, bool isActive)
+    public void Update(
+        string name,
+        string? phoneNumber,
+        string? notes,
+        bool isActive
+    )
     {
         if (string.IsNullOrWhiteSpace(name))
             throw new DomainValidationException("Supplier name cannot be empty");

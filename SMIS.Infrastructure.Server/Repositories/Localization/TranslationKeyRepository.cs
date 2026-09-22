@@ -8,7 +8,10 @@ namespace SMIS.Infrastructure.Server.Repositories.Localization
     public class TranslationKeyRepository : GenericRepository<TranslationKey>, ITranslationKeyRepository
     {
         private readonly AppDbContext _context;
-        public TranslationKeyRepository(AppDbContext context) : base(context)
+
+        public TranslationKeyRepository(
+            AppDbContext context
+        ) : base(context)
         {
             _context = context;
         }

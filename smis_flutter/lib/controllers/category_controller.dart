@@ -86,9 +86,7 @@ class CategoryController extends AsyncNotifier<CategoryScreenState> {
     _refreshingFromPowerSync = true;
     try {
       final current = state.value!;
-      state = AsyncData(
-        await _load(searchQuery: current.searchQuery),
-      );
+      state = AsyncData(await _load(searchQuery: current.searchQuery));
       ref.invalidate(categoryLookupProvider);
     } catch (error, stackTrace) {
       if (kDebugMode) {
@@ -102,9 +100,7 @@ class CategoryController extends AsyncNotifier<CategoryScreenState> {
   Future<void> reload() async {
     final previous = state.value;
     try {
-      final loaded = await _load(
-        searchQuery: previous?.searchQuery,
-      );
+      final loaded = await _load(searchQuery: previous?.searchQuery);
       state = AsyncData(loaded);
       ref.invalidate(categoryLookupProvider);
     } catch (error, stackTrace) {
@@ -185,9 +181,7 @@ class CategoryController extends AsyncNotifier<CategoryScreenState> {
     }
   }
 
-  Future<CategoryScreenState> _load({
-    String? searchQuery,
-  }) async {
+  Future<CategoryScreenState> _load({String? searchQuery}) async {
     return _readLocal(
       pageNumber: 1,
       pageSize: _pageSize,

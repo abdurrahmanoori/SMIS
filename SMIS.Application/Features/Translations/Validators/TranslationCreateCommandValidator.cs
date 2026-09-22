@@ -8,7 +8,9 @@ namespace SMIS.Application.Features.Translations.Validators
     {
         private readonly ITranslationRepository _translationRepository;
 
-        public TranslationCreateCommandValidator(ITranslationRepository translationRepository)
+        public TranslationCreateCommandValidator(
+            ITranslationRepository translationRepository
+        )
         {
             _translationRepository = translationRepository;
 
@@ -23,10 +25,10 @@ namespace SMIS.Application.Features.Translations.Validators
                 .NotEmpty().WithMessage("LanguageNo is required");
 
             RuleFor(x => x.TranslationCreateDto)
-                .MustAsync(async (dto, cancellation) => 
+                .MustAsync(async (dto, cancellation) =>
                 {
-                    var existing = await _translationRepository.GetFirstOrDefaultAsync(
-                        t => t.TranslationKeyId == dto.TranslationKeyId && t.LanguageNo == dto.LanguageNo);
+                    var existing = await _translationRepository.GetFirstOrDefaultAsync(t =>
+                        t.TranslationKeyId == dto.TranslationKeyId && t.LanguageNo == dto.LanguageNo);
                     return existing == null;
                 })
                 .WithMessage("A translation for this TranslationKey and Language combination already exists");

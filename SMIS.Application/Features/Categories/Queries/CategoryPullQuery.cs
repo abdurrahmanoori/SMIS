@@ -16,17 +16,24 @@ namespace SMIS.Application.Features.Categories.Queries
         private readonly IMapper _mapper;
         private readonly ICurrentUser _currentUser;
 
-        public CategoryPullQueryHandler(ICategoryRepository categoryRepository, IMapper mapper, ICurrentUser currentUser)
+        public CategoryPullQueryHandler(
+            ICategoryRepository categoryRepository,
+            IMapper mapper,
+            ICurrentUser currentUser
+        )
         {
             _categoryRepository = categoryRepository;
             _mapper = mapper;
             _currentUser = currentUser;
         }
 
-        public async Task<Result<List<CategoryDto>>> Handle(CategoryPullQuery request, CancellationToken cancellationToken)
+        public async Task<Result<List<CategoryDto>>> Handle(
+            CategoryPullQuery request,
+            CancellationToken cancellationToken
+        )
         {
             var shopId = _currentUser.GetShopId();
-            var changedSinceUtc =DateTimeService.NormalizeUtc(request.ChangedSince);
+            var changedSinceUtc = DateTimeService.NormalizeUtc(request.ChangedSince);
             var categories = await _categoryRepository.GetAllAsync(
                 filter: c => c.LastModifiedUtc > changedSinceUtc &&
                              c.ShopId == shopId,

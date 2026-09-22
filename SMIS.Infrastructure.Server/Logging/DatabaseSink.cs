@@ -17,12 +17,16 @@ namespace SMIS.Infrastructure.Server.Logging
     {
         private readonly IServiceProvider _serviceProvider;
 
-        public DatabaseSink(IServiceProvider serviceProvider)
+        public DatabaseSink(
+            IServiceProvider serviceProvider
+        )
         {
             _serviceProvider = serviceProvider;
         }
 
-        public async Task EmitBatchAsync(IEnumerable<LogEvent> batch)
+        public async Task EmitBatchAsync(
+            IEnumerable<LogEvent> batch
+        )
         {
             // Never hold a DbContext on the sink itself. Creating a scope here gives each
             // batch an independent scoped repository/DbContext lifetime.
@@ -35,7 +39,9 @@ namespace SMIS.Infrastructure.Server.Logging
 
         public Task OnEmptyBatchAsync() => Task.CompletedTask;
 
-        private static AppLog MapLogEvent(LogEvent logEvent)
+        private static AppLog MapLogEvent(
+            LogEvent logEvent
+        )
         {
             // Preserve structured Serilog properties as JSON so diagnostics can recover
             // request/user context without adding a database column for every property.
@@ -56,7 +62,9 @@ namespace SMIS.Infrastructure.Server.Logging
             };
         }
 
-        private static string? ExtractUserId(IReadOnlyDictionary<string, LogEventPropertyValue> properties)
+        private static string? ExtractUserId(
+            IReadOnlyDictionary<string, LogEventPropertyValue> properties
+        )
         {
             if (!properties.TryGetValue("UserId", out var userIdValue) ||
                 userIdValue is not ScalarValue { Value: string userId } ||

@@ -22,9 +22,7 @@ Future<void> main() async {
 Future<void> mainEntryPoint() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  runApp(
-    const ProviderScope(child: SmisApp()),
-  );
+  runApp(const ProviderScope(child: SmisApp()));
 }
 
 class SmisApp extends ConsumerWidget {

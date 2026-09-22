@@ -36,7 +36,8 @@ internal sealed class SaleReturnCommandHandler :
         IIdempotencyService idempotency,
         IUnitOfWork unitOfWork,
         IMapper mapper,
-        ICurrentUser currentUser)
+        ICurrentUser currentUser
+    )
     {
         _db = db;
         _inventory = inventory;
@@ -48,7 +49,8 @@ internal sealed class SaleReturnCommandHandler :
 
     public Task<Result<SaleReturnResultDto>> Handle(
         SaleReturnCommand request,
-        CancellationToken cancellationToken) =>
+        CancellationToken cancellationToken
+    ) =>
         ExecuteAsync(
             request.SaleId,
             request.Dto.Lines,
@@ -59,7 +61,8 @@ internal sealed class SaleReturnCommandHandler :
 
     public Task<Result<SaleReturnResultDto>> Handle(
         SaleVoidCommand request,
-        CancellationToken cancellationToken) =>
+        CancellationToken cancellationToken
+    ) =>
         ExecuteAsync(
             request.SaleId,
             requestedLines: null,
@@ -74,13 +77,14 @@ internal sealed class SaleReturnCommandHandler :
         DateTime occurredAtUtc,
         string? idempotencyKey,
         bool isVoid,
-        CancellationToken cancellationToken)
+        CancellationToken cancellationToken
+    )
     {
         var sale = await _db.Sales
             .Include(item => item.Lines)
-                .ThenInclude(line => line.ProductUnit)
+            .ThenInclude(line => line.ProductUnit)
             .Include(item => item.Receivable)
-                .ThenInclude(receivable => receivable!.Payments)
+            .ThenInclude(receivable => receivable!.Payments)
             .FirstOrDefaultAsync(item => item.Id == saleId, cancellationToken);
 
         if (sale is null)
@@ -117,7 +121,8 @@ internal sealed class SaleReturnCommandHandler :
                 "NothingToReturn",
                 "The sale has no remaining quantity to return.");
 
-        if (linesToReturn.Select(line => line.SaleLineId).Distinct(StringComparer.Ordinal).Count() != linesToReturn.Count)
+        if (linesToReturn.Select(line => line.SaleLineId).Distinct(StringComparer.Ordinal).Count() !=
+            linesToReturn.Count)
             return Result<SaleReturnResultDto>.FailureResult(
                 "DuplicateSaleReturnLine",
                 "A sale line can appear only once in a return request.");
@@ -228,7 +233,9 @@ internal sealed class SaleReturnCommandHandler :
         });
     }
 
-    private static Result<SaleReturnResultDto> Failure<T>(Result<T> source) => new()
+    private static Result<SaleReturnResultDto> Failure<T>(
+        Result<T> source
+    ) => new()
     {
         Success = false,
         Message = source.Message,

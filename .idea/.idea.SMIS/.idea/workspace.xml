@@ -254,7 +254,7 @@
     ]
   }
 }</component>
-  <component name="RunManager" selected="Shell Script.Run Flutter App">
+  <component name="RunManager" selected=".NET Launch Settings Profile.SMIS.Api: http">
     <configuration name="Run &amp; Debug Flutter" type="DartCommandLineRunConfigurationType" factoryName="Dart Command Line Application">
       <option name="filePath" value="$PROJECT_DIR$/smis_flutter/lib/main.dart" />
       <option name="workingDirectory" value="$PROJECT_DIR$/smis_flutter" />

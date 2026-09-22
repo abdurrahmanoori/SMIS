@@ -5,7 +5,10 @@ namespace SMIS.Application.DTO.Common.Localization
     public static class TranslationSelector
     {
         // Picks the best language code from available ones based on requested culture
-        public static string? PickLanguage(IEnumerable<string> languages, string? requested)
+        public static string? PickLanguage(
+            IEnumerable<string> languages,
+            string? requested
+        )
         {
             if (languages == null) return null;
             var langs = languages.ToList();
@@ -22,11 +25,15 @@ namespace SMIS.Application.DTO.Common.Localization
                 {
                     var culture = new CultureInfo(requested);
                     var primary = culture.TwoLetterISOLanguageName;
-                    var primaryMatch = langs.FirstOrDefault(l => string.Equals(l, primary, StringComparison.OrdinalIgnoreCase));
+                    var primaryMatch =
+                        langs.FirstOrDefault(l => string.Equals(l, primary, StringComparison.OrdinalIgnoreCase));
                     if (primaryMatch != null) return primaryMatch;
                 }
-                catch { }
+                catch
+                {
+                }
             }
+
             // Nothing matched -> return first
             return langs[0];
         }

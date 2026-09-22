@@ -66,25 +66,26 @@ class UnitOfMeasureRemoteModel {
     );
   }
 
-  static Map<String, Object?> createPayload(UnitOfMeasureLocalRecord record) => {
-    'id': record.id,
-    'name': record.name,
-    'symbol': record.symbol,
-    'description': record.description,
-    'clientCreatedDate': record.createdAt.toUtc().toIso8601String(),
-    'clientModifiedDate': record.lastModifiedUtc.toUtc().toIso8601String(),
-  };
+  static Map<String, Object?> createPayload(UnitOfMeasureLocalRecord record) =>
+      {
+        'id': record.id,
+        'name': record.name,
+        'symbol': record.symbol,
+        'description': record.description,
+        'clientCreatedDate': record.createdAt.toUtc().toIso8601String(),
+        'clientModifiedDate': record.lastModifiedUtc.toUtc().toIso8601String(),
+      };
 
-  static Map<String, Object?> updatePayload(UnitOfMeasureLocalRecord record) => {
-    'name': record.name,
-    'symbol': record.symbol,
-    'description': record.description,
-    'clientModifiedDate': record.lastModifiedUtc.toUtc().toIso8601String(),
-  };
+  static Map<String, Object?> updatePayload(UnitOfMeasureLocalRecord record) =>
+      {
+        'name': record.name,
+        'symbol': record.symbol,
+        'description': record.description,
+        'clientModifiedDate': record.lastModifiedUtc.toUtc().toIso8601String(),
+      };
 
-  static Map<String, Object?> deletePayload(UnitOfMeasureLocalRecord record) => {
-    'clientModifiedDate': record.lastModifiedUtc.toUtc().toIso8601String(),
-  };
+  static Map<String, Object?> deletePayload(UnitOfMeasureLocalRecord record) =>
+      {'clientModifiedDate': record.lastModifiedUtc.toUtc().toIso8601String()};
 
   static DateTime _requiredDate(Map<String, dynamic> json, String key) =>
       DateTime.parse(json[key] as String).toUtc();

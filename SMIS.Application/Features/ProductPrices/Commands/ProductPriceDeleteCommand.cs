@@ -20,7 +20,8 @@ internal sealed class ProductPriceDeleteCommandHandler : IRequestHandler<Product
         IUnitOfWork unitOfWork,
         IProductPriceRepository productPriceRepository,
         IProductUnitRepository productUnitRepository,
-        ICurrentUser currentUser)
+        ICurrentUser currentUser
+    )
     {
         _unitOfWork = unitOfWork;
         _productPriceRepository = productPriceRepository;
@@ -28,7 +29,10 @@ internal sealed class ProductPriceDeleteCommandHandler : IRequestHandler<Product
         _currentUser = currentUser;
     }
 
-    public async Task<Result<Unit>> Handle(ProductPriceDeleteCommand request, CancellationToken cancellationToken)
+    public async Task<Result<Unit>> Handle(
+        ProductPriceDeleteCommand request,
+        CancellationToken cancellationToken
+    )
     {
         var entity = await _productPriceRepository.GetByIdAsync(request.Id);
         if (entity == null)

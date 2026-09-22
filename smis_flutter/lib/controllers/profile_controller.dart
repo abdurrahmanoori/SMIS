@@ -45,4 +45,6 @@ final profileLanguagesProvider = FutureProvider<List<ProfileLanguage>>(
 );
 
 final profileControllerProvider =
-    AsyncNotifierProvider<ProfileController, UserProfile>(ProfileController.new);
+    AsyncNotifierProvider<ProfileController, UserProfile>(
+      ProfileController.new,
+    );

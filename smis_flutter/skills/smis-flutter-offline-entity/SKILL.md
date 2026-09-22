@@ -163,14 +163,14 @@ release it in `finally`, and allow a conservative stale-lock timeout.
 Select eligible pending rows in deterministic order. For each row, read the
 current server copy immediately before writing:
 
-| Pending operation | Decision |
-| --- | --- |
-| Create/update, server missing | Create/upsert only if the contract supports the local ID and intended operation. |
-| Create/update, local newer | Update server and merge the response locally. |
-| Create/update, server newer/equal | Apply server locally and count a resolved conflict. |
-| Delete, server missing | Remove local tombstone as acknowledged. |
-| Delete, local newer | Delete remotely, then remove local tombstone. |
-| Delete, server newer/equal | Restore/apply server locally and count a resolved conflict. |
+| Pending operation                 | Decision                                                                         |
+|-----------------------------------|----------------------------------------------------------------------------------|
+| Create/update, server missing     | Create/upsert only if the contract supports the local ID and intended operation. |
+| Create/update, local newer        | Update server and merge the response locally.                                    |
+| Create/update, server newer/equal | Apply server locally and count a resolved conflict.                              |
+| Delete, server missing            | Remove local tombstone as acknowledged.                                          |
+| Delete, local newer               | Delete remotely, then remove local tombstone.                                    |
+| Delete, server newer/equal        | Restore/apply server locally and count a resolved conflict.                      |
 
 Use the canonical server response after a successful create/update so server
 fields such as shop ID are retained. Do not mark a record synchronized before
@@ -213,6 +213,7 @@ Keep validation in the model/repository even if the form also validates for a
 better user experience.
 
 ## Verification
+
 At minimum cover:
 
 1. offline create/update/delete without any API;

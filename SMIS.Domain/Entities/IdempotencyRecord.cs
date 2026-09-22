@@ -17,7 +17,11 @@ public sealed class IdempotencyRecord : BaseAuditableEntityWithoutName
     {
     }
 
-    public static IdempotencyRecord Create(string actorId, string scope, string key)
+    public static IdempotencyRecord Create(
+        string actorId,
+        string scope,
+        string key
+    )
     {
         if (string.IsNullOrWhiteSpace(actorId))
             throw new DomainValidationException("Idempotency actor ID cannot be empty");

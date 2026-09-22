@@ -28,10 +28,7 @@ class ProductPriceUploadHandler implements PowerSyncUploadHandler {
   Future<void> update(String id, Map<String, dynamic> row) async {
     await _dio.put<void>(
       '${AppConfig.productPriceEndpoint}/$id/sync',
-      data: {
-        ..._payload(row),
-        'clientModifiedDate': _timestamp(row),
-      },
+      data: {..._payload(row), 'clientModifiedDate': _timestamp(row)},
     );
   }
 

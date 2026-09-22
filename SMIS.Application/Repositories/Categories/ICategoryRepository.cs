@@ -5,11 +5,16 @@ namespace SMIS.Application.Repositories.Categories
 {
     public interface ICategoryRepository : IGenericRepository<Category>
     {
-        Task<Category?> GetByIdIncludingDeletedAsync(string id, CancellationToken cancellationToken = default);
+        Task<Category?> GetByIdIncludingDeletedAsync(
+            string id,
+            CancellationToken cancellationToken = default
+        );
+
         Task<bool> NameExistsInShopAsync(
             string shopId,
             string name,
             string? excludeId = null,
-            CancellationToken cancellationToken = default);
+            CancellationToken cancellationToken = default
+        );
     }
 }

@@ -13,15 +13,19 @@ namespace SMIS.Api.Middleware
     {
         private readonly RequestDelegate _next;
 
-        public LogEnrichmentMiddleware(RequestDelegate next)
+        public LogEnrichmentMiddleware(
+            RequestDelegate next
+        )
         {
             _next = next;
         }
 
-        public async Task InvokeAsync(HttpContext context)
+        public async Task InvokeAsync(
+            HttpContext context
+        )
         {
             var currentUser = context.RequestServices.GetService<ICurrentUser>();
-            
+
             using (LogContext.PushProperty("ClientIP", context.Connection.RemoteIpAddress?.ToString()))
             using (LogContext.PushProperty("RequestScheme", context.Request?.Scheme))
             using (LogContext.PushProperty("RequestHost", context.Request?.Host.Value))
@@ -43,30 +47,35 @@ namespace SMIS.Api.Middleware
                             !string.IsNullOrEmpty(requestBody?.ToString()))
                         {
                             using (LogContext.PushProperty("RequestBody", FormatJson(requestBody.ToString())))
-                            { }
+                            {
+                            }
                         }
 
                         if (context.Items.TryGetValue("ResponseBody", out var responseBody) &&
                             !string.IsNullOrEmpty(responseBody?.ToString()))
                         {
                             using (LogContext.PushProperty("ResponseBody", FormatJson(responseBody.ToString())))
-                            { }
+                            {
+                            }
                         }
 
                         if (context.Items.TryGetValue(nameof(ExceptionLog), out var exceptionLog))
                         {
                             using (LogContext.PushProperty("ExceptionId", ((ExceptionLog)exceptionLog!).Id))
-                            { }
+                            {
+                            }
                         }
                     }
                 }
             }
         }
 
-        private static string? FormatJson(string? content)
+        private static string? FormatJson(
+            string? content
+        )
         {
             if (string.IsNullOrEmpty(content)) return content;
-            
+
             try
             {
                 var jsonElement = JsonSerializer.Deserialize<JsonElement>(content);
