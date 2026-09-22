@@ -7,6 +7,7 @@ import '../data_exception.dart';
 import 'upload/category_upload_handler.dart';
 import 'upload/powersync_upload_handler.dart';
 import 'upload/product_unit_upload_handler.dart';
+import 'upload/product_price_upload_handler.dart';
 import 'upload/product_upload_handler.dart';
 import 'upload/shop_upload_handler.dart';
 import 'upload/unit_of_measure_upload_handler.dart';
@@ -33,6 +34,7 @@ class AppPowerSyncWriteApi {
       UnitOfMeasureUploadHandler(_dio),
       ProductUploadHandler(_dio),
       ProductUnitUploadHandler(_dio),
+      ProductPriceUploadHandler(_dio),
     ];
     _handlers = {for (final handler in handlers) handler.table: handler};
   }

@@ -51,4 +51,11 @@ const appPowerSyncSchema = Schema([
     Column.real('base_unit_quantity'),
     Column.text('last_modified_utc'),
   ], trackPreviousValues: _trackTimestamp),
+  Table('product_price', [
+    Column.text('product_unit_id'),
+    Column.integer('sell_price'),
+    Column.text('effective_date'),
+    Column.text('end_date'),
+    Column.text('last_modified_utc'),
+  ], trackPreviousValues: _trackTimestamp),
 ]);

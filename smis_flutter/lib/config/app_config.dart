@@ -23,4 +23,5 @@ class AppConfig {
   static const shopEndpoint = '/api/Shop';
   static const productEndpoint = '/api/Product';
   static const productUnitEndpoint = '/api/ProductUnit';
+  static const productPriceEndpoint = '/api/ProductPrice';
 }

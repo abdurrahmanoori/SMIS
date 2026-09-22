@@ -5,6 +5,7 @@ import '../controllers/auth_controller.dart';
 import '../controllers/category_controller.dart';
 import '../controllers/profile_controller.dart';
 import '../controllers/product_controller.dart';
+import '../controllers/product_price_controller.dart';
 import '../controllers/product_unit_controller.dart';
 import '../controllers/shop_controller.dart';
 import '../controllers/unit_of_measure_controller.dart';
@@ -12,6 +13,7 @@ import '../screens/categories_screen.dart';
 import '../screens/authentication_gate.dart';
 import '../screens/profile_screen.dart';
 import '../screens/products_screen.dart';
+import '../screens/product_prices_screen.dart';
 import '../screens/product_units_screen.dart';
 import '../screens/shops_screen.dart';
 import '../screens/unit_of_measures_screen.dart';
@@ -35,6 +37,8 @@ class AppDrawer extends ConsumerWidget {
     final productPendingCount = productState.value?.pendingCount ?? 0;
     final productUnitState = ref.watch(productUnitControllerProvider);
     final productUnitPendingCount = productUnitState.value?.pendingCount ?? 0;
+    final productPriceState = ref.watch(productPriceControllerProvider);
+    final productPricePendingCount = productPriceState.value?.pendingCount ?? 0;
 
     if (session == null) return const SizedBox.shrink();
 
@@ -77,6 +81,21 @@ class AppDrawer extends ConsumerWidget {
               Navigator.of(context).pushReplacement(
                 MaterialPageRoute<void>(
                   builder: (context) => const ProductUnitsScreen(),
+                ),
+              );
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.price_change_outlined),
+            title: Text(l10n.text('Product prices')),
+            trailing: productPricePendingCount > 0
+                ? Badge(label: Text('$productPricePendingCount'))
+                : null,
+            onTap: () {
+              Navigator.of(context).pop();
+              Navigator.of(context).pushReplacement(
+                MaterialPageRoute<void>(
+                  builder: (context) => const ProductPricesScreen(),
                 ),
               );
             },

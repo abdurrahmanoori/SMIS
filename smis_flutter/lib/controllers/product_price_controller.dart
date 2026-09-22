@@ -3,13 +3,13 @@ import 'dart:async';
 import 'package:flutter/foundation.dart' show debugPrint, kDebugMode;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../data/powersync/product_unit_powersync_repository.dart';
-import '../models/product_unit.dart';
+import '../data/powersync/product_price_powersync_repository.dart';
+import '../models/product_price.dart';
 import 'app_dependencies.dart';
 import 'auth_controller.dart';
 
-class ProductUnitScreenState {
-  const ProductUnitScreenState({
+class ProductPriceScreenState {
+  const ProductPriceScreenState({
     required this.items,
     required this.pendingCount,
     required this.totalCount,
@@ -19,7 +19,7 @@ class ProductUnitScreenState {
     this.isLoadingMore = false,
   });
 
-  final List<ProductUnit> items;
+  final List<ProductPrice> items;
   final int pendingCount;
   final int totalCount;
   final int pageNumber;
@@ -30,15 +30,15 @@ class ProductUnitScreenState {
   int get totalPages => (totalCount / pageSize).ceil();
   bool get hasNextPage => pageNumber < totalPages;
 
-  ProductUnitScreenState copyWith({
-    List<ProductUnit>? items,
+  ProductPriceScreenState copyWith({
+    List<ProductPrice>? items,
     int? pendingCount,
     int? totalCount,
     int? pageNumber,
     int? pageSize,
     String? searchQuery,
     bool? isLoadingMore,
-  }) => ProductUnitScreenState(
+  }) => ProductPriceScreenState(
     items: items ?? this.items,
     pendingCount: pendingCount ?? this.pendingCount,
     totalCount: totalCount ?? this.totalCount,
@@ -49,14 +49,14 @@ class ProductUnitScreenState {
   );
 }
 
-class ProductUnitController extends AsyncNotifier<ProductUnitScreenState> {
+class ProductPriceController extends AsyncNotifier<ProductPriceScreenState> {
   static const _pageSize = 25;
   StreamSubscription<void>? _changesSubscription;
   bool _refreshingFromPowerSync = false;
   int _searchRequestId = 0;
 
-  ProductUnitPowerSyncRepository get _repository =>
-      ref.read(productUnitRepositoryProvider);
+  ProductPricePowerSyncRepository get _repository =>
+      ref.read(productPriceRepositoryProvider);
 
   String get _shopId {
     final session = ref.watch(
@@ -67,7 +67,7 @@ class ProductUnitController extends AsyncNotifier<ProductUnitScreenState> {
   }
 
   @override
-  Future<ProductUnitScreenState> build() async {
+  Future<ProductPriceScreenState> build() async {
     final shopId = _shopId;
     await _changesSubscription?.cancel();
     final changes = await _repository.watchChanges(shopId);
@@ -83,14 +83,10 @@ class ProductUnitController extends AsyncNotifier<ProductUnitScreenState> {
     _refreshingFromPowerSync = true;
     try {
       final current = state.value!;
-      state = AsyncData(
-        await _load(searchQuery: current.searchQuery),
-      );
+      state = AsyncData(await _load(searchQuery: current.searchQuery));
     } catch (error, stackTrace) {
       if (kDebugMode) {
-        debugPrint(
-          'Product unit PowerSync refresh failed: $error\n$stackTrace',
-        );
+        debugPrint('Product price PowerSync refresh failed: $error\n$stackTrace');
       }
     } finally {
       _refreshingFromPowerSync = false;
@@ -110,13 +106,13 @@ class ProductUnitController extends AsyncNotifier<ProductUnitScreenState> {
     state = AsyncData(loaded);
   }
 
-  Future<void> create(ProductUnitDraft draft) async {
+  Future<void> create(ProductPriceDraft draft) async {
     await _repository.create(draft, _shopId);
     await reload();
   }
 
-  Future<void> updateProductUnit(String id, ProductUnitDraft draft) async {
-    await _repository.update(id, draft, _shopId);
+  Future<void> createSuccessor(String id, ProductPriceDraft draft) async {
+    await _repository.createSuccessor(id, draft, _shopId);
     await reload();
   }
 
@@ -127,9 +123,8 @@ class ProductUnitController extends AsyncNotifier<ProductUnitScreenState> {
 
   Future<void> loadNextPage() async {
     final current = state.value;
-    if (current == null || current.isLoadingMore || !current.hasNextPage) {
-      return;
-    }
+    if (current == null || current.isLoadingMore || !current.hasNextPage) return;
+
     state = AsyncData(current.copyWith(isLoadingMore: true));
     try {
       final nextPage = current.pageNumber + 1;
@@ -150,12 +145,10 @@ class ProductUnitController extends AsyncNotifier<ProductUnitScreenState> {
     }
   }
 
-  Future<ProductUnitScreenState> _load({String? searchQuery}) => _readLocal(
-    pageNumber: 1,
-    searchQuery: searchQuery,
-  );
+  Future<ProductPriceScreenState> _load({String? searchQuery}) =>
+      _readLocal(pageNumber: 1, searchQuery: searchQuery);
 
-  Future<ProductUnitScreenState> _readLocal({
+  Future<ProductPriceScreenState> _readLocal({
     required int pageNumber,
     String? searchQuery,
   }) async {
@@ -164,7 +157,7 @@ class ProductUnitController extends AsyncNotifier<ProductUnitScreenState> {
       shopId,
       searchQuery: searchQuery,
     );
-    return ProductUnitScreenState(
+    return ProductPriceScreenState(
       items: await _repository.getAll(
         shopId,
         searchQuery: searchQuery,
@@ -180,19 +173,12 @@ class ProductUnitController extends AsyncNotifier<ProductUnitScreenState> {
   }
 }
 
-final productUnitRepositoryProvider = Provider<ProductUnitPowerSyncRepository>(
+final productPriceRepositoryProvider = Provider<ProductPricePowerSyncRepository>(
   (ref) =>
-      ProductUnitPowerSyncRepository(ref.watch(appPowerSyncDatabaseProvider)),
+      ProductPricePowerSyncRepository(ref.watch(appPowerSyncDatabaseProvider)),
 );
-final productUnitControllerProvider =
-    AsyncNotifierProvider<ProductUnitController, ProductUnitScreenState>(
-      ProductUnitController.new,
-    );
 
-final productUnitLookupProvider = FutureProvider<List<ProductUnit>>((ref) async {
-  final session = ref.watch(
-    authControllerProvider.select((state) => state.session),
-  );
-  if (session == null) return const <ProductUnit>[];
-  return ref.watch(productUnitRepositoryProvider).getAll(session.shopId);
-});
+final productPriceControllerProvider =
+    AsyncNotifierProvider<ProductPriceController, ProductPriceScreenState>(
+      ProductPriceController.new,
+    );

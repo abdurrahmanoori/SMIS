@@ -40,32 +40,26 @@ public class ProductPriceController : BaseApiController
     ) => HandleResultResponseOld(await Mediator.Send(new ProductPriceSyncCreateCommand(dto)));
 
     /// <summary>
-    /// Gets product prices in pages.
+    /// Searches product prices using flexible filters and optional returned columns.
     /// </summary>
-    /// <remarks>
-    /// Set <c>includeProduct</c> to true when related product information should be included.
-    /// </remarks>
-    [HttpGet]
-    public async Task<ActionResult<PagedList<ProductPriceDto>>> GetAll(
+    [HttpGet("query")]
+    public async Task<ActionResult<PagedListNew<ProductPriceDto>>> Query(
+        [FromQuery] ProductPriceQueryCriteria criteria,
+        [FromQuery] string[]? columns,
         [FromQuery] int pageNumber = 1,
         [FromQuery] int pageSize = 25,
-        [FromQuery] bool includeProduct = false
-    ) =>
-        HandleResultResponseOld(
-            await Mediator.Send(new ProductPriceGetListQuery(pageNumber, pageSize, includeProduct)));
-
-    /// <summary>
-    /// Gets one product price by its ID.
-    /// </summary>
-    /// <remarks>
-    /// Set <c>includeProduct</c> to true to include related product information.
-    /// </remarks>
-    [HttpGet("{id}")]
-    public async Task<ActionResult<ProductPriceDto>> GetById(
-        string id,
-        [FromQuery] bool includeProduct = false
-    ) =>
-        HandleResultResponseOld(await Mediator.Send(new ProductPriceGetByIdQuery(id, includeProduct)));
+        CancellationToken cancellationToken = default
+    )
+    {
+        return await HandleRequest(new ProductPriceQuery(
+            new EntityDropdown<ProductPriceQueryCriteria>
+            {
+                Criteria = criteria,
+                Columns = columns,
+                PageNumber = pageNumber,
+                PageSize = pageSize
+            }), cancellationToken);
+    }
 
     /// <summary>
     /// Updates an existing product price.

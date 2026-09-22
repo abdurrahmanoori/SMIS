@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../controllers/auth_controller.dart';
 import '../controllers/category_controller.dart';
 import '../controllers/product_controller.dart';
+import '../controllers/product_price_controller.dart';
 import '../controllers/product_unit_controller.dart';
 import '../controllers/shop_controller.dart';
 import '../controllers/unit_of_measure_controller.dart';
@@ -14,6 +15,7 @@ import '../widgets/theme_mode_action.dart';
 import '../l10n/app_localizations.dart';
 import 'categories_screen.dart';
 import 'profile_screen.dart';
+import 'product_prices_screen.dart';
 import 'products_screen.dart';
 import 'product_units_screen.dart';
 import 'shops_screen.dart';
@@ -36,12 +38,15 @@ class HomeScreen extends ConsumerWidget {
     final productPendingCount = productState.value?.pendingCount ?? 0;
     final productUnitState = ref.watch(productUnitControllerProvider);
     final productUnitPendingCount = productUnitState.value?.pendingCount ?? 0;
+    final productPriceState = ref.watch(productPriceControllerProvider);
+    final productPricePendingCount = productPriceState.value?.pendingCount ?? 0;
     final totalPendingCount =
         pendingCount +
         unitPendingCount +
         shopPendingCount +
         productPendingCount +
-        productUnitPendingCount;
+        productUnitPendingCount +
+        productPricePendingCount;
 
     // HomeScreen is only shown by the authentication gate after a session is
     // restored or created, but keep this defensive fallback for state changes.
@@ -174,6 +179,22 @@ class HomeScreen extends ConsumerWidget {
                             }),
                       onTap: () => _openProductUnits(context),
                     );
+                    final productPricesCard = _HomeActionCard(
+                      icon: Icons.price_change_outlined,
+                      title: l10n.text('Product prices'),
+                      description: productPricePendingCount == 0
+                          ? l10n.text('Manage local product selling prices.')
+                          : l10n.text(
+                              '{count} local changes waiting to sync.',
+                              {'count': productPricePendingCount},
+                            ),
+                      badgeLabel: productPricePendingCount == 0
+                          ? null
+                          : l10n.text('{count} pending', {
+                              'count': productPricePendingCount,
+                            }),
+                      onTap: () => _openProductPrices(context),
+                    );
                     return wideLayout
                         ? Wrap(
                             spacing: 16,
@@ -201,6 +222,10 @@ class HomeScreen extends ConsumerWidget {
                               ),
                               SizedBox(
                                 width: (constraints.maxWidth - 16) / 2,
+                                child: productPricesCard,
+                              ),
+                              SizedBox(
+                                width: (constraints.maxWidth - 16) / 2,
                                 child: profileCard,
                               ),
                             ],
@@ -216,6 +241,8 @@ class HomeScreen extends ConsumerWidget {
                               productsCard,
                               const SizedBox(height: 16),
                               productUnitsCard,
+                              const SizedBox(height: 16),
+                              productPricesCard,
                               const SizedBox(height: 16),
                               profileCard,
                             ],
@@ -267,6 +294,14 @@ class HomeScreen extends ConsumerWidget {
   void _openProductUnits(BuildContext context) {
     Navigator.of(context).push(
       MaterialPageRoute<void>(builder: (context) => const ProductUnitsScreen()),
+    );
+  }
+
+  void _openProductPrices(BuildContext context) {
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (context) => const ProductPricesScreen(),
+      ),
     );
   }
 }
