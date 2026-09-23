@@ -10,7 +10,7 @@ public static class StockBatchSeed
         ModelBuilder modelBuilder
     )
     {
-        var now = DateTimeService.NowUtc;
+        var now = SeedIds.SeedTimestampUtc;
         modelBuilder.Entity<StockBatch>().HasData(
             CreateStockBatch(SeedIds.Batch1, SeedIds.Shop1, SeedIds.ProdCocaCola, SeedIds.PU1, 100m, 40000,
                 now.AddDays(-10), "CC-001", now.AddMonths(6)),
@@ -47,9 +47,9 @@ public static class StockBatchSeed
             expirationDate);
 
         typeof(StockBatch).GetProperty(nameof(StockBatch.Id))!.SetValue(batch, id);
-        typeof(StockBatch).GetProperty(nameof(StockBatch.CreatedDate))!.SetValue(batch, DateTimeService.NowUtc);
-        typeof(StockBatch).GetProperty(nameof(StockBatch.UpdatedDate))!.SetValue(batch, DateTimeService.NowUtc);
-        typeof(StockBatch).GetProperty(nameof(StockBatch.LastModifiedUtc))!.SetValue(batch, DateTimeService.NowUtc);
+        typeof(StockBatch).GetProperty(nameof(StockBatch.CreatedDate))!.SetValue(batch, SeedIds.SeedTimestampUtc);
+        typeof(StockBatch).GetProperty(nameof(StockBatch.UpdatedDate))!.SetValue(batch, SeedIds.SeedTimestampUtc);
+        typeof(StockBatch).GetProperty(nameof(StockBatch.LastModifiedUtc))!.SetValue(batch, SeedIds.SeedTimestampUtc);
         return batch;
     }
 }

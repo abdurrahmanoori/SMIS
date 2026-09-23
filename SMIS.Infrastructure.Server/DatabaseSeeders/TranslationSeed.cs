@@ -9,7 +9,7 @@ public static class TranslationSeed
         ModelBuilder modelBuilder
     )
     {
-        modelBuilder.Entity<Translation>().HasData(
+        modelBuilder.Entity<Translation>().HasData(SeedIds.Stamp(
             new Translation
             {
                 Id = SeedIds.Trans1, Name = "Kabul Center District", TranslationKeyId = SeedIds.TKey1,
@@ -68,6 +68,6 @@ public static class TranslationSeed
                 Id = SeedIds.Trans12, Name = "پیام خوش آمدید", TranslationKeyId = SeedIds.TKey6,
                 LanguageNo = SeedIds.LangPs
             }
-        );
+        ));
     }
 }

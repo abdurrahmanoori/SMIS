@@ -32,9 +32,9 @@ public static class CategorySeed
     {
         var category = Category.Create(name, shopId, code, description, true);
         category.Id = id;
-        category.CreatedDate = DateTimeService.NowUtc;
-        category.UpdatedDate = DateTimeService.NowUtc;
-        category.LastModifiedUtc = DateTimeService.NowUtc;
+        category.CreatedDate = SeedIds.SeedTimestampUtc;
+        category.UpdatedDate = SeedIds.SeedTimestampUtc;
+        category.LastModifiedUtc = SeedIds.SeedTimestampUtc;
         return category;
 
 

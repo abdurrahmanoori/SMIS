@@ -42,12 +42,13 @@ public static class ShopOwnerSeed
         // Set ID and additional properties for seeding
         typeof(ShopOwner).GetProperty(nameof(ShopOwner.Id))!.SetValue(owner, id);
         typeof(ShopOwner).GetProperty(nameof(ShopOwner.ShopName))!.SetValue(owner, GetShopName(shopId));
+        typeof(ShopOwner).GetProperty(nameof(ShopOwner.StartDate))!.SetValue(owner, SeedIds.SeedTimestampUtc);
         owner.SetNationalIdCardNumber(nationalId);
         if (isActive) owner.Activate();
         else owner.Deactivate();
-        typeof(ShopOwner).GetProperty(nameof(ShopOwner.CreatedDate))!.SetValue(owner, DateTimeService.NowUtc);
-        typeof(ShopOwner).GetProperty(nameof(ShopOwner.UpdatedDate))!.SetValue(owner, DateTimeService.NowUtc);
-        typeof(ShopOwner).GetProperty(nameof(ShopOwner.LastModifiedUtc))!.SetValue(owner, DateTimeService.NowUtc);
+        typeof(ShopOwner).GetProperty(nameof(ShopOwner.CreatedDate))!.SetValue(owner, SeedIds.SeedTimestampUtc);
+        typeof(ShopOwner).GetProperty(nameof(ShopOwner.UpdatedDate))!.SetValue(owner, SeedIds.SeedTimestampUtc);
+        typeof(ShopOwner).GetProperty(nameof(ShopOwner.LastModifiedUtc))!.SetValue(owner, SeedIds.SeedTimestampUtc);
 
         return owner;
     }

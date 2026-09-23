@@ -78,9 +78,9 @@ public static class ProductSeed
         typeof(Product).GetProperty(nameof(Product.ShopName))!.SetValue(product, GetShopName(shopId));
         typeof(Product).GetProperty(nameof(Product.BaseUnitName))!.SetValue(product, GetUnitName(baseUnitId));
         typeof(Product).GetProperty(nameof(Product.CategoryName))!.SetValue(product, GetCategoryName(categoryId));
-        typeof(Product).GetProperty(nameof(Product.CreatedDate))!.SetValue(product, DateTimeService.NowUtc);
-        typeof(Product).GetProperty(nameof(Product.UpdatedDate))!.SetValue(product, DateTimeService.NowUtc);
-        typeof(Product).GetProperty(nameof(Product.LastModifiedUtc))!.SetValue(product, DateTimeService.NowUtc);
+        typeof(Product).GetProperty(nameof(Product.CreatedDate))!.SetValue(product, SeedIds.SeedTimestampUtc);
+        typeof(Product).GetProperty(nameof(Product.UpdatedDate))!.SetValue(product, SeedIds.SeedTimestampUtc);
+        typeof(Product).GetProperty(nameof(Product.LastModifiedUtc))!.SetValue(product, SeedIds.SeedTimestampUtc);
 
         return product;
     }

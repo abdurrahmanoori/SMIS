@@ -9,14 +9,14 @@ public static class ProvinceSeed
         ModelBuilder modelBuilder
     )
     {
-        modelBuilder.Entity<Province>().HasData(
+        modelBuilder.Entity<Province>().HasData(SeedIds.Stamp(
             new Province { Id = SeedIds.ProvinceKabul, Name = "Kabul" },
             new Province { Id = SeedIds.ProvinceHerat, Name = "Herat" },
             new Province { Id = SeedIds.ProvinceKandahar, Name = "Kandahar" },
             new Province { Id = SeedIds.ProvinceBalkh, Name = "Balkh" }
-        );
+        ));
 
-        modelBuilder.Entity<ProvinceTranslation>().HasData(
+        modelBuilder.Entity<ProvinceTranslation>().HasData(SeedIds.Stamp(
             new ProvinceTranslation
             {
                 Id = SeedIds.PTrans1, ProvinceId = SeedIds.ProvinceKabul, LanguageId = SeedIds.LangEn,
@@ -77,6 +77,6 @@ public static class ProvinceSeed
                 Id = SeedIds.PTrans12, ProvinceId = SeedIds.ProvinceBalkh, LanguageId = SeedIds.LangFa,
                 LanguageCode = "fa", Name = "بلخ", IsDefault = false
             }
-        );
+        ));
     }
 }

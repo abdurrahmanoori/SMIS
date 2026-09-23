@@ -109,7 +109,7 @@ public static class ProductUnitSeed
         productUnit.SetUnitName(GetUnitName(unitOfMeasureId));
 
         typeof(ProductUnit).GetProperty(nameof(ProductUnit.LastModifiedUtc))!.SetValue(productUnit,
-            DateTimeService.NowUtc);
+            SeedIds.SeedTimestampUtc);
 
         return productUnit;
     }

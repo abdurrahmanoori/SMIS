@@ -9,10 +9,10 @@ public static class DistrictSeed
         ModelBuilder modelBuilder
     )
     {
-        modelBuilder.Entity<District>().HasData(
+        modelBuilder.Entity<District>().HasData(SeedIds.Stamp(
             new District { Id = SeedIds.DistrictKabulCenter, Name = "Kabul Center", TranslationKeyId = SeedIds.TKey1 },
             new District { Id = SeedIds.DistrictKabulNorth, Name = "Kabul North", TranslationKeyId = SeedIds.TKey2 },
             new District { Id = SeedIds.DistrictHeratCenter, Name = "Herat Center", TranslationKeyId = SeedIds.TKey3 }
-        );
+        ));
     }
 }

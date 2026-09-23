@@ -85,3 +85,23 @@ streams:
       WHERE product."ShopId" = auth.parameter('ShopId')
         AND product."IsDeleted" = 0
         AND product_unit."IsDeleted" = 0
+
+  shop_product_prices:
+    auto_subscribe: true
+    query: |
+      SELECT
+        product_price."Id" AS id,
+        product_price."ProductUnitId" AS product_unit_id,
+        product_price."SellPrice" AS sell_price,
+        product_price."EffectiveDate" AS effective_date,
+        product_price."EndDate" AS end_date,
+        product_price."LastModifiedUtc" AS last_modified_utc
+      FROM "ProductPrice" AS product_price
+      INNER JOIN "ProductUnit" AS product_unit
+        ON product_unit."Id" = product_price."ProductUnitId"
+      INNER JOIN "Product" AS product
+        ON product."Id" = product_unit."ProductId"
+      WHERE product."ShopId" = auth.parameter('ShopId')
+        AND product."IsDeleted" = 0
+        AND product_unit."IsDeleted" = 0
+        AND product_price."IsDeleted" = 0

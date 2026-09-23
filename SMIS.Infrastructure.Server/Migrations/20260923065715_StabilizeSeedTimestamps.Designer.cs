@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SMIS.Infrastructure.Server.Context;
 
@@ -11,9 +12,11 @@ using SMIS.Infrastructure.Server.Context;
 namespace SMIS.Infrastructure.Server.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260923065715_StabilizeSeedTimestamps")]
+    partial class StabilizeSeedTimestamps
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -5442,7 +5445,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                             PhoneNumber = "+1234567890",
                             ShopId = "11111111-0000-0000-0000-000000000001",
                             ShopName = "Main Store",
-                            StartDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            StartDate = new DateTime(2026, 9, 23, 11, 27, 11, 775, DateTimeKind.Local).AddTicks(9742),
                             UpdatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Version = 0
                         },
@@ -5466,7 +5469,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                             PhoneNumber = "+0987654321",
                             ShopId = "11111111-0000-0000-0000-000000000002",
                             ShopName = "Branch Store",
-                            StartDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            StartDate = new DateTime(2026, 9, 23, 11, 27, 11, 777, DateTimeKind.Local).AddTicks(7965),
                             UpdatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Version = 0
                         },
@@ -5490,7 +5493,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                             PhoneNumber = "+1555666777",
                             ShopId = "11111111-0000-0000-0000-000000000003",
                             ShopName = "Warehouse",
-                            StartDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            StartDate = new DateTime(2026, 9, 23, 11, 27, 11, 778, DateTimeKind.Local).AddTicks(1016),
                             UpdatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Version = 0
                         },
@@ -5514,7 +5517,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                             PhoneNumber = "+1234567890",
                             ShopId = "11111111-0000-0000-0000-000000000004",
                             ShopName = "Wasil Shop",
-                            StartDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            StartDate = new DateTime(2026, 9, 23, 11, 27, 11, 778, DateTimeKind.Local).AddTicks(4305),
                             UpdatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Version = 0
                         });
@@ -5988,7 +5991,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                             IsPublic = false,
                             LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             OccurredAtUtc = new DateTime(2025, 12, 22, 0, 0, 0, 0, DateTimeKind.Utc),
-                            OperationId = "22222222-2222-0000-0000-000000000001",
+                            OperationId = "8fc49455-7047-4bd8-853f-b3699dc42783",
                             ProductUnitId = "dddddddd-0000-0000-0000-000000000001",
                             QuantityBase = 100m,
                             QuantityEntered = 100m,
@@ -6009,7 +6012,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                             IsPublic = false,
                             LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             OccurredAtUtc = new DateTime(2025, 12, 27, 0, 0, 0, 0, DateTimeKind.Utc),
-                            OperationId = "22222222-2222-0000-0000-000000000002",
+                            OperationId = "1019249c-ed6f-4cf5-8e2e-aa8b85edbcbe",
                             ProductUnitId = "dddddddd-0000-0000-0000-000000000001",
                             QuantityBase = 80m,
                             QuantityEntered = 80m,
@@ -6030,7 +6033,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                             IsPublic = false,
                             LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             OccurredAtUtc = new DateTime(2025, 12, 17, 0, 0, 0, 0, DateTimeKind.Utc),
-                            OperationId = "22222222-2222-0000-0000-000000000003",
+                            OperationId = "1b25247f-eaa8-4b10-942b-1f77bcfc060e",
                             ProductUnitId = "dddddddd-0000-0000-0000-000000000010",
                             QuantityBase = 50m,
                             QuantityEntered = 50m,
@@ -6051,7 +6054,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                             IsPublic = false,
                             LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             OccurredAtUtc = new DateTime(2025, 12, 12, 0, 0, 0, 0, DateTimeKind.Utc),
-                            OperationId = "22222222-2222-0000-0000-000000000004",
+                            OperationId = "7b37726c-0103-41d9-9850-0e7bb438f8e8",
                             ProductUnitId = "dddddddd-0000-0000-0000-000000000019",
                             QuantityBase = 200m,
                             QuantityEntered = 200m,

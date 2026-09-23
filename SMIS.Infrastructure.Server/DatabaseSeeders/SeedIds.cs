@@ -1,3 +1,5 @@
+using SMIS.Domain.Common.Interfaces;
+
 namespace SMIS.Infrastructure.Server.DatabaseSeeders;
 
 /// <summary>
@@ -6,6 +8,19 @@ namespace SMIS.Infrastructure.Server.DatabaseSeeders;
 /// </summary>
 public static class SeedIds
 {
+    public static readonly DateTime SeedTimestampUtc = new(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+
+    public static T[] Stamp<T>(params T[] entities)
+        where T : IEntityPK
+    {
+        foreach (var entity in entities)
+        {
+            entity.LastModifiedUtc = SeedTimestampUtc;
+        }
+
+        return entities;
+    }
+
     // Shops
     public const string Shop1 = "11111111-0000-0000-0000-000000000001";
     public const string Shop2 = "11111111-0000-0000-0000-000000000002";

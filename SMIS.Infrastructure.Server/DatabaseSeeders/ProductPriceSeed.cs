@@ -81,11 +81,11 @@ public static class ProductPriceSeed
 
         typeof(ProductPrice).GetProperty(nameof(ProductPrice.Id))!.SetValue(productPrice, id);
         typeof(ProductPrice).GetProperty(nameof(ProductPrice.CreatedDate))!.SetValue(productPrice,
-            DateTimeService.NowUtc);
+            SeedIds.SeedTimestampUtc);
         typeof(ProductPrice).GetProperty(nameof(ProductPrice.UpdatedDate))!.SetValue(productPrice,
-            DateTimeService.NowUtc);
+            SeedIds.SeedTimestampUtc);
         typeof(ProductPrice).GetProperty(nameof(ProductPrice.LastModifiedUtc))!.SetValue(productPrice,
-            DateTimeService.NowUtc);
+            SeedIds.SeedTimestampUtc);
 
         return productPrice;
     }

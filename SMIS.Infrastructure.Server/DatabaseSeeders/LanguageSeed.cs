@@ -9,10 +9,10 @@ public static class LanguageSeed
         ModelBuilder modelBuilder
     )
     {
-        modelBuilder.Entity<Language>().HasData(
+        modelBuilder.Entity<Language>().HasData(SeedIds.Stamp(
             new Language { Id = SeedIds.LangEn, Name = "English", Code = "en", IsActive = true },
             new Language { Id = SeedIds.LangPs, Name = "Pashto", Code = "ps", IsActive = true },
             new Language { Id = SeedIds.LangFa, Name = "Farsi", Code = "fa", IsActive = true }
-        );
+        ));
     }
 }

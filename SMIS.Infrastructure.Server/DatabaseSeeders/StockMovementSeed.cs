@@ -11,7 +11,7 @@ public static class StockMovementSeed
         ModelBuilder modelBuilder
     )
     {
-        var now = DateTimeService.NowUtc;
+        var now = SeedIds.SeedTimestampUtc;
         modelBuilder.Entity<StockMovement>().HasData(
             CreateReceipt(SeedIds.STrans1, SeedIds.Shop1, SeedIds.Batch1, SeedIds.PU1, 100m, now.AddDays(-10)),
             CreateReceipt(SeedIds.STrans2, SeedIds.Shop1, SeedIds.Batch2, SeedIds.PU1, 80m, now.AddDays(-5)),
@@ -39,15 +39,16 @@ public static class StockMovementSeed
             StockMovementReason.PurchaseReceipt,
             occurredAtUtc,
             "Seed",
-            batchId);
+            batchId,
+            id);
 
         typeof(StockMovement).GetProperty(nameof(StockMovement.Id))!.SetValue(movement, id);
         typeof(StockMovement).GetProperty(nameof(StockMovement.CreatedDate))!.SetValue(movement,
-            DateTimeService.NowUtc);
+            SeedIds.SeedTimestampUtc);
         typeof(StockMovement).GetProperty(nameof(StockMovement.UpdatedDate))!.SetValue(movement,
-            DateTimeService.NowUtc);
+            SeedIds.SeedTimestampUtc);
         typeof(StockMovement).GetProperty(nameof(StockMovement.LastModifiedUtc))!.SetValue(movement,
-            DateTimeService.NowUtc);
+            SeedIds.SeedTimestampUtc);
         return movement;
     }
 }

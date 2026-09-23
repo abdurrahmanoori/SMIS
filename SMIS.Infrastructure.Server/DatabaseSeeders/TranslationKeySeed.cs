@@ -9,7 +9,7 @@ public static class TranslationKeySeed
         ModelBuilder modelBuilder
     )
     {
-        modelBuilder.Entity<TranslationKey>().HasData(
+        modelBuilder.Entity<TranslationKey>().HasData(SeedIds.Stamp(
             new TranslationKey
                 { Id = SeedIds.TKey1, Name = "Kabul Center District", MessageCode = "1001", IsActive = true },
             new TranslationKey
@@ -21,6 +21,6 @@ public static class TranslationKeySeed
             new TranslationKey { Id = SeedIds.TKey6, Name = "Welcome Message", MessageCode = "3001", IsActive = true },
             new TranslationKey { Id = SeedIds.TKey7, Name = "Error Message", MessageCode = "3002", IsActive = true },
             new TranslationKey { Id = SeedIds.TKey8, Name = "Success Message", MessageCode = "3003", IsActive = true }
-        );
+        ));
     }
 }
