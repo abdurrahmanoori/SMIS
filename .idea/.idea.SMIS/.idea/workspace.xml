@@ -101,12 +101,22 @@
     &quot;assignee&quot;: &quot;abdurrahmanoori&quot;
   }
 }</component>
-  <component name="GithubPullRequestsUISettings">{
-  &quot;selectedUrlAndAccountId&quot;: {
-    &quot;url&quot;: &quot;https://github.com/abdurrahmanoori/SMIS.git&quot;,
-    &quot;accountId&quot;: &quot;2f15994d-76ef-48a3-ad19-aa2b9a23361b&quot;
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "https://github.com/abdurrahmanoori/SMIS.git",
+    "accountId": "2f15994d-76ef-48a3-ad19-aa2b9a23361b"
+  },
+  "recentNewPullRequestHead": {
+    "server": {
+      "useHttp": false,
+      "host": "github.com",
+      "port": null,
+      "suffix": null
+    },
+    "owner": "abdurrahmanoori",
+    "repository": "SMIS"
   }
-}</component>
+}]]></component>
   <component name="HighlightingSettingsPerFile">
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/0b7856b364e04283a10bb924825b197f28f228/bc/87b86347/EntityFrameworkQueryableExtensions.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/1c1723e034ca465b81243e017417127623020/3b/99e4da88/JsonWebTokenHandler.cs" root0="FORCE_HIGHLIGHTING" />
@@ -256,7 +266,7 @@
     ]
   }
 }</component>
-  <component name="RunManager" selected=".NET Launch Settings Profile.SMIS.Api: http">
+  <component name="RunManager" selected="Dart Command Line App.Run &amp; Debug Flutter">
     <configuration name="Run &amp; Debug Flutter" type="DartCommandLineRunConfigurationType" factoryName="Dart Command Line Application">
       <option name="filePath" value="$PROJECT_DIR$/smis_flutter/lib/main.dart" />
       <option name="workingDirectory" value="$PROJECT_DIR$/smis_flutter" />
@@ -407,22 +417,6 @@
       <option name="presentableId" value="LOCAL-00038" />
       <option name="project" value="LOCAL" />
       <updated>1789462942314</updated>
-    </task>
-    <task id="LOCAL-00045" summary="feat: add Wasil Shop roles and users, and update seed data for new shop">
-      <option name="closed" value="true" />
-      <created>1789027736492</created>
-      <option name="number" value="00045" />
-      <option name="presentableId" value="LOCAL-00045" />
-      <option name="project" value="LOCAL" />
-      <updated>1789027736493</updated>
-    </task>
-    <task id="LOCAL-00046" summary="feat: add Wasil Shop roles and users, and update seed data for new shop">
-      <option name="closed" value="true" />
-      <created>1789030964599</created>
-      <option name="number" value="00046" />
-      <option name="presentableId" value="LOCAL-00046" />
-      <option name="project" value="LOCAL" />
-      <updated>1789030964599</updated>
     </task>
     <task id="LOCAL-00047" summary="feat: implement generic entity dropdown and new paged list functionality">
       <option name="closed" value="true" />
@@ -784,7 +778,23 @@
       <option name="project" value="LOCAL" />
       <updated>1790141619653</updated>
     </task>
-    <option name="localTasksCounter" value="92" />
+    <task id="LOCAL-00092" summary="refactor: change delete behavior to restrict for various entity configurations">
+      <option name="closed" value="true" />
+      <created>1790151817717</created>
+      <option name="number" value="00092" />
+      <option name="presentableId" value="LOCAL-00092" />
+      <option name="project" value="LOCAL" />
+      <updated>1790151817717</updated>
+    </task>
+    <task id="LOCAL-00093" summary="refactor: standardize seed timestamps across various seed files">
+      <option name="closed" value="true" />
+      <created>1790163128427</created>
+      <option name="number" value="00093" />
+      <option name="presentableId" value="LOCAL-00093" />
+      <option name="project" value="LOCAL" />
+      <updated>1790163128428</updated>
+    </task>
+    <option name="localTasksCounter" value="94" />
     <option name="clearContext" value="false" />
     <option name="createChangelist" value="false" />
     <option name="createBranch" value="false" />
@@ -803,10 +813,19 @@
     <option featureType="dependencySupport" implementationName="dotnet:Serilog" />
     <option featureType="dependencySupport" implementationName="dotnet:Microsoft.EntityFrameworkCore" />
   </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
-    <MESSAGE value="feat: implement base unit change validation; prevent changes if stock or conversions exist" />
-    <MESSAGE value="domain layer code formated" />
     <MESSAGE value="just comment added" />
     <MESSAGE value="feat: update entity properties and validation; remove ShopId from multiple DTOs and entities, add ProductPrices collection to ProductUnit, and enhance ProductUnit repository with HasUsageAsync method" />
     <MESSAGE value="feat: introduce StockMovement and related DTOs; implement StockMovementController and validation logic, and replace StockTransaction references with StockMovement" />
@@ -830,6 +849,8 @@
     <MESSAGE value="refactor: remove GetByIdIncludingDeletedAsync methods and update repositories to use IApplicationDbContext for data access" />
     <MESSAGE value="refactor: remove IUnitOfWork references and update command handlers to use IApplicationDbContext for data access" />
     <MESSAGE value="refactor: update database constraint handling and improve timestamp normalization in sync handlers" />
+    <MESSAGE value="refactor: change delete behavior to restrict for various entity configurations" />
+    <MESSAGE value="refactor: standardize seed timestamps across various seed files" />
     <option name="LAST_COMMIT_MESSAGE" value="" />
   </component>
   <component name="XDebuggerManager">

@@ -92,6 +92,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                           _SavedAccountsList(
                             sessions: auth.savedSessions,
                             activeUserId: auth.session?.userId,
+                            disabled: auth.isSwitchingAccount,
                             onSwitch: (userId) => ref
                                 .read(authControllerProvider.notifier)
                                 .switchAccount(userId),
@@ -270,12 +271,14 @@ class _SavedAccountsList extends StatelessWidget {
   const _SavedAccountsList({
     required this.sessions,
     this.activeUserId,
+    required this.disabled,
     required this.onSwitch,
     required this.onRemove,
   });
 
   final List<AuthSession> sessions;
   final String? activeUserId;
+  final bool disabled;
   final ValueChanged<String> onSwitch;
   final ValueChanged<String> onRemove;
 
@@ -309,9 +312,13 @@ class _SavedAccountsList extends StatelessWidget {
                   ? const Icon(Icons.check_circle, color: Colors.green)
                   : IconButton(
                       icon: const Icon(Icons.close, size: 20),
-                      onPressed: () => onRemove(session.userId),
+                      onPressed: disabled
+                          ? null
+                          : () => onRemove(session.userId),
                     ),
-              onTap: isSelected ? null : () => onSwitch(session.userId),
+              onTap: isSelected || disabled
+                  ? null
+                  : () => onSwitch(session.userId),
             ),
           );
         }),

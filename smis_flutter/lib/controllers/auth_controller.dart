@@ -4,6 +4,7 @@ import '../data/auth_api.dart';
 import '../data/data_exception.dart';
 import '../models/auth_session.dart';
 import '../services/auth_session_store.dart';
+import 'app_dependencies.dart';
 
 class AuthState {
   const AuthState({
@@ -11,6 +12,7 @@ class AuthState {
     this.savedSessions = const [],
     this.isRestoring = false,
     this.isSigningIn = false,
+    this.isSwitchingAccount = false,
     this.isSwitchingShop = false,
     this.error,
   });
@@ -19,6 +21,7 @@ class AuthState {
   final List<AuthSession> savedSessions;
   final bool isRestoring;
   final bool isSigningIn;
+  final bool isSwitchingAccount;
   final bool isSwitchingShop;
   final Object? error;
 
@@ -33,6 +36,7 @@ class AuthState {
     List<AuthSession>? savedSessions,
     bool? isRestoring,
     bool? isSigningIn,
+    bool? isSwitchingAccount,
     bool? isSwitchingShop,
     Object? error,
     bool clearError = false,
@@ -42,6 +46,7 @@ class AuthState {
     savedSessions: savedSessions ?? this.savedSessions,
     isRestoring: isRestoring ?? this.isRestoring,
     isSigningIn: isSigningIn ?? this.isSigningIn,
+    isSwitchingAccount: isSwitchingAccount ?? this.isSwitchingAccount,
     isSwitchingShop: isSwitchingShop ?? this.isSwitchingShop,
     error: clearError ? null : (error ?? this.error),
   );
@@ -100,9 +105,55 @@ class AuthController extends Notifier<AuthState> {
   }
 
   Future<void> switchAccount(String userId) async {
-    final session = state.savedSessions.firstWhere((s) => s.userId == userId);
-    await _sessionStore.save(session);
-    state = state.copyWith(session: session);
+    final target = state.savedSessions.firstWhere((s) => s.userId == userId);
+    final current = state.session;
+    if (current?.userId == target.userId && current?.shopId == target.shopId) {
+      return;
+    }
+
+    final powerSync = ref.read(appPowerSyncDatabaseProvider);
+    if (current != null) {
+      final pending = await powerSync.pendingCountForCurrentContext();
+      if (pending > 0) {
+        state = state.copyWith(
+          error: LocalStorageException(
+            'Synchronize the current account before switching. '
+            '$pending local change(s) are still pending.',
+          ),
+        );
+        return;
+      }
+    }
+
+    state = state.copyWith(isSwitchingAccount: true, clearError: true);
+    try {
+      await powerSync.close();
+      await _sessionStore.save(target);
+      await _connectCurrentPowerSyncContext(
+        'The account changed, but PowerSync could not refresh the new account yet.',
+      );
+
+      final savedSessions = await _sessionStore.readAll();
+      state = state.copyWith(
+        session: target,
+        savedSessions: savedSessions,
+        isSwitchingAccount: false,
+      );
+    } catch (error) {
+      await powerSync.close();
+      try {
+        if (current == null) {
+          await _sessionStore.clear();
+        } else {
+          await _sessionStore.save(current);
+          await powerSync.connectForCurrentSession();
+        }
+      } catch (_) {
+        // Preserve the original switching failure. The UI still keeps the
+        // previous in-memory session instead of publishing a partial switch.
+      }
+      state = state.copyWith(error: error, isSwitchingAccount: false);
+    }
   }
 
   Future<AuthSession> switchShop(String shopId) async {
@@ -150,20 +201,51 @@ class AuthController extends Notifier<AuthState> {
   }
 
   Future<void> logout() async {
+    Object? cleanupError;
+    try {
+      await ref.read(appPowerSyncDatabaseProvider).close();
+    } catch (error) {
+      cleanupError = error;
+    }
+
     try {
       await _sessionStore.clear();
-      state = state.copyWith(clearSession: true, clearError: true);
     } catch (error) {
-      // Do not leave the user on an authenticated screen if secure-storage
-      // cleanup fails. The login page exposes the storage problem so it can be
-      // resolved, while the active in-memory session is still removed.
+      cleanupError ??= error;
+    }
+
+    if (cleanupError == null) {
+      state = state.copyWith(clearSession: true, clearError: true);
+    } else {
+      // Do not leave the user on an authenticated screen if local cleanup
+      // fails. Pending PowerSync writes remain in the isolated SQLite file and
+      // can resume if the same account signs in again.
       state = state.copyWith(
         clearSession: true,
         error: LocalStorageException(
-          'Signed out of this app, but the saved session could not be removed.',
-          cause: error,
+          'Signed out of this app, but some local session cleanup failed.',
+          cause: cleanupError,
         ),
       );
+    }
+  }
+
+  Future<void> _connectCurrentPowerSyncContext(String failureMessage) async {
+    final database = await ref
+        .read(appPowerSyncDatabaseProvider)
+        .connectForCurrentSession();
+
+    var status = database.currentStatus;
+    if (status.hasSynced != true && status.anyError == null) {
+      status = await database.statusStream
+          .firstWhere(
+            (value) => value.hasSynced == true || value.anyError != null,
+          )
+          .timeout(const Duration(seconds: 30));
+    }
+
+    if (status.anyError != null) {
+      throw RemoteTransientException(failureMessage, cause: status.anyError);
     }
   }
 
