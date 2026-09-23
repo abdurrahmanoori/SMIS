@@ -31,18 +31,22 @@ namespace SMIS.Infrastructure.Server.Repositories.Products
         {
             // ProductUnit is an owned child of Product and is deleted by cascade.
             // Only external/business references should block deleting the product.
-            var count = await _context.ProductPrices.CountAsync(
-                price => price.ProductUnit.ProductId == id,
-                cancellationToken);
-            count += await _context.StockBatches.CountAsync(
-                batch => batch.ProductId == id,
-                cancellationToken);
-            count += await _context.StockMovements.CountAsync(
-                movement => movement.StockBatch.ProductId == id,
-                cancellationToken);
-            count += await _context.SaleLines.CountAsync(
-                line => line.ProductId == id,
-                cancellationToken);
+            var count = await _context.ProductPrices
+                .CountAsync(
+                    price => price.ProductUnit.ProductId == id,
+                    cancellationToken);
+            count += await _context.StockBatches
+                .CountAsync(
+                    batch => batch.ProductId == id,
+                    cancellationToken);
+            count += await _context.StockMovements
+                .CountAsync(
+                    movement => movement.ProductUnit.ProductId == id,
+                    cancellationToken);
+            count += await _context.SaleLines
+                .CountAsync(
+                    line => line.ProductId == id,
+                    cancellationToken);
             return count;
         }
 

@@ -153,7 +153,7 @@ internal sealed class
         if (value is null) return Result<ProductUnitDto>.NotFoundResult(request.Id);
 
         var modified = DateTimeService.NormalizeUtc(request.Dto.ClientModifiedDate);
-        if (modified <= value.GetConflictModifiedUtc())
+        if (modified < value.GetConflictModifiedUtc())
             return Result<ProductUnitDto>.SuccessResult(_mapper.Map<ProductUnitDto>(value));
 
         var currentProduct = await ProductUnitSyncRules.GetAccessibleProductAsync(value.ProductId, _products, _user);
@@ -230,7 +230,7 @@ internal sealed class
             return ProductUnitCommandRules.ConversionInUse();
 
         var modified = DateTimeService.NormalizeUtc(request.Dto.ClientModifiedDate);
-        if (modified <= value.GetConflictModifiedUtc())
+        if (modified < value.GetConflictModifiedUtc())
             return Result<ProductUnitDto>.SuccessResult(_mapper.Map<ProductUnitDto>(value));
 
         value.SetClientModificationMetadata(modified, request.Dto.ClientModifiedBy);

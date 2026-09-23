@@ -192,7 +192,7 @@ internal sealed class CategorySyncUpdateCommandHandler
         var clientModified =
             DateTimeService.NormalizeUtc(request.Dto.ClientModifiedDate);
 
-        if (clientModified <= category.GetConflictModifiedUtc())
+        if (clientModified < category.GetConflictModifiedUtc())
         {
             return Result<CategoryDto>.SuccessResult(
                 _mapper.Map<CategoryDto>(category));
@@ -277,7 +277,7 @@ internal sealed class CategorySyncDeleteCommandHandler
         var clientModified =
             DateTimeService.NormalizeUtc(request.Dto.ClientModifiedDate);
 
-        if (clientModified <= category.GetConflictModifiedUtc())
+        if (clientModified < category.GetConflictModifiedUtc())
         {
             return Result<CategoryDto>.SuccessResult(
                 _mapper.Map<CategoryDto>(category));

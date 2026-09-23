@@ -134,7 +134,7 @@ internal sealed class
             .FirstOrDefaultAsync(value => value.Id == id, cancellationToken);
         if (unit is null) return Result<UnitOfMeasureDto>.NotFoundResult(request.Id);
         var modified = DateTimeService.NormalizeUtc(request.Dto.ClientModifiedDate);
-        if (modified <= unit.GetConflictModifiedUtc())
+        if (modified < unit.GetConflictModifiedUtc())
             return Result<UnitOfMeasureDto>.SuccessResult(_mapper.Map<UnitOfMeasureDto>(unit));
 
         var referenceCount = await _repository.CountReferencesAsync(

@@ -36,7 +36,9 @@ class UnitOfMeasureUploadHandler implements PowerSyncUploadHandler {
   Future<void> delete(String id, String lastModifiedUtc) async {
     await _dio.delete<void>(
       '${AppConfig.unitOfMeasureEndpoint}/$id/sync',
-      data: {'clientModifiedDate': lastModifiedUtc},
+      data: {
+        'clientModifiedDate': normalizePowerSyncTimestamp(lastModifiedUtc),
+      },
     );
   }
 
@@ -47,5 +49,5 @@ class UnitOfMeasureUploadHandler implements PowerSyncUploadHandler {
   };
 
   String _timestamp(Map<String, dynamic> row) =>
-      row['last_modified_utc'] as String;
+      normalizePowerSyncTimestamp(row['last_modified_utc'] as String);
 }

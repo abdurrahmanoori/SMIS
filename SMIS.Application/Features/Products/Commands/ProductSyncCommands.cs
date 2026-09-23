@@ -163,7 +163,7 @@ internal sealed class ProductSyncDeleteCommandHandler : IRequestHandler<ProductS
         if (product is null) return Result<ProductDto>.NotFoundResult(request.Id);
         if (!ProductSyncRules.CanAccess(product, _currentUser)) return ProductSyncRules.Forbidden();
         var modified = DateTimeService.NormalizeUtc(request.Dto.ClientModifiedDate);
-        if (modified <= product.GetConflictModifiedUtc())
+        if (modified < product.GetConflictModifiedUtc())
             return Result<ProductDto>.SuccessResult(_mapper.Map<ProductDto>(product));
         var referenceCount = await _repository.CountReferencesAsync(
             product.Id,

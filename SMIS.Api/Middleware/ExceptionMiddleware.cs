@@ -50,13 +50,7 @@ namespace SMIS.Api.Middleware
                 DomainValidationException => StatusCodes.Status400BadRequest,
                 UnauthorizedAccessException => StatusCodes.Status401Unauthorized,
                 DbUpdateConcurrencyException => StatusCodes.Status409Conflict,
-                DbUpdateException dbEx
-                    when dbEx.InnerException?.Message.Contains("FOREIGN KEY constraint failed") == true
-                         || dbEx.InnerException?.Message.Contains("UNIQUE constraint failed") == true
-                         || dbEx.InnerException?.Message.Contains("Cannot insert duplicate key",
-                             StringComparison.OrdinalIgnoreCase) == true
-                         || dbEx.InnerException?.Message.Contains("duplicate key row",
-                             StringComparison.OrdinalIgnoreCase) == true
+                DbUpdateException dbEx when IsConstraintViolation(dbEx)
                     => StatusCodes.Status409Conflict,
                 _ => StatusCodes.Status500InternalServerError
             };
@@ -82,6 +76,19 @@ namespace SMIS.Api.Middleware
                         }
                     }
                 }),
+                DbUpdateException dbEx when IsConstraintViolation(dbEx) => JsonSerializer.Serialize(new
+                {
+                    Success = false,
+                    Errors = new[]
+                    {
+                        new
+                        {
+                            Code = "DatabaseConstraintViolation",
+                            Description =
+                                "The operation conflicts with related or duplicate data. Resolve the related records and retry."
+                        }
+                    }
+                }),
                 _ => hostEnvironment.IsDevelopment()
                     ? JsonSerializer.Serialize(log, new JsonSerializerOptions { WriteIndented = true })
                     : JsonSerializer.Serialize(new
@@ -92,6 +99,18 @@ namespace SMIS.Api.Middleware
             };
 
             await context.Response.WriteAsync(response);
+        }
+
+        private static bool IsConstraintViolation(
+            DbUpdateException exception
+        )
+        {
+            var message = exception.InnerException?.Message ?? exception.Message;
+            return message.Contains("FOREIGN KEY constraint failed", StringComparison.OrdinalIgnoreCase)
+                   || message.Contains("REFERENCE constraint", StringComparison.OrdinalIgnoreCase)
+                   || message.Contains("UNIQUE constraint failed", StringComparison.OrdinalIgnoreCase)
+                   || message.Contains("Cannot insert duplicate key", StringComparison.OrdinalIgnoreCase)
+                   || message.Contains("duplicate key row", StringComparison.OrdinalIgnoreCase);
         }
     }
 }

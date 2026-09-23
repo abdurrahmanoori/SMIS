@@ -163,7 +163,7 @@ internal sealed class ShopSyncDeleteCommandHandler : IRequestHandler<ShopSyncDel
             return ShopSyncRules.Forbidden();
 
         var clientModified = DateTimeService.NormalizeUtc(request.Dto.ClientModifiedDate);
-        if (clientModified <= shop.GetConflictModifiedUtc())
+        if (clientModified < shop.GetConflictModifiedUtc())
             return Result<ShopDto>.SuccessResult(_mapper.Map<ShopDto>(shop));
 
         var referenceCount = await _repository.CountReferencesAsync(

@@ -121,7 +121,17 @@ class ApiErrorParser {
       if (validationMessage != null) return validationMessage;
 
       final message = data['message'] ?? data['Message'] ?? data['title'];
-      if (message is String && message.trim().isNotEmpty) return message;
+      if (message is String && message.trim().isNotEmpty) {
+        final serverDetail =
+            data['exceptionId'] ??
+            data['ExceptionId'] ??
+            data['exception'] ??
+            data['Exception'];
+        if (serverDetail is String && serverDetail.trim().isNotEmpty) {
+          return '${message.trim()} ${serverDetail.trim()}';
+        }
+        return message;
+      }
 
       final description = data['description'] ?? data['Description'];
       if (description is String && description.trim().isNotEmpty) {

@@ -71,7 +71,16 @@ class AppPowerSyncWriteApi {
     try {
       await _handler(table).delete(id, lastModifiedUtc);
     } on DioException catch (error, stackTrace) {
-      if (error.response?.statusCode == 404) return;
+      final status = error.response?.statusCode;
+      // Complete only recognized permanent rejections. Generic ASP.NET model-binding
+      // 400 responses stay retryable so malformed payloads are not silently discarded.
+      if (status == 404 ||
+          status == 409 ||
+          status == 422 ||
+          (status == 400 &&
+              _isBusinessValidationResponse(error.response?.data))) {
+        return;
+      }
       ApiErrorParser.mapAndThrow(error, stackTrace);
     } catch (error, stackTrace) {
       ApiErrorParser.mapAndThrow(error, stackTrace);
@@ -84,5 +93,14 @@ class AppPowerSyncWriteApi {
       throw StateError('Unsupported PowerSync table: $table');
     }
     return handler;
+  }
+
+  bool _isBusinessValidationResponse(Object? data) {
+    if (data is! List || data.isEmpty) return false;
+    return data.every(
+      (item) =>
+          item is Map &&
+          (item.containsKey('description') || item.containsKey('Description')),
+    );
   }
 }

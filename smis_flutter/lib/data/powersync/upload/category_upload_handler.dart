@@ -36,7 +36,9 @@ class CategoryUploadHandler implements PowerSyncUploadHandler {
   Future<void> delete(String id, String lastModifiedUtc) async {
     await _dio.delete<void>(
       '${AppConfig.categoryEndpoint}/$id/sync',
-      data: {'clientModifiedDate': lastModifiedUtc},
+      data: {
+        'clientModifiedDate': normalizePowerSyncTimestamp(lastModifiedUtc),
+      },
     );
   }
 
@@ -50,5 +52,5 @@ class CategoryUploadHandler implements PowerSyncUploadHandler {
   bool _asBool(Object? value) => value == true || value == 1;
 
   String _timestamp(Map<String, dynamic> row) =>
-      row['last_modified_utc'] as String;
+      normalizePowerSyncTimestamp(row['last_modified_utc'] as String);
 }

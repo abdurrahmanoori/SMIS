@@ -190,7 +190,7 @@ internal sealed class
         if (productUnit is null) return ProductPriceCommandRules.ProductUnitNotFoundOrForbidden();
 
         var modified = DateTimeService.NormalizeUtc(request.Dto.ClientModifiedDate);
-        if (modified <= value.GetConflictModifiedUtc())
+        if (modified < value.GetConflictModifiedUtc())
             return Result<ProductPriceDto>.SuccessResult(_mapper.Map<ProductPriceDto>(value));
 
         value.SetClientModificationMetadata(modified, request.Dto.ClientModifiedBy);

@@ -78,5 +78,6 @@ class AppPowerSyncConnector extends PowerSyncBackendConnector {
     'unit_of_measure',
     'product',
     'product_unit',
+    'product_price',
   };
 }

@@ -2651,6 +2651,14 @@ namespace SMIS.Infrastructure.Server.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
 
+                    b.Property<decimal>("ReorderPointBase")
+                        .HasPrecision(18, 4)
+                        .HasColumnType("decimal(18,4)");
+
+                    b.Property<decimal>("ReorderQuantityBase")
+                        .HasPrecision(18, 4)
+                        .HasColumnType("decimal(18,4)");
+
                     b.Property<string>("SKU")
                         .IsRequired()
                         .HasMaxLength(100)
