@@ -52,12 +52,12 @@ namespace SMIS.Infrastructure.Server.EntityConfigurations
             builder.HasOne(pu => pu.Product)
                 .WithMany(p => p.ProductUnits) // Product has a navigation property called ProductUnits
                 .HasForeignKey(pu => pu.ProductId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.Restrict);
 
             builder.HasOne(pu => pu.UnitOfMeasure)
                 .WithMany(u => u.ProductUnits) // UnitOfMeasure has a navigation property called ProductUnits
                 .HasForeignKey(pu => pu.UnitOfMeasureId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

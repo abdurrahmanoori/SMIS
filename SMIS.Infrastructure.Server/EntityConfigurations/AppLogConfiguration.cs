@@ -35,7 +35,7 @@ public class AppLogConfiguration : IEntityTypeConfiguration<AppLog>
         builder.HasOne(x => x.User)
             .WithMany()
             .HasForeignKey(x => x.UserId)
-            .OnDelete(DeleteBehavior.SetNull);
+            .OnDelete(DeleteBehavior.Restrict);
 
         builder.HasIndex(x => x.Level);
         builder.HasIndex(x => x.CreatedAt);

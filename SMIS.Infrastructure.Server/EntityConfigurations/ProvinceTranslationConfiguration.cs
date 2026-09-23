@@ -19,7 +19,7 @@ namespace SMIS.Infrastructure.Server.EntityConfigurations
             builder.HasOne(x => x.Province)
                 .WithMany(p => p.Translations)
                 .HasForeignKey(x => x.ProvinceId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.Restrict);
 
             builder.HasOne(x => x.Language)
                 .WithMany()

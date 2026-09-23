@@ -29,12 +29,12 @@ namespace SMIS.Infrastructure.Server.EntityConfigurations
             builder.HasOne<ApplicationUser>()
                 .WithMany()
                 .HasForeignKey(ur => ur.UserId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.Restrict);
 
             builder.HasOne<ApplicationRole>()
                 .WithMany()
                 .HasForeignKey(ur => ur.RoleId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

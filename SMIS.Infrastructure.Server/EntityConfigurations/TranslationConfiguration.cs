@@ -33,7 +33,7 @@ namespace SMIS.Infrastructure.Server.EntityConfigurations
                 .WithMany(tk => tk.Translations)
                 .HasForeignKey(t => t.TranslationKeyId)
                 .HasPrincipalKey(tk => tk.Id)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.Restrict);
 
             builder.HasOne(t => t.Language)
                 .WithMany()

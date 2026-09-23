@@ -26,7 +26,7 @@ namespace SMIS.Infrastructure.Server.EntityConfigurations
                 .WithOne(t => t.TranslationKey)
                 .HasForeignKey(t => t.TranslationKeyId)
                 .HasPrincipalKey(tk => tk.Id)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

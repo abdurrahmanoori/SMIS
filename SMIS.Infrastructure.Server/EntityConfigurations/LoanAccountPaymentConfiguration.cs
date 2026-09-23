@@ -38,6 +38,6 @@ public class LoanAccountPaymentConfiguration : IEntityTypeConfiguration<LoanAcco
         builder.HasOne(p => p.LoanAccount)
             .WithMany(l => l.Payments)
             .HasForeignKey(p => p.LoanAccountId)
-            .OnDelete(DeleteBehavior.Cascade);
+            .OnDelete(DeleteBehavior.Restrict);
     }
 }

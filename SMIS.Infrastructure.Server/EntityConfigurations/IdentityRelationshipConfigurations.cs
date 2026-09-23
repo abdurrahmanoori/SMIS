@@ -14,7 +14,7 @@ public sealed class IdentityRoleClaimConfiguration : IEntityTypeConfiguration<Id
         builder.HasOne<ApplicationRole>()
             .WithMany()
             .HasForeignKey(claim => claim.RoleId)
-            .OnDelete(DeleteBehavior.Cascade);
+            .OnDelete(DeleteBehavior.Restrict);
     }
 }
 
@@ -27,7 +27,7 @@ public sealed class IdentityUserClaimConfiguration : IEntityTypeConfiguration<Id
         builder.HasOne<ApplicationUser>()
             .WithMany()
             .HasForeignKey(claim => claim.UserId)
-            .OnDelete(DeleteBehavior.Cascade);
+            .OnDelete(DeleteBehavior.Restrict);
     }
 }
 
@@ -40,7 +40,7 @@ public sealed class IdentityUserLoginConfiguration : IEntityTypeConfiguration<Id
         builder.HasOne<ApplicationUser>()
             .WithMany()
             .HasForeignKey(login => login.UserId)
-            .OnDelete(DeleteBehavior.Cascade);
+            .OnDelete(DeleteBehavior.Restrict);
     }
 }
 
@@ -53,6 +53,6 @@ public sealed class IdentityUserTokenConfiguration : IEntityTypeConfiguration<Id
         builder.HasOne<ApplicationUser>()
             .WithMany()
             .HasForeignKey(token => token.UserId)
-            .OnDelete(DeleteBehavior.Cascade);
+            .OnDelete(DeleteBehavior.Restrict);
     }
 }

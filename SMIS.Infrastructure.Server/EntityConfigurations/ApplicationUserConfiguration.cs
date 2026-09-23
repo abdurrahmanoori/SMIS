@@ -50,7 +50,7 @@ namespace SMIS.Infrastructure.Server.EntityConfigurations
             builder.HasOne(u => u.Language)
                 .WithMany()
                 .HasForeignKey(u => u.LanguageId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.Restrict);
 
             builder.HasIndex(u => u.ShopId);
             builder.HasIndex(u => u.LanguageId);

@@ -77,12 +77,12 @@ namespace SMIS.Infrastructure.Server.EntityConfigurations
             builder.HasOne(so => so.Province)
                 .WithMany()
                 .HasForeignKey(so => so.ProvinceId)
-                .OnDelete(DeleteBehavior.SetNull);
+                .OnDelete(DeleteBehavior.Restrict);
 
             builder.HasOne(so => so.District)
                 .WithMany()
                 .HasForeignKey(so => so.DistrictId)
-                .OnDelete(DeleteBehavior.SetNull);
+                .OnDelete(DeleteBehavior.Restrict);
 
             // Indexes
             builder.HasIndex(so => so.ApplicationUserId);
