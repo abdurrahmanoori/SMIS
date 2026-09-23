@@ -6,9 +6,13 @@ public sealed class UnitName
 {
     public string Value { get; }
 
-    private UnitName(string value) => Value = value;
+    private UnitName(
+        string value
+    ) => Value = value;
 
-    public static UnitName Create(string name)
+    public static UnitName Create(
+        string name
+    )
     {
         if (string.IsNullOrWhiteSpace(name))
             throw new DomainValidationException("Unit name cannot be empty");
@@ -19,6 +23,9 @@ public sealed class UnitName
         return new UnitName(name.Trim());
     }
 
-    public static implicit operator string(UnitName unitName) => unitName.Value;
+    public static implicit operator string(
+        UnitName unitName
+    ) => unitName.Value;
+
     public override string ToString() => Value;
 }

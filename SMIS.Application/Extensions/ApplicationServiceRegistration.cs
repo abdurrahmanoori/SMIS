@@ -2,6 +2,7 @@
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using SMIS.Application.Common.Behaviors;
+using SMIS.Application.Services;
 using SMIS.Domain.Services;
 using System.Reflection;
 
@@ -9,7 +10,9 @@ namespace SMIS.Application.Extensions;
 
 public static class ApplicationServiceRegistration
 {
-    public static IServiceCollection ConfigureApplicationServices(this IServiceCollection services)
+    public static IServiceCollection ConfigureApplicationServices(
+        this IServiceCollection services
+    )
     {
         services.AddMediatR(Assembly.GetExecutingAssembly());
         services.AddScoped(typeof(IPipelineBehavior<,>), typeof(DomainExceptionPipelineBehavior<,>));
@@ -24,6 +27,11 @@ public static class ApplicationServiceRegistration
 
         // Register domain services
         services.AddScoped<PaymentAllocationService>();
+
+        // All physical stock changes are orchestrated here. Feature handlers must not
+        // update StockBatch balances or create StockMovement rows independently.
+        services.AddScoped<IInventoryService, InventoryService>();
+        services.AddScoped<IIdempotencyService, IdempotencyService>();
 
         return services;
     }

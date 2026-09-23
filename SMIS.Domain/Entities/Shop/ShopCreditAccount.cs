@@ -1,4 +1,3 @@
-
 //using SMIS.Domain.Common.BaseAbstract;
 //using SMIS.Domain.Enums;
 
@@ -11,7 +10,7 @@
 //        public DateTime AccountOpenDate { get; set; }
 //        public decimal CreditLimit { get; set; }
 //        public decimal InterestRate { get; set; }
-        
+
 //        // Removed derived fields - calculate from Transactions/Payments
 //        // public decimal TotalCreditAmount { get; set; }
 //        // public decimal PaidAmount { get; set; }
@@ -29,3 +28,4 @@
 //        public virtual ICollection<ShopCreditTransaction> Transactions { get; set; } = new List<ShopCreditTransaction>();
 //    }
 //}
+

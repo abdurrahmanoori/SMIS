@@ -5,5 +5,9 @@ namespace SMIS.Application.Repositories.UnitOfMeasures
 {
     public interface IUnitOfMeasureRepository : IGenericRepository<UnitOfMeasure>
     {
+        Task<int> CountReferencesAsync(
+            string id,
+            CancellationToken cancellationToken = default
+        );
     }
 }

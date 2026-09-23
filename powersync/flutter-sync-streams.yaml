@@ -1,0 +1,107 @@
+config:
+  edition: 3
+
+streams:
+  shops:
+    auto_subscribe: true
+    query: |
+      SELECT
+        shop."Id" AS id,
+        shop."Name" AS name,
+        shop."ShopType" AS shop_type,
+        shop."Address" AS address,
+        shop."PhoneNumber" AS phone_number,
+        shop."Email" AS email,
+        shop."TaxNumber" AS tax_number,
+        shop."IsActive" AS is_active,
+        shop."LastModifiedUtc" AS last_modified_utc
+      FROM "Shop" AS shop
+      WHERE shop."IsDeleted" = 0
+        AND (
+          shop."Id" = auth.parameter('ShopId')
+          OR auth.parameter('IsSuperAdmin') = 'true'
+        )
+
+  shop_categories:
+    auto_subscribe: true
+    query: |
+      SELECT
+        category."Id" AS id,
+        category."Name" AS name,
+        category."Code" AS code,
+        category."Description" AS description,
+        category."IsActive" AS is_active,
+        category."ShopId" AS shop_id,
+        category."LastModifiedUtc" AS last_modified_utc
+      FROM "Category" AS category
+      WHERE category."ShopId" = auth.parameter('ShopId')
+        AND category."IsDeleted" = 0
+
+  units_of_measure:
+    auto_subscribe: true
+    query: |
+      SELECT
+        unit_of_measure."Id" AS id,
+        unit_of_measure."Name" AS name,
+        unit_of_measure."Symbol" AS symbol,
+        unit_of_measure."Description" AS description,
+        unit_of_measure."LastModifiedUtc" AS last_modified_utc
+      FROM "UnitOfMeasure" AS unit_of_measure
+      WHERE unit_of_measure."IsDeleted" = 0
+
+  shop_products:
+    auto_subscribe: true
+    query: |
+      SELECT
+        product."Id" AS id,
+        product."Name" AS name,
+        product."BaseUnitId" AS base_unit_id,
+        product."SKU" AS sku,
+        product."Description" AS description,
+        product."IsActive" AS is_active,
+        product."Barcode" AS barcode,
+        product."ImageUrl" AS image_url,
+        product."CategoryId" AS category_id,
+        product."ShopId" AS shop_id,
+        product."ReorderPointBase" AS reorder_point_base,
+        product."ReorderQuantityBase" AS reorder_quantity_base,
+        product."LastModifiedUtc" AS last_modified_utc
+      FROM "Product" AS product
+      WHERE product."ShopId" = auth.parameter('ShopId')
+        AND product."IsDeleted" = 0
+
+  shop_product_units:
+    auto_subscribe: true
+    query: |
+      SELECT
+        product_unit."Id" AS id,
+        product_unit."ProductId" AS product_id,
+        product_unit."UnitOfMeasureId" AS unit_of_measure_id,
+        product_unit."BaseUnitQuantity" AS base_unit_quantity,
+        product_unit."LastModifiedUtc" AS last_modified_utc
+      FROM "ProductUnit" AS product_unit
+      INNER JOIN "Product" AS product
+        ON product."Id" = product_unit."ProductId"
+      WHERE product."ShopId" = auth.parameter('ShopId')
+        AND product."IsDeleted" = 0
+        AND product_unit."IsDeleted" = 0
+
+  shop_product_prices:
+    auto_subscribe: true
+    query: |
+      SELECT
+        product_price."Id" AS id,
+        product_price."ProductUnitId" AS product_unit_id,
+        product_price."SellPrice" AS sell_price,
+        product_price."EffectiveDate" AS effective_date,
+        product_price."EndDate" AS end_date,
+        product_price."LastModifiedUtc" AS last_modified_utc
+      FROM "ProductPrice" AS product_price
+      INNER JOIN "ProductUnit" AS product_unit
+        ON product_unit."Id" = product_price."ProductUnitId"
+      INNER JOIN "Product" AS product
+        ON product."Id" = product_unit."ProductId"
+      WHERE product."ShopId" = auth.parameter('ShopId')
+        AND product."IsDeleted" = 0
+        AND product_unit."IsDeleted" = 0
+        AND product_price."IsDeleted" = 0

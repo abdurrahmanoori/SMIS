@@ -1,0 +1,434 @@
+import 'dart:async';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import '../controllers/auth_controller.dart';
+import '../controllers/shop_controller.dart';
+import '../data/data_exception.dart';
+import '../models/shop.dart';
+import '../l10n/app_localizations.dart';
+import '../widgets/app_drawer.dart';
+import '../widgets/active_shop_context.dart';
+import '../widgets/app_error_view.dart';
+import '../widgets/shop_form_dialog.dart';
+import '../widgets/theme_mode_action.dart';
+import '../widgets/locale_action.dart';
+import '../widgets/home_action.dart';
+
+class ShopsScreen extends ConsumerStatefulWidget {
+  const ShopsScreen({super.key});
+
+  @override
+  ConsumerState<ShopsScreen> createState() => _ShopsScreenState();
+}
+
+class _ShopsScreenState extends ConsumerState<ShopsScreen>
+    with WidgetsBindingObserver {
+  final _searchController = TextEditingController();
+  bool _isSearching = false;
+  Timer? _searchDebounce;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    _searchDebounce?.cancel();
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  void _onSearchChanged(String query) {
+    _searchDebounce?.cancel();
+    _searchDebounce = Timer(const Duration(milliseconds: 500), () {
+      ref.read(shopControllerProvider.notifier).search(query);
+    });
+  }
+
+  void _stopSearching() {
+    _searchDebounce?.cancel();
+    setState(() {
+      _isSearching = false;
+      _searchController.clear();
+    });
+    ref.read(shopControllerProvider.notifier).search('');
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      ref.read(shopControllerProvider.notifier).reload();
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final shops = ref.watch(shopControllerProvider);
+    final session = ref.watch(authControllerProvider).session;
+    final canCreate =
+        session?.roles.any(
+          (role) => role.trim().toLowerCase() == 'superadmin',
+        ) ??
+        false;
+    return Scaffold(
+      appBar: AppBar(
+        title: _isSearching
+            ? TextField(
+                controller: _searchController,
+                autofocus: true,
+                decoration: InputDecoration(
+                  hintText: context.l10n.text('Search shops...'),
+                  border: InputBorder.none,
+                ),
+                onChanged: _onSearchChanged,
+              )
+            : Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(context.l10n.text('Shops')),
+                  Text(
+                    context.l10n.text('Local-first administration'),
+                    style: const TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.normal,
+                    ),
+                  ),
+                ],
+              ),
+        actions: [
+          const ActiveShopAction(),
+          if (_isSearching)
+            IconButton(icon: const Icon(Icons.close), onPressed: _stopSearching)
+          else
+            IconButton(
+              icon: const Icon(Icons.search),
+              onPressed: () => setState(() => _isSearching = true),
+            ),
+          const HomeAction(),
+          const LocaleAction(),
+          const ThemeModeAction(),
+          const SizedBox(width: 8),
+        ],
+      ),
+      drawer: const AppDrawer(),
+      body: SafeArea(
+        child: Center(
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 900),
+            child: shops.when(
+              loading: () => const Center(child: CircularProgressIndicator()),
+              error: (error, stackTrace) => AppErrorView(
+                error: error,
+                stackTrace: stackTrace,
+                onRetry: () =>
+                    ref.read(shopControllerProvider.notifier).reload(),
+              ),
+              data: (state) => _Content(
+                state: state,
+                canCreate: canCreate,
+                onEdit: _edit,
+                onDelete: _delete,
+              ),
+            ),
+          ),
+        ),
+      ),
+      floatingActionButton: canCreate
+          ? FloatingActionButton.extended(
+              onPressed: _create,
+              icon: const Icon(Icons.add_business_outlined),
+              label: Text(context.l10n.text('Add shop')),
+            )
+          : null,
+    );
+  }
+
+  Future<void> _create() async {
+    final draft = await showDialog<ShopDraft>(
+      context: context,
+      builder: (context) => const ShopFormDialog(),
+    );
+    if (draft == null || !mounted) return;
+    await _runMutation(
+      () => ref.read(shopControllerProvider.notifier).create(draft),
+      context.l10n.text('Shop saved locally.'),
+    );
+  }
+
+  Future<void> _edit(Shop shop) async {
+    final draft = await showDialog<ShopDraft>(
+      context: context,
+      builder: (context) => ShopFormDialog(shop: shop),
+    );
+    if (draft == null || !mounted) return;
+    await _runMutation(
+      () =>
+          ref.read(shopControllerProvider.notifier).updateShop(shop.id, draft),
+      context.l10n.text('Shop updated locally.'),
+    );
+  }
+
+  Future<void> _delete(Shop shop) async {
+    try {
+      final recordCount = await ref
+          .read(shopControllerProvider.notifier)
+          .countLocalRecords(shop.id);
+      if (!mounted) return;
+      if (recordCount > 0) {
+        await showDialog<void>(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: Text(context.l10n.text('Cannot delete shop')),
+            content: Text(
+              context.l10n.text(
+                'This shop contains {count} local records. Remove or reassign them before deleting the shop.',
+                {'count': recordCount},
+              ),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: Text(context.l10n.text('Close')),
+              ),
+            ],
+          ),
+        );
+        return;
+      }
+    } catch (error, stackTrace) {
+      if (mounted) AppErrorNotification.show(context, error, stackTrace);
+      return;
+    }
+
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(context.l10n.text('Delete shop?')),
+        content: Text(
+          context.l10n.text(
+            '“{name}” will disappear now and its deletion will sync later.',
+            {'name': shop.name},
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: Text(context.l10n.text('Cancel')),
+          ),
+          FilledButton.tonal(
+            onPressed: () => Navigator.pop(context, true),
+            child: Text(context.l10n.text('Delete offline')),
+          ),
+        ],
+      ),
+    );
+    if (confirmed != true || !mounted) return;
+    await _runMutation(
+      () => ref.read(shopControllerProvider.notifier).delete(shop.id),
+      context.l10n.text('Shop deleted locally.'),
+    );
+  }
+
+  Future<void> _runMutation(
+    Future<void> Function() action,
+    String message,
+  ) async {
+    try {
+      await action();
+      if (mounted) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(message)));
+      }
+    } catch (error, stackTrace) {
+      if (mounted) AppErrorNotification.show(context, error, stackTrace);
+    }
+  }
+}
+
+class _Content extends StatelessWidget {
+  const _Content({
+    required this.state,
+    required this.canCreate,
+    required this.onEdit,
+    required this.onDelete,
+  });
+
+  final ShopScreenState state;
+  final bool canCreate;
+  final ValueChanged<Shop> onEdit;
+  final ValueChanged<Shop> onDelete;
+
+  @override
+  Widget build(BuildContext context) => Column(
+    children: [
+      if (!canCreate) const _ShopPermissionNotice(),
+      Expanded(
+        child: state.shops.isEmpty
+            ? _EmptyView(isSearch: state.searchQuery.isNotEmpty)
+            : ListView.separated(
+                padding: const EdgeInsets.fromLTRB(16, 16, 16, 100),
+                itemCount: state.shops.length,
+                separatorBuilder: (_, _) => const SizedBox(height: 10),
+                itemBuilder: (context, index) {
+                  final shop = state.shops[index];
+                  return _ShopCard(
+                    shop: shop,
+                    onEdit: () => onEdit(shop),
+                    onDelete: () => onDelete(shop),
+                  );
+                },
+              ),
+      ),
+    ],
+  );
+}
+
+class _ShopCard extends StatelessWidget {
+  const _ShopCard({
+    required this.shop,
+    required this.onEdit,
+    required this.onDelete,
+  });
+
+  final Shop shop;
+  final VoidCallback onEdit;
+  final VoidCallback onDelete;
+
+  @override
+  Widget build(BuildContext context) => Card(
+    child: ListTile(
+      leading: CircleAvatar(
+        child: Text(shop.name.characters.first.toUpperCase()),
+      ),
+      title: Row(
+        children: [
+          Flexible(child: Text(shop.name)),
+          const SizedBox(width: 8),
+          _SyncStateIcon(shop: shop),
+        ],
+      ),
+      subtitle: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            context.l10n.text(
+              shop.shopType == ShopType.retailShop
+                  ? 'Retail shop'
+                  : 'Wholesale shop',
+            ),
+          ),
+          if (shop.address case final address?)
+            Text(address, maxLines: 1, overflow: TextOverflow.ellipsis),
+          Text(context.l10n.text(shop.isActive ? 'Active' : 'Inactive')),
+        ],
+      ),
+      isThreeLine: true,
+      trailing: PopupMenuButton<String>(
+        onSelected: (value) => value == 'edit' ? onEdit() : onDelete(),
+        itemBuilder: (context) => [
+          PopupMenuItem(value: 'edit', child: Text(context.l10n.text('Edit'))),
+          PopupMenuItem(
+            value: 'delete',
+            child: Text(context.l10n.text('Delete')),
+          ),
+        ],
+      ),
+    ),
+  );
+}
+
+class _SyncStateIcon extends StatelessWidget {
+  const _SyncStateIcon({required this.shop});
+
+  final Shop shop;
+
+  @override
+  Widget build(BuildContext context) {
+    final failed = shop.syncStatus == ShopSyncStatus.failed;
+    final synced = shop.syncStatus == ShopSyncStatus.synced;
+    return Tooltip(
+      message:
+          shop.lastSyncError ??
+          context.l10n.text(
+            synced
+                ? 'Synced'
+                : failed
+                ? 'Sync failed'
+                : 'Waiting to sync',
+          ),
+      child: Icon(
+        failed
+            ? Icons.cloud_off_outlined
+            : synced
+            ? Icons.cloud_done_outlined
+            : Icons.cloud_upload_outlined,
+        size: 18,
+        color: failed
+            ? Theme.of(context).colorScheme.error
+            : Theme.of(context).colorScheme.outline,
+      ),
+    );
+  }
+}
+
+class _EmptyView extends StatelessWidget {
+  const _EmptyView({this.isSearch = false});
+
+  final bool isSearch;
+
+  @override
+  Widget build(BuildContext context) => Center(
+    child: Padding(
+      padding: const EdgeInsets.all(32),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(
+            isSearch ? Icons.search_off : Icons.storefront_outlined,
+            size: 56,
+          ),
+          const SizedBox(height: 12),
+          Text(
+            context.l10n.text(isSearch ? 'No matching shops' : 'No shops yet'),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            context.l10n.text(
+              isSearch
+                  ? 'Try a different search term.'
+                  : 'Add one now—even while completely offline.',
+            ),
+          ),
+        ],
+      ),
+    ),
+  );
+}
+
+class _ShopPermissionNotice extends StatelessWidget {
+  const _ShopPermissionNotice();
+
+  @override
+  Widget build(BuildContext context) => Padding(
+    padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
+    child: MaterialBanner(
+      content: Text(
+        context.l10n.text(
+          'Your account can view and update its assigned shop. Only a SuperAdmin can create or delete shops.',
+        ),
+      ),
+      leading: const Icon(Icons.admin_panel_settings_outlined),
+      actions: [
+        TextButton(
+          onPressed: () => ScaffoldMessenger.of(context).clearMaterialBanners(),
+          child: Text(context.l10n.text('OK')),
+        ),
+      ],
+    ),
+  );
+}

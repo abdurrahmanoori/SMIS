@@ -1,16 +1,27 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using SMIS.Application.Identity.IServices;
 using SMIS.Application.Services;
 using SMIS.Domain.Common.Interfaces;
+using SMIS.Domain.Entities;
+using SMIS.Domain.Services;
+
 namespace SMIS.Infrastructure.Server.Interceptors;
 
+/// <summary>
+/// Assigns public entity IDs immediately before persistence.
+/// Sync-capable entities keep valid client-supplied GUIDs so the same row has one stable
+/// identity on SQLite and SQL Server; other entities use the configured ID generator.
+/// </summary>
 public class EntityPKInterceptor : SaveChangesInterceptor
 {
     private readonly ICurrentUser _currentUser;
     private readonly IPublicIdGenerator _publicIdGenerator;
 
-    public EntityPKInterceptor(ICurrentUser currentUser, IPublicIdGenerator publicIdGenerator)
+    public EntityPKInterceptor(
+        ICurrentUser currentUser,
+        IPublicIdGenerator publicIdGenerator
+    )
     {
         _currentUser = currentUser;
         _publicIdGenerator = publicIdGenerator;
@@ -19,7 +30,8 @@ public class EntityPKInterceptor : SaveChangesInterceptor
     public override async ValueTask<InterceptionResult<int>> SavingChangesAsync(
         DbContextEventData eventData,
         InterceptionResult<int> result,
-        CancellationToken cancellationToken = default)
+        CancellationToken cancellationToken = default
+    )
     {
         var context = eventData.Context;
 
@@ -30,7 +42,20 @@ public class EntityPKInterceptor : SaveChangesInterceptor
         {
             if (entry.State == EntityState.Added)
             {
-// In DEBUG mode, we also replace auto-generated GUIDs (from EntityPK base class default)
+                // Sync IDs are validated GUIDs and form the stable key shared by
+                // offline clients and the server. Never replace them.
+                var preservesClientSyncId = entry.Entity is Category
+                    or Shop
+                    or Customer
+                    or Product
+                    or UnitOfMeasure
+                    or ProductUnit
+                    or ProductPrice;
+
+                if (preservesClientSyncId && Guid.TryParse(entry.Entity.Id, out _))
+                    continue;
+
+                // In DEBUG mode, we also replace auto-generated GUIDs (from EntityPK base class default)
                 // with sequential numeric IDs for easier testing and readability.
                 // In Release (production), we only generate an ID when it is truly empty,
                 // preserving any GUID set by either the client or the server.
@@ -39,7 +64,7 @@ public class EntityPKInterceptor : SaveChangesInterceptor
 #else
                 if (string.IsNullOrEmpty(entry.Entity.Id))
 #endif
-        {
+                {
                     var generated = _publicIdGenerator.Generate();
                     if (!string.IsNullOrEmpty(generated))
                         entry.Entity.Id = generated;
@@ -50,7 +75,7 @@ public class EntityPKInterceptor : SaveChangesInterceptor
 
             //if (entry.State == EntityStateEnum.Modified)
             //{
-            //    entry.Entity.UpdatedDate = DateTime.UtcNow;
+            //    entry.Entity.UpdatedDate = DateTimeService.NowUtc;
             //    entry.Entity.UpdatedBy = _currentUser.GetId();
             //    entry.Property(e => e.CreatedDate).IsModified = false; // Ensure CreatedDate is not updated
             //}
@@ -58,7 +83,7 @@ public class EntityPKInterceptor : SaveChangesInterceptor
             //{
             //    //entry.State = EntityStateEnum.Modified; // Soft-delete the entity
             //    //entry.Entity.IsDeleted = true;
-            //    //entry.Entity.DeletedAt = DateTime.UtcNow;
+            //    //entry.Entity.DeletedAt = DateTimeService.NowUtc;
             //    //entry.Entity.DeletedBy = _currentUser.GetId();
             //}
         }
@@ -67,13 +92,13 @@ public class EntityPKInterceptor : SaveChangesInterceptor
         //{
         //    if (entry.State == EntityStateEnum.Added)
         //    {
-        //        entry.Entity.CreatedAt = DateTime.UtcNow;
+        //        entry.Entity.CreatedAt = DateTimeService.NowUtc;
         //        entry.Entity.CreatedBy = _currentUser.GetId();
         //    }
 
         //    if (entry.State == EntityStateEnum.Modified)
         //    {
-        //        entry.Entity.UpdatedAt = DateTime.UtcNow;
+        //        entry.Entity.UpdatedAt = DateTimeService.NowUtc;
         //        entry.Entity.UpdatedBy = _currentUser.GetId();
         //        entry.Property(e => e.CreatedAt).IsModified = false; // Ensure CreatedDate is not updated
         //    }
@@ -81,15 +106,22 @@ public class EntityPKInterceptor : SaveChangesInterceptor
         //    {
         //        entry.State = EntityStateEnum.Modified; // Soft-delete the entity
         //        entry.Entity.IsDeleted = true;
-        //        entry.Entity.DeletedAt = DateTime.UtcNow;
+        //        entry.Entity.DeletedAt = DateTimeService.NowUtc;
         //        entry.Entity.DeletedBy = _currentUser.GetId();
         //    }
         //}
 
         return await base.SavingChangesAsync(eventData, result, cancellationToken);
     }
-    private async Task AssignSequenceNumber(IEntityPK entity, DbContext context)
+
+    private async Task AssignSequenceNumber(
+        IEntityPK entity,
+        DbContext context
+    )
     {
+        // Fallback used when PublicIdGenerator intentionally returns an empty value in
+        // Development. Both persisted and not-yet-saved entities are inspected to avoid
+        // assigning the same sequence number twice inside one SaveChanges call.
         var entityType = entity.GetType();
         var setMethod = typeof(DbContext).GetMethod("Set", new Type[0])?.MakeGenericMethod(entityType);
         var dbSet = setMethod?.Invoke(context, null) as IQueryable<IEntityPK>;
@@ -119,9 +151,9 @@ public class EntityPKInterceptor : SaveChangesInterceptor
 
             // Get max ID from pending entities in change tracker
             var pendingEntities = context.ChangeTracker.Entries<IEntityPK>()
-                .Where(e => e.State == EntityState.Added && 
-                           e.Entity.GetType() == entityType && 
-                           !string.IsNullOrEmpty(e.Entity.Id))
+                .Where(e => e.State == EntityState.Added &&
+                            e.Entity.GetType() == entityType &&
+                            !string.IsNullOrEmpty(e.Entity.Id))
                 .Select(e => e.Entity.Id)
                 .Where(id => int.TryParse(id, out _))
                 .Select(id => int.Parse(id))

@@ -1,5 +1,4 @@
-﻿using SMIS.Domain.Common.BaseAbstract;
-using SMIS.Domain.Common.Interfaces;
+using SMIS.Domain.Common.BaseAbstract;
 using SMIS.Domain.Exceptions;
 using SMIS.Domain.ValueObjects;
 
@@ -10,13 +9,14 @@ namespace SMIS.Domain.Entities;
 /// This entity exists because the same Unit (e.g. Box, Carton)
 /// can represent different quantities for different products.
 /// </summary>
-public class ProductUnit : EntityPK
+public class ProductUnit : BaseSyncableAuditableEntity
 {
     /// <summary>
     /// Foreign key to the Product.
-    /// Example: Biscuit, Notebook, Coca Cola
+    /// Example: Biscuit, Notebook, Coca-Cola
     /// </summary>
     public string ProductId { get; private set; } = string.Empty;
+
     public string? ProductName { get; private set; }
 
     /// <summary>
@@ -24,40 +24,46 @@ public class ProductUnit : EntityPK
     /// Example: Box, Carton, Pack
     /// </summary>
     public string UnitOfMeasureId { get; private set; } = string.Empty;
+
     public string? UnitName { get; private set; }
 
     /// <summary>
     /// How many Base Units of the Product are contained in this Unit.
     /// 
     /// Example:
-    /// - Biscuit: 1 Box = 12 Packs → ConversionFactor = 12
-    /// - Notebook: 1 Box = 10 Pieces → ConversionFactor = 10
-    /// - Coca Cola: 1 Carton = 24 Bottles → ConversionFactor = 24
+    /// - Biscuit: 1 Box = 12 Packs → BaseUnitQuantity = 12
+    /// - Notebook: 1 Box = 10 Pieces → BaseUnitQuantity = 10
+    /// - Coca Cola: 1 Carton = 24 Bottles → BaseUnitQuantity = 24
     /// </summary>
-    public decimal ConversionFactor { get; private set; }
+    public decimal BaseUnitQuantity { get; private set; }
 
-    /// <summary>
-    /// Navigation property to Product.
-    /// </summary>
+    public DateTime ConflictModifiedUtc => GetConflictModifiedUtc();
+
     public Product Product { get; set; } = null!;
 
-    /// <summary>
-    /// Navigation property to Unit.
-    /// </summary>
     public UnitOfMeasure UnitOfMeasure { get; set; } = null!;
+    public ICollection<ProductPrice> ProductPrices { get; set; } = new List<ProductPrice>();
 
-    internal ProductUnit() { } // EF Core & Seeding
+    internal ProductUnit()
+    {
+    } // EF Core & Seeding
 
-    public static ProductUnit Create(string productId, string unitOfMeasureId, decimal conversionFactor)
+    public static ProductUnit Create(
+        string productId,
+        string unitOfMeasureId,
+        decimal baseUnitQuantity
+    )
     {
         var productUnit = new ProductUnit();
         productUnit.SetProductId(productId);
         productUnit.SetUnitOfMeasureId(unitOfMeasureId);
-        productUnit.SetConversionFactor(conversionFactor);
+        productUnit.SetBaseUnitQuantity(baseUnitQuantity);
         return productUnit;
     }
 
-    public void SetProductId(string productId)
+    public void SetProductId(
+        string productId
+    )
     {
         if (string.IsNullOrWhiteSpace(productId))
             throw new DomainValidationException("Product ID cannot be empty");
@@ -65,7 +71,9 @@ public class ProductUnit : EntityPK
         ProductId = productId.Trim();
     }
 
-    public void SetUnitOfMeasureId(string unitOfMeasureId)
+    public void SetUnitOfMeasureId(
+        string unitOfMeasureId
+    )
     {
         if (string.IsNullOrWhiteSpace(unitOfMeasureId))
             throw new DomainValidationException("Unit of measure ID cannot be empty");
@@ -73,17 +81,22 @@ public class ProductUnit : EntityPK
         UnitOfMeasureId = unitOfMeasureId.Trim();
     }
 
-    public void SetConversionFactor(decimal conversionFactor)
+    public void SetBaseUnitQuantity(
+        decimal baseUnitQuantity
+    )
     {
-        var conversionFactorVO = ValueObjects.ConversionFactor.Create(conversionFactor);
-        ConversionFactor = conversionFactorVO;
+        var baseUnitQuantityVO = ValueObjects.BaseUnitQuantity.Create(baseUnitQuantity);
+        BaseUnitQuantity = baseUnitQuantityVO;
     }
 
-    public void SetProductName(string? productName) => ProductName = productName?.Trim();
-    public void SetUnitName(string? unitName) => UnitName = unitName?.Trim();
+    public void SetProductName(
+        string? productName
+    ) => ProductName = productName?.Trim();
+
+    public void SetUnitName(
+        string? unitName
+    ) => UnitName = unitName?.Trim();
 }
-
-
 
 
 /*
@@ -105,7 +118,7 @@ Example from real life
 | Notebook  | Box    | 10 Pieces       |
 | Coca‑Cola | Carton | 24 Bottles      |
 | Eggs      | Carton | 30 Pieces       |
-Same unit name → different meaning. 
+Same unit name → different meaning.
 
 ❌ Wrong Thinking (Beginner Mistake)
 Box = 12
@@ -117,7 +130,7 @@ A unit only describes the container.
 The product defines how much that container holds.
 
 So conversion belongs to:
-Product + Unit → ConversionFactor
+Product + Unit → BaseUnitQuantity
 That is exactly why ProductUnit exists.
 🧠 Mental Rule (Never Forget This)
 
@@ -136,6 +149,35 @@ Example:
 1 Box of Notebook = 10 Pieces
 1 Carton of Coke = 24 Bottles
 
+=======================================================================
+
+
+
+
+A clean relational version would look like this.
+
+Product
+Id	Name	BaseUnitId
+P001	Coca Cola	U001
+
+Here, U001 refers to Bottle.
+
+UnitOfMeasure
+Id	Name
+U001	Bottle
+U002	Box
+U003	Carton
+ProductUnit
+Id	ProductId	UnitOfMeasureId	BaseUnitQuantity
+PU001	P001	U001	1
+PU002	P001	U002	12
+PU003	P001	U003	24
+
+Meaning:
+
+PU001 -> 1 Bottle = 1 Bottle
+PU002 -> 1 Box    = 12 Bottles
+PU003 -> 1 Carton = 24 Bottles
 
 
 

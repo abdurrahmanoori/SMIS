@@ -12,13 +12,19 @@ internal sealed class LoanAccountDeleteCommandHandler : IRequestHandler<LoanAcco
     private readonly ILoanAccountRepository _loanAccountRepository;
     private readonly IUnitOfWork _unitOfWork;
 
-    public LoanAccountDeleteCommandHandler(IUnitOfWork unitOfWork, ILoanAccountRepository loanAccountRepository)
+    public LoanAccountDeleteCommandHandler(
+        IUnitOfWork unitOfWork,
+        ILoanAccountRepository loanAccountRepository
+    )
     {
         _unitOfWork = unitOfWork;
         _loanAccountRepository = loanAccountRepository;
     }
 
-    public async Task<Result<Unit>> Handle(LoanAccountDeleteCommand request, CancellationToken cancellationToken)
+    public async Task<Result<Unit>> Handle(
+        LoanAccountDeleteCommand request,
+        CancellationToken cancellationToken
+    )
     {
         var entity = await _loanAccountRepository.GetByIdAsync(request.Id);
         if (entity == null)

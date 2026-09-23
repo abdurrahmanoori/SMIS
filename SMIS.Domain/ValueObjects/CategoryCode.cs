@@ -9,9 +9,13 @@ public sealed class CategoryCode
 
     public string Value { get; }
 
-    private CategoryCode(string value) => Value = value;
+    private CategoryCode(
+        string value
+    ) => Value = value;
 
-    public static CategoryCode? Create(string? code)
+    public static CategoryCode? Create(
+        string? code
+    )
     {
         if (code == null)
             return null;
@@ -27,6 +31,9 @@ public sealed class CategoryCode
         return new CategoryCode(cleaned);
     }
 
-    public static implicit operator string?(CategoryCode? code) => code?.Value;
-    public override string ToString( ) => Value;
+    public static implicit operator string?(
+        CategoryCode? code
+    ) => code?.Value;
+
+    public override string ToString() => Value;
 }

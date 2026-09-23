@@ -19,7 +19,8 @@ public class ProcessCustomerPaymentCommand : IRequest<Result<PaymentAllocationRe
     public string? Notes { get; set; }
 }
 
-public class ProcessCustomerPaymentHandler : IRequestHandler<ProcessCustomerPaymentCommand, Result<PaymentAllocationResultDto>>
+public class
+    ProcessCustomerPaymentHandler : IRequestHandler<ProcessCustomerPaymentCommand, Result<PaymentAllocationResultDto>>
 {
     private readonly ILoanAccountRepository _loanAccountRepository;
     private readonly PaymentAllocationService _paymentAllocationService;
@@ -28,21 +29,25 @@ public class ProcessCustomerPaymentHandler : IRequestHandler<ProcessCustomerPaym
     public ProcessCustomerPaymentHandler(
         ILoanAccountRepository loanAccountRepository,
         PaymentAllocationService paymentAllocationService,
-        IUnitOfWork unitOfWork)
+        IUnitOfWork unitOfWork
+    )
     {
         _loanAccountRepository = loanAccountRepository;
         _paymentAllocationService = paymentAllocationService;
         _unitOfWork = unitOfWork;
     }
 
-    public async Task<Result<PaymentAllocationResultDto>> Handle(ProcessCustomerPaymentCommand request, CancellationToken cancellationToken)
+    public async Task<Result<PaymentAllocationResultDto>> Handle(
+        ProcessCustomerPaymentCommand request,
+        CancellationToken cancellationToken
+    )
     {
         // Step 1: Fetch all unpaid/partially paid loans for this customer
         var unpaidLoans = await _loanAccountRepository
-            .GetAllQueryable()
+            .GetAllQueryable(includeProperties: "Payments", tracked: true)
             .Where(l => l.CustomerId == request.CustomerId
-                     && l.Status != LoanStatus.Paid
-                     && l.IsActive)
+                        && l.Status != LoanStatus.Paid
+                        && l.IsActive)
             .ToListAsync(cancellationToken);
 
         if (!unpaidLoans.Any())
@@ -51,7 +56,8 @@ public class ProcessCustomerPaymentHandler : IRequestHandler<ProcessCustomerPaym
         // Step 2: Validate payment doesn't exceed total debt
         var totalDebt = unpaidLoans.Sum(l => l.RemainingAmount);
         if (request.PaymentAmount > totalDebt)
-            return Result<PaymentAllocationResultDto>.FailureResult($"Payment amount ({request.PaymentAmount}) exceeds total debt ({totalDebt})");
+            return Result<PaymentAllocationResultDto>.FailureResult(
+                $"Payment amount ({request.PaymentAmount}) exceeds total debt ({totalDebt})");
 
         // Step 3: Use domain service to allocate payment across loans (FIFO)
         // Example: Payment=130, Loans=[100, 50, 150] → Allocations=[Loan1:100, Loan2:30]
@@ -73,7 +79,7 @@ public class ProcessCustomerPaymentHandler : IRequestHandler<ProcessCustomerPaym
 
             // Add payment to loan's collection (this updates PaidAmount calculation)
             allocation.LoanAccount.Payments.Add(payment);
-            
+
             // Validate and update loan status (Unpaid → PartiallyPaid → Paid)
             allocation.LoanAccount.RecordPayment(allocation.AllocatedAmount);
 
@@ -81,14 +87,15 @@ public class ProcessCustomerPaymentHandler : IRequestHandler<ProcessCustomerPaym
             resultAllocations.Add(new LoanPaymentAllocationDto
             {
                 LoanAccountId = allocation.LoanAccount.Id,
-                ProductName = allocation.LoanAccount.ProductName ?? "Unknown",
+                SaleId = allocation.LoanAccount.SaleId,
                 AllocatedAmount = allocation.AllocatedAmount,
                 RemainingAfterPayment = allocation.LoanAccount.RemainingAmount,
                 Status = allocation.LoanAccount.Status.ToString()
             });
         }
 
-        // Step 5: Persist all changes to database
+        // Payments settle debt only. No inventory workflow is invoked here because
+        // stock already left the business when the related sale was created.
         await _unitOfWork.SaveChanges(cancellationToken);
 
         // Step 6: Return result with allocation details

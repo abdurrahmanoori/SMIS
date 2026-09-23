@@ -10,16 +10,23 @@ using SMIS.Application.Repositories.Customers;
 
 namespace SMIS.Application.Features.Customers.Queries
 {
-    public record CustomerGetListQuery(int PageNumber = 1, int PageSize = 25, bool IncludeShop = false) : IRequest<Result<PagedList<CustomerDto>>>;
+    public record CustomerGetListQuery(int PageNumber = 1, int PageSize = 25, bool IncludeShop = false)
+        : IRequest<Result<PagedList<CustomerDto>>>;
 
-    internal sealed class CustomerGetListQueryHandler : IRequestHandler<CustomerGetListQuery, Result<PagedList<CustomerDto>>>
+    internal sealed class
+        CustomerGetListQueryHandler : IRequestHandler<CustomerGetListQuery, Result<PagedList<CustomerDto>>>
     {
         private readonly ICustomerRepository _customerRepository;
         private readonly ITranslationKeyRepository _translationKeyRepository;
         private readonly ICurrentUser _currentUser;
         private readonly IMapper _mapper;
 
-        public CustomerGetListQueryHandler(ICustomerRepository customerRepository, ITranslationKeyRepository translationKeyRepository, ICurrentUser currentUser, IMapper mapper)
+        public CustomerGetListQueryHandler(
+            ICustomerRepository customerRepository,
+            ITranslationKeyRepository translationKeyRepository,
+            ICurrentUser currentUser,
+            IMapper mapper
+        )
         {
             _customerRepository = customerRepository;
             _translationKeyRepository = translationKeyRepository;
@@ -27,7 +34,10 @@ namespace SMIS.Application.Features.Customers.Queries
             _mapper = mapper;
         }
 
-        public async Task<Result<PagedList<CustomerDto>>> Handle(CustomerGetListQuery request, CancellationToken cancellationToken)
+        public async Task<Result<PagedList<CustomerDto>>> Handle(
+            CustomerGetListQuery request,
+            CancellationToken cancellationToken
+        )
         {
             var query = _customerRepository.GetAllQueryable(includeProperties: request.IncludeShop ? "Shop" : null);
             var customers = await query.ToPagedList(request.PageNumber, request.PageSize);

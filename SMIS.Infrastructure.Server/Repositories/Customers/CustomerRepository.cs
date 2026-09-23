@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using SMIS.Application.Repositories.Customers;
 using SMIS.Domain.Entities;
 using SMIS.Infrastructure.Server.Context;
@@ -7,8 +8,20 @@ namespace SMIS.Infrastructure.Server.Repositories.Customers
 {
     public class CustomerRepository : GenericRepository<Customer>, ICustomerRepository
     {
-        public CustomerRepository(AppDbContext context) : base(context)
+        public CustomerRepository(
+            AppDbContext context
+        ) : base(context)
         {
+        }
+
+        public Task<Customer?> GetByIdIncludingDeletedAsync(
+            string id,
+            CancellationToken cancellationToken = default
+        )
+        {
+            return _context.Customers
+                .IgnoreQueryFilters()
+                .FirstOrDefaultAsync(customer => customer.Id == id, cancellationToken);
         }
     }
 }

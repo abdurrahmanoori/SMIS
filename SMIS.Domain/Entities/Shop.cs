@@ -1,25 +1,20 @@
 using SMIS.Domain.Common.BaseAbstract;
-using SMIS.Domain.Common.Interfaces;
 using SMIS.Domain.Enums;
 using SMIS.Domain.Exceptions;
 using SMIS.Domain.ValueObjects;
 
 namespace SMIS.Domain.Entities;
 
-public class Shop : BaseAuditableEntity, ISyncableEntity
+public class Shop : BaseSyncableAuditableEntity
 {
     public string Name { get; private set; } = string.Empty;
     public ShopType ShopType { get; private set; }
     public string? Address { get; private set; } = string.Empty;
     public string? PhoneNumber { get; private set; } = string.Empty;
+
     public string? Email { get; private set; } = string.Empty;
     public string? TaxNumber { get; private set; } = string.Empty;
     public bool IsActive { get; private set; } = true;
-
-    // ISyncableEntity properties (mobile sync)
-    public bool IsSyncedToServer { get; set; }
-    public DateTime? LastSyncedAt { get; set; }
-    public DateTime LastModifiedUtc { get; set; }
 
     // Navigation Properties
     //public virtual ICollection<Product> Products { get; set; } = new List<Product>();
@@ -29,9 +24,20 @@ public class Shop : BaseAuditableEntity, ISyncableEntity
     //public virtual ICollection<ShopCreditAccount> CreditAccountsAsCreditor { get; set; } = new List<ShopCreditAccount>();
     //public virtual ICollection<ShopCreditAccount> CreditAccountsAsDebtor { get; set; } = new List<ShopCreditAccount>();
 
-    internal Shop() { } // EF Core & Seeding
+    internal Shop()
+    {
+        IsSyncedToServer = false;
+    } // EF Core & Seeding
 
-    public static Shop Create(string name, ShopType shopType, string? address = null, string? phoneNumber = null, string? email = null, string? taxNumber = null, bool isActive = true)
+    public static Shop Create(
+        string name,
+        ShopType shopType,
+        string? address = null,
+        string? phoneNumber = null,
+        string? email = null,
+        string? taxNumber = null,
+        bool isActive = true
+    )
     {
         var shop = new Shop();
         shop.SetName(name);
@@ -44,18 +50,16 @@ public class Shop : BaseAuditableEntity, ISyncableEntity
         return shop;
     }
 
-    public void SetName(string name)
+    public void SetName(
+        string name
+    )
     {
-        if (string.IsNullOrWhiteSpace(name))
-            throw new DomainValidationException("Shop name cannot be empty");
-
-        if (name.Length > 200)
-            throw new DomainValidationException("Shop name cannot exceed 200 characters");
-
         Name = name.Trim();
     }
 
-    public void SetShopType(ShopType shopType)
+    public void SetShopType(
+        ShopType shopType
+    )
     {
         if (!Enum.IsDefined(typeof(ShopType), shopType))
             throw new DomainValidationException("Invalid shop type");
@@ -63,43 +67,51 @@ public class Shop : BaseAuditableEntity, ISyncableEntity
         ShopType = shopType;
     }
 
-    public void SetAddress(string? address)
+    public void SetAddress(
+        string? address
+    )
     {
-        if (!string.IsNullOrWhiteSpace(address) && address.Length > 500)
-            throw new DomainValidationException("Address cannot exceed 500 characters");
-
         Address = address?.Trim();
     }
 
-    public void SetPhoneNumber(string? phoneNumber)
+    public void SetPhoneNumber(
+        string? phoneNumber
+    )
     {
         if (string.IsNullOrWhiteSpace(phoneNumber))
         {
             PhoneNumber = null;
             return;
         }
+
         var phone = ValueObjects.PhoneNumber.Create(phoneNumber);
         PhoneNumber = phone;
     }
 
-    public void SetEmail(string? email)
+    public void SetEmail(
+        string? email
+    )
     {
         if (string.IsNullOrWhiteSpace(email))
         {
             Email = null;
             return;
         }
+
         var emailVO = ValueObjects.Email.Create(email);
         Email = emailVO;
     }
 
-    public void SetTaxNumber(string? taxNumber)
+    public void SetTaxNumber(
+        string? taxNumber
+    )
     {
         if (string.IsNullOrWhiteSpace(taxNumber))
         {
             TaxNumber = null;
             return;
         }
+
         var tax = ValueObjects.TaxNumber.Create(taxNumber);
         TaxNumber = tax;
     }

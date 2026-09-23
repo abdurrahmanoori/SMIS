@@ -18,7 +18,12 @@ namespace SMIS.Application.Features.Customers.Commands
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
 
-        public CustomerUpdateCommandHandler(IUnitOfWork unitOfWork, IMapper mapper, ICustomerRepository customerRepository, ITranslationKeyRepository translationKeyRepository)
+        public CustomerUpdateCommandHandler(
+            IUnitOfWork unitOfWork,
+            IMapper mapper,
+            ICustomerRepository customerRepository,
+            ITranslationKeyRepository translationKeyRepository
+        )
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
@@ -26,7 +31,10 @@ namespace SMIS.Application.Features.Customers.Commands
             _translationKeyRepository = translationKeyRepository;
         }
 
-        public async Task<Result<CustomerDto>> Handle(CustomerUpdateCommand request, CancellationToken cancellationToken)
+        public async Task<Result<CustomerDto>> Handle(
+            CustomerUpdateCommand request,
+            CancellationToken cancellationToken
+        )
         {
             var entity = await _customerRepository.GetByIdAsync(request.Id);
             if (entity == null)
@@ -35,10 +43,9 @@ namespace SMIS.Application.Features.Customers.Commands
             }
 
             await _translationKeyRepository.AddTranslationKeysForChangedProperties(request.CustomerCreateDto, entity);
-            
+
             // Update using domain methods
             entity.SetFirstName(request.CustomerCreateDto.FirstName);
-            entity.SetShopId(request.CustomerCreateDto.ShopId);
             entity.SetCustomerType(request.CustomerCreateDto.CustomerType);
             entity.SetLastName(request.CustomerCreateDto.LastName);
             entity.SetFatherName(request.CustomerCreateDto.FatherName);
@@ -48,8 +55,10 @@ namespace SMIS.Application.Features.Customers.Commands
             entity.SetTaxNumber(request.CustomerCreateDto.TaxNumber);
             entity.SetProvinceId(request.CustomerCreateDto.ProvinceId);
             entity.SetDistrictId(request.CustomerCreateDto.DistrictId);
-            if (request.CustomerCreateDto.IsActive) entity.Activate(); else entity.Deactivate();
-            
+            if (request.CustomerCreateDto.IsActive) entity.Activate();
+            else entity.Deactivate();
+            entity.ClearClientModificationMetadata();
+
             await _unitOfWork.SaveChanges(cancellationToken);
 
             var dto = _mapper.Map<CustomerDto>(entity);

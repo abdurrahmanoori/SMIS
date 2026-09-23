@@ -5,12 +5,14 @@ namespace SMIS.Infrastructure.Server.DatabaseSeeders;
 
 public static class DistrictSeed
 {
-    public static void DataSeed(ModelBuilder modelBuilder)
+    public static void DataSeed(
+        ModelBuilder modelBuilder
+    )
     {
-        modelBuilder.Entity<District>().HasData(
-            new District { Id = "1", Name = "Kabul Center", TranslationKeyId = "1" },
-            new District { Id = "2", Name = "Kabul North", TranslationKeyId = "2" },
-            new District { Id = "3", Name = "Herat Center", TranslationKeyId = "3" }
-        );
+        modelBuilder.Entity<District>().HasData(SeedIds.Stamp(
+            new District { Id = SeedIds.DistrictKabulCenter, Name = "Kabul Center", TranslationKeyId = SeedIds.TKey1 },
+            new District { Id = SeedIds.DistrictKabulNorth, Name = "Kabul North", TranslationKeyId = SeedIds.TKey2 },
+            new District { Id = SeedIds.DistrictHeratCenter, Name = "Herat Center", TranslationKeyId = SeedIds.TKey3 }
+        ));
     }
 }

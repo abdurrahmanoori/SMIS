@@ -28,7 +28,8 @@ namespace SMIS.Application.Features.Identity.Users.Commands
             UserManager<ApplicationUser> userManager,
             RoleManager<ApplicationRole> roleManager,
             IUnitOfWork unitOfWork,
-            IMapper mapper)
+            IMapper mapper
+        )
         {
             _translationKeyRepository = translationKeyRepository;
             _shopRepository = shopRepository;
@@ -38,12 +39,15 @@ namespace SMIS.Application.Features.Identity.Users.Commands
             _mapper = mapper;
         }
 
-        public async Task<Result<UserDto>> Handle(UserCreateCommand request, CancellationToken cancellationToken)
+        public async Task<Result<UserDto>> Handle(
+            UserCreateCommand request,
+            CancellationToken cancellationToken
+        )
         {
             await _translationKeyRepository.AddTranslationKeysForEntity(request.UserCreateDto, _unitOfWork);
 
             var entity = _mapper.Map<ApplicationUser>(request.UserCreateDto);
-            
+
             // Populate shop name
             var shop = await _shopRepository.GetByIdAsync(request.UserCreateDto.ShopId);
             entity.ShopName = shop?.Name;
@@ -67,6 +71,7 @@ namespace SMIS.Application.Features.Identity.Users.Commands
                         await _roleManager.CreateAsync(new ApplicationRole { Name = role });
                     }
                 }
+
                 var addToRoles = await _userManager.AddToRolesAsync(entity, request.UserCreateDto.Roles.Distinct());
                 if (!addToRoles.Succeeded)
                 {

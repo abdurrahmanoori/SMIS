@@ -2,15 +2,31 @@ using SMIS.Domain.Enums;
 
 namespace SMIS.Application.DTO.StockBatches
 {
+    /// <summary>
+    /// Receipt input. Quantity is entered in ReceivedProductUnitId and is normalized
+    /// to the product base unit by the application layer before inventory is posted.
+    /// </summary>
     public class StockBatchCreateDto
     {
         public string ProductId { get; set; } = string.Empty;
+        public string ReceivedProductUnitId { get; set; } = string.Empty;
+        public decimal ReceivedQuantity { get; set; }
+        public long UnitCostBase { get; set; }
         public string? BatchNumber { get; set; }
-        public decimal Quantity { get; set; }
-        public string UnitId { get; set; } = string.Empty;
-        public DateTime? ReceivedDate { get; set; }
+        public DateTime? ReceivedAtUtc { get; set; }
         public DateTime? ExpirationDate { get; set; }
-        public long PurchasePrice { get; set; }
-        public StatusEnum Status { get; set; } = StatusEnum.Active;
+
+        /// <summary>
+        /// Optional business entity type that caused the receipt, for example PurchaseOrder.
+        /// </summary>
+        public string? ReferenceType { get; set; }
+
+        /// <summary>
+        /// Primary key of the related business entity. Do not put invoice numbers,
+        /// receipt numbers, or other human-readable document numbers here.
+        /// </summary>
+        public string? ReferenceId { get; set; }
+
+        public string? IdempotencyKey { get; set; }
     }
 }

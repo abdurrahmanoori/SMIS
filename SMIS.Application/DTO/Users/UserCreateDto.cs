@@ -8,13 +8,11 @@ namespace SMIS.Application.DTO.Users
         public string Email { get; set; } = default!;
         public string? PhoneNumber { get; set; }
         public string Password { get; set; } = default!;
-        
-        [Translatable]
-        public string? FirstName { get; set; }
-        
-        [Translatable]
-        public string? LastName { get; set; }
-        
+
+        [Translatable] public string? FirstName { get; set; }
+
+        [Translatable] public string? LastName { get; set; }
+
         public string ShopId { get; set; } = default!;
         public string? LanguageId { get; set; }
         public IEnumerable<string>? Roles { get; set; }

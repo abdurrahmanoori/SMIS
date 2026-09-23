@@ -12,7 +12,7 @@ using SMIS.Application.DTO.ProductUnits;
 using SMIS.Application.DTO.StockBatches;
 using SMIS.Application.DTO.TranslationKeys;
 using SMIS.Application.DTO.Translations;
-using SMIS.Application.DTO.StockTransactions;
+using SMIS.Application.DTO.StockMovements;
 using SMIS.Domain.Entities;
 using SMIS.Domain.Entities.Localization;
 using SMIS.Domain.Entities.LocationEntities;
@@ -22,6 +22,7 @@ using SMIS.Application.DTO.ProductPrices;
 using SMIS.Application.DTO.Customers;
 using SMIS.Application.DTO.ShopOwners;
 using SMIS.Application.DTO.LoanAccounts;
+using SMIS.Application.DTO.Sales;
 
 namespace SMIS.Application.Mappings;
 
@@ -101,63 +102,87 @@ public class MappingProfile : Profile
         CreateMap<District, DistrictCreateDto>().ReverseMap();
 
         // Shop mapping
-        CreateMap<Shop, ShopDto>().ReverseMap();
+        CreateMap<Shop, ShopDto>()
+            .ForMember(dest => dest.ClientCreatedDate,
+                opt => opt.MapFrom(src => AsUtc(src.ClientCreatedDate)))
+            .ForMember(dest => dest.ClientModifiedDate,
+                opt => opt.MapFrom(src => AsUtc(src.ClientModifiedDate)))
+            .ForMember(dest => dest.LastModifiedUtc,
+                opt => opt.MapFrom(src => AsUtc(src.LastModifiedUtc)))
+            .ForMember(dest => dest.ConflictModifiedUtc,
+                opt => opt.MapFrom(src => src.GetConflictModifiedUtc()));
         // ShopCreateDto mapping removed - use Shop.Create() in handler
 
         // Product mapping
-        CreateMap<Product, ProductDto>().ReverseMap();
-        CreateMap<ProductCreateDto, Product>()
-            .ConstructUsing(src => Product.Create(
-                src.Name,
-                src.ShopId,
-                src.BaseUnitId,
-                src.SKU,
-                src.IsActive,
-                src.Description,
-                src.Barcode,
-                src.ImageUrl,
-                src.CategoryId
-            ));
-
+        CreateMap<Product, ProductDto>()
+            .ForMember(dest => dest.CreatedDate,
+                opt => opt.MapFrom(src => AsUtc(src.CreatedDate)))
+            .ForMember(dest => dest.UpdatedDate,
+                opt => opt.MapFrom(src => AsUtc(src.UpdatedDate)))
+            .ForMember(dest => dest.ClientCreatedDate,
+                opt => opt.MapFrom(src => AsUtc(src.ClientCreatedDate)))
+            .ForMember(dest => dest.ClientModifiedDate,
+                opt => opt.MapFrom(src => AsUtc(src.ClientModifiedDate)))
+            .ForMember(dest => dest.LastModifiedUtc,
+                opt => opt.MapFrom(src => AsUtc(src.LastModifiedUtc)))
+            .ForMember(dest => dest.ConflictModifiedUtc,
+                opt => opt.MapFrom(src => src.GetConflictModifiedUtc()));
         // UnitOfMeasure mapping
-        CreateMap<UnitOfMeasure, UnitOfMeasureDto>().ReverseMap();
+        CreateMap<UnitOfMeasure, UnitOfMeasureDto>()
+            .ForMember(dest => dest.ClientCreatedDate, opt => opt.MapFrom(src => AsUtc(src.ClientCreatedDate)))
+            .ForMember(dest => dest.ClientModifiedDate, opt => opt.MapFrom(src => AsUtc(src.ClientModifiedDate)))
+            .ForMember(dest => dest.LastModifiedUtc, opt => opt.MapFrom(src => AsUtc(src.LastModifiedUtc)))
+            .ForMember(dest => dest.ConflictModifiedUtc, opt => opt.MapFrom(src => src.GetConflictModifiedUtc()));
         CreateMap<UnitOfMeasureCreateDto, UnitOfMeasure>()
             .ConstructUsing(src => UnitOfMeasure.Create(
                 src.Name,
                 src.Symbol,
-                src.ShopId,
                 src.Description
             ));
 
         // Category mapping
-        CreateMap<Category, CategoryDto>().ReverseMap();
+        CreateMap<Category, CategoryDto>()
+            .ForMember(dest => dest.CreatedDate,
+                opt => opt.MapFrom(src => AsUtc(src.CreatedDate)))
+            .ForMember(dest => dest.UpdatedDate,
+                opt => opt.MapFrom(src => AsUtc(src.UpdatedDate)))
+            .ForMember(dest => dest.ClientCreatedDate,
+                opt => opt.MapFrom(src => AsUtc(src.ClientCreatedDate)))
+            .ForMember(dest => dest.ClientModifiedDate,
+                opt => opt.MapFrom(src => AsUtc(src.ClientModifiedDate)))
+            .ForMember(dest => dest.LastModifiedUtc,
+                opt => opt.MapFrom(src => AsUtc(src.LastModifiedUtc)))
+            .ForMember(dest => dest.ConflictModifiedUtc,
+                opt => opt.MapFrom(src => src.GetConflictModifiedUtc()));
         // CategoryCreateDto mapping removed - use Category.Create() in handler with ICurrentUser.GetShopId()
 
 
         // ProductUnit mapping
-        CreateMap<ProductUnit, ProductUnitDto>().ReverseMap();
+        CreateMap<ProductUnit, ProductUnitDto>()
+            .ForMember(dest => dest.ClientCreatedDate, opt => opt.MapFrom(src => AsUtc(src.ClientCreatedDate)))
+            .ForMember(dest => dest.ClientModifiedDate, opt => opt.MapFrom(src => AsUtc(src.ClientModifiedDate)))
+            .ForMember(dest => dest.LastModifiedUtc, opt => opt.MapFrom(src => AsUtc(src.LastModifiedUtc)))
+            .ForMember(dest => dest.ConflictModifiedUtc, opt => opt.MapFrom(src => src.GetConflictModifiedUtc()));
         CreateMap<ProductUnitCreateDto, ProductUnit>()
             .ConstructUsing(src => ProductUnit.Create(
                 src.ProductId,
                 src.UnitOfMeasureId,
-                src.ConversionFactor
+                src.BaseUnitQuantity
             ));
 
         // ProductPrice mapping
-        CreateMap<ProductPrice, ProductPriceDto>().ReverseMap();
+        CreateMap<ProductPrice, ProductPriceDto>()
+            .ForMember(dest => dest.ClientCreatedDate, opt => opt.MapFrom(src => AsUtc(src.ClientCreatedDate)))
+            .ForMember(dest => dest.ClientModifiedDate, opt => opt.MapFrom(src => AsUtc(src.ClientModifiedDate)))
+            .ForMember(dest => dest.LastModifiedUtc, opt => opt.MapFrom(src => AsUtc(src.LastModifiedUtc)))
+            .ForMember(dest => dest.ConflictModifiedUtc, opt => opt.MapFrom(src => src.GetConflictModifiedUtc()));
         CreateMap<ProductPriceCreateDto, ProductPrice>()
             .ConstructUsing(src => ProductPrice.Create(
-                src.ProductId,
                 src.ProductUnitId,
-                src.BuyPrice,
                 src.SellPrice,
                 src.EffectiveDate
             ))
-            .AfterMap((src, dest) =>
-            {
-                dest.SetEndDate(src.EndDate);
-                if (src.IsActive) dest.Activate(); else dest.Deactivate();
-            });
+            .AfterMap((src, dest) => { dest.SetEndDate(src.EndDate); });
 
         // TranslationKey mapping
         CreateMap<TranslationKey, TranslationKeyDto>().ReverseMap();
@@ -167,103 +192,75 @@ public class MappingProfile : Profile
         CreateMap<Translation, TranslationEntityDto>().ReverseMap();
         CreateMap<Translation, TranslationEntityCreateDto>().ReverseMap();
 
-        // StockBatch mapping
-        CreateMap<StockBatch, StockBatchDto>().ReverseMap();
-        CreateMap<StockBatchCreateDto, StockBatch>()
-            .ConstructUsing(src => StockBatch.Create(
-                src.ProductId,
-                src.UnitId,
-                src.Quantity,
-                src.PurchasePrice,
-                src.ReceivedDate,
-                src.BatchNumber,
-                src.ExpirationDate
-            ));
+        // Inventory mapping. Creation is handled explicitly because conversion,
+        // tenant checks and ledger posting are domain/application operations.
+        CreateMap<StockBatch, StockBatchDto>();
+        CreateMap<StockMovement, StockMovementDto>();
 
-        // StockTransaction mapping
-        CreateMap<StockTransaction, StockTransactionDto>()
-            .ForMember(dest => dest.Type, opt => opt.MapFrom(src => Enum.Parse<TransactionType>(src.Type)));
-        CreateMap<StockTransactionCreateDto, StockTransaction>()
-            .ConstructUsing(src => StockTransaction.Create(
-                src.ShopId,
-                src.ProductId,
-                src.StockBatchId,
-                src.Quantity,
-                src.UnitId,
-                src.Type,
-                src.TransactionDate,
-                src.Reference
-            ));
+        // Sales contain commercial facts only. Inventory allocation remains represented
+        // by StockMovement rows that reference each SaleLine.Id.
+        CreateMap<SaleLine, SaleLineDto>();
+        CreateMap<Sale, SaleDto>()
+            .ForMember(dest => dest.ReceivableId,
+                opt => opt.MapFrom(src => src.Receivable == null ? null : src.Receivable.Id))
+            .ForMember(dest => dest.ReceivableRemainingAmount,
+                opt => opt.MapFrom(src => src.Receivable == null ? null : (long?)src.Receivable.RemainingAmount));
 
         // Customer mapping
-        CreateMap<Customer, CustomerDto>().ReverseMap();
-        CreateMap<CustomerCreateDto, Customer>()
-            .ConstructUsing(src => Customer.Create(
-                src.FirstName,
-                src.ShopId,
-                src.CustomerType,
-                src.LastName,
-                src.FatherName,
-                src.Email,
-                src.PhoneNumber,
-                src.Address,
-                src.TaxNumber,
-                src.ProvinceId,
-                src.DistrictId,
-                src.IsActive
-            ));
-
+        CreateMap<Customer, CustomerDto>()
+            .ForMember(dest => dest.CreatedDate,
+                opt => opt.MapFrom(src => AsUtc(src.CreatedDate)))
+            .ForMember(dest => dest.UpdatedDate,
+                opt => opt.MapFrom(src => AsUtc(src.UpdatedDate)))
+            .ForMember(dest => dest.ClientCreatedDate,
+                opt => opt.MapFrom(src => AsUtc(src.ClientCreatedDate)))
+            .ForMember(dest => dest.ClientModifiedDate,
+                opt => opt.MapFrom(src => AsUtc(src.ClientModifiedDate)))
+            .ForMember(dest => dest.LastModifiedUtc,
+                opt => opt.MapFrom(src => AsUtc(src.LastModifiedUtc)))
+            .ForMember(dest => dest.ConflictModifiedUtc,
+                opt => opt.MapFrom(src => src.GetConflictModifiedUtc()));
         // ShopOwner mapping
         CreateMap<ShopOwner, ShopOwnerDto>().ReverseMap();
-        CreateMap<ShopOwnerCreateDto, ShopOwner>()
-            .ConstructUsing(src => ShopOwner.Create(
-                src.ApplicationUserId,
-                src.ShopId,
-                src.FirstName,
-                src.LastName,
-                src.PhoneNumber,
-                src.Email,
-                src.Address,
-                src.OwnershipPercentage
-            ))
-            .AfterMap((src, dest) =>
-            {
-                dest.SetNationalIdCardNumber(src.NationalIdCardNumber);
-                if (src.IsActive) dest.Activate(); else dest.Deactivate();
-            });
-
-        // LoanAccount mapping
+        // LoanAccount is a receivable linked to a sale. Product/unit details live on SaleLine.
         CreateMap<LoanAccount, LoanAccountDto>()
             .ForMember(dest => dest.PaidAmount, opt => opt.MapFrom(src => src.PaidAmount))
             .ForMember(dest => dest.RemainingAmount, opt => opt.MapFrom(src => src.RemainingAmount));
-        CreateMap<LoanAccountCreateDto, LoanAccount>()
-            .ConstructUsing(src => LoanAccount.Create(
-                src.CustomerId,
-                src.ShopId,
-                src.ProductId,
-                src.Quantity,
-                src.UnitId,
-                src.PriceAtLoanTime,
-                src.TotalAmount,
-                src.DueDate,
-                src.Notes
-            ));
     }
 
-    private static string ResolveProvinceName(Province src)
+    private static string ResolveProvinceName(
+        Province src
+    )
     {
         if (src.Translations != null && src.Translations.Count > 0)
         {
             var translations = src.Translations;
             var current = CultureInfo.CurrentUICulture;
-            var exact = translations.FirstOrDefault(t => string.Equals(t.LanguageCode, current.Name, StringComparison.OrdinalIgnoreCase));
+            var exact = translations.FirstOrDefault(t =>
+                string.Equals(t.LanguageCode, current.Name, StringComparison.OrdinalIgnoreCase));
             if (exact != null) return exact.Name;
-            var primary = translations.FirstOrDefault(t => string.Equals(t.LanguageCode, current.TwoLetterISOLanguageName, StringComparison.OrdinalIgnoreCase));
+            var primary = translations.FirstOrDefault(t =>
+                string.Equals(t.LanguageCode, current.TwoLetterISOLanguageName, StringComparison.OrdinalIgnoreCase));
             if (primary != null) return primary.Name;
             var def = translations.FirstOrDefault(t => t.IsDefault);
             if (def != null) return def.Name;
             return translations.First().Name;
         }
+
         return src.Name ?? string.Empty;
     }
+
+    private static DateTime AsUtc(
+        DateTime value
+    ) => value.Kind switch
+    {
+        DateTimeKind.Utc => value,
+        DateTimeKind.Local => value.ToUniversalTime(),
+        _ => DateTime.SpecifyKind(value, DateTimeKind.Utc)
+    };
+
+    private static DateTime? AsUtc(
+        DateTime? value
+    ) =>
+        value.HasValue ? AsUtc(value.Value) : null;
 }

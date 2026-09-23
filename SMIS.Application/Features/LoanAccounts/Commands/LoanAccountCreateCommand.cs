@@ -2,58 +2,79 @@ using AutoMapper;
 using MediatR;
 using SMIS.Application.Common.Response;
 using SMIS.Application.DTO.LoanAccounts;
+using SMIS.Application.Identity.IServices;
 using SMIS.Application.Repositories.Base;
-using SMIS.Application.Repositories.Customers;
 using SMIS.Application.Repositories.LoanAccounts;
-using SMIS.Application.Repositories.Products;
-using SMIS.Application.Repositories.Shops;
-using SMIS.Application.Repositories.UnitOfMeasures;
+using SMIS.Application.Repositories.Sales;
 using SMIS.Domain.Entities;
+using SMIS.Domain.Enums;
 
 namespace SMIS.Application.Features.LoanAccounts.Commands;
 
-public record LoanAccountCreateCommand(LoanAccountCreateDto LoanAccountCreateDto) : IRequest<Result<LoanAccountDto>>;
+public record LoanAccountCreateCommand(LoanAccountCreateDto LoanAccountCreateDto)
+    : IRequest<Result<LoanAccountDto>>;
 
-internal sealed class LoanAccountCreateCommandHandler : IRequestHandler<LoanAccountCreateCommand, Result<LoanAccountDto>>
+internal sealed class LoanAccountCreateCommandHandler
+    : IRequestHandler<LoanAccountCreateCommand, Result<LoanAccountDto>>
 {
-    private readonly ILoanAccountRepository _loanAccountRepository;
-    private readonly ICustomerRepository _customerRepository;
-    private readonly IShopRepository _shopRepository;
-    private readonly IProductRepository _productRepository;
-    private readonly IUnitOfMeasureRepository _unitOfMeasureRepository;
+    private readonly ILoanAccountRepository _receivables;
+    private readonly ISaleRepository _sales;
     private readonly IUnitOfWork _unitOfWork;
+    private readonly ICurrentUser _currentUser;
     private readonly IMapper _mapper;
 
-    public LoanAccountCreateCommandHandler(IUnitOfWork unitOfWork, IMapper mapper, ILoanAccountRepository loanAccountRepository, ICustomerRepository customerRepository, IShopRepository shopRepository, IProductRepository productRepository, IUnitOfMeasureRepository unitOfMeasureRepository)
+    public LoanAccountCreateCommandHandler(
+        ILoanAccountRepository receivables,
+        ISaleRepository sales,
+        IUnitOfWork unitOfWork,
+        ICurrentUser currentUser,
+        IMapper mapper
+    )
     {
+        _receivables = receivables;
+        _sales = sales;
         _unitOfWork = unitOfWork;
+        _currentUser = currentUser;
         _mapper = mapper;
-        _loanAccountRepository = loanAccountRepository;
-        _customerRepository = customerRepository;
-        _shopRepository = shopRepository;
-        _productRepository = productRepository;
-        _unitOfMeasureRepository = unitOfMeasureRepository;
     }
 
-    public async Task<Result<LoanAccountDto>> Handle(LoanAccountCreateCommand request, CancellationToken cancellationToken)
+    public async Task<Result<LoanAccountDto>> Handle(
+        LoanAccountCreateCommand request,
+        CancellationToken cancellationToken
+    )
     {
-        var entity = _mapper.Map<LoanAccount>(request.LoanAccountCreateDto);
-        
-        var customer = await _customerRepository.GetByIdAsync(request.LoanAccountCreateDto.CustomerId);
-        entity.CustomerName = customer?.FirstName;
-        
-        var shop = await _shopRepository.GetByIdAsync(request.LoanAccountCreateDto.ShopId);
-        entity.ShopName = shop?.Name;
-        
-        var product = await _productRepository.GetByIdAsync(request.LoanAccountCreateDto.ProductId);
-        entity.ProductName = product?.Name;
-        
-        var unit = await _unitOfMeasureRepository.GetByIdAsync(request.LoanAccountCreateDto.UnitId);
-        entity.UnitName = unit?.Name;
-        
-        await _loanAccountRepository.AddAsync(entity);
+        var sale = await _sales.GetByIdWithDetailsAsync(
+            request.LoanAccountCreateDto.SaleId,
+            cancellationToken);
+
+        if (sale is null)
+            return Result<LoanAccountDto>.FailureResult("SaleNotFound", "The related sale does not exist.");
+
+        if (sale.ShopId != _currentUser.GetShopId())
+            return Result<LoanAccountDto>.FailureResult("Forbidden", "The sale belongs to another shop.");
+
+        if (sale.PaymentType != SalePaymentType.Credit || string.IsNullOrWhiteSpace(sale.CustomerId))
+            return Result<LoanAccountDto>.FailureResult(
+                "SaleIsNotCredit",
+                "Only a credit sale with a customer can create a receivable.");
+
+        if (sale.Receivable is not null)
+            return Result<LoanAccountDto>.FailureResult(
+                "ReceivableAlreadyExists",
+                "This sale already has a receivable.");
+
+        var receivable = LoanAccount.Create(
+            sale.Id,
+            sale.CustomerId,
+            sale.ShopId,
+            sale.TotalAmount,
+            sale.SaleDateUtc,
+            request.LoanAccountCreateDto.DueDate,
+            request.LoanAccountCreateDto.Notes);
+
+        await _receivables.AddAsync(receivable);
         await _unitOfWork.SaveChanges(cancellationToken);
 
-        return Result<LoanAccountDto>.SuccessResult(_mapper.Map<LoanAccountDto>(entity));
+        return Result<LoanAccountDto>.SuccessResult(_mapper.Map<LoanAccountDto>(receivable));
     }
 }

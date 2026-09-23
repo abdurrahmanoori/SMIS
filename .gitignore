@@ -365,3 +365,6 @@ FodyWeavers.xsd
 # Environment-specific settings containing secrets (API keys, connection strings)
 appsettings.Production.json
 appsettings.secrets.json
+
+# Local PowerSync CLI instance link/config fetched from PowerSync Cloud.
+powersync/.cloud/

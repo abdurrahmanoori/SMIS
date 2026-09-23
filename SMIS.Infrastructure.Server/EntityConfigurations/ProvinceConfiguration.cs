@@ -6,15 +6,18 @@ namespace SMIS.Infrastructure.Server.EntityConfigurations
 {
     public class ProvinceConfiguration : IEntityTypeConfiguration<Province>
     {
-        public void Configure(EntityTypeBuilder<Province> builder)
+        public void Configure(
+            EntityTypeBuilder<Province> builder
+        )
         {
+            builder.ConfigureAuditUserRelationships();
             builder.HasKey(x => x.Id);
             builder.Property(x => x.Name).HasMaxLength(200).IsRequired();
 
             builder.HasMany(x => x.Translations)
-                   .WithOne(t => t.Province)
-                   .HasForeignKey(t => t.ProvinceId)
-                   .OnDelete(DeleteBehavior.Cascade);
+                .WithOne(t => t.Province)
+                .HasForeignKey(t => t.ProvinceId)
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

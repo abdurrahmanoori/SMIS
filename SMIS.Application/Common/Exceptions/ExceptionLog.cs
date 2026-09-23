@@ -10,19 +10,21 @@ namespace SMIS.Application.Common.Exceptions
         public string? Source { get; set; }
         public InnerExceptionLog? InnerException { get; set; }
 
-        public static ExceptionLog CreateLog(Exception exception)
+        public static ExceptionLog CreateLog(
+            Exception exception
+        )
         {
             return new ExceptionLog
             {
                 Message = exception.Message,
                 StackTrace = exception.StackTrace,
                 Source = exception.Source,
-                InnerException = exception.InnerException != null 
+                InnerException = exception.InnerException != null
                     ? new InnerExceptionLog
                     {
                         Message = exception.InnerException.Message,
                         StackTrace = exception.InnerException.StackTrace
-                    } 
+                    }
                     : null
             };
         }

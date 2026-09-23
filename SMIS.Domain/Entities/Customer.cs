@@ -3,24 +3,23 @@ using SMIS.Domain.Common.Interfaces;
 using SMIS.Domain.Entities.LocationEntities;
 using SMIS.Domain.Enums;
 using SMIS.Domain.Exceptions;
+using SMIS.Domain.Services;
 
 namespace SMIS.Domain.Entities;
 
-public class Customer : BaseAuditableEntity, IShopEntity
+public class Customer : BaseSyncableAuditableEntity, IShopEntity
 {
     public string FirstName { get; private set; } = string.Empty;
     public string? LastName { get; private set; }
     public string ShopId { get; private set; } = string.Empty;
     public string? ShopName { get; private set; }
-    public CustomerType CustomerType { get; private set; } 
+    public CustomerType CustomerType { get; private set; }
     public string? FatherName { get; private set; }
     public string? Email { get; private set; }
     public string? PhoneNumber { get; private set; }
     public string? Address { get; private set; }
     public string? TaxNumber { get; private set; }
     public bool IsActive { get; private set; } = true;
-    public bool IsDeleted { get; private set; } = false;
-    public DateTime? DeletedAt { get; private set; }
     public string? DeletedBy { get; private set; }
     public string? ProvinceId { get; private set; }
     public string? DistrictId { get; private set; }
@@ -29,11 +28,24 @@ public class Customer : BaseAuditableEntity, IShopEntity
     public Province? Province { get; set; }
     public District? District { get; set; }
 
-    internal Customer() { } // EF Core & Seeding
+    internal Customer()
+    {
+    } // EF Core & Seeding
 
-    public static Customer Create(string firstName, string shopId, CustomerType customerType = CustomerType.Individual, string? lastName = null, string? fatherName = null, 
-        string? email = null, string? phoneNumber = null, string? address = null, string? taxNumber = null, 
-        string? provinceId = null, string? districtId = null, bool isActive = true)
+    public static Customer Create(
+        string firstName,
+        string shopId,
+        CustomerType customerType = CustomerType.Individual,
+        string? lastName = null,
+        string? fatherName = null,
+        string? email = null,
+        string? phoneNumber = null,
+        string? address = null,
+        string? taxNumber = null,
+        string? provinceId = null,
+        string? districtId = null,
+        bool isActive = true
+    )
     {
         var customer = new Customer();
         customer.SetFirstName(firstName);
@@ -51,18 +63,16 @@ public class Customer : BaseAuditableEntity, IShopEntity
         return customer;
     }
 
-    public void SetFirstName(string firstName)
+    public void SetFirstName(
+        string firstName
+    )
     {
-        if (string.IsNullOrWhiteSpace(firstName))
-            throw new DomainValidationException("First name cannot be empty");
-
-        if (firstName.Length > 100)
-            throw new DomainValidationException("First name cannot exceed 100 characters");
-
         FirstName = firstName.Trim();
     }
 
-    public void SetShopId(string shopId)
+    public void SetShopId(
+        string shopId
+    )
     {
         if (string.IsNullOrWhiteSpace(shopId))
             throw new DomainValidationException("Shop ID cannot be empty");
@@ -70,28 +80,30 @@ public class Customer : BaseAuditableEntity, IShopEntity
         ShopId = shopId.Trim();
     }
 
-    public void SetCustomerType(CustomerType customerType)
+    public void SetCustomerType(
+        CustomerType customerType
+    )
     {
         CustomerType = customerType;
     }
 
-    public void SetLastName(string? lastName)
+    public void SetLastName(
+        string? lastName
+    )
     {
-        if (!string.IsNullOrWhiteSpace(lastName) && lastName.Length > 100)
-            throw new DomainValidationException("Last name cannot exceed 100 characters");
-
         LastName = string.IsNullOrWhiteSpace(lastName) ? null : lastName.Trim();
     }
 
-    public void SetFatherName(string? fatherName)
+    public void SetFatherName(
+        string? fatherName
+    )
     {
-        if (!string.IsNullOrWhiteSpace(fatherName) && fatherName.Length > 100)
-            throw new DomainValidationException("Father name cannot exceed 100 characters");
-
         FatherName = string.IsNullOrWhiteSpace(fatherName) ? null : fatherName.Trim();
     }
 
-    public void SetEmail(string? email)
+    public void SetEmail(
+        string? email
+    )
     {
         if (string.IsNullOrWhiteSpace(email))
         {
@@ -103,7 +115,9 @@ public class Customer : BaseAuditableEntity, IShopEntity
         Email = emailVO;
     }
 
-    public void SetPhoneNumber(string? phoneNumber)
+    public void SetPhoneNumber(
+        string? phoneNumber
+    )
     {
         if (string.IsNullOrWhiteSpace(phoneNumber))
         {
@@ -115,15 +129,16 @@ public class Customer : BaseAuditableEntity, IShopEntity
         PhoneNumber = phone;
     }
 
-    public void SetAddress(string? address)
+    public void SetAddress(
+        string? address
+    )
     {
-        if (!string.IsNullOrWhiteSpace(address) && address.Length > 500)
-            throw new DomainValidationException("Address cannot exceed 500 characters");
-
         Address = string.IsNullOrWhiteSpace(address) ? null : address.Trim();
     }
 
-    public void SetTaxNumber(string? taxNumber)
+    public void SetTaxNumber(
+        string? taxNumber
+    )
     {
         if (string.IsNullOrWhiteSpace(taxNumber))
         {
@@ -135,17 +150,23 @@ public class Customer : BaseAuditableEntity, IShopEntity
         TaxNumber = tax;
     }
 
-    public void SetProvinceId(string? provinceId)
+    public void SetProvinceId(
+        string? provinceId
+    )
     {
         ProvinceId = string.IsNullOrWhiteSpace(provinceId) ? null : provinceId.Trim();
     }
 
-    public void SetDistrictId(string? districtId)
+    public void SetDistrictId(
+        string? districtId
+    )
     {
         DistrictId = string.IsNullOrWhiteSpace(districtId) ? null : districtId.Trim();
     }
 
-    public void SetShopName(string? shopName)
+    public void SetShopName(
+        string? shopName
+    )
     {
         ShopName = string.IsNullOrWhiteSpace(shopName) ? null : shopName.Trim();
     }
@@ -153,15 +174,17 @@ public class Customer : BaseAuditableEntity, IShopEntity
     public void Activate() => IsActive = true;
     public void Deactivate() => IsActive = false;
 
-    public void Delete(string deletedBy)
+    public void Delete(
+        string deletedBy
+    )
     {
         IsDeleted = true;
-        DeletedAt = DateTime.UtcNow;
+        DeletedAt = DateTimeService.NowUtc;
         DeletedBy = deletedBy;
         Deactivate();
     }
 
-    public void Restore()
+    public override void Restore()
     {
         IsDeleted = false;
         DeletedAt = null;

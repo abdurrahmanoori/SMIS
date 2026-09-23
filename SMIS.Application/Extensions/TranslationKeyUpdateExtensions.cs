@@ -10,7 +10,8 @@ namespace SMIS.Application.Extensions
         public static async Task AddTranslationKeysForChangedProperties<TDto, TEntity>(
             this ITranslationKeyRepository repository,
             TDto newDto,
-            TEntity existingEntity)
+            TEntity existingEntity
+        )
         {
             var dtoProperties = typeof(TDto).GetProperties()
                 .Where(p => p.GetCustomAttribute<TranslatableAttribute>() != null && p.PropertyType == typeof(string))
@@ -22,7 +23,8 @@ namespace SMIS.Application.Extensions
             {
                 var newValue = dtoProperty.GetValue(newDto) as string;
 
-                if (!string.IsNullOrEmpty(newValue) && entityProperties.TryGetValue(dtoProperty.Name, out var entityProperty))
+                if (!string.IsNullOrEmpty(newValue) &&
+                    entityProperties.TryGetValue(dtoProperty.Name, out var entityProperty))
                 {
                     var oldValue = entityProperty.GetValue(existingEntity) as string;
 
@@ -30,12 +32,14 @@ namespace SMIS.Application.Extensions
                     if (newValue != oldValue)
                     {
                         // Check if a translation key with this name already exists (excluding those with empty/null IDs)
-                        var existingKey = await repository.GetFirstOrDefaultAsync(tk => tk.Name == newValue && tk.IsActive && !string.IsNullOrEmpty(tk.Id));
+                        var existingKey = await repository.GetFirstOrDefaultAsync(tk =>
+                            tk.Name == newValue && tk.IsActive && !string.IsNullOrEmpty(tk.Id));
 
                         if (existingKey == null)
                         {
                             // Check if there's already a translation key with this name but inactive
-                            var inactiveKey = await repository.GetFirstOrDefaultAsync(tk => tk.Name == newValue && !tk.IsActive && !string.IsNullOrEmpty(tk.Id));
+                            var inactiveKey = await repository.GetFirstOrDefaultAsync(tk =>
+                                tk.Name == newValue && !tk.IsActive && !string.IsNullOrEmpty(tk.Id));
 
                             if (inactiveKey != null)
                             {

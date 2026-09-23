@@ -1,13 +1,18 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using SMIS.Domain.Entities;
+using SMIS.Domain.Entities.Identity.Entity;
 
 namespace SMIS.Infrastructure.Server.EntityConfigurations
 {
     public class CustomerConfiguration : IEntityTypeConfiguration<Customer>
     {
-        public void Configure(EntityTypeBuilder<Customer> builder)
+        public void Configure(
+            EntityTypeBuilder<Customer> builder
+        )
         {
+            builder.ConfigureAuditUserRelationships();
+            builder.ConfigureClientAuditUserRelationships();
             builder.HasKey(e => e.Id);
             builder.Property(e => e.Id).HasMaxLength(450);
 
@@ -21,8 +26,11 @@ namespace SMIS.Infrastructure.Server.EntityConfigurations
             builder.Property(e => e.PhoneNumber).HasMaxLength(20);
             builder.Property(e => e.Address).HasMaxLength(500);
             builder.Property(e => e.TaxNumber).HasMaxLength(20);
+            builder.Property(e => e.DeletedBy).HasMaxLength(450);
             builder.Property(e => e.ProvinceId).HasMaxLength(450);
             builder.Property(e => e.DistrictId).HasMaxLength(450);
+            builder.Property(e => e.ClientCreatedBy).HasMaxLength(450);
+            builder.Property(e => e.ClientModifiedBy).HasMaxLength(450);
 
             builder.HasIndex(e => e.Email);
             builder.HasIndex(e => e.PhoneNumber);
@@ -30,6 +38,10 @@ namespace SMIS.Infrastructure.Server.EntityConfigurations
             builder.HasIndex(e => e.ShopId);
             builder.HasIndex(e => e.IsActive);
             builder.HasIndex(e => e.IsDeleted);
+
+            // These properties belong only to an offline client and are not server sync state.
+            builder.Ignore(e => e.IsSyncedToServer);
+            builder.Ignore(e => e.LastSyncedAt);
 
             builder.HasOne(e => e.Shop)
                 .WithMany()
@@ -39,12 +51,17 @@ namespace SMIS.Infrastructure.Server.EntityConfigurations
             builder.HasOne(e => e.Province)
                 .WithMany()
                 .HasForeignKey(e => e.ProvinceId)
-                .OnDelete(DeleteBehavior.SetNull);
+                .OnDelete(DeleteBehavior.Restrict);
 
             builder.HasOne(e => e.District)
                 .WithMany()
                 .HasForeignKey(e => e.DistrictId)
-                .OnDelete(DeleteBehavior.SetNull);
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder.HasOne<ApplicationUser>()
+                .WithMany()
+                .HasForeignKey(e => e.DeletedBy)
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

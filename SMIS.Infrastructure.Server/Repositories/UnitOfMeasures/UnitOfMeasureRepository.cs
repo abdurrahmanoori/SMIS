@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using SMIS.Application.Repositories.UnitOfMeasures;
 using SMIS.Domain.Entities;
 using SMIS.Infrastructure.Server.Context;
@@ -7,8 +8,33 @@ namespace SMIS.Infrastructure.Server.Repositories.UnitOfMeasures
 {
     public class UnitOfMeasureRepository : GenericRepository<UnitOfMeasure>, IUnitOfMeasureRepository
     {
-        public UnitOfMeasureRepository(AppDbContext context) : base(context)
+        public UnitOfMeasureRepository(
+            AppDbContext context
+        ) : base(context)
         {
+        }
+
+        public async Task<int> CountReferencesAsync(
+            string id,
+            CancellationToken cancellationToken = default
+        )
+        {
+            var count = await _context.Products.CountAsync(
+                product => product.BaseUnitId == id,
+                cancellationToken);
+            count += await _context.ProductUnits.CountAsync(
+                productUnit => productUnit.UnitOfMeasureId == id,
+                cancellationToken);
+            count += await _context.StockBatches.CountAsync(
+                batch => batch.ReceivedProductUnit.UnitOfMeasureId == id,
+                cancellationToken);
+            count += await _context.StockMovements.CountAsync(
+                movement => movement.ProductUnit.UnitOfMeasureId == id,
+                cancellationToken);
+            count += await _context.SaleLines.CountAsync(
+                line => line.ProductUnit.UnitOfMeasureId == id,
+                cancellationToken);
+            return count;
         }
     }
 }

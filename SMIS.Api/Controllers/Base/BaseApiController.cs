@@ -1,79 +1,98 @@
-﻿using MediatR;
-using Microsoft.AspNetCore.Authorization;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using SMIS.Application.Common.Response;
 
-namespace SMIS.Api.Controllers.Base
+namespace SMIS.Api.Controllers.Base;
+
+/// <summary>
+/// Provides shared request handling used by the API controllers.
+/// </summary>
+/// <remarks>
+/// Feature controllers send commands and queries through MediatR, while this base class converts the application result into an HTTP response.
+/// It is an internal controller base and does not expose its own API routes.
+/// </remarks>
+[ApiController]
+public abstract class BaseApiController : ControllerBase
 {
-    //[Route("api/[controller]")]
-    [ApiController]
-    //[Authorize]
+    private IMediator? _mediator;
 
-    public class BaseApiController : ControllerBase
+    protected IMediator Mediator =>
+        // Resolve lazily so controllers do not repeat an IMediator constructor dependency.
+        _mediator ??= HttpContext.RequestServices.GetRequiredService<IMediator>();
+
+
+    private ActionResult<T> HandleResultResponse<T>(
+        Result<T> response
+    )
     {
-        private IMediator? _mediator;
-        protected IMediator Mediator => _mediator ??= HttpContext.RequestServices.GetService<IMediator>()!;
-   
-        public ActionResult<T> HandleResultResponse<T>(Result<T> response)
+        if (response.Success && response.Response == null)
         {
-            try
-            {
-                if (response.Success && response.Response == null)
-                {
-                    return NotFound(response.Errors);
-                }
-                else if (!response.Success && response.Errors != null && response.Errors.Any(x => x.Code == DeclareMessage.Duplicate.Code))
-                {
-                    return Conflict(response.Errors);
-                }
-                else if (response.Success && response.Response != null)
-                {
-                    return Ok(response.Response);
-                }
-                else if (!response.Success && response.Errors != null)
-                {
-                    return BadRequest(response.Errors);
-                }
-
-                else
-                {
-                    return NotFound(response);
-                }
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-
-        }
-        public IActionResult HandleResult<T>(Result<T> response)
-        {
-            try
-            {
-                if (response.Success && response.Response == null)
-                {
-                    return NotFound();
-                }
-                else if (response.Success && response.Response != null)
-                {
-                    return Ok(response.Response);
-                }
-                else if (!response.Success && response.Errors != null)
-                {
-                    return BadRequest(response.Errors);
-                }
-                else
-                {
-                    return NotFound();
-                }
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-
+            return NotFound();
         }
 
+        if (response.Success && response.Response != null)
+        {
+            // if (response.HasMessages)
+            // {
+            //     response.Messages.ForEach(x => x.SetType(MessageTypeEnum.Warning));
+            //     return Ok(new { response.Response, response.Messages });
+            // }
 
+            return Ok(response.Response);
+        }
+
+        if (!response.Success)
+        {
+            return BadRequest(new { response.Message });
+        }
+
+        return NotFound();
+    }
+
+    public async Task<ActionResult<T>> HandleRequest<T>(
+        IRequest<Result<T>> result
+    )
+    {
+        return HandleResultResponse(await Mediator.Send(result));
+    }
+
+    public async Task<ActionResult<T>> HandleRequest<T>(
+        IRequest<Result<T>> result,
+        CancellationToken cancellationToken
+    )
+    {
+        return HandleResultResponse(await Mediator.Send(result, cancellationToken));
+    }
+
+
+    protected ActionResult<T> HandleResultResponseOld<T>(
+        Result<T> result
+    )
+    {
+        // Legacy response adapter retained for existing controllers. Unlike the newer
+        // handler above, it preserves structured validation errors and maps duplicate
+        // errors to HTTP 409 Conflict.
+        try
+        {
+            if (result.Success)
+            {
+                return result.Response is null
+                    ? NotFound(result.Errors)
+                    : Ok(result.Response);
+            }
+
+            if (result.Errors?.Any(error => error.Code == DeclareMessage.Duplicate.Code) == true)
+            {
+                return Conflict(result.Errors);
+            }
+
+            return result.Errors is not null
+                ? BadRequest(result.Errors)
+                : NotFound(result);
+        }
+        catch (Exception exception)
+        {
+            return BadRequest(exception.Message);
+        }
     }
 }

@@ -12,13 +12,19 @@ namespace SMIS.Application.Features.Translations.Commands
         private readonly ITranslationRepository _translationRepository;
         private readonly IUnitOfWork _unitOfWork;
 
-        public TranslationDeleteCommandHandler(IUnitOfWork unitOfWork, ITranslationRepository translationRepository)
+        public TranslationDeleteCommandHandler(
+            IUnitOfWork unitOfWork,
+            ITranslationRepository translationRepository
+        )
         {
             _unitOfWork = unitOfWork;
             _translationRepository = translationRepository;
         }
 
-        public async Task<Result<Unit>> Handle(TranslationDeleteCommand request, CancellationToken cancellationToken)
+        public async Task<Result<Unit>> Handle(
+            TranslationDeleteCommand request,
+            CancellationToken cancellationToken
+        )
         {
             var entity = await _translationRepository.GetByIdAsync(request.Id);
             if (entity == null)

@@ -7,8 +7,11 @@ namespace SMIS.Infrastructure.Server.EntityConfigurations
 {
     public class DistrictConfiguration : IEntityTypeConfiguration<District>
     {
-        public void Configure(EntityTypeBuilder<District> builder)
+        public void Configure(
+            EntityTypeBuilder<District> builder
+        )
         {
+            builder.ConfigureAuditUserRelationships();
             builder.HasKey(x => x.Id);
 
             builder.Property(x => x.Name).HasMaxLength(200).IsRequired();
@@ -21,7 +24,7 @@ namespace SMIS.Infrastructure.Server.EntityConfigurations
                 .WithOne()
                 .HasForeignKey<District>(d => d.TranslationKeyId)
                 .HasPrincipalKey<TranslationKey>(tk => tk.Id)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

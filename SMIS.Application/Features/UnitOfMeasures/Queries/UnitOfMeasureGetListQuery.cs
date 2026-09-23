@@ -7,20 +7,29 @@ using SMIS.Application.Repositories.UnitOfMeasures;
 
 namespace SMIS.Application.Features.UnitOfMeasures.Queries
 {
-    public record UnitOfMeasureGetListQuery(int PageNumber = 1, int PageSize = 25) : IRequest<Result<PagedList<UnitOfMeasureDto>>>;
+    public record UnitOfMeasureGetListQuery(int PageNumber = 1, int PageSize = 25)
+        : IRequest<Result<PagedList<UnitOfMeasureDto>>>;
 
-    internal sealed class UnitOfMeasureGetListQueryHandler : IRequestHandler<UnitOfMeasureGetListQuery, Result<PagedList<UnitOfMeasureDto>>>
+    internal sealed class
+        UnitOfMeasureGetListQueryHandler : IRequestHandler<UnitOfMeasureGetListQuery,
+        Result<PagedList<UnitOfMeasureDto>>>
     {
         private readonly IUnitOfMeasureRepository _unitOfMeasureRepository;
         private readonly IMapper _mapper;
 
-        public UnitOfMeasureGetListQueryHandler(IUnitOfMeasureRepository unitOfMeasureRepository, IMapper mapper)
+        public UnitOfMeasureGetListQueryHandler(
+            IUnitOfMeasureRepository unitOfMeasureRepository,
+            IMapper mapper
+        )
         {
             _unitOfMeasureRepository = unitOfMeasureRepository;
             _mapper = mapper;
         }
 
-        public async Task<Result<PagedList<UnitOfMeasureDto>>> Handle(UnitOfMeasureGetListQuery request, CancellationToken cancellationToken)
+        public async Task<Result<PagedList<UnitOfMeasureDto>>> Handle(
+            UnitOfMeasureGetListQuery request,
+            CancellationToken cancellationToken
+        )
         {
             var unitOfMeasures = await _unitOfMeasureRepository.GetAllQueryable()
                 .ToPagedList(request.PageNumber, request.PageSize);

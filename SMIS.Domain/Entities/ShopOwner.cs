@@ -1,7 +1,9 @@
 using SMIS.Domain.Common.BaseAbstract;
 using SMIS.Domain.Common.Interfaces;
 using SMIS.Domain.Entities.Identity.Entity;
+using SMIS.Domain.Entities.LocationEntities;
 using SMIS.Domain.Exceptions;
+using SMIS.Domain.Services;
 
 namespace SMIS.Domain.Entities;
 
@@ -16,11 +18,15 @@ public class ShopOwner : BaseAuditableEntity, IShopEntity
     public string? PhoneNumber { get; private set; }
     public string? Email { get; private set; }
     public string? Address { get; private set; }
+
     public decimal OwnershipPercentage { get; private set; } = 100.0m;
+
     // Tracks ownership period
-    public DateTime StartDate { get; private set; } = DateTime.Now;
+    public DateTime StartDate { get; private set; } = DateTimeService.NowLocal;
+
     // Tracks ownership period
     public DateTime? EndDate { get; private set; }
+
     // Current ownership status
     public bool IsActive { get; private set; } = true;
     public string? ProvinceId { get; private set; } = null;
@@ -29,11 +35,23 @@ public class ShopOwner : BaseAuditableEntity, IShopEntity
     // Navigation Properties
     public virtual ApplicationUser User { get; set; } = null!;
     public virtual Shop Shop { get; set; } = null!;
+    public virtual Province? Province { get; set; }
+    public virtual District? District { get; set; }
 
-    internal ShopOwner() { } // EF Core & Seeding
+    internal ShopOwner()
+    {
+    } // EF Core & Seeding
 
-    public static ShopOwner Create(string userId, string shopId, string? firstName = null, string? lastName = null, 
-        string? phoneNumber = null, string? email = null, string? address = null, decimal ownershipPercentage = 100.0m)
+    public static ShopOwner Create(
+        string userId,
+        string shopId,
+        string? firstName = null,
+        string? lastName = null,
+        string? phoneNumber = null,
+        string? email = null,
+        string? address = null,
+        decimal ownershipPercentage = 100.0m
+    )
     {
         var owner = new ShopOwner();
         owner.SetUserId(userId);
@@ -47,7 +65,9 @@ public class ShopOwner : BaseAuditableEntity, IShopEntity
         return owner;
     }
 
-    public void SetUserId(string userId)
+    public void SetUserId(
+        string userId
+    )
     {
         if (string.IsNullOrWhiteSpace(userId))
             throw new DomainValidationException("User ID cannot be empty");
@@ -55,7 +75,9 @@ public class ShopOwner : BaseAuditableEntity, IShopEntity
         ApplicationUserId = userId;
     }
 
-    public void SetShopId(string shopId)
+    public void SetShopId(
+        string shopId
+    )
     {
         if (string.IsNullOrWhiteSpace(shopId))
             throw new DomainValidationException("Shop ID cannot be empty");
@@ -63,34 +85,30 @@ public class ShopOwner : BaseAuditableEntity, IShopEntity
         ShopId = shopId;
     }
 
-    public void SetFirstName(string? firstName)
+    public void SetFirstName(
+        string? firstName
+    )
     {
-        if (string.IsNullOrEmpty(firstName))
-        {
-            throw new DomainValidationException("First name cannot be empty");
-        }
-        if (firstName?.Length > 100)
-            throw new DomainValidationException("First name cannot exceed 100 characters");
-
         FirstName = firstName?.Trim();
     }
 
-    public void SetLastName(string? lastName)
+    public void SetLastName(
+        string? lastName
+    )
     {
-        if (lastName?.Length > 100)
-            throw new DomainValidationException("Last name cannot exceed 100 characters");
-
         LastName = lastName?.Trim();
     }
 
-    public void SetNationalIdCardNumber(string? idCardNumber)
+    public void SetNationalIdCardNumber(
+        string? idCardNumber
+    )
     {
-        if (idCardNumber?.Length > 50)
-            throw new DomainValidationException("National ID Card Number cannot exceed 50 characters");
         NationalIdCardNumber = idCardNumber?.Trim();
     }
 
-    public void SetPhoneNumber(string? phoneNumber)
+    public void SetPhoneNumber(
+        string? phoneNumber
+    )
     {
         if (!string.IsNullOrWhiteSpace(phoneNumber))
         {
@@ -103,7 +121,9 @@ public class ShopOwner : BaseAuditableEntity, IShopEntity
         }
     }
 
-    public void SetEmail(string? email)
+    public void SetEmail(
+        string? email
+    )
     {
         if (!string.IsNullOrWhiteSpace(email))
         {
@@ -116,15 +136,16 @@ public class ShopOwner : BaseAuditableEntity, IShopEntity
         }
     }
 
-    public void SetAddress(string? address)
+    public void SetAddress(
+        string? address
+    )
     {
-        if (address?.Length > 500)
-            throw new DomainValidationException("Address cannot exceed 500 characters");
-
         Address = address?.Trim();
     }
 
-    public void SetOwnershipPercentage(decimal percentage)
+    public void SetOwnershipPercentage(
+        decimal percentage
+    )
     {
         if (percentage < 0 || percentage > 100)
             throw new DomainValidationException("Ownership percentage must be between 0 and 100");
@@ -132,7 +153,9 @@ public class ShopOwner : BaseAuditableEntity, IShopEntity
         OwnershipPercentage = percentage;
     }
 
-    public void SetEndDate(DateTime? endDate)
+    public void SetEndDate(
+        DateTime? endDate
+    )
     {
         if (endDate.HasValue && endDate.Value <= StartDate)
             throw new DomainValidationException("End date must be after start date");
@@ -143,10 +166,11 @@ public class ShopOwner : BaseAuditableEntity, IShopEntity
     }
 
     public void Activate() => IsActive = true;
-    public void Deactivate() 
+
+    public void Deactivate()
     {
         IsActive = false;
-        EndDate = DateTime.Now;
+        EndDate = DateTimeService.NowLocal;
     }
 
     public string GetFullName() => $"{FirstName} {LastName}".Trim();

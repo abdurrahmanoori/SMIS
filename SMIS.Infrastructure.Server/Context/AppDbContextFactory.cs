@@ -8,7 +8,9 @@ namespace SMIS.Infrastructure.Server.Context;
 
 public class AppDbContextFactory : IDesignTimeDbContextFactory<AppDbContext>
 {
-    public AppDbContext CreateDbContext(string[] args)
+    public AppDbContext CreateDbContext(
+        string[] args
+    )
     {
         var apiProjectPath = Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), "..", "SMIS.Api"));
 
@@ -19,8 +21,8 @@ public class AppDbContextFactory : IDesignTimeDbContextFactory<AppDbContext>
             .Build();
 
         var environment = Environment.GetEnvironmentVariable("EF_ENVIRONMENT")
-                       ?? baseConfig["Environment"]
-                       ?? "Development";
+                          ?? baseConfig["Environment"]
+                          ?? "Development";
         //throw new Exception(apiProjectPath);
         //throw new Exception(environment);
         // Second pass: layer the environment-specific file on top
@@ -31,8 +33,8 @@ public class AppDbContextFactory : IDesignTimeDbContextFactory<AppDbContext>
             .Build();
 
         var connectionString = configuration.GetConnectionString("DefaultConnection")
-            ?? throw new InvalidOperationException(
-                $"Connection string 'DefaultConnection' not found in appsettings.{environment}.json");
+                               ?? throw new InvalidOperationException(
+                                   $"Connection string 'DefaultConnection' not found in appsettings.{environment}.json");
 
         var optionsBuilder = new DbContextOptionsBuilder<AppDbContext>();
         optionsBuilder.UseSqlServer(connectionString);

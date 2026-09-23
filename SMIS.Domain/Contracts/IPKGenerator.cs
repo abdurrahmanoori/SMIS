@@ -1,9 +1,7 @@
-﻿
-namespace SMIS.Domain.Contracts
+﻿namespace SMIS.Domain.Contracts
 {
     public interface IPKGenerator
     {
         string Generate();
     }
-
 }

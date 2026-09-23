@@ -23,19 +23,25 @@ public class CustomerDebtSummaryDto
     public int PaidLoansCount { get; set; }
 }
 
-public class GetCustomerDebtSummaryHandler : IRequestHandler<GetCustomerDebtSummaryQuery, Result<CustomerDebtSummaryDto>>
+public class
+    GetCustomerDebtSummaryHandler : IRequestHandler<GetCustomerDebtSummaryQuery, Result<CustomerDebtSummaryDto>>
 {
     private readonly ILoanAccountRepository _loanAccountRepository;
 
-    public GetCustomerDebtSummaryHandler(ILoanAccountRepository loanAccountRepository)
+    public GetCustomerDebtSummaryHandler(
+        ILoanAccountRepository loanAccountRepository
+    )
     {
         _loanAccountRepository = loanAccountRepository;
     }
 
-    public async Task<Result<CustomerDebtSummaryDto>> Handle(GetCustomerDebtSummaryQuery request, CancellationToken cancellationToken)
+    public async Task<Result<CustomerDebtSummaryDto>> Handle(
+        GetCustomerDebtSummaryQuery request,
+        CancellationToken cancellationToken
+    )
     {
         var loans = await _loanAccountRepository
-            .GetAllQueryable()
+            .GetAllQueryable(includeProperties: "Payments")
             .Where(l => l.CustomerId == request.CustomerId && l.IsActive)
             .ToListAsync(cancellationToken);
 

@@ -3,70 +3,48 @@ using MediatR;
 using SMIS.Application.Common.Response;
 using SMIS.Application.DTO.LoanAccounts;
 using SMIS.Application.Repositories.Base;
-using SMIS.Application.Repositories.Customers;
 using SMIS.Application.Repositories.LoanAccounts;
-using SMIS.Application.Repositories.Products;
-using SMIS.Application.Repositories.Shops;
-using SMIS.Application.Repositories.UnitOfMeasures;
 
 namespace SMIS.Application.Features.LoanAccounts.Commands;
 
-public record LoanAccountUpdateCommand(string Id, LoanAccountCreateDto LoanAccountCreateDto) : IRequest<Result<LoanAccountDto>>;
+public record LoanAccountUpdateCommand(string Id, LoanAccountUpdateDto Dto)
+    : IRequest<Result<LoanAccountDto>>;
 
-internal sealed class LoanAccountUpdateCommandHandler : IRequestHandler<LoanAccountUpdateCommand, Result<LoanAccountDto>>
+internal sealed class LoanAccountUpdateCommandHandler
+    : IRequestHandler<LoanAccountUpdateCommand, Result<LoanAccountDto>>
 {
-    private readonly ILoanAccountRepository _loanAccountRepository;
-    private readonly ICustomerRepository _customerRepository;
-    private readonly IShopRepository _shopRepository;
-    private readonly IProductRepository _productRepository;
-    private readonly IUnitOfMeasureRepository _unitOfMeasureRepository;
+    private readonly ILoanAccountRepository _receivables;
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
 
-    public LoanAccountUpdateCommandHandler(IUnitOfWork unitOfWork, IMapper mapper, ILoanAccountRepository loanAccountRepository, ICustomerRepository customerRepository, IShopRepository shopRepository, IProductRepository productRepository, IUnitOfMeasureRepository unitOfMeasureRepository)
+    public LoanAccountUpdateCommandHandler(
+        ILoanAccountRepository receivables,
+        IUnitOfWork unitOfWork,
+        IMapper mapper
+    )
     {
+        _receivables = receivables;
         _unitOfWork = unitOfWork;
         _mapper = mapper;
-        _loanAccountRepository = loanAccountRepository;
-        _customerRepository = customerRepository;
-        _shopRepository = shopRepository;
-        _productRepository = productRepository;
-        _unitOfMeasureRepository = unitOfMeasureRepository;
     }
 
-    public async Task<Result<LoanAccountDto>> Handle(LoanAccountUpdateCommand request, CancellationToken cancellationToken)
+    public async Task<Result<LoanAccountDto>> Handle(
+        LoanAccountUpdateCommand request,
+        CancellationToken cancellationToken
+    )
     {
-        var entity = await _loanAccountRepository.GetByIdAsync(request.Id);
-        if (entity == null)
-        {
-            return Result<LoanAccountDto>.NotFoundResult(nameof(LoanAccountDto.Id));
-        }
+        var receivable = await _receivables.GetByIdAsync(request.Id);
+        if (receivable is null)
+            return Result<LoanAccountDto>.NotFoundResult(request.Id);
 
-        entity.SetCustomerId(request.LoanAccountCreateDto.CustomerId);
-        entity.SetShopId(request.LoanAccountCreateDto.ShopId);
-        entity.SetProductId(request.LoanAccountCreateDto.ProductId);
-        entity.SetQuantity(request.LoanAccountCreateDto.Quantity);
-        entity.SetUnitId(request.LoanAccountCreateDto.UnitId);
-        entity.SetPriceAtLoanTime(request.LoanAccountCreateDto.PriceAtLoanTime);
-        entity.SetTotalAmount(request.LoanAccountCreateDto.TotalAmount);
-        entity.SetDueDate(request.LoanAccountCreateDto.DueDate);
-        entity.SetNotes(request.LoanAccountCreateDto.Notes);
-        
-        var customer = await _customerRepository.GetByIdAsync(request.LoanAccountCreateDto.CustomerId);
-        entity.CustomerName = customer?.FirstName;
-        
-        var shop = await _shopRepository.GetByIdAsync(request.LoanAccountCreateDto.ShopId);
-        entity.ShopName = shop?.Name;
-        
-        var product = await _productRepository.GetByIdAsync(request.LoanAccountCreateDto.ProductId);
-        entity.ProductName = product?.Name;
-        
-        var unit = await _unitOfMeasureRepository.GetByIdAsync(request.LoanAccountCreateDto.UnitId);
-        entity.UnitName = unit?.Name;
-        
+        // Commercial amount and sale/customer ownership are historical facts. Only
+        // collection metadata may be edited after the receivable has been created.
+        receivable.SetDueDate(request.Dto.DueDate);
+        receivable.SetNotes(request.Dto.Notes);
+        if (request.Dto.IsActive) receivable.Activate();
+        else receivable.Deactivate();
+
         await _unitOfWork.SaveChanges(cancellationToken);
-
-        var dto = _mapper.Map<LoanAccountDto>(entity);
-        return Result<LoanAccountDto>.SuccessResult(dto);
+        return Result<LoanAccountDto>.SuccessResult(_mapper.Map<LoanAccountDto>(receivable));
     }
 }

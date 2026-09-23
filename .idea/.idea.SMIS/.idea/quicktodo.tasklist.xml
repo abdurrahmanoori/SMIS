@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="com.oleksiy.quicktodo.TaskService">
+    <option name="focusTimeByDate">
+      <map>
+        <entry key="2026-08-26" value="4601516" />
+      </map>
+    </option>
+    <tasks>
+      <task id="61717d38-5990-4d6a-ab45-b493b9279fcd" text="In Progress" createdAt="1787734367661" lastModified="1787744850557">
+        <option name="accumulatedHierarchyTimeMs" value="4601516" />
+        <option name="lastAccumulatedFocusStartedAt" value="1787751182822" />
+        <subtasks>
+          <task id="628e19a5-c750-487b-b125-9f38a250e7d7" text="Generic get" completed="true" level="1" ownTimeSpentMs="4601516" lastFocusStartedAt="1787751182822" createdAt="1787743488430" completedAt="1788438403915" lastModified="1788438403915">
+            <option name="completed" value="true" />
+            <description>make sure to create get opreation like sigtas</description>
+          </task>
+        </subtasks>
+      </task>
+      <task id="477a90fb-2d75-4517-8342-3bdd14f8ec6a" text="Backlog" createdAt="1787734391593" lastModified="1788428679015">
+        <subtasks>
+          <task id="0bb5669c-58c2-4a43-af91-f1b909381bc2" text="Generic CRUD" level="1" createdAt="1787743530393" lastModified="1787743530393">
+            <description>For common enity with common properties like Id and Name. make user to create a kind of generic crud</description>
+          </task>
+          <task id="e506a1f0-406e-4871-8508-979b8fdb6d9d" text="Fix the Result" level="1" createdAt="1787743567241" lastModified="1787743567241">
+            <description>Make sure to create some new Result method</description>
+          </task>
+          <task id="ff8b1ea3-8f7d-4a16-9771-ed39ded02495" text="Make the offline first" level="1" createdAt="1787743619671" lastModified="1788685303048">
+            <description>the app should be completly offline first and then using backgourd job should sync data api</description>
+          </task>
+          <task id="23168215-338a-4212-a0d0-1434d3cfde2a" text="add WhereIF Extention method" level="1" createdAt="1787744839602" lastModified="1787744839602" />
+          <task id="98ecd6ac-163f-438d-89ae-9f72ec620557" text="add valid fk relationship" level="1" createdAt="1789297187450" lastModified="1789297187450" />
+        </subtasks>
+      </task>
+      <task id="923330e7-c226-4228-87c2-11147434c074" text="Ready" createdAt="1787734360436" lastModified="1787734394961" />
+    </tasks>
+    <expandedTaskIds>
+      <id value="923330e7-c226-4228-87c2-11147434c074" />
+      <id value="477a90fb-2d75-4517-8342-3bdd14f8ec6a" />
+      <id value="61717d38-5990-4d6a-ab45-b493b9279fcd" />
+    </expandedTaskIds>
+  </component>
+</project>

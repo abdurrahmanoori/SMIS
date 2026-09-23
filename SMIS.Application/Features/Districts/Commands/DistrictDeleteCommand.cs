@@ -13,16 +13,22 @@ namespace SMIS.Application.Features.Districts.Commands
         private readonly IDistrictRepository _districtRepository;
         private readonly IUnitOfWork _unitOfWork;
 
-        public DistrictDeleteCommandHandler(IUnitOfWork unitOfWork, IDistrictRepository districtRepository)
+        public DistrictDeleteCommandHandler(
+            IUnitOfWork unitOfWork,
+            IDistrictRepository districtRepository
+        )
         {
             _unitOfWork = unitOfWork;
             _districtRepository = districtRepository;
         }
 
-        public async Task<Result<Unit>> Handle(DistrictDeleteCommand request, CancellationToken cancellationToken)
+        public async Task<Result<Unit>> Handle(
+            DistrictDeleteCommand request,
+            CancellationToken cancellationToken
+        )
         {
             var entity = await _districtRepository.GetFirstOrDefaultAsyncWithInclude(x => x.Id == request.Id,
-            x => x.Include(x => x.TranslationKey));
+                x => x.Include(x => x.TranslationKey));
 
             if (entity == null)
             {

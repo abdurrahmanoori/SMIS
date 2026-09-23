@@ -9,19 +9,29 @@ namespace SMIS.Application.Features.Provinces.Queries
 {
     public record ProvinceTranslationGetByIdQuery(string Id) : IRequest<Result<ProvinceTranslationDto>>;
 
-    internal sealed class ProvinceTranslationGetByIdQueryHandler : IRequestHandler<ProvinceTranslationGetByIdQuery, Result<ProvinceTranslationDto>>
+    internal sealed class
+        ProvinceTranslationGetByIdQueryHandler : IRequestHandler<ProvinceTranslationGetByIdQuery,
+        Result<ProvinceTranslationDto>>
     {
         private readonly IProvinceRepository _repo;
         private readonly IMapper _mapper;
 
-        public ProvinceTranslationGetByIdQueryHandler(IProvinceRepository repo, IMapper mapper)
+        public ProvinceTranslationGetByIdQueryHandler(
+            IProvinceRepository repo,
+            IMapper mapper
+        )
         {
-            _repo = repo; _mapper = mapper;
+            _repo = repo;
+            _mapper = mapper;
         }
 
-        public async Task<Result<ProvinceTranslationDto>> Handle(ProvinceTranslationGetByIdQuery request, CancellationToken cancellationToken)
+        public async Task<Result<ProvinceTranslationDto>> Handle(
+            ProvinceTranslationGetByIdQuery request,
+            CancellationToken cancellationToken
+        )
         {
-            var province = await _repo.GetFirstOrDefaultAsync(x => x.Translations.Any(t => t.Id == request.Id), includeProperties: nameof(Province.Translations));
+            var province = await _repo.GetFirstOrDefaultAsync(x => x.Translations.Any(t => t.Id == request.Id),
+                includeProperties: nameof(Province.Translations));
             if (province is null) return Result<ProvinceTranslationDto>.NotFoundResult(request.Id);
 
             var trans = province.Translations.FirstOrDefault(t => t.Id == request.Id);

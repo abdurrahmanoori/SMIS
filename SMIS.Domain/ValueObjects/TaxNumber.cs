@@ -9,12 +9,16 @@ public sealed class TaxNumber
 
     public string Value { get; }
 
-    private TaxNumber(string value) => Value = value;
+    private TaxNumber(
+        string value
+    ) => Value = value;
 
-    public static TaxNumber Create(string taxNumber)
+    public static TaxNumber Create(
+        string taxNumber
+    )
     {
-    //    if (string.IsNullOrWhiteSpace(taxNumber))
-    //        throw new DomainValidationException("Tax number cannot be empty");
+        //    if (string.IsNullOrWhiteSpace(taxNumber))
+        //        throw new DomainValidationException("Tax number cannot be empty");
 
         var cleaned = taxNumber.Trim().ToUpperInvariant();
 
@@ -27,6 +31,9 @@ public sealed class TaxNumber
         return new TaxNumber(cleaned);
     }
 
-    public static implicit operator string(TaxNumber taxNumber) => taxNumber.Value;
+    public static implicit operator string(
+        TaxNumber taxNumber
+    ) => taxNumber.Value;
+
     public override string ToString() => Value;
 }

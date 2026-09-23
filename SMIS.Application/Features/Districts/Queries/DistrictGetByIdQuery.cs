@@ -14,13 +14,19 @@ namespace SMIS.Application.Features.Districts.Queries
         private readonly IDistrictRepository _districtRepository;
         private readonly ICurrentUser _currentUser;
 
-        public DistrictGetByIdQueryHandler(IDistrictRepository districtRepository, ICurrentUser currentUser)
+        public DistrictGetByIdQueryHandler(
+            IDistrictRepository districtRepository,
+            ICurrentUser currentUser
+        )
         {
             _districtRepository = districtRepository;
             _currentUser = currentUser;
         }
 
-        public async Task<Result<DistrictDto>> Handle(DistrictGetByIdQuery request, CancellationToken cancellationToken)
+        public async Task<Result<DistrictDto>> Handle(
+            DistrictGetByIdQuery request,
+            CancellationToken cancellationToken
+        )
         {
             var userLangId = _currentUser.GetLangId();
 

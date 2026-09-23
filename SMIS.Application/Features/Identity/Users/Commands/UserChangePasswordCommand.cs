@@ -12,17 +12,23 @@ namespace SMIS.Application.Features.Identity.Users.Commands
     {
         private readonly UserManager<ApplicationUser> _userManager;
 
-        public UserChangePasswordCommandHandler(UserManager<ApplicationUser> userManager)
+        public UserChangePasswordCommandHandler(
+            UserManager<ApplicationUser> userManager
+        )
         {
             _userManager = userManager;
         }
 
-        public async Task<Result<Unit>> Handle(UserChangePasswordCommand request, CancellationToken cancellationToken)
+        public async Task<Result<Unit>> Handle(
+            UserChangePasswordCommand request,
+            CancellationToken cancellationToken
+        )
         {
             var user = await _userManager.FindByIdAsync(request.UserId);
             if (user == null) return Result<Unit>.NotFoundResult(request.UserId);
 
-            var result = await _userManager.ChangePasswordAsync(user, request.Dto.CurrentPassword, request.Dto.NewPassword);
+            var result =
+                await _userManager.ChangePasswordAsync(user, request.Dto.CurrentPassword, request.Dto.NewPassword);
             if (!result.Succeeded)
             {
                 return Result<Unit>.WithErrors(result.Errors.Select(e => new ValidationError

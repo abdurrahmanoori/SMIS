@@ -1,22 +1,32 @@
 # SMIS - Shop Management Information System
 
-A comprehensive shop management system built with .NET 9, featuring a RESTful API backend and a cross-platform .NET MAUI Blazor Hybrid mobile application.
+A shop management system with a .NET 9 REST API backend and a Flutter client.
 
 ## 🏗️ Architecture
 
-This solution follows Clean Architecture principles with clear separation of concerns:
+The backend keeps Clean Architecture, but uses only four main layers:
 
 ```
 SMIS/
-├── SMIS.Api/              # Web API layer (ASP.NET Core)
-├── SMIS.Application/      # Application business logic & DTOs
-├── SMIS.Domain/           # Core domain entities & business rules
-├── SMIS.Domain.Shared/    # Shared domain models
-├── SMIS.Infrastructure/   # Data access & external services
-├── SMIS.Identity/         # Authentication & authorization
-├── SMIS.Test/            # Unit & integration tests
-└── SMIS.UI3/             # Cross-platform mobile app (.NET MAUI)
+├── SMIS.Api/                    # Controllers, middleware, and startup
+├── SMIS.Application/            # Use cases, DTOs, validation, and interfaces
+├── SMIS.Domain/                 # Entities and business rules
+├── SMIS.Infrastructure.Server/  # EF Core, repositories, identity, and services
+├── SMIS.Test/                   # Integration and unit tests
+└── smis_flutter/                # Flutter client
 ```
+
+The normal backend request flow is:
+
+```text
+Controller -> MediatR command/query -> handler -> repository -> database
+                                      -> unit of work for saving
+```
+
+Keep business behavior in Application handlers or Domain entities. Controllers
+should only accept HTTP input and send commands or queries. Create a custom
+repository only when an entity needs a database operation that the generic
+repository does not already provide.
 
 ## 🚀 Tech Stack
 
@@ -32,9 +42,8 @@ SMIS/
 - **JWT Authentication** - Secure API authentication
 
 ### Frontend
-- **.NET MAUI** - Cross-platform framework (Android, iOS, Windows, macOS)
-- **Blazor Hybrid** - Web UI in native apps
-- **Syncfusion Blazor Components** - Rich UI component library
+- **Flutter** - Cross-platform UI framework
+- **Dart** - Client application language
 
 ### Testing
 - **xUnit** - Testing framework
@@ -48,7 +57,7 @@ SMIS/
 - [.NET 9 SDK](https://dotnet.microsoft.com/download/dotnet/9.0)
 - [Visual Studio 2022](https://visualstudio.microsoft.com/) (v17.14+) or [Visual Studio Code](https://code.visualstudio.com/)
 - [SQLite](https://www.sqlite.org/) (included with EF Core)
-- For mobile development: Android SDK, iOS SDK (macOS only)
+- [Flutter SDK](https://docs.flutter.dev/get-started/install)
 
 ## 🔧 Getting Started
 
@@ -77,12 +86,11 @@ dotnet run
 
 The API will be available at `https://localhost:7216`
 
-### 5. Run the Mobile App
+### 5. Run the Flutter App
 ```bash
-cd SMIS.UI3
-dotnet build -t:Run -f net9.0-android    # For Android
-dotnet build -t:Run -f net9.0-ios        # For iOS
-dotnet build -t:Run -f net9.0-windows    # For Windows
+cd smis_flutter
+flutter pub get
+flutter run
 ```
 
 ## 🔑 Configuration
@@ -192,12 +200,12 @@ Defines product-specific unit conversions. Critical for inventory accuracy.
   - `Id` (string) - Unique identifier
   - `ProductId` (string) - Foreign key to Product
   - `UnitOfMeasureId` (string) - Foreign key to UnitOfMeasure
-  - `ConversionFactor` (decimal) - How many base units in this unit
+  - `BaseUnitQuantity` (decimal) - How many base units in this unit
   - `CreatedAt`, `UpdatedAt` - Audit fields
 - **Example**: 
-  - Biscuit: 1 Box = 12 Packs (ConversionFactor = 12)
-  - Notebook: 1 Box = 10 Pieces (ConversionFactor = 10)
-  - Coca Cola: 1 Carton = 24 Bottles (ConversionFactor = 24)
+  - Biscuit: 1 Box = 12 Packs (BaseUnitQuantity = 12)
+  - Notebook: 1 Box = 10 Pieces (BaseUnitQuantity = 10)
+  - Coca Cola: 1 Carton = 24 Bottles (BaseUnitQuantity = 24)
 
 ### Inventory Management
 

@@ -3,42 +3,56 @@ using SMIS.Domain.Exceptions;
 
 namespace SMIS.Domain.Entities;
 
-public class ProductPrice : BaseAuditableEntity
+/// <summary>
+/// One effective selling-price period for a specific ProductUnit.
+/// Price history is represented by multiple rows over time instead of rewriting old prices.
+/// </summary>
+public class ProductPrice : BaseSyncableAuditableEntity
 {
-    public string ProductId { get; private set; } = string.Empty;
+    /// <summary>
+    /// The exact transaction unit being priced. ProductId is intentionally not duplicated
+    /// because ProductUnit already determines the owning product.
+    /// </summary>
     public string ProductUnitId { get; private set; } = string.Empty;
 
-    public long BuyPrice { get; private set; }
+    /// <summary>
+    /// Selling amount in the application's minor monetary unit.
+    /// Actual purchase cost belongs to StockBatch, not ProductPrice.
+    /// </summary>
     public long SellPrice { get; private set; }
 
+    /// <summary>
+    /// Start of this price period. EndDate stays null while the price remains open-ended.
+    /// </summary>
     public DateTime EffectiveDate { get; private set; }
-    public DateTime? EndDate { get; private set; }
-    public bool IsActive { get; private set; } = true;
-    // Navigation Properties
-    public virtual Product Product { get; set; } = null!;
-    public ProductUnit ProductUnit { get; set; } = null!;
-    internal ProductPrice() { } // EF Core
 
-    public static ProductPrice Create(string productId, string productUnitId, long buyPrice, long sellPrice, DateTime effectiveDate)
+    public DateTime? EndDate { get; private set; }
+
+    public DateTime ConflictModifiedUtc => GetConflictModifiedUtc();
+
+    // Navigation Properties
+    public ProductUnit ProductUnit { get; set; } = null!;
+
+    internal ProductPrice()
+    {
+    } // EF Core
+
+    public static ProductPrice Create(
+        string productUnitId,
+        long sellPrice,
+        DateTime effectiveDate
+    )
     {
         var productPrice = new ProductPrice();
-        productPrice.SetProductId(productId);
         productPrice.SetProductUnitId(productUnitId);
-        productPrice.SetBuyPrice(buyPrice);
         productPrice.SetSellPrice(sellPrice);
         productPrice.SetEffectiveDate(effectiveDate);
         return productPrice;
     }
 
-    public void SetProductId(string productId)
-    {
-        if (string.IsNullOrWhiteSpace(productId))
-            throw new DomainValidationException("Product ID cannot be empty");
-
-        ProductId = productId;
-    }
-
-    public void SetProductUnitId(string productUnitId)
+    public void SetProductUnitId(
+        string productUnitId
+    )
     {
         if (string.IsNullOrWhiteSpace(productUnitId))
             throw new DomainValidationException("Product unit ID cannot be empty");
@@ -46,15 +60,9 @@ public class ProductPrice : BaseAuditableEntity
         ProductUnitId = productUnitId;
     }
 
-    public void SetBuyPrice(long buyPrice)
-    {
-        if (buyPrice < 0)
-            throw new DomainValidationException("Buy price cannot be negative");
-
-        BuyPrice = buyPrice;
-    }
-
-    public void SetSellPrice(long sellPrice)
+    public void SetSellPrice(
+        long sellPrice
+    )
     {
         if (sellPrice < 0)
             throw new DomainValidationException("Sell price cannot be negative");
@@ -62,19 +70,20 @@ public class ProductPrice : BaseAuditableEntity
         SellPrice = sellPrice;
     }
 
-    public void SetEffectiveDate(DateTime effectiveDate)
+    public void SetEffectiveDate(
+        DateTime effectiveDate
+    )
     {
         EffectiveDate = effectiveDate;
     }
 
-    public void SetEndDate(DateTime? endDate)
+    public void SetEndDate(
+        DateTime? endDate
+    )
     {
         if (endDate.HasValue && endDate.Value < EffectiveDate)
             throw new DomainValidationException("End date cannot be before effective date");
 
         EndDate = endDate;
     }
-
-    public void Activate() => IsActive = true;
-    public void Deactivate() => IsActive = false;
 }

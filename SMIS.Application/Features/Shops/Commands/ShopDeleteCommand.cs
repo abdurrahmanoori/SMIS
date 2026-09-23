@@ -1,7 +1,7 @@
 using MediatR;
 using SMIS.Application.Common.Response;
-using SMIS.Application.Repositories.Base;
 using SMIS.Application.Repositories.Shops;
+using SMIS.Application.Services;
 
 namespace SMIS.Application.Features.Shops.Commands
 {
@@ -10,15 +10,21 @@ namespace SMIS.Application.Features.Shops.Commands
     internal sealed class ShopDeleteCommandHandler : IRequestHandler<ShopDeleteCommand, Result<Unit>>
     {
         private readonly IShopRepository _shopRepository;
-        private readonly IUnitOfWork _unitOfWork;
+        private readonly IApplicationDbContext _db;
 
-        public ShopDeleteCommandHandler(IUnitOfWork unitOfWork, IShopRepository shopRepository)
+        public ShopDeleteCommandHandler(
+            IApplicationDbContext db,
+            IShopRepository shopRepository
+        )
         {
-            _unitOfWork = unitOfWork;
+            _db = db;
             _shopRepository = shopRepository;
         }
 
-        public async Task<Result<Unit>> Handle(ShopDeleteCommand request, CancellationToken cancellationToken)
+        public async Task<Result<Unit>> Handle(
+            ShopDeleteCommand request,
+            CancellationToken cancellationToken
+        )
         {
             var entity = await _shopRepository.GetByIdAsync(request.Id);
             if (entity == null)
@@ -26,8 +32,17 @@ namespace SMIS.Application.Features.Shops.Commands
                 return Result<Unit>.NotFoundResult(request?.Id);
             }
 
+            var referenceCount = await _shopRepository.CountReferencesAsync(
+                entity.Id,
+                cancellationToken);
+            if (referenceCount > 0)
+                return Result<Unit>.FailureResult(
+                    "ShopInUse",
+                    $"Shop contains {referenceCount} related record(s). Remove or reassign them before deleting the shop.");
+
+            entity.ClearClientModificationMetadata();
             await _shopRepository.RemoveAsync(entity);
-            await _unitOfWork.SaveChanges(cancellationToken);
+            await _db.SaveChangesAsync(cancellationToken);
             return Result<Unit>.SuccessResult(Unit.Value);
         }
     }

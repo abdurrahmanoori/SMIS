@@ -15,7 +15,10 @@ public class PaymentAllocationService
     /// <param name="unpaidLoans">List of loans that can accept payment (Status != Paid)</param>
     /// <param name="paymentAmount">Total amount customer is paying (e.g., 130 Afghani)</param>
     /// <returns>List of allocations showing how much each loan received</returns>
-    public List<PaymentAllocation> AllocatePayment(List<LoanAccount> unpaidLoans, long paymentAmount)
+    public List<PaymentAllocation> AllocatePayment(
+        List<LoanAccount> unpaidLoans,
+        long paymentAmount
+    )
     {
         if (paymentAmount <= 0)
             throw new DomainValidationException("Payment amount must be greater than zero");

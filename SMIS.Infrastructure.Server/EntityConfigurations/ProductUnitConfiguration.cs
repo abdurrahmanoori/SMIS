@@ -4,13 +4,22 @@ using SMIS.Domain.Entities;
 
 namespace SMIS.Infrastructure.Server.EntityConfigurations
 {
+    // ProductUnit is the product-specific conversion contract. Inventory stores the
+    // resulting normalized base quantity, so historical conversions must stay stable.
     public class ProductUnitConfiguration : IEntityTypeConfiguration<ProductUnit>
     {
-        public void Configure(EntityTypeBuilder<ProductUnit> builder)
+        public void Configure(
+            EntityTypeBuilder<ProductUnit> builder
+        )
         {
+            builder.ConfigureAuditUserRelationships();
+            builder.ConfigureClientAuditUserRelationships();
             builder.ToTable(nameof(ProductUnit));
 
             builder.HasKey(pu => pu.Id);
+
+            builder.HasAlternateKey(pu => new { pu.Id, pu.ProductId })
+                .HasName("AK_ProductUnit_Id_ProductId");
 
             builder.Property(pu => pu.Id)
                 .ValueGeneratedOnAdd();
@@ -23,7 +32,10 @@ namespace SMIS.Infrastructure.Server.EntityConfigurations
                 .IsRequired()
                 .HasMaxLength(450);
 
-            builder.Property(pu => pu.ConversionFactor)
+            builder.HasAlternateKey(pu => new { pu.ProductId, pu.UnitOfMeasureId })
+                .HasName("AK_ProductUnit_ProductId_UnitOfMeasureId");
+
+            builder.Property(pu => pu.BaseUnitQuantity)
                 .IsRequired()
                 .HasColumnType("decimal(18,2)");
 
@@ -33,16 +45,19 @@ namespace SMIS.Infrastructure.Server.EntityConfigurations
             builder.Property(pu => pu.UnitName)
                 .HasMaxLength(100);
 
+            builder.Property(pu => pu.ClientCreatedBy).HasMaxLength(450);
+            builder.Property(pu => pu.ClientModifiedBy).HasMaxLength(450);
+
             // Configure relationships
             builder.HasOne(pu => pu.Product)
                 .WithMany(p => p.ProductUnits) // Product has a navigation property called ProductUnits
                 .HasForeignKey(pu => pu.ProductId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.Restrict);
 
             builder.HasOne(pu => pu.UnitOfMeasure)
                 .WithMany(u => u.ProductUnits) // UnitOfMeasure has a navigation property called ProductUnits
                 .HasForeignKey(pu => pu.UnitOfMeasureId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

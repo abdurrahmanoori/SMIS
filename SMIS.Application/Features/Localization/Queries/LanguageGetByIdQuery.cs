@@ -13,13 +13,19 @@ namespace SMIS.Application.Features.Localization.Queries
         private readonly ILanguageRepository _languageRepository;
         private readonly IMapper _mapper;
 
-        public LanguageGetByIdQueryHandler(ILanguageRepository languageRepository, IMapper mapper)
+        public LanguageGetByIdQueryHandler(
+            ILanguageRepository languageRepository,
+            IMapper mapper
+        )
         {
             _languageRepository = languageRepository;
             _mapper = mapper;
         }
 
-        public async Task<Result<LanguageDto>> Handle(LanguageGetByIdQuery request, CancellationToken cancellationToken)
+        public async Task<Result<LanguageDto>> Handle(
+            LanguageGetByIdQuery request,
+            CancellationToken cancellationToken
+        )
         {
             var entity = await _languageRepository.GetByIdAsync(request.Id);
             if (entity is null)

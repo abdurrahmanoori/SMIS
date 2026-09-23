@@ -7,20 +7,27 @@ using SMIS.Application.Repositories.Shops;
 
 namespace SMIS.Application.Features.Shops.Queries
 {
-    public record ShopGetListQuery(int PageNumber = 1, int PageSize = 25, string? SearchTerm = null) : IRequest<Result<PagedList<ShopDto>>>;
+    public record ShopGetListQuery(int PageNumber = 1, int PageSize = 25, string? SearchTerm = null)
+        : IRequest<Result<PagedList<ShopDto>>>;
 
     internal sealed class ShopGetListQueryHandler : IRequestHandler<ShopGetListQuery, Result<PagedList<ShopDto>>>
     {
         private readonly IShopRepository _shopRepository;
         private readonly IMapper _mapper;
 
-        public ShopGetListQueryHandler(IShopRepository shopRepository, IMapper mapper)
+        public ShopGetListQueryHandler(
+            IShopRepository shopRepository,
+            IMapper mapper
+        )
         {
             _shopRepository = shopRepository;
             _mapper = mapper;
         }
 
-        public async Task<Result<PagedList<ShopDto>>> Handle(ShopGetListQuery request, CancellationToken cancellationToken)
+        public async Task<Result<PagedList<ShopDto>>> Handle(
+            ShopGetListQuery request,
+            CancellationToken cancellationToken
+        )
         {
             var query = _shopRepository.GetAllQueryable();
 

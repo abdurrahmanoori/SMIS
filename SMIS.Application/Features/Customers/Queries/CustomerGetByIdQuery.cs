@@ -18,7 +18,12 @@ namespace SMIS.Application.Features.Customers.Queries
         private readonly ICurrentUser _currentUser;
         private readonly IMapper _mapper;
 
-        public CustomerGetByIdQueryHandler(ICustomerRepository customerRepository, ITranslationKeyRepository translationKeyRepository, ICurrentUser currentUser, IMapper mapper)
+        public CustomerGetByIdQueryHandler(
+            ICustomerRepository customerRepository,
+            ITranslationKeyRepository translationKeyRepository,
+            ICurrentUser currentUser,
+            IMapper mapper
+        )
         {
             _customerRepository = customerRepository;
             _translationKeyRepository = translationKeyRepository;
@@ -26,7 +31,10 @@ namespace SMIS.Application.Features.Customers.Queries
             _mapper = mapper;
         }
 
-        public async Task<Result<CustomerDto>> Handle(CustomerGetByIdQuery request, CancellationToken cancellationToken)
+        public async Task<Result<CustomerDto>> Handle(
+            CustomerGetByIdQuery request,
+            CancellationToken cancellationToken
+        )
         {
             var dbCustomer = await _customerRepository.GetFirstOrDefaultAsync(
                 x => x.Id == request.Id,

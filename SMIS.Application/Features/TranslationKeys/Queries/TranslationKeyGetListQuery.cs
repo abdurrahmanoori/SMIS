@@ -8,23 +8,32 @@ using SMIS.Application.Repositories.Localization;
 
 namespace SMIS.Application.Features.TranslationKeys.Queries
 {
-    public record TranslationKeyGetListQuery(int PageNumber = 1, int PageSize = 25, bool IncludeTranslations = false) : IRequest<Result<PagedList<TranslationKeyDto>>>;
+    public record TranslationKeyGetListQuery(int PageNumber = 1, int PageSize = 25, bool IncludeTranslations = false)
+        : IRequest<Result<PagedList<TranslationKeyDto>>>;
 
-    internal sealed class TranslationKeyGetListQueryHandler : IRequestHandler<TranslationKeyGetListQuery, Result<PagedList<TranslationKeyDto>>>
+    internal sealed class
+        TranslationKeyGetListQueryHandler : IRequestHandler<TranslationKeyGetListQuery,
+        Result<PagedList<TranslationKeyDto>>>
     {
         private readonly ITranslationKeyRepository _translationKeyRepository;
         private readonly IMapper _mapper;
 
-        public TranslationKeyGetListQueryHandler(ITranslationKeyRepository translationKeyRepository, IMapper mapper)
+        public TranslationKeyGetListQueryHandler(
+            ITranslationKeyRepository translationKeyRepository,
+            IMapper mapper
+        )
         {
             _translationKeyRepository = translationKeyRepository;
             _mapper = mapper;
         }
 
-        public async Task<Result<PagedList<TranslationKeyDto>>> Handle(TranslationKeyGetListQuery request, CancellationToken cancellationToken)
+        public async Task<Result<PagedList<TranslationKeyDto>>> Handle(
+            TranslationKeyGetListQuery request,
+            CancellationToken cancellationToken
+        )
         {
             var query = _translationKeyRepository.GetAllQueryable();
-            
+
             if (request.IncludeTranslations)
             {
                 query = _translationKeyRepository.GetAllQueryable(includeProperties: "Translations");

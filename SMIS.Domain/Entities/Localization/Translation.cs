@@ -14,9 +14,7 @@ public class Translation : BaseAuditableEntity, IEntity
 
 
     // Navigation properties
-    [ForeignKey(nameof(TranslationKeyId))]
-    public TranslationKey TranslationKey { get; set; } = null!;
+    [ForeignKey(nameof(TranslationKeyId))] public TranslationKey TranslationKey { get; set; } = null!;
 
-    [ForeignKey(nameof(LanguageNo))]
-    public Language Language { get; set; } = null!;
+    [ForeignKey(nameof(LanguageNo))] public Language Language { get; set; } = null!;
 }

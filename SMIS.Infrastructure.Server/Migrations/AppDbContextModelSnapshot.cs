@@ -178,7 +178,7 @@ namespace SMIS.Infrastructure.Server.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("AppLogs", (string)null);
+                    b.ToTable("AppLogs");
                 });
 
             modelBuilder.Entity("SMIS.Domain.Entities.Category", b =>
@@ -186,12 +186,27 @@ namespace SMIS.Infrastructure.Server.Migrations
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<string>("ClientCreatedBy")
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime?>("ClientCreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ClientModifiedBy")
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime?>("ClientModifiedDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Code")
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime?>("CreatedDate")
                         .HasColumnType("datetime2");
@@ -231,7 +246,8 @@ namespace SMIS.Infrastructure.Server.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("UpdatedBy")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime?>("UpdatedDate")
                         .HasColumnType("datetime2");
@@ -241,105 +257,116 @@ namespace SMIS.Infrastructure.Server.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ShopId");
+                    b.HasIndex("ClientCreatedBy");
+
+                    b.HasIndex("ClientModifiedBy");
+
+                    b.HasIndex("CreatedBy");
+
+                    b.HasIndex("UpdatedBy");
+
+                    b.HasIndex("ShopId", "Name")
+                        .IsUnique()
+                        .HasDatabaseName("UX_Category_ShopId_Name")
+                        .HasFilter("[IsDeleted] = 0");
 
                     b.ToTable("Category", (string)null);
 
                     b.HasData(
                         new
                         {
-                            Id = "1",
+                            Id = "bbbbbbbb-0000-0000-0000-000000000001",
                             Code = "BEV",
-                            CreatedDate = new DateTime(2026, 4, 9, 23, 45, 18, 649, DateTimeKind.Local).AddTicks(8977),
+                            CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Drinks and beverages",
                             EntityState = "Unchanged",
                             IsActive = true,
                             IsDeleted = false,
                             IsPublic = false,
-                            LastModifiedUtc = "2026-04-09 23:45:18.649898",
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             Name = "Beverages",
-                            ShopId = "1",
-                            UpdatedDate = new DateTime(2026, 4, 9, 23, 45, 18, 649, DateTimeKind.Local).AddTicks(8983),
+                            ShopId = "11111111-0000-0000-0000-000000000001",
+                            UpdatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Version = 0
                         },
                         new
                         {
-                            Id = "2",
+                            Id = "bbbbbbbb-0000-0000-0000-000000000002",
                             Code = "FOOD",
-                            CreatedDate = new DateTime(2026, 4, 9, 23, 45, 18, 649, DateTimeKind.Local).AddTicks(9014),
+                            CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Edible products and snacks",
                             EntityState = "Unchanged",
                             IsActive = true,
                             IsDeleted = false,
                             IsPublic = false,
-                            LastModifiedUtc = "2026-04-09 23:45:18.649901",
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             Name = "Food Items",
-                            ShopId = "1",
-                            UpdatedDate = new DateTime(2026, 4, 9, 23, 45, 18, 649, DateTimeKind.Local).AddTicks(9015),
+                            ShopId = "11111111-0000-0000-0000-000000000001",
+                            UpdatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Version = 0
                         },
                         new
                         {
-                            Id = "3",
+                            Id = "bbbbbbbb-0000-0000-0000-000000000003",
                             Code = "STAT",
-                            CreatedDate = new DateTime(2026, 4, 9, 23, 45, 18, 649, DateTimeKind.Local).AddTicks(9021),
+                            CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Office and school supplies",
                             EntityState = "Unchanged",
                             IsActive = true,
                             IsDeleted = false,
                             IsPublic = false,
-                            LastModifiedUtc = "2026-04-09 23:45:18.649902",
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             Name = "Stationery",
-                            ShopId = "2",
-                            UpdatedDate = new DateTime(2026, 4, 9, 23, 45, 18, 649, DateTimeKind.Local).AddTicks(9022),
+                            ShopId = "11111111-0000-0000-0000-000000000002",
+                            UpdatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Version = 0
                         },
                         new
                         {
-                            Id = "4",
+                            Id = "bbbbbbbb-0000-0000-0000-000000000004",
                             Code = "GROC",
-                            CreatedDate = new DateTime(2026, 4, 9, 23, 45, 18, 649, DateTimeKind.Local).AddTicks(9027),
+                            CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Daily household items",
                             EntityState = "Unchanged",
                             IsActive = true,
                             IsDeleted = false,
                             IsPublic = false,
-                            LastModifiedUtc = "2026-04-09 23:45:18.649902",
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             Name = "Grocery",
-                            ShopId = "2",
-                            UpdatedDate = new DateTime(2026, 4, 9, 23, 45, 18, 649, DateTimeKind.Local).AddTicks(9027),
+                            ShopId = "11111111-0000-0000-0000-000000000002",
+                            UpdatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Version = 0
                         },
                         new
                         {
-                            Id = "5",
+                            Id = "bbbbbbbb-0000-0000-0000-000000000005",
                             Code = "CARE",
-                            CreatedDate = new DateTime(2026, 4, 9, 23, 45, 18, 649, DateTimeKind.Local).AddTicks(9033),
+                            CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Health and hygiene products",
                             EntityState = "Unchanged",
                             IsActive = true,
                             IsDeleted = false,
                             IsPublic = false,
-                            LastModifiedUtc = "2026-04-09 23:45:18.649903",
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             Name = "Personal Care",
-                            ShopId = "3",
-                            UpdatedDate = new DateTime(2026, 4, 9, 23, 45, 18, 649, DateTimeKind.Local).AddTicks(9033),
+                            ShopId = "11111111-0000-0000-0000-000000000003",
+                            UpdatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Version = 0
                         },
                         new
                         {
-                            Id = "6",
+                            Id = "bbbbbbbb-0000-0000-0000-000000000006",
                             Code = "ELEC",
-                            CreatedDate = new DateTime(2026, 4, 9, 23, 45, 18, 649, DateTimeKind.Local).AddTicks(9038),
+                            CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Electronic devices and accessories",
                             EntityState = "Unchanged",
                             IsActive = true,
                             IsDeleted = false,
                             IsPublic = false,
-                            LastModifiedUtc = "2026-04-09 23:45:18.649903",
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             Name = "Electronics",
-                            ShopId = "3",
-                            UpdatedDate = new DateTime(2026, 4, 9, 23, 45, 18, 649, DateTimeKind.Local).AddTicks(9038),
+                            ShopId = "11111111-0000-0000-0000-000000000003",
+                            UpdatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Version = 0
                         });
                 });
@@ -354,8 +381,23 @@ namespace SMIS.Infrastructure.Server.Migrations
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 
+                    b.Property<string>("ClientCreatedBy")
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime?>("ClientCreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ClientModifiedBy")
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime?>("ClientModifiedDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime?>("CreatedDate")
                         .HasColumnType("datetime2");
@@ -368,7 +410,8 @@ namespace SMIS.Infrastructure.Server.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("DeletedBy")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("DistrictId")
                         .HasMaxLength(450)
@@ -400,9 +443,6 @@ namespace SMIS.Infrastructure.Server.Migrations
                     b.Property<bool>("IsPublic")
                         .HasColumnType("bit");
 
-                    b.Property<bool>("IsSyncedToServer")
-                        .HasColumnType("bit");
-
                     b.Property<string>("LastModifiedUtc")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -410,9 +450,6 @@ namespace SMIS.Infrastructure.Server.Migrations
                     b.Property<string>("LastName")
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
-
-                    b.Property<DateTime?>("LastSyncedAt")
-                        .HasColumnType("datetime2");
 
                     b.Property<string>("PhoneNumber")
                         .HasMaxLength(20)
@@ -436,7 +473,8 @@ namespace SMIS.Infrastructure.Server.Migrations
                         .HasColumnType("nvarchar(20)");
 
                     b.Property<string>("UpdatedBy")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime?>("UpdatedDate")
                         .HasColumnType("datetime2");
@@ -445,6 +483,14 @@ namespace SMIS.Infrastructure.Server.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ClientCreatedBy");
+
+                    b.HasIndex("ClientModifiedBy");
+
+                    b.HasIndex("CreatedBy");
+
+                    b.HasIndex("DeletedBy");
 
                     b.HasIndex("DistrictId");
 
@@ -462,16 +508,18 @@ namespace SMIS.Infrastructure.Server.Migrations
 
                     b.HasIndex("TaxNumber");
 
-                    b.ToTable("Customers", (string)null);
+                    b.HasIndex("UpdatedBy");
+
+                    b.ToTable("Customers");
 
                     b.HasData(
                         new
                         {
-                            Id = "1",
+                            Id = "eeeeeeee-0000-0000-0000-000000000001",
                             Address = "123 Main St, Phnom Penh",
-                            CreatedDate = new DateTime(2026, 4, 9, 23, 45, 18, 651, DateTimeKind.Local).AddTicks(6625),
+                            CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             CustomerType = "Individual",
-                            DistrictId = "1",
+                            DistrictId = "99999999-0000-0000-0000-000000000001",
                             Email = "john.doe@email.com",
                             EntityState = "Unchanged",
                             FatherName = "Smith",
@@ -479,24 +527,23 @@ namespace SMIS.Infrastructure.Server.Migrations
                             IsActive = true,
                             IsDeleted = false,
                             IsPublic = false,
-                            IsSyncedToServer = true,
-                            LastModifiedUtc = "2026-04-09 23:45:18.651691",
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             LastName = "Doe",
                             PhoneNumber = "+855123456789",
-                            ProvinceId = "1",
-                            ShopId = "1",
+                            ProvinceId = "77777777-0000-0000-0000-000000000001",
+                            ShopId = "11111111-0000-0000-0000-000000000001",
                             ShopName = "Main Store",
                             TaxNumber = "TAX001",
-                            UpdatedDate = new DateTime(2026, 4, 9, 23, 45, 18, 651, DateTimeKind.Local).AddTicks(6795),
+                            UpdatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Version = 0
                         },
                         new
                         {
-                            Id = "2",
+                            Id = "eeeeeeee-0000-0000-0000-000000000002",
                             Address = "456 Oak Ave, Phnom Penh",
-                            CreatedDate = new DateTime(2026, 4, 9, 23, 45, 18, 651, DateTimeKind.Local).AddTicks(8678),
+                            CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             CustomerType = "Individual",
-                            DistrictId = "2",
+                            DistrictId = "99999999-0000-0000-0000-000000000002",
                             Email = "jane.smith@email.com",
                             EntityState = "Unchanged",
                             FatherName = "Johnson",
@@ -504,24 +551,23 @@ namespace SMIS.Infrastructure.Server.Migrations
                             IsActive = true,
                             IsDeleted = false,
                             IsPublic = false,
-                            IsSyncedToServer = true,
-                            LastModifiedUtc = "2026-04-09 23:45:18.652017",
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             LastName = "Smith",
                             PhoneNumber = "+855987654321",
-                            ProvinceId = "1",
-                            ShopId = "1",
+                            ProvinceId = "77777777-0000-0000-0000-000000000001",
+                            ShopId = "11111111-0000-0000-0000-000000000001",
                             ShopName = "Main Store",
                             TaxNumber = "TAX002",
-                            UpdatedDate = new DateTime(2026, 4, 9, 23, 45, 18, 651, DateTimeKind.Local).AddTicks(9458),
+                            UpdatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Version = 0
                         },
                         new
                         {
-                            Id = "3",
+                            Id = "eeeeeeee-0000-0000-0000-000000000003",
                             Address = "789 Pine Rd, Phnom Penh",
-                            CreatedDate = new DateTime(2026, 4, 9, 23, 45, 18, 652, DateTimeKind.Local).AddTicks(2458),
+                            CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             CustomerType = "Enterprise",
-                            DistrictId = "3",
+                            DistrictId = "99999999-0000-0000-0000-000000000003",
                             Email = "michael.brown@email.com",
                             EntityState = "Unchanged",
                             FatherName = "Davis",
@@ -529,23 +575,22 @@ namespace SMIS.Infrastructure.Server.Migrations
                             IsActive = true,
                             IsDeleted = false,
                             IsPublic = false,
-                            IsSyncedToServer = true,
-                            LastModifiedUtc = "2026-04-09 23:45:18.652423",
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             LastName = "Brown",
                             PhoneNumber = "+855555123456",
-                            ProvinceId = "2",
-                            ShopId = "1",
+                            ProvinceId = "77777777-0000-0000-0000-000000000002",
+                            ShopId = "11111111-0000-0000-0000-000000000001",
                             ShopName = "Main Store",
-                            UpdatedDate = new DateTime(2026, 4, 9, 23, 45, 18, 652, DateTimeKind.Local).AddTicks(3388),
+                            UpdatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Version = 0
                         },
                         new
                         {
-                            Id = "4",
+                            Id = "eeeeeeee-0000-0000-0000-000000000004",
                             Address = "321 Elm St, Siem Reap",
-                            CreatedDate = new DateTime(2026, 4, 9, 23, 45, 18, 652, DateTimeKind.Local).AddTicks(5446),
+                            CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             CustomerType = "Individual",
-                            DistrictId = "1",
+                            DistrictId = "99999999-0000-0000-0000-000000000001",
                             Email = "sarah.wilson@email.com",
                             EntityState = "Unchanged",
                             FatherName = "Miller",
@@ -553,24 +598,23 @@ namespace SMIS.Infrastructure.Server.Migrations
                             IsActive = true,
                             IsDeleted = false,
                             IsPublic = false,
-                            IsSyncedToServer = true,
-                            LastModifiedUtc = "2026-04-09 23:45:18.652546",
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             LastName = "Wilson",
                             PhoneNumber = "+855444987654",
-                            ProvinceId = "3",
-                            ShopId = "2",
+                            ProvinceId = "77777777-0000-0000-0000-000000000003",
+                            ShopId = "11111111-0000-0000-0000-000000000002",
                             ShopName = "Branch Store",
                             TaxNumber = "TAX003",
-                            UpdatedDate = new DateTime(2026, 4, 9, 23, 45, 18, 652, DateTimeKind.Local).AddTicks(5458),
+                            UpdatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Version = 0
                         },
                         new
                         {
-                            Id = "5",
+                            Id = "eeeeeeee-0000-0000-0000-000000000005",
                             Address = "654 Maple Dr, Siem Reap",
-                            CreatedDate = new DateTime(2026, 4, 9, 23, 45, 18, 652, DateTimeKind.Local).AddTicks(5486),
+                            CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             CustomerType = "Individual",
-                            DistrictId = "2",
+                            DistrictId = "99999999-0000-0000-0000-000000000002",
                             Email = "david.taylor@email.com",
                             EntityState = "Unchanged",
                             FatherName = "Anderson",
@@ -578,23 +622,22 @@ namespace SMIS.Infrastructure.Server.Migrations
                             IsActive = true,
                             IsDeleted = false,
                             IsPublic = false,
-                            IsSyncedToServer = true,
-                            LastModifiedUtc = "2026-04-09 23:45:18.652549",
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             LastName = "Taylor",
                             PhoneNumber = "+855333456789",
-                            ProvinceId = "3",
-                            ShopId = "2",
+                            ProvinceId = "77777777-0000-0000-0000-000000000003",
+                            ShopId = "11111111-0000-0000-0000-000000000002",
                             ShopName = "Branch Store",
-                            UpdatedDate = new DateTime(2026, 4, 9, 23, 45, 18, 652, DateTimeKind.Local).AddTicks(5490),
+                            UpdatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Version = 0
                         },
                         new
                         {
-                            Id = "6",
+                            Id = "eeeeeeee-0000-0000-0000-000000000006",
                             Address = "987 Cedar Ln, Siem Reap",
-                            CreatedDate = new DateTime(2026, 4, 9, 23, 45, 18, 652, DateTimeKind.Local).AddTicks(5513),
+                            CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             CustomerType = "Enterprise",
-                            DistrictId = "3",
+                            DistrictId = "99999999-0000-0000-0000-000000000003",
                             Email = "lisa.garcia@email.com",
                             EntityState = "Unchanged",
                             FatherName = "Martinez",
@@ -602,24 +645,23 @@ namespace SMIS.Infrastructure.Server.Migrations
                             IsActive = true,
                             IsDeleted = false,
                             IsPublic = false,
-                            IsSyncedToServer = true,
-                            LastModifiedUtc = "2026-04-09 23:45:18.652552",
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             LastName = "Garcia",
                             PhoneNumber = "+855222123456",
-                            ProvinceId = "4",
-                            ShopId = "2",
+                            ProvinceId = "77777777-0000-0000-0000-000000000004",
+                            ShopId = "11111111-0000-0000-0000-000000000002",
                             ShopName = "Branch Store",
                             TaxNumber = "TAX004",
-                            UpdatedDate = new DateTime(2026, 4, 9, 23, 45, 18, 652, DateTimeKind.Local).AddTicks(5516),
+                            UpdatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Version = 0
                         },
                         new
                         {
-                            Id = "7",
+                            Id = "eeeeeeee-0000-0000-0000-000000000007",
                             Address = "147 Birch St, Battambang",
-                            CreatedDate = new DateTime(2026, 4, 9, 23, 45, 18, 652, DateTimeKind.Local).AddTicks(5537),
+                            CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             CustomerType = "Individual",
-                            DistrictId = "1",
+                            DistrictId = "99999999-0000-0000-0000-000000000001",
                             Email = "robert.martinez@email.com",
                             EntityState = "Unchanged",
                             FatherName = "Rodriguez",
@@ -627,23 +669,22 @@ namespace SMIS.Infrastructure.Server.Migrations
                             IsActive = true,
                             IsDeleted = false,
                             IsPublic = false,
-                            IsSyncedToServer = true,
-                            LastModifiedUtc = "2026-04-09 23:45:18.652554",
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             LastName = "Martinez",
                             PhoneNumber = "+855111987654",
-                            ProvinceId = "1",
-                            ShopId = "3",
+                            ProvinceId = "77777777-0000-0000-0000-000000000001",
+                            ShopId = "11111111-0000-0000-0000-000000000003",
                             ShopName = "Warehouse",
-                            UpdatedDate = new DateTime(2026, 4, 9, 23, 45, 18, 652, DateTimeKind.Local).AddTicks(5540),
+                            UpdatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Version = 0
                         },
                         new
                         {
-                            Id = "8",
+                            Id = "eeeeeeee-0000-0000-0000-000000000008",
                             Address = "258 Spruce Ave, Battambang",
-                            CreatedDate = new DateTime(2026, 4, 9, 23, 45, 18, 652, DateTimeKind.Local).AddTicks(5562),
+                            CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             CustomerType = "Individual",
-                            DistrictId = "2",
+                            DistrictId = "99999999-0000-0000-0000-000000000002",
                             Email = "emily.lopez@email.com",
                             EntityState = "Unchanged",
                             FatherName = "Hernandez",
@@ -651,24 +692,23 @@ namespace SMIS.Infrastructure.Server.Migrations
                             IsActive = true,
                             IsDeleted = false,
                             IsPublic = false,
-                            IsSyncedToServer = true,
-                            LastModifiedUtc = "2026-04-09 23:45:18.652556",
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             LastName = "Lopez",
                             PhoneNumber = "+855666456789",
-                            ProvinceId = "2",
-                            ShopId = "3",
+                            ProvinceId = "77777777-0000-0000-0000-000000000002",
+                            ShopId = "11111111-0000-0000-0000-000000000003",
                             ShopName = "Warehouse",
                             TaxNumber = "TAX005",
-                            UpdatedDate = new DateTime(2026, 4, 9, 23, 45, 18, 652, DateTimeKind.Local).AddTicks(5566),
+                            UpdatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Version = 0
                         },
                         new
                         {
-                            Id = "9",
+                            Id = "eeeeeeee-0000-0000-0000-000000000009",
                             Address = "369 Fir Rd, Battambang",
-                            CreatedDate = new DateTime(2026, 4, 9, 23, 45, 18, 652, DateTimeKind.Local).AddTicks(5584),
+                            CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             CustomerType = "Enterprise",
-                            DistrictId = "3",
+                            DistrictId = "99999999-0000-0000-0000-000000000003",
                             Email = "james.gonzalez@email.com",
                             EntityState = "Unchanged",
                             FatherName = "Perez",
@@ -676,23 +716,22 @@ namespace SMIS.Infrastructure.Server.Migrations
                             IsActive = true,
                             IsDeleted = false,
                             IsPublic = false,
-                            IsSyncedToServer = true,
-                            LastModifiedUtc = "2026-04-09 23:45:18.652559",
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             LastName = "Gonzalez",
                             PhoneNumber = "+855777123456",
-                            ProvinceId = "3",
-                            ShopId = "3",
+                            ProvinceId = "77777777-0000-0000-0000-000000000003",
+                            ShopId = "11111111-0000-0000-0000-000000000003",
                             ShopName = "Warehouse",
-                            UpdatedDate = new DateTime(2026, 4, 9, 23, 45, 18, 652, DateTimeKind.Local).AddTicks(5588),
+                            UpdatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Version = 0
                         },
                         new
                         {
-                            Id = "10",
+                            Id = "eeeeeeee-0000-0000-0000-000000000010",
                             Address = "741 Ash Dr, Battambang",
-                            CreatedDate = new DateTime(2026, 4, 9, 23, 45, 18, 652, DateTimeKind.Local).AddTicks(5609),
+                            CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             CustomerType = "Individual",
-                            DistrictId = "1",
+                            DistrictId = "99999999-0000-0000-0000-000000000001",
                             Email = "maria.rodriguez@email.com",
                             EntityState = "Unchanged",
                             FatherName = "Sanchez",
@@ -700,17 +739,77 @@ namespace SMIS.Infrastructure.Server.Migrations
                             IsActive = true,
                             IsDeleted = false,
                             IsPublic = false,
-                            IsSyncedToServer = true,
-                            LastModifiedUtc = "2026-04-09 23:45:18.652561",
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             LastName = "Rodriguez",
                             PhoneNumber = "+855888987654",
-                            ProvinceId = "4",
-                            ShopId = "3",
+                            ProvinceId = "77777777-0000-0000-0000-000000000004",
+                            ShopId = "11111111-0000-0000-0000-000000000003",
                             ShopName = "Warehouse",
                             TaxNumber = "TAX006",
-                            UpdatedDate = new DateTime(2026, 4, 9, 23, 45, 18, 652, DateTimeKind.Local).AddTicks(5612),
+                            UpdatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Version = 0
                         });
+                });
+
+            modelBuilder.Entity("SMIS.Domain.Entities.IdempotencyRecord", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("ActorId")
+                        .IsRequired()
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("CreatedBy")
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime?>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("EntityState")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsPublic")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Key")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<string>("LastModifiedUtc")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Scope")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime?>("UpdatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("Version")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CreatedBy");
+
+                    b.HasIndex("UpdatedBy");
+
+                    b.HasIndex("ActorId", "Scope", "Key")
+                        .IsUnique()
+                        .HasDatabaseName("UX_IdempotencyRecord_Actor_Scope_Key");
+
+                    b.ToTable("IdempotencyRecord", (string)null);
                 });
 
             modelBuilder.Entity("SMIS.Domain.Entities.Identity.Entity.ApplicationRole", b =>
@@ -753,7 +852,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "1",
+                            Id = "33333333-0000-0000-0000-000000000001",
                             EntityState = "Unchanged",
                             LastModifiedUtc = "0001-01-01 00:00:00.000000",
                             Name = "SuperAdmin",
@@ -762,128 +861,65 @@ namespace SMIS.Infrastructure.Server.Migrations
                         },
                         new
                         {
-                            Id = "2",
+                            Id = "33333333-0000-0000-0000-000000000002",
                             EntityState = "Unchanged",
                             LastModifiedUtc = "0001-01-01 00:00:00.000000",
-                            Name = "WShopAdmin",
-                            NormalizedName = "WSHOPADMIN",
+                            Name = "Admin",
+                            NormalizedName = "ADMIN",
                             Version = 0
                         },
                         new
                         {
-                            Id = "3",
+                            Id = "33333333-0000-0000-0000-000000000003",
                             EntityState = "Unchanged",
                             LastModifiedUtc = "0001-01-01 00:00:00.000000",
-                            Name = "WShopAdministration",
-                            NormalizedName = "WSHOPADMINISTRATION",
+                            Name = "Administration",
+                            NormalizedName = "ADMINISTRATION",
                             Version = 0
                         },
                         new
                         {
-                            Id = "4",
+                            Id = "33333333-0000-0000-0000-000000000004",
                             EntityState = "Unchanged",
                             LastModifiedUtc = "0001-01-01 00:00:00.000000",
-                            Name = "WShopManager",
-                            NormalizedName = "WSHOPMANAGER",
+                            Name = "Manager",
+                            NormalizedName = "MANAGER",
                             Version = 0
                         },
                         new
                         {
-                            Id = "5",
+                            Id = "33333333-0000-0000-0000-000000000005",
                             EntityState = "Unchanged",
                             LastModifiedUtc = "0001-01-01 00:00:00.000000",
-                            Name = "WShopStaff",
-                            NormalizedName = "WSHOPSTAFF",
+                            Name = "Staff",
+                            NormalizedName = "STAFF",
                             Version = 0
                         },
                         new
                         {
-                            Id = "6",
+                            Id = "33333333-0000-0000-0000-000000000006",
                             EntityState = "Unchanged",
                             LastModifiedUtc = "0001-01-01 00:00:00.000000",
-                            Name = "WShopViewer",
-                            NormalizedName = "WSHOPVIEWER",
+                            Name = "Viewer",
+                            NormalizedName = "VIEWER",
                             Version = 0
                         },
                         new
                         {
-                            Id = "7",
+                            Id = "33333333-0000-0000-0000-000000000007",
                             EntityState = "Unchanged",
                             LastModifiedUtc = "0001-01-01 00:00:00.000000",
-                            Name = "WShopEditor",
-                            NormalizedName = "WSHOPEDITOR",
+                            Name = "Editor",
+                            NormalizedName = "EDITOR",
                             Version = 0
                         },
                         new
                         {
-                            Id = "8",
+                            Id = "33333333-0000-0000-0000-000000000008",
                             EntityState = "Unchanged",
                             LastModifiedUtc = "0001-01-01 00:00:00.000000",
-                            Name = "WShopUser",
-                            NormalizedName = "WSHOPUSER",
-                            Version = 0
-                        },
-                        new
-                        {
-                            Id = "9",
-                            EntityState = "Unchanged",
-                            LastModifiedUtc = "0001-01-01 00:00:00.000000",
-                            Name = "RShopAdmin",
-                            NormalizedName = "RSHOPADMIN",
-                            Version = 0
-                        },
-                        new
-                        {
-                            Id = "10",
-                            EntityState = "Unchanged",
-                            LastModifiedUtc = "0001-01-01 00:00:00.000000",
-                            Name = "RShopAdministration",
-                            NormalizedName = "RSHOPADMINISTRATION",
-                            Version = 0
-                        },
-                        new
-                        {
-                            Id = "11",
-                            EntityState = "Unchanged",
-                            LastModifiedUtc = "0001-01-01 00:00:00.000000",
-                            Name = "RShopManager",
-                            NormalizedName = "RSHOPMANAGER",
-                            Version = 0
-                        },
-                        new
-                        {
-                            Id = "12",
-                            EntityState = "Unchanged",
-                            LastModifiedUtc = "0001-01-01 00:00:00.000000",
-                            Name = "RShopStaff",
-                            NormalizedName = "RSHOPSTAFF",
-                            Version = 0
-                        },
-                        new
-                        {
-                            Id = "13",
-                            EntityState = "Unchanged",
-                            LastModifiedUtc = "0001-01-01 00:00:00.000000",
-                            Name = "RShopViewer",
-                            NormalizedName = "RSHOPVIEWER",
-                            Version = 0
-                        },
-                        new
-                        {
-                            Id = "14",
-                            EntityState = "Unchanged",
-                            LastModifiedUtc = "0001-01-01 00:00:00.000000",
-                            Name = "RShopEditor",
-                            NormalizedName = "RSHOPEDITOR",
-                            Version = 0
-                        },
-                        new
-                        {
-                            Id = "15",
-                            EntityState = "Unchanged",
-                            LastModifiedUtc = "0001-01-01 00:00:00.000000",
-                            Name = "RShopUser",
-                            NormalizedName = "RSHOPUSER",
+                            Name = "User",
+                            NormalizedName = "USER",
                             Version = 0
                         });
                 });
@@ -918,6 +954,7 @@ namespace SMIS.Infrastructure.Server.Migrations
 
                     b.Property<string>("LanguageId")
                         .IsRequired()
+                        .HasMaxLength(450)
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("LastModifiedUtc")
@@ -1000,377 +1037,386 @@ namespace SMIS.Infrastructure.Server.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "1",
+                            Id = "44444444-0000-0000-0000-000000000001",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "c744cef7-6ffb-475e-b7e7-9c93ceef136e",
-                            Email = "superadmin@smis.com",
+                            ConcurrencyStamp = "44444444-0000-0000-0000-000000000001",
+                            Email = "superadmin@mainstore.com",
                             EmailConfirmed = true,
                             EntityState = "Unchanged",
-                            FirstName = "Super",
-                            LanguageId = "1",
+                            FirstName = "Main Store",
+                            LanguageId = "22222222-0000-0000-0000-000000000001",
                             LastModifiedUtc = "0001-01-01 00:00:00.000000",
-                            LastName = "Admin",
+                            LastName = "SuperAdmin",
                             LockoutEnabled = false,
-                            NormalizedEmail = "SUPERADMIN@SMIS.COM",
-                            NormalizedUserName = "SUPERADMIN",
-                            PasswordHash = "AQAAAAIAAYagAAAAEO0fu3AzvMNpnXR7XrrkQxBcWPjV2Qbz/reOZNok8ZPdPcvsNndOyV/3WiWUNHVvUQ==",
-                            PhoneNumber = "+855123456789",
+                            NormalizedEmail = "SUPERADMIN@MAINSTORE.COM",
+                            NormalizedUserName = "SUPERADMIN@MAINSTORE.COM",
+                            PasswordHash = "AQAAAAIAAYagAAAAEE0b5rQqY7JDcZPxjM2CJxuH16YriSpqTeSLO+7ys67UK89RbdA3SnUC2ymyF8fZEw==",
                             PhoneNumberConfirmed = true,
-                            SecurityStamp = "c2c4b850-28f8-4cd7-a107-1c4e8b3e672a",
-                            ShopId = "1",
+                            SecurityStamp = "44444444-0000-0000-0000-000000000001",
+                            ShopId = "11111111-0000-0000-0000-000000000001",
                             ShopName = "Main Store",
                             TwoFactorEnabled = false,
-                            UserName = "superadmin",
+                            UserName = "superadmin@mainstore.com",
                             Version = 0
                         },
                         new
                         {
-                            Id = "2",
+                            Id = "44444444-0000-0000-0000-000000000002",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "6e88910c-5055-49ff-beaa-5ffb2f83e2d5",
-                            Email = "wadmin@smis.com",
+                            ConcurrencyStamp = "44444444-0000-0000-0000-000000000002",
+                            Email = "admin@mainstore.com",
                             EmailConfirmed = true,
                             EntityState = "Unchanged",
-                            FirstName = "Wholesale",
-                            LanguageId = "1",
+                            FirstName = "Main Store",
+                            LanguageId = "22222222-0000-0000-0000-000000000001",
                             LastModifiedUtc = "0001-01-01 00:00:00.000000",
                             LastName = "Admin",
                             LockoutEnabled = false,
-                            NormalizedEmail = "WADMIN@SMIS.COM",
-                            NormalizedUserName = "WADMIN",
-                            PasswordHash = "AQAAAAIAAYagAAAAEBzx7tzRlQRzQn1VuMYDUOwdVBg57pXDNumhiX8OVPWIs3Z0qHICIC6wVFVXVne9Yw==",
-                            PhoneNumber = "+855123456790",
+                            NormalizedEmail = "ADMIN@MAINSTORE.COM",
+                            NormalizedUserName = "ADMIN@MAINSTORE.COM",
+                            PasswordHash = "AQAAAAIAAYagAAAAEE0b5rQqY7JDcZPxjM2CJxuH16YriSpqTeSLO+7ys67UK89RbdA3SnUC2ymyF8fZEw==",
                             PhoneNumberConfirmed = true,
-                            SecurityStamp = "a461b6c7-77b6-4377-9109-d3936c1e03a1",
-                            ShopId = "1",
+                            SecurityStamp = "44444444-0000-0000-0000-000000000002",
+                            ShopId = "11111111-0000-0000-0000-000000000001",
                             ShopName = "Main Store",
                             TwoFactorEnabled = false,
-                            UserName = "wadmin",
+                            UserName = "admin@mainstore.com",
                             Version = 0
                         },
                         new
                         {
-                            Id = "3",
+                            Id = "44444444-0000-0000-0000-000000000003",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "f2fe58f2-005a-42e7-9668-620611f6cae6",
-                            Email = "wadministration@smis.com",
+                            ConcurrencyStamp = "44444444-0000-0000-0000-000000000003",
+                            Email = "administration@mainstore.com",
                             EmailConfirmed = true,
                             EntityState = "Unchanged",
-                            FirstName = "Wholesale",
-                            LanguageId = "1",
+                            FirstName = "Main Store",
+                            LanguageId = "22222222-0000-0000-0000-000000000001",
                             LastModifiedUtc = "0001-01-01 00:00:00.000000",
                             LastName = "Administration",
                             LockoutEnabled = false,
-                            NormalizedEmail = "WADMINISTRATION@SMIS.COM",
-                            NormalizedUserName = "WADMINISTRATION",
-                            PasswordHash = "AQAAAAIAAYagAAAAEMXNIOE3cB6Cdt0ffdCBL7MbOZnMgBj62mkIE1vmzThtkE9YWTxRacTOTtOukxwleg==",
-                            PhoneNumber = "+855123456791",
+                            NormalizedEmail = "ADMINISTRATION@MAINSTORE.COM",
+                            NormalizedUserName = "ADMINISTRATION@MAINSTORE.COM",
+                            PasswordHash = "AQAAAAIAAYagAAAAEE0b5rQqY7JDcZPxjM2CJxuH16YriSpqTeSLO+7ys67UK89RbdA3SnUC2ymyF8fZEw==",
                             PhoneNumberConfirmed = true,
-                            SecurityStamp = "b388b5af-21a8-4051-bf94-d4cd4f4987cb",
-                            ShopId = "1",
+                            SecurityStamp = "44444444-0000-0000-0000-000000000003",
+                            ShopId = "11111111-0000-0000-0000-000000000001",
                             ShopName = "Main Store",
                             TwoFactorEnabled = false,
-                            UserName = "wadministration",
+                            UserName = "administration@mainstore.com",
                             Version = 0
                         },
                         new
                         {
-                            Id = "4",
+                            Id = "44444444-0000-0000-0000-000000000004",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "eb0c3562-7454-47fd-a429-a92710989a45",
-                            Email = "wmanager@smis.com",
+                            ConcurrencyStamp = "44444444-0000-0000-0000-000000000004",
+                            Email = "manager@mainstore.com",
                             EmailConfirmed = true,
                             EntityState = "Unchanged",
-                            FirstName = "Wholesale",
-                            LanguageId = "1",
+                            FirstName = "Main Store",
+                            LanguageId = "22222222-0000-0000-0000-000000000001",
                             LastModifiedUtc = "0001-01-01 00:00:00.000000",
                             LastName = "Manager",
                             LockoutEnabled = false,
-                            NormalizedEmail = "WMANAGER@SMIS.COM",
-                            NormalizedUserName = "WMANAGER",
-                            PasswordHash = "AQAAAAIAAYagAAAAECTBsmqIFkMO38sk1GP7Eb1wX++UTA8HrU0eHTFL9wZy046eAOerGcKgWisbyWuvYA==",
-                            PhoneNumber = "+855123456792",
+                            NormalizedEmail = "MANAGER@MAINSTORE.COM",
+                            NormalizedUserName = "MANAGER@MAINSTORE.COM",
+                            PasswordHash = "AQAAAAIAAYagAAAAEE0b5rQqY7JDcZPxjM2CJxuH16YriSpqTeSLO+7ys67UK89RbdA3SnUC2ymyF8fZEw==",
                             PhoneNumberConfirmed = true,
-                            SecurityStamp = "b592af41-01df-49e5-8f0a-5209750148e7",
-                            ShopId = "1",
+                            SecurityStamp = "44444444-0000-0000-0000-000000000004",
+                            ShopId = "11111111-0000-0000-0000-000000000001",
                             ShopName = "Main Store",
                             TwoFactorEnabled = false,
-                            UserName = "wmanager",
+                            UserName = "manager@mainstore.com",
                             Version = 0
                         },
                         new
                         {
-                            Id = "5",
+                            Id = "44444444-0000-0000-0000-000000000005",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "fa9c1851-1754-407d-8c06-d0ebe5c72b0c",
-                            Email = "wstaff@smis.com",
+                            ConcurrencyStamp = "44444444-0000-0000-0000-000000000005",
+                            Email = "staff@mainstore.com",
                             EmailConfirmed = true,
                             EntityState = "Unchanged",
-                            FirstName = "Wholesale",
-                            LanguageId = "1",
+                            FirstName = "Main Store",
+                            LanguageId = "22222222-0000-0000-0000-000000000001",
                             LastModifiedUtc = "0001-01-01 00:00:00.000000",
                             LastName = "Staff",
                             LockoutEnabled = false,
-                            NormalizedEmail = "WSTAFF@SMIS.COM",
-                            NormalizedUserName = "WSTAFF",
-                            PasswordHash = "AQAAAAIAAYagAAAAELjK5iPG0A3YV8fOAD7IJ73M8GsQttNJ9WA9239KFGDVH6xWKGIYrdkCl9kPmuvl3A==",
-                            PhoneNumber = "+855123456793",
+                            NormalizedEmail = "STAFF@MAINSTORE.COM",
+                            NormalizedUserName = "STAFF@MAINSTORE.COM",
+                            PasswordHash = "AQAAAAIAAYagAAAAEE0b5rQqY7JDcZPxjM2CJxuH16YriSpqTeSLO+7ys67UK89RbdA3SnUC2ymyF8fZEw==",
                             PhoneNumberConfirmed = true,
-                            SecurityStamp = "1f9b2ff5-f01e-4a96-b12f-77fe20d347f3",
-                            ShopId = "1",
+                            SecurityStamp = "44444444-0000-0000-0000-000000000005",
+                            ShopId = "11111111-0000-0000-0000-000000000001",
                             ShopName = "Main Store",
                             TwoFactorEnabled = false,
-                            UserName = "wstaff",
+                            UserName = "staff@mainstore.com",
                             Version = 0
                         },
                         new
                         {
-                            Id = "6",
+                            Id = "44444444-0000-0000-0000-000000000006",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "94e50dea-afbb-4b2c-b1ed-ec5ed6895813",
-                            Email = "wviewer@smis.com",
+                            ConcurrencyStamp = "44444444-0000-0000-0000-000000000006",
+                            Email = "viewer@mainstore.com",
                             EmailConfirmed = true,
                             EntityState = "Unchanged",
-                            FirstName = "Wholesale",
-                            LanguageId = "1",
+                            FirstName = "Main Store",
+                            LanguageId = "22222222-0000-0000-0000-000000000001",
                             LastModifiedUtc = "0001-01-01 00:00:00.000000",
                             LastName = "Viewer",
                             LockoutEnabled = false,
-                            NormalizedEmail = "WVIEWER@SMIS.COM",
-                            NormalizedUserName = "WVIEWER",
-                            PasswordHash = "AQAAAAIAAYagAAAAEMaQZTtxIXouehz5mSL19S6inX85iX6jYepPLe/GduSOvnsqgAtvY0RWLVdjiLioTg==",
-                            PhoneNumber = "+8512345634366",
+                            NormalizedEmail = "VIEWER@MAINSTORE.COM",
+                            NormalizedUserName = "VIEWER@MAINSTORE.COM",
+                            PasswordHash = "AQAAAAIAAYagAAAAEE0b5rQqY7JDcZPxjM2CJxuH16YriSpqTeSLO+7ys67UK89RbdA3SnUC2ymyF8fZEw==",
                             PhoneNumberConfirmed = true,
-                            SecurityStamp = "339df9e7-638d-4a48-8869-5a2cb341a180",
-                            ShopId = "1",
+                            SecurityStamp = "44444444-0000-0000-0000-000000000006",
+                            ShopId = "11111111-0000-0000-0000-000000000001",
                             ShopName = "Main Store",
                             TwoFactorEnabled = false,
-                            UserName = "wviewer",
+                            UserName = "viewer@mainstore.com",
                             Version = 0
                         },
                         new
                         {
-                            Id = "7",
+                            Id = "44444444-0000-0000-0000-000000000007",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "1d837cfa-df76-4491-b9fa-2c1735e29abe",
-                            Email = "weditor@smis.com",
+                            ConcurrencyStamp = "44444444-0000-0000-0000-000000000007",
+                            Email = "editor@mainstore.com",
                             EmailConfirmed = true,
                             EntityState = "Unchanged",
-                            FirstName = "Wholesale",
-                            LanguageId = "1",
+                            FirstName = "Main Store",
+                            LanguageId = "22222222-0000-0000-0000-000000000001",
                             LastModifiedUtc = "0001-01-01 00:00:00.000000",
                             LastName = "Editor",
                             LockoutEnabled = false,
-                            NormalizedEmail = "WEDITOR@SMIS.COM",
-                            NormalizedUserName = "WEDITOR",
-                            PasswordHash = "AQAAAAIAAYagAAAAEMOdIM5brmuak2EzZ7Zoe3ZAOe5LhGwijso3pReGFCAUI2svAF9oq5v7w0aLD3s93Q==",
-                            PhoneNumber = "+855123456795",
+                            NormalizedEmail = "EDITOR@MAINSTORE.COM",
+                            NormalizedUserName = "EDITOR@MAINSTORE.COM",
+                            PasswordHash = "AQAAAAIAAYagAAAAEE0b5rQqY7JDcZPxjM2CJxuH16YriSpqTeSLO+7ys67UK89RbdA3SnUC2ymyF8fZEw==",
                             PhoneNumberConfirmed = true,
-                            SecurityStamp = "445b746c-85ed-4cc5-873e-552e10127996",
-                            ShopId = "1",
+                            SecurityStamp = "44444444-0000-0000-0000-000000000007",
+                            ShopId = "11111111-0000-0000-0000-000000000001",
                             ShopName = "Main Store",
                             TwoFactorEnabled = false,
-                            UserName = "weditor",
+                            UserName = "editor@mainstore.com",
                             Version = 0
                         },
                         new
                         {
-                            Id = "8",
+                            Id = "44444444-0000-0000-0000-000000000008",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "b3d6707a-e300-4f87-b692-0d7a9859e31c",
-                            Email = "wuser@smis.com",
+                            ConcurrencyStamp = "44444444-0000-0000-0000-000000000008",
+                            Email = "user@mainstore.com",
                             EmailConfirmed = true,
                             EntityState = "Unchanged",
-                            FirstName = "Wholesale",
-                            LanguageId = "1",
+                            FirstName = "Main Store",
+                            LanguageId = "22222222-0000-0000-0000-000000000001",
                             LastModifiedUtc = "0001-01-01 00:00:00.000000",
                             LastName = "User",
                             LockoutEnabled = false,
-                            NormalizedEmail = "WUSER@SMIS.COM",
-                            NormalizedUserName = "WUSER",
-                            PasswordHash = "AQAAAAIAAYagAAAAEF13WpC3pM6wZTUXP/tb7/ttLRlvEkdGIw/UXGgZwlPRCqtTqLvWDrxTLVLR8i6Lgw==",
-                            PhoneNumber = "+855123456796",
+                            NormalizedEmail = "USER@MAINSTORE.COM",
+                            NormalizedUserName = "USER@MAINSTORE.COM",
+                            PasswordHash = "AQAAAAIAAYagAAAAEE0b5rQqY7JDcZPxjM2CJxuH16YriSpqTeSLO+7ys67UK89RbdA3SnUC2ymyF8fZEw==",
                             PhoneNumberConfirmed = true,
-                            SecurityStamp = "aa0e39fa-e5cb-4fbb-8c00-d392635d5637",
-                            ShopId = "1",
+                            SecurityStamp = "44444444-0000-0000-0000-000000000008",
+                            ShopId = "11111111-0000-0000-0000-000000000001",
                             ShopName = "Main Store",
                             TwoFactorEnabled = false,
-                            UserName = "wuser",
+                            UserName = "user@mainstore.com",
                             Version = 0
                         },
                         new
                         {
-                            Id = "9",
+                            Id = "44444444-0000-0000-0000-000000000009",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "94b5d9d9-447b-4cf4-bb28-fdc9b8b472b3",
-                            Email = "radmin@smis.com",
+                            ConcurrencyStamp = "44444444-0000-0000-0000-000000000009",
+                            Email = "admin@branchstore.com",
                             EmailConfirmed = true,
                             EntityState = "Unchanged",
-                            FirstName = "Retail",
-                            LanguageId = "1",
+                            FirstName = "Branch Store",
+                            LanguageId = "22222222-0000-0000-0000-000000000001",
                             LastModifiedUtc = "0001-01-01 00:00:00.000000",
                             LastName = "Admin",
                             LockoutEnabled = false,
-                            NormalizedEmail = "RADMIN@SMIS.COM",
-                            NormalizedUserName = "RADMIN",
-                            PasswordHash = "AQAAAAIAAYagAAAAEAW57tUnMB5YZwjdwzWU3z8KveQpJoNdhDUqroYutsFhYmfKbXg3g4YnzRRnd5Sg8Q==",
-                            PhoneNumber = "+855123456797",
+                            NormalizedEmail = "ADMIN@BRANCHSTORE.COM",
+                            NormalizedUserName = "ADMIN@BRANCHSTORE.COM",
+                            PasswordHash = "AQAAAAIAAYagAAAAEE0b5rQqY7JDcZPxjM2CJxuH16YriSpqTeSLO+7ys67UK89RbdA3SnUC2ymyF8fZEw==",
                             PhoneNumberConfirmed = true,
-                            SecurityStamp = "ef735c69-d5d5-4f8d-ae33-f634e718be1c",
-                            ShopId = "2",
+                            SecurityStamp = "44444444-0000-0000-0000-000000000009",
+                            ShopId = "11111111-0000-0000-0000-000000000002",
                             ShopName = "Branch Store",
                             TwoFactorEnabled = false,
-                            UserName = "radmin",
+                            UserName = "admin@branchstore.com",
                             Version = 0
                         },
                         new
                         {
-                            Id = "10",
+                            Id = "44444444-0000-0000-0000-000000000010",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "f640a6c2-6078-44a4-a150-beb15d3d5d56",
-                            Email = "radministration@smis.com",
+                            ConcurrencyStamp = "44444444-0000-0000-0000-000000000010",
+                            Email = "administration@branchstore.com",
                             EmailConfirmed = true,
                             EntityState = "Unchanged",
-                            FirstName = "Retail",
-                            LanguageId = "1",
+                            FirstName = "Branch Store",
+                            LanguageId = "22222222-0000-0000-0000-000000000001",
                             LastModifiedUtc = "0001-01-01 00:00:00.000000",
                             LastName = "Administration",
                             LockoutEnabled = false,
-                            NormalizedEmail = "RADMINISTRATION@SMIS.COM",
-                            NormalizedUserName = "RADMINISTRATION",
-                            PasswordHash = "AQAAAAIAAYagAAAAEH5KOuCbRIj0ajgJ1t9/5iAlkRuCT3fpbOwkBLWTuB0sl2eydZGGqS0KyePjxHY3JA==",
-                            PhoneNumber = "+855123456798",
+                            NormalizedEmail = "ADMINISTRATION@BRANCHSTORE.COM",
+                            NormalizedUserName = "ADMINISTRATION@BRANCHSTORE.COM",
+                            PasswordHash = "AQAAAAIAAYagAAAAEE0b5rQqY7JDcZPxjM2CJxuH16YriSpqTeSLO+7ys67UK89RbdA3SnUC2ymyF8fZEw==",
                             PhoneNumberConfirmed = true,
-                            SecurityStamp = "36fea153-15e8-45ea-bab2-fbca9f2d54fb",
-                            ShopId = "2",
+                            SecurityStamp = "44444444-0000-0000-0000-000000000010",
+                            ShopId = "11111111-0000-0000-0000-000000000002",
                             ShopName = "Branch Store",
                             TwoFactorEnabled = false,
-                            UserName = "radministration",
+                            UserName = "administration@branchstore.com",
                             Version = 0
                         },
                         new
                         {
-                            Id = "11",
+                            Id = "44444444-0000-0000-0000-000000000011",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "77a0749c-5b0e-4ff8-8498-e1f9b068d433",
-                            Email = "rmanager@smis.com",
+                            ConcurrencyStamp = "44444444-0000-0000-0000-000000000011",
+                            Email = "manager@branchstore.com",
                             EmailConfirmed = true,
                             EntityState = "Unchanged",
-                            FirstName = "Retail",
-                            LanguageId = "1",
+                            FirstName = "Branch Store",
+                            LanguageId = "22222222-0000-0000-0000-000000000001",
                             LastModifiedUtc = "0001-01-01 00:00:00.000000",
                             LastName = "Manager",
                             LockoutEnabled = false,
-                            NormalizedEmail = "RMANAGER@SMIS.COM",
-                            NormalizedUserName = "RMANAGER",
-                            PasswordHash = "AQAAAAIAAYagAAAAEO3tlnK/zLIl1mvKdDFhupRvfsVdx+rFO+I1OXUI49/MuBQDb/4ZbofzfARq0D8dMQ==",
-                            PhoneNumber = "+855123456799",
+                            NormalizedEmail = "MANAGER@BRANCHSTORE.COM",
+                            NormalizedUserName = "MANAGER@BRANCHSTORE.COM",
+                            PasswordHash = "AQAAAAIAAYagAAAAEE0b5rQqY7JDcZPxjM2CJxuH16YriSpqTeSLO+7ys67UK89RbdA3SnUC2ymyF8fZEw==",
                             PhoneNumberConfirmed = true,
-                            SecurityStamp = "67738b4a-af82-4b40-8e0a-24616c58413e",
-                            ShopId = "2",
+                            SecurityStamp = "44444444-0000-0000-0000-000000000011",
+                            ShopId = "11111111-0000-0000-0000-000000000002",
                             ShopName = "Branch Store",
                             TwoFactorEnabled = false,
-                            UserName = "rmanager",
+                            UserName = "manager@branchstore.com",
                             Version = 0
                         },
                         new
                         {
-                            Id = "12",
+                            Id = "44444444-0000-0000-0000-000000000012",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "4ff57326-06bc-4264-a3fe-0402048fa7e1",
-                            Email = "rstaff@smis.com",
+                            ConcurrencyStamp = "44444444-0000-0000-0000-000000000012",
+                            Email = "staff@branchstore.com",
                             EmailConfirmed = true,
                             EntityState = "Unchanged",
-                            FirstName = "Retail",
-                            LanguageId = "1",
+                            FirstName = "Branch Store",
+                            LanguageId = "22222222-0000-0000-0000-000000000001",
                             LastModifiedUtc = "0001-01-01 00:00:00.000000",
                             LastName = "Staff",
                             LockoutEnabled = false,
-                            NormalizedEmail = "RSTAFF@SMIS.COM",
-                            NormalizedUserName = "RSTAFF",
-                            PasswordHash = "AQAAAAIAAYagAAAAEBIa7pnu9EogK5wudc/W9h8wN3emqoQxNWO+eEMJgc3hg5Idem8Z2dLxXecFkQDy4w==",
-                            PhoneNumber = "+855123456800",
+                            NormalizedEmail = "STAFF@BRANCHSTORE.COM",
+                            NormalizedUserName = "STAFF@BRANCHSTORE.COM",
+                            PasswordHash = "AQAAAAIAAYagAAAAEE0b5rQqY7JDcZPxjM2CJxuH16YriSpqTeSLO+7ys67UK89RbdA3SnUC2ymyF8fZEw==",
                             PhoneNumberConfirmed = true,
-                            SecurityStamp = "a95f352c-7caa-4b0d-b31e-70b2d7550610",
-                            ShopId = "2",
+                            SecurityStamp = "44444444-0000-0000-0000-000000000012",
+                            ShopId = "11111111-0000-0000-0000-000000000002",
                             ShopName = "Branch Store",
                             TwoFactorEnabled = false,
-                            UserName = "rstaff",
+                            UserName = "staff@branchstore.com",
                             Version = 0
                         },
                         new
                         {
-                            Id = "13",
+                            Id = "44444444-0000-0000-0000-000000000013",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "015c979d-90ef-4862-a00b-38658c21e3b0",
-                            Email = "rviewer@smis.com",
+                            ConcurrencyStamp = "44444444-0000-0000-0000-000000000013",
+                            Email = "viewer@branchstore.com",
                             EmailConfirmed = true,
                             EntityState = "Unchanged",
-                            FirstName = "Retail",
-                            LanguageId = "1",
+                            FirstName = "Branch Store",
+                            LanguageId = "22222222-0000-0000-0000-000000000001",
                             LastModifiedUtc = "0001-01-01 00:00:00.000000",
                             LastName = "Viewer",
                             LockoutEnabled = false,
-                            NormalizedEmail = "RVIEWER@SMIS.COM",
-                            NormalizedUserName = "RVIEWER",
-                            PasswordHash = "AQAAAAIAAYagAAAAEDaLYVj5215RJhSSQRn9Runo3OehzyEw4AcDAFpQWzC5RAwh0o1uiLv32IwWerwtLQ==",
-                            PhoneNumber = "+855123456801",
+                            NormalizedEmail = "VIEWER@BRANCHSTORE.COM",
+                            NormalizedUserName = "VIEWER@BRANCHSTORE.COM",
+                            PasswordHash = "AQAAAAIAAYagAAAAEE0b5rQqY7JDcZPxjM2CJxuH16YriSpqTeSLO+7ys67UK89RbdA3SnUC2ymyF8fZEw==",
                             PhoneNumberConfirmed = true,
-                            SecurityStamp = "c5a7b4c2-ac34-4f31-80b1-fdcf0a144102",
-                            ShopId = "2",
+                            SecurityStamp = "44444444-0000-0000-0000-000000000013",
+                            ShopId = "11111111-0000-0000-0000-000000000002",
                             ShopName = "Branch Store",
                             TwoFactorEnabled = false,
-                            UserName = "rviewer",
+                            UserName = "viewer@branchstore.com",
                             Version = 0
                         },
                         new
                         {
-                            Id = "14",
+                            Id = "44444444-0000-0000-0000-000000000014",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "38d09008-0705-4485-a955-2903b23da3aa",
-                            Email = "reditor@smis.com",
+                            ConcurrencyStamp = "44444444-0000-0000-0000-000000000014",
+                            Email = "editor@branchstore.com",
                             EmailConfirmed = true,
                             EntityState = "Unchanged",
-                            FirstName = "Retail",
-                            LanguageId = "1",
+                            FirstName = "Branch Store",
+                            LanguageId = "22222222-0000-0000-0000-000000000001",
                             LastModifiedUtc = "0001-01-01 00:00:00.000000",
                             LastName = "Editor",
                             LockoutEnabled = false,
-                            NormalizedEmail = "REDITOR@SMIS.COM",
-                            NormalizedUserName = "REDITOR",
-                            PasswordHash = "AQAAAAIAAYagAAAAEPU3Rp+gky832jnsXF4NpMHVDhhDyeQLR2Zex1ItNkPJvq8s0pGySTQuz7aH4cHimQ==",
-                            PhoneNumber = "+855123456802",
+                            NormalizedEmail = "EDITOR@BRANCHSTORE.COM",
+                            NormalizedUserName = "EDITOR@BRANCHSTORE.COM",
+                            PasswordHash = "AQAAAAIAAYagAAAAEE0b5rQqY7JDcZPxjM2CJxuH16YriSpqTeSLO+7ys67UK89RbdA3SnUC2ymyF8fZEw==",
                             PhoneNumberConfirmed = true,
-                            SecurityStamp = "6718d3f4-a16b-4d33-8261-bf74131abca6",
-                            ShopId = "2",
+                            SecurityStamp = "44444444-0000-0000-0000-000000000014",
+                            ShopId = "11111111-0000-0000-0000-000000000002",
                             ShopName = "Branch Store",
                             TwoFactorEnabled = false,
-                            UserName = "reditor",
+                            UserName = "editor@branchstore.com",
                             Version = 0
                         },
                         new
                         {
-                            Id = "15",
+                            Id = "44444444-0000-0000-0000-000000000015",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "f55e9503-ec2c-4580-9cd5-5793e95e2b58",
-                            Email = "ruser@smis.com",
+                            ConcurrencyStamp = "44444444-0000-0000-0000-000000000015",
+                            Email = "user@branchstore.com",
                             EmailConfirmed = true,
                             EntityState = "Unchanged",
-                            FirstName = "Retail",
-                            LanguageId = "1",
+                            FirstName = "Branch Store",
+                            LanguageId = "22222222-0000-0000-0000-000000000001",
                             LastModifiedUtc = "0001-01-01 00:00:00.000000",
                             LastName = "User",
                             LockoutEnabled = false,
-                            NormalizedEmail = "RUSER@SMIS.COM",
-                            NormalizedUserName = "RUSER",
-                            PasswordHash = "AQAAAAIAAYagAAAAEFCxKZ7vJLlQmvgVqh69C1AOQYAnlH2+ruWye/u6XVzRjfWrt2sA+BQoz0VXLVoGqA==",
-                            PhoneNumber = "+855123456803",
+                            NormalizedEmail = "USER@BRANCHSTORE.COM",
+                            NormalizedUserName = "USER@BRANCHSTORE.COM",
+                            PasswordHash = "AQAAAAIAAYagAAAAEE0b5rQqY7JDcZPxjM2CJxuH16YriSpqTeSLO+7ys67UK89RbdA3SnUC2ymyF8fZEw==",
                             PhoneNumberConfirmed = true,
-                            SecurityStamp = "83d9ce1a-53ab-4e38-bcb4-366ec1ed3e06",
-                            ShopId = "2",
+                            SecurityStamp = "44444444-0000-0000-0000-000000000015",
+                            ShopId = "11111111-0000-0000-0000-000000000002",
                             ShopName = "Branch Store",
                             TwoFactorEnabled = false,
-                            UserName = "ruser",
+                            UserName = "user@branchstore.com",
+                            Version = 0
+                        },
+                        new
+                        {
+                            Id = "44444444-0000-0000-0000-000000000016",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "44444444-0000-0000-0000-000000000016",
+                            Email = "admin@wasilshop.com",
+                            EmailConfirmed = true,
+                            EntityState = "Unchanged",
+                            FirstName = "Wasil Shop",
+                            LanguageId = "22222222-0000-0000-0000-000000000001",
+                            LastModifiedUtc = "0001-01-01 00:00:00.000000",
+                            LastName = "Admin",
+                            LockoutEnabled = false,
+                            NormalizedEmail = "ADMIN@WASILSHOP.COM",
+                            NormalizedUserName = "ADMIN@WASILSHOP.COM",
+                            PasswordHash = "AQAAAAIAAYagAAAAEE0b5rQqY7JDcZPxjM2CJxuH16YriSpqTeSLO+7ys67UK89RbdA3SnUC2ymyF8fZEw==",
+                            PhoneNumberConfirmed = true,
+                            SecurityStamp = "44444444-0000-0000-0000-000000000016",
+                            ShopId = "11111111-0000-0000-0000-000000000004",
+                            ShopName = "Wasil Shop",
+                            TwoFactorEnabled = false,
+                            UserName = "admin@wasilshop.com",
                             Version = 0
                         });
                 });
@@ -1378,9 +1424,11 @@ namespace SMIS.Infrastructure.Server.Migrations
             modelBuilder.Entity("SMIS.Domain.Entities.Identity.Entity.ApplicationUserRole", b =>
                 {
                     b.Property<string>("UserId")
+                        .HasMaxLength(450)
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("RoleId")
+                        .HasMaxLength(450)
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("RoleName")
@@ -1400,108 +1448,115 @@ namespace SMIS.Infrastructure.Server.Migrations
                     b.HasData(
                         new
                         {
-                            UserId = "1",
-                            RoleId = "1",
+                            UserId = "44444444-0000-0000-0000-000000000001",
+                            RoleId = "33333333-0000-0000-0000-000000000001",
                             RoleName = "SuperAdmin",
-                            UserName = "superadmin"
+                            UserName = "superadmin@mainstore.com"
                         },
                         new
                         {
-                            UserId = "2",
-                            RoleId = "2",
-                            RoleName = "WShopAdmin",
-                            UserName = "wadmin"
+                            UserId = "44444444-0000-0000-0000-000000000002",
+                            RoleId = "33333333-0000-0000-0000-000000000002",
+                            RoleName = "Admin",
+                            UserName = "admin@mainstore.com"
                         },
                         new
                         {
-                            UserId = "3",
-                            RoleId = "3",
-                            RoleName = "WShopAdministration",
-                            UserName = "wadministration"
+                            UserId = "44444444-0000-0000-0000-000000000003",
+                            RoleId = "33333333-0000-0000-0000-000000000003",
+                            RoleName = "Administration",
+                            UserName = "administration@mainstore.com"
                         },
                         new
                         {
-                            UserId = "4",
-                            RoleId = "4",
-                            RoleName = "WShopManager",
-                            UserName = "wmanager"
+                            UserId = "44444444-0000-0000-0000-000000000004",
+                            RoleId = "33333333-0000-0000-0000-000000000004",
+                            RoleName = "Manager",
+                            UserName = "manager@mainstore.com"
                         },
                         new
                         {
-                            UserId = "5",
-                            RoleId = "5",
-                            RoleName = "WShopStaff",
-                            UserName = "wstaff"
+                            UserId = "44444444-0000-0000-0000-000000000005",
+                            RoleId = "33333333-0000-0000-0000-000000000005",
+                            RoleName = "Staff",
+                            UserName = "staff@mainstore.com"
                         },
                         new
                         {
-                            UserId = "6",
-                            RoleId = "6",
-                            RoleName = "WShopViewer",
-                            UserName = "wviewer"
+                            UserId = "44444444-0000-0000-0000-000000000006",
+                            RoleId = "33333333-0000-0000-0000-000000000006",
+                            RoleName = "Viewer",
+                            UserName = "viewer@mainstore.com"
                         },
                         new
                         {
-                            UserId = "7",
-                            RoleId = "7",
-                            RoleName = "WShopEditor",
-                            UserName = "weditor"
+                            UserId = "44444444-0000-0000-0000-000000000007",
+                            RoleId = "33333333-0000-0000-0000-000000000007",
+                            RoleName = "Editor",
+                            UserName = "editor@mainstore.com"
                         },
                         new
                         {
-                            UserId = "8",
-                            RoleId = "8",
-                            RoleName = "WShopUser",
-                            UserName = "wuser"
+                            UserId = "44444444-0000-0000-0000-000000000008",
+                            RoleId = "33333333-0000-0000-0000-000000000008",
+                            RoleName = "User",
+                            UserName = "user@mainstore.com"
                         },
                         new
                         {
-                            UserId = "9",
-                            RoleId = "9",
-                            RoleName = "RShopAdmin",
-                            UserName = "radmin"
+                            UserId = "44444444-0000-0000-0000-000000000009",
+                            RoleId = "33333333-0000-0000-0000-000000000002",
+                            RoleName = "Admin",
+                            UserName = "admin@branchstore.com"
                         },
                         new
                         {
-                            UserId = "10",
-                            RoleId = "10",
-                            RoleName = "RShopAdministration",
-                            UserName = "radministration"
+                            UserId = "44444444-0000-0000-0000-000000000010",
+                            RoleId = "33333333-0000-0000-0000-000000000003",
+                            RoleName = "Administration",
+                            UserName = "administration@branchstore.com"
                         },
                         new
                         {
-                            UserId = "11",
-                            RoleId = "11",
-                            RoleName = "RShopManager",
-                            UserName = "rmanager"
+                            UserId = "44444444-0000-0000-0000-000000000011",
+                            RoleId = "33333333-0000-0000-0000-000000000004",
+                            RoleName = "Manager",
+                            UserName = "manager@branchstore.com"
                         },
                         new
                         {
-                            UserId = "12",
-                            RoleId = "12",
-                            RoleName = "RShopStaff",
-                            UserName = "rstaff"
+                            UserId = "44444444-0000-0000-0000-000000000012",
+                            RoleId = "33333333-0000-0000-0000-000000000005",
+                            RoleName = "Staff",
+                            UserName = "staff@branchstore.com"
                         },
                         new
                         {
-                            UserId = "13",
-                            RoleId = "13",
-                            RoleName = "RShopViewer",
-                            UserName = "rviewer"
+                            UserId = "44444444-0000-0000-0000-000000000013",
+                            RoleId = "33333333-0000-0000-0000-000000000006",
+                            RoleName = "Viewer",
+                            UserName = "viewer@branchstore.com"
                         },
                         new
                         {
-                            UserId = "14",
-                            RoleId = "14",
-                            RoleName = "RShopEditor",
-                            UserName = "reditor"
+                            UserId = "44444444-0000-0000-0000-000000000014",
+                            RoleId = "33333333-0000-0000-0000-000000000007",
+                            RoleName = "Editor",
+                            UserName = "editor@branchstore.com"
                         },
                         new
                         {
-                            UserId = "15",
-                            RoleId = "15",
-                            RoleName = "RShopUser",
-                            UserName = "ruser"
+                            UserId = "44444444-0000-0000-0000-000000000015",
+                            RoleId = "33333333-0000-0000-0000-000000000008",
+                            RoleName = "User",
+                            UserName = "user@branchstore.com"
+                        },
+                        new
+                        {
+                            UserId = "44444444-0000-0000-0000-000000000016",
+                            RoleId = "33333333-0000-0000-0000-000000000002",
+                            RoleName = "Admin",
+                            UserName = "admin@wasilshop.com"
                         });
                 });
 
@@ -1511,10 +1566,14 @@ namespace SMIS.Infrastructure.Server.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime?>("CreatedDate")
                         .HasColumnType("datetime2");
+
+                    b.Property<long>("CreditAmount")
+                        .HasColumnType("bigint");
 
                     b.Property<string>("CustomerId")
                         .IsRequired()
@@ -1561,22 +1620,10 @@ namespace SMIS.Infrastructure.Server.Migrations
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 
-                    b.Property<decimal>("PriceAtLoanTime")
-                        .HasPrecision(18, 2)
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<string>("ProductId")
+                    b.Property<string>("SaleId")
                         .IsRequired()
                         .HasMaxLength(450)
                         .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("ProductName")
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.Property<decimal>("Quantity")
-                        .HasPrecision(18, 2)
-                        .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("ShopId")
                         .IsRequired()
@@ -1587,24 +1634,17 @@ namespace SMIS.Infrastructure.Server.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
 
-                    b.Property<int>("Status")
+                    b.Property<string>("Status")
+                        .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("int");
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<long>("TotalAmount")
                         .HasColumnType("bigint");
 
-                    b.Property<string>("UnitId")
-                        .IsRequired()
+                    b.Property<string>("UpdatedBy")
                         .HasMaxLength(450)
                         .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("UnitName")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<string>("UpdatedBy")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("UpdatedDate")
                         .HasColumnType("datetime2");
@@ -1614,296 +1654,18 @@ namespace SMIS.Infrastructure.Server.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CreatedBy");
+
                     b.HasIndex("CustomerId");
 
-                    b.HasIndex("ProductId");
+                    b.HasIndex("SaleId")
+                        .IsUnique();
 
                     b.HasIndex("ShopId");
 
-                    b.HasIndex("UnitId");
+                    b.HasIndex("UpdatedBy");
 
                     b.ToTable("LoanAccount", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = "1",
-                            CreatedDate = new DateTime(2026, 4, 9, 23, 45, 17, 334, DateTimeKind.Local).AddTicks(2584),
-                            CustomerId = "1",
-                            CustomerName = "John",
-                            DueDate = new DateTime(2026, 5, 9, 23, 45, 17, 331, DateTimeKind.Local).AddTicks(5163),
-                            EntityState = "Unchanged",
-                            IsActive = true,
-                            IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
-                            LastModifiedUtc = "2026-04-09 23:45:17.334309",
-                            LoanDate = new DateTime(2026, 3, 10, 23, 45, 17, 331, DateTimeKind.Local).AddTicks(5163),
-                            Notes = "Coca Cola loan for John",
-                            PriceAtLoanTime = 5000m,
-                            ProductId = "1",
-                            ProductName = "Coca Cola 500ml",
-                            Quantity = 10m,
-                            ShopId = "1",
-                            ShopName = "Main Store",
-                            Status = 1,
-                            TotalAmount = 50000L,
-                            UnitId = "2",
-                            UnitName = "Bottle",
-                            UpdatedDate = new DateTime(2026, 4, 9, 23, 45, 17, 334, DateTimeKind.Local).AddTicks(2859),
-                            Version = 0
-                        },
-                        new
-                        {
-                            Id = "2",
-                            CreatedDate = new DateTime(2026, 4, 9, 23, 45, 17, 334, DateTimeKind.Local).AddTicks(8364),
-                            CustomerId = "2",
-                            CustomerName = "Jane",
-                            DueDate = new DateTime(2026, 4, 24, 23, 45, 17, 331, DateTimeKind.Local).AddTicks(5163),
-                            EntityState = "Unchanged",
-                            IsActive = true,
-                            IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
-                            LastModifiedUtc = "2026-04-09 23:45:17.334997",
-                            LoanDate = new DateTime(2026, 3, 25, 23, 45, 17, 331, DateTimeKind.Local).AddTicks(5163),
-                            Notes = "Oreo biscuits for Jane",
-                            PriceAtLoanTime = 4000m,
-                            ProductId = "4",
-                            ProductName = "Oreo Biscuits",
-                            Quantity = 5m,
-                            ShopId = "1",
-                            ShopName = "Main Store",
-                            Status = 1,
-                            TotalAmount = 20000L,
-                            UnitId = "3",
-                            UnitName = "Pack",
-                            UpdatedDate = new DateTime(2026, 4, 9, 23, 45, 17, 334, DateTimeKind.Local).AddTicks(9182),
-                            Version = 0
-                        },
-                        new
-                        {
-                            Id = "3",
-                            CreatedDate = new DateTime(2026, 4, 9, 23, 45, 17, 335, DateTimeKind.Local).AddTicks(5410),
-                            CustomerId = "3",
-                            CustomerName = "Michael",
-                            DueDate = new DateTime(2026, 4, 29, 23, 45, 17, 331, DateTimeKind.Local).AddTicks(5163),
-                            EntityState = "Unchanged",
-                            IsActive = true,
-                            IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
-                            LastModifiedUtc = "2026-04-09 23:45:17.335744",
-                            LoanDate = new DateTime(2026, 3, 30, 23, 45, 17, 331, DateTimeKind.Local).AddTicks(5163),
-                            Notes = "Notebooks for Michael",
-                            PriceAtLoanTime = 3000m,
-                            ProductId = "7",
-                            ProductName = "A4 Notebook",
-                            Quantity = 20m,
-                            ShopId = "1",
-                            ShopName = "Main Store",
-                            Status = 1,
-                            TotalAmount = 60000L,
-                            UnitId = "1",
-                            UnitName = "Piece",
-                            UpdatedDate = new DateTime(2026, 4, 9, 23, 45, 17, 335, DateTimeKind.Local).AddTicks(6465),
-                            Version = 0
-                        },
-                        new
-                        {
-                            Id = "4",
-                            CreatedDate = new DateTime(2026, 4, 9, 23, 45, 17, 335, DateTimeKind.Local).AddTicks(8395),
-                            CustomerId = "1",
-                            CustomerName = "John",
-                            DueDate = new DateTime(2026, 5, 24, 23, 45, 17, 331, DateTimeKind.Local).AddTicks(5163),
-                            EntityState = "Unchanged",
-                            IsActive = true,
-                            IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
-                            LastModifiedUtc = "2026-04-09 23:45:17.335841",
-                            LoanDate = new DateTime(2026, 4, 4, 23, 45, 17, 331, DateTimeKind.Local).AddTicks(5163),
-                            Notes = "Cooking oil bulk order",
-                            PriceAtLoanTime = 8000m,
-                            ProductId = "10",
-                            ProductName = "Cooking Oil 1L",
-                            Quantity = 15m,
-                            ShopId = "1",
-                            ShopName = "Main Store",
-                            Status = 1,
-                            TotalAmount = 120000L,
-                            UnitId = "2",
-                            UnitName = "Bottle",
-                            UpdatedDate = new DateTime(2026, 4, 9, 23, 45, 17, 335, DateTimeKind.Local).AddTicks(8410),
-                            Version = 0
-                        },
-                        new
-                        {
-                            Id = "5",
-                            CreatedDate = new DateTime(2026, 4, 9, 23, 45, 17, 335, DateTimeKind.Local).AddTicks(8455),
-                            CustomerId = "4",
-                            CustomerName = "Sarah",
-                            DueDate = new DateTime(2026, 4, 19, 23, 45, 17, 331, DateTimeKind.Local).AddTicks(5163),
-                            EntityState = "Unchanged",
-                            IsActive = true,
-                            IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
-                            LastModifiedUtc = "2026-04-09 23:45:17.335846",
-                            LoanDate = new DateTime(2026, 3, 20, 23, 45, 17, 331, DateTimeKind.Local).AddTicks(5163),
-                            Notes = "Pepsi for Sarah",
-                            PriceAtLoanTime = 4500m,
-                            ProductId = "2",
-                            ProductName = "Pepsi 500ml",
-                            Quantity = 24m,
-                            ShopId = "2",
-                            ShopName = "Branch Store",
-                            Status = 1,
-                            TotalAmount = 108000L,
-                            UnitId = "2",
-                            UnitName = "Bottle",
-                            UpdatedDate = new DateTime(2026, 4, 9, 23, 45, 17, 335, DateTimeKind.Local).AddTicks(8460),
-                            Version = 0
-                        },
-                        new
-                        {
-                            Id = "6",
-                            CreatedDate = new DateTime(2026, 4, 9, 23, 45, 17, 335, DateTimeKind.Local).AddTicks(8497),
-                            CustomerId = "5",
-                            CustomerName = "David",
-                            DueDate = new DateTime(2026, 4, 27, 23, 45, 17, 331, DateTimeKind.Local).AddTicks(5163),
-                            EntityState = "Unchanged",
-                            IsActive = true,
-                            IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
-                            LastModifiedUtc = "2026-04-09 23:45:17.335850",
-                            LoanDate = new DateTime(2026, 3, 28, 23, 45, 17, 331, DateTimeKind.Local).AddTicks(5163),
-                            Notes = "Blue pens for David",
-                            PriceAtLoanTime = 500m,
-                            ProductId = "8",
-                            ProductName = "Blue Pen",
-                            Quantity = 50m,
-                            ShopId = "2",
-                            ShopName = "Branch Store",
-                            Status = 1,
-                            TotalAmount = 25000L,
-                            UnitId = "1",
-                            UnitName = "Piece",
-                            UpdatedDate = new DateTime(2026, 4, 9, 23, 45, 17, 335, DateTimeKind.Local).AddTicks(8502),
-                            Version = 0
-                        },
-                        new
-                        {
-                            Id = "7",
-                            CreatedDate = new DateTime(2026, 4, 9, 23, 45, 17, 335, DateTimeKind.Local).AddTicks(8525),
-                            CustomerId = "6",
-                            CustomerName = "Lisa",
-                            EntityState = "Unchanged",
-                            IsActive = true,
-                            IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
-                            LastModifiedUtc = "2026-04-09 23:45:17.335853",
-                            LoanDate = new DateTime(2026, 3, 15, 23, 45, 17, 331, DateTimeKind.Local).AddTicks(5163),
-                            Notes = "Rice bulk purchase",
-                            PriceAtLoanTime = 2000m,
-                            ProductId = "11",
-                            ProductName = "Rice 1kg",
-                            Quantity = 100m,
-                            ShopId = "2",
-                            ShopName = "Branch Store",
-                            Status = 1,
-                            TotalAmount = 200000L,
-                            UnitId = "7",
-                            UnitName = "Kilogram",
-                            UpdatedDate = new DateTime(2026, 4, 9, 23, 45, 17, 335, DateTimeKind.Local).AddTicks(8529),
-                            Version = 0
-                        },
-                        new
-                        {
-                            Id = "8",
-                            CreatedDate = new DateTime(2026, 4, 9, 23, 45, 17, 335, DateTimeKind.Local).AddTicks(8551),
-                            CustomerId = "7",
-                            CustomerName = "Robert",
-                            DueDate = new DateTime(2026, 4, 21, 23, 45, 17, 331, DateTimeKind.Local).AddTicks(5163),
-                            EntityState = "Unchanged",
-                            IsActive = true,
-                            IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
-                            LastModifiedUtc = "2026-04-09 23:45:17.335855",
-                            LoanDate = new DateTime(2026, 3, 22, 23, 45, 17, 331, DateTimeKind.Local).AddTicks(5163),
-                            Notes = "Mineral water for Robert",
-                            PriceAtLoanTime = 3000m,
-                            ProductId = "3",
-                            ProductName = "Mineral Water 1L",
-                            Quantity = 48m,
-                            ShopId = "3",
-                            ShopName = "Warehouse",
-                            Status = 1,
-                            TotalAmount = 144000L,
-                            UnitId = "2",
-                            UnitName = "Bottle",
-                            UpdatedDate = new DateTime(2026, 4, 9, 23, 45, 17, 335, DateTimeKind.Local).AddTicks(8555),
-                            Version = 0
-                        },
-                        new
-                        {
-                            Id = "9",
-                            CreatedDate = new DateTime(2026, 4, 9, 23, 45, 17, 335, DateTimeKind.Local).AddTicks(8577),
-                            CustomerId = "8",
-                            CustomerName = "Emily",
-                            DueDate = new DateTime(2026, 5, 1, 23, 45, 17, 331, DateTimeKind.Local).AddTicks(5163),
-                            EntityState = "Unchanged",
-                            IsActive = true,
-                            IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
-                            LastModifiedUtc = "2026-04-09 23:45:17.335858",
-                            LoanDate = new DateTime(2026, 4, 1, 23, 45, 17, 331, DateTimeKind.Local).AddTicks(5163),
-                            Notes = "Instant noodles for Emily",
-                            PriceAtLoanTime = 1500m,
-                            ProductId = "6",
-                            ProductName = "Instant Noodles",
-                            Quantity = 30m,
-                            ShopId = "3",
-                            ShopName = "Warehouse",
-                            Status = 1,
-                            TotalAmount = 45000L,
-                            UnitId = "3",
-                            UnitName = "Pack",
-                            UpdatedDate = new DateTime(2026, 4, 9, 23, 45, 17, 335, DateTimeKind.Local).AddTicks(8581),
-                            Version = 0
-                        },
-                        new
-                        {
-                            Id = "10",
-                            CreatedDate = new DateTime(2026, 4, 9, 23, 45, 17, 335, DateTimeKind.Local).AddTicks(8602),
-                            CustomerId = "9",
-                            CustomerName = "James",
-                            DueDate = new DateTime(2026, 5, 6, 23, 45, 17, 331, DateTimeKind.Local).AddTicks(5163),
-                            EntityState = "Unchanged",
-                            IsActive = true,
-                            IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
-                            LastModifiedUtc = "2026-04-09 23:45:17.335861",
-                            LoanDate = new DateTime(2026, 4, 6, 23, 45, 17, 331, DateTimeKind.Local).AddTicks(5163),
-                            Notes = "USB cables for James",
-                            PriceAtLoanTime = 1000m,
-                            ProductId = "15",
-                            ProductName = "USB Cable",
-                            Quantity = 100m,
-                            ShopId = "3",
-                            ShopName = "Warehouse",
-                            Status = 1,
-                            TotalAmount = 100000L,
-                            UnitId = "1",
-                            UnitName = "Piece",
-                            UpdatedDate = new DateTime(2026, 4, 9, 23, 45, 17, 335, DateTimeKind.Local).AddTicks(8607),
-                            Version = 0
-                        });
                 });
 
             modelBuilder.Entity("SMIS.Domain.Entities.LoanAccountPayment", b =>
@@ -1915,7 +1677,8 @@ namespace SMIS.Infrastructure.Server.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime?>("CreatedDate")
                         .HasColumnType("datetime2");
@@ -1967,7 +1730,8 @@ namespace SMIS.Infrastructure.Server.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("UpdatedBy")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime?>("UpdatedDate")
                         .HasColumnType("datetime2");
@@ -1977,7 +1741,11 @@ namespace SMIS.Infrastructure.Server.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CreatedBy");
+
                     b.HasIndex("LoanAccountId");
+
+                    b.HasIndex("UpdatedBy");
 
                     b.ToTable("LoanAccountPayment", (string)null);
                 });
@@ -2016,36 +1784,36 @@ namespace SMIS.Infrastructure.Server.Migrations
                         .IsUnique()
                         .HasFilter("[Code] IS NOT NULL");
 
-                    b.ToTable("Languages", (string)null);
+                    b.ToTable("Languages");
 
                     b.HasData(
                         new
                         {
-                            Id = "1",
+                            Id = "22222222-0000-0000-0000-000000000001",
                             Code = "en",
                             EntityState = "Added",
                             IsActive = true,
-                            LastModifiedUtc = "2026-04-09 19:15:18.636639",
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             Name = "English",
                             Version = 0
                         },
                         new
                         {
-                            Id = "2",
+                            Id = "22222222-0000-0000-0000-000000000002",
                             Code = "ps",
                             EntityState = "Added",
                             IsActive = true,
-                            LastModifiedUtc = "2026-04-09 19:15:18.636768",
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             Name = "Pashto",
                             Version = 0
                         },
                         new
                         {
-                            Id = "3",
+                            Id = "22222222-0000-0000-0000-000000000003",
                             Code = "fa",
                             EntityState = "Added",
                             IsActive = true,
-                            LastModifiedUtc = "2026-04-09 19:15:18.636768",
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             Name = "Farsi",
                             Version = 0
                         });
@@ -2057,7 +1825,8 @@ namespace SMIS.Infrastructure.Server.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime?>("CreatedDate")
                         .HasColumnType("datetime2");
@@ -2101,7 +1870,8 @@ namespace SMIS.Infrastructure.Server.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("UpdatedBy")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime?>("UpdatedDate")
                         .HasColumnType("datetime2");
@@ -2111,168 +1881,172 @@ namespace SMIS.Infrastructure.Server.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CreatedBy");
+
                     b.HasIndex("LanguageNo");
+
+                    b.HasIndex("UpdatedBy");
 
                     b.HasIndex("TranslationKeyId", "LanguageNo")
                         .IsUnique();
 
-                    b.ToTable("Translations", (string)null);
+                    b.ToTable("Translations");
 
                     b.HasData(
                         new
                         {
-                            Id = "1",
+                            Id = "66666666-0000-0000-0000-000000000001",
                             EntityState = "Unchanged",
                             IsDeleted = false,
                             IsPublic = false,
                             IsSyncedToServer = true,
-                            LanguageNo = "1",
-                            LastModifiedUtc = "2026-04-09 23:45:18.637900",
+                            LanguageNo = "22222222-0000-0000-0000-000000000001",
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             Name = "Kabul Center District",
-                            TranslationKeyId = "1",
+                            TranslationKeyId = "55555555-0000-0000-0000-000000000001",
                             Version = 0
                         },
                         new
                         {
-                            Id = "2",
+                            Id = "66666666-0000-0000-0000-000000000002",
                             EntityState = "Unchanged",
                             IsDeleted = false,
                             IsPublic = false,
                             IsSyncedToServer = true,
-                            LanguageNo = "2",
-                            LastModifiedUtc = "2026-04-09 23:45:18.637982",
+                            LanguageNo = "22222222-0000-0000-0000-000000000002",
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             Name = "منطقه مرکز کابل",
-                            TranslationKeyId = "1",
+                            TranslationKeyId = "55555555-0000-0000-0000-000000000001",
                             Version = 0
                         },
                         new
                         {
-                            Id = "3",
+                            Id = "66666666-0000-0000-0000-000000000003",
                             EntityState = "Unchanged",
                             IsDeleted = false,
                             IsPublic = false,
                             IsSyncedToServer = true,
-                            LanguageNo = "1",
-                            LastModifiedUtc = "2026-04-09 23:45:18.637983",
+                            LanguageNo = "22222222-0000-0000-0000-000000000001",
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             Name = "Kabul North District",
-                            TranslationKeyId = "2",
+                            TranslationKeyId = "55555555-0000-0000-0000-000000000002",
                             Version = 0
                         },
                         new
                         {
-                            Id = "4",
+                            Id = "66666666-0000-0000-0000-000000000004",
                             EntityState = "Unchanged",
                             IsDeleted = false,
                             IsPublic = false,
                             IsSyncedToServer = true,
-                            LanguageNo = "2",
-                            LastModifiedUtc = "2026-04-09 23:45:18.637983",
+                            LanguageNo = "22222222-0000-0000-0000-000000000002",
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             Name = "منطقه شمال کابل",
-                            TranslationKeyId = "2",
+                            TranslationKeyId = "55555555-0000-0000-0000-000000000002",
                             Version = 0
                         },
                         new
                         {
-                            Id = "5",
+                            Id = "66666666-0000-0000-0000-000000000005",
                             EntityState = "Unchanged",
                             IsDeleted = false,
                             IsPublic = false,
                             IsSyncedToServer = true,
-                            LanguageNo = "1",
-                            LastModifiedUtc = "2026-04-09 23:45:18.637983",
+                            LanguageNo = "22222222-0000-0000-0000-000000000001",
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             Name = "Herat Center District",
-                            TranslationKeyId = "3",
+                            TranslationKeyId = "55555555-0000-0000-0000-000000000003",
                             Version = 0
                         },
                         new
                         {
-                            Id = "6",
+                            Id = "66666666-0000-0000-0000-000000000006",
                             EntityState = "Unchanged",
                             IsDeleted = false,
                             IsPublic = false,
                             IsSyncedToServer = true,
-                            LanguageNo = "2",
-                            LastModifiedUtc = "2026-04-09 23:45:18.637984",
+                            LanguageNo = "22222222-0000-0000-0000-000000000002",
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             Name = "منطقه مرکز هرات",
-                            TranslationKeyId = "3",
+                            TranslationKeyId = "55555555-0000-0000-0000-000000000003",
                             Version = 0
                         },
                         new
                         {
-                            Id = "7",
+                            Id = "66666666-0000-0000-0000-000000000007",
                             EntityState = "Unchanged",
                             IsDeleted = false,
                             IsPublic = false,
                             IsSyncedToServer = true,
-                            LanguageNo = "1",
-                            LastModifiedUtc = "2026-04-09 23:45:18.637986",
+                            LanguageNo = "22222222-0000-0000-0000-000000000001",
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             Name = "Kabul Province",
-                            TranslationKeyId = "4",
+                            TranslationKeyId = "55555555-0000-0000-0000-000000000004",
                             Version = 0
                         },
                         new
                         {
-                            Id = "8",
+                            Id = "66666666-0000-0000-0000-000000000008",
                             EntityState = "Unchanged",
                             IsDeleted = false,
                             IsPublic = false,
                             IsSyncedToServer = true,
-                            LanguageNo = "2",
-                            LastModifiedUtc = "2026-04-09 23:45:18.637987",
+                            LanguageNo = "22222222-0000-0000-0000-000000000002",
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             Name = "ولایت کابل",
-                            TranslationKeyId = "4",
+                            TranslationKeyId = "55555555-0000-0000-0000-000000000004",
                             Version = 0
                         },
                         new
                         {
-                            Id = "9",
+                            Id = "66666666-0000-0000-0000-000000000009",
                             EntityState = "Unchanged",
                             IsDeleted = false,
                             IsPublic = false,
                             IsSyncedToServer = true,
-                            LanguageNo = "1",
-                            LastModifiedUtc = "2026-04-09 23:45:18.637987",
+                            LanguageNo = "22222222-0000-0000-0000-000000000001",
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             Name = "Herat Province",
-                            TranslationKeyId = "5",
+                            TranslationKeyId = "55555555-0000-0000-0000-000000000005",
                             Version = 0
                         },
                         new
                         {
-                            Id = "10",
+                            Id = "66666666-0000-0000-0000-000000000010",
                             EntityState = "Unchanged",
                             IsDeleted = false,
                             IsPublic = false,
                             IsSyncedToServer = true,
-                            LanguageNo = "2",
-                            LastModifiedUtc = "2026-04-09 23:45:18.637987",
+                            LanguageNo = "22222222-0000-0000-0000-000000000002",
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             Name = "ولایت هرات",
-                            TranslationKeyId = "5",
+                            TranslationKeyId = "55555555-0000-0000-0000-000000000005",
                             Version = 0
                         },
                         new
                         {
-                            Id = "11",
+                            Id = "66666666-0000-0000-0000-000000000011",
                             EntityState = "Unchanged",
                             IsDeleted = false,
                             IsPublic = false,
                             IsSyncedToServer = true,
-                            LanguageNo = "1",
-                            LastModifiedUtc = "2026-04-09 23:45:18.637988",
+                            LanguageNo = "22222222-0000-0000-0000-000000000001",
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             Name = "Welcome Message",
-                            TranslationKeyId = "6",
+                            TranslationKeyId = "55555555-0000-0000-0000-000000000006",
                             Version = 0
                         },
                         new
                         {
-                            Id = "12",
+                            Id = "66666666-0000-0000-0000-000000000012",
                             EntityState = "Unchanged",
                             IsDeleted = false,
                             IsPublic = false,
                             IsSyncedToServer = true,
-                            LanguageNo = "2",
-                            LastModifiedUtc = "2026-04-09 23:45:18.637988",
+                            LanguageNo = "22222222-0000-0000-0000-000000000002",
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             Name = "پیام خوش آمدید",
-                            TranslationKeyId = "6",
+                            TranslationKeyId = "55555555-0000-0000-0000-000000000006",
                             Version = 0
                         });
                 });
@@ -2283,7 +2057,8 @@ namespace SMIS.Infrastructure.Server.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime?>("CreatedDate")
                         .HasColumnType("datetime2");
@@ -2324,7 +2099,8 @@ namespace SMIS.Infrastructure.Server.Migrations
                         .HasColumnType("nvarchar(200)");
 
                     b.Property<string>("UpdatedBy")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime?>("UpdatedDate")
                         .HasColumnType("datetime2");
@@ -2334,111 +2110,115 @@ namespace SMIS.Infrastructure.Server.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CreatedBy");
+
                     b.HasIndex("MessageCode");
 
-                    b.ToTable("TranslationKeys", (string)null);
+                    b.HasIndex("UpdatedBy");
+
+                    b.ToTable("TranslationKeys");
 
                     b.HasData(
                         new
                         {
-                            Id = "1",
+                            Id = "55555555-0000-0000-0000-000000000001",
                             EntityState = "Unchanged",
                             IsActive = true,
                             IsDeleted = false,
                             IsPublic = false,
                             IsSyncedToServer = true,
-                            LastModifiedUtc = "2026-04-09 23:45:18.637304",
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             MessageCode = "1001",
                             Name = "Kabul Center District",
                             Version = 0
                         },
                         new
                         {
-                            Id = "2",
+                            Id = "55555555-0000-0000-0000-000000000002",
                             EntityState = "Unchanged",
                             IsActive = true,
                             IsDeleted = false,
                             IsPublic = false,
                             IsSyncedToServer = true,
-                            LastModifiedUtc = "2026-04-09 23:45:18.637400",
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             MessageCode = "1002",
                             Name = "Kabul North District",
                             Version = 0
                         },
                         new
                         {
-                            Id = "3",
+                            Id = "55555555-0000-0000-0000-000000000003",
                             EntityState = "Unchanged",
                             IsActive = true,
                             IsDeleted = false,
                             IsPublic = false,
                             IsSyncedToServer = true,
-                            LastModifiedUtc = "2026-04-09 23:45:18.637401",
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             MessageCode = "1003",
                             Name = "Herat Center District",
                             Version = 0
                         },
                         new
                         {
-                            Id = "4",
+                            Id = "55555555-0000-0000-0000-000000000004",
                             EntityState = "Unchanged",
                             IsActive = true,
                             IsDeleted = false,
                             IsPublic = false,
                             IsSyncedToServer = true,
-                            LastModifiedUtc = "2026-04-09 23:45:18.637401",
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             MessageCode = "2001",
                             Name = "Kabul Province",
                             Version = 0
                         },
                         new
                         {
-                            Id = "5",
+                            Id = "55555555-0000-0000-0000-000000000005",
                             EntityState = "Unchanged",
                             IsActive = true,
                             IsDeleted = false,
                             IsPublic = false,
                             IsSyncedToServer = true,
-                            LastModifiedUtc = "2026-04-09 23:45:18.637402",
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             MessageCode = "2002",
                             Name = "Herat Province",
                             Version = 0
                         },
                         new
                         {
-                            Id = "6",
+                            Id = "55555555-0000-0000-0000-000000000006",
                             EntityState = "Unchanged",
                             IsActive = true,
                             IsDeleted = false,
                             IsPublic = false,
                             IsSyncedToServer = true,
-                            LastModifiedUtc = "2026-04-09 23:45:18.637403",
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             MessageCode = "3001",
                             Name = "Welcome Message",
                             Version = 0
                         },
                         new
                         {
-                            Id = "7",
+                            Id = "55555555-0000-0000-0000-000000000007",
                             EntityState = "Unchanged",
                             IsActive = true,
                             IsDeleted = false,
                             IsPublic = false,
                             IsSyncedToServer = true,
-                            LastModifiedUtc = "2026-04-09 23:45:18.637403",
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             MessageCode = "3002",
                             Name = "Error Message",
                             Version = 0
                         },
                         new
                         {
-                            Id = "8",
+                            Id = "55555555-0000-0000-0000-000000000008",
                             EntityState = "Unchanged",
                             IsActive = true,
                             IsDeleted = false,
                             IsPublic = false,
                             IsSyncedToServer = true,
-                            LastModifiedUtc = "2026-04-09 23:45:18.637404",
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             MessageCode = "3003",
                             Name = "Success Message",
                             Version = 0
@@ -2451,7 +2231,8 @@ namespace SMIS.Infrastructure.Server.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime?>("CreatedDate")
                         .HasColumnType("datetime2");
@@ -2489,7 +2270,8 @@ namespace SMIS.Infrastructure.Server.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("UpdatedBy")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime?>("UpdatedDate")
                         .HasColumnType("datetime2");
@@ -2499,47 +2281,51 @@ namespace SMIS.Infrastructure.Server.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CreatedBy");
+
                     b.HasIndex("TranslationKeyId")
                         .IsUnique()
                         .HasFilter("[TranslationKeyId] IS NOT NULL");
 
-                    b.ToTable("Districts", (string)null);
+                    b.HasIndex("UpdatedBy");
+
+                    b.ToTable("Districts");
 
                     b.HasData(
                         new
                         {
-                            Id = "1",
+                            Id = "99999999-0000-0000-0000-000000000001",
                             EntityState = "Unchanged",
                             IsDeleted = false,
                             IsPublic = false,
                             IsSyncedToServer = true,
-                            LastModifiedUtc = "2026-04-09 23:45:18.639095",
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             Name = "Kabul Center",
-                            TranslationKeyId = "1",
+                            TranslationKeyId = "55555555-0000-0000-0000-000000000001",
                             Version = 0
                         },
                         new
                         {
-                            Id = "2",
+                            Id = "99999999-0000-0000-0000-000000000002",
                             EntityState = "Unchanged",
                             IsDeleted = false,
                             IsPublic = false,
                             IsSyncedToServer = true,
-                            LastModifiedUtc = "2026-04-09 23:45:18.639150",
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             Name = "Kabul North",
-                            TranslationKeyId = "2",
+                            TranslationKeyId = "55555555-0000-0000-0000-000000000002",
                             Version = 0
                         },
                         new
                         {
-                            Id = "3",
+                            Id = "99999999-0000-0000-0000-000000000003",
                             EntityState = "Unchanged",
                             IsDeleted = false,
                             IsPublic = false,
                             IsSyncedToServer = true,
-                            LastModifiedUtc = "2026-04-09 23:45:18.639151",
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             Name = "Herat Center",
-                            TranslationKeyId = "3",
+                            TranslationKeyId = "55555555-0000-0000-0000-000000000003",
                             Version = 0
                         });
                 });
@@ -2550,7 +2336,8 @@ namespace SMIS.Infrastructure.Server.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime?>("CreatedDate")
                         .HasColumnType("datetime2");
@@ -2584,7 +2371,8 @@ namespace SMIS.Infrastructure.Server.Migrations
                         .HasColumnType("nvarchar(200)");
 
                     b.Property<string>("UpdatedBy")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime?>("UpdatedDate")
                         .HasColumnType("datetime2");
@@ -2594,50 +2382,54 @@ namespace SMIS.Infrastructure.Server.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Provinces", (string)null);
+                    b.HasIndex("CreatedBy");
+
+                    b.HasIndex("UpdatedBy");
+
+                    b.ToTable("Provinces");
 
                     b.HasData(
                         new
                         {
-                            Id = "1",
+                            Id = "77777777-0000-0000-0000-000000000001",
                             EntityState = "Unchanged",
                             IsDeleted = false,
                             IsPublic = false,
                             IsSyncedToServer = true,
-                            LastModifiedUtc = "2026-04-09 23:45:18.638598",
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             Name = "Kabul",
                             Version = 0
                         },
                         new
                         {
-                            Id = "2",
+                            Id = "77777777-0000-0000-0000-000000000002",
                             EntityState = "Unchanged",
                             IsDeleted = false,
                             IsPublic = false,
                             IsSyncedToServer = true,
-                            LastModifiedUtc = "2026-04-09 23:45:18.638638",
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             Name = "Herat",
                             Version = 0
                         },
                         new
                         {
-                            Id = "3",
+                            Id = "77777777-0000-0000-0000-000000000003",
                             EntityState = "Unchanged",
                             IsDeleted = false,
                             IsPublic = false,
                             IsSyncedToServer = true,
-                            LastModifiedUtc = "2026-04-09 23:45:18.638639",
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             Name = "Kandahar",
                             Version = 0
                         },
                         new
                         {
-                            Id = "4",
+                            Id = "77777777-0000-0000-0000-000000000004",
                             EntityState = "Unchanged",
                             IsDeleted = false,
                             IsPublic = false,
                             IsSyncedToServer = true,
-                            LastModifiedUtc = "2026-04-09 23:45:18.638639",
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             Name = "Balkh",
                             Version = 0
                         });
@@ -2687,151 +2479,151 @@ namespace SMIS.Infrastructure.Server.Migrations
                     b.HasIndex("ProvinceId", "LanguageId")
                         .IsUnique();
 
-                    b.ToTable("ProvinceTranslations", (string)null);
+                    b.ToTable("ProvinceTranslations");
 
                     b.HasData(
                         new
                         {
-                            Id = "1",
+                            Id = "88888888-0000-0000-0000-000000000001",
                             EntityState = "Added",
                             IsDefault = true,
                             LanguageCode = "en",
-                            LanguageId = "1",
-                            LastModifiedUtc = "2026-04-09 19:15:18.638747",
+                            LanguageId = "22222222-0000-0000-0000-000000000001",
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             Name = "Kabul",
-                            ProvinceId = "1",
+                            ProvinceId = "77777777-0000-0000-0000-000000000001",
                             Version = 0
                         },
                         new
                         {
-                            Id = "2",
+                            Id = "88888888-0000-0000-0000-000000000002",
                             EntityState = "Added",
                             IsDefault = false,
                             LanguageCode = "ps",
-                            LanguageId = "2",
-                            LastModifiedUtc = "2026-04-09 19:15:18.638874",
+                            LanguageId = "22222222-0000-0000-0000-000000000002",
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             Name = "کابل",
-                            ProvinceId = "1",
+                            ProvinceId = "77777777-0000-0000-0000-000000000001",
                             Version = 0
                         },
                         new
                         {
-                            Id = "3",
+                            Id = "88888888-0000-0000-0000-000000000003",
                             EntityState = "Added",
                             IsDefault = false,
                             LanguageCode = "fa",
-                            LanguageId = "3",
-                            LastModifiedUtc = "2026-04-09 19:15:18.638875",
+                            LanguageId = "22222222-0000-0000-0000-000000000003",
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             Name = "کابل",
-                            ProvinceId = "1",
+                            ProvinceId = "77777777-0000-0000-0000-000000000001",
                             Version = 0
                         },
                         new
                         {
-                            Id = "4",
+                            Id = "88888888-0000-0000-0000-000000000004",
                             EntityState = "Added",
                             IsDefault = true,
                             LanguageCode = "en",
-                            LanguageId = "1",
-                            LastModifiedUtc = "2026-04-09 19:15:18.638876",
+                            LanguageId = "22222222-0000-0000-0000-000000000001",
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             Name = "Herat",
-                            ProvinceId = "2",
+                            ProvinceId = "77777777-0000-0000-0000-000000000002",
                             Version = 0
                         },
                         new
                         {
-                            Id = "5",
+                            Id = "88888888-0000-0000-0000-000000000005",
                             EntityState = "Added",
                             IsDefault = false,
                             LanguageCode = "ps",
-                            LanguageId = "2",
-                            LastModifiedUtc = "2026-04-09 19:15:18.638876",
+                            LanguageId = "22222222-0000-0000-0000-000000000002",
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             Name = "هرات",
-                            ProvinceId = "2",
+                            ProvinceId = "77777777-0000-0000-0000-000000000002",
                             Version = 0
                         },
                         new
                         {
-                            Id = "6",
+                            Id = "88888888-0000-0000-0000-000000000006",
                             EntityState = "Added",
                             IsDefault = false,
                             LanguageCode = "fa",
-                            LanguageId = "3",
-                            LastModifiedUtc = "2026-04-09 19:15:18.638877",
+                            LanguageId = "22222222-0000-0000-0000-000000000003",
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             Name = "هرات",
-                            ProvinceId = "2",
+                            ProvinceId = "77777777-0000-0000-0000-000000000002",
                             Version = 0
                         },
                         new
                         {
-                            Id = "7",
+                            Id = "88888888-0000-0000-0000-000000000007",
                             EntityState = "Added",
                             IsDefault = true,
                             LanguageCode = "en",
-                            LanguageId = "1",
-                            LastModifiedUtc = "2026-04-09 19:15:18.638877",
+                            LanguageId = "22222222-0000-0000-0000-000000000001",
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             Name = "Kandahar",
-                            ProvinceId = "3",
+                            ProvinceId = "77777777-0000-0000-0000-000000000003",
                             Version = 0
                         },
                         new
                         {
-                            Id = "8",
+                            Id = "88888888-0000-0000-0000-000000000008",
                             EntityState = "Added",
                             IsDefault = false,
                             LanguageCode = "ps",
-                            LanguageId = "2",
-                            LastModifiedUtc = "2026-04-09 19:15:18.638877",
+                            LanguageId = "22222222-0000-0000-0000-000000000002",
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             Name = "کندهار",
-                            ProvinceId = "3",
+                            ProvinceId = "77777777-0000-0000-0000-000000000003",
                             Version = 0
                         },
                         new
                         {
-                            Id = "9",
+                            Id = "88888888-0000-0000-0000-000000000009",
                             EntityState = "Added",
                             IsDefault = false,
                             LanguageCode = "fa",
-                            LanguageId = "3",
-                            LastModifiedUtc = "2026-04-09 19:15:18.638878",
+                            LanguageId = "22222222-0000-0000-0000-000000000003",
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             Name = "قندهار",
-                            ProvinceId = "3",
+                            ProvinceId = "77777777-0000-0000-0000-000000000003",
                             Version = 0
                         },
                         new
                         {
-                            Id = "10",
+                            Id = "88888888-0000-0000-0000-000000000010",
                             EntityState = "Added",
                             IsDefault = true,
                             LanguageCode = "en",
-                            LanguageId = "1",
-                            LastModifiedUtc = "2026-04-09 19:15:18.638878",
+                            LanguageId = "22222222-0000-0000-0000-000000000001",
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             Name = "Balkh",
-                            ProvinceId = "4",
+                            ProvinceId = "77777777-0000-0000-0000-000000000004",
                             Version = 0
                         },
                         new
                         {
-                            Id = "11",
+                            Id = "88888888-0000-0000-0000-000000000011",
                             EntityState = "Added",
                             IsDefault = false,
                             LanguageCode = "ps",
-                            LanguageId = "2",
-                            LastModifiedUtc = "2026-04-09 19:15:18.638878",
+                            LanguageId = "22222222-0000-0000-0000-000000000002",
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             Name = "بلخ",
-                            ProvinceId = "4",
+                            ProvinceId = "77777777-0000-0000-0000-000000000004",
                             Version = 0
                         },
                         new
                         {
-                            Id = "12",
+                            Id = "88888888-0000-0000-0000-000000000012",
                             EntityState = "Added",
                             IsDefault = false,
                             LanguageCode = "fa",
-                            LanguageId = "3",
-                            LastModifiedUtc = "2026-04-09 19:15:18.638878",
+                            LanguageId = "22222222-0000-0000-0000-000000000003",
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             Name = "بلخ",
-                            ProvinceId = "4",
+                            ProvinceId = "77777777-0000-0000-0000-000000000004",
                             Version = 0
                         });
                 });
@@ -2855,6 +2647,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                         .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("CategoryId")
+                        .IsRequired()
                         .HasMaxLength(450)
                         .HasColumnType("nvarchar(450)");
 
@@ -2862,8 +2655,23 @@ namespace SMIS.Infrastructure.Server.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
 
+                    b.Property<string>("ClientCreatedBy")
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime?>("ClientCreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ClientModifiedBy")
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime?>("ClientModifiedDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime?>("CreatedDate")
                         .HasColumnType("datetime2");
@@ -2907,6 +2715,14 @@ namespace SMIS.Infrastructure.Server.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
 
+                    b.Property<decimal>("ReorderPointBase")
+                        .HasPrecision(18, 4)
+                        .HasColumnType("decimal(18,4)");
+
+                    b.Property<decimal>("ReorderQuantityBase")
+                        .HasPrecision(18, 4)
+                        .HasColumnType("decimal(18,4)");
+
                     b.Property<string>("SKU")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -2922,7 +2738,8 @@ namespace SMIS.Infrastructure.Server.Migrations
                         .HasColumnType("nvarchar(200)");
 
                     b.Property<string>("UpdatedBy")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime?>("UpdatedDate")
                         .HasColumnType("datetime2");
@@ -2932,381 +2749,432 @@ namespace SMIS.Infrastructure.Server.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasAlternateKey("Id", "ShopId")
+                        .HasName("AK_Product_Id_ShopId");
+
                     b.HasIndex("BaseUnitId");
 
                     b.HasIndex("CategoryId");
 
-                    b.HasIndex("ShopId");
+                    b.HasIndex("ClientCreatedBy");
+
+                    b.HasIndex("ClientModifiedBy");
+
+                    b.HasIndex("CreatedBy");
+
+                    b.HasIndex("UpdatedBy");
+
+                    b.HasIndex("ShopId", "Barcode")
+                        .IsUnique()
+                        .HasDatabaseName("UX_Product_ShopId_Barcode_Active")
+                        .HasFilter("[IsDeleted] = 0 AND [Barcode] IS NOT NULL");
+
+                    b.HasIndex("ShopId", "SKU")
+                        .IsUnique()
+                        .HasDatabaseName("UX_Product_ShopId_SKU_Active")
+                        .HasFilter("[IsDeleted] = 0");
 
                     b.ToTable("Product", (string)null);
 
                     b.HasData(
                         new
                         {
-                            Id = "1",
+                            Id = "cccccccc-0000-0000-0000-000000000001",
                             Barcode = "1234567890001",
-                            BaseUnitId = "2",
+                            BaseUnitId = "aaaaaaaa-0000-0000-0000-000000000002",
                             BaseUnitName = "Bottle",
-                            CategoryId = "1",
+                            CategoryId = "bbbbbbbb-0000-0000-0000-000000000001",
                             CategoryName = "Beverages",
-                            CreatedDate = new DateTime(2026, 4, 9, 23, 45, 18, 647, DateTimeKind.Local).AddTicks(7364),
+                            CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Classic cola drink",
                             EntityState = "Unchanged",
                             IsActive = true,
                             IsDeleted = false,
                             IsPublic = false,
                             IsSyncedToServer = true,
-                            LastModifiedUtc = "2026-04-09 23:45:18.647765",
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             Name = "Coca Cola 500ml",
+                            ReorderPointBase = 0m,
+                            ReorderQuantityBase = 0m,
                             SKU = "COKE-500ML-001",
-                            ShopId = "1",
+                            ShopId = "11111111-0000-0000-0000-000000000001",
                             ShopName = "Main Store",
-                            UpdatedDate = new DateTime(2026, 4, 9, 23, 45, 18, 647, DateTimeKind.Local).AddTicks(7540),
+                            UpdatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Version = 0
                         },
                         new
                         {
-                            Id = "2",
+                            Id = "cccccccc-0000-0000-0000-000000000002",
                             Barcode = "1234567890002",
-                            BaseUnitId = "2",
+                            BaseUnitId = "aaaaaaaa-0000-0000-0000-000000000002",
                             BaseUnitName = "Bottle",
-                            CategoryId = "1",
+                            CategoryId = "bbbbbbbb-0000-0000-0000-000000000001",
                             CategoryName = "Beverages",
-                            CreatedDate = new DateTime(2026, 4, 9, 23, 45, 18, 648, DateTimeKind.Local).AddTicks(611),
+                            CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Cola soft drink",
                             EntityState = "Unchanged",
                             IsActive = true,
                             IsDeleted = false,
                             IsPublic = false,
                             IsSyncedToServer = true,
-                            LastModifiedUtc = "2026-04-09 23:45:18.648214",
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             Name = "Pepsi 500ml",
+                            ReorderPointBase = 0m,
+                            ReorderQuantityBase = 0m,
                             SKU = "PEPSI-500ML-002",
-                            ShopId = "1",
+                            ShopId = "11111111-0000-0000-0000-000000000001",
                             ShopName = "Main Store",
-                            UpdatedDate = new DateTime(2026, 4, 9, 23, 45, 18, 648, DateTimeKind.Local).AddTicks(1351),
+                            UpdatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Version = 0
                         },
                         new
                         {
-                            Id = "3",
+                            Id = "cccccccc-0000-0000-0000-000000000003",
                             Barcode = "1234567890003",
-                            BaseUnitId = "2",
+                            BaseUnitId = "aaaaaaaa-0000-0000-0000-000000000002",
                             BaseUnitName = "Bottle",
-                            CategoryId = "1",
+                            CategoryId = "bbbbbbbb-0000-0000-0000-000000000001",
                             CategoryName = "Beverages",
-                            CreatedDate = new DateTime(2026, 4, 9, 23, 45, 18, 648, DateTimeKind.Local).AddTicks(5355),
+                            CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Pure drinking water",
                             EntityState = "Unchanged",
                             IsActive = true,
                             IsDeleted = false,
                             IsPublic = false,
                             IsSyncedToServer = true,
-                            LastModifiedUtc = "2026-04-09 23:45:18.648714",
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             Name = "Mineral Water 1L",
+                            ReorderPointBase = 0m,
+                            ReorderQuantityBase = 0m,
                             SKU = "WATER-1L-003",
-                            ShopId = "2",
+                            ShopId = "11111111-0000-0000-0000-000000000002",
                             ShopName = "Branch Store",
-                            UpdatedDate = new DateTime(2026, 4, 9, 23, 45, 18, 648, DateTimeKind.Local).AddTicks(6306),
+                            UpdatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Version = 0
                         },
                         new
                         {
-                            Id = "4",
+                            Id = "cccccccc-0000-0000-0000-000000000004",
                             Barcode = "1234567890004",
-                            BaseUnitId = "3",
+                            BaseUnitId = "aaaaaaaa-0000-0000-0000-000000000003",
                             BaseUnitName = "Pack",
-                            CategoryId = "2",
-                            CategoryName = "Food",
-                            CreatedDate = new DateTime(2026, 4, 9, 23, 45, 18, 648, DateTimeKind.Local).AddTicks(7957),
+                            CategoryId = "bbbbbbbb-0000-0000-0000-000000000002",
+                            CategoryName = "Food Items",
+                            CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Chocolate sandwich cookies",
                             EntityState = "Unchanged",
                             IsActive = true,
                             IsDeleted = false,
                             IsPublic = false,
                             IsSyncedToServer = true,
-                            LastModifiedUtc = "2026-04-09 23:45:18.648797",
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             Name = "Oreo Biscuits",
+                            ReorderPointBase = 0m,
+                            ReorderQuantityBase = 0m,
                             SKU = "OREO-PACK-004",
-                            ShopId = "1",
+                            ShopId = "11111111-0000-0000-0000-000000000001",
                             ShopName = "Main Store",
-                            UpdatedDate = new DateTime(2026, 4, 9, 23, 45, 18, 648, DateTimeKind.Local).AddTicks(7968),
+                            UpdatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Version = 0
                         },
                         new
                         {
-                            Id = "5",
+                            Id = "cccccccc-0000-0000-0000-000000000005",
                             Barcode = "1234567890005",
-                            BaseUnitId = "3",
+                            BaseUnitId = "aaaaaaaa-0000-0000-0000-000000000003",
                             BaseUnitName = "Pack",
-                            CategoryId = "2",
-                            CategoryName = "Food",
-                            CreatedDate = new DateTime(2026, 4, 9, 23, 45, 18, 648, DateTimeKind.Local).AddTicks(8001),
+                            CategoryId = "bbbbbbbb-0000-0000-0000-000000000002",
+                            CategoryName = "Food Items",
+                            CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Potato chips",
                             EntityState = "Unchanged",
                             IsActive = true,
                             IsDeleted = false,
                             IsPublic = false,
                             IsSyncedToServer = true,
-                            LastModifiedUtc = "2026-04-09 23:45:18.648800",
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             Name = "Lay's Chips",
+                            ReorderPointBase = 0m,
+                            ReorderQuantityBase = 0m,
                             SKU = "LAYS-PACK-005",
-                            ShopId = "2",
+                            ShopId = "11111111-0000-0000-0000-000000000002",
                             ShopName = "Branch Store",
-                            UpdatedDate = new DateTime(2026, 4, 9, 23, 45, 18, 648, DateTimeKind.Local).AddTicks(8005),
+                            UpdatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Version = 0
                         },
                         new
                         {
-                            Id = "6",
+                            Id = "cccccccc-0000-0000-0000-000000000006",
                             Barcode = "1234567890006",
-                            BaseUnitId = "3",
+                            BaseUnitId = "aaaaaaaa-0000-0000-0000-000000000003",
                             BaseUnitName = "Pack",
-                            CategoryId = "2",
-                            CategoryName = "Food",
-                            CreatedDate = new DateTime(2026, 4, 9, 23, 45, 18, 648, DateTimeKind.Local).AddTicks(8023),
+                            CategoryId = "bbbbbbbb-0000-0000-0000-000000000002",
+                            CategoryName = "Food Items",
+                            CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Quick meal noodles",
                             EntityState = "Unchanged",
                             IsActive = true,
                             IsDeleted = false,
                             IsPublic = false,
                             IsSyncedToServer = true,
-                            LastModifiedUtc = "2026-04-09 23:45:18.648802",
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             Name = "Instant Noodles",
+                            ReorderPointBase = 0m,
+                            ReorderQuantityBase = 0m,
                             SKU = "NOODLE-PACK-006",
-                            ShopId = "3",
+                            ShopId = "11111111-0000-0000-0000-000000000003",
                             ShopName = "Warehouse",
-                            UpdatedDate = new DateTime(2026, 4, 9, 23, 45, 18, 648, DateTimeKind.Local).AddTicks(8026),
+                            UpdatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Version = 0
                         },
                         new
                         {
-                            Id = "7",
+                            Id = "cccccccc-0000-0000-0000-000000000007",
                             Barcode = "1234567890007",
-                            BaseUnitId = "1",
+                            BaseUnitId = "aaaaaaaa-0000-0000-0000-000000000001",
                             BaseUnitName = "Piece",
-                            CategoryId = "3",
+                            CategoryId = "bbbbbbbb-0000-0000-0000-000000000003",
                             CategoryName = "Stationery",
-                            CreatedDate = new DateTime(2026, 4, 9, 23, 45, 18, 648, DateTimeKind.Local).AddTicks(8044),
+                            CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "200 pages ruled notebook",
                             EntityState = "Unchanged",
                             IsActive = true,
                             IsDeleted = false,
                             IsPublic = false,
                             IsSyncedToServer = true,
-                            LastModifiedUtc = "2026-04-09 23:45:18.648805",
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             Name = "A4 Notebook",
+                            ReorderPointBase = 0m,
+                            ReorderQuantityBase = 0m,
                             SKU = "NOTE-A4-007",
-                            ShopId = "1",
+                            ShopId = "11111111-0000-0000-0000-000000000001",
                             ShopName = "Main Store",
-                            UpdatedDate = new DateTime(2026, 4, 9, 23, 45, 18, 648, DateTimeKind.Local).AddTicks(8047),
+                            UpdatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Version = 0
                         },
                         new
                         {
-                            Id = "8",
+                            Id = "cccccccc-0000-0000-0000-000000000008",
                             Barcode = "1234567890008",
-                            BaseUnitId = "1",
+                            BaseUnitId = "aaaaaaaa-0000-0000-0000-000000000001",
                             BaseUnitName = "Piece",
-                            CategoryId = "3",
+                            CategoryId = "bbbbbbbb-0000-0000-0000-000000000003",
                             CategoryName = "Stationery",
-                            CreatedDate = new DateTime(2026, 4, 9, 23, 45, 18, 648, DateTimeKind.Local).AddTicks(8064),
+                            CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Ballpoint pen",
                             EntityState = "Unchanged",
                             IsActive = true,
                             IsDeleted = false,
                             IsPublic = false,
                             IsSyncedToServer = true,
-                            LastModifiedUtc = "2026-04-09 23:45:18.648807",
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             Name = "Blue Pen",
+                            ReorderPointBase = 0m,
+                            ReorderQuantityBase = 0m,
                             SKU = "PEN-BLUE-008",
-                            ShopId = "2",
+                            ShopId = "11111111-0000-0000-0000-000000000002",
                             ShopName = "Branch Store",
-                            UpdatedDate = new DateTime(2026, 4, 9, 23, 45, 18, 648, DateTimeKind.Local).AddTicks(8067),
+                            UpdatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Version = 0
                         },
                         new
                         {
-                            Id = "9",
+                            Id = "cccccccc-0000-0000-0000-000000000009",
                             Barcode = "1234567890009",
-                            BaseUnitId = "4",
+                            BaseUnitId = "aaaaaaaa-0000-0000-0000-000000000004",
                             BaseUnitName = "Box",
-                            CategoryId = "3",
+                            CategoryId = "bbbbbbbb-0000-0000-0000-000000000003",
                             CategoryName = "Stationery",
-                            CreatedDate = new DateTime(2026, 4, 9, 23, 45, 18, 648, DateTimeKind.Local).AddTicks(8083),
+                            CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "12 pencils per box",
                             EntityState = "Unchanged",
                             IsActive = true,
                             IsDeleted = false,
                             IsPublic = false,
                             IsSyncedToServer = true,
-                            LastModifiedUtc = "2026-04-09 23:45:18.648809",
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             Name = "Pencil Set",
+                            ReorderPointBase = 0m,
+                            ReorderQuantityBase = 0m,
                             SKU = "PENCIL-BOX-009",
-                            ShopId = "3",
+                            ShopId = "11111111-0000-0000-0000-000000000003",
                             ShopName = "Warehouse",
-                            UpdatedDate = new DateTime(2026, 4, 9, 23, 45, 18, 648, DateTimeKind.Local).AddTicks(8089),
+                            UpdatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Version = 0
                         },
                         new
                         {
-                            Id = "10",
+                            Id = "cccccccc-0000-0000-0000-000000000010",
                             Barcode = "1234567890010",
-                            BaseUnitId = "2",
+                            BaseUnitId = "aaaaaaaa-0000-0000-0000-000000000002",
                             BaseUnitName = "Bottle",
-                            CategoryId = "4",
+                            CategoryId = "bbbbbbbb-0000-0000-0000-000000000004",
                             CategoryName = "Grocery",
-                            CreatedDate = new DateTime(2026, 4, 9, 23, 45, 18, 648, DateTimeKind.Local).AddTicks(8123),
+                            CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Sunflower cooking oil",
                             EntityState = "Unchanged",
                             IsActive = true,
                             IsDeleted = false,
                             IsPublic = false,
                             IsSyncedToServer = true,
-                            LastModifiedUtc = "2026-04-09 23:45:18.648813",
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             Name = "Cooking Oil 1L",
+                            ReorderPointBase = 0m,
+                            ReorderQuantityBase = 0m,
                             SKU = "OIL-1L-010",
-                            ShopId = "1",
+                            ShopId = "11111111-0000-0000-0000-000000000001",
                             ShopName = "Main Store",
-                            UpdatedDate = new DateTime(2026, 4, 9, 23, 45, 18, 648, DateTimeKind.Local).AddTicks(8127),
+                            UpdatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Version = 0
                         },
                         new
                         {
-                            Id = "11",
+                            Id = "cccccccc-0000-0000-0000-000000000011",
                             Barcode = "1234567890011",
-                            BaseUnitId = "7",
+                            BaseUnitId = "aaaaaaaa-0000-0000-0000-000000000007",
                             BaseUnitName = "Kilogram",
-                            CategoryId = "4",
+                            CategoryId = "bbbbbbbb-0000-0000-0000-000000000004",
                             CategoryName = "Grocery",
-                            CreatedDate = new DateTime(2026, 4, 9, 23, 45, 18, 648, DateTimeKind.Local).AddTicks(8144),
+                            CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Basmati rice",
                             EntityState = "Unchanged",
                             IsActive = true,
                             IsDeleted = false,
                             IsPublic = false,
                             IsSyncedToServer = true,
-                            LastModifiedUtc = "2026-04-09 23:45:18.648815",
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             Name = "Rice 1kg",
+                            ReorderPointBase = 0m,
+                            ReorderQuantityBase = 0m,
                             SKU = "RICE-1KG-011",
-                            ShopId = "2",
+                            ShopId = "11111111-0000-0000-0000-000000000002",
                             ShopName = "Branch Store",
-                            UpdatedDate = new DateTime(2026, 4, 9, 23, 45, 18, 648, DateTimeKind.Local).AddTicks(8147),
+                            UpdatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Version = 0
                         },
                         new
                         {
-                            Id = "12",
+                            Id = "cccccccc-0000-0000-0000-000000000012",
                             Barcode = "1234567890012",
-                            BaseUnitId = "7",
+                            BaseUnitId = "aaaaaaaa-0000-0000-0000-000000000007",
                             BaseUnitName = "Kilogram",
-                            CategoryId = "4",
+                            CategoryId = "bbbbbbbb-0000-0000-0000-000000000004",
                             CategoryName = "Grocery",
-                            CreatedDate = new DateTime(2026, 4, 9, 23, 45, 18, 648, DateTimeKind.Local).AddTicks(8163),
+                            CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "White granulated sugar",
                             EntityState = "Unchanged",
                             IsActive = true,
                             IsDeleted = false,
                             IsPublic = false,
                             IsSyncedToServer = true,
-                            LastModifiedUtc = "2026-04-09 23:45:18.648817",
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             Name = "Sugar 1kg",
+                            ReorderPointBase = 0m,
+                            ReorderQuantityBase = 0m,
                             SKU = "SUGAR-1KG-012",
-                            ShopId = "3",
+                            ShopId = "11111111-0000-0000-0000-000000000003",
                             ShopName = "Warehouse",
-                            UpdatedDate = new DateTime(2026, 4, 9, 23, 45, 18, 648, DateTimeKind.Local).AddTicks(8166),
+                            UpdatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Version = 0
                         },
                         new
                         {
-                            Id = "13",
+                            Id = "cccccccc-0000-0000-0000-000000000013",
                             Barcode = "1234567890013",
-                            BaseUnitId = "2",
+                            BaseUnitId = "aaaaaaaa-0000-0000-0000-000000000002",
                             BaseUnitName = "Bottle",
-                            CategoryId = "5",
+                            CategoryId = "bbbbbbbb-0000-0000-0000-000000000005",
                             CategoryName = "Personal Care",
-                            CreatedDate = new DateTime(2026, 4, 9, 23, 45, 18, 648, DateTimeKind.Local).AddTicks(8187),
+                            CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Hair care shampoo",
                             EntityState = "Unchanged",
                             IsActive = true,
                             IsDeleted = false,
                             IsPublic = false,
                             IsSyncedToServer = true,
-                            LastModifiedUtc = "2026-04-09 23:45:18.648819",
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             Name = "Shampoo 400ml",
+                            ReorderPointBase = 0m,
+                            ReorderQuantityBase = 0m,
                             SKU = "SHAMP-400ML-013",
-                            ShopId = "1",
+                            ShopId = "11111111-0000-0000-0000-000000000001",
                             ShopName = "Main Store",
-                            UpdatedDate = new DateTime(2026, 4, 9, 23, 45, 18, 648, DateTimeKind.Local).AddTicks(8190),
+                            UpdatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Version = 0
                         },
                         new
                         {
-                            Id = "14",
+                            Id = "cccccccc-0000-0000-0000-000000000014",
                             Barcode = "1234567890014",
-                            BaseUnitId = "1",
+                            BaseUnitId = "aaaaaaaa-0000-0000-0000-000000000001",
                             BaseUnitName = "Piece",
-                            CategoryId = "5",
+                            CategoryId = "bbbbbbbb-0000-0000-0000-000000000005",
                             CategoryName = "Personal Care",
-                            CreatedDate = new DateTime(2026, 4, 9, 23, 45, 18, 648, DateTimeKind.Local).AddTicks(8206),
+                            CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Dental care paste",
                             EntityState = "Unchanged",
                             IsActive = true,
                             IsDeleted = false,
                             IsPublic = false,
                             IsSyncedToServer = true,
-                            LastModifiedUtc = "2026-04-09 23:45:18.648821",
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             Name = "Toothpaste",
+                            ReorderPointBase = 0m,
+                            ReorderQuantityBase = 0m,
                             SKU = "TOOTH-PASTE-014",
-                            ShopId = "2",
+                            ShopId = "11111111-0000-0000-0000-000000000002",
                             ShopName = "Branch Store",
-                            UpdatedDate = new DateTime(2026, 4, 9, 23, 45, 18, 648, DateTimeKind.Local).AddTicks(8209),
+                            UpdatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Version = 0
                         },
                         new
                         {
-                            Id = "15",
+                            Id = "cccccccc-0000-0000-0000-000000000015",
                             Barcode = "1234567890015",
-                            BaseUnitId = "1",
+                            BaseUnitId = "aaaaaaaa-0000-0000-0000-000000000001",
                             BaseUnitName = "Piece",
-                            CategoryId = "6",
+                            CategoryId = "bbbbbbbb-0000-0000-0000-000000000006",
                             CategoryName = "Electronics",
-                            CreatedDate = new DateTime(2026, 4, 9, 23, 45, 18, 648, DateTimeKind.Local).AddTicks(8225),
+                            CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Type-C charging cable",
                             EntityState = "Unchanged",
                             IsActive = true,
                             IsDeleted = false,
                             IsPublic = false,
                             IsSyncedToServer = true,
-                            LastModifiedUtc = "2026-04-09 23:45:18.648823",
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             Name = "USB Cable",
+                            ReorderPointBase = 0m,
+                            ReorderQuantityBase = 0m,
                             SKU = "USB-CABLE-015",
-                            ShopId = "1",
+                            ShopId = "11111111-0000-0000-0000-000000000001",
                             ShopName = "Main Store",
-                            UpdatedDate = new DateTime(2026, 4, 9, 23, 45, 18, 648, DateTimeKind.Local).AddTicks(8228),
+                            UpdatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Version = 0
                         },
                         new
                         {
-                            Id = "16",
+                            Id = "cccccccc-0000-0000-0000-000000000016",
                             Barcode = "1234567890016",
-                            BaseUnitId = "1",
+                            BaseUnitId = "aaaaaaaa-0000-0000-0000-000000000001",
                             BaseUnitName = "Piece",
-                            CategoryId = "6",
+                            CategoryId = "bbbbbbbb-0000-0000-0000-000000000006",
                             CategoryName = "Electronics",
-                            CreatedDate = new DateTime(2026, 4, 9, 23, 45, 18, 648, DateTimeKind.Local).AddTicks(8244),
+                            CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Fast charging adapter",
                             EntityState = "Unchanged",
                             IsActive = true,
                             IsDeleted = false,
                             IsPublic = false,
                             IsSyncedToServer = true,
-                            LastModifiedUtc = "2026-04-09 23:45:18.648825",
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             Name = "Phone Charger",
+                            ReorderPointBase = 0m,
+                            ReorderQuantityBase = 0m,
                             SKU = "CHARGER-016",
-                            ShopId = "3",
+                            ShopId = "11111111-0000-0000-0000-000000000003",
                             ShopName = "Warehouse",
-                            UpdatedDate = new DateTime(2026, 4, 9, 23, 45, 18, 648, DateTimeKind.Local).AddTicks(8247),
+                            UpdatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Version = 0
                         });
                 });
@@ -3316,11 +3184,23 @@ namespace SMIS.Infrastructure.Server.Migrations
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<long>("BuyPrice")
-                        .HasColumnType("bigint");
+                    b.Property<string>("ClientCreatedBy")
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime?>("ClientCreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ClientModifiedBy")
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime?>("ClientModifiedDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime?>("CreatedDate")
                         .HasColumnType("datetime2");
@@ -3338,8 +3218,798 @@ namespace SMIS.Infrastructure.Server.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("IsActive")
+                    b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
+
+                    b.Property<bool>("IsPublic")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsSyncedToServer")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("LastModifiedUtc")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("LastSyncedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ProductUnitId")
+                        .IsRequired()
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<long>("SellPrice")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime?>("UpdatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("Version")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ClientCreatedBy");
+
+                    b.HasIndex("ClientModifiedBy");
+
+                    b.HasIndex("CreatedBy");
+
+                    b.HasIndex("UpdatedBy");
+
+                    b.HasIndex("ProductUnitId", "EffectiveDate");
+
+                    b.ToTable("ProductPrice", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "33333333-3333-0000-0000-000000000001",
+                            CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            EffectiveDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            EntityState = "Unchanged",
+                            IsDeleted = false,
+                            IsPublic = false,
+                            IsSyncedToServer = true,
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
+                            ProductUnitId = "dddddddd-0000-0000-0000-000000000001",
+                            SellPrice = 160L,
+                            UpdatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Version = 0
+                        },
+                        new
+                        {
+                            Id = "33333333-3333-0000-0000-000000000002",
+                            CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            EffectiveDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            EntityState = "Unchanged",
+                            IsDeleted = false,
+                            IsPublic = false,
+                            IsSyncedToServer = true,
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
+                            ProductUnitId = "dddddddd-0000-0000-0000-000000000002",
+                            SellPrice = 1920L,
+                            UpdatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Version = 0
+                        },
+                        new
+                        {
+                            Id = "33333333-3333-0000-0000-000000000003",
+                            CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            EffectiveDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            EntityState = "Unchanged",
+                            IsDeleted = false,
+                            IsPublic = false,
+                            IsSyncedToServer = true,
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
+                            ProductUnitId = "dddddddd-0000-0000-0000-000000000003",
+                            SellPrice = 3840L,
+                            UpdatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Version = 0
+                        },
+                        new
+                        {
+                            Id = "33333333-3333-0000-0000-000000000004",
+                            CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            EffectiveDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            EntityState = "Unchanged",
+                            IsDeleted = false,
+                            IsPublic = false,
+                            IsSyncedToServer = true,
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
+                            ProductUnitId = "dddddddd-0000-0000-0000-000000000004",
+                            SellPrice = 150L,
+                            UpdatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Version = 0
+                        },
+                        new
+                        {
+                            Id = "33333333-3333-0000-0000-000000000005",
+                            CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            EffectiveDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            EntityState = "Unchanged",
+                            IsDeleted = false,
+                            IsPublic = false,
+                            IsSyncedToServer = true,
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
+                            ProductUnitId = "dddddddd-0000-0000-0000-000000000005",
+                            SellPrice = 1800L,
+                            UpdatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Version = 0
+                        },
+                        new
+                        {
+                            Id = "33333333-3333-0000-0000-000000000006",
+                            CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            EffectiveDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            EntityState = "Unchanged",
+                            IsDeleted = false,
+                            IsPublic = false,
+                            IsSyncedToServer = true,
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
+                            ProductUnitId = "dddddddd-0000-0000-0000-000000000006",
+                            SellPrice = 3600L,
+                            UpdatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Version = 0
+                        },
+                        new
+                        {
+                            Id = "33333333-3333-0000-0000-000000000007",
+                            CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            EffectiveDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            EntityState = "Unchanged",
+                            IsDeleted = false,
+                            IsPublic = false,
+                            IsSyncedToServer = true,
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
+                            ProductUnitId = "dddddddd-0000-0000-0000-000000000007",
+                            SellPrice = 90L,
+                            UpdatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Version = 0
+                        },
+                        new
+                        {
+                            Id = "33333333-3333-0000-0000-000000000008",
+                            CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            EffectiveDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            EntityState = "Unchanged",
+                            IsDeleted = false,
+                            IsPublic = false,
+                            IsSyncedToServer = true,
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
+                            ProductUnitId = "dddddddd-0000-0000-0000-000000000008",
+                            SellPrice = 540L,
+                            UpdatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Version = 0
+                        },
+                        new
+                        {
+                            Id = "33333333-3333-0000-0000-000000000009",
+                            CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            EffectiveDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            EntityState = "Unchanged",
+                            IsDeleted = false,
+                            IsPublic = false,
+                            IsSyncedToServer = true,
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
+                            ProductUnitId = "dddddddd-0000-0000-0000-000000000009",
+                            SellPrice = 1080L,
+                            UpdatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Version = 0
+                        },
+                        new
+                        {
+                            Id = "33333333-3333-0000-0000-000000000010",
+                            CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            EffectiveDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            EntityState = "Unchanged",
+                            IsDeleted = false,
+                            IsPublic = false,
+                            IsSyncedToServer = true,
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
+                            ProductUnitId = "dddddddd-0000-0000-0000-000000000010",
+                            SellPrice = 270L,
+                            UpdatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Version = 0
+                        },
+                        new
+                        {
+                            Id = "33333333-3333-0000-0000-000000000011",
+                            CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            EffectiveDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            EntityState = "Unchanged",
+                            IsDeleted = false,
+                            IsPublic = false,
+                            IsSyncedToServer = true,
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
+                            ProductUnitId = "dddddddd-0000-0000-0000-000000000011",
+                            SellPrice = 3240L,
+                            UpdatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Version = 0
+                        },
+                        new
+                        {
+                            Id = "33333333-3333-0000-0000-000000000012",
+                            CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            EffectiveDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            EntityState = "Unchanged",
+                            IsDeleted = false,
+                            IsPublic = false,
+                            IsSyncedToServer = true,
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
+                            ProductUnitId = "dddddddd-0000-0000-0000-000000000012",
+                            SellPrice = 12960L,
+                            UpdatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Version = 0
+                        },
+                        new
+                        {
+                            Id = "33333333-3333-0000-0000-000000000013",
+                            CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            EffectiveDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            EntityState = "Unchanged",
+                            IsDeleted = false,
+                            IsPublic = false,
+                            IsSyncedToServer = true,
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
+                            ProductUnitId = "dddddddd-0000-0000-0000-000000000013",
+                            SellPrice = 190L,
+                            UpdatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Version = 0
+                        },
+                        new
+                        {
+                            Id = "33333333-3333-0000-0000-000000000014",
+                            CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            EffectiveDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            EntityState = "Unchanged",
+                            IsDeleted = false,
+                            IsPublic = false,
+                            IsSyncedToServer = true,
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
+                            ProductUnitId = "dddddddd-0000-0000-0000-000000000014",
+                            SellPrice = 3800L,
+                            UpdatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Version = 0
+                        },
+                        new
+                        {
+                            Id = "33333333-3333-0000-0000-000000000015",
+                            CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            EffectiveDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            EntityState = "Unchanged",
+                            IsDeleted = false,
+                            IsPublic = false,
+                            IsSyncedToServer = true,
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
+                            ProductUnitId = "dddddddd-0000-0000-0000-000000000015",
+                            SellPrice = 11400L,
+                            UpdatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Version = 0
+                        },
+                        new
+                        {
+                            Id = "33333333-3333-0000-0000-000000000016",
+                            CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            EffectiveDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            EntityState = "Unchanged",
+                            IsDeleted = false,
+                            IsPublic = false,
+                            IsSyncedToServer = true,
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
+                            ProductUnitId = "dddddddd-0000-0000-0000-000000000016",
+                            SellPrice = 130L,
+                            UpdatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Version = 0
+                        },
+                        new
+                        {
+                            Id = "33333333-3333-0000-0000-000000000017",
+                            CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            EffectiveDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            EntityState = "Unchanged",
+                            IsDeleted = false,
+                            IsPublic = false,
+                            IsSyncedToServer = true,
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
+                            ProductUnitId = "dddddddd-0000-0000-0000-000000000017",
+                            SellPrice = 3120L,
+                            UpdatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Version = 0
+                        },
+                        new
+                        {
+                            Id = "33333333-3333-0000-0000-000000000018",
+                            CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            EffectiveDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            EntityState = "Unchanged",
+                            IsDeleted = false,
+                            IsPublic = false,
+                            IsSyncedToServer = true,
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
+                            ProductUnitId = "dddddddd-0000-0000-0000-000000000018",
+                            SellPrice = 9360L,
+                            UpdatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Version = 0
+                        },
+                        new
+                        {
+                            Id = "33333333-3333-0000-0000-000000000019",
+                            CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            EffectiveDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            EntityState = "Unchanged",
+                            IsDeleted = false,
+                            IsPublic = false,
+                            IsSyncedToServer = true,
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
+                            ProductUnitId = "dddddddd-0000-0000-0000-000000000019",
+                            SellPrice = 320L,
+                            UpdatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Version = 0
+                        },
+                        new
+                        {
+                            Id = "33333333-3333-0000-0000-000000000020",
+                            CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            EffectiveDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            EntityState = "Unchanged",
+                            IsDeleted = false,
+                            IsPublic = false,
+                            IsSyncedToServer = true,
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
+                            ProductUnitId = "dddddddd-0000-0000-0000-000000000020",
+                            SellPrice = 3840L,
+                            UpdatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Version = 0
+                        },
+                        new
+                        {
+                            Id = "33333333-3333-0000-0000-000000000021",
+                            CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            EffectiveDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            EntityState = "Unchanged",
+                            IsDeleted = false,
+                            IsPublic = false,
+                            IsSyncedToServer = true,
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
+                            ProductUnitId = "dddddddd-0000-0000-0000-000000000021",
+                            SellPrice = 16000L,
+                            UpdatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Version = 0
+                        },
+                        new
+                        {
+                            Id = "33333333-3333-0000-0000-000000000022",
+                            CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            EffectiveDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            EntityState = "Unchanged",
+                            IsDeleted = false,
+                            IsPublic = false,
+                            IsSyncedToServer = true,
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
+                            ProductUnitId = "dddddddd-0000-0000-0000-000000000022",
+                            SellPrice = 55L,
+                            UpdatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Version = 0
+                        },
+                        new
+                        {
+                            Id = "33333333-3333-0000-0000-000000000023",
+                            CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            EffectiveDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            EntityState = "Unchanged",
+                            IsDeleted = false,
+                            IsPublic = false,
+                            IsSyncedToServer = true,
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
+                            ProductUnitId = "dddddddd-0000-0000-0000-000000000023",
+                            SellPrice = 660L,
+                            UpdatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Version = 0
+                        },
+                        new
+                        {
+                            Id = "33333333-3333-0000-0000-000000000024",
+                            CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            EffectiveDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            EntityState = "Unchanged",
+                            IsDeleted = false,
+                            IsPublic = false,
+                            IsSyncedToServer = true,
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
+                            ProductUnitId = "dddddddd-0000-0000-0000-000000000024",
+                            SellPrice = 7920L,
+                            UpdatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Version = 0
+                        },
+                        new
+                        {
+                            Id = "33333333-3333-0000-0000-000000000025",
+                            CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            EffectiveDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            EntityState = "Unchanged",
+                            IsDeleted = false,
+                            IsPublic = false,
+                            IsSyncedToServer = true,
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
+                            ProductUnitId = "dddddddd-0000-0000-0000-000000000025",
+                            SellPrice = 420L,
+                            UpdatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Version = 0
+                        },
+                        new
+                        {
+                            Id = "33333333-3333-0000-0000-000000000026",
+                            CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            EffectiveDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            EntityState = "Unchanged",
+                            IsDeleted = false,
+                            IsPublic = false,
+                            IsSyncedToServer = true,
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
+                            ProductUnitId = "dddddddd-0000-0000-0000-000000000026",
+                            SellPrice = 8400L,
+                            UpdatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Version = 0
+                        },
+                        new
+                        {
+                            Id = "33333333-3333-0000-0000-000000000027",
+                            CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            EffectiveDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            EntityState = "Unchanged",
+                            IsDeleted = false,
+                            IsPublic = false,
+                            IsSyncedToServer = true,
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
+                            ProductUnitId = "dddddddd-0000-0000-0000-000000000027",
+                            SellPrice = 470L,
+                            UpdatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Version = 0
+                        },
+                        new
+                        {
+                            Id = "33333333-3333-0000-0000-000000000028",
+                            CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            EffectiveDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            EntityState = "Unchanged",
+                            IsDeleted = false,
+                            IsPublic = false,
+                            IsSyncedToServer = true,
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
+                            ProductUnitId = "dddddddd-0000-0000-0000-000000000028",
+                            SellPrice = 5640L,
+                            UpdatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Version = 0
+                        },
+                        new
+                        {
+                            Id = "33333333-3333-0000-0000-000000000029",
+                            CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            EffectiveDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            EntityState = "Unchanged",
+                            IsDeleted = false,
+                            IsPublic = false,
+                            IsSyncedToServer = true,
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
+                            ProductUnitId = "dddddddd-0000-0000-0000-000000000029",
+                            SellPrice = 11280L,
+                            UpdatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Version = 0
+                        },
+                        new
+                        {
+                            Id = "33333333-3333-0000-0000-000000000030",
+                            CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            EffectiveDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            EntityState = "Unchanged",
+                            IsDeleted = false,
+                            IsPublic = false,
+                            IsSyncedToServer = true,
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
+                            ProductUnitId = "dddddddd-0000-0000-0000-000000000030",
+                            SellPrice = 300L,
+                            UpdatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Version = 0
+                        },
+                        new
+                        {
+                            Id = "33333333-3333-0000-0000-000000000031",
+                            CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            EffectiveDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            EntityState = "Unchanged",
+                            IsDeleted = false,
+                            IsPublic = false,
+                            IsSyncedToServer = true,
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
+                            ProductUnitId = "dddddddd-0000-0000-0000-000000000031",
+                            SellPrice = 3000L,
+                            UpdatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Version = 0
+                        },
+                        new
+                        {
+                            Id = "33333333-3333-0000-0000-000000000032",
+                            CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            EffectiveDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            EntityState = "Unchanged",
+                            IsDeleted = false,
+                            IsPublic = false,
+                            IsSyncedToServer = true,
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
+                            ProductUnitId = "dddddddd-0000-0000-0000-000000000032",
+                            SellPrice = 7500L,
+                            UpdatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Version = 0
+                        },
+                        new
+                        {
+                            Id = "33333333-3333-0000-0000-000000000033",
+                            CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            EffectiveDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            EntityState = "Unchanged",
+                            IsDeleted = false,
+                            IsPublic = false,
+                            IsSyncedToServer = true,
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
+                            ProductUnitId = "dddddddd-0000-0000-0000-000000000033",
+                            SellPrice = 220L,
+                            UpdatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Version = 0
+                        },
+                        new
+                        {
+                            Id = "33333333-3333-0000-0000-000000000034",
+                            CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            EffectiveDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            EntityState = "Unchanged",
+                            IsDeleted = false,
+                            IsPublic = false,
+                            IsSyncedToServer = true,
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
+                            ProductUnitId = "dddddddd-0000-0000-0000-000000000034",
+                            SellPrice = 4400L,
+                            UpdatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Version = 0
+                        },
+                        new
+                        {
+                            Id = "33333333-3333-0000-0000-000000000035",
+                            CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            EffectiveDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            EntityState = "Unchanged",
+                            IsDeleted = false,
+                            IsPublic = false,
+                            IsSyncedToServer = true,
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
+                            ProductUnitId = "dddddddd-0000-0000-0000-000000000035",
+                            SellPrice = 11000L,
+                            UpdatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Version = 0
+                        },
+                        new
+                        {
+                            Id = "33333333-3333-0000-0000-000000000036",
+                            CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            EffectiveDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            EntityState = "Unchanged",
+                            IsDeleted = false,
+                            IsPublic = false,
+                            IsSyncedToServer = true,
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
+                            ProductUnitId = "dddddddd-0000-0000-0000-000000000036",
+                            SellPrice = 370L,
+                            UpdatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Version = 0
+                        },
+                        new
+                        {
+                            Id = "33333333-3333-0000-0000-000000000037",
+                            CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            EffectiveDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            EntityState = "Unchanged",
+                            IsDeleted = false,
+                            IsPublic = false,
+                            IsSyncedToServer = true,
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
+                            ProductUnitId = "dddddddd-0000-0000-0000-000000000037",
+                            SellPrice = 4440L,
+                            UpdatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Version = 0
+                        },
+                        new
+                        {
+                            Id = "33333333-3333-0000-0000-000000000038",
+                            CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            EffectiveDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            EntityState = "Unchanged",
+                            IsDeleted = false,
+                            IsPublic = false,
+                            IsSyncedToServer = true,
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
+                            ProductUnitId = "dddddddd-0000-0000-0000-000000000038",
+                            SellPrice = 8880L,
+                            UpdatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Version = 0
+                        },
+                        new
+                        {
+                            Id = "33333333-3333-0000-0000-000000000039",
+                            CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            EffectiveDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            EntityState = "Unchanged",
+                            IsDeleted = false,
+                            IsPublic = false,
+                            IsSyncedToServer = true,
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
+                            ProductUnitId = "dddddddd-0000-0000-0000-000000000039",
+                            SellPrice = 200L,
+                            UpdatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Version = 0
+                        },
+                        new
+                        {
+                            Id = "33333333-3333-0000-0000-000000000040",
+                            CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            EffectiveDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            EntityState = "Unchanged",
+                            IsDeleted = false,
+                            IsPublic = false,
+                            IsSyncedToServer = true,
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
+                            ProductUnitId = "dddddddd-0000-0000-0000-000000000040",
+                            SellPrice = 4800L,
+                            UpdatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Version = 0
+                        },
+                        new
+                        {
+                            Id = "33333333-3333-0000-0000-000000000041",
+                            CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            EffectiveDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            EntityState = "Unchanged",
+                            IsDeleted = false,
+                            IsPublic = false,
+                            IsSyncedToServer = true,
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
+                            ProductUnitId = "dddddddd-0000-0000-0000-000000000041",
+                            SellPrice = 14400L,
+                            UpdatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Version = 0
+                        },
+                        new
+                        {
+                            Id = "33333333-3333-0000-0000-000000000042",
+                            CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            EffectiveDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            EntityState = "Unchanged",
+                            IsDeleted = false,
+                            IsPublic = false,
+                            IsSyncedToServer = true,
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
+                            ProductUnitId = "dddddddd-0000-0000-0000-000000000042",
+                            SellPrice = 270L,
+                            UpdatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Version = 0
+                        },
+                        new
+                        {
+                            Id = "33333333-3333-0000-0000-000000000043",
+                            CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            EffectiveDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            EntityState = "Unchanged",
+                            IsDeleted = false,
+                            IsPublic = false,
+                            IsSyncedToServer = true,
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
+                            ProductUnitId = "dddddddd-0000-0000-0000-000000000043",
+                            SellPrice = 13500L,
+                            UpdatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Version = 0
+                        },
+                        new
+                        {
+                            Id = "33333333-3333-0000-0000-000000000044",
+                            CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            EffectiveDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            EntityState = "Unchanged",
+                            IsDeleted = false,
+                            IsPublic = false,
+                            IsSyncedToServer = true,
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
+                            ProductUnitId = "dddddddd-0000-0000-0000-000000000044",
+                            SellPrice = 54000L,
+                            UpdatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Version = 0
+                        },
+                        new
+                        {
+                            Id = "33333333-3333-0000-0000-000000000045",
+                            CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            EffectiveDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            EntityState = "Unchanged",
+                            IsDeleted = false,
+                            IsPublic = false,
+                            IsSyncedToServer = true,
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
+                            ProductUnitId = "dddddddd-0000-0000-0000-000000000045",
+                            SellPrice = 850L,
+                            UpdatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Version = 0
+                        },
+                        new
+                        {
+                            Id = "33333333-3333-0000-0000-000000000046",
+                            CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            EffectiveDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            EntityState = "Unchanged",
+                            IsDeleted = false,
+                            IsPublic = false,
+                            IsSyncedToServer = true,
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
+                            ProductUnitId = "dddddddd-0000-0000-0000-000000000046",
+                            SellPrice = 17000L,
+                            UpdatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Version = 0
+                        },
+                        new
+                        {
+                            Id = "33333333-3333-0000-0000-000000000047",
+                            CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            EffectiveDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            EntityState = "Unchanged",
+                            IsDeleted = false,
+                            IsPublic = false,
+                            IsSyncedToServer = true,
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
+                            ProductUnitId = "dddddddd-0000-0000-0000-000000000047",
+                            SellPrice = 85000L,
+                            UpdatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Version = 0
+                        });
+                });
+
+            modelBuilder.Entity("SMIS.Domain.Entities.ProductUnit", b =>
+                {
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<decimal>("BaseUnitQuantity")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("ClientCreatedBy")
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime?>("ClientCreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ClientModifiedBy")
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime?>("ClientModifiedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedBy")
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime?>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("EntityState")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
@@ -3362,903 +4032,6 @@ namespace SMIS.Infrastructure.Server.Migrations
                         .HasMaxLength(450)
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("ProductUnitId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<long>("SellPrice")
-                        .HasColumnType("bigint");
-
-                    b.Property<string>("UpdatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("UpdatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("Version")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("IsActive");
-
-                    b.HasIndex("ProductUnitId");
-
-                    b.HasIndex("ProductId", "ProductUnitId", "EffectiveDate");
-
-                    b.ToTable("ProductPrice", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = "1",
-                            BuyPrice = 140L,
-                            CreatedDate = new DateTime(2026, 4, 9, 23, 45, 17, 304, DateTimeKind.Local).AddTicks(7587),
-                            EffectiveDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            EntityState = "Unchanged",
-                            IsActive = true,
-                            IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
-                            LastModifiedUtc = "2026-04-09 23:45:17.304930",
-                            ProductId = "1",
-                            ProductUnitId = "1",
-                            SellPrice = 160L,
-                            UpdatedDate = new DateTime(2026, 4, 9, 23, 45, 17, 304, DateTimeKind.Local).AddTicks(8577),
-                            Version = 0
-                        },
-                        new
-                        {
-                            Id = "2",
-                            BuyPrice = 1680L,
-                            CreatedDate = new DateTime(2026, 4, 9, 23, 45, 17, 305, DateTimeKind.Local).AddTicks(2051),
-                            EffectiveDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            EntityState = "Unchanged",
-                            IsActive = true,
-                            IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
-                            LastModifiedUtc = "2026-04-09 23:45:17.305408",
-                            ProductId = "1",
-                            ProductUnitId = "2",
-                            SellPrice = 1920L,
-                            UpdatedDate = new DateTime(2026, 4, 9, 23, 45, 17, 305, DateTimeKind.Local).AddTicks(3160),
-                            Version = 0
-                        },
-                        new
-                        {
-                            Id = "3",
-                            BuyPrice = 3360L,
-                            CreatedDate = new DateTime(2026, 4, 9, 23, 45, 17, 305, DateTimeKind.Local).AddTicks(5915),
-                            EffectiveDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            EntityState = "Unchanged",
-                            IsActive = true,
-                            IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
-                            LastModifiedUtc = "2026-04-09 23:45:17.305832",
-                            ProductId = "1",
-                            ProductUnitId = "3",
-                            SellPrice = 3840L,
-                            UpdatedDate = new DateTime(2026, 4, 9, 23, 45, 17, 305, DateTimeKind.Local).AddTicks(7173),
-                            Version = 0
-                        },
-                        new
-                        {
-                            Id = "4",
-                            BuyPrice = 130L,
-                            CreatedDate = new DateTime(2026, 4, 9, 23, 45, 17, 305, DateTimeKind.Local).AddTicks(9375),
-                            EffectiveDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            EntityState = "Unchanged",
-                            IsActive = true,
-                            IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
-                            LastModifiedUtc = "2026-04-09 23:45:17.305939",
-                            ProductId = "2",
-                            ProductUnitId = "4",
-                            SellPrice = 150L,
-                            UpdatedDate = new DateTime(2026, 4, 9, 23, 45, 17, 305, DateTimeKind.Local).AddTicks(9390),
-                            Version = 0
-                        },
-                        new
-                        {
-                            Id = "5",
-                            BuyPrice = 1560L,
-                            CreatedDate = new DateTime(2026, 4, 9, 23, 45, 17, 305, DateTimeKind.Local).AddTicks(9408),
-                            EffectiveDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            EntityState = "Unchanged",
-                            IsActive = true,
-                            IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
-                            LastModifiedUtc = "2026-04-09 23:45:17.305941",
-                            ProductId = "2",
-                            ProductUnitId = "5",
-                            SellPrice = 1800L,
-                            UpdatedDate = new DateTime(2026, 4, 9, 23, 45, 17, 305, DateTimeKind.Local).AddTicks(9412),
-                            Version = 0
-                        },
-                        new
-                        {
-                            Id = "6",
-                            BuyPrice = 3120L,
-                            CreatedDate = new DateTime(2026, 4, 9, 23, 45, 17, 305, DateTimeKind.Local).AddTicks(9424),
-                            EffectiveDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            EntityState = "Unchanged",
-                            IsActive = true,
-                            IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
-                            LastModifiedUtc = "2026-04-09 23:45:17.305943",
-                            ProductId = "2",
-                            ProductUnitId = "6",
-                            SellPrice = 3600L,
-                            UpdatedDate = new DateTime(2026, 4, 9, 23, 45, 17, 305, DateTimeKind.Local).AddTicks(9428),
-                            Version = 0
-                        },
-                        new
-                        {
-                            Id = "7",
-                            BuyPrice = 70L,
-                            CreatedDate = new DateTime(2026, 4, 9, 23, 45, 17, 305, DateTimeKind.Local).AddTicks(9453),
-                            EffectiveDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            EntityState = "Unchanged",
-                            IsActive = true,
-                            IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
-                            LastModifiedUtc = "2026-04-09 23:45:17.305946",
-                            ProductId = "3",
-                            ProductUnitId = "7",
-                            SellPrice = 90L,
-                            UpdatedDate = new DateTime(2026, 4, 9, 23, 45, 17, 305, DateTimeKind.Local).AddTicks(9457),
-                            Version = 0
-                        },
-                        new
-                        {
-                            Id = "8",
-                            BuyPrice = 420L,
-                            CreatedDate = new DateTime(2026, 4, 9, 23, 45, 17, 305, DateTimeKind.Local).AddTicks(9469),
-                            EffectiveDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            EntityState = "Unchanged",
-                            IsActive = true,
-                            IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
-                            LastModifiedUtc = "2026-04-09 23:45:17.305947",
-                            ProductId = "3",
-                            ProductUnitId = "8",
-                            SellPrice = 540L,
-                            UpdatedDate = new DateTime(2026, 4, 9, 23, 45, 17, 305, DateTimeKind.Local).AddTicks(9473),
-                            Version = 0
-                        },
-                        new
-                        {
-                            Id = "9",
-                            BuyPrice = 840L,
-                            CreatedDate = new DateTime(2026, 4, 9, 23, 45, 17, 305, DateTimeKind.Local).AddTicks(9484),
-                            EffectiveDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            EntityState = "Unchanged",
-                            IsActive = true,
-                            IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
-                            LastModifiedUtc = "2026-04-09 23:45:17.305949",
-                            ProductId = "3",
-                            ProductUnitId = "9",
-                            SellPrice = 1080L,
-                            UpdatedDate = new DateTime(2026, 4, 9, 23, 45, 17, 305, DateTimeKind.Local).AddTicks(9488),
-                            Version = 0
-                        },
-                        new
-                        {
-                            Id = "10",
-                            BuyPrice = 230L,
-                            CreatedDate = new DateTime(2026, 4, 9, 23, 45, 17, 305, DateTimeKind.Local).AddTicks(9500),
-                            EffectiveDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            EntityState = "Unchanged",
-                            IsActive = true,
-                            IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
-                            LastModifiedUtc = "2026-04-09 23:45:17.305950",
-                            ProductId = "4",
-                            ProductUnitId = "10",
-                            SellPrice = 270L,
-                            UpdatedDate = new DateTime(2026, 4, 9, 23, 45, 17, 305, DateTimeKind.Local).AddTicks(9504),
-                            Version = 0
-                        },
-                        new
-                        {
-                            Id = "11",
-                            BuyPrice = 2760L,
-                            CreatedDate = new DateTime(2026, 4, 9, 23, 45, 17, 305, DateTimeKind.Local).AddTicks(9583),
-                            EffectiveDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            EntityState = "Unchanged",
-                            IsActive = true,
-                            IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
-                            LastModifiedUtc = "2026-04-09 23:45:17.305959",
-                            ProductId = "4",
-                            ProductUnitId = "11",
-                            SellPrice = 3240L,
-                            UpdatedDate = new DateTime(2026, 4, 9, 23, 45, 17, 305, DateTimeKind.Local).AddTicks(9588),
-                            Version = 0
-                        },
-                        new
-                        {
-                            Id = "12",
-                            BuyPrice = 11040L,
-                            CreatedDate = new DateTime(2026, 4, 9, 23, 45, 17, 305, DateTimeKind.Local).AddTicks(9600),
-                            EffectiveDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            EntityState = "Unchanged",
-                            IsActive = true,
-                            IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
-                            LastModifiedUtc = "2026-04-09 23:45:17.305960",
-                            ProductId = "4",
-                            ProductUnitId = "12",
-                            SellPrice = 12960L,
-                            UpdatedDate = new DateTime(2026, 4, 9, 23, 45, 17, 305, DateTimeKind.Local).AddTicks(9604),
-                            Version = 0
-                        },
-                        new
-                        {
-                            Id = "13",
-                            BuyPrice = 160L,
-                            CreatedDate = new DateTime(2026, 4, 9, 23, 45, 17, 305, DateTimeKind.Local).AddTicks(9616),
-                            EffectiveDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            EntityState = "Unchanged",
-                            IsActive = true,
-                            IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
-                            LastModifiedUtc = "2026-04-09 23:45:17.305962",
-                            ProductId = "5",
-                            ProductUnitId = "13",
-                            SellPrice = 190L,
-                            UpdatedDate = new DateTime(2026, 4, 9, 23, 45, 17, 305, DateTimeKind.Local).AddTicks(9620),
-                            Version = 0
-                        },
-                        new
-                        {
-                            Id = "14",
-                            BuyPrice = 3200L,
-                            CreatedDate = new DateTime(2026, 4, 9, 23, 45, 17, 305, DateTimeKind.Local).AddTicks(9631),
-                            EffectiveDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            EntityState = "Unchanged",
-                            IsActive = true,
-                            IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
-                            LastModifiedUtc = "2026-04-09 23:45:17.305963",
-                            ProductId = "5",
-                            ProductUnitId = "14",
-                            SellPrice = 3800L,
-                            UpdatedDate = new DateTime(2026, 4, 9, 23, 45, 17, 305, DateTimeKind.Local).AddTicks(9635),
-                            Version = 0
-                        },
-                        new
-                        {
-                            Id = "15",
-                            BuyPrice = 9600L,
-                            CreatedDate = new DateTime(2026, 4, 9, 23, 45, 17, 305, DateTimeKind.Local).AddTicks(9651),
-                            EffectiveDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            EntityState = "Unchanged",
-                            IsActive = true,
-                            IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
-                            LastModifiedUtc = "2026-04-09 23:45:17.305965",
-                            ProductId = "5",
-                            ProductUnitId = "15",
-                            SellPrice = 11400L,
-                            UpdatedDate = new DateTime(2026, 4, 9, 23, 45, 17, 305, DateTimeKind.Local).AddTicks(9655),
-                            Version = 0
-                        },
-                        new
-                        {
-                            Id = "16",
-                            BuyPrice = 110L,
-                            CreatedDate = new DateTime(2026, 4, 9, 23, 45, 17, 305, DateTimeKind.Local).AddTicks(9667),
-                            EffectiveDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            EntityState = "Unchanged",
-                            IsActive = true,
-                            IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
-                            LastModifiedUtc = "2026-04-09 23:45:17.305967",
-                            ProductId = "6",
-                            ProductUnitId = "16",
-                            SellPrice = 130L,
-                            UpdatedDate = new DateTime(2026, 4, 9, 23, 45, 17, 305, DateTimeKind.Local).AddTicks(9671),
-                            Version = 0
-                        },
-                        new
-                        {
-                            Id = "17",
-                            BuyPrice = 2640L,
-                            CreatedDate = new DateTime(2026, 4, 9, 23, 45, 17, 305, DateTimeKind.Local).AddTicks(9683),
-                            EffectiveDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            EntityState = "Unchanged",
-                            IsActive = true,
-                            IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
-                            LastModifiedUtc = "2026-04-09 23:45:17.305969",
-                            ProductId = "6",
-                            ProductUnitId = "17",
-                            SellPrice = 3120L,
-                            UpdatedDate = new DateTime(2026, 4, 9, 23, 45, 17, 305, DateTimeKind.Local).AddTicks(9687),
-                            Version = 0
-                        },
-                        new
-                        {
-                            Id = "18",
-                            BuyPrice = 7920L,
-                            CreatedDate = new DateTime(2026, 4, 9, 23, 45, 17, 305, DateTimeKind.Local).AddTicks(9698),
-                            EffectiveDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            EntityState = "Unchanged",
-                            IsActive = true,
-                            IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
-                            LastModifiedUtc = "2026-04-09 23:45:17.305970",
-                            ProductId = "6",
-                            ProductUnitId = "18",
-                            SellPrice = 9360L,
-                            UpdatedDate = new DateTime(2026, 4, 9, 23, 45, 17, 305, DateTimeKind.Local).AddTicks(9702),
-                            Version = 0
-                        },
-                        new
-                        {
-                            Id = "19",
-                            BuyPrice = 280L,
-                            CreatedDate = new DateTime(2026, 4, 9, 23, 45, 17, 305, DateTimeKind.Local).AddTicks(9715),
-                            EffectiveDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            EntityState = "Unchanged",
-                            IsActive = true,
-                            IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
-                            LastModifiedUtc = "2026-04-09 23:45:17.305972",
-                            ProductId = "7",
-                            ProductUnitId = "19",
-                            SellPrice = 320L,
-                            UpdatedDate = new DateTime(2026, 4, 9, 23, 45, 17, 305, DateTimeKind.Local).AddTicks(9719),
-                            Version = 0
-                        },
-                        new
-                        {
-                            Id = "20",
-                            BuyPrice = 3360L,
-                            CreatedDate = new DateTime(2026, 4, 9, 23, 45, 17, 305, DateTimeKind.Local).AddTicks(9730),
-                            EffectiveDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            EntityState = "Unchanged",
-                            IsActive = true,
-                            IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
-                            LastModifiedUtc = "2026-04-09 23:45:17.305973",
-                            ProductId = "7",
-                            ProductUnitId = "20",
-                            SellPrice = 3840L,
-                            UpdatedDate = new DateTime(2026, 4, 9, 23, 45, 17, 305, DateTimeKind.Local).AddTicks(9734),
-                            Version = 0
-                        },
-                        new
-                        {
-                            Id = "21",
-                            BuyPrice = 14000L,
-                            CreatedDate = new DateTime(2026, 4, 9, 23, 45, 17, 305, DateTimeKind.Local).AddTicks(9747),
-                            EffectiveDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            EntityState = "Unchanged",
-                            IsActive = true,
-                            IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
-                            LastModifiedUtc = "2026-04-09 23:45:17.305975",
-                            ProductId = "7",
-                            ProductUnitId = "21",
-                            SellPrice = 16000L,
-                            UpdatedDate = new DateTime(2026, 4, 9, 23, 45, 17, 305, DateTimeKind.Local).AddTicks(9751),
-                            Version = 0
-                        },
-                        new
-                        {
-                            Id = "22",
-                            BuyPrice = 45L,
-                            CreatedDate = new DateTime(2026, 4, 9, 23, 45, 17, 305, DateTimeKind.Local).AddTicks(9762),
-                            EffectiveDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            EntityState = "Unchanged",
-                            IsActive = true,
-                            IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
-                            LastModifiedUtc = "2026-04-09 23:45:17.305976",
-                            ProductId = "8",
-                            ProductUnitId = "22",
-                            SellPrice = 55L,
-                            UpdatedDate = new DateTime(2026, 4, 9, 23, 45, 17, 305, DateTimeKind.Local).AddTicks(9766),
-                            Version = 0
-                        },
-                        new
-                        {
-                            Id = "23",
-                            BuyPrice = 540L,
-                            CreatedDate = new DateTime(2026, 4, 9, 23, 45, 17, 305, DateTimeKind.Local).AddTicks(9781),
-                            EffectiveDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            EntityState = "Unchanged",
-                            IsActive = true,
-                            IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
-                            LastModifiedUtc = "2026-04-09 23:45:17.305978",
-                            ProductId = "8",
-                            ProductUnitId = "23",
-                            SellPrice = 660L,
-                            UpdatedDate = new DateTime(2026, 4, 9, 23, 45, 17, 305, DateTimeKind.Local).AddTicks(9785),
-                            Version = 0
-                        },
-                        new
-                        {
-                            Id = "24",
-                            BuyPrice = 6480L,
-                            CreatedDate = new DateTime(2026, 4, 9, 23, 45, 17, 305, DateTimeKind.Local).AddTicks(9799),
-                            EffectiveDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            EntityState = "Unchanged",
-                            IsActive = true,
-                            IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
-                            LastModifiedUtc = "2026-04-09 23:45:17.305980",
-                            ProductId = "8",
-                            ProductUnitId = "24",
-                            SellPrice = 7920L,
-                            UpdatedDate = new DateTime(2026, 4, 9, 23, 45, 17, 305, DateTimeKind.Local).AddTicks(9803),
-                            Version = 0
-                        },
-                        new
-                        {
-                            Id = "25",
-                            BuyPrice = 380L,
-                            CreatedDate = new DateTime(2026, 4, 9, 23, 45, 17, 305, DateTimeKind.Local).AddTicks(9815),
-                            EffectiveDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            EntityState = "Unchanged",
-                            IsActive = true,
-                            IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
-                            LastModifiedUtc = "2026-04-09 23:45:17.305982",
-                            ProductId = "9",
-                            ProductUnitId = "25",
-                            SellPrice = 420L,
-                            UpdatedDate = new DateTime(2026, 4, 9, 23, 45, 17, 305, DateTimeKind.Local).AddTicks(9819),
-                            Version = 0
-                        },
-                        new
-                        {
-                            Id = "26",
-                            BuyPrice = 7600L,
-                            CreatedDate = new DateTime(2026, 4, 9, 23, 45, 17, 305, DateTimeKind.Local).AddTicks(9831),
-                            EffectiveDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            EntityState = "Unchanged",
-                            IsActive = true,
-                            IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
-                            LastModifiedUtc = "2026-04-09 23:45:17.305983",
-                            ProductId = "9",
-                            ProductUnitId = "26",
-                            SellPrice = 8400L,
-                            UpdatedDate = new DateTime(2026, 4, 9, 23, 45, 17, 305, DateTimeKind.Local).AddTicks(9835),
-                            Version = 0
-                        },
-                        new
-                        {
-                            Id = "27",
-                            BuyPrice = 430L,
-                            CreatedDate = new DateTime(2026, 4, 9, 23, 45, 17, 305, DateTimeKind.Local).AddTicks(9846),
-                            EffectiveDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            EntityState = "Unchanged",
-                            IsActive = true,
-                            IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
-                            LastModifiedUtc = "2026-04-09 23:45:17.305985",
-                            ProductId = "10",
-                            ProductUnitId = "27",
-                            SellPrice = 470L,
-                            UpdatedDate = new DateTime(2026, 4, 9, 23, 45, 17, 305, DateTimeKind.Local).AddTicks(9850),
-                            Version = 0
-                        },
-                        new
-                        {
-                            Id = "28",
-                            BuyPrice = 5160L,
-                            CreatedDate = new DateTime(2026, 4, 9, 23, 45, 17, 305, DateTimeKind.Local).AddTicks(9861),
-                            EffectiveDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            EntityState = "Unchanged",
-                            IsActive = true,
-                            IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
-                            LastModifiedUtc = "2026-04-09 23:45:17.305986",
-                            ProductId = "10",
-                            ProductUnitId = "28",
-                            SellPrice = 5640L,
-                            UpdatedDate = new DateTime(2026, 4, 9, 23, 45, 17, 305, DateTimeKind.Local).AddTicks(9865),
-                            Version = 0
-                        },
-                        new
-                        {
-                            Id = "29",
-                            BuyPrice = 10320L,
-                            CreatedDate = new DateTime(2026, 4, 9, 23, 45, 17, 305, DateTimeKind.Local).AddTicks(9877),
-                            EffectiveDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            EntityState = "Unchanged",
-                            IsActive = true,
-                            IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
-                            LastModifiedUtc = "2026-04-09 23:45:17.305988",
-                            ProductId = "10",
-                            ProductUnitId = "29",
-                            SellPrice = 11280L,
-                            UpdatedDate = new DateTime(2026, 4, 9, 23, 45, 17, 305, DateTimeKind.Local).AddTicks(9880),
-                            Version = 0
-                        },
-                        new
-                        {
-                            Id = "30",
-                            BuyPrice = 260L,
-                            CreatedDate = new DateTime(2026, 4, 9, 23, 45, 17, 305, DateTimeKind.Local).AddTicks(9902),
-                            EffectiveDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            EntityState = "Unchanged",
-                            IsActive = true,
-                            IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
-                            LastModifiedUtc = "2026-04-09 23:45:17.305991",
-                            ProductId = "11",
-                            ProductUnitId = "30",
-                            SellPrice = 300L,
-                            UpdatedDate = new DateTime(2026, 4, 9, 23, 45, 17, 305, DateTimeKind.Local).AddTicks(9906),
-                            Version = 0
-                        },
-                        new
-                        {
-                            Id = "31",
-                            BuyPrice = 2600L,
-                            CreatedDate = new DateTime(2026, 4, 9, 23, 45, 17, 305, DateTimeKind.Local).AddTicks(9921),
-                            EffectiveDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            EntityState = "Unchanged",
-                            IsActive = true,
-                            IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
-                            LastModifiedUtc = "2026-04-09 23:45:17.305992",
-                            ProductId = "11",
-                            ProductUnitId = "31",
-                            SellPrice = 3000L,
-                            UpdatedDate = new DateTime(2026, 4, 9, 23, 45, 17, 305, DateTimeKind.Local).AddTicks(9925),
-                            Version = 0
-                        },
-                        new
-                        {
-                            Id = "32",
-                            BuyPrice = 6500L,
-                            CreatedDate = new DateTime(2026, 4, 9, 23, 45, 17, 305, DateTimeKind.Local).AddTicks(9936),
-                            EffectiveDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            EntityState = "Unchanged",
-                            IsActive = true,
-                            IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
-                            LastModifiedUtc = "2026-04-09 23:45:17.305994",
-                            ProductId = "11",
-                            ProductUnitId = "32",
-                            SellPrice = 7500L,
-                            UpdatedDate = new DateTime(2026, 4, 9, 23, 45, 17, 305, DateTimeKind.Local).AddTicks(9940),
-                            Version = 0
-                        },
-                        new
-                        {
-                            Id = "33",
-                            BuyPrice = 180L,
-                            CreatedDate = new DateTime(2026, 4, 9, 23, 45, 17, 305, DateTimeKind.Local).AddTicks(9951),
-                            EffectiveDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            EntityState = "Unchanged",
-                            IsActive = true,
-                            IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
-                            LastModifiedUtc = "2026-04-09 23:45:17.305995",
-                            ProductId = "12",
-                            ProductUnitId = "33",
-                            SellPrice = 220L,
-                            UpdatedDate = new DateTime(2026, 4, 9, 23, 45, 17, 305, DateTimeKind.Local).AddTicks(9955),
-                            Version = 0
-                        },
-                        new
-                        {
-                            Id = "34",
-                            BuyPrice = 3600L,
-                            CreatedDate = new DateTime(2026, 4, 9, 23, 45, 17, 305, DateTimeKind.Local).AddTicks(9967),
-                            EffectiveDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            EntityState = "Unchanged",
-                            IsActive = true,
-                            IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
-                            LastModifiedUtc = "2026-04-09 23:45:17.305997",
-                            ProductId = "12",
-                            ProductUnitId = "34",
-                            SellPrice = 4400L,
-                            UpdatedDate = new DateTime(2026, 4, 9, 23, 45, 17, 305, DateTimeKind.Local).AddTicks(9971),
-                            Version = 0
-                        },
-                        new
-                        {
-                            Id = "35",
-                            BuyPrice = 9000L,
-                            CreatedDate = new DateTime(2026, 4, 9, 23, 45, 17, 305, DateTimeKind.Local).AddTicks(9982),
-                            EffectiveDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            EntityState = "Unchanged",
-                            IsActive = true,
-                            IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
-                            LastModifiedUtc = "2026-04-09 23:45:17.305998",
-                            ProductId = "12",
-                            ProductUnitId = "35",
-                            SellPrice = 11000L,
-                            UpdatedDate = new DateTime(2026, 4, 9, 23, 45, 17, 305, DateTimeKind.Local).AddTicks(9985),
-                            Version = 0
-                        },
-                        new
-                        {
-                            Id = "36",
-                            BuyPrice = 330L,
-                            CreatedDate = new DateTime(2026, 4, 9, 23, 45, 17, 305, DateTimeKind.Local).AddTicks(9997),
-                            EffectiveDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            EntityState = "Unchanged",
-                            IsActive = true,
-                            IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
-                            LastModifiedUtc = "2026-04-09 23:45:17.306000",
-                            ProductId = "13",
-                            ProductUnitId = "36",
-                            SellPrice = 370L,
-                            UpdatedDate = new DateTime(2026, 4, 9, 23, 45, 17, 306, DateTimeKind.Local).AddTicks(1),
-                            Version = 0
-                        },
-                        new
-                        {
-                            Id = "37",
-                            BuyPrice = 3960L,
-                            CreatedDate = new DateTime(2026, 4, 9, 23, 45, 17, 306, DateTimeKind.Local).AddTicks(13),
-                            EffectiveDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            EntityState = "Unchanged",
-                            IsActive = true,
-                            IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
-                            LastModifiedUtc = "2026-04-09 23:45:17.306002",
-                            ProductId = "13",
-                            ProductUnitId = "37",
-                            SellPrice = 4440L,
-                            UpdatedDate = new DateTime(2026, 4, 9, 23, 45, 17, 306, DateTimeKind.Local).AddTicks(17),
-                            Version = 0
-                        },
-                        new
-                        {
-                            Id = "38",
-                            BuyPrice = 7920L,
-                            CreatedDate = new DateTime(2026, 4, 9, 23, 45, 17, 306, DateTimeKind.Local).AddTicks(29),
-                            EffectiveDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            EntityState = "Unchanged",
-                            IsActive = true,
-                            IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
-                            LastModifiedUtc = "2026-04-09 23:45:17.306003",
-                            ProductId = "13",
-                            ProductUnitId = "38",
-                            SellPrice = 8880L,
-                            UpdatedDate = new DateTime(2026, 4, 9, 23, 45, 17, 306, DateTimeKind.Local).AddTicks(33),
-                            Version = 0
-                        },
-                        new
-                        {
-                            Id = "39",
-                            BuyPrice = 160L,
-                            CreatedDate = new DateTime(2026, 4, 9, 23, 45, 17, 306, DateTimeKind.Local).AddTicks(48),
-                            EffectiveDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            EntityState = "Unchanged",
-                            IsActive = true,
-                            IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
-                            LastModifiedUtc = "2026-04-09 23:45:17.306005",
-                            ProductId = "14",
-                            ProductUnitId = "39",
-                            SellPrice = 200L,
-                            UpdatedDate = new DateTime(2026, 4, 9, 23, 45, 17, 306, DateTimeKind.Local).AddTicks(52),
-                            Version = 0
-                        },
-                        new
-                        {
-                            Id = "40",
-                            BuyPrice = 3840L,
-                            CreatedDate = new DateTime(2026, 4, 9, 23, 45, 17, 306, DateTimeKind.Local).AddTicks(64),
-                            EffectiveDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            EntityState = "Unchanged",
-                            IsActive = true,
-                            IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
-                            LastModifiedUtc = "2026-04-09 23:45:17.306007",
-                            ProductId = "14",
-                            ProductUnitId = "40",
-                            SellPrice = 4800L,
-                            UpdatedDate = new DateTime(2026, 4, 9, 23, 45, 17, 306, DateTimeKind.Local).AddTicks(68),
-                            Version = 0
-                        },
-                        new
-                        {
-                            Id = "41",
-                            BuyPrice = 11520L,
-                            CreatedDate = new DateTime(2026, 4, 9, 23, 45, 17, 306, DateTimeKind.Local).AddTicks(79),
-                            EffectiveDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            EntityState = "Unchanged",
-                            IsActive = true,
-                            IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
-                            LastModifiedUtc = "2026-04-09 23:45:17.306008",
-                            ProductId = "14",
-                            ProductUnitId = "41",
-                            SellPrice = 14400L,
-                            UpdatedDate = new DateTime(2026, 4, 9, 23, 45, 17, 306, DateTimeKind.Local).AddTicks(82),
-                            Version = 0
-                        },
-                        new
-                        {
-                            Id = "42",
-                            BuyPrice = 230L,
-                            CreatedDate = new DateTime(2026, 4, 9, 23, 45, 17, 306, DateTimeKind.Local).AddTicks(93),
-                            EffectiveDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            EntityState = "Unchanged",
-                            IsActive = true,
-                            IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
-                            LastModifiedUtc = "2026-04-09 23:45:17.306010",
-                            ProductId = "15",
-                            ProductUnitId = "42",
-                            SellPrice = 270L,
-                            UpdatedDate = new DateTime(2026, 4, 9, 23, 45, 17, 306, DateTimeKind.Local).AddTicks(97),
-                            Version = 0
-                        },
-                        new
-                        {
-                            Id = "43",
-                            BuyPrice = 11500L,
-                            CreatedDate = new DateTime(2026, 4, 9, 23, 45, 17, 306, DateTimeKind.Local).AddTicks(111),
-                            EffectiveDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            EntityState = "Unchanged",
-                            IsActive = true,
-                            IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
-                            LastModifiedUtc = "2026-04-09 23:45:17.306011",
-                            ProductId = "15",
-                            ProductUnitId = "43",
-                            SellPrice = 13500L,
-                            UpdatedDate = new DateTime(2026, 4, 9, 23, 45, 17, 306, DateTimeKind.Local).AddTicks(115),
-                            Version = 0
-                        },
-                        new
-                        {
-                            Id = "44",
-                            BuyPrice = 46000L,
-                            CreatedDate = new DateTime(2026, 4, 9, 23, 45, 17, 306, DateTimeKind.Local).AddTicks(128),
-                            EffectiveDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            EntityState = "Unchanged",
-                            IsActive = true,
-                            IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
-                            LastModifiedUtc = "2026-04-09 23:45:17.306013",
-                            ProductId = "15",
-                            ProductUnitId = "44",
-                            SellPrice = 54000L,
-                            UpdatedDate = new DateTime(2026, 4, 9, 23, 45, 17, 306, DateTimeKind.Local).AddTicks(132),
-                            Version = 0
-                        },
-                        new
-                        {
-                            Id = "45",
-                            BuyPrice = 750L,
-                            CreatedDate = new DateTime(2026, 4, 9, 23, 45, 17, 306, DateTimeKind.Local).AddTicks(144),
-                            EffectiveDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            EntityState = "Unchanged",
-                            IsActive = true,
-                            IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
-                            LastModifiedUtc = "2026-04-09 23:45:17.306015",
-                            ProductId = "16",
-                            ProductUnitId = "45",
-                            SellPrice = 850L,
-                            UpdatedDate = new DateTime(2026, 4, 9, 23, 45, 17, 306, DateTimeKind.Local).AddTicks(147),
-                            Version = 0
-                        },
-                        new
-                        {
-                            Id = "46",
-                            BuyPrice = 15000L,
-                            CreatedDate = new DateTime(2026, 4, 9, 23, 45, 17, 306, DateTimeKind.Local).AddTicks(159),
-                            EffectiveDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            EntityState = "Unchanged",
-                            IsActive = true,
-                            IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
-                            LastModifiedUtc = "2026-04-09 23:45:17.306016",
-                            ProductId = "16",
-                            ProductUnitId = "46",
-                            SellPrice = 17000L,
-                            UpdatedDate = new DateTime(2026, 4, 9, 23, 45, 17, 306, DateTimeKind.Local).AddTicks(163),
-                            Version = 0
-                        },
-                        new
-                        {
-                            Id = "47",
-                            BuyPrice = 75000L,
-                            CreatedDate = new DateTime(2026, 4, 9, 23, 45, 17, 306, DateTimeKind.Local).AddTicks(177),
-                            EffectiveDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            EntityState = "Unchanged",
-                            IsActive = true,
-                            IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
-                            LastModifiedUtc = "2026-04-09 23:45:17.306018",
-                            ProductId = "16",
-                            ProductUnitId = "47",
-                            SellPrice = 85000L,
-                            UpdatedDate = new DateTime(2026, 4, 9, 23, 45, 17, 306, DateTimeKind.Local).AddTicks(181),
-                            Version = 0
-                        });
-                });
-
-            modelBuilder.Entity("SMIS.Domain.Entities.ProductUnit", b =>
-                {
-                    b.Property<string>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<decimal>("ConversionFactor")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<string>("EntityState")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("LastModifiedUtc")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ProductId")
-                        .IsRequired()
-                        .HasMaxLength(450)
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<string>("ProductName")
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
@@ -4272,582 +4045,1088 @@ namespace SMIS.Infrastructure.Server.Migrations
                         .HasMaxLength(450)
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<string>("UpdatedBy")
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime?>("UpdatedDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<int>("Version")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ProductId");
+                    b.HasAlternateKey("Id", "ProductId")
+                        .HasName("AK_ProductUnit_Id_ProductId");
+
+                    b.HasAlternateKey("ProductId", "UnitOfMeasureId")
+                        .HasName("AK_ProductUnit_ProductId_UnitOfMeasureId");
+
+                    b.HasIndex("ClientCreatedBy");
+
+                    b.HasIndex("ClientModifiedBy");
+
+                    b.HasIndex("CreatedBy");
 
                     b.HasIndex("UnitOfMeasureId");
+
+                    b.HasIndex("UpdatedBy");
 
                     b.ToTable("ProductUnit", (string)null);
 
                     b.HasData(
                         new
                         {
-                            Id = "1",
-                            ConversionFactor = 1m,
-                            EntityState = "Added",
-                            LastModifiedUtc = "2026-04-09 23:45:17.298774",
-                            ProductId = "1",
+                            Id = "dddddddd-0000-0000-0000-000000000001",
+                            BaseUnitQuantity = 1m,
+                            EntityState = "Unchanged",
+                            IsDeleted = false,
+                            IsPublic = false,
+                            IsSyncedToServer = true,
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
+                            ProductId = "cccccccc-0000-0000-0000-000000000001",
                             ProductName = "Coca Cola 500ml",
                             UnitName = "Bottle",
-                            UnitOfMeasureId = "2",
+                            UnitOfMeasureId = "aaaaaaaa-0000-0000-0000-000000000002",
                             Version = 0
                         },
                         new
                         {
-                            Id = "2",
-                            ConversionFactor = 12m,
-                            EntityState = "Added",
-                            LastModifiedUtc = "2026-04-09 23:45:17.300423",
-                            ProductId = "1",
+                            Id = "dddddddd-0000-0000-0000-000000000002",
+                            BaseUnitQuantity = 12m,
+                            EntityState = "Unchanged",
+                            IsDeleted = false,
+                            IsPublic = false,
+                            IsSyncedToServer = true,
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
+                            ProductId = "cccccccc-0000-0000-0000-000000000001",
                             ProductName = "Coca Cola 500ml",
                             UnitName = "Box",
-                            UnitOfMeasureId = "4",
+                            UnitOfMeasureId = "aaaaaaaa-0000-0000-0000-000000000004",
                             Version = 0
                         },
                         new
                         {
-                            Id = "3",
-                            ConversionFactor = 24m,
-                            EntityState = "Added",
-                            LastModifiedUtc = "2026-04-09 23:45:17.300610",
-                            ProductId = "1",
+                            Id = "dddddddd-0000-0000-0000-000000000003",
+                            BaseUnitQuantity = 24m,
+                            EntityState = "Unchanged",
+                            IsDeleted = false,
+                            IsPublic = false,
+                            IsSyncedToServer = true,
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
+                            ProductId = "cccccccc-0000-0000-0000-000000000001",
                             ProductName = "Coca Cola 500ml",
                             UnitName = "Carton",
-                            UnitOfMeasureId = "5",
+                            UnitOfMeasureId = "aaaaaaaa-0000-0000-0000-000000000005",
                             Version = 0
                         },
                         new
                         {
-                            Id = "4",
-                            ConversionFactor = 1m,
-                            EntityState = "Added",
-                            LastModifiedUtc = "2026-04-09 23:45:17.300735",
-                            ProductId = "2",
+                            Id = "dddddddd-0000-0000-0000-000000000004",
+                            BaseUnitQuantity = 1m,
+                            EntityState = "Unchanged",
+                            IsDeleted = false,
+                            IsPublic = false,
+                            IsSyncedToServer = true,
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
+                            ProductId = "cccccccc-0000-0000-0000-000000000002",
                             ProductName = "Pepsi 500ml",
                             UnitName = "Bottle",
-                            UnitOfMeasureId = "2",
+                            UnitOfMeasureId = "aaaaaaaa-0000-0000-0000-000000000002",
                             Version = 0
                         },
                         new
                         {
-                            Id = "5",
-                            ConversionFactor = 12m,
-                            EntityState = "Added",
-                            LastModifiedUtc = "2026-04-09 23:45:17.300741",
-                            ProductId = "2",
+                            Id = "dddddddd-0000-0000-0000-000000000005",
+                            BaseUnitQuantity = 12m,
+                            EntityState = "Unchanged",
+                            IsDeleted = false,
+                            IsPublic = false,
+                            IsSyncedToServer = true,
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
+                            ProductId = "cccccccc-0000-0000-0000-000000000002",
                             ProductName = "Pepsi 500ml",
                             UnitName = "Box",
-                            UnitOfMeasureId = "4",
+                            UnitOfMeasureId = "aaaaaaaa-0000-0000-0000-000000000004",
                             Version = 0
                         },
                         new
                         {
-                            Id = "6",
-                            ConversionFactor = 24m,
-                            EntityState = "Added",
-                            LastModifiedUtc = "2026-04-09 23:45:17.300743",
-                            ProductId = "2",
+                            Id = "dddddddd-0000-0000-0000-000000000006",
+                            BaseUnitQuantity = 24m,
+                            EntityState = "Unchanged",
+                            IsDeleted = false,
+                            IsPublic = false,
+                            IsSyncedToServer = true,
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
+                            ProductId = "cccccccc-0000-0000-0000-000000000002",
                             ProductName = "Pepsi 500ml",
                             UnitName = "Carton",
-                            UnitOfMeasureId = "5",
+                            UnitOfMeasureId = "aaaaaaaa-0000-0000-0000-000000000005",
                             Version = 0
                         },
                         new
                         {
-                            Id = "7",
-                            ConversionFactor = 1m,
-                            EntityState = "Added",
-                            LastModifiedUtc = "2026-04-09 23:45:17.300744",
-                            ProductId = "3",
+                            Id = "dddddddd-0000-0000-0000-000000000007",
+                            BaseUnitQuantity = 1m,
+                            EntityState = "Unchanged",
+                            IsDeleted = false,
+                            IsPublic = false,
+                            IsSyncedToServer = true,
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
+                            ProductId = "cccccccc-0000-0000-0000-000000000003",
                             ProductName = "Mineral Water 1L",
                             UnitName = "Bottle",
-                            UnitOfMeasureId = "2",
+                            UnitOfMeasureId = "aaaaaaaa-0000-0000-0000-000000000002",
                             Version = 0
                         },
                         new
                         {
-                            Id = "8",
-                            ConversionFactor = 6m,
-                            EntityState = "Added",
-                            LastModifiedUtc = "2026-04-09 23:45:17.300745",
-                            ProductId = "3",
+                            Id = "dddddddd-0000-0000-0000-000000000008",
+                            BaseUnitQuantity = 6m,
+                            EntityState = "Unchanged",
+                            IsDeleted = false,
+                            IsPublic = false,
+                            IsSyncedToServer = true,
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
+                            ProductId = "cccccccc-0000-0000-0000-000000000003",
                             ProductName = "Mineral Water 1L",
                             UnitName = "Box",
-                            UnitOfMeasureId = "4",
+                            UnitOfMeasureId = "aaaaaaaa-0000-0000-0000-000000000004",
                             Version = 0
                         },
                         new
                         {
-                            Id = "9",
-                            ConversionFactor = 12m,
-                            EntityState = "Added",
-                            LastModifiedUtc = "2026-04-09 23:45:17.300745",
-                            ProductId = "3",
+                            Id = "dddddddd-0000-0000-0000-000000000009",
+                            BaseUnitQuantity = 12m,
+                            EntityState = "Unchanged",
+                            IsDeleted = false,
+                            IsPublic = false,
+                            IsSyncedToServer = true,
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
+                            ProductId = "cccccccc-0000-0000-0000-000000000003",
                             ProductName = "Mineral Water 1L",
                             UnitName = "Carton",
-                            UnitOfMeasureId = "5",
+                            UnitOfMeasureId = "aaaaaaaa-0000-0000-0000-000000000005",
                             Version = 0
                         },
                         new
                         {
-                            Id = "10",
-                            ConversionFactor = 1m,
-                            EntityState = "Added",
-                            LastModifiedUtc = "2026-04-09 23:45:17.300746",
-                            ProductId = "4",
+                            Id = "dddddddd-0000-0000-0000-000000000010",
+                            BaseUnitQuantity = 1m,
+                            EntityState = "Unchanged",
+                            IsDeleted = false,
+                            IsPublic = false,
+                            IsSyncedToServer = true,
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
+                            ProductId = "cccccccc-0000-0000-0000-000000000004",
                             ProductName = "Oreo Biscuits",
                             UnitName = "Pack",
-                            UnitOfMeasureId = "3",
+                            UnitOfMeasureId = "aaaaaaaa-0000-0000-0000-000000000003",
                             Version = 0
                         },
                         new
                         {
-                            Id = "11",
-                            ConversionFactor = 12m,
-                            EntityState = "Added",
-                            LastModifiedUtc = "2026-04-09 23:45:17.300747",
-                            ProductId = "4",
+                            Id = "dddddddd-0000-0000-0000-000000000011",
+                            BaseUnitQuantity = 12m,
+                            EntityState = "Unchanged",
+                            IsDeleted = false,
+                            IsPublic = false,
+                            IsSyncedToServer = true,
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
+                            ProductId = "cccccccc-0000-0000-0000-000000000004",
                             ProductName = "Oreo Biscuits",
                             UnitName = "Box",
-                            UnitOfMeasureId = "4",
+                            UnitOfMeasureId = "aaaaaaaa-0000-0000-0000-000000000004",
                             Version = 0
                         },
                         new
                         {
-                            Id = "12",
-                            ConversionFactor = 48m,
-                            EntityState = "Added",
-                            LastModifiedUtc = "2026-04-09 23:45:17.300748",
-                            ProductId = "4",
+                            Id = "dddddddd-0000-0000-0000-000000000012",
+                            BaseUnitQuantity = 48m,
+                            EntityState = "Unchanged",
+                            IsDeleted = false,
+                            IsPublic = false,
+                            IsSyncedToServer = true,
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
+                            ProductId = "cccccccc-0000-0000-0000-000000000004",
                             ProductName = "Oreo Biscuits",
                             UnitName = "Carton",
-                            UnitOfMeasureId = "5",
+                            UnitOfMeasureId = "aaaaaaaa-0000-0000-0000-000000000005",
                             Version = 0
                         },
                         new
                         {
-                            Id = "13",
-                            ConversionFactor = 1m,
-                            EntityState = "Added",
-                            LastModifiedUtc = "2026-04-09 23:45:17.300749",
-                            ProductId = "5",
+                            Id = "dddddddd-0000-0000-0000-000000000013",
+                            BaseUnitQuantity = 1m,
+                            EntityState = "Unchanged",
+                            IsDeleted = false,
+                            IsPublic = false,
+                            IsSyncedToServer = true,
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
+                            ProductId = "cccccccc-0000-0000-0000-000000000005",
                             ProductName = "Lay's Chips",
                             UnitName = "Pack",
-                            UnitOfMeasureId = "3",
+                            UnitOfMeasureId = "aaaaaaaa-0000-0000-0000-000000000003",
                             Version = 0
                         },
                         new
                         {
-                            Id = "14",
-                            ConversionFactor = 20m,
-                            EntityState = "Added",
-                            LastModifiedUtc = "2026-04-09 23:45:17.300750",
-                            ProductId = "5",
+                            Id = "dddddddd-0000-0000-0000-000000000014",
+                            BaseUnitQuantity = 20m,
+                            EntityState = "Unchanged",
+                            IsDeleted = false,
+                            IsPublic = false,
+                            IsSyncedToServer = true,
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
+                            ProductId = "cccccccc-0000-0000-0000-000000000005",
                             ProductName = "Lay's Chips",
                             UnitName = "Box",
-                            UnitOfMeasureId = "4",
+                            UnitOfMeasureId = "aaaaaaaa-0000-0000-0000-000000000004",
                             Version = 0
                         },
                         new
                         {
-                            Id = "15",
-                            ConversionFactor = 60m,
-                            EntityState = "Added",
-                            LastModifiedUtc = "2026-04-09 23:45:17.300751",
-                            ProductId = "5",
+                            Id = "dddddddd-0000-0000-0000-000000000015",
+                            BaseUnitQuantity = 60m,
+                            EntityState = "Unchanged",
+                            IsDeleted = false,
+                            IsPublic = false,
+                            IsSyncedToServer = true,
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
+                            ProductId = "cccccccc-0000-0000-0000-000000000005",
                             ProductName = "Lay's Chips",
                             UnitName = "Carton",
-                            UnitOfMeasureId = "5",
+                            UnitOfMeasureId = "aaaaaaaa-0000-0000-0000-000000000005",
                             Version = 0
                         },
                         new
                         {
-                            Id = "16",
-                            ConversionFactor = 1m,
-                            EntityState = "Added",
-                            LastModifiedUtc = "2026-04-09 23:45:17.300752",
-                            ProductId = "6",
+                            Id = "dddddddd-0000-0000-0000-000000000016",
+                            BaseUnitQuantity = 1m,
+                            EntityState = "Unchanged",
+                            IsDeleted = false,
+                            IsPublic = false,
+                            IsSyncedToServer = true,
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
+                            ProductId = "cccccccc-0000-0000-0000-000000000006",
                             ProductName = "Instant Noodles",
                             UnitName = "Pack",
-                            UnitOfMeasureId = "3",
+                            UnitOfMeasureId = "aaaaaaaa-0000-0000-0000-000000000003",
                             Version = 0
                         },
                         new
                         {
-                            Id = "17",
-                            ConversionFactor = 24m,
-                            EntityState = "Added",
-                            LastModifiedUtc = "2026-04-09 23:45:17.300753",
-                            ProductId = "6",
+                            Id = "dddddddd-0000-0000-0000-000000000017",
+                            BaseUnitQuantity = 24m,
+                            EntityState = "Unchanged",
+                            IsDeleted = false,
+                            IsPublic = false,
+                            IsSyncedToServer = true,
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
+                            ProductId = "cccccccc-0000-0000-0000-000000000006",
                             ProductName = "Instant Noodles",
                             UnitName = "Box",
-                            UnitOfMeasureId = "4",
+                            UnitOfMeasureId = "aaaaaaaa-0000-0000-0000-000000000004",
                             Version = 0
                         },
                         new
                         {
-                            Id = "18",
-                            ConversionFactor = 72m,
-                            EntityState = "Added",
-                            LastModifiedUtc = "2026-04-09 23:45:17.300753",
-                            ProductId = "6",
+                            Id = "dddddddd-0000-0000-0000-000000000018",
+                            BaseUnitQuantity = 72m,
+                            EntityState = "Unchanged",
+                            IsDeleted = false,
+                            IsPublic = false,
+                            IsSyncedToServer = true,
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
+                            ProductId = "cccccccc-0000-0000-0000-000000000006",
                             ProductName = "Instant Noodles",
                             UnitName = "Carton",
-                            UnitOfMeasureId = "5",
+                            UnitOfMeasureId = "aaaaaaaa-0000-0000-0000-000000000005",
                             Version = 0
                         },
                         new
                         {
-                            Id = "19",
-                            ConversionFactor = 1m,
-                            EntityState = "Added",
-                            LastModifiedUtc = "2026-04-09 23:45:17.300754",
-                            ProductId = "7",
+                            Id = "dddddddd-0000-0000-0000-000000000019",
+                            BaseUnitQuantity = 1m,
+                            EntityState = "Unchanged",
+                            IsDeleted = false,
+                            IsPublic = false,
+                            IsSyncedToServer = true,
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
+                            ProductId = "cccccccc-0000-0000-0000-000000000007",
                             ProductName = "A4 Notebook",
                             UnitName = "Piece",
-                            UnitOfMeasureId = "1",
+                            UnitOfMeasureId = "aaaaaaaa-0000-0000-0000-000000000001",
                             Version = 0
                         },
                         new
                         {
-                            Id = "20",
-                            ConversionFactor = 12m,
-                            EntityState = "Added",
-                            LastModifiedUtc = "2026-04-09 23:45:17.300755",
-                            ProductId = "7",
+                            Id = "dddddddd-0000-0000-0000-000000000020",
+                            BaseUnitQuantity = 12m,
+                            EntityState = "Unchanged",
+                            IsDeleted = false,
+                            IsPublic = false,
+                            IsSyncedToServer = true,
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
+                            ProductId = "cccccccc-0000-0000-0000-000000000007",
                             ProductName = "A4 Notebook",
                             UnitName = "Dozen",
-                            UnitOfMeasureId = "10",
+                            UnitOfMeasureId = "aaaaaaaa-0000-0000-0000-000000000010",
                             Version = 0
                         },
                         new
                         {
-                            Id = "21",
-                            ConversionFactor = 50m,
-                            EntityState = "Added",
-                            LastModifiedUtc = "2026-04-09 23:45:17.300756",
-                            ProductId = "7",
+                            Id = "dddddddd-0000-0000-0000-000000000021",
+                            BaseUnitQuantity = 50m,
+                            EntityState = "Unchanged",
+                            IsDeleted = false,
+                            IsPublic = false,
+                            IsSyncedToServer = true,
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
+                            ProductId = "cccccccc-0000-0000-0000-000000000007",
                             ProductName = "A4 Notebook",
                             UnitName = "Box",
-                            UnitOfMeasureId = "4",
+                            UnitOfMeasureId = "aaaaaaaa-0000-0000-0000-000000000004",
                             Version = 0
                         },
                         new
                         {
-                            Id = "22",
-                            ConversionFactor = 1m,
-                            EntityState = "Added",
-                            LastModifiedUtc = "2026-04-09 23:45:17.300757",
-                            ProductId = "8",
+                            Id = "dddddddd-0000-0000-0000-000000000022",
+                            BaseUnitQuantity = 1m,
+                            EntityState = "Unchanged",
+                            IsDeleted = false,
+                            IsPublic = false,
+                            IsSyncedToServer = true,
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
+                            ProductId = "cccccccc-0000-0000-0000-000000000008",
                             ProductName = "Blue Pen",
                             UnitName = "Piece",
-                            UnitOfMeasureId = "1",
+                            UnitOfMeasureId = "aaaaaaaa-0000-0000-0000-000000000001",
                             Version = 0
                         },
                         new
                         {
-                            Id = "23",
-                            ConversionFactor = 12m,
-                            EntityState = "Added",
-                            LastModifiedUtc = "2026-04-09 23:45:17.300758",
-                            ProductId = "8",
+                            Id = "dddddddd-0000-0000-0000-000000000023",
+                            BaseUnitQuantity = 12m,
+                            EntityState = "Unchanged",
+                            IsDeleted = false,
+                            IsPublic = false,
+                            IsSyncedToServer = true,
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
+                            ProductId = "cccccccc-0000-0000-0000-000000000008",
                             ProductName = "Blue Pen",
                             UnitName = "Dozen",
-                            UnitOfMeasureId = "10",
+                            UnitOfMeasureId = "aaaaaaaa-0000-0000-0000-000000000010",
                             Version = 0
                         },
                         new
                         {
-                            Id = "24",
-                            ConversionFactor = 144m,
-                            EntityState = "Added",
-                            LastModifiedUtc = "2026-04-09 23:45:17.300759",
-                            ProductId = "8",
+                            Id = "dddddddd-0000-0000-0000-000000000024",
+                            BaseUnitQuantity = 144m,
+                            EntityState = "Unchanged",
+                            IsDeleted = false,
+                            IsPublic = false,
+                            IsSyncedToServer = true,
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
+                            ProductId = "cccccccc-0000-0000-0000-000000000008",
                             ProductName = "Blue Pen",
                             UnitName = "Box",
-                            UnitOfMeasureId = "4",
+                            UnitOfMeasureId = "aaaaaaaa-0000-0000-0000-000000000004",
                             Version = 0
                         },
                         new
                         {
-                            Id = "25",
-                            ConversionFactor = 1m,
-                            EntityState = "Added",
-                            LastModifiedUtc = "2026-04-09 23:45:17.300760",
-                            ProductId = "9",
+                            Id = "dddddddd-0000-0000-0000-000000000025",
+                            BaseUnitQuantity = 1m,
+                            EntityState = "Unchanged",
+                            IsDeleted = false,
+                            IsPublic = false,
+                            IsSyncedToServer = true,
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
+                            ProductId = "cccccccc-0000-0000-0000-000000000009",
                             ProductName = "Pencil Set",
                             UnitName = "Box",
-                            UnitOfMeasureId = "4",
+                            UnitOfMeasureId = "aaaaaaaa-0000-0000-0000-000000000004",
                             Version = 0
                         },
                         new
                         {
-                            Id = "26",
-                            ConversionFactor = 20m,
-                            EntityState = "Added",
-                            LastModifiedUtc = "2026-04-09 23:45:17.300760",
-                            ProductId = "9",
+                            Id = "dddddddd-0000-0000-0000-000000000026",
+                            BaseUnitQuantity = 20m,
+                            EntityState = "Unchanged",
+                            IsDeleted = false,
+                            IsPublic = false,
+                            IsSyncedToServer = true,
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
+                            ProductId = "cccccccc-0000-0000-0000-000000000009",
                             ProductName = "Pencil Set",
                             UnitName = "Carton",
-                            UnitOfMeasureId = "5",
+                            UnitOfMeasureId = "aaaaaaaa-0000-0000-0000-000000000005",
                             Version = 0
                         },
                         new
                         {
-                            Id = "27",
-                            ConversionFactor = 1m,
-                            EntityState = "Added",
-                            LastModifiedUtc = "2026-04-09 23:45:17.300761",
-                            ProductId = "10",
+                            Id = "dddddddd-0000-0000-0000-000000000027",
+                            BaseUnitQuantity = 1m,
+                            EntityState = "Unchanged",
+                            IsDeleted = false,
+                            IsPublic = false,
+                            IsSyncedToServer = true,
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
+                            ProductId = "cccccccc-0000-0000-0000-000000000010",
                             ProductName = "Cooking Oil 1L",
                             UnitName = "Bottle",
-                            UnitOfMeasureId = "2",
+                            UnitOfMeasureId = "aaaaaaaa-0000-0000-0000-000000000002",
                             Version = 0
                         },
                         new
                         {
-                            Id = "28",
-                            ConversionFactor = 12m,
-                            EntityState = "Added",
-                            LastModifiedUtc = "2026-04-09 23:45:17.300762",
-                            ProductId = "10",
+                            Id = "dddddddd-0000-0000-0000-000000000028",
+                            BaseUnitQuantity = 12m,
+                            EntityState = "Unchanged",
+                            IsDeleted = false,
+                            IsPublic = false,
+                            IsSyncedToServer = true,
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
+                            ProductId = "cccccccc-0000-0000-0000-000000000010",
                             ProductName = "Cooking Oil 1L",
                             UnitName = "Box",
-                            UnitOfMeasureId = "4",
+                            UnitOfMeasureId = "aaaaaaaa-0000-0000-0000-000000000004",
                             Version = 0
                         },
                         new
                         {
-                            Id = "29",
-                            ConversionFactor = 24m,
-                            EntityState = "Added",
-                            LastModifiedUtc = "2026-04-09 23:45:17.300763",
-                            ProductId = "10",
+                            Id = "dddddddd-0000-0000-0000-000000000029",
+                            BaseUnitQuantity = 24m,
+                            EntityState = "Unchanged",
+                            IsDeleted = false,
+                            IsPublic = false,
+                            IsSyncedToServer = true,
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
+                            ProductId = "cccccccc-0000-0000-0000-000000000010",
                             ProductName = "Cooking Oil 1L",
                             UnitName = "Carton",
-                            UnitOfMeasureId = "5",
+                            UnitOfMeasureId = "aaaaaaaa-0000-0000-0000-000000000005",
                             Version = 0
                         },
                         new
                         {
-                            Id = "30",
-                            ConversionFactor = 1m,
-                            EntityState = "Added",
-                            LastModifiedUtc = "2026-04-09 23:45:17.300764",
-                            ProductId = "11",
+                            Id = "dddddddd-0000-0000-0000-000000000030",
+                            BaseUnitQuantity = 1m,
+                            EntityState = "Unchanged",
+                            IsDeleted = false,
+                            IsPublic = false,
+                            IsSyncedToServer = true,
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
+                            ProductId = "cccccccc-0000-0000-0000-000000000011",
                             ProductName = "Rice 1kg",
                             UnitName = "Kilogram",
-                            UnitOfMeasureId = "7",
+                            UnitOfMeasureId = "aaaaaaaa-0000-0000-0000-000000000007",
                             Version = 0
                         },
                         new
                         {
-                            Id = "31",
-                            ConversionFactor = 10m,
-                            EntityState = "Added",
-                            LastModifiedUtc = "2026-04-09 23:45:17.300765",
-                            ProductId = "11",
+                            Id = "dddddddd-0000-0000-0000-000000000031",
+                            BaseUnitQuantity = 10m,
+                            EntityState = "Unchanged",
+                            IsDeleted = false,
+                            IsPublic = false,
+                            IsSyncedToServer = true,
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
+                            ProductId = "cccccccc-0000-0000-0000-000000000011",
                             ProductName = "Rice 1kg",
                             UnitName = "Box",
-                            UnitOfMeasureId = "4",
+                            UnitOfMeasureId = "aaaaaaaa-0000-0000-0000-000000000004",
                             Version = 0
                         },
                         new
                         {
-                            Id = "32",
-                            ConversionFactor = 25m,
-                            EntityState = "Added",
-                            LastModifiedUtc = "2026-04-09 23:45:17.300766",
-                            ProductId = "11",
+                            Id = "dddddddd-0000-0000-0000-000000000032",
+                            BaseUnitQuantity = 25m,
+                            EntityState = "Unchanged",
+                            IsDeleted = false,
+                            IsPublic = false,
+                            IsSyncedToServer = true,
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
+                            ProductId = "cccccccc-0000-0000-0000-000000000011",
                             ProductName = "Rice 1kg",
                             UnitName = "Carton",
-                            UnitOfMeasureId = "5",
+                            UnitOfMeasureId = "aaaaaaaa-0000-0000-0000-000000000005",
                             Version = 0
                         },
                         new
                         {
-                            Id = "33",
-                            ConversionFactor = 1m,
-                            EntityState = "Added",
-                            LastModifiedUtc = "2026-04-09 23:45:17.300767",
-                            ProductId = "12",
+                            Id = "dddddddd-0000-0000-0000-000000000033",
+                            BaseUnitQuantity = 1m,
+                            EntityState = "Unchanged",
+                            IsDeleted = false,
+                            IsPublic = false,
+                            IsSyncedToServer = true,
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
+                            ProductId = "cccccccc-0000-0000-0000-000000000012",
                             ProductName = "Sugar 1kg",
                             UnitName = "Kilogram",
-                            UnitOfMeasureId = "7",
+                            UnitOfMeasureId = "aaaaaaaa-0000-0000-0000-000000000007",
                             Version = 0
                         },
                         new
                         {
-                            Id = "34",
-                            ConversionFactor = 20m,
-                            EntityState = "Added",
-                            LastModifiedUtc = "2026-04-09 23:45:17.300767",
-                            ProductId = "12",
+                            Id = "dddddddd-0000-0000-0000-000000000034",
+                            BaseUnitQuantity = 20m,
+                            EntityState = "Unchanged",
+                            IsDeleted = false,
+                            IsPublic = false,
+                            IsSyncedToServer = true,
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
+                            ProductId = "cccccccc-0000-0000-0000-000000000012",
                             ProductName = "Sugar 1kg",
                             UnitName = "Box",
-                            UnitOfMeasureId = "4",
+                            UnitOfMeasureId = "aaaaaaaa-0000-0000-0000-000000000004",
                             Version = 0
                         },
                         new
                         {
-                            Id = "35",
-                            ConversionFactor = 50m,
-                            EntityState = "Added",
-                            LastModifiedUtc = "2026-04-09 23:45:17.300768",
-                            ProductId = "12",
+                            Id = "dddddddd-0000-0000-0000-000000000035",
+                            BaseUnitQuantity = 50m,
+                            EntityState = "Unchanged",
+                            IsDeleted = false,
+                            IsPublic = false,
+                            IsSyncedToServer = true,
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
+                            ProductId = "cccccccc-0000-0000-0000-000000000012",
                             ProductName = "Sugar 1kg",
                             UnitName = "Carton",
-                            UnitOfMeasureId = "5",
+                            UnitOfMeasureId = "aaaaaaaa-0000-0000-0000-000000000005",
                             Version = 0
                         },
                         new
                         {
-                            Id = "36",
-                            ConversionFactor = 1m,
-                            EntityState = "Added",
-                            LastModifiedUtc = "2026-04-09 23:45:17.300770",
-                            ProductId = "13",
+                            Id = "dddddddd-0000-0000-0000-000000000036",
+                            BaseUnitQuantity = 1m,
+                            EntityState = "Unchanged",
+                            IsDeleted = false,
+                            IsPublic = false,
+                            IsSyncedToServer = true,
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
+                            ProductId = "cccccccc-0000-0000-0000-000000000013",
                             ProductName = "Shampoo 400ml",
                             UnitName = "Bottle",
-                            UnitOfMeasureId = "2",
+                            UnitOfMeasureId = "aaaaaaaa-0000-0000-0000-000000000002",
                             Version = 0
                         },
                         new
                         {
-                            Id = "37",
-                            ConversionFactor = 12m,
-                            EntityState = "Added",
-                            LastModifiedUtc = "2026-04-09 23:45:17.300771",
-                            ProductId = "13",
+                            Id = "dddddddd-0000-0000-0000-000000000037",
+                            BaseUnitQuantity = 12m,
+                            EntityState = "Unchanged",
+                            IsDeleted = false,
+                            IsPublic = false,
+                            IsSyncedToServer = true,
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
+                            ProductId = "cccccccc-0000-0000-0000-000000000013",
                             ProductName = "Shampoo 400ml",
                             UnitName = "Box",
-                            UnitOfMeasureId = "4",
+                            UnitOfMeasureId = "aaaaaaaa-0000-0000-0000-000000000004",
                             Version = 0
                         },
                         new
                         {
-                            Id = "38",
-                            ConversionFactor = 24m,
-                            EntityState = "Added",
-                            LastModifiedUtc = "2026-04-09 23:45:17.300772",
-                            ProductId = "13",
+                            Id = "dddddddd-0000-0000-0000-000000000038",
+                            BaseUnitQuantity = 24m,
+                            EntityState = "Unchanged",
+                            IsDeleted = false,
+                            IsPublic = false,
+                            IsSyncedToServer = true,
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
+                            ProductId = "cccccccc-0000-0000-0000-000000000013",
                             ProductName = "Shampoo 400ml",
                             UnitName = "Carton",
-                            UnitOfMeasureId = "5",
+                            UnitOfMeasureId = "aaaaaaaa-0000-0000-0000-000000000005",
                             Version = 0
                         },
                         new
                         {
-                            Id = "39",
-                            ConversionFactor = 1m,
-                            EntityState = "Added",
-                            LastModifiedUtc = "2026-04-09 23:45:17.300773",
-                            ProductId = "14",
+                            Id = "dddddddd-0000-0000-0000-000000000039",
+                            BaseUnitQuantity = 1m,
+                            EntityState = "Unchanged",
+                            IsDeleted = false,
+                            IsPublic = false,
+                            IsSyncedToServer = true,
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
+                            ProductId = "cccccccc-0000-0000-0000-000000000014",
                             ProductName = "Toothpaste",
                             UnitName = "Piece",
-                            UnitOfMeasureId = "1",
+                            UnitOfMeasureId = "aaaaaaaa-0000-0000-0000-000000000001",
                             Version = 0
                         },
                         new
                         {
-                            Id = "40",
-                            ConversionFactor = 24m,
-                            EntityState = "Added",
-                            LastModifiedUtc = "2026-04-09 23:45:17.300774",
-                            ProductId = "14",
+                            Id = "dddddddd-0000-0000-0000-000000000040",
+                            BaseUnitQuantity = 24m,
+                            EntityState = "Unchanged",
+                            IsDeleted = false,
+                            IsPublic = false,
+                            IsSyncedToServer = true,
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
+                            ProductId = "cccccccc-0000-0000-0000-000000000014",
                             ProductName = "Toothpaste",
                             UnitName = "Box",
-                            UnitOfMeasureId = "4",
+                            UnitOfMeasureId = "aaaaaaaa-0000-0000-0000-000000000004",
                             Version = 0
                         },
                         new
                         {
-                            Id = "41",
-                            ConversionFactor = 72m,
-                            EntityState = "Added",
-                            LastModifiedUtc = "2026-04-09 23:45:17.300775",
-                            ProductId = "14",
+                            Id = "dddddddd-0000-0000-0000-000000000041",
+                            BaseUnitQuantity = 72m,
+                            EntityState = "Unchanged",
+                            IsDeleted = false,
+                            IsPublic = false,
+                            IsSyncedToServer = true,
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
+                            ProductId = "cccccccc-0000-0000-0000-000000000014",
                             ProductName = "Toothpaste",
                             UnitName = "Carton",
-                            UnitOfMeasureId = "5",
+                            UnitOfMeasureId = "aaaaaaaa-0000-0000-0000-000000000005",
                             Version = 0
                         },
                         new
                         {
-                            Id = "42",
-                            ConversionFactor = 1m,
-                            EntityState = "Added",
-                            LastModifiedUtc = "2026-04-09 23:45:17.300776",
-                            ProductId = "15",
+                            Id = "dddddddd-0000-0000-0000-000000000042",
+                            BaseUnitQuantity = 1m,
+                            EntityState = "Unchanged",
+                            IsDeleted = false,
+                            IsPublic = false,
+                            IsSyncedToServer = true,
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
+                            ProductId = "cccccccc-0000-0000-0000-000000000015",
                             ProductName = "USB Cable",
                             UnitName = "Piece",
-                            UnitOfMeasureId = "1",
+                            UnitOfMeasureId = "aaaaaaaa-0000-0000-0000-000000000001",
                             Version = 0
                         },
                         new
                         {
-                            Id = "43",
-                            ConversionFactor = 50m,
-                            EntityState = "Added",
-                            LastModifiedUtc = "2026-04-09 23:45:17.300776",
-                            ProductId = "15",
+                            Id = "dddddddd-0000-0000-0000-000000000043",
+                            BaseUnitQuantity = 50m,
+                            EntityState = "Unchanged",
+                            IsDeleted = false,
+                            IsPublic = false,
+                            IsSyncedToServer = true,
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
+                            ProductId = "cccccccc-0000-0000-0000-000000000015",
                             ProductName = "USB Cable",
                             UnitName = "Box",
-                            UnitOfMeasureId = "4",
+                            UnitOfMeasureId = "aaaaaaaa-0000-0000-0000-000000000004",
                             Version = 0
                         },
                         new
                         {
-                            Id = "44",
-                            ConversionFactor = 200m,
-                            EntityState = "Added",
-                            LastModifiedUtc = "2026-04-09 23:45:17.300777",
-                            ProductId = "15",
+                            Id = "dddddddd-0000-0000-0000-000000000044",
+                            BaseUnitQuantity = 200m,
+                            EntityState = "Unchanged",
+                            IsDeleted = false,
+                            IsPublic = false,
+                            IsSyncedToServer = true,
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
+                            ProductId = "cccccccc-0000-0000-0000-000000000015",
                             ProductName = "USB Cable",
                             UnitName = "Carton",
-                            UnitOfMeasureId = "5",
+                            UnitOfMeasureId = "aaaaaaaa-0000-0000-0000-000000000005",
                             Version = 0
                         },
                         new
                         {
-                            Id = "45",
-                            ConversionFactor = 1m,
-                            EntityState = "Added",
-                            LastModifiedUtc = "2026-04-09 23:45:17.300778",
-                            ProductId = "16",
+                            Id = "dddddddd-0000-0000-0000-000000000045",
+                            BaseUnitQuantity = 1m,
+                            EntityState = "Unchanged",
+                            IsDeleted = false,
+                            IsPublic = false,
+                            IsSyncedToServer = true,
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
+                            ProductId = "cccccccc-0000-0000-0000-000000000016",
                             ProductName = "Phone Charger",
                             UnitName = "Piece",
-                            UnitOfMeasureId = "1",
+                            UnitOfMeasureId = "aaaaaaaa-0000-0000-0000-000000000001",
                             Version = 0
                         },
                         new
                         {
-                            Id = "46",
-                            ConversionFactor = 20m,
-                            EntityState = "Added",
-                            LastModifiedUtc = "2026-04-09 23:45:17.300779",
-                            ProductId = "16",
+                            Id = "dddddddd-0000-0000-0000-000000000046",
+                            BaseUnitQuantity = 20m,
+                            EntityState = "Unchanged",
+                            IsDeleted = false,
+                            IsPublic = false,
+                            IsSyncedToServer = true,
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
+                            ProductId = "cccccccc-0000-0000-0000-000000000016",
                             ProductName = "Phone Charger",
                             UnitName = "Box",
-                            UnitOfMeasureId = "4",
+                            UnitOfMeasureId = "aaaaaaaa-0000-0000-0000-000000000004",
                             Version = 0
                         },
                         new
                         {
-                            Id = "47",
-                            ConversionFactor = 100m,
-                            EntityState = "Added",
-                            LastModifiedUtc = "2026-04-09 23:45:17.300780",
-                            ProductId = "16",
+                            Id = "dddddddd-0000-0000-0000-000000000047",
+                            BaseUnitQuantity = 100m,
+                            EntityState = "Unchanged",
+                            IsDeleted = false,
+                            IsPublic = false,
+                            IsSyncedToServer = true,
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
+                            ProductId = "cccccccc-0000-0000-0000-000000000016",
                             ProductName = "Phone Charger",
                             UnitName = "Carton",
-                            UnitOfMeasureId = "5",
+                            UnitOfMeasureId = "aaaaaaaa-0000-0000-0000-000000000005",
                             Version = 0
                         });
+                });
+
+            modelBuilder.Entity("SMIS.Domain.Entities.PurchaseOrder", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("CreatedBy")
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime?>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("EntityState")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsPublic")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsSyncedToServer")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("LastModifiedUtc")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("LastSyncedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Notes")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<DateTime>("OrderedAtUtc")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ReferenceNumber")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("ShopId")
+                        .IsRequired()
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
+
+                    b.Property<string>("SupplierId")
+                        .IsRequired()
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime?>("UpdatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("Version")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CreatedBy");
+
+                    b.HasIndex("OrderedAtUtc");
+
+                    b.HasIndex("ShopId");
+
+                    b.HasIndex("Status");
+
+                    b.HasIndex("SupplierId");
+
+                    b.HasIndex("UpdatedBy");
+
+                    b.HasIndex("ShopId", "ReferenceNumber");
+
+                    b.ToTable("PurchaseOrder", (string)null);
+                });
+
+            modelBuilder.Entity("SMIS.Domain.Entities.PurchaseOrderLine", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("CreatedBy")
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime?>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("EntityState")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsPublic")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsSyncedToServer")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("LastModifiedUtc")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("LastSyncedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<decimal>("OrderedQuantityEntered")
+                        .HasPrecision(18, 4)
+                        .HasColumnType("decimal(18,4)");
+
+                    b.Property<string>("ProductId")
+                        .IsRequired()
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("ProductUnitId")
+                        .IsRequired()
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("PurchaseOrderId")
+                        .IsRequired()
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<decimal>("ReceivedQuantityEntered")
+                        .HasPrecision(18, 4)
+                        .HasColumnType("decimal(18,4)");
+
+                    b.Property<decimal>("ReturnedQuantityEntered")
+                        .HasPrecision(18, 4)
+                        .HasColumnType("decimal(18,4)");
+
+                    b.Property<long>("UnitCostBase")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime?>("UpdatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("Version")
+                        .IsConcurrencyToken()
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CreatedBy");
+
+                    b.HasIndex("ProductId");
+
+                    b.HasIndex("ProductUnitId");
+
+                    b.HasIndex("PurchaseOrderId");
+
+                    b.HasIndex("UpdatedBy");
+
+                    b.HasIndex("ProductUnitId", "ProductId");
+
+                    b.ToTable("PurchaseOrderLine", (string)null);
+                });
+
+            modelBuilder.Entity("SMIS.Domain.Entities.Sale", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("CreatedBy")
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime?>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CustomerId")
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("EntityState")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsPublic")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("LastModifiedUtc")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Notes")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<string>("PaymentType")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<long>("ReturnedAmount")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime>("SaleDateUtc")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ShopId")
+                        .IsRequired()
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
+
+                    b.Property<long>("TotalAmount")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime?>("UpdatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("Version")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CreatedBy");
+
+                    b.HasIndex("CustomerId");
+
+                    b.HasIndex("PaymentType");
+
+                    b.HasIndex("SaleDateUtc");
+
+                    b.HasIndex("ShopId");
+
+                    b.HasIndex("Status");
+
+                    b.HasIndex("UpdatedBy");
+
+                    b.ToTable("Sale", (string)null);
+                });
+
+            modelBuilder.Entity("SMIS.Domain.Entities.SaleLine", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("CreatedBy")
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime?>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("EntityState")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsPublic")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("LastModifiedUtc")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<long>("LineTotal")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("ProductId")
+                        .IsRequired()
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("ProductUnitId")
+                        .IsRequired()
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<decimal>("QuantityEntered")
+                        .HasPrecision(18, 4)
+                        .HasColumnType("decimal(18,4)");
+
+                    b.Property<decimal>("ReturnedQuantityEntered")
+                        .HasPrecision(18, 4)
+                        .HasColumnType("decimal(18,4)");
+
+                    b.Property<string>("SaleId")
+                        .IsRequired()
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<long>("UnitPrice")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime?>("UpdatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("Version")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CreatedBy");
+
+                    b.HasIndex("ProductId");
+
+                    b.HasIndex("ProductUnitId");
+
+                    b.HasIndex("SaleId");
+
+                    b.HasIndex("UpdatedBy");
+
+                    b.HasIndex("ProductUnitId", "ProductId");
+
+                    b.ToTable("SaleLine", (string)null);
                 });
 
             modelBuilder.Entity("SMIS.Domain.Entities.Shop", b =>
@@ -4859,8 +5138,23 @@ namespace SMIS.Infrastructure.Server.Migrations
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 
+                    b.Property<string>("ClientCreatedBy")
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime?>("ClientCreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ClientModifiedBy")
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime?>("ClientModifiedDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime?>("CreatedDate")
                         .HasColumnType("datetime2");
@@ -4907,7 +5201,8 @@ namespace SMIS.Infrastructure.Server.Migrations
                         .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("UpdatedBy")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime?>("UpdatedDate")
                         .HasColumnType("datetime2");
@@ -4917,61 +5212,87 @@ namespace SMIS.Infrastructure.Server.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("ClientCreatedBy");
+
+                    b.HasIndex("ClientModifiedBy");
+
+                    b.HasIndex("CreatedBy");
+
+                    b.HasIndex("UpdatedBy");
+
                     b.ToTable("Shop", (string)null);
 
                     b.HasData(
                         new
                         {
-                            Id = "1",
+                            Id = "11111111-0000-0000-0000-000000000001",
                             Address = "Kabul Center",
-                            CreatedDate = new DateTime(2026, 4, 9, 23, 45, 18, 643, DateTimeKind.Local).AddTicks(4297),
+                            CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Email = "main@store.local",
                             EntityState = "Unchanged",
                             IsActive = true,
                             IsDeleted = false,
                             IsPublic = false,
-                            LastModifiedUtc = "2026-04-09 23:45:18.643459",
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             Name = "Main Store",
                             PhoneNumber = "0700000001",
                             ShopType = "RetailShop",
                             TaxNumber = "TAX001",
-                            UpdatedDate = new DateTime(2026, 4, 9, 23, 45, 18, 643, DateTimeKind.Local).AddTicks(4443),
+                            UpdatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Version = 0
                         },
                         new
                         {
-                            Id = "2",
+                            Id = "11111111-0000-0000-0000-000000000002",
                             Address = "Herat Center",
-                            CreatedDate = new DateTime(2026, 4, 9, 23, 45, 18, 643, DateTimeKind.Local).AddTicks(5989),
+                            CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Email = "branch@store.local",
                             EntityState = "Unchanged",
                             IsActive = true,
                             IsDeleted = false,
                             IsPublic = false,
-                            LastModifiedUtc = "2026-04-09 23:45:18.643814",
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             Name = "Branch Store",
                             PhoneNumber = "0700000002",
                             ShopType = "WholesaleShop",
                             TaxNumber = "TAX002",
-                            UpdatedDate = new DateTime(2026, 4, 9, 23, 45, 18, 643, DateTimeKind.Local).AddTicks(7072),
+                            UpdatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Version = 0
                         },
                         new
                         {
-                            Id = "3",
+                            Id = "11111111-0000-0000-0000-000000000003",
                             Address = "Kandahar Center",
-                            CreatedDate = new DateTime(2026, 4, 9, 23, 45, 18, 643, DateTimeKind.Local).AddTicks(9892),
+                            CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Email = "warehouse@store.local",
                             EntityState = "Unchanged",
                             IsActive = true,
                             IsDeleted = false,
                             IsPublic = false,
-                            LastModifiedUtc = "2026-04-09 23:45:18.644173",
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             Name = "Warehouse",
                             PhoneNumber = "0700000003",
                             ShopType = "RetailShop",
                             TaxNumber = "TAX003",
-                            UpdatedDate = new DateTime(2026, 4, 9, 23, 45, 18, 644, DateTimeKind.Local).AddTicks(861),
+                            UpdatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Version = 0
+                        },
+                        new
+                        {
+                            Id = "11111111-0000-0000-0000-000000000004",
+                            Address = "Kabul Center",
+                            CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Email = "wasil@wasilshop.com",
+                            EntityState = "Unchanged",
+                            IsActive = true,
+                            IsDeleted = false,
+                            IsPublic = false,
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
+                            Name = "Wasil Shop",
+                            PhoneNumber = "0700000004",
+                            ShopType = "RetailShop",
+                            TaxNumber = "TAX004",
+                            UpdatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Version = 0
                         });
                 });
@@ -4991,7 +5312,8 @@ namespace SMIS.Infrastructure.Server.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime?>("CreatedDate")
                         .HasColumnType("datetime2");
@@ -5000,8 +5322,8 @@ namespace SMIS.Infrastructure.Server.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("DistrictId")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Email")
                         .HasMaxLength(256)
@@ -5055,8 +5377,8 @@ namespace SMIS.Infrastructure.Server.Migrations
                         .HasColumnType("nvarchar(20)");
 
                     b.Property<string>("ProvinceId")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("ShopId")
                         .IsRequired()
@@ -5072,7 +5394,8 @@ namespace SMIS.Infrastructure.Server.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("UpdatedBy")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime?>("UpdatedDate")
                         .HasColumnType("datetime2");
@@ -5084,19 +5407,27 @@ namespace SMIS.Infrastructure.Server.Migrations
 
                     b.HasIndex("ApplicationUserId");
 
+                    b.HasIndex("CreatedBy");
+
+                    b.HasIndex("DistrictId");
+
                     b.HasIndex("IsActive");
 
+                    b.HasIndex("ProvinceId");
+
                     b.HasIndex("ShopId");
+
+                    b.HasIndex("UpdatedBy");
 
                     b.ToTable("ShopOwner", (string)null);
 
                     b.HasData(
                         new
                         {
-                            Id = "1",
+                            Id = "ffffffff-0000-0000-0000-000000000001",
                             Address = "123 Main St",
-                            ApplicationUserId = "1",
-                            CreatedDate = new DateTime(2026, 4, 9, 23, 45, 17, 329, DateTimeKind.Local).AddTicks(6202),
+                            ApplicationUserId = "44444444-0000-0000-0000-000000000001",
+                            CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Email = "john.doe@example.com",
                             EntityState = "Unchanged",
                             FirstName = "John",
@@ -5104,23 +5435,23 @@ namespace SMIS.Infrastructure.Server.Migrations
                             IsDeleted = false,
                             IsPublic = false,
                             IsSyncedToServer = true,
-                            LastModifiedUtc = "2026-04-09 23:45:17.329683",
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             LastName = "Doe",
                             NationalIdCardNumber = "123456789",
                             OwnershipPercentage = 100.0m,
                             PhoneNumber = "+1234567890",
-                            ShopId = "1",
+                            ShopId = "11111111-0000-0000-0000-000000000001",
                             ShopName = "Main Store",
-                            StartDate = new DateTime(2026, 4, 9, 23, 45, 17, 315, DateTimeKind.Local).AddTicks(2043),
-                            UpdatedDate = new DateTime(2026, 4, 9, 23, 45, 17, 329, DateTimeKind.Local).AddTicks(6579),
+                            StartDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            UpdatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Version = 0
                         },
                         new
                         {
-                            Id = "2",
+                            Id = "ffffffff-0000-0000-0000-000000000002",
                             Address = "456 Oak Ave",
-                            ApplicationUserId = "2",
-                            CreatedDate = new DateTime(2026, 4, 9, 23, 45, 17, 329, DateTimeKind.Local).AddTicks(9023),
+                            ApplicationUserId = "44444444-0000-0000-0000-000000000002",
+                            CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Email = "jane.smith@example.com",
                             EntityState = "Unchanged",
                             FirstName = "Jane",
@@ -5128,23 +5459,23 @@ namespace SMIS.Infrastructure.Server.Migrations
                             IsDeleted = false,
                             IsPublic = false,
                             IsSyncedToServer = true,
-                            LastModifiedUtc = "2026-04-09 23:45:17.330082",
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             LastName = "Smith",
                             NationalIdCardNumber = "987654321",
                             OwnershipPercentage = 75.0m,
                             PhoneNumber = "+0987654321",
-                            ShopId = "2",
+                            ShopId = "11111111-0000-0000-0000-000000000002",
                             ShopName = "Branch Store",
-                            StartDate = new DateTime(2026, 4, 9, 23, 45, 17, 329, DateTimeKind.Local).AddTicks(6859),
-                            UpdatedDate = new DateTime(2026, 4, 9, 23, 45, 17, 329, DateTimeKind.Local).AddTicks(9952),
+                            StartDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            UpdatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Version = 0
                         },
                         new
                         {
-                            Id = "3",
+                            Id = "ffffffff-0000-0000-0000-000000000003",
                             Address = "789 Pine Rd",
-                            ApplicationUserId = "3",
-                            CreatedDate = new DateTime(2026, 4, 9, 23, 45, 17, 330, DateTimeKind.Local).AddTicks(3384),
+                            ApplicationUserId = "44444444-0000-0000-0000-000000000004",
+                            CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Email = "bob.johnson@example.com",
                             EntityState = "Unchanged",
                             FirstName = "Bob",
@@ -5152,15 +5483,39 @@ namespace SMIS.Infrastructure.Server.Migrations
                             IsDeleted = false,
                             IsPublic = false,
                             IsSyncedToServer = true,
-                            LastModifiedUtc = "2026-04-09 23:45:17.330566",
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             LastName = "Johnson",
                             NationalIdCardNumber = "555666777",
                             OwnershipPercentage = 50.0m,
                             PhoneNumber = "+1555666777",
-                            ShopId = "3",
+                            ShopId = "11111111-0000-0000-0000-000000000003",
                             ShopName = "Warehouse",
-                            StartDate = new DateTime(2026, 4, 9, 23, 45, 17, 330, DateTimeKind.Local).AddTicks(1605),
-                            UpdatedDate = new DateTime(2026, 4, 9, 23, 45, 17, 330, DateTimeKind.Local).AddTicks(4564),
+                            StartDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            UpdatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Version = 0
+                        },
+                        new
+                        {
+                            Id = "ffffffff-0000-0000-0000-000000000004",
+                            Address = "Kabul Center",
+                            ApplicationUserId = "44444444-0000-0000-0000-000000000016",
+                            CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Email = "wasil@wasilshop.com",
+                            EntityState = "Unchanged",
+                            FirstName = "Wasil",
+                            IsActive = true,
+                            IsDeleted = false,
+                            IsPublic = false,
+                            IsSyncedToServer = true,
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
+                            LastName = "Admin",
+                            NationalIdCardNumber = "123456789",
+                            OwnershipPercentage = 100.0m,
+                            PhoneNumber = "+1234567890",
+                            ShopId = "11111111-0000-0000-0000-000000000004",
+                            ShopName = "Wasil Shop",
+                            StartDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            UpdatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Version = 0
                         });
                 });
@@ -5175,7 +5530,8 @@ namespace SMIS.Infrastructure.Server.Migrations
                         .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime?>("CreatedDate")
                         .HasColumnType("datetime2");
@@ -5199,35 +5555,224 @@ namespace SMIS.Infrastructure.Server.Migrations
                         .HasMaxLength(450)
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("ProductName")
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
+                    b.Property<DateTime>("ReceivedAtUtc")
+                        .HasColumnType("datetime2");
 
-                    b.Property<long>("PurchasePrice")
-                        .HasColumnType("bigint");
+                    b.Property<string>("ReceivedProductUnitId")
+                        .IsRequired()
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
 
-                    b.Property<decimal>("Quantity")
+                    b.Property<decimal>("ReceivedQuantity")
                         .HasPrecision(18, 4)
                         .HasColumnType("decimal(18,4)");
 
-                    b.Property<DateTime>("ReceivedDate")
-                        .HasColumnType("datetime2");
+                    b.Property<decimal>("ReceivedQuantityBase")
+                        .HasPrecision(18, 4)
+                        .HasColumnType("decimal(18,4)");
+
+                    b.Property<decimal>("RemainingQuantityBase")
+                        .HasPrecision(18, 4)
+                        .HasColumnType("decimal(18,4)");
+
+                    b.Property<string>("ShopId")
+                        .IsRequired()
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Status")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("UnitId")
+                    b.Property<long>("UnitCostBase")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime?>("UpdatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("Version")
+                        .IsConcurrencyToken()
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasAlternateKey("Id", "ShopId")
+                        .HasName("AK_StockBatch_Id_ShopId");
+
+                    b.HasIndex("BatchNumber");
+
+                    b.HasIndex("CreatedBy");
+
+                    b.HasIndex("ExpirationDate");
+
+                    b.HasIndex("ProductId");
+
+                    b.HasIndex("ReceivedAtUtc");
+
+                    b.HasIndex("ReceivedProductUnitId");
+
+                    b.HasIndex("ShopId");
+
+                    b.HasIndex("Status");
+
+                    b.HasIndex("UpdatedBy");
+
+                    b.HasIndex("ProductId", "ShopId");
+
+                    b.HasIndex("ReceivedProductUnitId", "ProductId");
+
+                    b.ToTable("StockBatch", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "11111111-1111-0000-0000-000000000001",
+                            BatchNumber = "CC-001",
+                            CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            EntityState = "Unchanged",
+                            ExpirationDate = new DateTime(2026, 7, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            IsPublic = false,
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
+                            ProductId = "cccccccc-0000-0000-0000-000000000001",
+                            ReceivedAtUtc = new DateTime(2025, 12, 22, 0, 0, 0, 0, DateTimeKind.Utc),
+                            ReceivedProductUnitId = "dddddddd-0000-0000-0000-000000000001",
+                            ReceivedQuantity = 100m,
+                            ReceivedQuantityBase = 100m,
+                            RemainingQuantityBase = 100m,
+                            ShopId = "11111111-0000-0000-0000-000000000001",
+                            Status = "Active",
+                            UnitCostBase = 40000L,
+                            UpdatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Version = 0
+                        },
+                        new
+                        {
+                            Id = "11111111-1111-0000-0000-000000000002",
+                            BatchNumber = "CC-002",
+                            CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            EntityState = "Unchanged",
+                            ExpirationDate = new DateTime(2026, 8, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            IsPublic = false,
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
+                            ProductId = "cccccccc-0000-0000-0000-000000000001",
+                            ReceivedAtUtc = new DateTime(2025, 12, 27, 0, 0, 0, 0, DateTimeKind.Utc),
+                            ReceivedProductUnitId = "dddddddd-0000-0000-0000-000000000001",
+                            ReceivedQuantity = 80m,
+                            ReceivedQuantityBase = 80m,
+                            RemainingQuantityBase = 80m,
+                            ShopId = "11111111-0000-0000-0000-000000000001",
+                            Status = "Active",
+                            UnitCostBase = 42000L,
+                            UpdatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Version = 0
+                        },
+                        new
+                        {
+                            Id = "11111111-1111-0000-0000-000000000003",
+                            BatchNumber = "OREO-101",
+                            CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            EntityState = "Unchanged",
+                            ExpirationDate = new DateTime(2026, 4, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            IsPublic = false,
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
+                            ProductId = "cccccccc-0000-0000-0000-000000000004",
+                            ReceivedAtUtc = new DateTime(2025, 12, 17, 0, 0, 0, 0, DateTimeKind.Utc),
+                            ReceivedProductUnitId = "dddddddd-0000-0000-0000-000000000010",
+                            ReceivedQuantity = 50m,
+                            ReceivedQuantityBase = 50m,
+                            RemainingQuantityBase = 50m,
+                            ShopId = "11111111-0000-0000-0000-000000000001",
+                            Status = "Active",
+                            UnitCostBase = 25000L,
+                            UpdatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Version = 0
+                        },
+                        new
+                        {
+                            Id = "11111111-1111-0000-0000-000000000004",
+                            BatchNumber = "NB-009",
+                            CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            EntityState = "Unchanged",
+                            IsPublic = false,
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
+                            ProductId = "cccccccc-0000-0000-0000-000000000007",
+                            ReceivedAtUtc = new DateTime(2025, 12, 12, 0, 0, 0, 0, DateTimeKind.Utc),
+                            ReceivedProductUnitId = "dddddddd-0000-0000-0000-000000000019",
+                            ReceivedQuantity = 200m,
+                            ReceivedQuantityBase = 200m,
+                            RemainingQuantityBase = 200m,
+                            ShopId = "11111111-0000-0000-0000-000000000001",
+                            Status = "Active",
+                            UnitCostBase = 120000L,
+                            UpdatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Version = 0
+                        });
+                });
+
+            modelBuilder.Entity("SMIS.Domain.Entities.StockCountLine", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<decimal?>("CountedQuantityBase")
+                        .HasPrecision(18, 4)
+                        .HasColumnType("decimal(18,4)");
+
+                    b.Property<string>("CreatedBy")
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime?>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<decimal>("DifferenceBase")
+                        .HasPrecision(18, 4)
+                        .HasColumnType("decimal(18,4)");
+
+                    b.Property<string>("EntityState")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("ExpectedQuantityBase")
+                        .HasPrecision(18, 4)
+                        .HasColumnType("decimal(18,4)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsPublic")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsSyncedToServer")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("LastModifiedUtc")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("LastSyncedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("StockBatchId")
                         .IsRequired()
                         .HasMaxLength(450)
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("UnitName")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                    b.Property<string>("StockCountSessionId")
+                        .IsRequired()
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("UpdatedBy")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime?>("UpdatedDate")
                         .HasColumnType("datetime2");
@@ -5237,110 +5782,114 @@ namespace SMIS.Infrastructure.Server.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("BatchNumber");
+                    b.HasIndex("CreatedBy");
 
-                    b.HasIndex("ExpirationDate");
+                    b.HasIndex("StockBatchId");
 
-                    b.HasIndex("ProductId");
+                    b.HasIndex("UpdatedBy");
+
+                    b.HasIndex("StockCountSessionId", "StockBatchId")
+                        .IsUnique();
+
+                    b.ToTable("StockCountLine", (string)null);
+                });
+
+            modelBuilder.Entity("SMIS.Domain.Entities.StockCountSession", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime?>("CompletedAtUtc")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedBy")
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime?>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("EntityState")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsPublic")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsSyncedToServer")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("LastModifiedUtc")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("LastSyncedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Notes")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<string>("ShopId")
+                        .IsRequired()
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("StartedAtUtc")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime?>("UpdatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("Version")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CreatedBy");
+
+                    b.HasIndex("ShopId");
+
+                    b.HasIndex("StartedAtUtc");
 
                     b.HasIndex("Status");
 
-                    b.HasIndex("UnitId");
+                    b.HasIndex("UpdatedBy");
 
-                    b.ToTable("StockBatch", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = "1",
-                            BatchNumber = "CC-001",
-                            CreatedDate = new DateTime(2026, 4, 9, 23, 45, 17, 308, DateTimeKind.Local).AddTicks(4886),
-                            EntityState = "Unchanged",
-                            ExpirationDate = new DateTime(2026, 10, 9, 23, 45, 17, 306, DateTimeKind.Local).AddTicks(4783),
-                            IsPublic = false,
-                            LastModifiedUtc = "2026-04-09 23:45:17.308629",
-                            ProductId = "1",
-                            ProductName = "Coca Cola 500ml",
-                            PurchasePrice = 40000L,
-                            Quantity = 100m,
-                            ReceivedDate = new DateTime(2026, 3, 30, 23, 45, 17, 306, DateTimeKind.Local).AddTicks(4783),
-                            Status = "Active",
-                            UnitId = "2",
-                            UnitName = "Bottle",
-                            UpdatedDate = new DateTime(2026, 4, 9, 23, 45, 17, 308, DateTimeKind.Local).AddTicks(5609),
-                            Version = 0
-                        },
-                        new
-                        {
-                            Id = "2",
-                            BatchNumber = "CC-002",
-                            CreatedDate = new DateTime(2026, 4, 9, 23, 45, 17, 308, DateTimeKind.Local).AddTicks(9345),
-                            EntityState = "Unchanged",
-                            ExpirationDate = new DateTime(2026, 11, 9, 23, 45, 17, 306, DateTimeKind.Local).AddTicks(4783),
-                            IsPublic = false,
-                            LastModifiedUtc = "2026-04-09 23:45:17.309129",
-                            ProductId = "1",
-                            ProductName = "Coca Cola 500ml",
-                            PurchasePrice = 42000L,
-                            Quantity = 80m,
-                            ReceivedDate = new DateTime(2026, 4, 4, 23, 45, 17, 306, DateTimeKind.Local).AddTicks(4783),
-                            Status = "Active",
-                            UnitId = "2",
-                            UnitName = "Bottle",
-                            UpdatedDate = new DateTime(2026, 4, 9, 23, 45, 17, 309, DateTimeKind.Local).AddTicks(401),
-                            Version = 0
-                        },
-                        new
-                        {
-                            Id = "3",
-                            BatchNumber = "OREO-101",
-                            CreatedDate = new DateTime(2026, 4, 9, 23, 45, 17, 309, DateTimeKind.Local).AddTicks(4622),
-                            EntityState = "Unchanged",
-                            ExpirationDate = new DateTime(2026, 7, 9, 23, 45, 17, 306, DateTimeKind.Local).AddTicks(4783),
-                            IsPublic = false,
-                            LastModifiedUtc = "2026-04-09 23:45:17.309683",
-                            ProductId = "4",
-                            ProductName = "Oreo Biscuits",
-                            PurchasePrice = 25000L,
-                            Quantity = 50m,
-                            ReceivedDate = new DateTime(2026, 3, 25, 23, 45, 17, 306, DateTimeKind.Local).AddTicks(4783),
-                            Status = "Active",
-                            UnitId = "3",
-                            UnitName = "Pack",
-                            UpdatedDate = new DateTime(2026, 4, 9, 23, 45, 17, 309, DateTimeKind.Local).AddTicks(5761),
-                            Version = 0
-                        },
-                        new
-                        {
-                            Id = "4",
-                            BatchNumber = "NB-009",
-                            CreatedDate = new DateTime(2026, 4, 9, 23, 45, 17, 309, DateTimeKind.Local).AddTicks(7898),
-                            EntityState = "Unchanged",
-                            IsPublic = false,
-                            LastModifiedUtc = "2026-04-09 23:45:17.309791",
-                            ProductId = "7",
-                            ProductName = "A4 Notebook",
-                            PurchasePrice = 120000L,
-                            Quantity = 200m,
-                            ReceivedDate = new DateTime(2026, 3, 20, 23, 45, 17, 306, DateTimeKind.Local).AddTicks(4783),
-                            Status = "Active",
-                            UnitId = "1",
-                            UnitName = "Piece",
-                            UpdatedDate = new DateTime(2026, 4, 9, 23, 45, 17, 309, DateTimeKind.Local).AddTicks(7912),
-                            Version = 0
-                        });
+                    b.ToTable("StockCountSession", (string)null);
                 });
 
-            modelBuilder.Entity("SMIS.Domain.Entities.StockTransaction", b =>
+            modelBuilder.Entity("SMIS.Domain.Entities.StockMovement", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime?>("CreatedDate")
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("Direction")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
 
                     b.Property<string>("EntityState")
                         .IsRequired()
@@ -5353,55 +5902,53 @@ namespace SMIS.Infrastructure.Server.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("ProductId")
+                    b.Property<DateTime>("OccurredAtUtc")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("OperationId")
                         .IsRequired()
                         .HasMaxLength(450)
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("ProductName")
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
+                    b.Property<string>("ProductUnitId")
+                        .IsRequired()
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
 
-                    b.Property<decimal>("Quantity")
+                    b.Property<decimal>("QuantityBase")
                         .HasPrecision(18, 4)
                         .HasColumnType("decimal(18,4)");
 
-                    b.Property<string>("Reference")
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
+                    b.Property<decimal>("QuantityEntered")
+                        .HasPrecision(18, 4)
+                        .HasColumnType("decimal(18,4)");
+
+                    b.Property<string>("Reason")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("ReferenceId")
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("ReferenceType")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("ShopId")
                         .IsRequired()
                         .HasMaxLength(450)
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("ShopName")
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
                     b.Property<string>("StockBatchId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<DateTime>("TransactionDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Type")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<string>("UnitId")
                         .IsRequired()
                         .HasMaxLength(450)
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("UnitName")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
                     b.Property<string>("UpdatedBy")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime?>("UpdatedDate")
                         .HasColumnType("datetime2");
@@ -5411,237 +5958,221 @@ namespace SMIS.Infrastructure.Server.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ProductId");
+                    b.HasIndex("CreatedBy");
+
+                    b.HasIndex("OccurredAtUtc");
+
+                    b.HasIndex("OperationId");
+
+                    b.HasIndex("ProductUnitId");
 
                     b.HasIndex("ShopId");
 
                     b.HasIndex("StockBatchId");
 
-                    b.HasIndex("TransactionDate");
+                    b.HasIndex("UpdatedBy");
 
-                    b.HasIndex("Type");
+                    b.HasIndex("ReferenceType", "ReferenceId");
 
-                    b.HasIndex("UnitId");
+                    b.HasIndex("StockBatchId", "ShopId");
 
-                    b.ToTable("StockTransaction", (string)null);
+                    b.ToTable("StockMovement", (string)null);
 
                     b.HasData(
                         new
                         {
-                            Id = "1",
-                            CreatedDate = new DateTime(2026, 4, 9, 23, 45, 17, 313, DateTimeKind.Local).AddTicks(454),
+                            Id = "22222222-2222-0000-0000-000000000001",
+                            CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Direction = "In",
                             EntityState = "Unchanged",
                             IsPublic = false,
-                            LastModifiedUtc = "2026-04-09 23:45:17.313095",
-                            ProductId = "1",
-                            ProductName = "Coca Cola 500ml",
-                            Quantity = 100m,
-                            Reference = "Purchase Order #001",
-                            ShopId = "1",
-                            ShopName = "Main Store",
-                            StockBatchId = "1",
-                            TransactionDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Type = "In",
-                            UnitId = "2",
-                            UnitName = "Bottle",
-                            UpdatedDate = new DateTime(2026, 4, 9, 23, 45, 17, 313, DateTimeKind.Local).AddTicks(743),
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
+                            OccurredAtUtc = new DateTime(2025, 12, 22, 0, 0, 0, 0, DateTimeKind.Utc),
+                            OperationId = "22222222-2222-0000-0000-000000000001",
+                            ProductUnitId = "dddddddd-0000-0000-0000-000000000001",
+                            QuantityBase = 100m,
+                            QuantityEntered = 100m,
+                            Reason = "PurchaseReceipt",
+                            ReferenceId = "11111111-1111-0000-0000-000000000001",
+                            ReferenceType = "Seed",
+                            ShopId = "11111111-0000-0000-0000-000000000001",
+                            StockBatchId = "11111111-1111-0000-0000-000000000001",
+                            UpdatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Version = 0
                         },
                         new
                         {
-                            Id = "2",
-                            CreatedDate = new DateTime(2026, 4, 9, 23, 45, 17, 313, DateTimeKind.Local).AddTicks(4664),
+                            Id = "22222222-2222-0000-0000-000000000002",
+                            CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Direction = "In",
                             EntityState = "Unchanged",
                             IsPublic = false,
-                            LastModifiedUtc = "2026-04-09 23:45:17.313647",
-                            ProductId = "1",
-                            ProductName = "Coca Cola 500ml",
-                            Quantity = 20m,
-                            Reference = "Sale #001",
-                            ShopId = "1",
-                            ShopName = "Main Store",
-                            StockBatchId = "1",
-                            TransactionDate = new DateTime(2024, 1, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Type = "Out",
-                            UnitId = "2",
-                            UnitName = "Bottle",
-                            UpdatedDate = new DateTime(2026, 4, 9, 23, 45, 17, 313, DateTimeKind.Local).AddTicks(5605),
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
+                            OccurredAtUtc = new DateTime(2025, 12, 27, 0, 0, 0, 0, DateTimeKind.Utc),
+                            OperationId = "22222222-2222-0000-0000-000000000002",
+                            ProductUnitId = "dddddddd-0000-0000-0000-000000000001",
+                            QuantityBase = 80m,
+                            QuantityEntered = 80m,
+                            Reason = "PurchaseReceipt",
+                            ReferenceId = "11111111-1111-0000-0000-000000000002",
+                            ReferenceType = "Seed",
+                            ShopId = "11111111-0000-0000-0000-000000000001",
+                            StockBatchId = "11111111-1111-0000-0000-000000000002",
+                            UpdatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Version = 0
                         },
                         new
                         {
-                            Id = "3",
-                            CreatedDate = new DateTime(2026, 4, 9, 23, 45, 17, 314, DateTimeKind.Local).AddTicks(363),
+                            Id = "22222222-2222-0000-0000-000000000003",
+                            CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Direction = "In",
                             EntityState = "Unchanged",
                             IsPublic = false,
-                            LastModifiedUtc = "2026-04-09 23:45:17.314262",
-                            ProductId = "1",
-                            ProductName = "Coca Cola 500ml",
-                            Quantity = 80m,
-                            Reference = "Purchase Order #002",
-                            ShopId = "1",
-                            ShopName = "Main Store",
-                            StockBatchId = "2",
-                            TransactionDate = new DateTime(2024, 1, 3, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Type = "In",
-                            UnitId = "2",
-                            UnitName = "Bottle",
-                            UpdatedDate = new DateTime(2026, 4, 9, 23, 45, 17, 314, DateTimeKind.Local).AddTicks(1552),
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
+                            OccurredAtUtc = new DateTime(2025, 12, 17, 0, 0, 0, 0, DateTimeKind.Utc),
+                            OperationId = "22222222-2222-0000-0000-000000000003",
+                            ProductUnitId = "dddddddd-0000-0000-0000-000000000010",
+                            QuantityBase = 50m,
+                            QuantityEntered = 50m,
+                            Reason = "PurchaseReceipt",
+                            ReferenceId = "11111111-1111-0000-0000-000000000003",
+                            ReferenceType = "Seed",
+                            ShopId = "11111111-0000-0000-0000-000000000001",
+                            StockBatchId = "11111111-1111-0000-0000-000000000003",
+                            UpdatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Version = 0
                         },
                         new
                         {
-                            Id = "4",
-                            CreatedDate = new DateTime(2026, 4, 9, 23, 45, 17, 314, DateTimeKind.Local).AddTicks(3664),
+                            Id = "22222222-2222-0000-0000-000000000004",
+                            CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Direction = "In",
                             EntityState = "Unchanged",
                             IsPublic = false,
-                            LastModifiedUtc = "2026-04-09 23:45:17.314368",
-                            ProductId = "1",
-                            ProductName = "Coca Cola 500ml",
-                            Quantity = 15m,
-                            Reference = "Sale #002",
-                            ShopId = "1",
-                            ShopName = "Main Store",
-                            StockBatchId = "2",
-                            TransactionDate = new DateTime(2024, 1, 4, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Type = "Out",
-                            UnitId = "2",
-                            UnitName = "Bottle",
-                            UpdatedDate = new DateTime(2026, 4, 9, 23, 45, 17, 314, DateTimeKind.Local).AddTicks(3680),
-                            Version = 0
-                        },
-                        new
-                        {
-                            Id = "5",
-                            CreatedDate = new DateTime(2026, 4, 9, 23, 45, 17, 314, DateTimeKind.Local).AddTicks(3708),
-                            EntityState = "Unchanged",
-                            IsPublic = false,
-                            LastModifiedUtc = "2026-04-09 23:45:17.314371",
-                            ProductId = "4",
-                            ProductName = "Oreo Biscuits",
-                            Quantity = 50m,
-                            Reference = "Purchase Order #003",
-                            ShopId = "1",
-                            ShopName = "Main Store",
-                            StockBatchId = "3",
-                            TransactionDate = new DateTime(2024, 1, 5, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Type = "In",
-                            UnitId = "3",
-                            UnitName = "Pack",
-                            UpdatedDate = new DateTime(2026, 4, 9, 23, 45, 17, 314, DateTimeKind.Local).AddTicks(3713),
-                            Version = 0
-                        },
-                        new
-                        {
-                            Id = "6",
-                            CreatedDate = new DateTime(2026, 4, 9, 23, 45, 17, 314, DateTimeKind.Local).AddTicks(3732),
-                            EntityState = "Unchanged",
-                            IsPublic = false,
-                            LastModifiedUtc = "2026-04-09 23:45:17.314374",
-                            ProductId = "4",
-                            ProductName = "Oreo Biscuits",
-                            Quantity = 10m,
-                            Reference = "Sale #003",
-                            ShopId = "1",
-                            ShopName = "Main Store",
-                            StockBatchId = "3",
-                            TransactionDate = new DateTime(2024, 1, 6, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Type = "Out",
-                            UnitId = "3",
-                            UnitName = "Pack",
-                            UpdatedDate = new DateTime(2026, 4, 9, 23, 45, 17, 314, DateTimeKind.Local).AddTicks(3737),
-                            Version = 0
-                        },
-                        new
-                        {
-                            Id = "7",
-                            CreatedDate = new DateTime(2026, 4, 9, 23, 45, 17, 314, DateTimeKind.Local).AddTicks(3756),
-                            EntityState = "Unchanged",
-                            IsPublic = false,
-                            LastModifiedUtc = "2026-04-09 23:45:17.314376",
-                            ProductId = "4",
-                            ProductName = "Oreo Biscuits",
-                            Quantity = 2m,
-                            Reference = "Damage - Expired",
-                            ShopId = "1",
-                            ShopName = "Main Store",
-                            StockBatchId = "3",
-                            TransactionDate = new DateTime(2024, 1, 7, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Type = "Adujstment",
-                            UnitId = "3",
-                            UnitName = "Pack",
-                            UpdatedDate = new DateTime(2026, 4, 9, 23, 45, 17, 314, DateTimeKind.Local).AddTicks(3760),
-                            Version = 0
-                        },
-                        new
-                        {
-                            Id = "8",
-                            CreatedDate = new DateTime(2026, 4, 9, 23, 45, 17, 314, DateTimeKind.Local).AddTicks(3779),
-                            EntityState = "Unchanged",
-                            IsPublic = false,
-                            LastModifiedUtc = "2026-04-09 23:45:17.314378",
-                            ProductId = "7",
-                            ProductName = "A4 Notebook",
-                            Quantity = 200m,
-                            Reference = "Purchase Order #004",
-                            ShopId = "1",
-                            ShopName = "Main Store",
-                            StockBatchId = "4",
-                            TransactionDate = new DateTime(2024, 1, 8, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Type = "In",
-                            UnitId = "1",
-                            UnitName = "Piece",
-                            UpdatedDate = new DateTime(2026, 4, 9, 23, 45, 17, 314, DateTimeKind.Local).AddTicks(3784),
-                            Version = 0
-                        },
-                        new
-                        {
-                            Id = "9",
-                            CreatedDate = new DateTime(2026, 4, 9, 23, 45, 17, 314, DateTimeKind.Local).AddTicks(3802),
-                            EntityState = "Unchanged",
-                            IsPublic = false,
-                            LastModifiedUtc = "2026-04-09 23:45:17.314381",
-                            ProductId = "7",
-                            ProductName = "A4 Notebook",
-                            Quantity = 25m,
-                            Reference = "Sale #004",
-                            ShopId = "1",
-                            ShopName = "Main Store",
-                            StockBatchId = "4",
-                            TransactionDate = new DateTime(2024, 1, 9, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Type = "Out",
-                            UnitId = "1",
-                            UnitName = "Piece",
-                            UpdatedDate = new DateTime(2026, 4, 9, 23, 45, 17, 314, DateTimeKind.Local).AddTicks(3806),
-                            Version = 0
-                        },
-                        new
-                        {
-                            Id = "10",
-                            CreatedDate = new DateTime(2026, 4, 9, 23, 45, 17, 314, DateTimeKind.Local).AddTicks(3838),
-                            EntityState = "Unchanged",
-                            IsPublic = false,
-                            LastModifiedUtc = "2026-04-09 23:45:17.314384",
-                            ProductId = "7",
-                            ProductName = "A4 Notebook",
-                            Quantity = 5m,
-                            Reference = "Sale #005",
-                            ShopId = "1",
-                            ShopName = "Main Store",
-                            StockBatchId = "4",
-                            TransactionDate = new DateTime(2024, 1, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Type = "Out",
-                            UnitId = "1",
-                            UnitName = "Piece",
-                            UpdatedDate = new DateTime(2026, 4, 9, 23, 45, 17, 314, DateTimeKind.Local).AddTicks(3843),
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
+                            OccurredAtUtc = new DateTime(2025, 12, 12, 0, 0, 0, 0, DateTimeKind.Utc),
+                            OperationId = "22222222-2222-0000-0000-000000000004",
+                            ProductUnitId = "dddddddd-0000-0000-0000-000000000019",
+                            QuantityBase = 200m,
+                            QuantityEntered = 200m,
+                            Reason = "PurchaseReceipt",
+                            ReferenceId = "11111111-1111-0000-0000-000000000004",
+                            ReferenceType = "Seed",
+                            ShopId = "11111111-0000-0000-0000-000000000001",
+                            StockBatchId = "11111111-1111-0000-0000-000000000004",
+                            UpdatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Version = 0
                         });
+                });
+
+            modelBuilder.Entity("SMIS.Domain.Entities.Supplier", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("CreatedBy")
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime?>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("EntityState")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsPublic")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsSyncedToServer")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("LastModifiedUtc")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("LastSyncedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<string>("Notes")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<string>("PhoneNumber")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("ShopId")
+                        .IsRequired()
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime?>("UpdatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("Version")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CreatedBy");
+
+                    b.HasIndex("UpdatedBy");
+
+                    b.HasIndex("ShopId", "Name")
+                        .IsUnique()
+                        .HasDatabaseName("UX_Supplier_ShopId_Name_Active")
+                        .HasFilter("[IsDeleted] = 0");
+
+                    b.ToTable("Supplier", (string)null);
                 });
 
             modelBuilder.Entity("SMIS.Domain.Entities.UnitOfMeasure", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("ClientCreatedBy")
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime?>("ClientCreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ClientModifiedBy")
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime?>("ClientModifiedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedBy")
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime?>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Description")
                         .HasMaxLength(500)
@@ -5651,142 +6182,192 @@ namespace SMIS.Infrastructure.Server.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsPublic")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsSyncedToServer")
+                        .HasColumnType("bit");
+
                     b.Property<string>("LastModifiedUtc")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("LastSyncedAt")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<string>("ShopId")
-                        .IsRequired()
-                        .HasMaxLength(450)
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<string>("Symbol")
                         .IsRequired()
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime?>("UpdatedDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<int>("Version")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ShopId");
+                    b.HasIndex("ClientCreatedBy");
+
+                    b.HasIndex("ClientModifiedBy");
+
+                    b.HasIndex("CreatedBy");
+
+                    b.HasIndex("Name")
+                        .IsUnique()
+                        .HasDatabaseName("UX_UnitOfMeasure_Name_Active")
+                        .HasFilter("[IsDeleted] = 0");
+
+                    b.HasIndex("Symbol")
+                        .IsUnique()
+                        .HasDatabaseName("UX_UnitOfMeasure_Symbol_Active")
+                        .HasFilter("[IsDeleted] = 0 AND [Symbol] IS NOT NULL");
+
+                    b.HasIndex("UpdatedBy");
 
                     b.ToTable("UnitOfMeasure", (string)null);
 
                     b.HasData(
                         new
                         {
-                            Id = "1",
+                            Id = "aaaaaaaa-0000-0000-0000-000000000001",
                             Description = "Individual items",
-                            EntityState = "Added",
-                            LastModifiedUtc = "2026-04-09 23:45:18.640526",
+                            EntityState = "Unchanged",
+                            IsDeleted = false,
+                            IsPublic = false,
+                            IsSyncedToServer = true,
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             Name = "Piece",
-                            ShopId = "1",
                             Symbol = "pcs",
                             Version = 0
                         },
                         new
                         {
-                            Id = "2",
+                            Id = "aaaaaaaa-0000-0000-0000-000000000002",
                             Description = "Liquid containers",
-                            EntityState = "Added",
-                            LastModifiedUtc = "2026-04-09 23:45:18.640680",
+                            EntityState = "Unchanged",
+                            IsDeleted = false,
+                            IsPublic = false,
+                            IsSyncedToServer = true,
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             Name = "Bottle",
-                            ShopId = "1",
                             Symbol = "btl",
                             Version = 0
                         },
                         new
                         {
-                            Id = "3",
+                            Id = "aaaaaaaa-0000-0000-0000-000000000003",
                             Description = "Small packages",
-                            EntityState = "Added",
-                            LastModifiedUtc = "2026-04-09 23:45:18.640859",
+                            EntityState = "Unchanged",
+                            IsDeleted = false,
+                            IsPublic = false,
+                            IsSyncedToServer = true,
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             Name = "Pack",
-                            ShopId = "1",
                             Symbol = "pk",
                             Version = 0
                         },
                         new
                         {
-                            Id = "4",
+                            Id = "aaaaaaaa-0000-0000-0000-000000000004",
                             Description = "Medium containers",
-                            EntityState = "Added",
-                            LastModifiedUtc = "2026-04-09 23:45:18.640967",
+                            EntityState = "Unchanged",
+                            IsDeleted = false,
+                            IsPublic = false,
+                            IsSyncedToServer = true,
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             Name = "Box",
-                            ShopId = "1",
                             Symbol = "box",
                             Version = 0
                         },
                         new
                         {
-                            Id = "5",
+                            Id = "aaaaaaaa-0000-0000-0000-000000000005",
                             Description = "Large containers",
-                            EntityState = "Added",
-                            LastModifiedUtc = "2026-04-09 23:45:18.640968",
+                            EntityState = "Unchanged",
+                            IsDeleted = false,
+                            IsPublic = false,
+                            IsSyncedToServer = true,
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             Name = "Carton",
-                            ShopId = "1",
                             Symbol = "ctn",
                             Version = 0
                         },
                         new
                         {
-                            Id = "6",
+                            Id = "aaaaaaaa-0000-0000-0000-000000000006",
                             Description = "Volume measurement",
-                            EntityState = "Added",
-                            LastModifiedUtc = "2026-04-09 23:45:18.640969",
+                            EntityState = "Unchanged",
+                            IsDeleted = false,
+                            IsPublic = false,
+                            IsSyncedToServer = true,
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             Name = "Liter",
-                            ShopId = "1",
                             Symbol = "L",
                             Version = 0
                         },
                         new
                         {
-                            Id = "7",
+                            Id = "aaaaaaaa-0000-0000-0000-000000000007",
                             Description = "Weight measurement",
-                            EntityState = "Added",
-                            LastModifiedUtc = "2026-04-09 23:45:18.640970",
+                            EntityState = "Unchanged",
+                            IsDeleted = false,
+                            IsPublic = false,
+                            IsSyncedToServer = true,
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             Name = "Kilogram",
-                            ShopId = "1",
                             Symbol = "kg",
                             Version = 0
                         },
                         new
                         {
-                            Id = "8",
+                            Id = "aaaaaaaa-0000-0000-0000-000000000008",
                             Description = "Small weight measurement",
-                            EntityState = "Added",
-                            LastModifiedUtc = "2026-04-09 23:45:18.640971",
+                            EntityState = "Unchanged",
+                            IsDeleted = false,
+                            IsPublic = false,
+                            IsSyncedToServer = true,
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             Name = "Gram",
-                            ShopId = "1",
                             Symbol = "g",
                             Version = 0
                         },
                         new
                         {
-                            Id = "9",
+                            Id = "aaaaaaaa-0000-0000-0000-000000000009",
                             Description = "Small volume measurement",
-                            EntityState = "Added",
-                            LastModifiedUtc = "2026-04-09 23:45:18.640972",
+                            EntityState = "Unchanged",
+                            IsDeleted = false,
+                            IsPublic = false,
+                            IsSyncedToServer = true,
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             Name = "Milliliter",
-                            ShopId = "1",
                             Symbol = "ml",
                             Version = 0
                         },
                         new
                         {
-                            Id = "10",
+                            Id = "aaaaaaaa-0000-0000-0000-000000000010",
                             Description = "12 pieces",
-                            EntityState = "Added",
-                            LastModifiedUtc = "2026-04-09 23:45:18.640973",
+                            EntityState = "Unchanged",
+                            IsDeleted = false,
+                            IsPublic = false,
+                            IsSyncedToServer = true,
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             Name = "Dozen",
-                            ShopId = "1",
                             Symbol = "dz",
                             Version = 0
                         });
@@ -5797,7 +6378,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                     b.HasOne("SMIS.Domain.Entities.Identity.Entity.ApplicationRole", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
@@ -5806,7 +6387,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                     b.HasOne("SMIS.Domain.Entities.Identity.Entity.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
@@ -5815,7 +6396,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                     b.HasOne("SMIS.Domain.Entities.Identity.Entity.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
@@ -5824,38 +6405,93 @@ namespace SMIS.Infrastructure.Server.Migrations
                     b.HasOne("SMIS.Domain.Entities.Identity.Entity.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("SMIS.Domain.Entities.AppLog", b =>
+                {
+                    b.HasOne("SMIS.Domain.Entities.Identity.Entity.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("SMIS.Domain.Entities.Category", b =>
                 {
+                    b.HasOne("SMIS.Domain.Entities.Identity.Entity.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("ClientCreatedBy")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("SMIS.Domain.Entities.Identity.Entity.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("ClientModifiedBy")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("SMIS.Domain.Entities.Identity.Entity.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("CreatedBy")
+                        .OnDelete(DeleteBehavior.Restrict);
+
                     b.HasOne("SMIS.Domain.Entities.Shop", "Shop")
                         .WithMany()
                         .HasForeignKey("ShopId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.HasOne("SMIS.Domain.Entities.Identity.Entity.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("UpdatedBy")
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("Shop");
                 });
 
             modelBuilder.Entity("SMIS.Domain.Entities.Customer", b =>
                 {
+                    b.HasOne("SMIS.Domain.Entities.Identity.Entity.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("ClientCreatedBy")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("SMIS.Domain.Entities.Identity.Entity.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("ClientModifiedBy")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("SMIS.Domain.Entities.Identity.Entity.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("CreatedBy")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("SMIS.Domain.Entities.Identity.Entity.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("DeletedBy")
+                        .OnDelete(DeleteBehavior.Restrict);
+
                     b.HasOne("SMIS.Domain.Entities.LocationEntities.District", "District")
                         .WithMany()
                         .HasForeignKey("DistrictId")
-                        .OnDelete(DeleteBehavior.SetNull);
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("SMIS.Domain.Entities.LocationEntities.Province", "Province")
                         .WithMany()
                         .HasForeignKey("ProvinceId")
-                        .OnDelete(DeleteBehavior.SetNull);
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("SMIS.Domain.Entities.Shop", "Shop")
                         .WithMany()
                         .HasForeignKey("ShopId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.HasOne("SMIS.Domain.Entities.Identity.Entity.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("UpdatedBy")
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("District");
 
@@ -5864,12 +6500,25 @@ namespace SMIS.Infrastructure.Server.Migrations
                     b.Navigation("Shop");
                 });
 
+            modelBuilder.Entity("SMIS.Domain.Entities.IdempotencyRecord", b =>
+                {
+                    b.HasOne("SMIS.Domain.Entities.Identity.Entity.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("CreatedBy")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("SMIS.Domain.Entities.Identity.Entity.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("UpdatedBy")
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
             modelBuilder.Entity("SMIS.Domain.Entities.Identity.Entity.ApplicationUser", b =>
                 {
                     b.HasOne("SMIS.Domain.Entities.Localization.Language", "Language")
                         .WithMany()
                         .HasForeignKey("LanguageId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("SMIS.Domain.Entities.Shop", "Shop")
@@ -5888,27 +6537,32 @@ namespace SMIS.Infrastructure.Server.Migrations
                     b.HasOne("SMIS.Domain.Entities.Identity.Entity.ApplicationRole", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("SMIS.Domain.Entities.Identity.Entity.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
             modelBuilder.Entity("SMIS.Domain.Entities.LoanAccount", b =>
                 {
+                    b.HasOne("SMIS.Domain.Entities.Identity.Entity.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("CreatedBy")
+                        .OnDelete(DeleteBehavior.Restrict);
+
                     b.HasOne("SMIS.Domain.Entities.Customer", "Customer")
                         .WithMany()
                         .HasForeignKey("CustomerId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("SMIS.Domain.Entities.Product", "Product")
-                        .WithMany()
-                        .HasForeignKey("ProductId")
+                    b.HasOne("SMIS.Domain.Entities.Sale", "Sale")
+                        .WithOne("Receivable")
+                        .HasForeignKey("SMIS.Domain.Entities.LoanAccount", "SaleId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
@@ -5918,34 +6572,46 @@ namespace SMIS.Infrastructure.Server.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("SMIS.Domain.Entities.UnitOfMeasure", "UnitOfMeasure")
+                    b.HasOne("SMIS.Domain.Entities.Identity.Entity.ApplicationUser", null)
                         .WithMany()
-                        .HasForeignKey("UnitId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .HasForeignKey("UpdatedBy")
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("Customer");
 
-                    b.Navigation("Product");
+                    b.Navigation("Sale");
 
                     b.Navigation("Shop");
-
-                    b.Navigation("UnitOfMeasure");
                 });
 
             modelBuilder.Entity("SMIS.Domain.Entities.LoanAccountPayment", b =>
                 {
+                    b.HasOne("SMIS.Domain.Entities.Identity.Entity.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("CreatedBy")
+                        .OnDelete(DeleteBehavior.Restrict);
+
                     b.HasOne("SMIS.Domain.Entities.LoanAccount", "LoanAccount")
                         .WithMany("Payments")
                         .HasForeignKey("LoanAccountId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.HasOne("SMIS.Domain.Entities.Identity.Entity.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("UpdatedBy")
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("LoanAccount");
                 });
 
             modelBuilder.Entity("SMIS.Domain.Entities.Localization.Translation", b =>
                 {
+                    b.HasOne("SMIS.Domain.Entities.Identity.Entity.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("CreatedBy")
+                        .OnDelete(DeleteBehavior.Restrict);
+
                     b.HasOne("SMIS.Domain.Entities.Localization.Language", "Language")
                         .WithMany()
                         .HasForeignKey("LanguageNo")
@@ -5955,22 +6621,63 @@ namespace SMIS.Infrastructure.Server.Migrations
                     b.HasOne("SMIS.Domain.Entities.Localization.TranslationKey", "TranslationKey")
                         .WithMany("Translations")
                         .HasForeignKey("TranslationKeyId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.HasOne("SMIS.Domain.Entities.Identity.Entity.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("UpdatedBy")
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("Language");
 
                     b.Navigation("TranslationKey");
                 });
 
+            modelBuilder.Entity("SMIS.Domain.Entities.Localization.TranslationKey", b =>
+                {
+                    b.HasOne("SMIS.Domain.Entities.Identity.Entity.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("CreatedBy")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("SMIS.Domain.Entities.Identity.Entity.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("UpdatedBy")
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
             modelBuilder.Entity("SMIS.Domain.Entities.LocationEntities.District", b =>
                 {
+                    b.HasOne("SMIS.Domain.Entities.Identity.Entity.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("CreatedBy")
+                        .OnDelete(DeleteBehavior.Restrict);
+
                     b.HasOne("SMIS.Domain.Entities.Localization.TranslationKey", "TranslationKey")
                         .WithOne()
                         .HasForeignKey("SMIS.Domain.Entities.LocationEntities.District", "TranslationKeyId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("SMIS.Domain.Entities.Identity.Entity.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("UpdatedBy")
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("TranslationKey");
+                });
+
+            modelBuilder.Entity("SMIS.Domain.Entities.LocationEntities.Province", b =>
+                {
+                    b.HasOne("SMIS.Domain.Entities.Identity.Entity.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("CreatedBy")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("SMIS.Domain.Entities.Identity.Entity.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("UpdatedBy")
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
             modelBuilder.Entity("SMIS.Domain.Entities.LocationEntities.ProvinceTranslation", b =>
@@ -5984,7 +6691,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                     b.HasOne("SMIS.Domain.Entities.LocationEntities.Province", "Province")
                         .WithMany("Translations")
                         .HasForeignKey("ProvinceId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Language");
@@ -6003,13 +6710,34 @@ namespace SMIS.Infrastructure.Server.Migrations
                     b.HasOne("SMIS.Domain.Entities.Category", "Category")
                         .WithMany("Products")
                         .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.SetNull);
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("SMIS.Domain.Entities.Identity.Entity.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("ClientCreatedBy")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("SMIS.Domain.Entities.Identity.Entity.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("ClientModifiedBy")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("SMIS.Domain.Entities.Identity.Entity.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("CreatedBy")
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("SMIS.Domain.Entities.Shop", "Shop")
                         .WithMany()
                         .HasForeignKey("ShopId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.HasOne("SMIS.Domain.Entities.Identity.Entity.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("UpdatedBy")
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("Category");
 
@@ -6020,40 +6748,228 @@ namespace SMIS.Infrastructure.Server.Migrations
 
             modelBuilder.Entity("SMIS.Domain.Entities.ProductPrice", b =>
                 {
-                    b.HasOne("SMIS.Domain.Entities.Product", "Product")
-                        .WithMany("ProductPrices")
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.HasOne("SMIS.Domain.Entities.Identity.Entity.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("ClientCreatedBy")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("SMIS.Domain.Entities.Identity.Entity.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("ClientModifiedBy")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("SMIS.Domain.Entities.Identity.Entity.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("CreatedBy")
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("SMIS.Domain.Entities.ProductUnit", "ProductUnit")
-                        .WithMany()
+                        .WithMany("ProductPrices")
                         .HasForeignKey("ProductUnitId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.Navigation("Product");
+                    b.HasOne("SMIS.Domain.Entities.Identity.Entity.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("UpdatedBy")
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("ProductUnit");
                 });
 
             modelBuilder.Entity("SMIS.Domain.Entities.ProductUnit", b =>
                 {
+                    b.HasOne("SMIS.Domain.Entities.Identity.Entity.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("ClientCreatedBy")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("SMIS.Domain.Entities.Identity.Entity.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("ClientModifiedBy")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("SMIS.Domain.Entities.Identity.Entity.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("CreatedBy")
+                        .OnDelete(DeleteBehavior.Restrict);
+
                     b.HasOne("SMIS.Domain.Entities.Product", "Product")
                         .WithMany("ProductUnits")
                         .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("SMIS.Domain.Entities.UnitOfMeasure", "UnitOfMeasure")
                         .WithMany("ProductUnits")
                         .HasForeignKey("UnitOfMeasureId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.HasOne("SMIS.Domain.Entities.Identity.Entity.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("UpdatedBy")
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("Product");
 
                     b.Navigation("UnitOfMeasure");
+                });
+
+            modelBuilder.Entity("SMIS.Domain.Entities.PurchaseOrder", b =>
+                {
+                    b.HasOne("SMIS.Domain.Entities.Identity.Entity.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("CreatedBy")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("SMIS.Domain.Entities.Shop", "Shop")
+                        .WithMany()
+                        .HasForeignKey("ShopId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("SMIS.Domain.Entities.Supplier", "Supplier")
+                        .WithMany("PurchaseOrders")
+                        .HasForeignKey("SupplierId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("SMIS.Domain.Entities.Identity.Entity.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("UpdatedBy")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("Shop");
+
+                    b.Navigation("Supplier");
+                });
+
+            modelBuilder.Entity("SMIS.Domain.Entities.PurchaseOrderLine", b =>
+                {
+                    b.HasOne("SMIS.Domain.Entities.Identity.Entity.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("CreatedBy")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("SMIS.Domain.Entities.Product", "Product")
+                        .WithMany()
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("SMIS.Domain.Entities.PurchaseOrder", "PurchaseOrder")
+                        .WithMany("Lines")
+                        .HasForeignKey("PurchaseOrderId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("SMIS.Domain.Entities.Identity.Entity.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("UpdatedBy")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("SMIS.Domain.Entities.ProductUnit", "ProductUnit")
+                        .WithMany()
+                        .HasForeignKey("ProductUnitId", "ProductId")
+                        .HasPrincipalKey("Id", "ProductId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Product");
+
+                    b.Navigation("ProductUnit");
+
+                    b.Navigation("PurchaseOrder");
+                });
+
+            modelBuilder.Entity("SMIS.Domain.Entities.Sale", b =>
+                {
+                    b.HasOne("SMIS.Domain.Entities.Identity.Entity.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("CreatedBy")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("SMIS.Domain.Entities.Customer", "Customer")
+                        .WithMany()
+                        .HasForeignKey("CustomerId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("SMIS.Domain.Entities.Shop", "Shop")
+                        .WithMany()
+                        .HasForeignKey("ShopId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("SMIS.Domain.Entities.Identity.Entity.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("UpdatedBy")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("Customer");
+
+                    b.Navigation("Shop");
+                });
+
+            modelBuilder.Entity("SMIS.Domain.Entities.SaleLine", b =>
+                {
+                    b.HasOne("SMIS.Domain.Entities.Identity.Entity.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("CreatedBy")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("SMIS.Domain.Entities.Product", "Product")
+                        .WithMany()
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("SMIS.Domain.Entities.Sale", "Sale")
+                        .WithMany("Lines")
+                        .HasForeignKey("SaleId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("SMIS.Domain.Entities.Identity.Entity.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("UpdatedBy")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("SMIS.Domain.Entities.ProductUnit", "ProductUnit")
+                        .WithMany()
+                        .HasForeignKey("ProductUnitId", "ProductId")
+                        .HasPrincipalKey("Id", "ProductId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Product");
+
+                    b.Navigation("ProductUnit");
+
+                    b.Navigation("Sale");
+                });
+
+            modelBuilder.Entity("SMIS.Domain.Entities.Shop", b =>
+                {
+                    b.HasOne("SMIS.Domain.Entities.Identity.Entity.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("ClientCreatedBy")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("SMIS.Domain.Entities.Identity.Entity.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("ClientModifiedBy")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("SMIS.Domain.Entities.Identity.Entity.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("CreatedBy")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("SMIS.Domain.Entities.Identity.Entity.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("UpdatedBy")
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
             modelBuilder.Entity("SMIS.Domain.Entities.ShopOwner", b =>
@@ -6064,11 +6980,35 @@ namespace SMIS.Infrastructure.Server.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("SMIS.Domain.Entities.Identity.Entity.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("CreatedBy")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("SMIS.Domain.Entities.LocationEntities.District", "District")
+                        .WithMany()
+                        .HasForeignKey("DistrictId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("SMIS.Domain.Entities.LocationEntities.Province", "Province")
+                        .WithMany()
+                        .HasForeignKey("ProvinceId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
                     b.HasOne("SMIS.Domain.Entities.Shop", "Shop")
                         .WithMany()
                         .HasForeignKey("ShopId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.HasOne("SMIS.Domain.Entities.Identity.Entity.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("UpdatedBy")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("District");
+
+                    b.Navigation("Province");
 
                     b.Navigation("Shop");
 
@@ -6077,32 +7017,49 @@ namespace SMIS.Infrastructure.Server.Migrations
 
             modelBuilder.Entity("SMIS.Domain.Entities.StockBatch", b =>
                 {
-                    b.HasOne("SMIS.Domain.Entities.Product", null)
+                    b.HasOne("SMIS.Domain.Entities.Identity.Entity.ApplicationUser", null)
                         .WithMany()
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("SMIS.Domain.Entities.UnitOfMeasure", null)
-                        .WithMany()
-                        .HasForeignKey("UnitId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("SMIS.Domain.Entities.StockTransaction", b =>
-                {
-                    b.HasOne("SMIS.Domain.Entities.Product", "Product")
-                        .WithMany()
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .HasForeignKey("CreatedBy")
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("SMIS.Domain.Entities.Shop", "Shop")
                         .WithMany()
                         .HasForeignKey("ShopId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.HasOne("SMIS.Domain.Entities.Identity.Entity.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("UpdatedBy")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("SMIS.Domain.Entities.Product", "Product")
+                        .WithMany()
+                        .HasForeignKey("ProductId", "ShopId")
+                        .HasPrincipalKey("Id", "ShopId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("SMIS.Domain.Entities.ProductUnit", "ReceivedProductUnit")
+                        .WithMany()
+                        .HasForeignKey("ReceivedProductUnitId", "ProductId")
+                        .HasPrincipalKey("Id", "ProductId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Product");
+
+                    b.Navigation("ReceivedProductUnit");
+
+                    b.Navigation("Shop");
+                });
+
+            modelBuilder.Entity("SMIS.Domain.Entities.StockCountLine", b =>
+                {
+                    b.HasOne("SMIS.Domain.Entities.Identity.Entity.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("CreatedBy")
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("SMIS.Domain.Entities.StockBatch", "StockBatch")
                         .WithMany()
@@ -6110,30 +7067,123 @@ namespace SMIS.Infrastructure.Server.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("SMIS.Domain.Entities.UnitOfMeasure", "UnitOfMeasure")
-                        .WithMany()
-                        .HasForeignKey("UnitId")
+                    b.HasOne("SMIS.Domain.Entities.StockCountSession", "StockCountSession")
+                        .WithMany("Lines")
+                        .HasForeignKey("StockCountSessionId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.Navigation("Product");
-
-                    b.Navigation("Shop");
+                    b.HasOne("SMIS.Domain.Entities.Identity.Entity.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("UpdatedBy")
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("StockBatch");
 
-                    b.Navigation("UnitOfMeasure");
+                    b.Navigation("StockCountSession");
                 });
 
-            modelBuilder.Entity("SMIS.Domain.Entities.UnitOfMeasure", b =>
+            modelBuilder.Entity("SMIS.Domain.Entities.StockCountSession", b =>
                 {
+                    b.HasOne("SMIS.Domain.Entities.Identity.Entity.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("CreatedBy")
+                        .OnDelete(DeleteBehavior.Restrict);
+
                     b.HasOne("SMIS.Domain.Entities.Shop", "Shop")
                         .WithMany()
                         .HasForeignKey("ShopId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("SMIS.Domain.Entities.Identity.Entity.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("UpdatedBy")
+                        .OnDelete(DeleteBehavior.Restrict);
+
                     b.Navigation("Shop");
+                });
+
+            modelBuilder.Entity("SMIS.Domain.Entities.StockMovement", b =>
+                {
+                    b.HasOne("SMIS.Domain.Entities.Identity.Entity.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("CreatedBy")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("SMIS.Domain.Entities.ProductUnit", "ProductUnit")
+                        .WithMany()
+                        .HasForeignKey("ProductUnitId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("SMIS.Domain.Entities.Shop", "Shop")
+                        .WithMany()
+                        .HasForeignKey("ShopId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("SMIS.Domain.Entities.Identity.Entity.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("UpdatedBy")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("SMIS.Domain.Entities.StockBatch", "StockBatch")
+                        .WithMany("StockMovements")
+                        .HasForeignKey("StockBatchId", "ShopId")
+                        .HasPrincipalKey("Id", "ShopId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("ProductUnit");
+
+                    b.Navigation("Shop");
+
+                    b.Navigation("StockBatch");
+                });
+
+            modelBuilder.Entity("SMIS.Domain.Entities.Supplier", b =>
+                {
+                    b.HasOne("SMIS.Domain.Entities.Identity.Entity.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("CreatedBy")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("SMIS.Domain.Entities.Shop", "Shop")
+                        .WithMany()
+                        .HasForeignKey("ShopId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("SMIS.Domain.Entities.Identity.Entity.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("UpdatedBy")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("Shop");
+                });
+
+            modelBuilder.Entity("SMIS.Domain.Entities.UnitOfMeasure", b =>
+                {
+                    b.HasOne("SMIS.Domain.Entities.Identity.Entity.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("ClientCreatedBy")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("SMIS.Domain.Entities.Identity.Entity.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("ClientModifiedBy")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("SMIS.Domain.Entities.Identity.Entity.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("CreatedBy")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("SMIS.Domain.Entities.Identity.Entity.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("UpdatedBy")
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
             modelBuilder.Entity("SMIS.Domain.Entities.Category", b =>
@@ -6158,9 +7208,39 @@ namespace SMIS.Infrastructure.Server.Migrations
 
             modelBuilder.Entity("SMIS.Domain.Entities.Product", b =>
                 {
-                    b.Navigation("ProductPrices");
-
                     b.Navigation("ProductUnits");
+                });
+
+            modelBuilder.Entity("SMIS.Domain.Entities.ProductUnit", b =>
+                {
+                    b.Navigation("ProductPrices");
+                });
+
+            modelBuilder.Entity("SMIS.Domain.Entities.PurchaseOrder", b =>
+                {
+                    b.Navigation("Lines");
+                });
+
+            modelBuilder.Entity("SMIS.Domain.Entities.Sale", b =>
+                {
+                    b.Navigation("Lines");
+
+                    b.Navigation("Receivable");
+                });
+
+            modelBuilder.Entity("SMIS.Domain.Entities.StockBatch", b =>
+                {
+                    b.Navigation("StockMovements");
+                });
+
+            modelBuilder.Entity("SMIS.Domain.Entities.StockCountSession", b =>
+                {
+                    b.Navigation("Lines");
+                });
+
+            modelBuilder.Entity("SMIS.Domain.Entities.Supplier", b =>
+                {
+                    b.Navigation("PurchaseOrders");
                 });
 
             modelBuilder.Entity("SMIS.Domain.Entities.UnitOfMeasure", b =>

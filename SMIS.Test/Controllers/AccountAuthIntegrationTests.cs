@@ -93,7 +93,7 @@ public class AccountAuthIntegrationTests : BaseIntegrationTest
     public async Task Get_CurrentUser_ReturnsLoggedInUser()
     {
         //var registerDto = _dataHelper.CreateApplicationUserBuilder()
-        //    .WithEmail("superadmin@smis.com").Build();
+        //    .WithEmail("superadmin@mainstore.com").Build();
         //var registerResponse = await Client.PostAsJsonAsync($"{ApiEndpoints.Account}/register", registerDto);
         //await LogIfError(registerResponse, "Get_CurrentUser_ReturnsLoggedInUser");
 
@@ -105,7 +105,7 @@ public class AccountAuthIntegrationTests : BaseIntegrationTest
         response.StatusCode.ShouldBe(HttpStatusCode.OK);
         var currentUser = await response.Content.ReadFromJsonAsync<UserDto>();
         currentUser.ShouldNotBeNull();
-        currentUser!.Email?.ToLower().ShouldBe("superadmin@smis.com");
+        currentUser!.Email?.ToLower().ShouldBe("superadmin@mainstore.com");
         currentUser.Roles.ShouldNotBeNull();
     }
 

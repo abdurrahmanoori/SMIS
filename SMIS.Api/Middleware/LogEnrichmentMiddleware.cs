@@ -5,19 +5,27 @@ using System.Text.Json;
 
 namespace SMIS.Api.Middleware
 {
+    /// <summary>
+    /// Adds request/user context to Serilog and attaches captured bodies for failed
+    /// responses. RequestResponseLoggingMiddleware populates the body values in HttpContext.Items.
+    /// </summary>
     public class LogEnrichmentMiddleware
     {
         private readonly RequestDelegate _next;
 
-        public LogEnrichmentMiddleware(RequestDelegate next)
+        public LogEnrichmentMiddleware(
+            RequestDelegate next
+        )
         {
             _next = next;
         }
 
-        public async Task InvokeAsync(HttpContext context)
+        public async Task InvokeAsync(
+            HttpContext context
+        )
         {
             var currentUser = context.RequestServices.GetService<ICurrentUser>();
-            
+
             using (LogContext.PushProperty("ClientIP", context.Connection.RemoteIpAddress?.ToString()))
             using (LogContext.PushProperty("RequestScheme", context.Request?.Scheme))
             using (LogContext.PushProperty("RequestHost", context.Request?.Host.Value))
@@ -27,7 +35,8 @@ namespace SMIS.Api.Middleware
             {
                 await _next(context);
 
-                // Log request/response details for error responses
+                // Bodies are only promoted into structured logs for failed requests to
+                // avoid duplicating large successful payloads in normal application logs.
                 if (context.Response.StatusCode >= 400)
                 {
                     var endpoint = context.GetEndpoint()?.DisplayName ?? "Unknown";
@@ -38,30 +47,35 @@ namespace SMIS.Api.Middleware
                             !string.IsNullOrEmpty(requestBody?.ToString()))
                         {
                             using (LogContext.PushProperty("RequestBody", FormatJson(requestBody.ToString())))
-                            { }
+                            {
+                            }
                         }
 
                         if (context.Items.TryGetValue("ResponseBody", out var responseBody) &&
                             !string.IsNullOrEmpty(responseBody?.ToString()))
                         {
                             using (LogContext.PushProperty("ResponseBody", FormatJson(responseBody.ToString())))
-                            { }
+                            {
+                            }
                         }
 
                         if (context.Items.TryGetValue(nameof(ExceptionLog), out var exceptionLog))
                         {
                             using (LogContext.PushProperty("ExceptionId", ((ExceptionLog)exceptionLog!).Id))
-                            { }
+                            {
+                            }
                         }
                     }
                 }
             }
         }
 
-        private static string? FormatJson(string? content)
+        private static string? FormatJson(
+            string? content
+        )
         {
             if (string.IsNullOrEmpty(content)) return content;
-            
+
             try
             {
                 var jsonElement = JsonSerializer.Deserialize<JsonElement>(content);

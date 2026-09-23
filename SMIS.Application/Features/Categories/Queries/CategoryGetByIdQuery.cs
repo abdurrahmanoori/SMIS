@@ -14,11 +14,16 @@ namespace SMIS.Application.Features.Categories.Queries
     internal sealed class CategoryGetByIdQueryHandler : IRequestHandler<CategoryGetByIdQuery, Result<CategoryDto>>
     {
         private readonly ICategoryRepository _categoryRepository;
+
         //private readonly ITranslationKeyRepository _translationKeyRepository;
         private readonly ICurrentUser _currentUser;
         private readonly IMapper _mapper;
 
-        public CategoryGetByIdQueryHandler(ICategoryRepository categoryRepository, /*ITranslationKeyRepository translationKeyRepository,*/ ICurrentUser currentUser, IMapper mapper)
+        public CategoryGetByIdQueryHandler(
+            ICategoryRepository categoryRepository, /*ITranslationKeyRepository translationKeyRepository,*/
+            ICurrentUser currentUser,
+            IMapper mapper
+        )
         {
             _categoryRepository = categoryRepository;
             //_translationKeyRepository = translationKeyRepository;
@@ -26,7 +31,10 @@ namespace SMIS.Application.Features.Categories.Queries
             _mapper = mapper;
         }
 
-        public async Task<Result<CategoryDto>> Handle(CategoryGetByIdQuery request, CancellationToken cancellationToken)
+        public async Task<Result<CategoryDto>> Handle(
+            CategoryGetByIdQuery request,
+            CancellationToken cancellationToken
+        )
         {
             var dbCategory = await _categoryRepository.GetFirstOrDefaultAsync(x => x.Id == request.Id);
 

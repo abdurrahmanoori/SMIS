@@ -15,13 +15,19 @@ namespace SMIS.Application.Features.Identity.Users.Queries
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IMapper _mapper;
 
-        public UserGetByIdQueryHandler(UserManager<ApplicationUser> userManager, IMapper mapper)
+        public UserGetByIdQueryHandler(
+            UserManager<ApplicationUser> userManager,
+            IMapper mapper
+        )
         {
             _userManager = userManager;
             _mapper = mapper;
         }
 
-        public async Task<Result<UserDto>> Handle(UserGetByIdQuery request, CancellationToken cancellationToken)
+        public async Task<Result<UserDto>> Handle(
+            UserGetByIdQuery request,
+            CancellationToken cancellationToken
+        )
         {
             var query = _userManager.Users.AsNoTracking();
 

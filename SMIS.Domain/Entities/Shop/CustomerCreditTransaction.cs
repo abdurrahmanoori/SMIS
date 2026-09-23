@@ -1,4 +1,3 @@
-
 //using SMIS.Domain.Common.BaseAbstract;
 //using SMIS.Domain.Enums;
 
@@ -18,3 +17,4 @@
 //        public virtual CustomerCreditAccount CustomerCreditAccount { get; set; }
 //    }
 //}
+

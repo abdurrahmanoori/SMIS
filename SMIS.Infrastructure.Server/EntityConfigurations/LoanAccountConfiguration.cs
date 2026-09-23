@@ -6,90 +6,70 @@ namespace SMIS.Infrastructure.Server.EntityConfigurations;
 
 public class LoanAccountConfiguration : IEntityTypeConfiguration<LoanAccount>
 {
-    public void Configure(EntityTypeBuilder<LoanAccount> builder)
+    public void Configure(
+        EntityTypeBuilder<LoanAccount> builder
+    )
     {
+        builder.ConfigureAuditUserRelationships();
         builder.ToTable(nameof(LoanAccount));
 
-        builder.HasKey(l => l.Id);
+        builder.HasKey(loan => loan.Id);
 
-        builder.Property(l => l.CustomerId)
+        builder.Property(loan => loan.SaleId)
             .IsRequired()
             .HasMaxLength(450);
-
-        builder.Property(l => l.CustomerName)
+        builder.Property(loan => loan.CustomerId)
+            .IsRequired()
+            .HasMaxLength(450);
+        builder.Property(loan => loan.CustomerName)
             .HasMaxLength(200);
-
-        builder.Property(l => l.ShopId)
+        builder.Property(loan => loan.ShopId)
             .IsRequired()
             .HasMaxLength(450);
-
-        builder.Property(l => l.ShopName)
+        builder.Property(loan => loan.ShopName)
             .HasMaxLength(200);
-
-        builder.Property(l => l.ProductId)
-            .IsRequired()
-            .HasMaxLength(450);
-
-        builder.Property(l => l.ProductName)
-            .HasMaxLength(200);
-
-        builder.Property(l => l.Quantity)
-            .IsRequired()
-            .HasPrecision(18, 2);
-
-        builder.Property(l => l.UnitId)
-            .IsRequired()
-            .HasMaxLength(450);
-
-        builder.Property(l => l.UnitName)
-            .HasMaxLength(100);
-
-        builder.Property(l => l.PriceAtLoanTime)
-            .IsRequired()
-            .HasPrecision(18, 2);
-
-        builder.Property(l => l.TotalAmount)
+        builder.Property(loan => loan.TotalAmount)
             .IsRequired();
-
-        builder.Property(l => l.LoanDate)
+        builder.Property(loan => loan.CreditAmount)
             .IsRequired();
-
-        builder.Property(l => l.Status)
+        builder.Property(loan => loan.LoanDate)
+            .IsRequired();
+        builder.Property(loan => loan.Status)
             .IsRequired()
+            .HasConversion<string>()
             .HasMaxLength(50);
-
-        builder.Property(l => l.Notes)
+        builder.Property(loan => loan.Notes)
             .HasMaxLength(500);
-
-        builder.Property(l => l.IsActive)
+        builder.Property(loan => loan.IsActive)
             .IsRequired();
 
-        builder.HasOne(l => l.Customer)
-            .WithMany()
-            .HasForeignKey(l => l.CustomerId)
+        // One credit sale can create only one receivable.
+        builder.HasIndex(loan => loan.SaleId)
+            .IsUnique();
+
+        builder.HasOne(loan => loan.Sale)
+            .WithOne(sale => sale.Receivable)
+            .HasForeignKey<LoanAccount>(loan => loan.SaleId)
             .OnDelete(DeleteBehavior.Restrict);
 
-        builder.HasOne(l => l.Shop)
+        builder.HasOne(loan => loan.Customer)
             .WithMany()
-            .HasForeignKey(l => l.ShopId)
+            .HasForeignKey(loan => loan.CustomerId)
             .OnDelete(DeleteBehavior.Restrict);
 
-        builder.HasOne(l => l.Product)
+        builder.HasOne(loan => loan.Shop)
             .WithMany()
-            .HasForeignKey(l => l.ProductId)
+            .HasForeignKey(loan => loan.ShopId)
             .OnDelete(DeleteBehavior.Restrict);
 
-        builder.HasOne(l => l.UnitOfMeasure)
-            .WithMany()
-            .HasForeignKey(l => l.UnitId)
+        builder.HasMany(loan => loan.Payments)
+            .WithOne(payment => payment.LoanAccount)
+            .HasForeignKey(payment => payment.LoanAccountId)
             .OnDelete(DeleteBehavior.Restrict);
 
-        builder.HasMany(l => l.Payments)
-            .WithOne(p => p.LoanAccount)
-            .HasForeignKey(p => p.LoanAccountId)
-            .OnDelete(DeleteBehavior.Cascade);
-
-        builder.Ignore(l => l.PaidAmount);
-        builder.Ignore(l => l.RemainingAmount);
+        builder.Ignore(loan => loan.PaidAmount);
+        builder.Ignore(loan => loan.NetReceivableAmount);
+        builder.Ignore(loan => loan.RemainingAmount);
+        builder.Ignore(loan => loan.OverpaidAmount);
     }
 }

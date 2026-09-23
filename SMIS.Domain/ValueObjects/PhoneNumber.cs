@@ -9,9 +9,13 @@ public sealed class PhoneNumber
 
     public string Value { get; }
 
-    private PhoneNumber(string value) => Value = value;
+    private PhoneNumber(
+        string value
+    ) => Value = value;
 
-    public static PhoneNumber Create(string phoneNumber)
+    public static PhoneNumber Create(
+        string phoneNumber
+    )
     {
         //if (string.IsNullOrWhiteSpace(phoneNumber))
         //    throw new DomainValidationException("Phone number cannot be empty");
@@ -27,6 +31,9 @@ public sealed class PhoneNumber
         return new PhoneNumber(cleaned);
     }
 
-    public static implicit operator string(PhoneNumber phoneNumber) => phoneNumber.Value;
+    public static implicit operator string(
+        PhoneNumber phoneNumber
+    ) => phoneNumber.Value;
+
     public override string ToString() => Value;
 }

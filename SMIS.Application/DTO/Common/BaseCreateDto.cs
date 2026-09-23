@@ -26,5 +26,5 @@ namespace SMIS.Application.DTO.Common
         /// Preserved on the server so the pull cursor reflects the client's actual change time.
         /// </summary>
         public DateTime? LastModifiedUtc { get; set; } = null;
-    } 
+    }
 }

@@ -16,13 +16,13 @@ public class ProductGlobalFilterTests : BaseIntegrationTest
     private readonly ProductTestDataHelper _dataHelper;
 
     // Seeded users from UserSeed.cs
-    private const string SuperAdminEmail = "superadmin@smis.com";
-    private const string WholesaleAdminEmail = "wadmin@smis.com";
-    private const string WholesaleManagerEmail = "wmanager@smis.com";
-    private const string WholesaleStaffEmail = "wstaff@smis.com";
-    private const string WholesaleViewerEmail = "wviewer@smis.com";
-    private const string RetailAdminEmail = "radmin@smis.com";
-    private const string RetailManagerEmail = "rmanager@smis.com";
+    private const string SuperAdminEmail = "superadmin@mainstore.com";
+    private const string WholesaleAdminEmail = "wadmin@mainstore.com";
+    private const string WholesaleManagerEmail = "wmanager@mainstore.com";
+    private const string WholesaleStaffEmail = "wstaff@mainstore.com";
+    private const string WholesaleViewerEmail = "wviewer@mainstore.com";
+    private const string RetailAdminEmail = "radmin@branchstore.com";
+    private const string RetailManagerEmail = "rmanager@branchstore.com";
     
     private const string Shop1Id = "1"; // Wholesale shop
     private const string Shop2Id = "2"; // Retail shop

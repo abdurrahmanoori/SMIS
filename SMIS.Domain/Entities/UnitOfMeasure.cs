@@ -1,61 +1,72 @@
 ﻿using SMIS.Domain.Common.BaseAbstract;
-using SMIS.Domain.Common.Interfaces;
 using SMIS.Domain.Exceptions;
 using SMIS.Domain.ValueObjects;
 
 namespace SMIS.Domain.Entities;
 
-public class UnitOfMeasure : EntityPK
+/// <summary>
+/// Global unit dictionary such as Piece, Kilogram, Box, or Bottle.
+/// A unit only supplies the label; product-specific meaning such as
+/// "1 Box = 12 Bottles" belongs to <see cref="ProductUnit"/>.
+/// </summary>
+public class UnitOfMeasure : BaseSyncableAuditableEntity
 {
     public string Name { get; private set; } = null!;
-    // Example: Piece, Gram, Milliliter, Liter, Box, Pack, Bottle
-    public string? Symbol { get; private set; } = null!;
-    // pcs, g, ml, l, box, pack
-    public string? Description { get; private set; } = null!;
-    public string ShopId { get; private set; } = string.Empty;
 
-    // Navigation Properties
-    public virtual Shop Shop { get; set; } = null!;
+    /// <summary>
+    /// Short display symbol such as pcs, kg, g, ml, or L.
+    /// This is reference data, not a conversion factor.
+    /// </summary>
+    public string? Symbol { get; private set; } = null!;
+
+    /// <summary>
+    /// Optional human-readable explanation of the unit.
+    /// </summary>
+    public string? Description { get; private set; } = null!;
+
+    public DateTime ConflictModifiedUtc => GetConflictModifiedUtc();
+
+    // ProductUnit supplies the product-specific conversion semantics for this unit label.
     public virtual ICollection<ProductUnit> ProductUnits { get; set; } = new List<ProductUnit>();
 
-    internal UnitOfMeasure() { } // EF Core & Seeding
+    internal UnitOfMeasure()
+    {
+    } // EF Core & Seeding
 
-    public static UnitOfMeasure Create(string name, string? symbol, string shopId, string? description = null)
+    public static UnitOfMeasure Create(
+        string name,
+        string? symbol,
+        string? description = null
+    )
     {
         var unit = new UnitOfMeasure();
         unit.SetName(name);
         unit.SetSymbol(symbol);
-        unit.SetShopId(shopId);
         unit.SetDescription(description);
         return unit;
     }
 
-    public void SetName(string name)
+    public void SetName(
+        string name
+    )
     {
         var unitName = UnitName.Create(name);
         Name = unitName;
     }
 
-    public void SetSymbol(string? symbol)
+    public void SetSymbol(
+        string? symbol
+    )
     {
         var unitSymbol = UnitSymbol.Create(symbol);
         Symbol = unitSymbol;
     }
 
-    public void SetDescription(string? description)
+    public void SetDescription(
+        string? description
+    )
     {
-        if (description?.Length > 500)
-            throw new DomainValidationException("Description cannot exceed 500 characters");
-
         Description = description?.Trim();
-    }
-
-    public void SetShopId(string shopId)
-    {
-        if (string.IsNullOrWhiteSpace(shopId))
-            throw new DomainValidationException("Shop ID cannot be empty");
-
-        ShopId = shopId;
     }
 }
 

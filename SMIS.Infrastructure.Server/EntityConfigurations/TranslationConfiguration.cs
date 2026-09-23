@@ -6,8 +6,11 @@ namespace SMIS.Infrastructure.Server.EntityConfigurations
 {
     public class TranslationConfiguration : IEntityTypeConfiguration<Translation>
     {
-        public void Configure(EntityTypeBuilder<Translation> builder)
+        public void Configure(
+            EntityTypeBuilder<Translation> builder
+        )
         {
+            builder.ConfigureAuditUserRelationships();
             builder.HasKey(x => x.Id);
 
 
@@ -30,7 +33,7 @@ namespace SMIS.Infrastructure.Server.EntityConfigurations
                 .WithMany(tk => tk.Translations)
                 .HasForeignKey(t => t.TranslationKeyId)
                 .HasPrincipalKey(tk => tk.Id)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.Restrict);
 
             builder.HasOne(t => t.Language)
                 .WithMany()

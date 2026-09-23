@@ -8,27 +8,36 @@ using SMIS.Domain.Entities.Localization;
 
 namespace SMIS.Application.Features.TranslationKeys.Commands
 {
-    public record TranslationKeyUpdateCommand(string Id, TranslationKeyCreateDto TranslationKeyCreateDto) : IRequest<Result<TranslationKeyDto>>;
+    public record TranslationKeyUpdateCommand(string Id, TranslationKeyCreateDto TranslationKeyCreateDto)
+        : IRequest<Result<TranslationKeyDto>>;
 
-    internal sealed class TranslationKeyUpdateCommandHandler : IRequestHandler<TranslationKeyUpdateCommand, Result<TranslationKeyDto>>
+    internal sealed class
+        TranslationKeyUpdateCommandHandler : IRequestHandler<TranslationKeyUpdateCommand, Result<TranslationKeyDto>>
     {
         private readonly ITranslationKeyRepository _translationKeyRepository;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
 
-        public TranslationKeyUpdateCommandHandler(IUnitOfWork unitOfWork, IMapper mapper, ITranslationKeyRepository translationKeyRepository)
+        public TranslationKeyUpdateCommandHandler(
+            IUnitOfWork unitOfWork,
+            IMapper mapper,
+            ITranslationKeyRepository translationKeyRepository
+        )
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _translationKeyRepository = translationKeyRepository;
         }
 
-        public async Task<Result<TranslationKeyDto>> Handle(TranslationKeyUpdateCommand request, CancellationToken cancellationToken)
+        public async Task<Result<TranslationKeyDto>> Handle(
+            TranslationKeyUpdateCommand request,
+            CancellationToken cancellationToken
+        )
         {
             var entity = await _translationKeyRepository.GetFirstOrDefaultAsync(
-                x => x.Id == request.Id, 
+                x => x.Id == request.Id,
                 includeProperties: "Translations");
-                
+
             if (entity == null)
             {
                 return Result<TranslationKeyDto>.NotFoundResult(nameof(TranslationKeyDto.Id));

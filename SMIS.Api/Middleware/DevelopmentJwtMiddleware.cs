@@ -2,26 +2,41 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using SMIS.Infrastructure.Server.DatabaseSeeders;
+using SMIS.Domain.Services;
 
 namespace SMIS.Api.Middleware;
 
+/// <summary>
+/// Development-only convenience middleware that injects a seeded SuperAdmin JWT when
+/// a request has no Authorization header. It never replaces an explicitly supplied token
+/// and is inactive outside the Development environment.
+/// </summary>
 public class DevelopmentJwtMiddleware
 {
     private readonly RequestDelegate _next;
     private readonly IConfiguration _configuration;
     private readonly IWebHostEnvironment _environment;
 
-    public DevelopmentJwtMiddleware(RequestDelegate next, IConfiguration configuration, IWebHostEnvironment environment)
+    public DevelopmentJwtMiddleware(
+        RequestDelegate next,
+        IConfiguration configuration,
+        IWebHostEnvironment environment
+    )
     {
         _next = next;
         _configuration = configuration;
         _environment = environment;
     }
 
-    public async Task InvokeAsync(HttpContext context)
+    public async Task InvokeAsync(
+        HttpContext context
+    )
     {
         if (_environment.IsDevelopment() && !context.Request.Headers.ContainsKey("Authorization"))
         {
+            // This keeps local Swagger/manual API calls convenient while still allowing
+            // developers to test another user simply by supplying their own token.
             var token = GenerateDevelopmentToken();
             context.Request.Headers.Append("Authorization", $"Bearer {token}");
         }
@@ -36,18 +51,18 @@ public class DevelopmentJwtMiddleware
 
         var claims = new[]
         {
-            new Claim(ClaimTypes.NameIdentifier, "1"),
+            new Claim(ClaimTypes.NameIdentifier, SeedIds.UserSuperAdmin),
             new Claim(ClaimTypes.Name, "superadmin"),
-            new Claim(ClaimTypes.Email, "superadmin@smis.com"),
+            new Claim(ClaimTypes.Email, "superadmin@mainstore.com"),
             new Claim(ClaimTypes.Role, "SuperAdmin"),
-            new Claim("ShopId", "1")
+            new Claim("ShopId", SeedIds.Shop1.ToString())
         };
 
         var token = new JwtSecurityToken(
             issuer: _configuration["JwtSettings:Issuer"],
             audience: _configuration["JwtSettings:Audience"],
             claims: claims,
-            expires: DateTime.UtcNow.AddHours(24),
+            expires: DateTimeService.NowUtc.AddHours(24),
             signingCredentials: credentials
         );
 

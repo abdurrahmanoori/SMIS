@@ -6,20 +6,28 @@ using SMIS.Application.Repositories.Localization;
 
 namespace SMIS.Application.Features.TranslationKeys.Queries
 {
-    public record TranslationKeyGetByIdQuery(string Id, bool IncludeTranslations = false) : IRequest<Result<TranslationKeyDto>>;
+    public record TranslationKeyGetByIdQuery(string Id, bool IncludeTranslations = false)
+        : IRequest<Result<TranslationKeyDto>>;
 
-    internal sealed class TranslationKeyGetByIdQueryHandler : IRequestHandler<TranslationKeyGetByIdQuery, Result<TranslationKeyDto>>
+    internal sealed class
+        TranslationKeyGetByIdQueryHandler : IRequestHandler<TranslationKeyGetByIdQuery, Result<TranslationKeyDto>>
     {
         private readonly ITranslationKeyRepository _translationKeyRepository;
         private readonly IMapper _mapper;
 
-        public TranslationKeyGetByIdQueryHandler(ITranslationKeyRepository translationKeyRepository, IMapper mapper)
+        public TranslationKeyGetByIdQueryHandler(
+            ITranslationKeyRepository translationKeyRepository,
+            IMapper mapper
+        )
         {
             _translationKeyRepository = translationKeyRepository;
             _mapper = mapper;
         }
 
-        public async Task<Result<TranslationKeyDto>> Handle(TranslationKeyGetByIdQuery request, CancellationToken cancellationToken)
+        public async Task<Result<TranslationKeyDto>> Handle(
+            TranslationKeyGetByIdQuery request,
+            CancellationToken cancellationToken
+        )
         {
             var dbTranslationKey = await _translationKeyRepository.GetFirstOrDefaultAsync(
                 x => x.Id == request.Id,

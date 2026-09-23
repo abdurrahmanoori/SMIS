@@ -1,149 +1,221 @@
-﻿using SMIS.Domain.Common.BaseAbstract;
+using SMIS.Domain.Common.BaseAbstract;
+using SMIS.Domain.Common.Interfaces;
 using SMIS.Domain.Enums;
 using SMIS.Domain.Exceptions;
+using SMIS.Domain.Services;
 
 namespace SMIS.Domain.Entities;
 
-public class StockBatch : BaseAuditableEntityWithoutName
+public class StockBatch : BaseAuditableEntityWithoutName, IShopEntity
 {
+    // Stock is always tracked internally in the product's base unit. The original
+    // receiving unit/quantity are kept separately for audit and user-facing history.
+    public string ShopId { get; private set; } = string.Empty;
     public string ProductId { get; private set; } = string.Empty;
-    public string? ProductName { get; set; }
+    public string ReceivedProductUnitId { get; private set; } = string.Empty;
+    public decimal ReceivedQuantity { get; private set; }
+    public decimal ReceivedQuantityBase { get; private set; }
+    public decimal RemainingQuantityBase { get; private set; }
+    public long UnitCostBase { get; private set; }
     public string? BatchNumber { get; private set; }
-    public decimal Quantity { get; private set; }
-    public string UnitId { get; private set; } = string.Empty;
-    public string? UnitName { get; set; }
-    public DateTime ReceivedDate { get; private set; }
+    public DateTime ReceivedAtUtc { get; private set; }
     public DateTime? ExpirationDate { get; private set; }
-    public long PurchasePrice { get; private set; }
     public StatusEnum Status { get; private set; } = StatusEnum.Active;
 
-    internal StockBatch() { } // EF Core & Seeding
+    public virtual Shop Shop { get; set; } = null!;
+    public virtual Product Product { get; set; } = null!;
+    public virtual ProductUnit ReceivedProductUnit { get; set; } = null!;
+    public ICollection<StockMovement> StockMovements { get; set; } = new List<StockMovement>();
 
-    public static StockBatch Create(string productId, string unitId, decimal quantity, long purchasePrice, DateTime? receivedDate = null, string? batchNumber = null, DateTime? expirationDate = null)
+    internal StockBatch()
+    {
+    } // EF Core & Seeding
+
+    public static StockBatch Create(
+        string shopId,
+        string productId,
+        string receivedProductUnitId,
+        decimal receivedQuantity,
+        decimal baseUnitQuantity,
+        long unitCostBase,
+        DateTime? receivedAtUtc = null,
+        string? batchNumber = null,
+        DateTime? expirationDate = null
+    )
     {
         var batch = new StockBatch();
+        batch.SetShopId(shopId);
         batch.SetProductId(productId);
-        batch.SetUnitId(unitId);
-        batch.SetQuantity(quantity);
-        batch.SetPurchasePrice(purchasePrice);
-        batch.SetReceivedDate(receivedDate ?? DateTime.UtcNow);
+        batch.SetReceivedProductUnitId(receivedProductUnitId);
+        batch.SetInitialQuantity(receivedQuantity, baseUnitQuantity);
+        batch.SetUnitCostBase(unitCostBase);
+        batch.SetReceivedAtUtc(receivedAtUtc ?? DateTimeService.NowUtc);
         batch.SetBatchNumber(batchNumber);
         batch.SetExpirationDate(expirationDate);
         return batch;
     }
 
-    public void SetProductId(string productId)
+    private void SetShopId(
+        string shopId
+    )
+    {
+        if (string.IsNullOrWhiteSpace(shopId))
+            throw new DomainValidationException("Shop ID cannot be empty");
+
+        ShopId = shopId.Trim();
+    }
+
+    public void SetProductId(
+        string productId
+    )
     {
         if (string.IsNullOrWhiteSpace(productId))
             throw new DomainValidationException("Product ID cannot be empty");
         ProductId = productId.Trim();
     }
 
-    public void SetUnitId(string unitId)
+    private void SetReceivedProductUnitId(
+        string productUnitId
+    )
     {
-        if (string.IsNullOrWhiteSpace(unitId))
-            throw new DomainValidationException("Unit ID cannot be empty");
-        UnitId = unitId.Trim();
+        if (string.IsNullOrWhiteSpace(productUnitId))
+            throw new DomainValidationException("Received product unit ID cannot be empty");
+
+        ReceivedProductUnitId = productUnitId.Trim();
     }
 
-    public void SetQuantity(decimal quantity)
+    private void SetInitialQuantity(
+        decimal receivedQuantity,
+        decimal baseUnitQuantity
+    )
     {
-        if (quantity < 0)
-            throw new DomainValidationException("Quantity cannot be negative");
-        Quantity = quantity;
+        if (receivedQuantity <= 0)
+            throw new DomainValidationException("Received quantity must be greater than zero");
+        if (baseUnitQuantity <= 0)
+            throw new DomainValidationException("Base unit quantity must be greater than zero");
+
+        ReceivedQuantity = receivedQuantity;
+        ReceivedQuantityBase = receivedQuantity * baseUnitQuantity;
+        RemainingQuantityBase = ReceivedQuantityBase;
     }
 
-    public void SetPurchasePrice(long purchasePrice)
+    private void SetUnitCostBase(
+        long unitCostBase
+    )
     {
-        if (purchasePrice < 0)
-            throw new DomainValidationException("Purchase price cannot be negative");
-        PurchasePrice = purchasePrice;
+        if (unitCostBase < 0)
+            throw new DomainValidationException("Unit cost in base units cannot be negative");
+
+        UnitCostBase = unitCostBase;
     }
 
-    public void SetReceivedDate(DateTime receivedDate)
+    private void SetReceivedAtUtc(
+        DateTime receivedAtUtc
+    )
     {
-        if (receivedDate > DateTime.UtcNow.AddDays(1))
-            throw new DomainValidationException("Received date cannot be in the future");
-        ReceivedDate = receivedDate;
+        var utc = receivedAtUtc.Kind == DateTimeKind.Utc
+            ? receivedAtUtc
+            : receivedAtUtc.ToUniversalTime();
+        if (utc > DateTimeService.NowUtc.AddMinutes(5))
+            throw new DomainValidationException("Received time cannot be in the future");
+
+        ReceivedAtUtc = utc;
     }
 
-    public void SetBatchNumber(string? batchNumber)
+    public void SetBatchNumber(
+        string? batchNumber
+    )
     {
-        if (!string.IsNullOrWhiteSpace(batchNumber) && batchNumber.Length > 50)
-            throw new DomainValidationException("Batch number cannot exceed 50 characters");
         BatchNumber = string.IsNullOrWhiteSpace(batchNumber) ? null : batchNumber.Trim();
     }
 
-    public void SetExpirationDate(DateTime? expirationDate)
+    public void SetExpirationDate(
+        DateTime? expirationDate
+    )
     {
-        if (expirationDate.HasValue && expirationDate.Value <= ReceivedDate)
+        if (expirationDate.HasValue && expirationDate.Value <= ReceivedAtUtc)
             throw new DomainValidationException("Expiration date must be after received date");
         ExpirationDate = expirationDate;
     }
 
-    public void Activate() => Status = StatusEnum.Active;
-    public void Deactivate() => Status = StatusEnum.Inactive;
-    public void MarkAsCompleted() => Status = StatusEnum.Completed;
-    public void MarkAsCancelled() => Status = StatusEnum.Cancelled;
-
-    public void ConsumeQuantity(decimal consumedQuantity)
+    public void Activate()
     {
-        if (consumedQuantity <= 0)
-            throw new DomainValidationException("Consumed quantity must be positive");
-        if (consumedQuantity > Quantity)
-            throw new DomainValidationException("Cannot consume more than available quantity");
-        Quantity -= consumedQuantity;
+        if (Status == StatusEnum.Cancelled)
+            throw new DomainValidationException("A cancelled stock batch cannot be reactivated");
+        if (RemainingQuantityBase <= 0)
+            throw new DomainValidationException("An empty stock batch cannot be activated");
+
+        Status = StatusEnum.Active;
     }
 
-    public void AddQuantity(decimal addedQuantity)
+    public void Deactivate()
     {
-        if (addedQuantity <= 0)
-            throw new DomainValidationException("Added quantity must be positive");
-        Quantity += addedQuantity;
+        if (Status == StatusEnum.Cancelled)
+            throw new DomainValidationException("A cancelled stock batch cannot be deactivated");
+
+        Status = StatusEnum.Inactive;
+    }
+
+    public void MarkAsCompleted()
+    {
+        if (RemainingQuantityBase != 0)
+            throw new DomainValidationException(
+                "A stock batch can only be completed when its remaining quantity is zero");
+
+        Status = StatusEnum.Completed;
+    }
+
+    public void MarkAsCancelled()
+    {
+        if (RemainingQuantityBase != 0)
+            throw new DomainValidationException(
+                "A stock batch with remaining stock cannot be cancelled. Transfer or adjust the stock first.");
+
+        Status = StatusEnum.Cancelled;
+    }
+
+    public void ApplyOutMovement(
+        decimal quantityBase
+    )
+    {
+        // Application features must reach this method through IInventoryService so the
+        // balance update and immutable StockMovement are always committed together.
+        // Never subtract the entered transaction quantity directly. Callers must
+        // normalize it through ProductUnit.BaseUnitQuantity before reaching here.
+        EnsureCanMove(quantityBase);
+        if (quantityBase > RemainingQuantityBase)
+            throw new DomainValidationException("Insufficient stock in this batch");
+
+        RemainingQuantityBase -= quantityBase;
+        Version++;
+        if (RemainingQuantityBase == 0)
+            Status = StatusEnum.Completed;
+    }
+
+    public void ApplyInMovement(
+        decimal quantityBase
+    )
+    {
+        // Application features must reach this method through IInventoryService so the
+        // cached balance can never change without a matching ledger entry.
+        // IN movements restore/increase the cached batch balance. The StockMovement
+        // ledger remains the historical source of truth for why the balance changed.
+        EnsureCanMove(quantityBase);
+        RemainingQuantityBase += quantityBase;
+        Version++;
+        if (Status == StatusEnum.Completed)
+            Status = StatusEnum.Active;
+    }
+
+    private void EnsureCanMove(
+        decimal quantityBase
+    )
+    {
+        // Completed means the batch is currently exhausted, so an IN reversal may
+        // reactivate it. Inactive/cancelled batches, however, cannot accept movement.
+        if (quantityBase <= 0)
+            throw new DomainValidationException("Movement quantity in base units must be greater than zero");
+        if (Status is StatusEnum.Cancelled or StatusEnum.Inactive)
+            throw new DomainValidationException("Stock cannot be moved against an inactive or cancelled batch");
     }
 }
-
-/*
-* What it is
-A StockBatch represents one physical receipt of a product.
-Same product → many batches → different expiration dates.
-
-👉 This is how you solve the “same product, different expiry” problem.
-I received THIS amount of a product on THIS date, and it expires on THAT date.
-Sample Data
-| Id | Product   | BatchNo | Qty | Unit   | Expiry     | Price |
-| -- | --------- | ------- | --- | ------ | ---------- | ----- |
-| 1  | Coca Cola | CC-001  | 100 | Bottle | 2026-06-01 | 0.40  |
-| 2  | Coca Cola | CC-002  | 80  | Bottle | 2026-07-15 | 0.42  |
-| 3  | Biscuit   | BS-101  | 50  | Pack   | 2025-09-01 | 0.25  |
-| 4  | Notebook  | NB-009  | 200 | Piece  | NULL       | 1.20  |
-📌 Notebook has no expiration → NULL expiry is allowed.
-
-
-
-Sample data (real life)
-Energy Drink (base unit = ml)
-| BatchNumber | QuantityInBaseUnit | ExpiryDate | ReceivedAt |
-| ----------- | ------------------ | ---------- | ---------- |
-| ED-001      | 12,500 ml          | 2026-03-01 | 2026-01-10 |
-| ED-002      | 12,500 ml          | 2026-04-01 | 2026-01-20 |
-
-This means:
-Same product
-Two different expiry dates
-Inventory is split, not mixed
-
-
-Biscuit (base unit = piece)
-| BatchNumber | QuantityInBaseUnit | ExpiryDate |
-| ----------- | ------------------ | ---------- |
-| BIS-11      | 120                | 2026-02-15 |
-| BIS-12      | 120                | 2026-03-10 |
-
-Pen (non-food)
-| BatchNumber | QuantityInBaseUnit | ExpiryDate |
-| ----------- | ------------------ | ---------- |
-| PEN-01      | 120                | null       |
-Pens don’t expire. No drama.
-
-*/

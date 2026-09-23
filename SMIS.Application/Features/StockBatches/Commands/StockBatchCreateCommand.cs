@@ -3,47 +3,78 @@ using MediatR;
 using SMIS.Application.Common.Response;
 using SMIS.Application.DTO.StockBatches;
 using SMIS.Application.Repositories.Base;
-using SMIS.Application.Repositories.Products;
-using SMIS.Application.Repositories.StockBatches;
-using SMIS.Application.Repositories.UnitOfMeasures;
-using SMIS.Domain.Entities;
+using SMIS.Application.Services;
+using SMIS.Domain.Services;
 
-namespace SMIS.Application.Features.StockBatches.Commands
+namespace SMIS.Application.Features.StockBatches.Commands;
+
+public record StockBatchCreateCommand(StockBatchCreateDto StockBatchCreateDto)
+    : IRequest<Result<StockBatchDto>>;
+
+internal sealed class StockBatchCreateCommandHandler
+    : IRequestHandler<StockBatchCreateCommand, Result<StockBatchDto>>
 {
-    public record StockBatchCreateCommand(StockBatchCreateDto StockBatchCreateDto) : IRequest<Result<StockBatchDto>>;
+    private readonly IInventoryService _inventory;
+    private readonly IIdempotencyService _idempotency;
+    private readonly IUnitOfWork _unitOfWork;
+    private readonly IMapper _mapper;
 
-    internal sealed class StockBatchCreateCommandHandler : IRequestHandler<StockBatchCreateCommand, Result<StockBatchDto>>
+    public StockBatchCreateCommandHandler(
+        IInventoryService inventory,
+        IIdempotencyService idempotency,
+        IUnitOfWork unitOfWork,
+        IMapper mapper
+    )
     {
-        private readonly IStockBatchRepository _stockBatchRepository;
-        private readonly IProductRepository _productRepository;
-        private readonly IUnitOfMeasureRepository _unitOfMeasureRepository;
-        private readonly IUnitOfWork _unitOfWork;
-        private readonly IMapper _mapper;
+        _inventory = inventory;
+        _idempotency = idempotency;
+        _unitOfWork = unitOfWork;
+        _mapper = mapper;
+    }
 
-        public StockBatchCreateCommandHandler(IUnitOfWork unitOfWork, IMapper mapper, IStockBatchRepository stockBatchRepository, IProductRepository productRepository, IUnitOfMeasureRepository unitOfMeasureRepository)
-        {
-            _unitOfWork = unitOfWork;
-            _mapper = mapper;
-            _stockBatchRepository = stockBatchRepository;
-            _productRepository = productRepository;
-            _unitOfMeasureRepository = unitOfMeasureRepository;
-        }
+    public async Task<Result<StockBatchDto>> Handle(
+        StockBatchCreateCommand request,
+        CancellationToken cancellationToken
+    )
+    {
+        var dto = request.StockBatchCreateDto;
+        var reservation = await _idempotency.ReserveAsync(
+            "inventory:purchase-receipt",
+            dto.IdempotencyKey,
+            cancellationToken);
+        if (!reservation.Success)
+            return new Result<StockBatchDto>
+            {
+                Success = false,
+                Message = reservation.Message,
+                Errors = reservation.Errors
+            };
 
-        public async Task<Result<StockBatchDto>> Handle(StockBatchCreateCommand request, CancellationToken cancellationToken)
-        {
-            var entity = _mapper.Map<StockBatch>(request.StockBatchCreateDto);
-            
-            // Populate name fields
-            var product = await _productRepository.GetByIdAsync(request.StockBatchCreateDto.ProductId);
-            entity.ProductName = product?.Name;
-            
-            var unit = await _unitOfMeasureRepository.GetByIdAsync(request.StockBatchCreateDto.UnitId);
-            entity.UnitName = unit?.Name;
-            
-            await _stockBatchRepository.AddAsync(entity);
-            await _unitOfWork.SaveChanges(cancellationToken);
+        var result = await _inventory.ReceiveBatchAsync(
+            new InventoryReceiptRequest(
+                dto.ProductId,
+                dto.ReceivedProductUnitId,
+                dto.ReceivedQuantity,
+                dto.UnitCostBase,
+                dto.ReceivedAtUtc ?? DateTimeService.NowUtc,
+                dto.BatchNumber,
+                dto.ExpirationDate,
+                dto.ReferenceType,
+                dto.ReferenceId),
+            cancellationToken);
 
-            return Result<StockBatchDto>.SuccessResult(_mapper.Map<StockBatchDto>(entity));
-        }
+        if (!result.Success)
+            return new Result<StockBatchDto>
+            {
+                Success = false,
+                Message = result.Message,
+                Errors = result.Errors
+            };
+
+        // Batch and opening movement are already staged in the same DbContext.
+        // One SaveChanges call is sufficient; EF Core wraps it in a transaction.
+        await _unitOfWork.SaveChanges(cancellationToken);
+
+        return Result<StockBatchDto>.SuccessResult(_mapper.Map<StockBatchDto>(result.Response));
     }
 }

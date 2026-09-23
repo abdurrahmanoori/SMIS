@@ -8,36 +8,60 @@ using SMIS.Api.Controllers.Base;
 
 namespace SMIS.Api.Controllers
 {
+    /// <summary>
+    /// Manages districts used in addresses and location data.
+    /// </summary>
     [Route("api/[controller]")]
     [ApiController]
     public class DistrictController : BaseApiController
     {
-        private readonly IMediator _mediator;
-        public DistrictController(IMediator mediator)
-        {
-            _mediator = mediator;
-        }
-
+        /// <summary>
+        /// Creates a new district.
+        /// </summary>
         [HttpPost]
-        public async Task<ActionResult<DistrictDto>> Create(DistrictCreateDto dto) =>
-            HandleResultResponse(await _mediator.Send(new DistrictCreateCommand(dto)));
+        public async Task<ActionResult<DistrictDto>> Create(
+            DistrictCreateDto dto
+        ) =>
+            HandleResultResponseOld(await Mediator.Send(new DistrictCreateCommand(dto)));
 
+        /// <summary>
+        /// Gets districts in pages.
+        /// </summary>
         [HttpGet]
-        public async Task<ActionResult<PagedList<DistrictDto>>> GetAll([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 25)
+        public async Task<ActionResult<PagedList<DistrictDto>>> GetAll(
+            [FromQuery] int pageNumber = 1,
+            [FromQuery] int pageSize = 25
+        )
         {
-            return HandleResultResponse(await _mediator.Send(new DistrictGetListQuery(pageNumber, pageSize)));
+            return HandleResultResponseOld(await Mediator.Send(new DistrictGetListQuery(pageNumber, pageSize)));
         }
 
+        /// <summary>
+        /// Gets one district by its ID.
+        /// </summary>
         [HttpGet("{id}")]
-        public async Task<ActionResult<DistrictDto>> GetById(string id) =>
-            HandleResultResponse(await _mediator.Send(new DistrictGetByIdQuery(id)));
+        public async Task<ActionResult<DistrictDto>> GetById(
+            string id
+        ) =>
+            HandleResultResponseOld(await Mediator.Send(new DistrictGetByIdQuery(id)));
 
+        /// <summary>
+        /// Updates an existing district.
+        /// </summary>
         [HttpPut("{id}")]
-        public async Task<ActionResult<DistrictDto>> Update(string id, DistrictCreateDto dto) =>
-            HandleResultResponse(await _mediator.Send(new DistrictUpdateCommand(id, dto)));
+        public async Task<ActionResult<DistrictDto>> Update(
+            string id,
+            DistrictCreateDto dto
+        ) =>
+            HandleResultResponseOld(await Mediator.Send(new DistrictUpdateCommand(id, dto)));
 
+        /// <summary>
+        /// Deletes a district.
+        /// </summary>
         [HttpDelete("{id}")]
-        public async Task<ActionResult<Unit>> Delete(string id) =>
-            HandleResultResponse(await _mediator.Send(new DistrictDeleteCommand(id)));
+        public async Task<ActionResult<Unit>> Delete(
+            string id
+        ) =>
+            HandleResultResponseOld(await Mediator.Send(new DistrictDeleteCommand(id)));
     }
 }

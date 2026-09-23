@@ -7,7 +7,9 @@ namespace SMIS.Infrastructure.Server.Repositories.Provinces
 {
     public class ProvinceRepository : GenericRepository<Province>, IProvinceRepository
     {
-        public ProvinceRepository(AppDbContext context) : base(context)
+        public ProvinceRepository(
+            AppDbContext context
+        ) : base(context)
         {
         }
     }

@@ -2,10 +2,13 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using SMIS.Infrastructure.Server.Context;
+using SMIS.Infrastructure.Server.Interceptors;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Xunit;
@@ -31,10 +34,12 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>, IAsyn
 
         builder.ConfigureServices(services =>
         {
-            // Remove existing registration
-            var descriptor = services.SingleOrDefault(d =>
-                d.ServiceType == typeof(DbContextOptions<AppDbContext>));
-            if (descriptor != null) services.Remove(descriptor);
+            // Remove the production provider and its options callback before
+            // registering SQLite. Leaving the callback behind registers both
+            // SQL Server and SQLite in the same EF service provider.
+            services.RemoveAll<AppDbContext>();
+            services.RemoveAll<DbContextOptions<AppDbContext>>();
+            services.RemoveAll<IDbContextOptionsConfiguration<AppDbContext>>();
 
             // Create new connection for each test
             _connection = new SqliteConnection("DataSource=:memory:");
@@ -43,7 +48,10 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>, IAsyn
             services.AddSingleton(_connection);
             services.AddDbContext<AppDbContext>((sp, options) =>
             {
-                options.UseSqlite(_connection);
+                options.UseSqlite(_connection)
+                    .AddInterceptors(
+                        sp.GetRequiredService<AuditInterceptor>(),
+                        sp.GetRequiredService<EntityPKInterceptor>());
             });
 
             services.ConfigureHttpJsonOptions(options =>

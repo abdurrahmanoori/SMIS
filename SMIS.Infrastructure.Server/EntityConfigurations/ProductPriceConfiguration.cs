@@ -6,21 +6,19 @@ namespace SMIS.Infrastructure.Server.EntityConfigurations;
 
 public class ProductPriceConfiguration : IEntityTypeConfiguration<ProductPrice>
 {
-    public void Configure(EntityTypeBuilder<ProductPrice> builder)
+    public void Configure(
+        EntityTypeBuilder<ProductPrice> builder
+    )
     {
+        builder.ConfigureAuditUserRelationships();
+        builder.ConfigureClientAuditUserRelationships();
         builder.ToTable(nameof(ProductPrice));
 
         builder.HasKey(p => p.Id);
 
-        builder.Property(p => p.ProductId)
+        builder.Property(p => p.ProductUnitId)
             .IsRequired()
             .HasMaxLength(450);
-
-        builder.Property(p => p.ProductUnitId)
-            .IsRequired();
-
-        builder.Property(p => p.BuyPrice)
-            .IsRequired();
 
         builder.Property(p => p.SellPrice)
             .IsRequired();
@@ -30,20 +28,14 @@ public class ProductPriceConfiguration : IEntityTypeConfiguration<ProductPrice>
 
         builder.Property(p => p.EndDate);
 
-        builder.Property(p => p.IsActive)
-            .IsRequired();
-
-        builder.HasOne(p => p.Product)
-            .WithMany(p => p.ProductPrices)
-            .HasForeignKey(p => p.ProductId)
-            .OnDelete(DeleteBehavior.Cascade);
+        builder.Property(p => p.ClientCreatedBy).HasMaxLength(450);
+        builder.Property(p => p.ClientModifiedBy).HasMaxLength(450);
 
         builder.HasOne(p => p.ProductUnit)
-            .WithMany()
+            .WithMany(pu => pu.ProductPrices)
             .HasForeignKey(p => p.ProductUnitId)
             .OnDelete(DeleteBehavior.Restrict);
 
-        builder.HasIndex(p => new { p.ProductId, p.ProductUnitId, p.EffectiveDate });
-        builder.HasIndex(p => p.IsActive);
+        builder.HasIndex(p => new { p.ProductUnitId, p.EffectiveDate });
     }
 }

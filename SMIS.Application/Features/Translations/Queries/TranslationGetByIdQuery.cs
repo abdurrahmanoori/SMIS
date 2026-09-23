@@ -8,18 +8,25 @@ namespace SMIS.Application.Features.Translations.Queries
 {
     public record TranslationGetByIdQuery(string Id) : IRequest<Result<TranslationEntityDto>>;
 
-    internal sealed class TranslationGetByIdQueryHandler : IRequestHandler<TranslationGetByIdQuery, Result<TranslationEntityDto>>
+    internal sealed class
+        TranslationGetByIdQueryHandler : IRequestHandler<TranslationGetByIdQuery, Result<TranslationEntityDto>>
     {
         private readonly ITranslationRepository _translationRepository;
         private readonly IMapper _mapper;
 
-        public TranslationGetByIdQueryHandler(ITranslationRepository translationRepository, IMapper mapper)
+        public TranslationGetByIdQueryHandler(
+            ITranslationRepository translationRepository,
+            IMapper mapper
+        )
         {
             _translationRepository = translationRepository;
             _mapper = mapper;
         }
 
-        public async Task<Result<TranslationEntityDto>> Handle(TranslationGetByIdQuery request, CancellationToken cancellationToken)
+        public async Task<Result<TranslationEntityDto>> Handle(
+            TranslationGetByIdQuery request,
+            CancellationToken cancellationToken
+        )
         {
             var dbTranslation = await _translationRepository.GetFirstOrDefaultAsync(x => x.Id == request.Id);
 

@@ -11,9 +11,6 @@ namespace SMIS.Application.Features.ShopOwners.Validators
             RuleFor(x => x.ShopOwnerCreateDto.ApplicationUserId)
                 .NotEmpty().WithMessage("ApplicationUserId is required");
 
-            RuleFor(x => x.ShopOwnerCreateDto.ShopId)
-                .NotEmpty().WithMessage("ShopId is required");
-
             RuleFor(x => x.ShopOwnerCreateDto.FirstName)
                 .NotEmpty().WithMessage("FirstName is required")
                 .MaximumLength(100).WithMessage("FirstName must not exceed 100 characters");

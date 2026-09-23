@@ -8,19 +8,28 @@ namespace SMIS.Application.Features.Provinces.Commands
 {
     public record ProvinceTranslationDeleteCommand(string Id) : IRequest<Result<Unit>>;
 
-    internal sealed class ProvinceTranslationDeleteCommandHandler : IRequestHandler<ProvinceTranslationDeleteCommand, Result<Unit>>
+    internal sealed class
+        ProvinceTranslationDeleteCommandHandler : IRequestHandler<ProvinceTranslationDeleteCommand, Result<Unit>>
     {
         private readonly IProvinceRepository _repo;
         private readonly IUnitOfWork _uow;
 
-        public ProvinceTranslationDeleteCommandHandler(IProvinceRepository repo, IUnitOfWork uow)
+        public ProvinceTranslationDeleteCommandHandler(
+            IProvinceRepository repo,
+            IUnitOfWork uow
+        )
         {
-            _repo = repo; _uow = uow;
+            _repo = repo;
+            _uow = uow;
         }
 
-        public async Task<Result<Unit>> Handle(ProvinceTranslationDeleteCommand request, CancellationToken cancellationToken)
+        public async Task<Result<Unit>> Handle(
+            ProvinceTranslationDeleteCommand request,
+            CancellationToken cancellationToken
+        )
         {
-            var province = await _repo.GetFirstOrDefaultAsync(x => x.Translations.Any(t => t.Id == request.Id), includeProperties: nameof(Province.Translations));
+            var province = await _repo.GetFirstOrDefaultAsync(x => x.Translations.Any(t => t.Id == request.Id),
+                includeProperties: nameof(Province.Translations));
             if (province is null) return Result<Unit>.NotFoundResult(request.Id);
 
             var trans = province.Translations.FirstOrDefault(t => t.Id == request.Id);

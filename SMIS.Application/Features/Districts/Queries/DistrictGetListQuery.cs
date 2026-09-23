@@ -8,22 +8,30 @@ using SMIS.Application.Repositories.Districts;
 
 namespace SMIS.Application.Features.Districts.Queries
 {
-    public record DistrictGetListQuery(int PageNumber = 1, int PageSize = 25) : IRequest<Result<PagedList<DistrictDto>>>;
+    public record DistrictGetListQuery(int PageNumber = 1, int PageSize = 25)
+        : IRequest<Result<PagedList<DistrictDto>>>;
 
-    internal sealed class DistrictGetListQueryHandler : IRequestHandler<DistrictGetListQuery, Result<PagedList<DistrictDto>>>
+    internal sealed class
+        DistrictGetListQueryHandler : IRequestHandler<DistrictGetListQuery, Result<PagedList<DistrictDto>>>
     {
         private readonly IDistrictRepository _districtRepository;
         private readonly ICurrentUser _currentUser;
 
-        public DistrictGetListQueryHandler(IDistrictRepository districtRepository, ICurrentUser currentUser)
+        public DistrictGetListQueryHandler(
+            IDistrictRepository districtRepository,
+            ICurrentUser currentUser
+        )
         {
             _districtRepository = districtRepository;
             _currentUser = currentUser;
         }
 
-        public async Task<Result<PagedList<DistrictDto>>> Handle(DistrictGetListQuery request, CancellationToken cancellationToken)
+        public async Task<Result<PagedList<DistrictDto>>> Handle(
+            DistrictGetListQuery request,
+            CancellationToken cancellationToken
+        )
         {
-            var userLangId =  _currentUser.GetLangId();
+            var userLangId = _currentUser.GetLangId();
 
             var query = _districtRepository.GetAllQueryable()
                 .Include(d => d.TranslationKey)
@@ -44,7 +52,7 @@ namespace SMIS.Application.Features.Districts.Queries
                 return Result<PagedList<DistrictDto>>.EmptyResult(nameof(DistrictDto));
             }
 
-            return Result<PagedList<DistrictDto>>.SuccessResult(pagedEntities);
+            return Result<PagedList<DistrictDto>>.SuccessResult(default);
         }
     }
 }

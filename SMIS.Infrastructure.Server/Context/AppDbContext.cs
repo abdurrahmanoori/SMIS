@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
@@ -12,10 +12,19 @@ using SMIS.Domain.Entities.Localization;
 using SMIS.Domain.Entities.LocationEntities;
 using SMIS.Infrastructure.Server.DatabaseSeeders;
 using System.Reflection;
+using SMIS.Application.Services;
 
 namespace SMIS.Infrastructure.Server.Context;
 
-public partial class AppDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, string, IdentityUserClaim<string>, ApplicationUserRole, IdentityUserLogin<string>, IdentityRoleClaim<string>, IdentityUserToken<string>>
+/// <summary>
+/// Main EF Core context for the API. Besides entity mappings, this context applies
+/// cross-cutting persistence rules such as tenant filters, soft-delete filters, and
+/// a portable timestamp representation shared with the offline SQLite model.
+/// </summary>
+public partial class AppDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, string,
+        IdentityUserClaim<string>, ApplicationUserRole, IdentityUserLogin<string>, IdentityRoleClaim<string>,
+        IdentityUserToken<string>>,
+    IApplicationDbContext
 {
     private readonly ICurrentUser _currentUser;
 
@@ -23,19 +32,25 @@ public partial class AppDbContext : IdentityDbContext<ApplicationUser, Applicati
     //{
     //}
 
-    public AppDbContext(DbContextOptions options, ICurrentUser currentUser) : base(options)
+    public AppDbContext(
+        DbContextOptions options,
+        ICurrentUser currentUser
+    ) : base(options)
     {
         _currentUser = currentUser;
     }
 
-    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    protected override void OnModelCreating(
+        ModelBuilder modelBuilder
+    )
     {
         base.OnModelCreating(modelBuilder);
 
         // Apply all IEntityTypeConfiguration classes from this assembly
         modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
 
-        // Configure EntityState as string for all entities
+        // Configure sync-state enums consistently without repeating conversion rules
+        // in every individual IEntityTypeConfiguration.
         foreach (var entityType in modelBuilder.Model.GetEntityTypes())
         {
             var entityStateProperty = entityType.FindProperty(nameof(BaseEntity.EntityState));
@@ -49,7 +64,9 @@ public partial class AppDbContext : IdentityDbContext<ApplicationUser, Applicati
             var lastModifiedProperty = entityType.FindProperty(nameof(BaseEntity.LastModifiedUtc));
             if (lastModifiedProperty != null)
             {
-                // Store as ISO-8601 string — compatible with both SQLite (TEXT) and SQL Server (nvarchar)
+                // Store as a fixed sortable string. The same representation works in
+                // SQL Server and SQLite and avoids provider-specific DateTime behavior
+                // for the synchronization cursor.
                 var converter = new ValueConverter<DateTime, string>(
                     v => v.ToString("yyyy-MM-dd HH:mm:ss.ffffff"),
                     v => DateTime.ParseExact(v, "yyyy-MM-dd HH:mm:ss.ffffff",
@@ -61,8 +78,9 @@ public partial class AppDbContext : IdentityDbContext<ApplicationUser, Applicati
             }
         }
 
-        // Apply global query filters: shop-scope + soft-delete combined.
-        // Only entities implementing both IShopEntity and ISoftDeletable get this filter.
+        // Hide tombstones from normal queries. Shop-owned entities also receive
+        // the current-shop restriction. Sync pull queries explicitly bypass
+        // these filters so deletions can still be propagated to clients.
         foreach (var entityType in modelBuilder.Model.GetEntityTypes())
         {
             var clrType = entityType.ClrType;
@@ -74,30 +92,34 @@ public partial class AppDbContext : IdentityDbContext<ApplicationUser, Applicati
                     .MakeGenericMethod(clrType);
                 method.Invoke(this, new object[] { modelBuilder });
             }
+            else if (typeof(ISoftDeletable).IsAssignableFrom(clrType))
+            {
+                var method = typeof(AppDbContext)
+                    .GetMethod(nameof(SetSoftDeleteFilter), BindingFlags.NonPublic | BindingFlags.Instance)!
+                    .MakeGenericMethod(clrType);
+                method.Invoke(this, new object[] { modelBuilder });
+            }
         }
 
-        #region Seed Database
-        ProductUnitSeed.DataSeed(modelBuilder);
-        ProductPriceSeed.DataSeed(modelBuilder);
-        StockBatchSeed.DataSeed(modelBuilder);
-        StockTransactionSeed.DataSeed(modelBuilder);
-        ShopOwnerSeed.DataSeed(modelBuilder);
-        LoanAccountSeed.DataSeed(modelBuilder);
-        #endregion
 
         // Allow extension from other layers via partial method
         OnModelCreatingPartial(modelBuilder);
     }
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+
+    protected override void OnConfiguring(
+        DbContextOptionsBuilder optionsBuilder
+    )
     {
         base.OnConfiguring(optionsBuilder);
 
 
         optionsBuilder.ConfigureWarnings(warnings =>
-   warnings.Ignore(RelationalEventId.PendingModelChangesWarning));
+            warnings.Ignore(RelationalEventId.PendingModelChangesWarning));
     }
 
-    partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
+    partial void OnModelCreatingPartial(
+        ModelBuilder modelBuilder
+    );
 
     public DbSet<Province> Provinces { get; set; }
     public DbSet<ProvinceTranslation> ProvinceTranslations { get; set; }
@@ -113,7 +135,15 @@ public partial class AppDbContext : IdentityDbContext<ApplicationUser, Applicati
     public DbSet<ProductUnit> ProductUnits { get; set; }
     public DbSet<ProductPrice> ProductPrices { get; set; }
     public DbSet<StockBatch> StockBatches { get; set; }
-    public DbSet<StockTransaction> StockTransactions { get; set; }
+    public DbSet<StockMovement> StockMovements { get; set; }
+    public DbSet<IdempotencyRecord> IdempotencyRecords { get; set; }
+    public DbSet<StockCountSession> StockCountSessions { get; set; }
+    public DbSet<StockCountLine> StockCountLines { get; set; }
+    public DbSet<Supplier> Suppliers { get; set; }
+    public DbSet<PurchaseOrder> PurchaseOrders { get; set; }
+    public DbSet<PurchaseOrderLine> PurchaseOrderLines { get; set; }
+    public DbSet<Sale> Sales { get; set; }
+    public DbSet<SaleLine> SaleLines { get; set; }
     public DbSet<Customer> Customers { get; set; }
     public DbSet<ShopOwner> ShopOwners { get; set; }
     public DbSet<LoanAccount> LoanAccounts { get; set; }

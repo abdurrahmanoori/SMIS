@@ -6,8 +6,11 @@ namespace SMIS.Infrastructure.Server.EntityConfigurations
 {
     public class ShopOwnerConfiguration : IEntityTypeConfiguration<ShopOwner>
     {
-        public void Configure(EntityTypeBuilder<ShopOwner> builder)
+        public void Configure(
+            EntityTypeBuilder<ShopOwner> builder
+        )
         {
+            builder.ConfigureAuditUserRelationships();
             builder.ToTable(nameof(ShopOwner));
 
             builder.HasKey(so => so.Id);
@@ -55,10 +58,10 @@ namespace SMIS.Infrastructure.Server.EntityConfigurations
                 .IsRequired();
 
             builder.Property(so => so.ProvinceId)
-                .HasMaxLength(50);
+                .HasMaxLength(450);
 
             builder.Property(so => so.DistrictId)
-                .HasMaxLength(50);
+                .HasMaxLength(450);
 
             // Foreign keys
             builder.HasOne(so => so.User)
@@ -71,9 +74,21 @@ namespace SMIS.Infrastructure.Server.EntityConfigurations
                 .HasForeignKey(so => so.ShopId)
                 .OnDelete(DeleteBehavior.Restrict);
 
+            builder.HasOne(so => so.Province)
+                .WithMany()
+                .HasForeignKey(so => so.ProvinceId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder.HasOne(so => so.District)
+                .WithMany()
+                .HasForeignKey(so => so.DistrictId)
+                .OnDelete(DeleteBehavior.Restrict);
+
             // Indexes
             builder.HasIndex(so => so.ApplicationUserId);
             builder.HasIndex(so => so.ShopId);
+            builder.HasIndex(so => so.ProvinceId);
+            builder.HasIndex(so => so.DistrictId);
             builder.HasIndex(so => so.IsActive);
         }
     }

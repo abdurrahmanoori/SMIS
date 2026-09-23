@@ -3,9 +3,8 @@ using MediatR;
 using SMIS.Application.Common.Response;
 using SMIS.Application.DTO.Categories;
 using SMIS.Application.Identity.IServices;
-using SMIS.Application.Repositories.Base;
 using SMIS.Application.Repositories.Categories;
-using SMIS.Domain.Entities;
+using SMIS.Application.Services;
 
 namespace SMIS.Application.Features.Categories.Commands
 {
@@ -14,58 +13,50 @@ namespace SMIS.Application.Features.Categories.Commands
     internal sealed class CategoryCreateCommandHandler : IRequestHandler<CategoryCreateCommand, Result<CategoryDto>>
     {
         private readonly ICategoryRepository _categoryRepository;
+
         //private readonly ITranslationKeyRepository _translationKeyRepository;
-        private readonly IUnitOfWork _unitOfWork;
+        private readonly IApplicationDbContext _db;
         private readonly ICurrentUser _currentUser;
         private readonly IMapper _mapper;
 
-        public CategoryCreateCommandHandler(IUnitOfWork unitOfWork, IMapper mapper, ICategoryRepository categoryRepository, /*ITranslationKeyRepository translationKeyRepository,*/ ICurrentUser currentUser)
+        public CategoryCreateCommandHandler(
+            IApplicationDbContext db,
+            IMapper mapper,
+            ICategoryRepository categoryRepository, /*ITranslationKeyRepository translationKeyRepository,*/
+            ICurrentUser currentUser
+        )
         {
-            _unitOfWork = unitOfWork;
+            _db = db;
             _mapper = mapper;
             _categoryRepository = categoryRepository;
             //_translationKeyRepository = translationKeyRepository;
             _currentUser = currentUser;
         }
 
-        public async Task<Result<CategoryDto>> Handle(CategoryCreateCommand request, CancellationToken cancellationToken)
+        public async Task<Result<CategoryDto>> Handle(
+            CategoryCreateCommand request,
+            CancellationToken cancellationToken
+        )
         {
             //await _translationKeyRepository.AddTranslationKeysForEntity(request.CategoryCreateDto, _unitOfWork);
-            throw new Exception("This is test exception to test global exception handling. Remove this line after testing.");
             // Get ShopId from authenticated user (secure)
             var shopId = _currentUser.GetShopId();
 
-            var entity = Category.Create(
-                request.CategoryCreateDto.Name,
-                shopId,
-                request.CategoryCreateDto.Code,
-                request.CategoryCreateDto.Description,
-                request.CategoryCreateDto.IsActive
-            );
-
-            // Use client-provided Id if available (offline sync scenario)
-            if (!string.IsNullOrEmpty(request.CategoryCreateDto.Id))
+            if (await _categoryRepository.NameExistsInShopAsync(
+                    shopId,
+                    request.CategoryCreateDto.Name,
+                    cancellationToken: cancellationToken))
             {
-                // Check if already exists (idempotent)
-                var existing = await _categoryRepository.GetByIdAsync(request.CategoryCreateDto.Id);
-                if (existing != null)
-                    return Result<CategoryDto>.SuccessResult(_mapper.Map<CategoryDto>(existing));
-
-                entity.Id = request.CategoryCreateDto.Id;
-
-                // Preserve original timestamps from mobile sync
-                if (request.CategoryCreateDto.CreatedDate.HasValue)
-                    entity.CreatedDate = request.CategoryCreateDto.CreatedDate.Value;
-                if (!string.IsNullOrEmpty(request.CategoryCreateDto.CreatedBy))
-                    entity.CreatedBy = request.CategoryCreateDto.CreatedBy;
-                if (request.CategoryCreateDto.LastModifiedUtc.HasValue)
-                    entity.LastModifiedUtc = request.CategoryCreateDto.LastModifiedUtc.Value;
+                return CategoryCommandRules.DuplicateName();
             }
 
-            await _categoryRepository.AddAsync(entity);
-            await _unitOfWork.SaveChanges(cancellationToken);
+            var entity = CategoryCommandRules.Create(request.CategoryCreateDto, shopId);
 
-            return Result<CategoryDto>.SuccessResult(_mapper.Map<CategoryDto>(entity), "Category Created Successfully.");
+            await _categoryRepository.AddAsync(entity);
+            await _db.SaveChangesAsync(cancellationToken);
+
+            return Result<CategoryDto>.SuccessResult(_mapper.Map<CategoryDto>(entity),
+                "Category Created Successfully.");
         }
     }
 }

@@ -18,7 +18,12 @@ namespace SMIS.Application.Features.Shops.Queries
         private readonly ICurrentUser _currentUser;
         private readonly IMapper _mapper;
 
-        public ShopGetByIdQueryHandler(IShopRepository shopRepository, ITranslationKeyRepository translationKeyRepository, ICurrentUser currentUser, IMapper mapper)
+        public ShopGetByIdQueryHandler(
+            IShopRepository shopRepository,
+            ITranslationKeyRepository translationKeyRepository,
+            ICurrentUser currentUser,
+            IMapper mapper
+        )
         {
             _shopRepository = shopRepository;
             _translationKeyRepository = translationKeyRepository;
@@ -26,7 +31,10 @@ namespace SMIS.Application.Features.Shops.Queries
             _mapper = mapper;
         }
 
-        public async Task<Result<ShopDto>> Handle(ShopGetByIdQuery request, CancellationToken cancellationToken)
+        public async Task<Result<ShopDto>> Handle(
+            ShopGetByIdQuery request,
+            CancellationToken cancellationToken
+        )
         {
             var dbShop = await _shopRepository.GetFirstOrDefaultAsync(x => x.Id == request.Id);
 

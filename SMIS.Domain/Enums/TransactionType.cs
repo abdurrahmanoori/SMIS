@@ -11,7 +11,7 @@ public enum TransactionType
     //// Payment types
     //CashPayment = 4,
     //CreditPayment = 5,
-    
+
     //// Credit operations
     //CreditIssued = 6,
     //CreditAdjustment = 7

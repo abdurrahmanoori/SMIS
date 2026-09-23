@@ -8,16 +8,23 @@ using SMIS.Application.Repositories.Categories;
 
 namespace SMIS.Application.Features.Categories.Queries
 {
-    public record CategoryGetListQuery(int PageNumber = 1, int PageSize = 25, string? SearchTerm = null) : IRequest<Result<PagedList<CategoryDto>>>;
+    public record CategoryGetListQuery(int PageNumber = 1, int PageSize = 25, string? SearchTerm = null)
+        : IRequest<Result<PagedList<CategoryDto>>>;
 
-    internal sealed class CategoryGetListQueryHandler : IRequestHandler<CategoryGetListQuery, Result<PagedList<CategoryDto>>>
+    internal sealed class
+        CategoryGetListQueryHandler : IRequestHandler<CategoryGetListQuery, Result<PagedList<CategoryDto>>>
     {
         private readonly ICategoryRepository _categoryRepository;
+
         //private readonly ITranslationKeyRepository _translationKeyRepository;
         private readonly ICurrentUser _currentUser;
         private readonly IMapper _mapper;
 
-        public CategoryGetListQueryHandler(ICategoryRepository categoryRepository, /*ITranslationKeyRepository translationKeyRepository,*/ ICurrentUser currentUser, IMapper mapper)
+        public CategoryGetListQueryHandler(
+            ICategoryRepository categoryRepository, /*ITranslationKeyRepository translationKeyRepository,*/
+            ICurrentUser currentUser,
+            IMapper mapper
+        )
         {
             _categoryRepository = categoryRepository;
             //_translationKeyRepository = translationKeyRepository;
@@ -25,7 +32,10 @@ namespace SMIS.Application.Features.Categories.Queries
             _mapper = mapper;
         }
 
-        public async Task<Result<PagedList<CategoryDto>>> Handle(CategoryGetListQuery request, CancellationToken cancellationToken)
+        public async Task<Result<PagedList<CategoryDto>>> Handle(
+            CategoryGetListQuery request,
+            CancellationToken cancellationToken
+        )
         {
             var query = _categoryRepository.GetAllQueryable();
 

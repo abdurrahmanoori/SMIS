@@ -1,34 +1,61 @@
 using SMIS.Domain.Common.BaseAbstract;
-using SMIS.Domain.Common.Interfaces;
 using SMIS.Domain.Exceptions;
+using SMIS.Domain.Common.Interfaces;
 
 namespace SMIS.Domain.Entities;
 
-public class Product : BaseAuditableEntity, IEntity, IShopEntity
+/// <summary>
+/// Shop-owned catalog product. BaseUnitId defines the canonical unit used for
+/// inventory normalization; ProductUnit defines every supported transaction unit.
+/// </summary>
+public class Product : BaseSyncableAuditableEntity, IEntity, IShopEntity
 {
-    public string Name { get; set; } = string.Empty;
- 
+    public string Name { get; private set; } = string.Empty;
+
+    /// <summary>
+    /// Canonical inventory unit. Stock balances are ultimately expressed in this unit,
+    /// regardless of whether users receive or issue the product as boxes, cartons, etc.
+    /// </summary>
     public string BaseUnitId { get; private set; } = string.Empty;
+
+    // Denormalized display labels are convenience snapshots for DTO/sync flows.
+    // Their corresponding foreign-key IDs remain the source of relationship truth.
     public string? BaseUnitName { get; set; }
     public string? Description { get; private set; }
     public bool IsActive { get; private set; } = true;
     public string? SKU { get; private set; } = string.Empty;
     public string? Barcode { get; private set; }
     public string? ImageUrl { get; private set; }
-    public string? CategoryId { get; private set; }
+    public decimal ReorderPointBase { get; private set; }
+    public decimal ReorderQuantityBase { get; private set; }
+
+    public string CategoryId { get; private set; } = string.Empty;
     public string? CategoryName { get; set; }
     public string ShopId { get; private set; } = string.Empty;
+
     public string? ShopName { get; set; }
+
     // Navigation Properties
-    public virtual Shop Shop { get; set; } = null!;
+    public Shop Shop { get; set; } = null!;
     public UnitOfMeasure UnitOfMeasure { get; set; } = null!;
-    public virtual Category? Category { get; set; }
-    public virtual ICollection<ProductUnit> ProductUnits { get; set; } = new List<ProductUnit>();
-    public virtual ICollection<ProductPrice> ProductPrices { get; set; } = new List<ProductPrice>();
+    public Category Category { get; set; } = null!;
+    public ICollection<ProductUnit> ProductUnits { get; set; } = new List<ProductUnit>();
 
-    internal Product() { } // EF Core & Seeding
+    internal Product()
+    {
+    } // EF Core & Seeding
 
-    public static Product Create(string name, string shopId, string baseUnitId, string sku, bool isActive = true, string? description = null, string? barcode = null, string? imageUrl = null, string? categoryId = null)
+    public static Product Create(
+        string name,
+        string shopId,
+        string baseUnitId,
+        string sku,
+        string categoryId,
+        bool isActive = true,
+        string? description = null,
+        string? barcode = null,
+        string? imageUrl = null
+    )
     {
         var product = new Product();
         product.SetName(name);
@@ -36,25 +63,26 @@ public class Product : BaseAuditableEntity, IEntity, IShopEntity
         product.SetBaseUnitId(baseUnitId);
         product.SetSKU(sku);
         product.SetDescription(description);
-        if (!string.IsNullOrWhiteSpace(barcode)) product.SetBarcode(barcode);
+        product.SetBarcode(barcode);
         product.SetImageUrl(imageUrl);
         product.SetCategoryId(categoryId);
         if (!isActive) product.Deactivate();
         return product;
     }
 
-    public void SetName(string name)
+    public void SetName(
+        string name
+    )
     {
         if (string.IsNullOrWhiteSpace(name))
             throw new DomainValidationException("Product name cannot be empty");
 
-        if (name.Length > 200)
-            throw new DomainValidationException("Product name cannot exceed 200 characters");
-
         Name = name.Trim();
     }
 
-    public void SetShopId(string shopId)
+    public void SetShopId(
+        string shopId
+    )
     {
         if (string.IsNullOrWhiteSpace(shopId))
             throw new DomainValidationException("Shop ID cannot be empty");
@@ -62,49 +90,109 @@ public class Product : BaseAuditableEntity, IEntity, IShopEntity
         ShopId = shopId;
     }
 
-    public void SetBaseUnitId(string baseUnitId)
+    public bool IsBaseUnitChange(
+        string baseUnitId
+    ) =>
+        !string.Equals(BaseUnitId, NormalizeBaseUnitId(baseUnitId), StringComparison.Ordinal);
+
+    /// <summary>
+    /// Changes the canonical inventory unit only while the product has no stock or
+    /// meaningful conversion history. Changing it later would reinterpret historical quantities.
+    /// </summary>
+    public void ChangeBaseUnit(
+        string baseUnitId,
+        bool hasStockOrConversions
+    )
+    {
+        var normalizedBaseUnitId = NormalizeBaseUnitId(baseUnitId);
+        if (string.Equals(BaseUnitId, normalizedBaseUnitId, StringComparison.Ordinal)) return;
+
+        if (hasStockOrConversions)
+            throw new DomainValidationException(
+                "Base unit cannot be changed after stock or product-unit conversions exist.");
+
+        BaseUnitId = normalizedBaseUnitId;
+    }
+
+    private void SetBaseUnitId(
+        string baseUnitId
+    )
+    {
+        BaseUnitId = NormalizeBaseUnitId(baseUnitId);
+    }
+
+    private static string NormalizeBaseUnitId(
+        string baseUnitId
+    )
     {
         if (string.IsNullOrWhiteSpace(baseUnitId))
             throw new DomainValidationException("Base unit ID cannot be empty");
 
-        BaseUnitId = baseUnitId;
+        return baseUnitId.Trim();
     }
 
-    public void SetSKU(string? sku)
+    public void SetSKU(
+        string? sku
+    )
     {
         var skuVO = ValueObjects.SKU.Create(sku);
         SKU = skuVO;
     }
 
-    public void SetDescription(string? description)
+    public void SetDescription(
+        string? description
+    )
     {
-        if (description?.Length > 1000)
-            throw new DomainValidationException("Description cannot exceed 1000 characters");
-
         Description = description?.Trim();
     }
 
-    public void SetBarcode(string barcode)
+    public void SetBarcode(
+        string? barcode
+    )
     {
+        if (string.IsNullOrWhiteSpace(barcode))
+        {
+            Barcode = null;
+            return;
+        }
+
         var barcodeVO = ValueObjects.Barcode.Create(barcode);
         Barcode = barcodeVO;
     }
 
-    public void SetImageUrl(string? imageUrl)
+    public void SetImageUrl(
+        string? imageUrl
+    )
     {
-        if (imageUrl?.Length > 500)
-            throw new DomainValidationException("Image URL cannot exceed 500 characters");
-
         ImageUrl = imageUrl?.Trim();
     }
 
-    public void SetCategoryId(string? categoryId)
+    public void SetCategoryId(
+        string categoryId
+    )
     {
-        CategoryId = categoryId;
+        if (string.IsNullOrWhiteSpace(categoryId))
+            throw new DomainValidationException("Category ID cannot be empty");
+
+        CategoryId = categoryId.Trim();
     }
 
     public void Activate() => IsActive = true;
     public void Deactivate() => IsActive = false;
+
+    public void SetReorderPolicy(
+        decimal reorderPointBase,
+        decimal reorderQuantityBase
+    )
+    {
+        if (reorderPointBase < 0)
+            throw new DomainValidationException("Reorder point cannot be negative");
+        if (reorderQuantityBase < 0)
+            throw new DomainValidationException("Reorder quantity cannot be negative");
+
+        ReorderPointBase = reorderPointBase;
+        ReorderQuantityBase = reorderQuantityBase;
+    }
 }
 
 

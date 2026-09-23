@@ -1,6 +1,5 @@
 using FluentValidation;
 using SMIS.Application.Features.Products.Commands;
-using SMIS.Application.Features.Produmscts.Commands;
 
 namespace SMIS.Application.Features.Products.Validators
 {
@@ -11,9 +10,6 @@ namespace SMIS.Application.Features.Products.Validators
             RuleFor(x => x.ProductCreateDto.Name)
                 .NotEmpty().WithMessage("Name is required")
                 .MaximumLength(200).WithMessage("Name must not exceed 200 characters");
-
-            RuleFor(x => x.ProductCreateDto.ShopId)
-                .NotEmpty().WithMessage("ShopId is required");
 
             RuleFor(x => x.ProductCreateDto.BaseUnitId)
                 .NotEmpty().WithMessage("BaseUnitId is required");
@@ -37,8 +33,14 @@ namespace SMIS.Application.Features.Products.Validators
                 .When(x => !string.IsNullOrEmpty(x.ProductCreateDto.ImageUrl));
 
             RuleFor(x => x.ProductCreateDto.CategoryId)
-                .MaximumLength(50).WithMessage("CategoryId must not exceed 50 characters")
-                .When(x => !string.IsNullOrEmpty(x.ProductCreateDto.CategoryId));
+                .NotEmpty().WithMessage("CategoryId is required")
+                .MaximumLength(450).WithMessage("CategoryId must not exceed 450 characters");
+
+            RuleFor(x => x.ProductCreateDto.ReorderPointBase)
+                .GreaterThanOrEqualTo(0);
+
+            RuleFor(x => x.ProductCreateDto.ReorderQuantityBase)
+                .GreaterThanOrEqualTo(0);
         }
     }
 }

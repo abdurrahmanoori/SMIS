@@ -2,5 +2,8 @@
 
 public enum RelationshipType
 {
-    Child = 1,Father,Brother,Friend
+    Child = 1,
+    Father,
+    Brother,
+    Friend
 }

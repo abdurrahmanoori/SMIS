@@ -8,20 +8,28 @@ using SMIS.Domain.Entities.LocationEntities;
 
 namespace SMIS.Application.Features.Provinces.Queries
 {
-    public record ProvinceGetListQuery(int PageNumber = 1, int PageSize = 25) : IRequest<Result<PagedList<ProvinceDto>>>;
+    public record ProvinceGetListQuery(int PageNumber = 1, int PageSize = 25)
+        : IRequest<Result<PagedList<ProvinceDto>>>;
 
-    internal sealed class ProvinceGetListQueryHandler : IRequestHandler<ProvinceGetListQuery, Result<PagedList<ProvinceDto>>>
+    internal sealed class
+        ProvinceGetListQueryHandler : IRequestHandler<ProvinceGetListQuery, Result<PagedList<ProvinceDto>>>
     {
         private readonly IProvinceRepository _provinceRepository;
         private readonly ICurrentUser _currentUser;
 
-        public ProvinceGetListQueryHandler(IProvinceRepository provinceRepository, ICurrentUser currentUser)
+        public ProvinceGetListQueryHandler(
+            IProvinceRepository provinceRepository,
+            ICurrentUser currentUser
+        )
         {
             _provinceRepository = provinceRepository;
             _currentUser = currentUser;
         }
 
-        public async Task<Result<PagedList<ProvinceDto>>> Handle(ProvinceGetListQuery request, CancellationToken cancellationToken)
+        public async Task<Result<PagedList<ProvinceDto>>> Handle(
+            ProvinceGetListQuery request,
+            CancellationToken cancellationToken
+        )
         {
             var userLangId = _currentUser.GetLangId();
             var query = _provinceRepository.GetAllQueryable(includeProperties: nameof(Province.Translations))
@@ -29,7 +37,7 @@ namespace SMIS.Application.Features.Provinces.Queries
                 {
                     Province = p,
                     Translation = p.Translations.FirstOrDefault(t => t.LanguageId == userLangId) ??
-                                 p.Translations.FirstOrDefault(t => t.IsDefault)
+                                  p.Translations.FirstOrDefault(t => t.IsDefault)
                 });
 
             var pagedEntities = await query.ToPagedList(request.PageNumber, request.PageSize);

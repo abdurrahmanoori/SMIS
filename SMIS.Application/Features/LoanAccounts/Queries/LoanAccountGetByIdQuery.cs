@@ -6,24 +6,32 @@ using SMIS.Application.Repositories.LoanAccounts;
 
 namespace SMIS.Application.Features.LoanAccounts.Queries;
 
-public record LoanAccountGetByIdQuery(string Id, bool IncludeCustomer = false, bool IncludeProduct = false) : IRequest<Result<LoanAccountDto>>;
+public record LoanAccountGetByIdQuery(string Id, bool IncludeCustomer = false, bool IncludeSale = false)
+    : IRequest<Result<LoanAccountDto>>;
 
 internal sealed class LoanAccountGetByIdQueryHandler : IRequestHandler<LoanAccountGetByIdQuery, Result<LoanAccountDto>>
 {
     private readonly ILoanAccountRepository _loanAccountRepository;
     private readonly IMapper _mapper;
 
-    public LoanAccountGetByIdQueryHandler(ILoanAccountRepository loanAccountRepository, IMapper mapper)
+    public LoanAccountGetByIdQueryHandler(
+        ILoanAccountRepository loanAccountRepository,
+        IMapper mapper
+    )
     {
         _loanAccountRepository = loanAccountRepository;
         _mapper = mapper;
     }
 
-    public async Task<Result<LoanAccountDto>> Handle(LoanAccountGetByIdQuery request, CancellationToken cancellationToken)
+    public async Task<Result<LoanAccountDto>> Handle(
+        LoanAccountGetByIdQuery request,
+        CancellationToken cancellationToken
+    )
     {
         var includeProperties = new List<string>();
         if (request.IncludeCustomer) includeProperties.Add("Customer");
-        if (request.IncludeProduct) includeProperties.Add("Product");
+        if (request.IncludeSale) includeProperties.Add("Sale");
+        includeProperties.Add("Payments");
 
         var dbLoanAccount = await _loanAccountRepository.GetFirstOrDefaultAsync(
             x => x.Id == request.Id,

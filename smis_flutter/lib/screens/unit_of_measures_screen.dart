@@ -1,0 +1,393 @@
+import 'dart:async';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import '../controllers/unit_of_measure_controller.dart';
+import '../data/data_exception.dart';
+import '../models/unit_of_measure.dart';
+import '../l10n/app_localizations.dart';
+import '../widgets/app_drawer.dart';
+import '../widgets/active_shop_context.dart';
+import '../widgets/app_error_view.dart';
+import '../widgets/theme_mode_action.dart';
+import '../widgets/locale_action.dart';
+import '../widgets/home_action.dart';
+import '../widgets/unit_of_measure_form_dialog.dart';
+
+class UnitOfMeasuresScreen extends ConsumerStatefulWidget {
+  const UnitOfMeasuresScreen({super.key});
+
+  @override
+  ConsumerState<UnitOfMeasuresScreen> createState() =>
+      _UnitOfMeasuresScreenState();
+}
+
+class _UnitOfMeasuresScreenState extends ConsumerState<UnitOfMeasuresScreen>
+    with WidgetsBindingObserver {
+  final _searchController = TextEditingController();
+  bool _isSearching = false;
+  Timer? _searchDebounce;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    _searchDebounce?.cancel();
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  void _onSearchChanged(String query) {
+    _searchDebounce?.cancel();
+    _searchDebounce = Timer(const Duration(milliseconds: 500), () {
+      ref.read(unitOfMeasureControllerProvider.notifier).search(query);
+    });
+  }
+
+  void _stopSearching() {
+    _searchDebounce?.cancel();
+    setState(() {
+      _isSearching = false;
+      _searchController.clear();
+    });
+    ref.read(unitOfMeasureControllerProvider.notifier).search('');
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      ref.read(unitOfMeasureControllerProvider.notifier).reload();
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final units = ref.watch(unitOfMeasureControllerProvider);
+    return Scaffold(
+      appBar: AppBar(
+        title: _isSearching
+            ? TextField(
+                controller: _searchController,
+                autofocus: true,
+                decoration: InputDecoration(
+                  hintText: context.l10n.text('Search units...'),
+                  border: InputBorder.none,
+                ),
+                onChanged: _onSearchChanged,
+              )
+            : Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(context.l10n.text('Units of measurement')),
+                  Text(
+                    context.l10n.text('Local-first inventory setup'),
+                    style: const TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.normal,
+                    ),
+                  ),
+                ],
+              ),
+        actions: [
+          const ActiveShopAction(),
+          if (_isSearching)
+            IconButton(icon: const Icon(Icons.close), onPressed: _stopSearching)
+          else
+            IconButton(
+              icon: const Icon(Icons.search),
+              onPressed: () => setState(() => _isSearching = true),
+            ),
+          const HomeAction(),
+          const LocaleAction(),
+          const ThemeModeAction(),
+          const SizedBox(width: 8),
+        ],
+      ),
+      drawer: const AppDrawer(),
+      body: SafeArea(
+        child: Center(
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 900),
+            child: units.when(
+              loading: () => const Center(child: CircularProgressIndicator()),
+              error: (error, stackTrace) => AppErrorView(
+                error: error,
+                stackTrace: stackTrace,
+                onRetry: () =>
+                    ref.read(unitOfMeasureControllerProvider.notifier).reload(),
+              ),
+              data: (value) =>
+                  _Content(state: value, onEdit: _edit, onDelete: _delete),
+            ),
+          ),
+        ),
+      ),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: _create,
+        icon: const Icon(Icons.add),
+        label: Text(context.l10n.text('Add unit')),
+      ),
+    );
+  }
+
+  Future<void> _create() async {
+    final draft = await showDialog<UnitOfMeasureDraft>(
+      context: context,
+      builder: (context) => const UnitOfMeasureFormDialog(),
+    );
+    if (draft == null || !mounted) return;
+    await _runMutation(
+      () => ref.read(unitOfMeasureControllerProvider.notifier).create(draft),
+      context.l10n.text('Unit of measurement saved locally.'),
+    );
+  }
+
+  Future<void> _edit(UnitOfMeasure unit) async {
+    final draft = await showDialog<UnitOfMeasureDraft>(
+      context: context,
+      builder: (context) => UnitOfMeasureFormDialog(unit: unit),
+    );
+    if (draft == null || !mounted) return;
+    await _runMutation(
+      () => ref
+          .read(unitOfMeasureControllerProvider.notifier)
+          .updateUnit(unit.id, draft),
+      context.l10n.text('Unit of measurement updated locally.'),
+    );
+  }
+
+  Future<void> _delete(UnitOfMeasure unit) async {
+    try {
+      final productCount = await ref
+          .read(unitOfMeasureControllerProvider.notifier)
+          .countProductsUsingUnit(unit.id);
+      if (!mounted) return;
+      if (productCount > 0) {
+        await showDialog<void>(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: Text(context.l10n.text('Cannot delete unit')),
+            content: Text(
+              context.l10n.text(
+                productCount == 1
+                    ? 'This unit is used by {count} product. Reassign that product before deleting the unit.'
+                    : 'This unit is used by {count} products. Reassign those products before deleting the unit.',
+                {'count': productCount},
+              ),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: Text(context.l10n.text('Close')),
+              ),
+            ],
+          ),
+        );
+        return;
+      }
+    } catch (error, stackTrace) {
+      if (mounted) AppErrorNotification.show(context, error, stackTrace);
+      return;
+    }
+
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(context.l10n.text('Delete unit of measurement?')),
+        content: Text(
+          context.l10n.text(
+            '“{name}” will disappear now and its deletion will sync later.',
+            {'name': unit.name},
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: Text(context.l10n.text('Cancel')),
+          ),
+          FilledButton.tonal(
+            onPressed: () => Navigator.pop(context, true),
+            child: Text(context.l10n.text('Delete offline')),
+          ),
+        ],
+      ),
+    );
+    if (confirmed != true || !mounted) return;
+    await _runMutation(
+      () => ref.read(unitOfMeasureControllerProvider.notifier).delete(unit.id),
+      context.l10n.text('Unit of measurement deleted locally.'),
+    );
+  }
+
+  Future<void> _runMutation(
+    Future<void> Function() action,
+    String successMessage,
+  ) async {
+    try {
+      await action();
+      if (!mounted) return;
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(successMessage)));
+    } catch (error, stackTrace) {
+      if (mounted) AppErrorNotification.show(context, error, stackTrace);
+    }
+  }
+}
+
+class _Content extends StatelessWidget {
+  const _Content({
+    required this.state,
+    required this.onEdit,
+    required this.onDelete,
+  });
+
+  final UnitOfMeasureScreenState state;
+  final ValueChanged<UnitOfMeasure> onEdit;
+  final ValueChanged<UnitOfMeasure> onDelete;
+
+  @override
+  Widget build(BuildContext context) => Column(
+    children: [
+      Expanded(
+        child: state.units.isEmpty
+            ? _EmptyView(isSearch: state.searchQuery.isNotEmpty)
+            : ListView.separated(
+                padding: const EdgeInsets.fromLTRB(16, 16, 16, 100),
+                itemCount: state.units.length,
+                separatorBuilder: (_, _) => const SizedBox(height: 10),
+                itemBuilder: (context, index) {
+                  final unit = state.units[index];
+                  return _UnitCard(
+                    unit: unit,
+                    onEdit: () => onEdit(unit),
+                    onDelete: () => onDelete(unit),
+                  );
+                },
+              ),
+      ),
+    ],
+  );
+}
+
+class _UnitCard extends StatelessWidget {
+  const _UnitCard({
+    required this.unit,
+    required this.onEdit,
+    required this.onDelete,
+  });
+
+  final UnitOfMeasure unit;
+  final VoidCallback onEdit;
+  final VoidCallback onDelete;
+
+  @override
+  Widget build(BuildContext context) => Card(
+    child: ListTile(
+      leading: CircleAvatar(
+        child: Text(unit.symbol.characters.first.toUpperCase()),
+      ),
+      title: Row(
+        children: [
+          Flexible(child: Text(unit.name)),
+          const SizedBox(width: 8),
+          _SyncStateIcon(unit: unit),
+        ],
+      ),
+      subtitle: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(unit.symbol),
+          if (unit.description case final description?)
+            Text(description, maxLines: 2, overflow: TextOverflow.ellipsis),
+        ],
+      ),
+      isThreeLine: unit.description != null,
+      trailing: PopupMenuButton<String>(
+        onSelected: (value) => value == 'edit' ? onEdit() : onDelete(),
+        itemBuilder: (context) => [
+          PopupMenuItem(value: 'edit', child: Text(context.l10n.text('Edit'))),
+          PopupMenuItem(
+            value: 'delete',
+            child: Text(context.l10n.text('Delete')),
+          ),
+        ],
+      ),
+    ),
+  );
+}
+
+class _SyncStateIcon extends StatelessWidget {
+  const _SyncStateIcon({required this.unit});
+
+  final UnitOfMeasure unit;
+
+  @override
+  Widget build(BuildContext context) {
+    final failed = unit.syncStatus == UnitOfMeasureSyncStatus.failed;
+    final synced = unit.syncStatus == UnitOfMeasureSyncStatus.synced;
+    return Tooltip(
+      message:
+          unit.lastSyncError ??
+          context.l10n.text(
+            synced
+                ? 'Synced'
+                : failed
+                ? 'Sync failed'
+                : 'Waiting to sync',
+          ),
+      child: Icon(
+        failed
+            ? Icons.cloud_off_outlined
+            : synced
+            ? Icons.cloud_done_outlined
+            : Icons.cloud_upload_outlined,
+        size: 18,
+        color: failed
+            ? Theme.of(context).colorScheme.error
+            : Theme.of(context).colorScheme.outline,
+      ),
+    );
+  }
+}
+
+class _EmptyView extends StatelessWidget {
+  const _EmptyView({this.isSearch = false});
+
+  final bool isSearch;
+
+  @override
+  Widget build(BuildContext context) => Center(
+    child: Padding(
+      padding: const EdgeInsets.all(32),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(
+            isSearch ? Icons.search_off : Icons.straighten_outlined,
+            size: 56,
+          ),
+          const SizedBox(height: 12),
+          Text(
+            context.l10n.text(
+              isSearch ? 'No matching units' : 'No units of measurement yet',
+            ),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            context.l10n.text(
+              isSearch
+                  ? 'Try a different search term.'
+                  : 'Add one now—even while completely offline.',
+            ),
+          ),
+        ],
+      ),
+    ),
+  );
+}

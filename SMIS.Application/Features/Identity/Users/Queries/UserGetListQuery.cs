@@ -9,20 +9,27 @@ using SMIS.Domain.Entities.Identity.Entity;
 
 namespace SMIS.Application.Features.Identity.Users.Queries
 {
-    public record UserGetListQuery(int PageNumber = 1, int PageSize = 25, bool includeShop = false) : IRequest<Result<PagedList<UserDto>>>;
+    public record UserGetListQuery(int PageNumber = 1, int PageSize = 25, bool includeShop = false)
+        : IRequest<Result<PagedList<UserDto>>>;
 
     public class UserGetListQueryHandler : IRequestHandler<UserGetListQuery, Result<PagedList<UserDto>>>
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IMapper _mapper;
 
-        public UserGetListQueryHandler(UserManager<ApplicationUser> userManager, IMapper mapper)
+        public UserGetListQueryHandler(
+            UserManager<ApplicationUser> userManager,
+            IMapper mapper
+        )
         {
             _userManager = userManager;
             _mapper = mapper;
         }
 
-        public async Task<Result<PagedList<UserDto>>> Handle(UserGetListQuery request, CancellationToken cancellationToken)
+        public async Task<Result<PagedList<UserDto>>> Handle(
+            UserGetListQuery request,
+            CancellationToken cancellationToken
+        )
         {
             var query = _userManager.Users.AsNoTracking();
 
@@ -38,7 +45,7 @@ namespace SMIS.Application.Features.Identity.Users.Queries
                 .ToListAsync(cancellationToken);
 
             var userDtos = _mapper.Map<List<UserDto>>(users);
-            
+
             var pagedList = new PagedList<UserDto>
             {
                 PageNumber = request.PageNumber,

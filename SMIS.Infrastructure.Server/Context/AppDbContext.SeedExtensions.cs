@@ -5,7 +5,9 @@ namespace SMIS.Infrastructure.Server.Context;
 
 public partial class AppDbContext
 {
-    partial void OnModelCreatingPartial(ModelBuilder modelBuilder)
+    partial void OnModelCreatingPartial(
+        ModelBuilder modelBuilder
+    )
     {
         // Register additional seeds without modifying the main AppDbContext file
         RoleSeeder.DataSeed(modelBuilder);
@@ -16,10 +18,16 @@ public partial class AppDbContext
         TranslationSeed.DataSeed(modelBuilder);
         ProvinceSeed.DataSeed(modelBuilder);
         DistrictSeed.DataSeed(modelBuilder);
-        UnitOfMeasureSeed.DataSeed(modelBuilder);
         ShopSeed.DataSeed(modelBuilder);
-        ProductSeed.DataSeed(modelBuilder);
+        UnitOfMeasureSeed.DataSeed(modelBuilder);
         CategorySeed.DataSeed(modelBuilder);
+        ProductSeed.DataSeed(modelBuilder);
+        ProductUnitSeed.DataSeed(modelBuilder);
+        ProductPriceSeed.DataSeed(modelBuilder);
         CustomerSeed.DataSeed(modelBuilder);
+        ShopOwnerSeed.DataSeed(modelBuilder);
+        StockBatchSeed.DataSeed(modelBuilder);
+        StockMovementSeed.DataSeed(modelBuilder);
+        LoanAccountSeed.DataSeed(modelBuilder);
     }
 }

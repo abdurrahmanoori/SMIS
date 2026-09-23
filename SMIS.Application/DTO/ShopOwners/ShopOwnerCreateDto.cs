@@ -3,7 +3,6 @@ namespace SMIS.Application.DTO.ShopOwners
     public class ShopOwnerCreateDto
     {
         public string ApplicationUserId { get; set; } = string.Empty;
-        public string ShopId { get; set; } = string.Empty;
         public string FirstName { get; set; } = string.Empty;
         public string? LastName { get; set; }
         public string? NationalIdCardNumber { get; set; }

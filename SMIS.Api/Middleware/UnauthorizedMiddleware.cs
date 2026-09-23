@@ -4,12 +4,16 @@ namespace SMIS.Api.Middleware
     {
         private readonly RequestDelegate _next;
 
-        public UnauthorizedMiddleware(RequestDelegate next)
+        public UnauthorizedMiddleware(
+            RequestDelegate next
+        )
         {
             _next = next;
         }
 
-        public async Task InvokeAsync(HttpContext httpContext)
+        public async Task InvokeAsync(
+            HttpContext httpContext
+        )
         {
             await _next(httpContext);
 

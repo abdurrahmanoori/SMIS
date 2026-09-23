@@ -8,8 +8,11 @@ namespace SMIS.Application.Extensions
 {
     public static class TranslationExtensions
     {
-        public static string GetTranslation(this IQueryable<TranslationKey> translationKeys, 
-            string originalValue, string languageId)
+        public static string GetTranslation(
+            this IQueryable<TranslationKey> translationKeys,
+            string originalValue,
+            string languageId
+        )
         {
             try
             {
@@ -26,10 +29,12 @@ namespace SMIS.Application.Extensions
             }
         }
 
-        public static T TranslateEntity<T>(this T entity, 
-            IQueryable<TranslationKey> translationKeys, 
+        public static T TranslateEntity<T>(
+            this T entity,
+            IQueryable<TranslationKey> translationKeys,
             string languageId,
-            params (Func<T, string> getter, Action<T, string> setter)[] properties)
+            params (Func<T, string> getter, Action<T, string> setter)[] properties
+        )
         {
             foreach (var (getter, setter) in properties)
             {
@@ -37,12 +42,15 @@ namespace SMIS.Application.Extensions
                 var translatedValue = translationKeys.GetTranslation(originalValue, languageId);
                 setter(entity, translatedValue);
             }
+
             return entity;
         }
 
-        public static T TranslateEntityByAttributes<T>(this T entity,
+        public static T TranslateEntityByAttributes<T>(
+            this T entity,
             IQueryable<TranslationKey> translationKeys,
-            string languageId)
+            string languageId
+        )
         {
             var properties = typeof(T).GetProperties()
                 .Where(p => p.GetCustomAttribute<TranslatableAttribute>() != null && p.PropertyType == typeof(string));
@@ -56,6 +64,7 @@ namespace SMIS.Application.Extensions
                     property.SetValue(entity, translatedValue);
                 }
             }
+
             return entity;
         }
     }

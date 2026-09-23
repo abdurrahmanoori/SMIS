@@ -7,7 +7,9 @@ namespace SMIS.Infrastructure.Server.Services
     {
         private readonly bool _useSequentialIds;
 
-        public PublicIdGenerator(IConfiguration configuration)
+        public PublicIdGenerator(
+            IConfiguration configuration
+        )
         {
             var environment = configuration["Environment"] ?? "Production";
             // Sequential numeric IDs only in Development for readability.

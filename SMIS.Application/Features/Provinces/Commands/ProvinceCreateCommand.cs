@@ -16,24 +16,34 @@ namespace SMIS.Application.Features.Provinces.Commands
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
 
-        public ProvinceCreateCommandHandler(IUnitOfWork unitOfWork, IMapper mapper, IProvinceRepository provinceRepository)
+        public ProvinceCreateCommandHandler(
+            IUnitOfWork unitOfWork,
+            IMapper mapper,
+            IProvinceRepository provinceRepository
+        )
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _provinceRepository = provinceRepository;
         }
 
-        public async Task<Result<ProvinceDto>> Handle(ProvinceCreateCommand request,
-            CancellationToken cancellationToken)
+        public async Task<Result<ProvinceDto>> Handle(
+            ProvinceCreateCommand request,
+            CancellationToken cancellationToken
+        )
         {
             var entity = _mapper.Map<Province>(request.ProvinceCreateDto);
 
             // Ensure at least one translation exists for Name fallback
-            if ((entity.Translations == null || entity.Translations.Count == 0) && !string.IsNullOrWhiteSpace(request.ProvinceCreateDto.Name))
+            if ((entity.Translations == null || entity.Translations.Count == 0) &&
+                !string.IsNullOrWhiteSpace(request.ProvinceCreateDto.Name))
             {
                 entity.Translations = new List<ProvinceTranslation>
                 {
-                    new ProvinceTranslation { LanguageCode = "en", LanguageId = "1", IsDefault = true, Name = request.ProvinceCreateDto.Name }
+                    new ProvinceTranslation
+                    {
+                        LanguageCode = "en", LanguageId = "1", IsDefault = true, Name = request.ProvinceCreateDto.Name
+                    }
                 };
             }
 
