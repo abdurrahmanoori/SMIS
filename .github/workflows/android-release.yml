@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - main
+    paths:
+      - "smis_flutter/**"
   workflow_dispatch:
 
 permissions:
@@ -40,7 +42,7 @@ jobs:
         run: flutter pub get
 
       - name: Build release APK
-        run: flutter build apk --release
+        run: flutter build apk --release --build-number "${GITHUB_RUN_NUMBER}"
 
       - name: Prepare APK
         run: cp build/app/outputs/flutter-apk/app-release.apk "../SMIS-${GITHUB_RUN_NUMBER}.apk"
@@ -62,4 +64,4 @@ jobs:
             --repo "${GITHUB_REPOSITORY}" \
             --target "${GITHUB_SHA}" \
             --title "SMIS Android Build #${GITHUB_RUN_NUMBER}" \
-            --notes "Automated Flutter release APK built from commit ${GITHUB_SHA}."
+            --notes "Automated Flutter release APK built from commit ${GITHUB_SHA}. Android build number: ${GITHUB_RUN_NUMBER}."
