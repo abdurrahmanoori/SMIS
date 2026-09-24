@@ -32,6 +32,10 @@ namespace SMIS.Application.Features.Identity.Users.Validators
             RuleFor(x => x.UserCreateDto.ShopId)
                 .NotEmpty().WithMessage("ShopId is required");
 
+            RuleFor(x => x.UserCreateDto.LanguageId)
+                .NotEmpty().WithMessage("Language is required")
+                .MaximumLength(450).WithMessage("Language ID must not exceed 450 characters");
+
             RuleFor(x => x.UserCreateDto.FirstName)
                 .MaximumLength(100).WithMessage("First name must not exceed 100 characters")
                 .When(x => !string.IsNullOrEmpty(x.UserCreateDto.FirstName));

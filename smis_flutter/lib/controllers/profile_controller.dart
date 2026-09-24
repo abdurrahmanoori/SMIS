@@ -22,12 +22,33 @@ class ProfileController extends AsyncNotifier<UserProfile> {
     // profile so roles and shop details remain available on this screen.
     final updatedProfile = await _api.getCurrentUser();
     state = AsyncData(updatedProfile);
-    await ref
-        .read(authControllerProvider.notifier)
-        .updateSessionProfile(
-          userName: updatedProfile.userName,
-          email: updatedProfile.email,
-        );
+    await ref.read(authControllerProvider.notifier).refreshSession();
+  }
+
+  Future<void> updateLanguageByCode(String languageCode) async {
+    final normalizedCode = languageCode.trim().toLowerCase();
+    final languages = await _api.getLanguages();
+    ProfileLanguage? selectedLanguage;
+    for (final language in languages) {
+      if (language.code?.trim().toLowerCase() == normalizedCode) {
+        selectedLanguage = language;
+        break;
+      }
+    }
+    if (selectedLanguage == null) {
+      throw const ProfileValidationException(
+        'The selected language is not available.',
+      );
+    }
+
+    final currentProfile = state.value ?? await _api.getCurrentUser();
+    if (currentProfile.languageId != selectedLanguage.id) {
+      await _api.updateLanguage(currentProfile.id, selectedLanguage.id);
+    }
+
+    final updatedProfile = await _api.getCurrentUser();
+    state = AsyncData(updatedProfile);
+    await ref.read(authControllerProvider.notifier).refreshSession();
   }
 
   Future<void> changePassword(ChangePasswordDraft draft) async {

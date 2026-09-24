@@ -1,9 +1,9 @@
 # Flutter PowerSync gradual migration
 
-PowerSync is intentionally scoped to the business entities that currently
-exist in the Flutter application: Shop, Category, UnitOfMeasure, Product and
-ProductUnit. Other .NET domain entities are not synchronized until a Flutter
-feature explicitly adopts them.
+PowerSync is intentionally scoped to data that currently has an offline Flutter
+use case. In addition to the business entities used by Flutter, active language
+lookup rows and the signed-in user's language preference are synchronized so
+locale selection remains consistent with the server account.
 
 ## Authentication flow
 
@@ -23,6 +23,7 @@ needed.
 The PowerSync JWT contains:
 
 - `sub`: authenticated SMIS user ID
+- `UserId`: authenticated SMIS user ID used by the current-user sync stream
 - `ShopId`: authenticated user's shop
 - `aud`: PowerSync Development instance URL
 - `iat` / `exp`: short-lived token timestamps
@@ -74,8 +75,10 @@ the PowerSync service.
 The Development instance is configured with:
 
 - Azure SQL `smis` as the source database
-- CDC replication only for the five Flutter tables
-- explicit streams for Shop, Category, UnitOfMeasure, Product and ProductUnit
+- CDC replication for the Flutter-synchronized business tables plus Languages
+  and AspNetUsers
+- explicit streams for the Flutter business data, active languages, and the
+  signed-in user's language preference
 - custom RS256 JWT verification with a public JWKS key
 - temporary/development PowerSync tokens disabled
 

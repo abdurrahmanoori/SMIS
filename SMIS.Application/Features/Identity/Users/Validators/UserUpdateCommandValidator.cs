@@ -39,6 +39,7 @@ namespace SMIS.Application.Features.Identity.Users.Validators
 
             RuleFor(x => x.UserUpdateDto.LanguageId)
                 .NotEmpty().WithMessage("Language is required")
+                .MaximumLength(450).WithMessage("Language ID must not exceed 450 characters")
                 .When(x => x.UserUpdateDto.LanguageId is not null);
         }
     }

@@ -1,4 +1,5 @@
 using SMIS.Application.Attributes;
+using SMIS.Domain.Entities.Localization;
 
 namespace SMIS.Application.DTO.Users
 {
@@ -14,7 +15,7 @@ namespace SMIS.Application.DTO.Users
         [Translatable] public string? LastName { get; set; }
 
         public string ShopId { get; set; } = default!;
-        public string? LanguageId { get; set; }
+        public string LanguageId { get; set; } = LanguageDefaults.EnglishId;
         public IEnumerable<string>? Roles { get; set; }
     }
 }

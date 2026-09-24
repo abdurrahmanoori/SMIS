@@ -59,6 +59,15 @@ namespace SMIS.Api.Controllers
             HandleResultResponseOld(await Mediator.Send(new SwitchShopCommand(dto.ShopId)));
 
         /// <summary>
+        /// Reissues the current session so user profile changes such as language
+        /// preference are reflected in JWT claims immediately.
+        /// </summary>
+        [Authorize]
+        [HttpPost("refresh-session")]
+        public async Task<ActionResult<LoginResponseDto>> RefreshSession() =>
+            HandleResultResponseOld(await Mediator.Send(new RefreshSessionCommand()));
+
+        /// <summary>
         /// Creates a new user account.
         /// </summary>
         /// <remarks>

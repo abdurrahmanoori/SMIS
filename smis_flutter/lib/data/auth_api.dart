@@ -9,6 +9,8 @@ abstract interface class AuthApi {
   Future<AuthSession> login({required String email, required String password});
 
   Future<AuthSession> switchShop(String shopId);
+
+  Future<AuthSession> refreshSession();
 }
 
 class DioAuthApi implements AuthApi {
@@ -85,6 +87,36 @@ class DioAuthApi implements AuthApi {
         error,
         stackTrace,
         fallbackMessage: 'Unable to switch the active shop.',
+      );
+    }
+  }
+
+  @override
+  Future<AuthSession> refreshSession() async {
+    final current = await _sessionStore.read();
+    if (current == null) {
+      throw const AuthenticationException(
+        'You must be signed in to refresh the session.',
+      );
+    }
+
+    try {
+      final response = await _dio.post<Map<String, dynamic>>(
+        AppConfig.refreshSessionEndpoint,
+        options: Options(headers: {'Authorization': 'Bearer ${current.token}'}),
+      );
+      final data = response.data;
+      if (data == null) {
+        throw const AuthenticationException(
+          'The session refresh response was empty.',
+        );
+      }
+      return AuthSession.fromJson(data);
+    } catch (error, stackTrace) {
+      ApiErrorParser.mapAndThrow(
+        error,
+        stackTrace,
+        fallbackMessage: 'Unable to refresh the signed-in session.',
       );
     }
   }

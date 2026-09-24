@@ -16,6 +16,7 @@ namespace SMIS.Application.Features.Identity.Users.Commands
     public class UserCreateCommandHandler : IRequestHandler<UserCreateCommand, Result<UserDto>>
     {
         private readonly ITranslationKeyRepository _translationKeyRepository;
+        private readonly ILanguageRepository _languageRepository;
         private readonly IShopRepository _shopRepository;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly RoleManager<ApplicationRole> _roleManager;
@@ -24,6 +25,7 @@ namespace SMIS.Application.Features.Identity.Users.Commands
 
         public UserCreateCommandHandler(
             ITranslationKeyRepository translationKeyRepository,
+            ILanguageRepository languageRepository,
             IShopRepository shopRepository,
             UserManager<ApplicationUser> userManager,
             RoleManager<ApplicationRole> roleManager,
@@ -32,6 +34,7 @@ namespace SMIS.Application.Features.Identity.Users.Commands
         )
         {
             _translationKeyRepository = translationKeyRepository;
+            _languageRepository = languageRepository;
             _shopRepository = shopRepository;
             _userManager = userManager;
             _roleManager = roleManager;
@@ -44,6 +47,14 @@ namespace SMIS.Application.Features.Identity.Users.Commands
             CancellationToken cancellationToken
         )
         {
+            var language = await _languageRepository.GetByIdAsync(request.UserCreateDto.LanguageId);
+            if (language is null || !language.IsActive)
+            {
+                return Result<UserDto>.FailureResult(
+                    "InvalidLanguage",
+                    "The selected language does not exist or is inactive.");
+            }
+
             await _translationKeyRepository.AddTranslationKeysForEntity(request.UserCreateDto, _unitOfWork);
 
             var entity = _mapper.Map<ApplicationUser>(request.UserCreateDto);

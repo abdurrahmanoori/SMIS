@@ -1,4 +1,5 @@
 using SMIS.Domain.Common.Interfaces;
+using SMIS.Domain.Entities.Localization;
 
 namespace SMIS.Infrastructure.Server.DatabaseSeeders;
 
@@ -10,7 +11,9 @@ public static class SeedIds
 {
     public static readonly DateTime SeedTimestampUtc = new(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc);
 
-    public static T[] Stamp<T>(params T[] entities)
+    public static T[] Stamp<T>(
+        params T[] entities
+    )
         where T : IEntityPK
     {
         foreach (var entity in entities)
@@ -28,7 +31,7 @@ public static class SeedIds
     public const string ShopWasil = "11111111-0000-0000-0000-000000000004";
 
     // Languages
-    public const string LangEn = "22222222-0000-0000-0000-000000000001";
+    public const string LangEn = LanguageDefaults.EnglishId;
     public const string LangPs = "22222222-0000-0000-0000-000000000002";
     public const string LangFa = "22222222-0000-0000-0000-000000000003";
 

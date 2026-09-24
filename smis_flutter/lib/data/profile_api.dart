@@ -13,6 +13,8 @@ abstract interface class ProfileApi {
 
   Future<UserProfile> updateProfile(String userId, ProfileUpdateDraft draft);
 
+  Future<void> updateLanguage(String userId, String languageId);
+
   Future<void> changePassword(String userId, ChangePasswordDraft draft);
 }
 
@@ -100,6 +102,18 @@ class DioProfileApi implements ProfileApi {
         );
       }
       return UserProfile.fromJson(data);
+    } catch (error, stackTrace) {
+      ApiErrorParser.mapAndThrow(error, stackTrace);
+    }
+  }
+
+  @override
+  Future<void> updateLanguage(String userId, String languageId) async {
+    try {
+      await _dio.put<void>(
+        '${AppConfig.accountEndpoint}/$userId',
+        data: {'languageId': languageId},
+      );
     } catch (error, stackTrace) {
       ApiErrorParser.mapAndThrow(error, stackTrace);
     }

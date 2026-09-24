@@ -2,6 +2,28 @@ config:
   edition: 3
 
 streams:
+  languages:
+    auto_subscribe: true
+    query: |
+      SELECT
+        language."Id" AS id,
+        language."Name" AS name,
+        language."Code" AS code,
+        language."IsActive" AS is_active,
+        language."LastModifiedUtc" AS last_modified_utc
+      FROM "Languages" AS language
+      WHERE language."IsActive" = 1
+
+  current_user:
+    auto_subscribe: true
+    query: |
+      SELECT
+        app_user."Id" AS id,
+        app_user."LanguageId" AS language_id,
+        app_user."LastModifiedUtc" AS last_modified_utc
+      FROM "AspNetUsers" AS app_user
+      WHERE app_user."Id" = auth.parameter('UserId')
+
   shops:
     auto_subscribe: true
     query: |

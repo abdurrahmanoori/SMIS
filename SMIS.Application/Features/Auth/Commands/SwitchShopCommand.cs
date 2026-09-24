@@ -3,8 +3,10 @@ using Microsoft.AspNetCore.Identity;
 using SMIS.Application.Common.Response;
 using SMIS.Application.DTO.Auth;
 using SMIS.Application.Identity.IServices;
+using SMIS.Application.Repositories.Localization;
 using SMIS.Application.Repositories.Shops;
 using SMIS.Domain.Entities.Identity.Entity;
+using SMIS.Domain.Entities.Localization;
 
 namespace SMIS.Application.Features.Auth.Commands;
 
@@ -17,18 +19,21 @@ internal sealed class SwitchShopCommandHandler
     private readonly IShopRepository _shopRepository;
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly ITokenGenerator _tokenGenerator;
+    private readonly ILanguageRepository _languageRepository;
 
     public SwitchShopCommandHandler(
         ICurrentUser currentUser,
         IShopRepository shopRepository,
         UserManager<ApplicationUser> userManager,
-        ITokenGenerator tokenGenerator
+        ITokenGenerator tokenGenerator,
+        ILanguageRepository languageRepository
     )
     {
         _currentUser = currentUser;
         _shopRepository = shopRepository;
         _userManager = userManager;
         _tokenGenerator = tokenGenerator;
+        _languageRepository = languageRepository;
     }
 
     public async Task<Result<LoginResponseDto>> Handle(
@@ -67,6 +72,10 @@ internal sealed class SwitchShopCommandHandler
 
         var roles = await _userManager.GetRolesAsync(user);
         var token = _tokenGenerator.Generate(user, roles, shop.Id);
+        var language = await _languageRepository.GetByIdAsync(user.LanguageId);
+        var languageCode = string.IsNullOrWhiteSpace(language?.Code)
+            ? LanguageDefaults.EnglishCode
+            : language.Code!;
 
         return Result<LoginResponseDto>.SuccessResult(
             new LoginResponseDto
@@ -76,6 +85,8 @@ internal sealed class SwitchShopCommandHandler
                 UserName = user.UserName ?? string.Empty,
                 Email = user.Email ?? string.Empty,
                 ShopId = shop.Id,
+                LanguageId = user.LanguageId,
+                LanguageCode = languageCode,
                 Roles = roles
             },
             $"Active shop changed to {shop.Name}.");

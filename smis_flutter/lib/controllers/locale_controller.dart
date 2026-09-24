@@ -36,6 +36,9 @@ class LocaleController extends Notifier<Locale> {
     state = Locale(locale.languageCode);
     await _storage.write(key: _localeKey, value: locale.languageCode);
   }
+
+  Future<void> setLanguageCode(String languageCode) =>
+      setLocale(Locale(languageCode.toLowerCase()));
 }
 
 final localeControllerProvider = NotifierProvider<LocaleController, Locale>(

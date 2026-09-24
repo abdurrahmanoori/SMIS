@@ -50,6 +50,7 @@ public sealed class PowerSyncTokenGenerator : IPowerSyncTokenGenerator
         var claims = new[]
         {
             new Claim(JwtRegisteredClaimNames.Sub, userId),
+            new Claim("UserId", userId),
             new Claim(nameof(ApplicationUser.ShopId), shopId),
             new Claim("IsSuperAdmin", isSuperAdmin ? "true" : "false"),
             new Claim(

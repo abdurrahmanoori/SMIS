@@ -1,3 +1,5 @@
+import 'language_defaults.dart';
+
 class AuthSession {
   const AuthSession({
     required this.token,
@@ -6,6 +8,8 @@ class AuthSession {
     required this.email,
     required this.roles,
     required this.shopId,
+    required this.languageId,
+    required this.languageCode,
   });
 
   final String token;
@@ -14,17 +18,29 @@ class AuthSession {
   final String email;
   final List<String> roles;
   final String shopId;
+  final String languageId;
+  final String languageCode;
 
   bool get isSuperAdmin =>
       roles.any((role) => role.trim().toLowerCase() == 'superadmin');
 
-  AuthSession copyWith({String? userName, String? email}) => AuthSession(
-    token: token,
+  AuthSession copyWith({
+    String? token,
+    String? userName,
+    String? email,
+    List<String>? roles,
+    String? shopId,
+    String? languageId,
+    String? languageCode,
+  }) => AuthSession(
+    token: token ?? this.token,
     userId: userId,
     userName: userName ?? this.userName,
     email: email ?? this.email,
-    roles: roles,
-    shopId: shopId,
+    roles: roles ?? this.roles,
+    shopId: shopId ?? this.shopId,
+    languageId: languageId ?? this.languageId,
+    languageCode: languageCode ?? this.languageCode,
   );
 
   factory AuthSession.fromJson(Map<String, dynamic> json) {
@@ -36,6 +52,15 @@ class AuthSession {
       return value;
     }
 
+    String optionalString(
+      String camelCase,
+      String pascalCase,
+      String fallback,
+    ) {
+      final value = json[camelCase] ?? json[pascalCase];
+      return value is String && value.trim().isNotEmpty ? value : fallback;
+    }
+
     final rawRoles = json['roles'] ?? json['Roles'] ?? const <dynamic>[];
     return AuthSession(
       token: requiredString('token', 'Token'),
@@ -43,6 +68,16 @@ class AuthSession {
       userName: requiredString('userName', 'UserName'),
       email: requiredString('email', 'Email'),
       shopId: requiredString('shopId', 'ShopId'),
+      languageId: optionalString(
+        'languageId',
+        'LanguageId',
+        LanguageDefaults.englishId,
+      ),
+      languageCode: optionalString(
+        'languageCode',
+        'LanguageCode',
+        LanguageDefaults.englishCode,
+      ).toLowerCase(),
       roles: rawRoles is List
           ? rawRoles.whereType<String>().toList(growable: false)
           : const <String>[],
@@ -56,6 +91,8 @@ class AuthSession {
     'email': email,
     'roles': roles,
     'shopId': shopId,
+    'languageId': languageId,
+    'languageCode': languageCode,
   };
 }
 
