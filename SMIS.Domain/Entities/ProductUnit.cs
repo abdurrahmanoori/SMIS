@@ -37,8 +37,6 @@ public class ProductUnit : BaseSyncableAuditableEntity
     /// </summary>
     public decimal BaseUnitQuantity { get; private set; }
 
-    public DateTime ConflictModifiedUtc => GetConflictModifiedUtc();
-
     public Product Product { get; set; } = null!;
 
     public UnitOfMeasure UnitOfMeasure { get; set; } = null!;

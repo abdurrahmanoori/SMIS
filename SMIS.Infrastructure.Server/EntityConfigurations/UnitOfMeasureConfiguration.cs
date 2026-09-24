@@ -11,7 +11,7 @@ namespace SMIS.Infrastructure.Server.EntityConfigurations
         )
         {
             builder.ConfigureAuditUserRelationships();
-            builder.ConfigureClientAuditUserRelationships();
+            builder.IgnoreLegacySyncMetadata();
             builder.ToTable(nameof(UnitOfMeasure));
 
             builder.HasKey(u => u.Id);
@@ -26,9 +26,6 @@ namespace SMIS.Infrastructure.Server.EntityConfigurations
 
             builder.Property(u => u.Description)
                 .HasMaxLength(500);
-
-            builder.Property(u => u.ClientCreatedBy).HasMaxLength(450);
-            builder.Property(u => u.ClientModifiedBy).HasMaxLength(450);
 
             builder.HasIndex(u => u.Name)
                 .IsUnique()

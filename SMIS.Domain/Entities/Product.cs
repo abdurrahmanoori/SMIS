@@ -23,7 +23,7 @@ public class Product : BaseSyncableAuditableEntity, IEntity, IShopEntity
     public string? BaseUnitName { get; set; }
     public string? Description { get; private set; }
     public bool IsActive { get; private set; } = true;
-    public string? SKU { get; private set; } = string.Empty;
+    public string? SKU { get; private set; }
     public string? Barcode { get; private set; }
     public string? ImageUrl { get; private set; }
     public decimal ReorderPointBase { get; private set; }
@@ -49,7 +49,7 @@ public class Product : BaseSyncableAuditableEntity, IEntity, IShopEntity
         string name,
         string shopId,
         string baseUnitId,
-        string sku,
+        string? sku,
         string categoryId,
         bool isActive = true,
         string? description = null,

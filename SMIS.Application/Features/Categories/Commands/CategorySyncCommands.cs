@@ -54,16 +54,6 @@ internal sealed class CategorySyncCreateCommandHandler : IRequestHandler<Categor
         // FluentValidation has already guaranteed a valid GUID.
         var id = CategorySyncRules.NormalizeGuid(request.Dto.Id);
 
-        if (!CategorySyncRules.UserMetadataMatches(
-                request.Dto.ClientCreatedBy, _currentUser) ||
-            !CategorySyncRules.UserMetadataMatches(request.Dto.ClientModifiedBy, _currentUser))
-        {
-            return CategorySyncRules.InvalidUser();
-        }
-
-        var clientCreated =
-            DateTimeService.NormalizeUtc(request.Dto.ClientCreatedDate);
-
         var clientModified =
             DateTimeService.NormalizeUtc(request.Dto.ClientModifiedDate);
 
@@ -93,14 +83,7 @@ internal sealed class CategorySyncCreateCommandHandler : IRequestHandler<Categor
             }
 
             CategoryCommandRules.Apply(existing, request.Dto);
-
-            existing.SetClientCreationMetadata(
-                clientCreated,
-                request.Dto.ClientCreatedBy);
-
-            existing.SetClientModificationMetadata(
-                clientModified,
-                request.Dto.ClientModifiedBy);
+            existing.SetClientModificationMetadata(clientModified);
 
             existing.Restore();
 
@@ -122,14 +105,7 @@ internal sealed class CategorySyncCreateCommandHandler : IRequestHandler<Categor
         var category = CategoryCommandRules.Create(request.Dto, shopId);
 
         category.Id = id;
-
-        category.SetClientCreationMetadata(
-            clientCreated,
-            request.Dto.ClientCreatedBy);
-
-        category.SetClientModificationMetadata(
-            clientModified,
-            request.Dto.ClientModifiedBy);
+        category.SetClientModificationMetadata(clientModified);
 
         await _repository.AddAsync(category);
 
@@ -172,13 +148,6 @@ internal sealed class CategorySyncUpdateCommandHandler
     {
         var id = CategorySyncRules.NormalizeGuid(request.Id);
 
-        if (!CategorySyncRules.UserMetadataMatches(
-                request.Dto.ClientModifiedBy,
-                _currentUser))
-        {
-            return CategorySyncRules.InvalidUser();
-        }
-
         var category = await _db.Categories
             .IgnoreQueryFilters()
             .FirstOrDefaultAsync(entity => entity.Id == id, cancellationToken);
@@ -209,9 +178,7 @@ internal sealed class CategorySyncUpdateCommandHandler
 
         CategoryCommandRules.Apply(category, request.Dto);
 
-        category.SetClientModificationMetadata(
-            clientModified,
-            request.Dto.ClientModifiedBy);
+        category.SetClientModificationMetadata(clientModified);
 
         category.Restore();
 
@@ -257,13 +224,6 @@ internal sealed class CategorySyncDeleteCommandHandler
     {
         var id = CategorySyncRules.NormalizeGuid(request.Id);
 
-        if (!CategorySyncRules.UserMetadataMatches(
-                request.Dto.ClientModifiedBy,
-                _currentUser))
-        {
-            return CategorySyncRules.InvalidUser();
-        }
-
         var category = await _db.Categories
             .IgnoreQueryFilters()
             .FirstOrDefaultAsync(entity => entity.Id == id, cancellationToken);
@@ -293,9 +253,7 @@ internal sealed class CategorySyncDeleteCommandHandler
                 $"Category is used by {productCount} product(s). Reassign them before deleting the category.");
         }
 
-        category.SetClientModificationMetadata(
-            clientModified,
-            request.Dto.ClientModifiedBy);
+        category.SetClientModificationMetadata(clientModified);
 
         await _repository.RemoveAsync(category);
 
@@ -317,18 +275,6 @@ internal static class CategorySyncRules
     ) =>
         Guid.Parse(value).ToString("D");
 
-    public static bool UserMetadataMatches(
-        string? clientUserId,
-        ICurrentUser currentUser
-    )
-    {
-        return string.IsNullOrWhiteSpace(clientUserId) ||
-               string.Equals(
-                   clientUserId.Trim(),
-                   currentUser.GetId(),
-                   StringComparison.Ordinal);
-    }
-
     public static bool CanAccess(
         Category category,
         ICurrentUser currentUser
@@ -336,11 +282,6 @@ internal static class CategorySyncRules
     {
         return category.ShopId == currentUser.GetShopId();
     }
-
-    public static Result<CategoryDto> InvalidUser() =>
-        Result<CategoryDto>.FailureResult(
-            "InvalidClientUser",
-            "Client user metadata must match the authenticated user.");
 
     public static Result<CategoryDto> Forbidden() =>
         Result<CategoryDto>.FailureResult(

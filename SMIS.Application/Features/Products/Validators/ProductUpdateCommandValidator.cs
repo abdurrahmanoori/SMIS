@@ -23,7 +23,6 @@ namespace SMIS.Application.Features.Products.Validators
                 .When(x => !string.IsNullOrEmpty(x.ProductCreateDto.Description));
 
             RuleFor(x => x.ProductCreateDto.SKU)
-                .NotEmpty().WithMessage("SKU is required")
                 .MaximumLength(50).WithMessage("SKU must not exceed 50 characters");
 
             RuleFor(x => x.ProductCreateDto.Barcode)

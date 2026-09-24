@@ -4,7 +4,6 @@ using SMIS.Application.Common.Response;
 using SMIS.Application.DTO.ProductPrices;
 using SMIS.Application.Identity.IServices;
 using SMIS.Application.Services;
-using SMIS.Domain.Services;
 
 namespace SMIS.Application.Features.ProductPrices.Queries;
 
@@ -47,10 +46,7 @@ internal sealed class ProductPriceQueryHandler
                 SellPrice = x.SellPrice,
                 EffectiveDate = x.EffectiveDate,
                 EndDate = x.EndDate,
-                ClientCreatedDate = x.ClientCreatedDate,
-                ClientCreatedBy = x.ClientCreatedBy,
                 ClientModifiedDate = x.ClientModifiedDate,
-                ClientModifiedBy = x.ClientModifiedBy,
                 LastModifiedUtc = x.LastModifiedUtc,
                 IsDeleted = x.IsDeleted,
             });
@@ -62,14 +58,6 @@ internal sealed class ProductPriceQueryHandler
                 request.Query.GetPageNumber(),
                 request.Query.GetPageSize(),
                 cancellationToken);
-
-        foreach (var item in pagedList.Items)
-        {
-            item.ConflictModifiedUtc = DateTimeService.NormalizeUtc(
-                item.ClientModifiedDate
-                ?? item.ClientCreatedDate
-                ?? item.LastModifiedUtc);
-        }
 
         return Result<PagedListNew<ProductPriceDto>>.SuccessResult(pagedList);
     }

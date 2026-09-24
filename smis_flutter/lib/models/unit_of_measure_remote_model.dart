@@ -12,12 +12,8 @@ class UnitOfMeasureRemoteModel {
     this.updatedDate,
     this.createdBy,
     this.updatedBy,
-    this.clientCreatedDate,
     this.clientModifiedDate,
-    this.clientCreatedBy,
-    this.clientModifiedBy,
-    DateTime? conflictModifiedUtc,
-  }) : conflictModifiedUtc = conflictModifiedUtc ?? lastModifiedUtc;
+  });
 
   final String id;
   final String name;
@@ -29,17 +25,12 @@ class UnitOfMeasureRemoteModel {
   final DateTime? updatedDate;
   final String? createdBy;
   final String? updatedBy;
-  final DateTime? clientCreatedDate;
   final DateTime? clientModifiedDate;
-  final String? clientCreatedBy;
-  final String? clientModifiedBy;
-  final DateTime conflictModifiedUtc;
 
   factory UnitOfMeasureRemoteModel.fromJson(Map<String, dynamic> json) {
     final lastModifiedUtc = _requiredDate(json, 'lastModifiedUtc');
     final createdDate = _optionalDate(json['createdDate']);
     final updatedDate = _optionalDate(json['updatedDate']);
-    final clientCreatedDate = _optionalDate(json['clientCreatedDate']);
     final clientModifiedDate = _optionalDate(json['clientModifiedDate']);
     return UnitOfMeasureRemoteModel(
       id: json['id'] as String,
@@ -52,17 +43,7 @@ class UnitOfMeasureRemoteModel {
       updatedDate: updatedDate,
       createdBy: json['createdBy'] as String?,
       updatedBy: json['updatedBy'] as String?,
-      clientCreatedDate: clientCreatedDate,
       clientModifiedDate: clientModifiedDate,
-      clientCreatedBy: json['clientCreatedBy'] as String?,
-      clientModifiedBy: json['clientModifiedBy'] as String?,
-      conflictModifiedUtc:
-          _optionalDate(json['conflictModifiedUtc']) ??
-          clientModifiedDate ??
-          updatedDate ??
-          clientCreatedDate ??
-          createdDate ??
-          lastModifiedUtc,
     );
   }
 
@@ -72,7 +53,6 @@ class UnitOfMeasureRemoteModel {
         'name': record.name,
         'symbol': record.symbol,
         'description': record.description,
-        'clientCreatedDate': record.createdAt.toUtc().toIso8601String(),
         'clientModifiedDate': record.lastModifiedUtc.toUtc().toIso8601String(),
       };
 

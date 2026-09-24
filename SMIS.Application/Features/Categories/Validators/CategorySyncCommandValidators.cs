@@ -34,33 +34,12 @@ public sealed class CategorySyncCreateCommandValidator
                 RuleFor(x => x.Dto.Description)
                     .MaximumLength(500);
 
-                RuleFor(x => x.Dto.ClientCreatedDate)
-                    .Cascade(CascadeMode.Stop)
-                    .NotEmpty()
-                    .Must(BeReasonableUtcTimestamp)
-                    .WithMessage(
-                        "ClientCreatedDate must contain a valid UTC timestamp.");
-
                 RuleFor(x => x.Dto.ClientModifiedDate)
                     .Cascade(CascadeMode.Stop)
                     .NotEmpty()
                     .Must(BeReasonableUtcTimestamp)
                     .WithMessage(
                         "ClientModifiedDate must contain a valid UTC timestamp.");
-
-                RuleFor(x => x.Dto)
-                    .Must(dto =>
-                        IsModifiedDateValid(
-                            dto.ClientCreatedDate,
-                            dto.ClientModifiedDate))
-                    .WithMessage(
-                        "ClientModifiedDate cannot be earlier than ClientCreatedDate.");
-
-                RuleFor(x => x.Dto.ClientCreatedBy)
-                    .MaximumLength(450);
-
-                RuleFor(x => x.Dto.ClientModifiedBy)
-                    .MaximumLength(450);
             });
     }
 
@@ -80,17 +59,6 @@ public sealed class CategorySyncCreateCommandValidator
                <= DateTimeService.NowUtc.AddMinutes(5);
     }
 
-    private static bool IsModifiedDateValid(
-        DateTime created,
-        DateTime modified
-    )
-    {
-        if (created == default || modified == default)
-            return true;
-
-        return DateTimeService.NormalizeUtc(modified)
-               >= DateTimeService.NormalizeUtc(created);
-    }
 }
 
 // ------------------------------------------------------------
@@ -130,8 +98,6 @@ public sealed class CategorySyncUpdateCommandValidator
                     .WithMessage(
                         "ClientModifiedDate must contain a valid UTC timestamp.");
 
-                RuleFor(x => x.Dto.ClientModifiedBy)
-                    .MaximumLength(450);
             });
     }
 
@@ -179,8 +145,6 @@ public sealed class CategorySyncDeleteCommandValidator
                     .WithMessage(
                         "ClientModifiedDate must contain a valid UTC timestamp.");
 
-                RuleFor(x => x.Dto.ClientModifiedBy)
-                    .MaximumLength(450);
             });
     }
 

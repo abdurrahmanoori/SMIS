@@ -9,7 +9,7 @@ namespace SMIS.Application.DTO.Products
         public string BaseUnitId { get; set; } = string.Empty;
         [Translatable] public string? Description { get; set; }
         public bool IsActive { get; set; } = true;
-        public string SKU { get; set; } = string.Empty; // Unique identifier
+        public string? SKU { get; set; } // Optional unique identifier
         public string? Barcode { get; set; }
         public string? ImageUrl { get; set; }
         public string CategoryId { get; set; } = string.Empty;

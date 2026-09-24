@@ -11,7 +11,7 @@ namespace SMIS.Infrastructure.Server.EntityConfigurations
         )
         {
             builder.ConfigureAuditUserRelationships();
-            builder.ConfigureClientAuditUserRelationships();
+            builder.IgnoreLegacySyncMetadata();
             builder.ToTable(nameof(Product));
 
             builder.HasKey(p => p.Id);
@@ -44,7 +44,6 @@ namespace SMIS.Infrastructure.Server.EntityConfigurations
                 .IsRequired();
 
             builder.Property(p => p.SKU)
-                .IsRequired()
                 .HasMaxLength(100);
 
             builder.Property(p => p.Barcode)
@@ -68,15 +67,9 @@ namespace SMIS.Infrastructure.Server.EntityConfigurations
             builder.Property(p => p.CategoryName)
                 .HasMaxLength(200);
 
-            builder.Property(p => p.ClientCreatedBy)
-                .HasMaxLength(450);
-
-            builder.Property(p => p.ClientModifiedBy)
-                .HasMaxLength(450);
-
             builder.HasIndex(p => new { p.ShopId, p.SKU })
                 .IsUnique()
-                .HasFilter("[IsDeleted] = 0")
+                .HasFilter("[IsDeleted] = 0 AND [SKU] IS NOT NULL")
                 .HasDatabaseName("UX_Product_ShopId_SKU_Active");
 
             builder.HasIndex(p => new { p.ShopId, p.Barcode })

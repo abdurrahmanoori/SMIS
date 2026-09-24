@@ -11,7 +11,7 @@ namespace SMIS.Infrastructure.Server.EntityConfigurations
         )
         {
             builder.ConfigureAuditUserRelationships();
-            builder.ConfigureClientAuditUserRelationships();
+            builder.IgnoreLegacySyncMetadata();
             builder.ToTable(nameof(Shop));
 
             builder.HasKey(s => s.Id);
@@ -39,9 +39,6 @@ namespace SMIS.Infrastructure.Server.EntityConfigurations
             builder.Property(s => s.IsActive)
                 .IsRequired();
 
-            // Ignore mobile-only properties
-            builder.Ignore(e => e.IsSyncedToServer);
-            builder.Ignore(e => e.LastSyncedAt);
         }
     }
 }

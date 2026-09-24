@@ -8,8 +8,6 @@ class ProductUnitRemoteModel {
     required this.baseUnitQuantity,
     required this.lastModifiedUtc,
     required this.isDeleted,
-    required this.conflictModifiedUtc,
-    this.clientCreatedDate,
     this.clientModifiedDate,
     this.createdDate,
     this.updatedDate,
@@ -23,8 +21,6 @@ class ProductUnitRemoteModel {
   final double baseUnitQuantity;
   final DateTime lastModifiedUtc;
   final bool isDeleted;
-  final DateTime conflictModifiedUtc;
-  final DateTime? clientCreatedDate;
   final DateTime? clientModifiedDate;
   final DateTime? createdDate;
   final DateTime? updatedDate;
@@ -37,7 +33,6 @@ class ProductUnitRemoteModel {
     ).toUtc();
     final clientModifiedDate = _dateOrNull(json['clientModifiedDate']);
     final updatedDate = _dateOrNull(json['updatedDate']);
-    final clientCreatedDate = _dateOrNull(json['clientCreatedDate']);
     final createdDate = _dateOrNull(json['createdDate']);
     return ProductUnitRemoteModel(
       id: json['id'] as String,
@@ -46,14 +41,6 @@ class ProductUnitRemoteModel {
       baseUnitQuantity: (json['baseUnitQuantity'] as num).toDouble(),
       lastModifiedUtc: lastModifiedUtc,
       isDeleted: json['isDeleted'] as bool? ?? false,
-      conflictModifiedUtc:
-          _dateOrNull(json['conflictModifiedUtc']) ??
-          clientModifiedDate ??
-          updatedDate ??
-          clientCreatedDate ??
-          createdDate ??
-          lastModifiedUtc,
-      clientCreatedDate: clientCreatedDate,
       clientModifiedDate: clientModifiedDate,
       createdDate: createdDate,
       updatedDate: updatedDate,
@@ -65,7 +52,6 @@ class ProductUnitRemoteModel {
   static Map<String, Object?> createPayload(ProductUnitLocalRecord record) => {
     'id': record.id,
     ...updatePayload(record),
-    'clientCreatedDate': record.createdAt.toUtc().toIso8601String(),
   };
 
   static Map<String, Object?> updatePayload(ProductUnitLocalRecord record) => {

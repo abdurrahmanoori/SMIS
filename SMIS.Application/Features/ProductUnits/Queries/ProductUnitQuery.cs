@@ -4,7 +4,6 @@ using SMIS.Application.Common.Response;
 using SMIS.Application.DTO.ProductUnits;
 using SMIS.Application.Identity.IServices;
 using SMIS.Application.Services;
-using SMIS.Domain.Services;
 
 namespace SMIS.Application.Features.ProductUnits.Queries;
 
@@ -46,10 +45,7 @@ internal sealed class ProductUnitQueryHandler
                 ProductId = x.ProductId,
                 UnitOfMeasureId = x.UnitOfMeasureId,
                 BaseUnitQuantity = x.BaseUnitQuantity,
-                ClientCreatedDate = x.ClientCreatedDate,
-                ClientCreatedBy = x.ClientCreatedBy,
                 ClientModifiedDate = x.ClientModifiedDate,
-                ClientModifiedBy = x.ClientModifiedBy,
                 LastModifiedUtc = x.LastModifiedUtc,
                 IsDeleted = x.IsDeleted,
             });
@@ -61,12 +57,6 @@ internal sealed class ProductUnitQueryHandler
                 request.Query.GetPageNumber(),
                 request.Query.GetPageSize(),
                 cancellationToken);
-
-        foreach (var item in pagedList.Items)
-        {
-            item.ConflictModifiedUtc = DateTimeService.NormalizeUtc(
-                item.ClientModifiedDate ?? item.LastModifiedUtc);
-        }
 
         return Result<PagedListNew<ProductUnitDto>>.SuccessResult(pagedList);
     }

@@ -47,10 +47,6 @@ internal sealed class
         CancellationToken ct
     )
     {
-        if (!ProductUnitSyncRules.User(request.Dto.ClientCreatedBy, _user) ||
-            !ProductUnitSyncRules.User(request.Dto.ClientModifiedBy, _user))
-            return ProductUnitSyncRules.InvalidUser();
-
         var product = await ProductUnitSyncRules.GetAccessibleProductAsync(request.Dto.ProductId, _products, _user);
         if (product is null) return ProductUnitSyncRules.Forbidden();
 
@@ -87,8 +83,7 @@ internal sealed class
                 request.Dto.ProductId,
                 request.Dto.UnitOfMeasureId,
                 request.Dto.BaseUnitQuantity);
-            value.SetClientCreationMetadata(request.Dto.ClientCreatedDate, request.Dto.ClientCreatedBy);
-            value.SetClientModificationMetadata(modified, request.Dto.ClientModifiedBy);
+            value.SetClientModificationMetadata(modified);
             value.Restore();
             await _db.SaveChangesAsync(ct);
             return Result<ProductUnitDto>.SuccessResult(_mapper.Map<ProductUnitDto>(value));
@@ -106,8 +101,7 @@ internal sealed class
         value = ProductUnit.Create(request.Dto.ProductId, request.Dto.UnitOfMeasureId, request.Dto.BaseUnitQuantity);
         value.Id = id;
         value.SetProductName(product.Name);
-        value.SetClientCreationMetadata(request.Dto.ClientCreatedDate, request.Dto.ClientCreatedBy);
-        value.SetClientModificationMetadata(modified, request.Dto.ClientModifiedBy);
+        value.SetClientModificationMetadata(modified);
         await _repository.AddAsync(value);
         await _db.SaveChangesAsync(ct);
         return Result<ProductUnitDto>.SuccessResult(_mapper.Map<ProductUnitDto>(value));
@@ -143,9 +137,6 @@ internal sealed class
         CancellationToken ct
     )
     {
-        if (!ProductUnitSyncRules.User(request.Dto.ClientModifiedBy, _user))
-            return ProductUnitSyncRules.InvalidUser();
-
         var id = ProductUnitSyncRules.Id(request.Id);
         var value = await _db.ProductUnits
             .IgnoreQueryFilters()
@@ -177,7 +168,7 @@ internal sealed class
             request.Dto.ProductId,
             request.Dto.UnitOfMeasureId,
             request.Dto.BaseUnitQuantity);
-        value.SetClientModificationMetadata(modified, request.Dto.ClientModifiedBy);
+        value.SetClientModificationMetadata(modified);
         value.Restore();
         await _db.SaveChangesAsync(ct);
         return Result<ProductUnitDto>.SuccessResult(_mapper.Map<ProductUnitDto>(value));
@@ -213,9 +204,6 @@ internal sealed class
         CancellationToken ct
     )
     {
-        if (!ProductUnitSyncRules.User(request.Dto.ClientModifiedBy, _user))
-            return ProductUnitSyncRules.InvalidUser();
-
         var id = ProductUnitSyncRules.Id(request.Id);
         var value = await _db.ProductUnits
             .IgnoreQueryFilters()
@@ -233,7 +221,7 @@ internal sealed class
         if (modified < value.GetConflictModifiedUtc())
             return Result<ProductUnitDto>.SuccessResult(_mapper.Map<ProductUnitDto>(value));
 
-        value.SetClientModificationMetadata(modified, request.Dto.ClientModifiedBy);
+        value.SetClientModificationMetadata(modified);
         await _repository.RemoveAsync(value);
         await _db.SaveChangesAsync(ct);
         return Result<ProductUnitDto>.SuccessResult(_mapper.Map<ProductUnitDto>(value));
@@ -246,13 +234,6 @@ internal static class ProductUnitSyncRules
         string value
     ) => Guid.Parse(value).ToString("D");
 
-    public static bool User(
-        string? value,
-        ICurrentUser user
-    ) =>
-        string.IsNullOrWhiteSpace(value) ||
-        string.Equals(value.Trim(), user.GetId(), StringComparison.Ordinal);
-
     public static async Task<Product?> GetAccessibleProductAsync(
         string productId,
         IProductRepository products,
@@ -264,11 +245,6 @@ internal static class ProductUnitSyncRules
             ? product
             : null;
     }
-
-    public static Result<ProductUnitDto> InvalidUser() =>
-        Result<ProductUnitDto>.FailureResult(
-            "InvalidClientUser",
-            "Client user metadata must match the authenticated user.");
 
     public static Result<ProductUnitDto> Forbidden() =>
         Result<ProductUnitDto>.FailureResult(

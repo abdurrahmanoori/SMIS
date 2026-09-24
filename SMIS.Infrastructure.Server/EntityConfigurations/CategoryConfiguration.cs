@@ -11,7 +11,7 @@ namespace SMIS.Infrastructure.Server.EntityConfigurations
         )
         {
             builder.ConfigureAuditUserRelationships();
-            builder.ConfigureClientAuditUserRelationships();
+            builder.IgnoreLegacySyncMetadata();
             builder.ToTable(nameof(Category));
 
             builder.HasKey(c => c.Id);
@@ -38,18 +38,12 @@ namespace SMIS.Infrastructure.Server.EntityConfigurations
                 .HasDatabaseName("UX_Category_ShopId_Name")
                 .HasFilter("[IsDeleted] = 0");
 
-            builder.Property(c => c.ClientCreatedBy).HasMaxLength(450);
-            builder.Property(c => c.ClientModifiedBy).HasMaxLength(450);
-
             // Backend-specific: Relationships
             builder.HasOne(c => c.Shop)
                 .WithMany()
                 .HasForeignKey(c => c.ShopId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            // Backend-specific: Ignore offline properties
-            builder.Ignore(c => c.IsSyncedToServer);
-            builder.Ignore(c => c.LastSyncedAt);
         }
     }
 }

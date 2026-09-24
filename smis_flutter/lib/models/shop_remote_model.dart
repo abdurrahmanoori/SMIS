@@ -13,12 +13,8 @@ class ShopRemoteModel {
     this.phoneNumber,
     this.email,
     this.taxNumber,
-    this.clientCreatedDate,
-    this.clientCreatedBy,
     this.clientModifiedDate,
-    this.clientModifiedBy,
-    DateTime? conflictModifiedUtc,
-  }) : conflictModifiedUtc = conflictModifiedUtc ?? lastModifiedUtc;
+  });
 
   final String id;
   final String name;
@@ -30,15 +26,10 @@ class ShopRemoteModel {
   final bool isActive;
   final DateTime lastModifiedUtc;
   final bool isDeleted;
-  final DateTime? clientCreatedDate;
-  final String? clientCreatedBy;
   final DateTime? clientModifiedDate;
-  final String? clientModifiedBy;
-  final DateTime conflictModifiedUtc;
 
   factory ShopRemoteModel.fromJson(Map<String, dynamic> json) {
     final lastModifiedUtc = _requiredDate(json, 'lastModifiedUtc');
-    final clientCreatedDate = _optionalDate(json['clientCreatedDate']);
     final clientModifiedDate = _optionalDate(json['clientModifiedDate']);
     return ShopRemoteModel(
       id: json['id'] as String,
@@ -51,15 +42,7 @@ class ShopRemoteModel {
       isActive: json['isActive'] as bool? ?? false,
       lastModifiedUtc: lastModifiedUtc,
       isDeleted: json['isDeleted'] as bool? ?? false,
-      clientCreatedDate: clientCreatedDate,
-      clientCreatedBy: json['clientCreatedBy'] as String?,
       clientModifiedDate: clientModifiedDate,
-      clientModifiedBy: json['clientModifiedBy'] as String?,
-      conflictModifiedUtc:
-          _optionalDate(json['conflictModifiedUtc']) ??
-          clientModifiedDate ??
-          clientCreatedDate ??
-          lastModifiedUtc,
     );
   }
 
@@ -72,7 +55,6 @@ class ShopRemoteModel {
     'email': shop.email,
     'taxNumber': shop.taxNumber,
     'isActive': shop.isActive,
-    'clientCreatedDate': shop.createdAt.toUtc().toIso8601String(),
     'clientModifiedDate': shop.lastModifiedUtc.toUtc().toIso8601String(),
   };
 

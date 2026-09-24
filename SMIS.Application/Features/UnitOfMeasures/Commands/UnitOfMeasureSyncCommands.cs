@@ -39,9 +39,6 @@ internal sealed class
     )
     {
         var id = UnitOfMeasureSyncRules.Id(request.Dto.Id);
-        if (!UnitOfMeasureSyncRules.User(request.Dto.ClientCreatedBy, _currentUser) ||
-            !UnitOfMeasureSyncRules.User(request.Dto.ClientModifiedBy, _currentUser))
-            return UnitOfMeasureSyncRules.InvalidUser();
         var unit = await _db.UnitOfMeasures
             .IgnoreQueryFilters()
             .FirstOrDefaultAsync(value => value.Id == id, cancellationToken);
@@ -51,8 +48,7 @@ internal sealed class
             if (modified <= unit.GetConflictModifiedUtc())
                 return Result<UnitOfMeasureDto>.SuccessResult(_mapper.Map<UnitOfMeasureDto>(unit));
             UnitOfMeasureCommandRules.Apply(unit, request.Dto.Name, request.Dto.Symbol, request.Dto.Description);
-            unit.SetClientCreationMetadata(request.Dto.ClientCreatedDate, request.Dto.ClientCreatedBy);
-            unit.SetClientModificationMetadata(modified, request.Dto.ClientModifiedBy);
+            unit.SetClientModificationMetadata(modified);
             unit.Restore();
             await _db.SaveChangesAsync(cancellationToken);
             return Result<UnitOfMeasureDto>.SuccessResult(_mapper.Map<UnitOfMeasureDto>(unit));
@@ -60,8 +56,7 @@ internal sealed class
 
         unit = UnitOfMeasureCommandRules.Create(request.Dto.Name, request.Dto.Symbol, request.Dto.Description);
         unit.Id = id;
-        unit.SetClientCreationMetadata(request.Dto.ClientCreatedDate, request.Dto.ClientCreatedBy);
-        unit.SetClientModificationMetadata(modified, request.Dto.ClientModifiedBy);
+        unit.SetClientModificationMetadata(modified);
         await _repository.AddAsync(unit);
         await _db.SaveChangesAsync(cancellationToken);
         return Result<UnitOfMeasureDto>.SuccessResult(_mapper.Map<UnitOfMeasureDto>(unit));
@@ -88,8 +83,6 @@ internal sealed class
         CancellationToken cancellationToken
     )
     {
-        if (!UnitOfMeasureSyncRules.User(request.Dto.ClientModifiedBy, _currentUser))
-            return UnitOfMeasureSyncRules.InvalidUser();
         var id = UnitOfMeasureSyncRules.Id(request.Id);
         var unit = await _db.UnitOfMeasures
             .IgnoreQueryFilters()
@@ -99,7 +92,7 @@ internal sealed class
         if (modified <= unit.GetConflictModifiedUtc())
             return Result<UnitOfMeasureDto>.SuccessResult(_mapper.Map<UnitOfMeasureDto>(unit));
         UnitOfMeasureCommandRules.Apply(unit, request.Dto.Name, request.Dto.Symbol, request.Dto.Description);
-        unit.SetClientModificationMetadata(modified, request.Dto.ClientModifiedBy);
+        unit.SetClientModificationMetadata(modified);
         unit.Restore();
         await _db.SaveChangesAsync(cancellationToken);
         return Result<UnitOfMeasureDto>.SuccessResult(_mapper.Map<UnitOfMeasureDto>(unit));
@@ -126,8 +119,6 @@ internal sealed class
         CancellationToken cancellationToken
     )
     {
-        if (!UnitOfMeasureSyncRules.User(request.Dto.ClientModifiedBy, _currentUser))
-            return UnitOfMeasureSyncRules.InvalidUser();
         var id = UnitOfMeasureSyncRules.Id(request.Id);
         var unit = await _db.UnitOfMeasures
             .IgnoreQueryFilters()
@@ -145,7 +136,7 @@ internal sealed class
                 "UnitOfMeasureInUse",
                 $"Unit of measurement is used by {referenceCount} record(s). Reassign them before deleting the unit.");
 
-        unit.SetClientModificationMetadata(modified, request.Dto.ClientModifiedBy);
+        unit.SetClientModificationMetadata(modified);
         await _repository.RemoveAsync(unit);
         await _db.SaveChangesAsync(cancellationToken);
         return Result<UnitOfMeasureDto>.SuccessResult(_mapper.Map<UnitOfMeasureDto>(unit));
@@ -158,11 +149,4 @@ internal static class UnitOfMeasureSyncRules
         string value
     ) => Guid.Parse(value).ToString("D");
 
-    public static bool User(
-        string? value,
-        ICurrentUser user
-    ) => string.IsNullOrWhiteSpace(value) || string.Equals(value.Trim(), user.GetId(), StringComparison.Ordinal);
-
-    public static Result<UnitOfMeasureDto> InvalidUser() => Result<UnitOfMeasureDto>.FailureResult("InvalidClientUser",
-        "Client user metadata must match the authenticated user.");
 }
