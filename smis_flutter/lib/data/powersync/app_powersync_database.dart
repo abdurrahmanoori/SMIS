@@ -19,6 +19,7 @@ class AppPowerSyncDatabase {
   String? _databaseContextKey;
   String? _connectedContextKey;
   Future<void>? _switchFuture;
+  Future<void>? _connectFuture;
 
   Future<PowerSyncDatabase> databaseForCurrentSession() async {
     final session = await _sessionStore.read();
@@ -42,6 +43,16 @@ class AppPowerSyncDatabase {
     final contextKey = _contextKey(session.userId, session.shopId);
     if (_connectedContextKey == contextKey) return database;
 
+    await (_connectFuture ??= _connect(database, contextKey)).whenComplete(
+      () => _connectFuture = null,
+    );
+    return database;
+  }
+
+  Future<void> _connect(
+    PowerSyncDatabase database,
+    String contextKey,
+  ) async {
     final authApi = PowerSyncAuthApi(sessionStore: _sessionStore);
     final writeApi = AppPowerSyncWriteApi(sessionStore: _sessionStore);
     await database.connect(
@@ -53,7 +64,6 @@ class AppPowerSyncDatabase {
       ),
     );
     _connectedContextKey = contextKey;
-    return database;
   }
 
   Future<int> pendingCountForCurrentContext() async {
@@ -113,5 +123,6 @@ class AppPowerSyncDatabase {
     _database = null;
     _databaseContextKey = null;
     _connectedContextKey = null;
+    _connectFuture = null;
   }
 }

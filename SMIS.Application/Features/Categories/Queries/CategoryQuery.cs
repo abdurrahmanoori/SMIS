@@ -4,7 +4,6 @@ using SMIS.Application.Common.Response;
 using SMIS.Application.DTO.Categories;
 using SMIS.Application.Repositories.Categories;
 using SMIS.Application.Services;
-using SMIS.Domain.Services;
 
 namespace SMIS.Application.Features.Categories.Queries;
 
@@ -55,26 +54,13 @@ internal sealed class CategoryQueryHandler
                 CreatedBy = x.CreatedBy,
                 UpdatedDate = x.UpdatedDate,
                 UpdatedBy = x.UpdatedBy,
-                ClientCreatedDate = x.ClientCreatedDate,
-                ClientCreatedBy = x.ClientCreatedBy,
                 ClientModifiedDate = x.ClientModifiedDate,
-                ClientModifiedBy = x.ClientModifiedBy,
                 LastModifiedUtc = x.LastModifiedUtc,
                 IsDeleted = x.IsDeleted,
             });
         var pagedList = await query.Filter(request.Query.Criteria).Select(request.Query.Columns)
             .ToPagedList((int)request.Query.PageNumber!,
                 (int)request.Query.PageSize!, cancellationToken);
-
-        foreach (var category in pagedList.Items)
-        {
-            category.ConflictModifiedUtc = DateTimeService.NormalizeUtc(
-                category.ClientModifiedDate
-                ?? category.UpdatedDate
-                ?? category.ClientCreatedDate
-                ?? category.CreatedDate
-                ?? category.LastModifiedUtc);
-        }
 
         // var pagedList = await query.ToPagedList(
         //     request.Query.GetPageNumber(),

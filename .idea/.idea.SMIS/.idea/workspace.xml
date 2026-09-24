@@ -73,11 +73,9 @@
   </component>
   <component name="DatabaseLocalColorSettings">
     <colors>
-      <entry key="217c9ab8-3f82-4012-9b1f-829d2efba1cc" value="@0" />
       <entry key="8efa3f65-ec7c-4776-a5e0-1831fa957b71" value="" />
       <entry key="ac5415fe-1e2d-4654-8634-a9fa83f2c4ba" value="yellow" />
       <entry key="b197dd73-534a-4452-ab6f-c2eebab4b337" value="" />
-      <entry key="c23083d1-ad9e-4a55-b047-06addaa567c3" value="green" />
     </colors>
   </component>
   <component name="DpaMonitoringSettings">
@@ -90,7 +88,7 @@
     <option name="PREVIEW_PUSH_PROTECTED_ONLY" value="true" />
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="Modrenize-api" />
+        <entry key="$PROJECT_DIR$" value="flutter-modern-ui-redesign" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -105,6 +103,16 @@
   &quot;selectedUrlAndAccountId&quot;: {
     &quot;url&quot;: &quot;https://github.com/abdurrahmanoori/SMIS.git&quot;,
     &quot;accountId&quot;: &quot;2f15994d-76ef-48a3-ad19-aa2b9a23361b&quot;
+  },
+  &quot;recentNewPullRequestHead&quot;: {
+    &quot;server&quot;: {
+      &quot;useHttp&quot;: false,
+      &quot;host&quot;: &quot;github.com&quot;,
+      &quot;port&quot;: null,
+      &quot;suffix&quot;: null
+    },
+    &quot;owner&quot;: &quot;abdurrahmanoori&quot;,
+    &quot;repository&quot;: &quot;SMIS&quot;
   }
 }</component>
   <component name="HighlightingSettingsPerFile">
@@ -240,7 +248,7 @@
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
     &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
     &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.lookFeel&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;com.github.linearviewer.settings.LinearSettingsConfigurable&quot;,
     &quot;sqlserver_backup_path_localServer&quot;: &quot;E:&quot;,
     &quot;to.speed.mode.migration.done&quot;: &quot;true&quot;
   },
@@ -256,7 +264,7 @@
     ]
   }
 }</component>
-  <component name="RunManager" selected=".NET Launch Settings Profile.SMIS.Api: http">
+  <component name="RunManager" selected="Shell Script.Run Flutter App">
     <configuration name="Run &amp; Debug Flutter" type="DartCommandLineRunConfigurationType" factoryName="Dart Command Line Application">
       <option name="filePath" value="$PROJECT_DIR$/smis_flutter/lib/main.dart" />
       <option name="workingDirectory" value="$PROJECT_DIR$/smis_flutter" />
@@ -407,22 +415,6 @@
       <option name="presentableId" value="LOCAL-00038" />
       <option name="project" value="LOCAL" />
       <updated>1789462942314</updated>
-    </task>
-    <task id="LOCAL-00045" summary="feat: add Wasil Shop roles and users, and update seed data for new shop">
-      <option name="closed" value="true" />
-      <created>1789027736492</created>
-      <option name="number" value="00045" />
-      <option name="presentableId" value="LOCAL-00045" />
-      <option name="project" value="LOCAL" />
-      <updated>1789027736493</updated>
-    </task>
-    <task id="LOCAL-00046" summary="feat: add Wasil Shop roles and users, and update seed data for new shop">
-      <option name="closed" value="true" />
-      <created>1789030964599</created>
-      <option name="number" value="00046" />
-      <option name="presentableId" value="LOCAL-00046" />
-      <option name="project" value="LOCAL" />
-      <updated>1789030964599</updated>
     </task>
     <task id="LOCAL-00047" summary="feat: implement generic entity dropdown and new paged list functionality">
       <option name="closed" value="true" />
@@ -784,7 +776,23 @@
       <option name="project" value="LOCAL" />
       <updated>1790141619653</updated>
     </task>
-    <option name="localTasksCounter" value="92" />
+    <task id="LOCAL-00092" summary="refactor: change delete behavior to restrict for various entity configurations">
+      <option name="closed" value="true" />
+      <created>1790151817717</created>
+      <option name="number" value="00092" />
+      <option name="presentableId" value="LOCAL-00092" />
+      <option name="project" value="LOCAL" />
+      <updated>1790151817717</updated>
+    </task>
+    <task id="LOCAL-00093" summary="refactor: standardize seed timestamps across various seed files">
+      <option name="closed" value="true" />
+      <created>1790163128427</created>
+      <option name="number" value="00093" />
+      <option name="presentableId" value="LOCAL-00093" />
+      <option name="project" value="LOCAL" />
+      <updated>1790163128428</updated>
+    </task>
+    <option name="localTasksCounter" value="94" />
     <option name="clearContext" value="false" />
     <option name="createChangelist" value="false" />
     <option name="createBranch" value="false" />
@@ -803,10 +811,19 @@
     <option featureType="dependencySupport" implementationName="dotnet:Serilog" />
     <option featureType="dependencySupport" implementationName="dotnet:Microsoft.EntityFrameworkCore" />
   </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
-    <MESSAGE value="feat: implement base unit change validation; prevent changes if stock or conversions exist" />
-    <MESSAGE value="domain layer code formated" />
     <MESSAGE value="just comment added" />
     <MESSAGE value="feat: update entity properties and validation; remove ShopId from multiple DTOs and entities, add ProductPrices collection to ProductUnit, and enhance ProductUnit repository with HasUsageAsync method" />
     <MESSAGE value="feat: introduce StockMovement and related DTOs; implement StockMovementController and validation logic, and replace StockTransaction references with StockMovement" />
@@ -830,6 +847,8 @@
     <MESSAGE value="refactor: remove GetByIdIncludingDeletedAsync methods and update repositories to use IApplicationDbContext for data access" />
     <MESSAGE value="refactor: remove IUnitOfWork references and update command handlers to use IApplicationDbContext for data access" />
     <MESSAGE value="refactor: update database constraint handling and improve timestamp normalization in sync handlers" />
+    <MESSAGE value="refactor: change delete behavior to restrict for various entity configurations" />
+    <MESSAGE value="refactor: standardize seed timestamps across various seed files" />
     <option name="LAST_COMMIT_MESSAGE" value="" />
   </component>
   <component name="XDebuggerManager">

@@ -12,13 +12,7 @@ public sealed class ProductSyncCreateCommandValidator : AbstractValidator<Produc
         {
             RuleFor(x => x.Dto.Id).NotEmpty().Must(SyncValidationRules.BeValidGuid);
             AddProductRules(x => x.Dto);
-            RuleFor(x => x.Dto.ClientCreatedDate).NotEmpty().Must(SyncValidationRules.BeReasonableUtcTimestamp);
             RuleFor(x => x.Dto.ClientModifiedDate).NotEmpty().Must(SyncValidationRules.BeReasonableUtcTimestamp);
-            RuleFor(x => x.Dto)
-                .Must(dto => SyncValidationRules.IsModifiedDateValid(dto.ClientCreatedDate, dto.ClientModifiedDate))
-                .WithMessage("ClientModifiedDate cannot be earlier than ClientCreatedDate.");
-            RuleFor(x => x.Dto.ClientCreatedBy).MaximumLength(450);
-            RuleFor(x => x.Dto.ClientModifiedBy).MaximumLength(450);
         });
     }
 
@@ -60,7 +54,6 @@ public sealed class ProductSyncUpdateCommandValidator : AbstractValidator<Produc
             RuleFor(x => x.Dto.ReorderPointBase).GreaterThanOrEqualTo(0);
             RuleFor(x => x.Dto.ReorderQuantityBase).GreaterThanOrEqualTo(0);
             RuleFor(x => x.Dto.ClientModifiedDate).NotEmpty().Must(SyncValidationRules.BeReasonableUtcTimestamp);
-            RuleFor(x => x.Dto.ClientModifiedBy).MaximumLength(450);
         });
     }
 }
@@ -73,7 +66,6 @@ public sealed class ProductSyncDeleteCommandValidator : AbstractValidator<Produc
         RuleFor(x => x.Dto).NotNull().DependentRules(() =>
         {
             RuleFor(x => x.Dto.ClientModifiedDate).NotEmpty().Must(SyncValidationRules.BeReasonableUtcTimestamp);
-            RuleFor(x => x.Dto.ClientModifiedBy).MaximumLength(450);
         });
     }
 }

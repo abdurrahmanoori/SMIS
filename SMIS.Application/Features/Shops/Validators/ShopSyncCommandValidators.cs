@@ -11,14 +11,7 @@ public sealed class ShopSyncCreateCommandValidator : AbstractValidator<ShopSyncC
     {
         RuleFor(x => x.Dto.Id).NotEmpty().Must(BeValidGuid);
         AddShopRules(x => x.Dto);
-        RuleFor(x => x.Dto.ClientCreatedDate).NotEmpty().Must(BeReasonableUtcTimestamp);
         RuleFor(x => x.Dto.ClientModifiedDate).NotEmpty().Must(BeReasonableUtcTimestamp);
-        RuleFor(x => x.Dto).Must(dto =>
-                DateTimeService.NormalizeUtc(dto.ClientModifiedDate) >=
-                DateTimeService.NormalizeUtc(dto.ClientCreatedDate))
-            .WithMessage("ClientModifiedDate cannot be earlier than ClientCreatedDate.");
-        RuleFor(x => x.Dto.ClientCreatedBy).MaximumLength(450);
-        RuleFor(x => x.Dto.ClientModifiedBy).MaximumLength(450);
     }
 
     private void AddShopRules(
@@ -63,7 +56,6 @@ public sealed class ShopSyncUpdateCommandValidator : AbstractValidator<ShopSyncU
         RuleFor(x => x.Dto.ShopType).IsInEnum();
         RuleFor(x => x.Dto.ClientModifiedDate).NotEmpty().Must(value =>
             value != default && DateTimeService.NormalizeUtc(value) <= DateTimeService.NowUtc.AddMinutes(5));
-        RuleFor(x => x.Dto.ClientModifiedBy).MaximumLength(450);
     }
 }
 
@@ -74,6 +66,5 @@ public sealed class ShopSyncDeleteCommandValidator : AbstractValidator<ShopSyncD
         RuleFor(x => x.Id).NotEmpty().Must(value => Guid.TryParse(value, out _));
         RuleFor(x => x.Dto.ClientModifiedDate).NotEmpty().Must(value =>
             value != default && DateTimeService.NormalizeUtc(value) <= DateTimeService.NowUtc.AddMinutes(5));
-        RuleFor(x => x.Dto.ClientModifiedBy).MaximumLength(450);
     }
 }

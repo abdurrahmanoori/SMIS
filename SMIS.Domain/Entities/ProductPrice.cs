@@ -28,8 +28,6 @@ public class ProductPrice : BaseSyncableAuditableEntity
 
     public DateTime? EndDate { get; private set; }
 
-    public DateTime ConflictModifiedUtc => GetConflictModifiedUtc();
-
     // Navigation Properties
     public ProductUnit ProductUnit { get; set; } = null!;
 

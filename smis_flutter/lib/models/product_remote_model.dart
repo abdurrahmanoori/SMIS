@@ -18,12 +18,8 @@ class ProductRemoteModel {
     this.updatedDate,
     this.createdBy,
     this.updatedBy,
-    this.clientCreatedDate,
     this.clientModifiedDate,
-    this.clientCreatedBy,
-    this.clientModifiedBy,
-    DateTime? conflictModifiedUtc,
-  }) : conflictModifiedUtc = conflictModifiedUtc ?? lastModifiedUtc;
+  });
 
   final String id;
   final String name;
@@ -41,17 +37,12 @@ class ProductRemoteModel {
   final DateTime? updatedDate;
   final String? createdBy;
   final String? updatedBy;
-  final DateTime? clientCreatedDate;
   final DateTime? clientModifiedDate;
-  final String? clientCreatedBy;
-  final String? clientModifiedBy;
-  final DateTime conflictModifiedUtc;
 
   factory ProductRemoteModel.fromJson(Map<String, dynamic> json) {
     final lastModifiedUtc = _requiredDate(json, 'lastModifiedUtc');
     final createdDate = _optionalDate(json['createdDate']);
     final updatedDate = _optionalDate(json['updatedDate']);
-    final clientCreatedDate = _optionalDate(json['clientCreatedDate']);
     final clientModifiedDate = _optionalDate(json['clientModifiedDate']);
     return ProductRemoteModel(
       id: json['id'] as String,
@@ -70,24 +61,13 @@ class ProductRemoteModel {
       updatedDate: updatedDate,
       createdBy: json['createdBy'] as String?,
       updatedBy: json['updatedBy'] as String?,
-      clientCreatedDate: clientCreatedDate,
       clientModifiedDate: clientModifiedDate,
-      clientCreatedBy: json['clientCreatedBy'] as String?,
-      clientModifiedBy: json['clientModifiedBy'] as String?,
-      conflictModifiedUtc:
-          _optionalDate(json['conflictModifiedUtc']) ??
-          clientModifiedDate ??
-          updatedDate ??
-          clientCreatedDate ??
-          createdDate ??
-          lastModifiedUtc,
     );
   }
 
   static Map<String, Object?> createPayload(ProductLocalRecord record) => {
     'id': record.id,
     ...updatePayload(record),
-    'clientCreatedDate': record.createdAt.toUtc().toIso8601String(),
   };
 
   static Map<String, Object?> updatePayload(ProductLocalRecord record) => {

@@ -41,9 +41,6 @@ internal sealed class ProductSyncCreateCommandHandler : IRequestHandler<ProductS
     )
     {
         var id = ProductSyncRules.NormalizeGuid(request.Dto.Id);
-        if (!ProductSyncRules.UserMatches(request.Dto.ClientCreatedBy, _currentUser) ||
-            !ProductSyncRules.UserMatches(request.Dto.ClientModifiedBy, _currentUser))
-            return ProductSyncRules.InvalidUser();
         var existing = await _db.Products
             .IgnoreQueryFilters()
             .FirstOrDefaultAsync(product => product.Id == id, cancellationToken);
@@ -63,8 +60,7 @@ internal sealed class ProductSyncCreateCommandHandler : IRequestHandler<ProductS
                 oldBaseUnitId,
                 _productUnitRepository,
                 cancellationToken);
-            existing.SetClientCreationMetadata(request.Dto.ClientCreatedDate, request.Dto.ClientCreatedBy);
-            existing.SetClientModificationMetadata(modified, request.Dto.ClientModifiedBy);
+            existing.SetClientModificationMetadata(modified);
             existing.Restore();
             await _db.SaveChangesAsync(cancellationToken);
             return Result<ProductDto>.SuccessResult(_mapper.Map<ProductDto>(existing));
@@ -72,8 +68,7 @@ internal sealed class ProductSyncCreateCommandHandler : IRequestHandler<ProductS
 
         var product = ProductCommandRules.Create(request.Dto, _currentUser.GetShopId());
         product.Id = id;
-        product.SetClientCreationMetadata(request.Dto.ClientCreatedDate, request.Dto.ClientCreatedBy);
-        product.SetClientModificationMetadata(modified, request.Dto.ClientModifiedBy);
+        product.SetClientModificationMetadata(modified);
         await _repository.AddAsync(product);
         await ProductCommandRules.EnsureBaseProductUnitAsync(
             product,
@@ -107,8 +102,6 @@ internal sealed class ProductSyncUpdateCommandHandler : IRequestHandler<ProductS
         CancellationToken cancellationToken
     )
     {
-        if (!ProductSyncRules.UserMatches(request.Dto.ClientModifiedBy, _currentUser))
-            return ProductSyncRules.InvalidUser();
         var id = ProductSyncRules.NormalizeGuid(request.Id);
         var product = await _db.Products
             .IgnoreQueryFilters()
@@ -128,7 +121,7 @@ internal sealed class ProductSyncUpdateCommandHandler : IRequestHandler<ProductS
             oldBaseUnitId,
             _productUnitRepository,
             cancellationToken);
-        product.SetClientModificationMetadata(modified, request.Dto.ClientModifiedBy);
+        product.SetClientModificationMetadata(modified);
         product.Restore();
         await _db.SaveChangesAsync(cancellationToken);
         return Result<ProductDto>.SuccessResult(_mapper.Map<ProductDto>(product));
@@ -154,8 +147,6 @@ internal sealed class ProductSyncDeleteCommandHandler : IRequestHandler<ProductS
         CancellationToken cancellationToken
     )
     {
-        if (!ProductSyncRules.UserMatches(request.Dto.ClientModifiedBy, _currentUser))
-            return ProductSyncRules.InvalidUser();
         var id = ProductSyncRules.NormalizeGuid(request.Id);
         var product = await _db.Products
             .IgnoreQueryFilters()
@@ -172,7 +163,7 @@ internal sealed class ProductSyncDeleteCommandHandler : IRequestHandler<ProductS
             return Result<ProductDto>.FailureResult(
                 "ProductInUse",
                 $"Product is used by {referenceCount} record(s). Remove those references before deleting the product.");
-        product.SetClientModificationMetadata(modified, request.Dto.ClientModifiedBy);
+        product.SetClientModificationMetadata(modified);
         await _repository.RemoveAsync(product);
         await _db.SaveChangesAsync(cancellationToken);
         return Result<ProductDto>.SuccessResult(_mapper.Map<ProductDto>(product));
@@ -189,22 +180,10 @@ internal static class ProductSyncRules
         string value
     ) => Guid.Parse(value).ToString("D");
 
-    /// <summary>
-    /// Client audit metadata may be omitted, but when supplied it must describe the
-    /// authenticated user. This prevents one offline device from impersonating another user.
-    /// </summary>
-    public static bool UserMatches(
-        string? value,
-        ICurrentUser currentUser
-    ) => string.IsNullOrWhiteSpace(value) || string.Equals(value.Trim(), currentUser.GetId(), StringComparison.Ordinal);
-
     public static bool CanAccess(
         Product product,
         ICurrentUser currentUser
     ) => product.ShopId == currentUser.GetShopId();
-
-    public static Result<ProductDto> InvalidUser() => Result<ProductDto>.FailureResult("InvalidClientUser",
-        "Client user metadata must match the authenticated user.");
 
     public static Result<ProductDto> Forbidden() =>
         Result<ProductDto>.FailureResult("Forbidden", "You can only synchronize products from your own shop.");

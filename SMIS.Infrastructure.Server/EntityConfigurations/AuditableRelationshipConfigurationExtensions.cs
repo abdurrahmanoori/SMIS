@@ -51,4 +51,18 @@ internal static class AuditableRelationshipConfigurationExtensions
             .HasForeignKey(nameof(BaseSyncableAuditableEntity.ClientModifiedBy))
             .OnDelete(DeleteBehavior.Restrict);
     }
+
+    internal static void IgnoreLegacySyncMetadata<TEntity>(
+        this EntityTypeBuilder<TEntity> builder
+    )
+        where TEntity : BaseSyncableAuditableEntity
+    {
+        builder.Ignore(e => e.IsPublic);
+        builder.Ignore(e => e.EntityState);
+        builder.Ignore(e => e.IsSyncedToServer);
+        builder.Ignore(e => e.LastSyncedAt);
+        builder.Ignore(e => e.ClientCreatedDate);
+        builder.Ignore(e => e.ClientCreatedBy);
+        builder.Ignore(e => e.ClientModifiedBy);
+    }
 }

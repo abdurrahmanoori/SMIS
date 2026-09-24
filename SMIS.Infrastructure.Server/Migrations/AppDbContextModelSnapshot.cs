@@ -186,17 +186,6 @@ namespace SMIS.Infrastructure.Server.Migrations
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("ClientCreatedBy")
-                        .HasMaxLength(450)
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<DateTime?>("ClientCreatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("ClientModifiedBy")
-                        .HasMaxLength(450)
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<DateTime?>("ClientModifiedDate")
                         .HasColumnType("datetime2");
 
@@ -218,17 +207,10 @@ namespace SMIS.Infrastructure.Server.Migrations
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 
-                    b.Property<string>("EntityState")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
 
                     b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsPublic")
                         .HasColumnType("bit");
 
                     b.Property<string>("LastModifiedUtc")
@@ -257,10 +239,6 @@ namespace SMIS.Infrastructure.Server.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ClientCreatedBy");
-
-                    b.HasIndex("ClientModifiedBy");
-
                     b.HasIndex("CreatedBy");
 
                     b.HasIndex("UpdatedBy");
@@ -279,10 +257,8 @@ namespace SMIS.Infrastructure.Server.Migrations
                             Code = "BEV",
                             CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Drinks and beverages",
-                            EntityState = "Unchanged",
                             IsActive = true,
                             IsDeleted = false,
-                            IsPublic = false,
                             LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             Name = "Beverages",
                             ShopId = "11111111-0000-0000-0000-000000000001",
@@ -295,10 +271,8 @@ namespace SMIS.Infrastructure.Server.Migrations
                             Code = "FOOD",
                             CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Edible products and snacks",
-                            EntityState = "Unchanged",
                             IsActive = true,
                             IsDeleted = false,
-                            IsPublic = false,
                             LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             Name = "Food Items",
                             ShopId = "11111111-0000-0000-0000-000000000001",
@@ -311,10 +285,8 @@ namespace SMIS.Infrastructure.Server.Migrations
                             Code = "STAT",
                             CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Office and school supplies",
-                            EntityState = "Unchanged",
                             IsActive = true,
                             IsDeleted = false,
-                            IsPublic = false,
                             LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             Name = "Stationery",
                             ShopId = "11111111-0000-0000-0000-000000000002",
@@ -327,10 +299,8 @@ namespace SMIS.Infrastructure.Server.Migrations
                             Code = "GROC",
                             CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Daily household items",
-                            EntityState = "Unchanged",
                             IsActive = true,
                             IsDeleted = false,
-                            IsPublic = false,
                             LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             Name = "Grocery",
                             ShopId = "11111111-0000-0000-0000-000000000002",
@@ -343,10 +313,8 @@ namespace SMIS.Infrastructure.Server.Migrations
                             Code = "CARE",
                             CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Health and hygiene products",
-                            EntityState = "Unchanged",
                             IsActive = true,
                             IsDeleted = false,
-                            IsPublic = false,
                             LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             Name = "Personal Care",
                             ShopId = "11111111-0000-0000-0000-000000000003",
@@ -359,10 +327,8 @@ namespace SMIS.Infrastructure.Server.Migrations
                             Code = "ELEC",
                             CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Electronic devices and accessories",
-                            EntityState = "Unchanged",
                             IsActive = true,
                             IsDeleted = false,
-                            IsPublic = false,
                             LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             Name = "Electronics",
                             ShopId = "11111111-0000-0000-0000-000000000003",
@@ -2655,17 +2621,6 @@ namespace SMIS.Infrastructure.Server.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
 
-                    b.Property<string>("ClientCreatedBy")
-                        .HasMaxLength(450)
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<DateTime?>("ClientCreatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("ClientModifiedBy")
-                        .HasMaxLength(450)
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<DateTime?>("ClientModifiedDate")
                         .HasColumnType("datetime2");
 
@@ -2683,10 +2638,6 @@ namespace SMIS.Infrastructure.Server.Migrations
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 
-                    b.Property<string>("EntityState")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("ImageUrl")
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
@@ -2697,18 +2648,9 @@ namespace SMIS.Infrastructure.Server.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<bool>("IsPublic")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsSyncedToServer")
-                        .HasColumnType("bit");
-
                     b.Property<string>("LastModifiedUtc")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("LastSyncedAt")
-                        .HasColumnType("datetime2");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -2724,7 +2666,6 @@ namespace SMIS.Infrastructure.Server.Migrations
                         .HasColumnType("decimal(18,4)");
 
                     b.Property<string>("SKU")
-                        .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
@@ -2756,10 +2697,6 @@ namespace SMIS.Infrastructure.Server.Migrations
 
                     b.HasIndex("CategoryId");
 
-                    b.HasIndex("ClientCreatedBy");
-
-                    b.HasIndex("ClientModifiedBy");
-
                     b.HasIndex("CreatedBy");
 
                     b.HasIndex("UpdatedBy");
@@ -2772,7 +2709,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                     b.HasIndex("ShopId", "SKU")
                         .IsUnique()
                         .HasDatabaseName("UX_Product_ShopId_SKU_Active")
-                        .HasFilter("[IsDeleted] = 0");
+                        .HasFilter("[IsDeleted] = 0 AND [SKU] IS NOT NULL");
 
                     b.ToTable("Product", (string)null);
 
@@ -2787,11 +2724,8 @@ namespace SMIS.Infrastructure.Server.Migrations
                             CategoryName = "Beverages",
                             CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Classic cola drink",
-                            EntityState = "Unchanged",
                             IsActive = true,
                             IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
                             LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             Name = "Coca Cola 500ml",
                             ReorderPointBase = 0m,
@@ -2812,11 +2746,8 @@ namespace SMIS.Infrastructure.Server.Migrations
                             CategoryName = "Beverages",
                             CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Cola soft drink",
-                            EntityState = "Unchanged",
                             IsActive = true,
                             IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
                             LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             Name = "Pepsi 500ml",
                             ReorderPointBase = 0m,
@@ -2837,11 +2768,8 @@ namespace SMIS.Infrastructure.Server.Migrations
                             CategoryName = "Beverages",
                             CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Pure drinking water",
-                            EntityState = "Unchanged",
                             IsActive = true,
                             IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
                             LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             Name = "Mineral Water 1L",
                             ReorderPointBase = 0m,
@@ -2862,11 +2790,8 @@ namespace SMIS.Infrastructure.Server.Migrations
                             CategoryName = "Food Items",
                             CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Chocolate sandwich cookies",
-                            EntityState = "Unchanged",
                             IsActive = true,
                             IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
                             LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             Name = "Oreo Biscuits",
                             ReorderPointBase = 0m,
@@ -2887,11 +2812,8 @@ namespace SMIS.Infrastructure.Server.Migrations
                             CategoryName = "Food Items",
                             CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Potato chips",
-                            EntityState = "Unchanged",
                             IsActive = true,
                             IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
                             LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             Name = "Lay's Chips",
                             ReorderPointBase = 0m,
@@ -2912,11 +2834,8 @@ namespace SMIS.Infrastructure.Server.Migrations
                             CategoryName = "Food Items",
                             CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Quick meal noodles",
-                            EntityState = "Unchanged",
                             IsActive = true,
                             IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
                             LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             Name = "Instant Noodles",
                             ReorderPointBase = 0m,
@@ -2937,11 +2856,8 @@ namespace SMIS.Infrastructure.Server.Migrations
                             CategoryName = "Stationery",
                             CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "200 pages ruled notebook",
-                            EntityState = "Unchanged",
                             IsActive = true,
                             IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
                             LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             Name = "A4 Notebook",
                             ReorderPointBase = 0m,
@@ -2962,11 +2878,8 @@ namespace SMIS.Infrastructure.Server.Migrations
                             CategoryName = "Stationery",
                             CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Ballpoint pen",
-                            EntityState = "Unchanged",
                             IsActive = true,
                             IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
                             LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             Name = "Blue Pen",
                             ReorderPointBase = 0m,
@@ -2987,11 +2900,8 @@ namespace SMIS.Infrastructure.Server.Migrations
                             CategoryName = "Stationery",
                             CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "12 pencils per box",
-                            EntityState = "Unchanged",
                             IsActive = true,
                             IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
                             LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             Name = "Pencil Set",
                             ReorderPointBase = 0m,
@@ -3012,11 +2922,8 @@ namespace SMIS.Infrastructure.Server.Migrations
                             CategoryName = "Grocery",
                             CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Sunflower cooking oil",
-                            EntityState = "Unchanged",
                             IsActive = true,
                             IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
                             LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             Name = "Cooking Oil 1L",
                             ReorderPointBase = 0m,
@@ -3037,11 +2944,8 @@ namespace SMIS.Infrastructure.Server.Migrations
                             CategoryName = "Grocery",
                             CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Basmati rice",
-                            EntityState = "Unchanged",
                             IsActive = true,
                             IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
                             LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             Name = "Rice 1kg",
                             ReorderPointBase = 0m,
@@ -3062,11 +2966,8 @@ namespace SMIS.Infrastructure.Server.Migrations
                             CategoryName = "Grocery",
                             CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "White granulated sugar",
-                            EntityState = "Unchanged",
                             IsActive = true,
                             IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
                             LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             Name = "Sugar 1kg",
                             ReorderPointBase = 0m,
@@ -3087,11 +2988,8 @@ namespace SMIS.Infrastructure.Server.Migrations
                             CategoryName = "Personal Care",
                             CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Hair care shampoo",
-                            EntityState = "Unchanged",
                             IsActive = true,
                             IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
                             LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             Name = "Shampoo 400ml",
                             ReorderPointBase = 0m,
@@ -3112,11 +3010,8 @@ namespace SMIS.Infrastructure.Server.Migrations
                             CategoryName = "Personal Care",
                             CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Dental care paste",
-                            EntityState = "Unchanged",
                             IsActive = true,
                             IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
                             LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             Name = "Toothpaste",
                             ReorderPointBase = 0m,
@@ -3137,11 +3032,8 @@ namespace SMIS.Infrastructure.Server.Migrations
                             CategoryName = "Electronics",
                             CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Type-C charging cable",
-                            EntityState = "Unchanged",
                             IsActive = true,
                             IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
                             LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             Name = "USB Cable",
                             ReorderPointBase = 0m,
@@ -3162,11 +3054,8 @@ namespace SMIS.Infrastructure.Server.Migrations
                             CategoryName = "Electronics",
                             CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Fast charging adapter",
-                            EntityState = "Unchanged",
                             IsActive = true,
                             IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
                             LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             Name = "Phone Charger",
                             ReorderPointBase = 0m,
@@ -3182,17 +3071,6 @@ namespace SMIS.Infrastructure.Server.Migrations
             modelBuilder.Entity("SMIS.Domain.Entities.ProductPrice", b =>
                 {
                     b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("ClientCreatedBy")
-                        .HasMaxLength(450)
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<DateTime?>("ClientCreatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("ClientModifiedBy")
-                        .HasMaxLength(450)
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime?>("ClientModifiedDate")
@@ -3214,25 +3092,12 @@ namespace SMIS.Infrastructure.Server.Migrations
                     b.Property<DateTime?>("EndDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("EntityState")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsPublic")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsSyncedToServer")
                         .HasColumnType("bit");
 
                     b.Property<string>("LastModifiedUtc")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("LastSyncedAt")
-                        .HasColumnType("datetime2");
 
                     b.Property<string>("ProductUnitId")
                         .IsRequired()
@@ -3254,10 +3119,6 @@ namespace SMIS.Infrastructure.Server.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ClientCreatedBy");
-
-                    b.HasIndex("ClientModifiedBy");
-
                     b.HasIndex("CreatedBy");
 
                     b.HasIndex("UpdatedBy");
@@ -3272,10 +3133,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                             Id = "33333333-3333-0000-0000-000000000001",
                             CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             EffectiveDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            EntityState = "Unchanged",
                             IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
                             LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             ProductUnitId = "dddddddd-0000-0000-0000-000000000001",
                             SellPrice = 160L,
@@ -3287,10 +3145,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                             Id = "33333333-3333-0000-0000-000000000002",
                             CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             EffectiveDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            EntityState = "Unchanged",
                             IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
                             LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             ProductUnitId = "dddddddd-0000-0000-0000-000000000002",
                             SellPrice = 1920L,
@@ -3302,10 +3157,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                             Id = "33333333-3333-0000-0000-000000000003",
                             CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             EffectiveDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            EntityState = "Unchanged",
                             IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
                             LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             ProductUnitId = "dddddddd-0000-0000-0000-000000000003",
                             SellPrice = 3840L,
@@ -3317,10 +3169,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                             Id = "33333333-3333-0000-0000-000000000004",
                             CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             EffectiveDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            EntityState = "Unchanged",
                             IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
                             LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             ProductUnitId = "dddddddd-0000-0000-0000-000000000004",
                             SellPrice = 150L,
@@ -3332,10 +3181,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                             Id = "33333333-3333-0000-0000-000000000005",
                             CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             EffectiveDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            EntityState = "Unchanged",
                             IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
                             LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             ProductUnitId = "dddddddd-0000-0000-0000-000000000005",
                             SellPrice = 1800L,
@@ -3347,10 +3193,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                             Id = "33333333-3333-0000-0000-000000000006",
                             CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             EffectiveDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            EntityState = "Unchanged",
                             IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
                             LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             ProductUnitId = "dddddddd-0000-0000-0000-000000000006",
                             SellPrice = 3600L,
@@ -3362,10 +3205,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                             Id = "33333333-3333-0000-0000-000000000007",
                             CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             EffectiveDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            EntityState = "Unchanged",
                             IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
                             LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             ProductUnitId = "dddddddd-0000-0000-0000-000000000007",
                             SellPrice = 90L,
@@ -3377,10 +3217,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                             Id = "33333333-3333-0000-0000-000000000008",
                             CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             EffectiveDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            EntityState = "Unchanged",
                             IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
                             LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             ProductUnitId = "dddddddd-0000-0000-0000-000000000008",
                             SellPrice = 540L,
@@ -3392,10 +3229,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                             Id = "33333333-3333-0000-0000-000000000009",
                             CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             EffectiveDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            EntityState = "Unchanged",
                             IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
                             LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             ProductUnitId = "dddddddd-0000-0000-0000-000000000009",
                             SellPrice = 1080L,
@@ -3407,10 +3241,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                             Id = "33333333-3333-0000-0000-000000000010",
                             CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             EffectiveDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            EntityState = "Unchanged",
                             IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
                             LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             ProductUnitId = "dddddddd-0000-0000-0000-000000000010",
                             SellPrice = 270L,
@@ -3422,10 +3253,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                             Id = "33333333-3333-0000-0000-000000000011",
                             CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             EffectiveDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            EntityState = "Unchanged",
                             IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
                             LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             ProductUnitId = "dddddddd-0000-0000-0000-000000000011",
                             SellPrice = 3240L,
@@ -3437,10 +3265,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                             Id = "33333333-3333-0000-0000-000000000012",
                             CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             EffectiveDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            EntityState = "Unchanged",
                             IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
                             LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             ProductUnitId = "dddddddd-0000-0000-0000-000000000012",
                             SellPrice = 12960L,
@@ -3452,10 +3277,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                             Id = "33333333-3333-0000-0000-000000000013",
                             CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             EffectiveDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            EntityState = "Unchanged",
                             IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
                             LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             ProductUnitId = "dddddddd-0000-0000-0000-000000000013",
                             SellPrice = 190L,
@@ -3467,10 +3289,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                             Id = "33333333-3333-0000-0000-000000000014",
                             CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             EffectiveDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            EntityState = "Unchanged",
                             IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
                             LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             ProductUnitId = "dddddddd-0000-0000-0000-000000000014",
                             SellPrice = 3800L,
@@ -3482,10 +3301,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                             Id = "33333333-3333-0000-0000-000000000015",
                             CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             EffectiveDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            EntityState = "Unchanged",
                             IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
                             LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             ProductUnitId = "dddddddd-0000-0000-0000-000000000015",
                             SellPrice = 11400L,
@@ -3497,10 +3313,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                             Id = "33333333-3333-0000-0000-000000000016",
                             CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             EffectiveDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            EntityState = "Unchanged",
                             IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
                             LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             ProductUnitId = "dddddddd-0000-0000-0000-000000000016",
                             SellPrice = 130L,
@@ -3512,10 +3325,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                             Id = "33333333-3333-0000-0000-000000000017",
                             CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             EffectiveDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            EntityState = "Unchanged",
                             IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
                             LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             ProductUnitId = "dddddddd-0000-0000-0000-000000000017",
                             SellPrice = 3120L,
@@ -3527,10 +3337,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                             Id = "33333333-3333-0000-0000-000000000018",
                             CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             EffectiveDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            EntityState = "Unchanged",
                             IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
                             LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             ProductUnitId = "dddddddd-0000-0000-0000-000000000018",
                             SellPrice = 9360L,
@@ -3542,10 +3349,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                             Id = "33333333-3333-0000-0000-000000000019",
                             CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             EffectiveDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            EntityState = "Unchanged",
                             IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
                             LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             ProductUnitId = "dddddddd-0000-0000-0000-000000000019",
                             SellPrice = 320L,
@@ -3557,10 +3361,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                             Id = "33333333-3333-0000-0000-000000000020",
                             CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             EffectiveDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            EntityState = "Unchanged",
                             IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
                             LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             ProductUnitId = "dddddddd-0000-0000-0000-000000000020",
                             SellPrice = 3840L,
@@ -3572,10 +3373,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                             Id = "33333333-3333-0000-0000-000000000021",
                             CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             EffectiveDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            EntityState = "Unchanged",
                             IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
                             LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             ProductUnitId = "dddddddd-0000-0000-0000-000000000021",
                             SellPrice = 16000L,
@@ -3587,10 +3385,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                             Id = "33333333-3333-0000-0000-000000000022",
                             CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             EffectiveDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            EntityState = "Unchanged",
                             IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
                             LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             ProductUnitId = "dddddddd-0000-0000-0000-000000000022",
                             SellPrice = 55L,
@@ -3602,10 +3397,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                             Id = "33333333-3333-0000-0000-000000000023",
                             CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             EffectiveDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            EntityState = "Unchanged",
                             IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
                             LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             ProductUnitId = "dddddddd-0000-0000-0000-000000000023",
                             SellPrice = 660L,
@@ -3617,10 +3409,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                             Id = "33333333-3333-0000-0000-000000000024",
                             CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             EffectiveDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            EntityState = "Unchanged",
                             IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
                             LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             ProductUnitId = "dddddddd-0000-0000-0000-000000000024",
                             SellPrice = 7920L,
@@ -3632,10 +3421,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                             Id = "33333333-3333-0000-0000-000000000025",
                             CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             EffectiveDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            EntityState = "Unchanged",
                             IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
                             LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             ProductUnitId = "dddddddd-0000-0000-0000-000000000025",
                             SellPrice = 420L,
@@ -3647,10 +3433,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                             Id = "33333333-3333-0000-0000-000000000026",
                             CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             EffectiveDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            EntityState = "Unchanged",
                             IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
                             LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             ProductUnitId = "dddddddd-0000-0000-0000-000000000026",
                             SellPrice = 8400L,
@@ -3662,10 +3445,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                             Id = "33333333-3333-0000-0000-000000000027",
                             CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             EffectiveDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            EntityState = "Unchanged",
                             IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
                             LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             ProductUnitId = "dddddddd-0000-0000-0000-000000000027",
                             SellPrice = 470L,
@@ -3677,10 +3457,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                             Id = "33333333-3333-0000-0000-000000000028",
                             CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             EffectiveDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            EntityState = "Unchanged",
                             IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
                             LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             ProductUnitId = "dddddddd-0000-0000-0000-000000000028",
                             SellPrice = 5640L,
@@ -3692,10 +3469,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                             Id = "33333333-3333-0000-0000-000000000029",
                             CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             EffectiveDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            EntityState = "Unchanged",
                             IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
                             LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             ProductUnitId = "dddddddd-0000-0000-0000-000000000029",
                             SellPrice = 11280L,
@@ -3707,10 +3481,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                             Id = "33333333-3333-0000-0000-000000000030",
                             CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             EffectiveDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            EntityState = "Unchanged",
                             IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
                             LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             ProductUnitId = "dddddddd-0000-0000-0000-000000000030",
                             SellPrice = 300L,
@@ -3722,10 +3493,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                             Id = "33333333-3333-0000-0000-000000000031",
                             CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             EffectiveDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            EntityState = "Unchanged",
                             IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
                             LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             ProductUnitId = "dddddddd-0000-0000-0000-000000000031",
                             SellPrice = 3000L,
@@ -3737,10 +3505,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                             Id = "33333333-3333-0000-0000-000000000032",
                             CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             EffectiveDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            EntityState = "Unchanged",
                             IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
                             LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             ProductUnitId = "dddddddd-0000-0000-0000-000000000032",
                             SellPrice = 7500L,
@@ -3752,10 +3517,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                             Id = "33333333-3333-0000-0000-000000000033",
                             CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             EffectiveDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            EntityState = "Unchanged",
                             IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
                             LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             ProductUnitId = "dddddddd-0000-0000-0000-000000000033",
                             SellPrice = 220L,
@@ -3767,10 +3529,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                             Id = "33333333-3333-0000-0000-000000000034",
                             CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             EffectiveDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            EntityState = "Unchanged",
                             IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
                             LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             ProductUnitId = "dddddddd-0000-0000-0000-000000000034",
                             SellPrice = 4400L,
@@ -3782,10 +3541,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                             Id = "33333333-3333-0000-0000-000000000035",
                             CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             EffectiveDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            EntityState = "Unchanged",
                             IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
                             LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             ProductUnitId = "dddddddd-0000-0000-0000-000000000035",
                             SellPrice = 11000L,
@@ -3797,10 +3553,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                             Id = "33333333-3333-0000-0000-000000000036",
                             CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             EffectiveDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            EntityState = "Unchanged",
                             IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
                             LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             ProductUnitId = "dddddddd-0000-0000-0000-000000000036",
                             SellPrice = 370L,
@@ -3812,10 +3565,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                             Id = "33333333-3333-0000-0000-000000000037",
                             CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             EffectiveDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            EntityState = "Unchanged",
                             IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
                             LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             ProductUnitId = "dddddddd-0000-0000-0000-000000000037",
                             SellPrice = 4440L,
@@ -3827,10 +3577,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                             Id = "33333333-3333-0000-0000-000000000038",
                             CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             EffectiveDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            EntityState = "Unchanged",
                             IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
                             LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             ProductUnitId = "dddddddd-0000-0000-0000-000000000038",
                             SellPrice = 8880L,
@@ -3842,10 +3589,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                             Id = "33333333-3333-0000-0000-000000000039",
                             CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             EffectiveDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            EntityState = "Unchanged",
                             IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
                             LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             ProductUnitId = "dddddddd-0000-0000-0000-000000000039",
                             SellPrice = 200L,
@@ -3857,10 +3601,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                             Id = "33333333-3333-0000-0000-000000000040",
                             CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             EffectiveDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            EntityState = "Unchanged",
                             IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
                             LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             ProductUnitId = "dddddddd-0000-0000-0000-000000000040",
                             SellPrice = 4800L,
@@ -3872,10 +3613,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                             Id = "33333333-3333-0000-0000-000000000041",
                             CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             EffectiveDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            EntityState = "Unchanged",
                             IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
                             LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             ProductUnitId = "dddddddd-0000-0000-0000-000000000041",
                             SellPrice = 14400L,
@@ -3887,10 +3625,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                             Id = "33333333-3333-0000-0000-000000000042",
                             CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             EffectiveDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            EntityState = "Unchanged",
                             IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
                             LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             ProductUnitId = "dddddddd-0000-0000-0000-000000000042",
                             SellPrice = 270L,
@@ -3902,10 +3637,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                             Id = "33333333-3333-0000-0000-000000000043",
                             CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             EffectiveDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            EntityState = "Unchanged",
                             IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
                             LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             ProductUnitId = "dddddddd-0000-0000-0000-000000000043",
                             SellPrice = 13500L,
@@ -3917,10 +3649,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                             Id = "33333333-3333-0000-0000-000000000044",
                             CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             EffectiveDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            EntityState = "Unchanged",
                             IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
                             LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             ProductUnitId = "dddddddd-0000-0000-0000-000000000044",
                             SellPrice = 54000L,
@@ -3932,10 +3661,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                             Id = "33333333-3333-0000-0000-000000000045",
                             CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             EffectiveDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            EntityState = "Unchanged",
                             IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
                             LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             ProductUnitId = "dddddddd-0000-0000-0000-000000000045",
                             SellPrice = 850L,
@@ -3947,10 +3673,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                             Id = "33333333-3333-0000-0000-000000000046",
                             CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             EffectiveDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            EntityState = "Unchanged",
                             IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
                             LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             ProductUnitId = "dddddddd-0000-0000-0000-000000000046",
                             SellPrice = 17000L,
@@ -3962,10 +3685,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                             Id = "33333333-3333-0000-0000-000000000047",
                             CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             EffectiveDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            EntityState = "Unchanged",
                             IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
                             LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             ProductUnitId = "dddddddd-0000-0000-0000-000000000047",
                             SellPrice = 85000L,
@@ -3983,17 +3703,6 @@ namespace SMIS.Infrastructure.Server.Migrations
                     b.Property<decimal>("BaseUnitQuantity")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<string>("ClientCreatedBy")
-                        .HasMaxLength(450)
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<DateTime?>("ClientCreatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("ClientModifiedBy")
-                        .HasMaxLength(450)
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<DateTime?>("ClientModifiedDate")
                         .HasColumnType("datetime2");
 
@@ -4007,25 +3716,12 @@ namespace SMIS.Infrastructure.Server.Migrations
                     b.Property<DateTime?>("DeletedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("EntityState")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsPublic")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsSyncedToServer")
                         .HasColumnType("bit");
 
                     b.Property<string>("LastModifiedUtc")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("LastSyncedAt")
-                        .HasColumnType("datetime2");
 
                     b.Property<string>("ProductId")
                         .IsRequired()
@@ -4063,10 +3759,6 @@ namespace SMIS.Infrastructure.Server.Migrations
                     b.HasAlternateKey("ProductId", "UnitOfMeasureId")
                         .HasName("AK_ProductUnit_ProductId_UnitOfMeasureId");
 
-                    b.HasIndex("ClientCreatedBy");
-
-                    b.HasIndex("ClientModifiedBy");
-
                     b.HasIndex("CreatedBy");
 
                     b.HasIndex("UnitOfMeasureId");
@@ -4080,10 +3772,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                         {
                             Id = "dddddddd-0000-0000-0000-000000000001",
                             BaseUnitQuantity = 1m,
-                            EntityState = "Unchanged",
                             IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
                             LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             ProductId = "cccccccc-0000-0000-0000-000000000001",
                             ProductName = "Coca Cola 500ml",
@@ -4095,10 +3784,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                         {
                             Id = "dddddddd-0000-0000-0000-000000000002",
                             BaseUnitQuantity = 12m,
-                            EntityState = "Unchanged",
                             IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
                             LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             ProductId = "cccccccc-0000-0000-0000-000000000001",
                             ProductName = "Coca Cola 500ml",
@@ -4110,10 +3796,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                         {
                             Id = "dddddddd-0000-0000-0000-000000000003",
                             BaseUnitQuantity = 24m,
-                            EntityState = "Unchanged",
                             IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
                             LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             ProductId = "cccccccc-0000-0000-0000-000000000001",
                             ProductName = "Coca Cola 500ml",
@@ -4125,10 +3808,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                         {
                             Id = "dddddddd-0000-0000-0000-000000000004",
                             BaseUnitQuantity = 1m,
-                            EntityState = "Unchanged",
                             IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
                             LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             ProductId = "cccccccc-0000-0000-0000-000000000002",
                             ProductName = "Pepsi 500ml",
@@ -4140,10 +3820,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                         {
                             Id = "dddddddd-0000-0000-0000-000000000005",
                             BaseUnitQuantity = 12m,
-                            EntityState = "Unchanged",
                             IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
                             LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             ProductId = "cccccccc-0000-0000-0000-000000000002",
                             ProductName = "Pepsi 500ml",
@@ -4155,10 +3832,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                         {
                             Id = "dddddddd-0000-0000-0000-000000000006",
                             BaseUnitQuantity = 24m,
-                            EntityState = "Unchanged",
                             IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
                             LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             ProductId = "cccccccc-0000-0000-0000-000000000002",
                             ProductName = "Pepsi 500ml",
@@ -4170,10 +3844,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                         {
                             Id = "dddddddd-0000-0000-0000-000000000007",
                             BaseUnitQuantity = 1m,
-                            EntityState = "Unchanged",
                             IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
                             LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             ProductId = "cccccccc-0000-0000-0000-000000000003",
                             ProductName = "Mineral Water 1L",
@@ -4185,10 +3856,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                         {
                             Id = "dddddddd-0000-0000-0000-000000000008",
                             BaseUnitQuantity = 6m,
-                            EntityState = "Unchanged",
                             IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
                             LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             ProductId = "cccccccc-0000-0000-0000-000000000003",
                             ProductName = "Mineral Water 1L",
@@ -4200,10 +3868,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                         {
                             Id = "dddddddd-0000-0000-0000-000000000009",
                             BaseUnitQuantity = 12m,
-                            EntityState = "Unchanged",
                             IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
                             LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             ProductId = "cccccccc-0000-0000-0000-000000000003",
                             ProductName = "Mineral Water 1L",
@@ -4215,10 +3880,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                         {
                             Id = "dddddddd-0000-0000-0000-000000000010",
                             BaseUnitQuantity = 1m,
-                            EntityState = "Unchanged",
                             IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
                             LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             ProductId = "cccccccc-0000-0000-0000-000000000004",
                             ProductName = "Oreo Biscuits",
@@ -4230,10 +3892,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                         {
                             Id = "dddddddd-0000-0000-0000-000000000011",
                             BaseUnitQuantity = 12m,
-                            EntityState = "Unchanged",
                             IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
                             LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             ProductId = "cccccccc-0000-0000-0000-000000000004",
                             ProductName = "Oreo Biscuits",
@@ -4245,10 +3904,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                         {
                             Id = "dddddddd-0000-0000-0000-000000000012",
                             BaseUnitQuantity = 48m,
-                            EntityState = "Unchanged",
                             IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
                             LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             ProductId = "cccccccc-0000-0000-0000-000000000004",
                             ProductName = "Oreo Biscuits",
@@ -4260,10 +3916,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                         {
                             Id = "dddddddd-0000-0000-0000-000000000013",
                             BaseUnitQuantity = 1m,
-                            EntityState = "Unchanged",
                             IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
                             LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             ProductId = "cccccccc-0000-0000-0000-000000000005",
                             ProductName = "Lay's Chips",
@@ -4275,10 +3928,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                         {
                             Id = "dddddddd-0000-0000-0000-000000000014",
                             BaseUnitQuantity = 20m,
-                            EntityState = "Unchanged",
                             IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
                             LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             ProductId = "cccccccc-0000-0000-0000-000000000005",
                             ProductName = "Lay's Chips",
@@ -4290,10 +3940,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                         {
                             Id = "dddddddd-0000-0000-0000-000000000015",
                             BaseUnitQuantity = 60m,
-                            EntityState = "Unchanged",
                             IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
                             LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             ProductId = "cccccccc-0000-0000-0000-000000000005",
                             ProductName = "Lay's Chips",
@@ -4305,10 +3952,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                         {
                             Id = "dddddddd-0000-0000-0000-000000000016",
                             BaseUnitQuantity = 1m,
-                            EntityState = "Unchanged",
                             IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
                             LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             ProductId = "cccccccc-0000-0000-0000-000000000006",
                             ProductName = "Instant Noodles",
@@ -4320,10 +3964,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                         {
                             Id = "dddddddd-0000-0000-0000-000000000017",
                             BaseUnitQuantity = 24m,
-                            EntityState = "Unchanged",
                             IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
                             LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             ProductId = "cccccccc-0000-0000-0000-000000000006",
                             ProductName = "Instant Noodles",
@@ -4335,10 +3976,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                         {
                             Id = "dddddddd-0000-0000-0000-000000000018",
                             BaseUnitQuantity = 72m,
-                            EntityState = "Unchanged",
                             IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
                             LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             ProductId = "cccccccc-0000-0000-0000-000000000006",
                             ProductName = "Instant Noodles",
@@ -4350,10 +3988,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                         {
                             Id = "dddddddd-0000-0000-0000-000000000019",
                             BaseUnitQuantity = 1m,
-                            EntityState = "Unchanged",
                             IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
                             LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             ProductId = "cccccccc-0000-0000-0000-000000000007",
                             ProductName = "A4 Notebook",
@@ -4365,10 +4000,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                         {
                             Id = "dddddddd-0000-0000-0000-000000000020",
                             BaseUnitQuantity = 12m,
-                            EntityState = "Unchanged",
                             IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
                             LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             ProductId = "cccccccc-0000-0000-0000-000000000007",
                             ProductName = "A4 Notebook",
@@ -4380,10 +4012,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                         {
                             Id = "dddddddd-0000-0000-0000-000000000021",
                             BaseUnitQuantity = 50m,
-                            EntityState = "Unchanged",
                             IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
                             LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             ProductId = "cccccccc-0000-0000-0000-000000000007",
                             ProductName = "A4 Notebook",
@@ -4395,10 +4024,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                         {
                             Id = "dddddddd-0000-0000-0000-000000000022",
                             BaseUnitQuantity = 1m,
-                            EntityState = "Unchanged",
                             IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
                             LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             ProductId = "cccccccc-0000-0000-0000-000000000008",
                             ProductName = "Blue Pen",
@@ -4410,10 +4036,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                         {
                             Id = "dddddddd-0000-0000-0000-000000000023",
                             BaseUnitQuantity = 12m,
-                            EntityState = "Unchanged",
                             IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
                             LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             ProductId = "cccccccc-0000-0000-0000-000000000008",
                             ProductName = "Blue Pen",
@@ -4425,10 +4048,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                         {
                             Id = "dddddddd-0000-0000-0000-000000000024",
                             BaseUnitQuantity = 144m,
-                            EntityState = "Unchanged",
                             IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
                             LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             ProductId = "cccccccc-0000-0000-0000-000000000008",
                             ProductName = "Blue Pen",
@@ -4440,10 +4060,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                         {
                             Id = "dddddddd-0000-0000-0000-000000000025",
                             BaseUnitQuantity = 1m,
-                            EntityState = "Unchanged",
                             IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
                             LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             ProductId = "cccccccc-0000-0000-0000-000000000009",
                             ProductName = "Pencil Set",
@@ -4455,10 +4072,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                         {
                             Id = "dddddddd-0000-0000-0000-000000000026",
                             BaseUnitQuantity = 20m,
-                            EntityState = "Unchanged",
                             IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
                             LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             ProductId = "cccccccc-0000-0000-0000-000000000009",
                             ProductName = "Pencil Set",
@@ -4470,10 +4084,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                         {
                             Id = "dddddddd-0000-0000-0000-000000000027",
                             BaseUnitQuantity = 1m,
-                            EntityState = "Unchanged",
                             IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
                             LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             ProductId = "cccccccc-0000-0000-0000-000000000010",
                             ProductName = "Cooking Oil 1L",
@@ -4485,10 +4096,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                         {
                             Id = "dddddddd-0000-0000-0000-000000000028",
                             BaseUnitQuantity = 12m,
-                            EntityState = "Unchanged",
                             IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
                             LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             ProductId = "cccccccc-0000-0000-0000-000000000010",
                             ProductName = "Cooking Oil 1L",
@@ -4500,10 +4108,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                         {
                             Id = "dddddddd-0000-0000-0000-000000000029",
                             BaseUnitQuantity = 24m,
-                            EntityState = "Unchanged",
                             IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
                             LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             ProductId = "cccccccc-0000-0000-0000-000000000010",
                             ProductName = "Cooking Oil 1L",
@@ -4515,10 +4120,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                         {
                             Id = "dddddddd-0000-0000-0000-000000000030",
                             BaseUnitQuantity = 1m,
-                            EntityState = "Unchanged",
                             IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
                             LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             ProductId = "cccccccc-0000-0000-0000-000000000011",
                             ProductName = "Rice 1kg",
@@ -4530,10 +4132,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                         {
                             Id = "dddddddd-0000-0000-0000-000000000031",
                             BaseUnitQuantity = 10m,
-                            EntityState = "Unchanged",
                             IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
                             LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             ProductId = "cccccccc-0000-0000-0000-000000000011",
                             ProductName = "Rice 1kg",
@@ -4545,10 +4144,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                         {
                             Id = "dddddddd-0000-0000-0000-000000000032",
                             BaseUnitQuantity = 25m,
-                            EntityState = "Unchanged",
                             IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
                             LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             ProductId = "cccccccc-0000-0000-0000-000000000011",
                             ProductName = "Rice 1kg",
@@ -4560,10 +4156,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                         {
                             Id = "dddddddd-0000-0000-0000-000000000033",
                             BaseUnitQuantity = 1m,
-                            EntityState = "Unchanged",
                             IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
                             LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             ProductId = "cccccccc-0000-0000-0000-000000000012",
                             ProductName = "Sugar 1kg",
@@ -4575,10 +4168,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                         {
                             Id = "dddddddd-0000-0000-0000-000000000034",
                             BaseUnitQuantity = 20m,
-                            EntityState = "Unchanged",
                             IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
                             LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             ProductId = "cccccccc-0000-0000-0000-000000000012",
                             ProductName = "Sugar 1kg",
@@ -4590,10 +4180,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                         {
                             Id = "dddddddd-0000-0000-0000-000000000035",
                             BaseUnitQuantity = 50m,
-                            EntityState = "Unchanged",
                             IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
                             LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             ProductId = "cccccccc-0000-0000-0000-000000000012",
                             ProductName = "Sugar 1kg",
@@ -4605,10 +4192,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                         {
                             Id = "dddddddd-0000-0000-0000-000000000036",
                             BaseUnitQuantity = 1m,
-                            EntityState = "Unchanged",
                             IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
                             LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             ProductId = "cccccccc-0000-0000-0000-000000000013",
                             ProductName = "Shampoo 400ml",
@@ -4620,10 +4204,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                         {
                             Id = "dddddddd-0000-0000-0000-000000000037",
                             BaseUnitQuantity = 12m,
-                            EntityState = "Unchanged",
                             IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
                             LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             ProductId = "cccccccc-0000-0000-0000-000000000013",
                             ProductName = "Shampoo 400ml",
@@ -4635,10 +4216,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                         {
                             Id = "dddddddd-0000-0000-0000-000000000038",
                             BaseUnitQuantity = 24m,
-                            EntityState = "Unchanged",
                             IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
                             LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             ProductId = "cccccccc-0000-0000-0000-000000000013",
                             ProductName = "Shampoo 400ml",
@@ -4650,10 +4228,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                         {
                             Id = "dddddddd-0000-0000-0000-000000000039",
                             BaseUnitQuantity = 1m,
-                            EntityState = "Unchanged",
                             IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
                             LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             ProductId = "cccccccc-0000-0000-0000-000000000014",
                             ProductName = "Toothpaste",
@@ -4665,10 +4240,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                         {
                             Id = "dddddddd-0000-0000-0000-000000000040",
                             BaseUnitQuantity = 24m,
-                            EntityState = "Unchanged",
                             IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
                             LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             ProductId = "cccccccc-0000-0000-0000-000000000014",
                             ProductName = "Toothpaste",
@@ -4680,10 +4252,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                         {
                             Id = "dddddddd-0000-0000-0000-000000000041",
                             BaseUnitQuantity = 72m,
-                            EntityState = "Unchanged",
                             IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
                             LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             ProductId = "cccccccc-0000-0000-0000-000000000014",
                             ProductName = "Toothpaste",
@@ -4695,10 +4264,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                         {
                             Id = "dddddddd-0000-0000-0000-000000000042",
                             BaseUnitQuantity = 1m,
-                            EntityState = "Unchanged",
                             IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
                             LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             ProductId = "cccccccc-0000-0000-0000-000000000015",
                             ProductName = "USB Cable",
@@ -4710,10 +4276,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                         {
                             Id = "dddddddd-0000-0000-0000-000000000043",
                             BaseUnitQuantity = 50m,
-                            EntityState = "Unchanged",
                             IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
                             LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             ProductId = "cccccccc-0000-0000-0000-000000000015",
                             ProductName = "USB Cable",
@@ -4725,10 +4288,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                         {
                             Id = "dddddddd-0000-0000-0000-000000000044",
                             BaseUnitQuantity = 200m,
-                            EntityState = "Unchanged",
                             IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
                             LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             ProductId = "cccccccc-0000-0000-0000-000000000015",
                             ProductName = "USB Cable",
@@ -4740,10 +4300,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                         {
                             Id = "dddddddd-0000-0000-0000-000000000045",
                             BaseUnitQuantity = 1m,
-                            EntityState = "Unchanged",
                             IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
                             LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             ProductId = "cccccccc-0000-0000-0000-000000000016",
                             ProductName = "Phone Charger",
@@ -4755,10 +4312,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                         {
                             Id = "dddddddd-0000-0000-0000-000000000046",
                             BaseUnitQuantity = 20m,
-                            EntityState = "Unchanged",
                             IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
                             LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             ProductId = "cccccccc-0000-0000-0000-000000000016",
                             ProductName = "Phone Charger",
@@ -4770,10 +4324,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                         {
                             Id = "dddddddd-0000-0000-0000-000000000047",
                             BaseUnitQuantity = 100m,
-                            EntityState = "Unchanged",
                             IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
                             LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             ProductId = "cccccccc-0000-0000-0000-000000000016",
                             ProductName = "Phone Charger",
@@ -5138,17 +4689,6 @@ namespace SMIS.Infrastructure.Server.Migrations
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 
-                    b.Property<string>("ClientCreatedBy")
-                        .HasMaxLength(450)
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<DateTime?>("ClientCreatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("ClientModifiedBy")
-                        .HasMaxLength(450)
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<DateTime?>("ClientModifiedDate")
                         .HasColumnType("datetime2");
 
@@ -5166,17 +4706,10 @@ namespace SMIS.Infrastructure.Server.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<string>("EntityState")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
 
                     b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsPublic")
                         .HasColumnType("bit");
 
                     b.Property<string>("LastModifiedUtc")
@@ -5212,10 +4745,6 @@ namespace SMIS.Infrastructure.Server.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ClientCreatedBy");
-
-                    b.HasIndex("ClientModifiedBy");
-
                     b.HasIndex("CreatedBy");
 
                     b.HasIndex("UpdatedBy");
@@ -5229,10 +4758,8 @@ namespace SMIS.Infrastructure.Server.Migrations
                             Address = "Kabul Center",
                             CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Email = "main@store.local",
-                            EntityState = "Unchanged",
                             IsActive = true,
                             IsDeleted = false,
-                            IsPublic = false,
                             LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             Name = "Main Store",
                             PhoneNumber = "0700000001",
@@ -5247,10 +4774,8 @@ namespace SMIS.Infrastructure.Server.Migrations
                             Address = "Herat Center",
                             CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Email = "branch@store.local",
-                            EntityState = "Unchanged",
                             IsActive = true,
                             IsDeleted = false,
-                            IsPublic = false,
                             LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             Name = "Branch Store",
                             PhoneNumber = "0700000002",
@@ -5265,10 +4790,8 @@ namespace SMIS.Infrastructure.Server.Migrations
                             Address = "Kandahar Center",
                             CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Email = "warehouse@store.local",
-                            EntityState = "Unchanged",
                             IsActive = true,
                             IsDeleted = false,
-                            IsPublic = false,
                             LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             Name = "Warehouse",
                             PhoneNumber = "0700000003",
@@ -5283,10 +4806,8 @@ namespace SMIS.Infrastructure.Server.Migrations
                             Address = "Kabul Center",
                             CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Email = "wasil@wasilshop.com",
-                            EntityState = "Unchanged",
                             IsActive = true,
                             IsDeleted = false,
-                            IsPublic = false,
                             LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             Name = "Wasil Shop",
                             PhoneNumber = "0700000004",
@@ -6150,17 +5671,6 @@ namespace SMIS.Infrastructure.Server.Migrations
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("ClientCreatedBy")
-                        .HasMaxLength(450)
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<DateTime?>("ClientCreatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("ClientModifiedBy")
-                        .HasMaxLength(450)
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<DateTime?>("ClientModifiedDate")
                         .HasColumnType("datetime2");
 
@@ -6178,25 +5688,12 @@ namespace SMIS.Infrastructure.Server.Migrations
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 
-                    b.Property<string>("EntityState")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsPublic")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsSyncedToServer")
                         .HasColumnType("bit");
 
                     b.Property<string>("LastModifiedUtc")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("LastSyncedAt")
-                        .HasColumnType("datetime2");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -6220,10 +5717,6 @@ namespace SMIS.Infrastructure.Server.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ClientCreatedBy");
-
-                    b.HasIndex("ClientModifiedBy");
-
                     b.HasIndex("CreatedBy");
 
                     b.HasIndex("Name")
@@ -6245,10 +5738,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                         {
                             Id = "aaaaaaaa-0000-0000-0000-000000000001",
                             Description = "Individual items",
-                            EntityState = "Unchanged",
                             IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
                             LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             Name = "Piece",
                             Symbol = "pcs",
@@ -6258,10 +5748,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                         {
                             Id = "aaaaaaaa-0000-0000-0000-000000000002",
                             Description = "Liquid containers",
-                            EntityState = "Unchanged",
                             IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
                             LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             Name = "Bottle",
                             Symbol = "btl",
@@ -6271,10 +5758,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                         {
                             Id = "aaaaaaaa-0000-0000-0000-000000000003",
                             Description = "Small packages",
-                            EntityState = "Unchanged",
                             IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
                             LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             Name = "Pack",
                             Symbol = "pk",
@@ -6284,10 +5768,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                         {
                             Id = "aaaaaaaa-0000-0000-0000-000000000004",
                             Description = "Medium containers",
-                            EntityState = "Unchanged",
                             IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
                             LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             Name = "Box",
                             Symbol = "box",
@@ -6297,10 +5778,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                         {
                             Id = "aaaaaaaa-0000-0000-0000-000000000005",
                             Description = "Large containers",
-                            EntityState = "Unchanged",
                             IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
                             LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             Name = "Carton",
                             Symbol = "ctn",
@@ -6310,10 +5788,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                         {
                             Id = "aaaaaaaa-0000-0000-0000-000000000006",
                             Description = "Volume measurement",
-                            EntityState = "Unchanged",
                             IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
                             LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             Name = "Liter",
                             Symbol = "L",
@@ -6323,10 +5798,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                         {
                             Id = "aaaaaaaa-0000-0000-0000-000000000007",
                             Description = "Weight measurement",
-                            EntityState = "Unchanged",
                             IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
                             LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             Name = "Kilogram",
                             Symbol = "kg",
@@ -6336,10 +5808,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                         {
                             Id = "aaaaaaaa-0000-0000-0000-000000000008",
                             Description = "Small weight measurement",
-                            EntityState = "Unchanged",
                             IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
                             LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             Name = "Gram",
                             Symbol = "g",
@@ -6349,10 +5818,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                         {
                             Id = "aaaaaaaa-0000-0000-0000-000000000009",
                             Description = "Small volume measurement",
-                            EntityState = "Unchanged",
                             IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
                             LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             Name = "Milliliter",
                             Symbol = "ml",
@@ -6362,10 +5828,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                         {
                             Id = "aaaaaaaa-0000-0000-0000-000000000010",
                             Description = "12 pieces",
-                            EntityState = "Unchanged",
                             IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
                             LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             Name = "Dozen",
                             Symbol = "dz",
@@ -6421,16 +5884,6 @@ namespace SMIS.Infrastructure.Server.Migrations
 
             modelBuilder.Entity("SMIS.Domain.Entities.Category", b =>
                 {
-                    b.HasOne("SMIS.Domain.Entities.Identity.Entity.ApplicationUser", null)
-                        .WithMany()
-                        .HasForeignKey("ClientCreatedBy")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("SMIS.Domain.Entities.Identity.Entity.ApplicationUser", null)
-                        .WithMany()
-                        .HasForeignKey("ClientModifiedBy")
-                        .OnDelete(DeleteBehavior.Restrict);
-
                     b.HasOne("SMIS.Domain.Entities.Identity.Entity.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("CreatedBy")
@@ -6715,16 +6168,6 @@ namespace SMIS.Infrastructure.Server.Migrations
 
                     b.HasOne("SMIS.Domain.Entities.Identity.Entity.ApplicationUser", null)
                         .WithMany()
-                        .HasForeignKey("ClientCreatedBy")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("SMIS.Domain.Entities.Identity.Entity.ApplicationUser", null)
-                        .WithMany()
-                        .HasForeignKey("ClientModifiedBy")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("SMIS.Domain.Entities.Identity.Entity.ApplicationUser", null)
-                        .WithMany()
                         .HasForeignKey("CreatedBy")
                         .OnDelete(DeleteBehavior.Restrict);
 
@@ -6750,16 +6193,6 @@ namespace SMIS.Infrastructure.Server.Migrations
                 {
                     b.HasOne("SMIS.Domain.Entities.Identity.Entity.ApplicationUser", null)
                         .WithMany()
-                        .HasForeignKey("ClientCreatedBy")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("SMIS.Domain.Entities.Identity.Entity.ApplicationUser", null)
-                        .WithMany()
-                        .HasForeignKey("ClientModifiedBy")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("SMIS.Domain.Entities.Identity.Entity.ApplicationUser", null)
-                        .WithMany()
                         .HasForeignKey("CreatedBy")
                         .OnDelete(DeleteBehavior.Restrict);
 
@@ -6779,16 +6212,6 @@ namespace SMIS.Infrastructure.Server.Migrations
 
             modelBuilder.Entity("SMIS.Domain.Entities.ProductUnit", b =>
                 {
-                    b.HasOne("SMIS.Domain.Entities.Identity.Entity.ApplicationUser", null)
-                        .WithMany()
-                        .HasForeignKey("ClientCreatedBy")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("SMIS.Domain.Entities.Identity.Entity.ApplicationUser", null)
-                        .WithMany()
-                        .HasForeignKey("ClientModifiedBy")
-                        .OnDelete(DeleteBehavior.Restrict);
-
                     b.HasOne("SMIS.Domain.Entities.Identity.Entity.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("CreatedBy")
@@ -6951,16 +6374,6 @@ namespace SMIS.Infrastructure.Server.Migrations
 
             modelBuilder.Entity("SMIS.Domain.Entities.Shop", b =>
                 {
-                    b.HasOne("SMIS.Domain.Entities.Identity.Entity.ApplicationUser", null)
-                        .WithMany()
-                        .HasForeignKey("ClientCreatedBy")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("SMIS.Domain.Entities.Identity.Entity.ApplicationUser", null)
-                        .WithMany()
-                        .HasForeignKey("ClientModifiedBy")
-                        .OnDelete(DeleteBehavior.Restrict);
-
                     b.HasOne("SMIS.Domain.Entities.Identity.Entity.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("CreatedBy")
@@ -7165,16 +6578,6 @@ namespace SMIS.Infrastructure.Server.Migrations
 
             modelBuilder.Entity("SMIS.Domain.Entities.UnitOfMeasure", b =>
                 {
-                    b.HasOne("SMIS.Domain.Entities.Identity.Entity.ApplicationUser", null)
-                        .WithMany()
-                        .HasForeignKey("ClientCreatedBy")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("SMIS.Domain.Entities.Identity.Entity.ApplicationUser", null)
-                        .WithMany()
-                        .HasForeignKey("ClientModifiedBy")
-                        .OnDelete(DeleteBehavior.Restrict);
-
                     b.HasOne("SMIS.Domain.Entities.Identity.Entity.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("CreatedBy")

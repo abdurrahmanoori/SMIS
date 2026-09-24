@@ -33,11 +33,18 @@ public abstract class BaseSyncableAuditableEntity : BaseAuditableEntity
     }
 
     public void SetClientModificationMetadata(
+        DateTime modifiedDateUtc
+    )
+    {
+        ClientModifiedDate = DateTimeService.NormalizeUtc(modifiedDateUtc);
+    }
+
+    public void SetClientModificationMetadata(
         DateTime modifiedDateUtc,
         string? modifiedBy
     )
     {
-        ClientModifiedDate = DateTimeService.NormalizeUtc(modifiedDateUtc);
+        SetClientModificationMetadata(modifiedDateUtc);
         ClientModifiedBy = NormalizeUserId(modifiedBy);
     }
 

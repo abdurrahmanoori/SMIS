@@ -13,7 +13,7 @@ namespace SMIS.Infrastructure.Server.EntityConfigurations
         )
         {
             builder.ConfigureAuditUserRelationships();
-            builder.ConfigureClientAuditUserRelationships();
+            builder.IgnoreLegacySyncMetadata();
             builder.ToTable(nameof(ProductUnit));
 
             builder.HasKey(pu => pu.Id);
@@ -44,9 +44,6 @@ namespace SMIS.Infrastructure.Server.EntityConfigurations
 
             builder.Property(pu => pu.UnitName)
                 .HasMaxLength(100);
-
-            builder.Property(pu => pu.ClientCreatedBy).HasMaxLength(450);
-            builder.Property(pu => pu.ClientModifiedBy).HasMaxLength(450);
 
             // Configure relationships
             builder.HasOne(pu => pu.Product)

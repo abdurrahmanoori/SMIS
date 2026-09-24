@@ -24,8 +24,6 @@ public class UnitOfMeasure : BaseSyncableAuditableEntity
     /// </summary>
     public string? Description { get; private set; } = null!;
 
-    public DateTime ConflictModifiedUtc => GetConflictModifiedUtc();
-
     // ProductUnit supplies the product-specific conversion semantics for this unit label.
     public virtual ICollection<ProductUnit> ProductUnits { get; set; } = new List<ProductUnit>();
 

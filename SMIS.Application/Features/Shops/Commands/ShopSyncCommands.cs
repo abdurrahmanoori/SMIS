@@ -42,10 +42,6 @@ internal sealed class ShopSyncCreateCommandHandler : IRequestHandler<ShopSyncCre
     )
     {
         var id = ShopSyncRules.NormalizeGuid(request.Dto.Id!);
-        if (!ShopSyncRules.UserMetadataMatches(request.Dto.ClientCreatedBy, _currentUser) ||
-            !ShopSyncRules.UserMetadataMatches(request.Dto.ClientModifiedBy, _currentUser))
-            return ShopSyncRules.InvalidUser();
-
         if (!_currentUser.IsSuperAdmin() && id != _currentUser.GetShopId())
             return ShopSyncRules.Forbidden();
 
@@ -60,9 +56,7 @@ internal sealed class ShopSyncCreateCommandHandler : IRequestHandler<ShopSyncCre
                 return Result<ShopDto>.SuccessResult(_mapper.Map<ShopDto>(existing));
 
             ShopCommandRules.Apply(existing, request.Dto);
-            existing.SetClientCreationMetadata(DateTimeService.NormalizeUtc(request.Dto.ClientCreatedDate),
-                request.Dto.ClientCreatedBy);
-            existing.SetClientModificationMetadata(clientModified, request.Dto.ClientModifiedBy);
+            existing.SetClientModificationMetadata(clientModified);
             existing.Restore();
             await _db.SaveChangesAsync(cancellationToken);
             return Result<ShopDto>.SuccessResult(_mapper.Map<ShopDto>(existing));
@@ -70,10 +64,7 @@ internal sealed class ShopSyncCreateCommandHandler : IRequestHandler<ShopSyncCre
 
         var shop = ShopCommandRules.Create(request.Dto);
         shop.Id = id;
-        shop.SetClientCreationMetadata(DateTimeService.NormalizeUtc(request.Dto.ClientCreatedDate),
-            request.Dto.ClientCreatedBy);
-        shop.SetClientModificationMetadata(DateTimeService.NormalizeUtc(request.Dto.ClientModifiedDate),
-            request.Dto.ClientModifiedBy);
+        shop.SetClientModificationMetadata(DateTimeService.NormalizeUtc(request.Dto.ClientModifiedDate));
         await _repository.AddAsync(shop);
         await _db.SaveChangesAsync(cancellationToken);
         return Result<ShopDto>.SuccessResult(_mapper.Map<ShopDto>(shop));
@@ -106,9 +97,6 @@ internal sealed class ShopSyncUpdateCommandHandler : IRequestHandler<ShopSyncUpd
     )
     {
         var id = ShopSyncRules.NormalizeGuid(request.Id);
-        if (!ShopSyncRules.UserMetadataMatches(request.Dto.ClientModifiedBy, _currentUser))
-            return ShopSyncRules.InvalidUser();
-
         var shop = await _repository.GetByIdIncludingDeletedAsync(id, cancellationToken);
         if (shop is null)
             return Result<ShopDto>.NotFoundResult(id);
@@ -120,7 +108,7 @@ internal sealed class ShopSyncUpdateCommandHandler : IRequestHandler<ShopSyncUpd
             return Result<ShopDto>.SuccessResult(_mapper.Map<ShopDto>(shop));
 
         ShopCommandRules.Apply(shop, request.Dto);
-        shop.SetClientModificationMetadata(clientModified, request.Dto.ClientModifiedBy);
+        shop.SetClientModificationMetadata(clientModified);
         shop.Restore();
         await _db.SaveChangesAsync(cancellationToken);
         return Result<ShopDto>.SuccessResult(_mapper.Map<ShopDto>(shop));
@@ -153,9 +141,6 @@ internal sealed class ShopSyncDeleteCommandHandler : IRequestHandler<ShopSyncDel
     )
     {
         var id = ShopSyncRules.NormalizeGuid(request.Id);
-        if (!ShopSyncRules.UserMetadataMatches(request.Dto.ClientModifiedBy, _currentUser))
-            return ShopSyncRules.InvalidUser();
-
         var shop = await _repository.GetByIdIncludingDeletedAsync(id, cancellationToken);
         if (shop is null)
             return Result<ShopDto>.NotFoundResult(id);
@@ -174,7 +159,7 @@ internal sealed class ShopSyncDeleteCommandHandler : IRequestHandler<ShopSyncDel
                 "ShopInUse",
                 $"Shop contains {referenceCount} related record(s). Remove or reassign them before deleting the shop.");
 
-        shop.SetClientModificationMetadata(clientModified, request.Dto.ClientModifiedBy);
+        shop.SetClientModificationMetadata(clientModified);
         await _repository.RemoveAsync(shop);
         await _db.SaveChangesAsync(cancellationToken);
         return Result<ShopDto>.SuccessResult(_mapper.Map<ShopDto>(shop));
@@ -187,21 +172,11 @@ internal static class ShopSyncRules
         string value
     ) => Guid.Parse(value).ToString("D");
 
-    public static bool UserMetadataMatches(
-        string? clientUserId,
-        ICurrentUser currentUser
-    ) =>
-        string.IsNullOrWhiteSpace(clientUserId) ||
-        string.Equals(clientUserId.Trim(), currentUser.GetId(), StringComparison.Ordinal);
-
     public static bool CanAccess(
         Shop shop,
         ICurrentUser currentUser
     ) =>
         currentUser.IsSuperAdmin() || shop.Id == currentUser.GetShopId();
-
-    public static Result<ShopDto> InvalidUser() => Result<ShopDto>.FailureResult(
-        "InvalidClientUser", "Client user metadata must match the authenticated user.");
 
     public static Result<ShopDto> Forbidden() => Result<ShopDto>.FailureResult(
         "Forbidden", "You can only synchronize your own shop.");

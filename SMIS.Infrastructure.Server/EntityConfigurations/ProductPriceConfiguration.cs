@@ -11,7 +11,7 @@ public class ProductPriceConfiguration : IEntityTypeConfiguration<ProductPrice>
     )
     {
         builder.ConfigureAuditUserRelationships();
-        builder.ConfigureClientAuditUserRelationships();
+        builder.IgnoreLegacySyncMetadata();
         builder.ToTable(nameof(ProductPrice));
 
         builder.HasKey(p => p.Id);
@@ -27,9 +27,6 @@ public class ProductPriceConfiguration : IEntityTypeConfiguration<ProductPrice>
             .IsRequired();
 
         builder.Property(p => p.EndDate);
-
-        builder.Property(p => p.ClientCreatedBy).HasMaxLength(450);
-        builder.Property(p => p.ClientModifiedBy).HasMaxLength(450);
 
         builder.HasOne(p => p.ProductUnit)
             .WithMany(pu => pu.ProductPrices)

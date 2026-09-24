@@ -15,12 +15,7 @@ class ProductUnitUploadHandler implements PowerSyncUploadHandler {
   Future<void> create(String id, Map<String, dynamic> row) async {
     await _dio.post<void>(
       '${AppConfig.productUnitEndpoint}/sync',
-      data: {
-        'id': id,
-        ..._payload(row),
-        'clientCreatedDate': _timestamp(row),
-        'clientModifiedDate': _timestamp(row),
-      },
+      data: {'id': id, ..._payload(row), 'clientModifiedDate': _timestamp(row)},
     );
   }
 

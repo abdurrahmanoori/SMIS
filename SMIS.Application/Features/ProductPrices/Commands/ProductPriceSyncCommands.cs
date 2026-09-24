@@ -49,10 +49,6 @@ internal sealed class
         CancellationToken ct
     )
     {
-        if (!ProductPriceSyncRules.User(request.Dto.ClientCreatedBy, _user) ||
-            !ProductPriceSyncRules.User(request.Dto.ClientModifiedBy, _user))
-            return ProductPriceSyncRules.InvalidUser();
-
         var id = ProductPriceSyncRules.Id(request.Dto.Id);
         var existing = await _db.ProductPrices
             .IgnoreQueryFilters()
@@ -73,8 +69,7 @@ internal sealed class
         var value = ProductPrice.Create(request.Dto.ProductUnitId, request.Dto.SellPrice, request.Dto.EffectiveDate);
         value.Id = id;
         value.SetEndDate(request.Dto.EndDate);
-        value.SetClientCreationMetadata(request.Dto.ClientCreatedDate, request.Dto.ClientCreatedBy);
-        value.SetClientModificationMetadata(request.Dto.ClientModifiedDate, request.Dto.ClientModifiedBy);
+        value.SetClientModificationMetadata(request.Dto.ClientModifiedDate);
         await _repository.AddAsync(value);
         await _db.SaveChangesAsync(ct);
         return Result<ProductPriceDto>.SuccessResult(_mapper.Map<ProductPriceDto>(value));
@@ -110,9 +105,6 @@ internal sealed class
         CancellationToken ct
     )
     {
-        if (!ProductPriceSyncRules.User(request.Dto.ClientModifiedBy, _user))
-            return ProductPriceSyncRules.InvalidUser();
-
         var id = ProductPriceSyncRules.Id(request.Id);
         var existing = await _db.ProductPrices
             .IgnoreQueryFilters()
@@ -138,7 +130,7 @@ internal sealed class
 
         var successor = ProductPrice.Create(existing.ProductUnitId, request.Dto.SellPrice, request.Dto.EffectiveDate);
         successor.SetEndDate(request.Dto.EndDate);
-        successor.SetClientModificationMetadata(request.Dto.ClientModifiedDate, request.Dto.ClientModifiedBy);
+        successor.SetClientModificationMetadata(request.Dto.ClientModifiedDate);
         await _repository.AddAsync(successor);
         await _db.SaveChangesAsync(ct);
         return Result<ProductPriceDto>.SuccessResult(_mapper.Map<ProductPriceDto>(successor));
@@ -174,9 +166,6 @@ internal sealed class
         CancellationToken ct
     )
     {
-        if (!ProductPriceSyncRules.User(request.Dto.ClientModifiedBy, _user))
-            return ProductPriceSyncRules.InvalidUser();
-
         var id = ProductPriceSyncRules.Id(request.Id);
         var value = await _db.ProductPrices
             .IgnoreQueryFilters()
@@ -193,7 +182,7 @@ internal sealed class
         if (modified < value.GetConflictModifiedUtc())
             return Result<ProductPriceDto>.SuccessResult(_mapper.Map<ProductPriceDto>(value));
 
-        value.SetClientModificationMetadata(modified, request.Dto.ClientModifiedBy);
+        value.SetClientModificationMetadata(modified);
         await _repository.RemoveAsync(value);
         await _db.SaveChangesAsync(ct);
         return Result<ProductPriceDto>.SuccessResult(_mapper.Map<ProductPriceDto>(value));
@@ -207,17 +196,4 @@ internal static class ProductPriceSyncRules
         string value
     ) => Guid.Parse(value).ToString("D");
 
-    // Audit metadata is optional for backwards compatibility, but a supplied user ID
-    // must match the authenticated principal to prevent cross-user sync impersonation.
-    public static bool User(
-        string? value,
-        ICurrentUser user
-    ) =>
-        string.IsNullOrWhiteSpace(value) ||
-        string.Equals(value.Trim(), user.GetId(), StringComparison.Ordinal);
-
-    public static Result<ProductPriceDto> InvalidUser() =>
-        Result<ProductPriceDto>.FailureResult(
-            "InvalidClientUser",
-            "Client user metadata must match the authenticated user.");
 }
