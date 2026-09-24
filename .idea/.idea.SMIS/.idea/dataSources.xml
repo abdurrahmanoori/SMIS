@@ -33,5 +33,41 @@
       <jdbc-url>jdbc:sqlite:C:\Users\ARD-Developer\AppData\Roaming\com.example\smis_flutter\smis_powersync_44444444-0000-0000-0000-000000000001_11111111-0000-0000-0000-000000000004.db</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
+    <data-source source="LOCAL" name="e2e-mainstore-web-remote" uuid="6432cdd3-6411-4ba4-b3bf-aeab676eace3">
+      <driver-ref>sqlite.xerial</driver-ref>
+      <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
+      <jdbc-url>jdbc:sqlite:E:\Repo\SMIS\.tmp\playwright-run\remote-mainstore-powersync.db</jdbc-url>
+      <working-dir>$ProjectFileDir$</working-dir>
+    </data-source>
+    <data-source source="LOCAL" name="e2e-mainstore-targeted-failed" uuid="d7c711c6-a778-44d3-8b35-1d0bc4f383c4">
+      <driver-ref>sqlite.xerial</driver-ref>
+      <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
+      <jdbc-url>jdbc:sqlite:E:\Repo\SMIS\.tmp\playwright-run\targeted-failed-local.db</jdbc-url>
+      <working-dir>$ProjectFileDir$</working-dir>
+    </data-source>
+    <data-source source="LOCAL" name="clean-remote-entities-local" uuid="84423b77-84f1-4842-81d3-0c9c213ceb5c">
+      <driver-ref>sqlite.xerial</driver-ref>
+      <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
+      <jdbc-url>jdbc:sqlite:E:\Repo\SMIS\.tmp\playwright-run\clean-remote-entities-local.db</jdbc-url>
+      <working-dir>$ProjectFileDir$</working-dir>
+    </data-source>
+    <data-source source="LOCAL" name="clean-remote-continuation-local" uuid="26217d0d-8d30-4868-aadd-2dd6c4981cea">
+      <driver-ref>sqlite.xerial</driver-ref>
+      <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
+      <jdbc-url>jdbc:sqlite:E:\Repo\SMIS\.tmp\playwright-run\clean-remote-continuation-local.db</jdbc-url>
+      <working-dir>$ProjectFileDir$</working-dir>
+    </data-source>
+    <data-source source="LOCAL" name="live-13339" uuid="ffac7565-9886-4361-99ed-c1e4b7fcd0b2">
+      <driver-ref>sqlite.xerial</driver-ref>
+      <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
+      <jdbc-url>jdbc:sqlite:E:\Repo\SMIS\.tmp\playwright-run\live-13339.db</jdbc-url>
+      <working-dir>$ProjectFileDir$</working-dir>
+    </data-source>
+    <data-source source="LOCAL" name="finish-remote-local" uuid="51b5da0c-3c47-467c-a107-951d370fc1a8">
+      <driver-ref>sqlite.xerial</driver-ref>
+      <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
+      <jdbc-url>jdbc:sqlite:E:\Repo\SMIS\.tmp\playwright-run\finish-remote-local.db</jdbc-url>
+      <working-dir>$ProjectFileDir$</working-dir>
+    </data-source>
   </component>
 </project>

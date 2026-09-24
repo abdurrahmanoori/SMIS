@@ -91,20 +91,28 @@ class _ProductUnitsScreenState extends ConsumerState<ProductUnitsScreen>
         ],
       ),
       drawer: const AppDrawer(),
-      body: state.when(
-        loading: () => const Center(child: CircularProgressIndicator()),
-        error: (error, stackTrace) => AppErrorView(
-          error: error,
-          stackTrace: stackTrace,
-          onRetry: () =>
-              ref.read(productUnitControllerProvider.notifier).reload(),
-        ),
-        data: (value) => _Content(
-          state: value,
-          onEdit: _edit,
-          onDelete: _delete,
-          onLoadMore: () =>
-              ref.read(productUnitControllerProvider.notifier).loadNextPage(),
+      body: SafeArea(
+        child: Center(
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 900),
+            child: state.when(
+              loading: () => const Center(child: CircularProgressIndicator()),
+              error: (error, stackTrace) => AppErrorView(
+                error: error,
+                stackTrace: stackTrace,
+                onRetry: () =>
+                    ref.read(productUnitControllerProvider.notifier).reload(),
+              ),
+              data: (value) => _Content(
+                state: value,
+                onEdit: _edit,
+                onDelete: _delete,
+                onLoadMore: () => ref
+                    .read(productUnitControllerProvider.notifier)
+                    .loadNextPage(),
+              ),
+            ),
+          ),
         ),
       ),
       floatingActionButton: FloatingActionButton.extended(
@@ -270,7 +278,7 @@ class _Content extends ConsumerWidget {
               : ListView.separated(
                   padding: const EdgeInsets.fromLTRB(16, 16, 16, 100),
                   itemCount: state.items.length,
-                  separatorBuilder: (_, _) => const SizedBox(height: 8),
+                  separatorBuilder: (_, _) => const SizedBox(height: 10),
                   itemBuilder: (context, index) {
                     final item = state.items[index];
                     final failed =
