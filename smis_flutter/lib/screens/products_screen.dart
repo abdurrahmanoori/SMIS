@@ -17,6 +17,7 @@ import '../widgets/product_form_dialog.dart';
 import '../widgets/theme_mode_action.dart';
 import '../widgets/locale_action.dart';
 import '../widgets/home_action.dart';
+import 'product_details_screen.dart';
 import 'unit_of_measures_screen.dart';
 
 class ProductsScreen extends ConsumerStatefulWidget {
@@ -284,10 +285,21 @@ class _Content extends StatelessWidget {
                 separatorBuilder: (_, _) => const SizedBox(height: 10),
                 itemBuilder: (context, index) {
                   final product = state.products[index];
+                  final unitName = _unitName(product.baseUnitId);
+                  final categoryName = _categoryName(product.categoryId);
                   return _ProductCard(
                     product: product,
-                    unitName: _unitName(product.baseUnitId),
-                    categoryName: _categoryName(product.categoryId),
+                    unitName: unitName,
+                    categoryName: categoryName,
+                    onTap: () => Navigator.of(context).push(
+                      MaterialPageRoute<void>(
+                        builder: (context) => ProductDetailsScreen(
+                          product: product,
+                          unitName: unitName,
+                          categoryName: categoryName,
+                        ),
+                      ),
+                    ),
                     onEdit: () => onEdit(product),
                     onDelete: () => onDelete(product),
                   );
@@ -317,6 +329,7 @@ class _ProductCard extends StatelessWidget {
     required this.product,
     required this.unitName,
     required this.categoryName,
+    required this.onTap,
     required this.onEdit,
     required this.onDelete,
   });
@@ -324,12 +337,14 @@ class _ProductCard extends StatelessWidget {
   final Product product;
   final String unitName;
   final String? categoryName;
+  final VoidCallback onTap;
   final VoidCallback onEdit;
   final VoidCallback onDelete;
 
   @override
   Widget build(BuildContext context) => Card(
     child: ListTile(
+      onTap: onTap,
       leading: CircleAvatar(
         child: Text(product.name.characters.first.toUpperCase()),
       ),
