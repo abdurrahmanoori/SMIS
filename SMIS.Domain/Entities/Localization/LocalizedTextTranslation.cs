@@ -16,7 +16,7 @@ public class LocalizedTextTranslation : EntityPK
     {
     }
 
-    internal static LocalizedTextTranslation Create(
+    public static LocalizedTextTranslation Create(
         string localizedTextId,
         string languageId,
         string value
