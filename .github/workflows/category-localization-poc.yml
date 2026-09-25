@@ -1,0 +1,71 @@
+name: Category Localization POC
+
+on:
+  push:
+    branches:
+      - category-localization-poc-build
+
+permissions:
+  contents: write
+
+jobs:
+  validate:
+    if: ${{ !contains(github.event.head_commit.message, '[skip-poc-build]') }}
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '9.0.x'
+
+      - name: Restore API
+        run: dotnet restore SMIS.Api/SMIS.Api.csproj
+
+      - name: Build API
+        run: dotnet build SMIS.Api/SMIS.Api.csproj --no-restore --configuration Release
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+
+      - name: Restore Flutter packages
+        working-directory: smis_flutter
+        run: flutter pub get
+
+      - name: Analyze Flutter lib
+        working-directory: smis_flutter
+        run: flutter analyze lib
+
+      - name: Build Flutter web
+        working-directory: smis_flutter
+        run: flutter build web -t lib/main_development.dart
+
+      - name: Install EF Core CLI
+        run: dotnet tool install --global dotnet-ef --version 9.0.0
+
+      - name: Generate EF migration
+        shell: bash
+        run: |
+          if ! find SMIS.Infrastructure.Server/Migrations -maxdepth 1 -name '*_AddCategoryLocalizedText.cs' | grep -q .; then
+            dotnet ef migrations add AddCategoryLocalizedText               --project SMIS.Infrastructure.Server/SMIS.Infrastructure.Server.csproj               --startup-project SMIS.Api/SMIS.Api.csproj               --context AppDbContext
+          fi
+
+      - name: Build API with migration
+        run: dotnet build SMIS.Api/SMIS.Api.csproj --no-restore --configuration Release
+
+      - name: Commit generated migration
+        shell: bash
+        run: |
+          if git status --porcelain SMIS.Infrastructure.Server/Migrations | grep -q .; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add SMIS.Infrastructure.Server/Migrations
+            git commit -m "chore: generate category localization migration [skip-poc-build]"
+            git push origin HEAD:category-localization-poc-build
+          fi
