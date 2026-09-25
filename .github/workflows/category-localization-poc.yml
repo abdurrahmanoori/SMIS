@@ -4,13 +4,16 @@ on:
   push:
     branches:
       - category-localization-poc-build
+  pull_request:
+    branches:
+      - flutter-and-api-only
 
 permissions:
   contents: write
 
 jobs:
   validate:
-    if: ${{ !contains(github.event.head_commit.message, '[skip-poc-build]') }}
+    if: ${{ github.event_name != 'push' || !contains(github.event.head_commit.message, '[skip-poc-build]') }}
     runs-on: ubuntu-latest
 
     steps:
@@ -60,6 +63,7 @@ jobs:
         run: dotnet build SMIS.Api/SMIS.Api.csproj --no-restore --configuration Release
 
       - name: Commit generated migration
+        if: ${{ github.event_name == 'push' }}
         shell: bash
         run: |
           if git status --porcelain SMIS.Infrastructure.Server/Migrations | grep -q .; then
