@@ -1,4 +1,5 @@
 using FluentValidation;
+using SMIS.Application.DTO.Localization;
 using SMIS.Application.Features.Categories.Commands;
 using SMIS.Domain.Entities.Localization;
 
@@ -44,7 +45,7 @@ namespace SMIS.Application.Features.Categories.Validators
             languageId == LanguageDefaults.DariId;
 
         private static bool HaveUniqueSupportedLanguages(
-            IEnumerable<DTO.Localization.LocalizedTextValueDto> translations
+            IEnumerable<LocalizedTextValueDto> translations
         )
         {
             var ids = translations.Select(x => x.LanguageId).ToList();
