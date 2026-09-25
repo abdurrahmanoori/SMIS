@@ -50,6 +50,7 @@ class CategoryLocalRecord {
   Category toCategory() => Category(
     id: id,
     name: name,
+    englishName: name,
     code: code,
     description: description,
     isActive: isActive,
