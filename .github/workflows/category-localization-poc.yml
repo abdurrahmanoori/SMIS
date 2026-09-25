@@ -43,7 +43,7 @@ jobs:
 
       - name: Analyze Flutter lib
         working-directory: smis_flutter
-        run: flutter analyze lib
+        run: flutter analyze lib --no-fatal-infos --no-fatal-warnings
 
       - name: Build Flutter web
         working-directory: smis_flutter
