@@ -1,8 +1,8 @@
-using AutoMapper;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using SMIS.Application.Common.Response;
 using SMIS.Application.DTO.Categories;
+using SMIS.Application.Features.Categories;
 using SMIS.Application.Identity.IServices;
 using SMIS.Application.Repositories.Categories;
 using SMIS.Application.Repositories.Products;
@@ -12,38 +12,27 @@ using SMIS.Domain.Services;
 
 namespace SMIS.Application.Features.Categories.Commands;
 
-// ------------------------------------------------------------
-// Commands
-// ------------------------------------------------------------
-
 public record CategorySyncCreateCommand(CategorySyncCreateDto Dto) : IRequest<Result<CategoryDto>>;
 
 public record CategorySyncUpdateCommand(string Id, CategorySyncUpdateDto Dto) : IRequest<Result<CategoryDto>>;
 
 public record CategorySyncDeleteCommand(string Id, CategorySyncDeleteDto Dto) : IRequest<Result<CategoryDto>>;
 
-// ------------------------------------------------------------
-// Create Handler
-// ------------------------------------------------------------
-
 internal sealed class CategorySyncCreateCommandHandler : IRequestHandler<CategorySyncCreateCommand, Result<CategoryDto>>
 {
     private readonly ICategoryRepository _repository;
     private readonly IApplicationDbContext _db;
     private readonly ICurrentUser _currentUser;
-    private readonly IMapper _mapper;
 
     public CategorySyncCreateCommandHandler(
         ICategoryRepository repository,
         IApplicationDbContext db,
-        ICurrentUser currentUser,
-        IMapper mapper
+        ICurrentUser currentUser
     )
     {
         _repository = repository;
         _db = db;
         _currentUser = currentUser;
-        _mapper = mapper;
     }
 
     public async Task<Result<CategoryDto>> Handle(
@@ -51,14 +40,12 @@ internal sealed class CategorySyncCreateCommandHandler : IRequestHandler<Categor
         CancellationToken cancellationToken
     )
     {
-        // FluentValidation has already guaranteed a valid GUID.
         var id = CategorySyncRules.NormalizeGuid(request.Dto.Id);
-
-        var clientModified =
-            DateTimeService.NormalizeUtc(request.Dto.ClientModifiedDate);
+        var clientModified = DateTimeService.NormalizeUtc(request.Dto.ClientModifiedDate);
 
         var existing = await _db.Categories
             .IgnoreQueryFilters()
+            .IncludeNameLocalization()
             .FirstOrDefaultAsync(category => category.Id == id, cancellationToken);
 
         if (existing is not null)
@@ -66,11 +53,10 @@ internal sealed class CategorySyncCreateCommandHandler : IRequestHandler<Categor
             if (!CategorySyncRules.CanAccess(existing, _currentUser))
                 return CategorySyncRules.Forbidden();
 
-            // Stale sync request. The request itself is valid.
             if (clientModified <= existing.GetConflictModifiedUtc())
             {
                 return Result<CategoryDto>.SuccessResult(
-                    _mapper.Map<CategoryDto>(existing));
+                    CategoryLocalization.ToDto(existing, _currentUser.GetLangId()));
             }
 
             if (await _repository.NameExistsInShopAsync(
@@ -83,14 +69,14 @@ internal sealed class CategorySyncCreateCommandHandler : IRequestHandler<Categor
             }
 
             CategoryCommandRules.Apply(existing, request.Dto);
+            CategoryLocalization.ApplyName(existing, request.Dto);
             existing.SetClientModificationMetadata(clientModified);
-
             existing.Restore();
 
             await _db.SaveChangesAsync(cancellationToken);
 
             return Result<CategoryDto>.SuccessResult(
-                _mapper.Map<CategoryDto>(existing));
+                CategoryLocalization.ToDto(existing, _currentUser.GetLangId()));
         }
 
         var shopId = _currentUser.GetShopId();
@@ -103,22 +89,20 @@ internal sealed class CategorySyncCreateCommandHandler : IRequestHandler<Categor
         }
 
         var category = CategoryCommandRules.Create(request.Dto, shopId);
+        var localizedName = CategoryLocalization.CreateName(request.Dto);
 
         category.Id = id;
+        category.SetNameLocalizedText(localizedName);
         category.SetClientModificationMetadata(clientModified);
 
+        _db.LocalizedTexts.Add(localizedName);
         await _repository.AddAsync(category);
-
         await _db.SaveChangesAsync(cancellationToken);
 
         return Result<CategoryDto>.SuccessResult(
-            _mapper.Map<CategoryDto>(category));
+            CategoryLocalization.ToDto(category, _currentUser.GetLangId()));
     }
 }
-
-// ------------------------------------------------------------
-// Update Handler
-// ------------------------------------------------------------
 
 internal sealed class CategorySyncUpdateCommandHandler
     : IRequestHandler<CategorySyncUpdateCommand, Result<CategoryDto>>
@@ -126,19 +110,16 @@ internal sealed class CategorySyncUpdateCommandHandler
     private readonly ICategoryRepository _repository;
     private readonly IApplicationDbContext _db;
     private readonly ICurrentUser _currentUser;
-    private readonly IMapper _mapper;
 
     public CategorySyncUpdateCommandHandler(
         ICategoryRepository repository,
         IApplicationDbContext db,
-        ICurrentUser currentUser,
-        IMapper mapper
+        ICurrentUser currentUser
     )
     {
         _repository = repository;
         _db = db;
         _currentUser = currentUser;
-        _mapper = mapper;
     }
 
     public async Task<Result<CategoryDto>> Handle(
@@ -150,6 +131,7 @@ internal sealed class CategorySyncUpdateCommandHandler
 
         var category = await _db.Categories
             .IgnoreQueryFilters()
+            .IncludeNameLocalization()
             .FirstOrDefaultAsync(entity => entity.Id == id, cancellationToken);
 
         if (category is null)
@@ -158,13 +140,12 @@ internal sealed class CategorySyncUpdateCommandHandler
         if (!CategorySyncRules.CanAccess(category, _currentUser))
             return CategorySyncRules.Forbidden();
 
-        var clientModified =
-            DateTimeService.NormalizeUtc(request.Dto.ClientModifiedDate);
+        var clientModified = DateTimeService.NormalizeUtc(request.Dto.ClientModifiedDate);
 
         if (clientModified < category.GetConflictModifiedUtc())
         {
             return Result<CategoryDto>.SuccessResult(
-                _mapper.Map<CategoryDto>(category));
+                CategoryLocalization.ToDto(category, _currentUser.GetLangId()));
         }
 
         if (await _repository.NameExistsInShopAsync(
@@ -177,21 +158,16 @@ internal sealed class CategorySyncUpdateCommandHandler
         }
 
         CategoryCommandRules.Apply(category, request.Dto);
-
+        CategoryLocalization.ApplyName(category, request.Dto);
         category.SetClientModificationMetadata(clientModified);
-
         category.Restore();
 
         await _db.SaveChangesAsync(cancellationToken);
 
         return Result<CategoryDto>.SuccessResult(
-            _mapper.Map<CategoryDto>(category));
+            CategoryLocalization.ToDto(category, _currentUser.GetLangId()));
     }
 }
-
-// ------------------------------------------------------------
-// Delete Handler
-// ------------------------------------------------------------
 
 internal sealed class CategorySyncDeleteCommandHandler
     : IRequestHandler<CategorySyncDeleteCommand, Result<CategoryDto>>
@@ -199,22 +175,19 @@ internal sealed class CategorySyncDeleteCommandHandler
     private readonly ICategoryRepository _repository;
     private readonly IApplicationDbContext _db;
     private readonly ICurrentUser _currentUser;
-    private readonly IMapper _mapper;
     private readonly IProductRepository _productRepository;
 
     public CategorySyncDeleteCommandHandler(
         ICategoryRepository repository,
         IApplicationDbContext db,
         IProductRepository productRepository,
-        ICurrentUser currentUser,
-        IMapper mapper
+        ICurrentUser currentUser
     )
     {
         _repository = repository;
         _db = db;
         _productRepository = productRepository;
         _currentUser = currentUser;
-        _mapper = mapper;
     }
 
     public async Task<Result<CategoryDto>> Handle(
@@ -226,6 +199,7 @@ internal sealed class CategorySyncDeleteCommandHandler
 
         var category = await _db.Categories
             .IgnoreQueryFilters()
+            .IncludeNameLocalization()
             .FirstOrDefaultAsync(entity => entity.Id == id, cancellationToken);
 
         if (category is null)
@@ -234,13 +208,12 @@ internal sealed class CategorySyncDeleteCommandHandler
         if (!CategorySyncRules.CanAccess(category, _currentUser))
             return CategorySyncRules.Forbidden();
 
-        var clientModified =
-            DateTimeService.NormalizeUtc(request.Dto.ClientModifiedDate);
+        var clientModified = DateTimeService.NormalizeUtc(request.Dto.ClientModifiedDate);
 
         if (clientModified < category.GetConflictModifiedUtc())
         {
             return Result<CategoryDto>.SuccessResult(
-                _mapper.Map<CategoryDto>(category));
+                CategoryLocalization.ToDto(category, _currentUser.GetLangId()));
         }
 
         var productCount = await _productRepository.CountByCategoryIdAsync(
@@ -254,19 +227,14 @@ internal sealed class CategorySyncDeleteCommandHandler
         }
 
         category.SetClientModificationMetadata(clientModified);
+        var response = CategoryLocalization.ToDto(category, _currentUser.GetLangId());
 
         await _repository.RemoveAsync(category);
-
         await _db.SaveChangesAsync(cancellationToken);
 
-        return Result<CategoryDto>.SuccessResult(
-            _mapper.Map<CategoryDto>(category));
+        return Result<CategoryDto>.SuccessResult(response);
     }
 }
-
-// ------------------------------------------------------------
-// Command-specific application rules/helpers
-// ------------------------------------------------------------
 
 internal static class CategorySyncRules
 {
