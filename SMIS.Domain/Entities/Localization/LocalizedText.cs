@@ -47,4 +47,11 @@ public class LocalizedText : EntityPK
 
         existing.SetValue(value);
     }
+
+    public void RemoveTranslation(string languageId)
+    {
+        var existing = Translations.FirstOrDefault(x => x.LanguageId == languageId);
+        if (existing is not null)
+            Translations.Remove(existing);
+    }
 }
