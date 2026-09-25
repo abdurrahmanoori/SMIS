@@ -20,6 +20,10 @@ namespace SMIS.Infrastructure.Server.EntityConfigurations
                 .IsRequired()
                 .HasMaxLength(200);
 
+            builder.Property(c => c.NameLocalizedTextId)
+                .IsRequired()
+                .HasMaxLength(450);
+
             builder.Property(c => c.Code)
                 .HasMaxLength(50);
 
@@ -38,12 +42,19 @@ namespace SMIS.Infrastructure.Server.EntityConfigurations
                 .HasDatabaseName("UX_Category_ShopId_Name")
                 .HasFilter("[IsDeleted] = 0");
 
-            // Backend-specific: Relationships
+            builder.HasIndex(c => c.NameLocalizedTextId)
+                .IsUnique()
+                .HasDatabaseName("UX_Category_NameLocalizedTextId");
+
+            builder.HasOne(c => c.NameLocalizedText)
+                .WithOne()
+                .HasForeignKey<Category>(c => c.NameLocalizedTextId)
+                .OnDelete(DeleteBehavior.Restrict);
+
             builder.HasOne(c => c.Shop)
                 .WithMany()
                 .HasForeignKey(c => c.ShopId)
                 .OnDelete(DeleteBehavior.Restrict);
-
         }
     }
 }

@@ -1,11 +1,10 @@
-using AutoMapper;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using SMIS.Application.Common.Response;
 using SMIS.Application.DTO.Categories;
-using SMIS.Application.Extensions;
+using SMIS.Application.Features.Categories;
 using SMIS.Application.Identity.IServices;
 using SMIS.Application.Repositories.Categories;
-using SMIS.Application.Repositories.Localization;
 
 namespace SMIS.Application.Features.Categories.Queries
 {
@@ -14,21 +13,15 @@ namespace SMIS.Application.Features.Categories.Queries
     internal sealed class CategoryGetByIdQueryHandler : IRequestHandler<CategoryGetByIdQuery, Result<CategoryDto>>
     {
         private readonly ICategoryRepository _categoryRepository;
-
-        //private readonly ITranslationKeyRepository _translationKeyRepository;
         private readonly ICurrentUser _currentUser;
-        private readonly IMapper _mapper;
 
         public CategoryGetByIdQueryHandler(
-            ICategoryRepository categoryRepository, /*ITranslationKeyRepository translationKeyRepository,*/
-            ICurrentUser currentUser,
-            IMapper mapper
+            ICategoryRepository categoryRepository,
+            ICurrentUser currentUser
         )
         {
             _categoryRepository = categoryRepository;
-            //_translationKeyRepository = translationKeyRepository;
             _currentUser = currentUser;
-            _mapper = mapper;
         }
 
         public async Task<Result<CategoryDto>> Handle(
@@ -36,17 +29,16 @@ namespace SMIS.Application.Features.Categories.Queries
             CancellationToken cancellationToken
         )
         {
-            var dbCategory = await _categoryRepository.GetFirstOrDefaultAsync(x => x.Id == request.Id);
+            var dbCategory = await _categoryRepository
+                .GetAllQueryable()
+                .IncludeNameLocalization()
+                .FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
 
             if (dbCategory == null)
-            {
                 return Result<CategoryDto>.NotFoundResult(nameof(CategoryDto));
-            }
 
-            var category = _mapper.Map<CategoryDto>(dbCategory);
-            //category.TranslateEntityByAttributes(_translationKeyRepository.GetAllQueryable(), _currentUser.GetLangId());
-
-            return Result<CategoryDto>.SuccessResult(category);
+            return Result<CategoryDto>.SuccessResult(
+                CategoryLocalization.ToDto(dbCategory, _currentUser.GetLangId()));
         }
     }
 }

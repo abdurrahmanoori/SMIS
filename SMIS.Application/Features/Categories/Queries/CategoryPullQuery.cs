@@ -1,9 +1,10 @@
-using AutoMapper;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using SMIS.Application.Common.Response;
 using SMIS.Application.DTO.Categories;
+using SMIS.Application.Features.Categories;
 using SMIS.Application.Identity.IServices;
-using SMIS.Application.Repositories.Categories;
+using SMIS.Application.Services;
 using SMIS.Domain.Services;
 
 namespace SMIS.Application.Features.Categories.Queries
@@ -12,18 +13,15 @@ namespace SMIS.Application.Features.Categories.Queries
 
     internal sealed class CategoryPullQueryHandler : IRequestHandler<CategoryPullQuery, Result<List<CategoryDto>>>
     {
-        private readonly ICategoryRepository _categoryRepository;
-        private readonly IMapper _mapper;
+        private readonly IApplicationDbContext _db;
         private readonly ICurrentUser _currentUser;
 
         public CategoryPullQueryHandler(
-            ICategoryRepository categoryRepository,
-            IMapper mapper,
+            IApplicationDbContext db,
             ICurrentUser currentUser
         )
         {
-            _categoryRepository = categoryRepository;
-            _mapper = mapper;
+            _db = db;
             _currentUser = currentUser;
         }
 
@@ -34,12 +32,17 @@ namespace SMIS.Application.Features.Categories.Queries
         {
             var shopId = _currentUser.GetShopId();
             var changedSinceUtc = DateTimeService.NormalizeUtc(request.ChangedSince);
-            var categories = await _categoryRepository.GetAllAsync(
-                filter: c => c.LastModifiedUtc > changedSinceUtc &&
-                             c.ShopId == shopId,
-                ignoreQueryFilters: true);
+            var categories = await _db.Categories
+                .IgnoreQueryFilters()
+                .IncludeNameLocalization()
+                .Where(c => c.LastModifiedUtc > changedSinceUtc && c.ShopId == shopId)
+                .ToListAsync(cancellationToken);
 
-            return Result<List<CategoryDto>>.SuccessResult(_mapper.Map<List<CategoryDto>>(categories));
+            var userLanguageId = _currentUser.GetLangId();
+            return Result<List<CategoryDto>>.SuccessResult(
+                categories
+                    .Select(category => CategoryLocalization.ToDto(category, userLanguageId))
+                    .ToList());
         }
     }
 }

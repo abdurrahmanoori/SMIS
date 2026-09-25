@@ -14,6 +14,7 @@ public partial class AppDbContext
         UserSeed.DataSeed(modelBuilder);
         UserRoleSeeder.DataSeed(modelBuilder);
         LanguageSeed.DataSeed(modelBuilder);
+        LocalizedTextSeed.DataSeed(modelBuilder);
         TranslationKeySeed.DataSeed(modelBuilder);
         TranslationSeed.DataSeed(modelBuilder);
         ProvinceSeed.DataSeed(modelBuilder);

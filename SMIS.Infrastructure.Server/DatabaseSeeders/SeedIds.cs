@@ -132,6 +132,27 @@ public static class SeedIds
     public const string CatPersonalCare = "bbbbbbbb-0000-0000-0000-000000000005";
     public const string CatElectronics = "bbbbbbbb-0000-0000-0000-000000000006";
 
+    // Category localized text values
+    public const string CatTextBeverages = "abababab-0000-0000-0000-000000000001";
+    public const string CatTextFood = "abababab-0000-0000-0000-000000000002";
+    public const string CatTextStationery = "abababab-0000-0000-0000-000000000003";
+    public const string CatTextGrocery = "abababab-0000-0000-0000-000000000004";
+    public const string CatTextPersonalCare = "abababab-0000-0000-0000-000000000005";
+    public const string CatTextElectronics = "abababab-0000-0000-0000-000000000006";
+
+    public const string CatTextTransEnBeverages = "acacacac-0000-0000-0000-000000000001";
+    public const string CatTextTransEnFood = "acacacac-0000-0000-0000-000000000002";
+    public const string CatTextTransEnStationery = "acacacac-0000-0000-0000-000000000003";
+    public const string CatTextTransEnGrocery = "acacacac-0000-0000-0000-000000000004";
+    public const string CatTextTransEnPersonalCare = "acacacac-0000-0000-0000-000000000005";
+    public const string CatTextTransEnElectronics = "acacacac-0000-0000-0000-000000000006";
+    public const string CatTextTransFaBeverages = "acacacac-0000-0000-0000-000000000007";
+    public const string CatTextTransFaFood = "acacacac-0000-0000-0000-000000000008";
+    public const string CatTextTransFaStationery = "acacacac-0000-0000-0000-000000000009";
+    public const string CatTextTransFaGrocery = "acacacac-0000-0000-0000-000000000010";
+    public const string CatTextTransFaPersonalCare = "acacacac-0000-0000-0000-000000000011";
+    public const string CatTextTransFaElectronics = "acacacac-0000-0000-0000-000000000012";
+
     // Products
     public const string ProdCocaCola = "cccccccc-0000-0000-0000-000000000001";
     public const string ProdPepsi = "cccccccc-0000-0000-0000-000000000002";

@@ -15,6 +15,8 @@ public interface IApplicationDbContext
     public DbSet<AppLog> AppLogs { get; set; }
     public DbSet<TranslationKey> TranslationKeys { get; set; }
     public DbSet<Translation> Translations { get; set; }
+    public DbSet<LocalizedText> LocalizedTexts { get; set; }
+    public DbSet<LocalizedTextTranslation> LocalizedTextTranslations { get; set; }
     public DbSet<Shop> Shops { get; set; }
     public DbSet<UnitOfMeasure> UnitOfMeasures { get; set; }
     public DbSet<Product> Products { get; set; }

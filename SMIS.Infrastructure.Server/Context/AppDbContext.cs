@@ -16,21 +16,12 @@ using SMIS.Application.Services;
 
 namespace SMIS.Infrastructure.Server.Context;
 
-/// <summary>
-/// Main EF Core context for the API. Besides entity mappings, this context applies
-/// cross-cutting persistence rules such as tenant filters, soft-delete filters, and
-/// a portable timestamp representation shared with the offline SQLite model.
-/// </summary>
 public partial class AppDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, string,
         IdentityUserClaim<string>, ApplicationUserRole, IdentityUserLogin<string>, IdentityRoleClaim<string>,
         IdentityUserToken<string>>,
     IApplicationDbContext
 {
     private readonly ICurrentUser _currentUser;
-
-    //public AppDbContext(DbContextOptions options) : base(options)
-    //{
-    //}
 
     public AppDbContext(
         DbContextOptions options,
@@ -46,11 +37,8 @@ public partial class AppDbContext : IdentityDbContext<ApplicationUser, Applicati
     {
         base.OnModelCreating(modelBuilder);
 
-        // Apply all IEntityTypeConfiguration classes from this assembly
         modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
 
-        // Configure sync-state enums consistently without repeating conversion rules
-        // in every individual IEntityTypeConfiguration.
         foreach (var entityType in modelBuilder.Model.GetEntityTypes())
         {
             var entityStateProperty = entityType.FindProperty(nameof(BaseEntity.EntityState));
@@ -64,9 +52,6 @@ public partial class AppDbContext : IdentityDbContext<ApplicationUser, Applicati
             var lastModifiedProperty = entityType.FindProperty(nameof(BaseEntity.LastModifiedUtc));
             if (lastModifiedProperty != null)
             {
-                // Store as a fixed sortable string. The same representation works in
-                // SQL Server and SQLite and avoids provider-specific DateTime behavior
-                // for the synchronization cursor.
                 var converter = new ValueConverter<DateTime, string>(
                     v => v.ToString("yyyy-MM-dd HH:mm:ss.ffffff"),
                     v => DateTime.ParseExact(v, "yyyy-MM-dd HH:mm:ss.ffffff",
@@ -78,9 +63,6 @@ public partial class AppDbContext : IdentityDbContext<ApplicationUser, Applicati
             }
         }
 
-        // Hide tombstones from normal queries. Shop-owned entities also receive
-        // the current-shop restriction. Sync pull queries explicitly bypass
-        // these filters so deletions can still be propagated to clients.
         foreach (var entityType in modelBuilder.Model.GetEntityTypes())
         {
             var clrType = entityType.ClrType;
@@ -101,8 +83,6 @@ public partial class AppDbContext : IdentityDbContext<ApplicationUser, Applicati
             }
         }
 
-
-        // Allow extension from other layers via partial method
         OnModelCreatingPartial(modelBuilder);
     }
 
@@ -111,7 +91,6 @@ public partial class AppDbContext : IdentityDbContext<ApplicationUser, Applicati
     )
     {
         base.OnConfiguring(optionsBuilder);
-
 
         optionsBuilder.ConfigureWarnings(warnings =>
             warnings.Ignore(RelationalEventId.PendingModelChangesWarning));
@@ -128,6 +107,8 @@ public partial class AppDbContext : IdentityDbContext<ApplicationUser, Applicati
     public DbSet<AppLog> AppLogs { get; set; }
     public DbSet<TranslationKey> TranslationKeys { get; set; }
     public DbSet<Translation> Translations { get; set; }
+    public DbSet<LocalizedText> LocalizedTexts { get; set; }
+    public DbSet<LocalizedTextTranslation> LocalizedTextTranslations { get; set; }
     public DbSet<Shop> Shops { get; set; }
     public DbSet<UnitOfMeasure> UnitOfMeasures { get; set; }
     public DbSet<Product> Products { get; set; }
@@ -149,18 +130,4 @@ public partial class AppDbContext : IdentityDbContext<ApplicationUser, Applicati
     public DbSet<LoanAccount> LoanAccounts { get; set; }
     public DbSet<LoanAccountPayment> LoanAccountPayments { get; set; }
     public DbSet<ApplicationUserRole> UserRoles { get; set; }
-
-    //private void EnsureShopIdSet()
-    //{
-    //    if (_currentUser != null && string.IsNullOrEmpty(ShopIdHolder.Instance.CurrentShopId))
-    //    {
-    //        ShopIdHolder.Instance.CurrentShopId = _currentUser.GetShopId();
-    //    }
-    //}
-
-    //public override DbSet<TEntity> Set<TEntity>()
-    //{
-    //    EnsureShopIdSet();
-    //    return base.Set<TEntity>();
-    //}
 }

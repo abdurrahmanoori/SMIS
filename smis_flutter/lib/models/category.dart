@@ -12,11 +12,14 @@ class Category {
   const Category({
     required this.id,
     required this.name,
+    required this.englishName,
     required this.isActive,
     required this.createdAt,
     required this.updatedAt,
     required this.lastModifiedUtc,
     required this.syncStatus,
+    this.dariName,
+    this.nameLocalizedTextId,
     this.code,
     this.description,
     this.shopId,
@@ -24,7 +27,13 @@ class Category {
   });
 
   final String id;
+
+  /// Name resolved for the current user's preferred language.
   final String name;
+  final String englishName;
+  final String? dariName;
+  final String? nameLocalizedTextId;
+
   final String? code;
   final String? description;
   final bool isActive;
@@ -40,17 +49,21 @@ class CategoryDraft {
   const CategoryDraft({
     required this.name,
     required this.isActive,
+    this.dariName,
     this.code,
     this.description,
   });
 
+  /// English/default category name.
   final String name;
+  final String? dariName;
   final String? code;
   final String? description;
   final bool isActive;
 
   CategoryDraft normalized() {
     final normalizedName = name.trim();
+    final normalizedDariName = dariName?.trim();
     final normalizedCode = code?.trim();
     final normalizedDescription = description?.trim();
 
@@ -60,6 +73,11 @@ class CategoryDraft {
     if (normalizedName.length > 200) {
       throw const CategoryValidationException(
         'Name cannot exceed 200 characters.',
+      );
+    }
+    if (normalizedDariName != null && normalizedDariName.length > 200) {
+      throw const CategoryValidationException(
+        'Dari name cannot exceed 200 characters.',
       );
     }
     if (normalizedCode != null && normalizedCode.length > 50) {
@@ -75,6 +93,7 @@ class CategoryDraft {
 
     return CategoryDraft(
       name: normalizedName,
+      dariName: normalizedDariName?.isEmpty == true ? null : normalizedDariName,
       code: normalizedCode?.isEmpty == true ? null : normalizedCode,
       description: normalizedDescription?.isEmpty == true
           ? null

@@ -2,8 +2,9 @@ using MediatR;
 using SMIS.Application.Common;
 using SMIS.Application.Common.Response;
 using SMIS.Application.DTO.Categories;
-using SMIS.Application.Repositories.Categories;
+using SMIS.Application.Identity.IServices;
 using SMIS.Application.Services;
+using SMIS.Domain.Entities.Localization;
 
 namespace SMIS.Application.Features.Categories.Queries;
 
@@ -23,16 +24,16 @@ public record CategoryQuery(EntityDropdown<CategoryQueryCriteria> Query)
 internal sealed class CategoryQueryHandler
     : IRequestHandler<CategoryQuery, Result<PagedListNew<CategoryDto>>>
 {
-    private readonly ICategoryRepository _categoryRepository;
     private readonly IApplicationDbContext _context;
+    private readonly ICurrentUser _currentUser;
 
     public CategoryQueryHandler(
-        ICategoryRepository categoryRepository,
-        IApplicationDbContext context
+        IApplicationDbContext context,
+        ICurrentUser currentUser
     )
     {
-        _categoryRepository = categoryRepository;
         _context = context;
+        _currentUser = currentUser;
     }
 
     public async Task<Result<PagedListNew<CategoryDto>>> Handle(
@@ -40,12 +41,27 @@ internal sealed class CategoryQueryHandler
         CancellationToken cancellationToken
     )
     {
+        var userLanguageId = _currentUser.GetLangId();
+
         var query = _context.Categories
-            .OrderBy(x => x.Name)
             .Select(x => new CategoryDto
             {
                 Id = x.Id,
-                Name = x.Name,
+                Name = x.NameLocalizedText.Translations
+                           .Where(t => t.LanguageId == userLanguageId)
+                           .Select(t => t.Value)
+                           .FirstOrDefault()
+                       ?? x.NameLocalizedText.DefaultValue,
+                EnglishName = x.NameLocalizedText.Translations
+                                  .Where(t => t.LanguageId == LanguageDefaults.EnglishId)
+                                  .Select(t => t.Value)
+                                  .FirstOrDefault()
+                              ?? x.NameLocalizedText.DefaultValue,
+                DariName = x.NameLocalizedText.Translations
+                    .Where(t => t.LanguageId == LanguageDefaults.DariId)
+                    .Select(t => t.Value)
+                    .FirstOrDefault(),
+                NameLocalizedTextId = x.NameLocalizedTextId,
                 Code = x.Code,
                 Description = x.Description,
                 IsActive = x.IsActive,
@@ -56,15 +72,17 @@ internal sealed class CategoryQueryHandler
                 UpdatedBy = x.UpdatedBy,
                 ClientModifiedDate = x.ClientModifiedDate,
                 LastModifiedUtc = x.LastModifiedUtc,
-                IsDeleted = x.IsDeleted,
-            });
-        var pagedList = await query.Filter(request.Query.Criteria).Select(request.Query.Columns)
-            .ToPagedList((int)request.Query.PageNumber!,
-                (int)request.Query.PageSize!, cancellationToken);
+                IsDeleted = x.IsDeleted
+            })
+            .OrderBy(x => x.Name);
 
-        // var pagedList = await query.ToPagedList(
-        //     request.Query.GetPageNumber(),
-        //     request.Query.GetPageSize());
+        var pagedList = await query
+            .Filter(request.Query.Criteria)
+            .Select(request.Query.Columns)
+            .ToPagedList(
+                (int)request.Query.PageNumber!,
+                (int)request.Query.PageSize!,
+                cancellationToken);
 
         return Result<PagedListNew<CategoryDto>>.SuccessResult(pagedList);
     }

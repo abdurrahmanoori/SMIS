@@ -69,9 +69,17 @@ class CategoryController extends AsyncNotifier<CategoryScreenState> {
     return session.shopId;
   }
 
+  String get _languageId {
+    final session = ref.watch(authControllerProvider.select((s) => s.session));
+    if (session == null) throw StateError('User is not authenticated.');
+    return session.languageId;
+  }
+
   @override
   Future<CategoryScreenState> build() async {
     final shopId = _shopId;
+    _languageId;
+
     await _changesSubscription?.cancel();
     final changes = await _repository.watchChanges(shopId);
     _changesSubscription = changes.skip(1).listen((_) {
@@ -113,7 +121,6 @@ class CategoryController extends AsyncNotifier<CategoryScreenState> {
     if (previous?.searchQuery == query) return;
     final requestId = ++_searchRequestId;
 
-    // Defer the search slightly to avoid excessive rebuilding
     state = AsyncData(
       previous?.copyWith(searchQuery: query, isLoadingMore: true) ??
           CategoryScreenState(
@@ -135,12 +142,20 @@ class CategoryController extends AsyncNotifier<CategoryScreenState> {
   }
 
   Future<void> create(CategoryDraft draft) async {
-    await _repository.create(draft, _shopId);
+    await _repository.create(
+      draft,
+      _shopId,
+      languageId: _languageId,
+    );
     await reload();
   }
 
   Future<void> updateCategory(String id, CategoryDraft draft) async {
-    await _repository.update(id, draft);
+    await _repository.update(
+      id,
+      draft,
+      languageId: _languageId,
+    );
     await reload();
   }
 
@@ -201,6 +216,7 @@ class CategoryController extends AsyncNotifier<CategoryScreenState> {
     );
     final categories = await _repository.getAll(
       shopId,
+      languageId: _languageId,
       searchQuery: searchQuery,
       limit: pageSize,
       offset: (pageNumber - 1) * pageSize,
@@ -231,11 +247,13 @@ final categoryControllerProvider =
     );
 
 /// All locally available categories for selectors and relationship labels.
-/// This is intentionally separate from the paginated Categories screen state.
 final categoryLookupProvider = FutureProvider<List<Category>>((ref) async {
   final session = ref.watch(
     authControllerProvider.select((state) => state.session),
   );
   if (session == null) return const <Category>[];
-  return ref.watch(categoryRepositoryProvider).getAll(session.shopId);
+  return ref.watch(categoryRepositoryProvider).getAll(
+    session.shopId,
+    languageId: session.languageId,
+  );
 });
