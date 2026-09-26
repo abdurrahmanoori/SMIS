@@ -1,4 +1,3 @@
-using SMIS.Application.Attributes;
 using SMIS.Domain.Entities.Localization;
 
 namespace SMIS.Application.DTO.Users
@@ -10,9 +9,9 @@ namespace SMIS.Application.DTO.Users
         public string? PhoneNumber { get; set; }
         public string Password { get; set; } = default!;
 
-        [Translatable] public string? FirstName { get; set; }
+        public string? FirstName { get; set; }
 
-        [Translatable] public string? LastName { get; set; }
+        public string? LastName { get; set; }
 
         public string ShopId { get; set; } = default!;
         public string LanguageId { get; set; } = LanguageDefaults.EnglishId;

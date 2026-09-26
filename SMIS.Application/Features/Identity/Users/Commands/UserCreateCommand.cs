@@ -3,7 +3,6 @@ using MediatR;
 using Microsoft.AspNetCore.Identity;
 using SMIS.Application.Common.Response;
 using SMIS.Application.DTO.Users;
-using SMIS.Application.Extensions;
 using SMIS.Application.Repositories.Base;
 using SMIS.Application.Repositories.Localization;
 using SMIS.Application.Repositories.Shops;
@@ -15,7 +14,6 @@ namespace SMIS.Application.Features.Identity.Users.Commands
 
     public class UserCreateCommandHandler : IRequestHandler<UserCreateCommand, Result<UserDto>>
     {
-        private readonly ITranslationKeyRepository _translationKeyRepository;
         private readonly ILanguageRepository _languageRepository;
         private readonly IShopRepository _shopRepository;
         private readonly UserManager<ApplicationUser> _userManager;
@@ -24,7 +22,6 @@ namespace SMIS.Application.Features.Identity.Users.Commands
         private readonly IMapper _mapper;
 
         public UserCreateCommandHandler(
-            ITranslationKeyRepository translationKeyRepository,
             ILanguageRepository languageRepository,
             IShopRepository shopRepository,
             UserManager<ApplicationUser> userManager,
@@ -33,7 +30,6 @@ namespace SMIS.Application.Features.Identity.Users.Commands
             IMapper mapper
         )
         {
-            _translationKeyRepository = translationKeyRepository;
             _languageRepository = languageRepository;
             _shopRepository = shopRepository;
             _userManager = userManager;
@@ -54,8 +50,6 @@ namespace SMIS.Application.Features.Identity.Users.Commands
                     "InvalidLanguage",
                     "The selected language does not exist or is inactive.");
             }
-
-            await _translationKeyRepository.AddTranslationKeysForEntity(request.UserCreateDto, _unitOfWork);
 
             var entity = _mapper.Map<ApplicationUser>(request.UserCreateDto);
 

@@ -63,30 +63,6 @@ public static class SeedIds
     public const string UserBranchUser = "44444444-0000-0000-0000-000000000015";
     public const string UserWasilAdmin = "44444444-0000-0000-0000-000000000016";
 
-    // TranslationKeys
-    public const string TKey1 = "55555555-0000-0000-0000-000000000001";
-    public const string TKey2 = "55555555-0000-0000-0000-000000000002";
-    public const string TKey3 = "55555555-0000-0000-0000-000000000003";
-    public const string TKey4 = "55555555-0000-0000-0000-000000000004";
-    public const string TKey5 = "55555555-0000-0000-0000-000000000005";
-    public const string TKey6 = "55555555-0000-0000-0000-000000000006";
-    public const string TKey7 = "55555555-0000-0000-0000-000000000007";
-    public const string TKey8 = "55555555-0000-0000-0000-000000000008";
-
-    // Translations
-    public const string Trans1 = "66666666-0000-0000-0000-000000000001";
-    public const string Trans2 = "66666666-0000-0000-0000-000000000002";
-    public const string Trans3 = "66666666-0000-0000-0000-000000000003";
-    public const string Trans4 = "66666666-0000-0000-0000-000000000004";
-    public const string Trans5 = "66666666-0000-0000-0000-000000000005";
-    public const string Trans6 = "66666666-0000-0000-0000-000000000006";
-    public const string Trans7 = "66666666-0000-0000-0000-000000000007";
-    public const string Trans8 = "66666666-0000-0000-0000-000000000008";
-    public const string Trans9 = "66666666-0000-0000-0000-000000000009";
-    public const string Trans10 = "66666666-0000-0000-0000-000000000010";
-    public const string Trans11 = "66666666-0000-0000-0000-000000000011";
-    public const string Trans12 = "66666666-0000-0000-0000-000000000012";
-
     // Provinces
     public const string ProvinceKabul = "77777777-0000-0000-0000-000000000001";
     public const string ProvinceHerat = "77777777-0000-0000-0000-000000000002";

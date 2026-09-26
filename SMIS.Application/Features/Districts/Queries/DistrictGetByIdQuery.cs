@@ -1,8 +1,6 @@
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 using SMIS.Application.Common.Response;
 using SMIS.Application.DTO.Districts;
-using SMIS.Application.Identity.IServices;
 using SMIS.Application.Repositories.Districts;
 
 namespace SMIS.Application.Features.Districts.Queries
@@ -12,15 +10,9 @@ namespace SMIS.Application.Features.Districts.Queries
     internal sealed class DistrictGetByIdQueryHandler : IRequestHandler<DistrictGetByIdQuery, Result<DistrictDto>>
     {
         private readonly IDistrictRepository _districtRepository;
-        private readonly ICurrentUser _currentUser;
-
-        public DistrictGetByIdQueryHandler(
-            IDistrictRepository districtRepository,
-            ICurrentUser currentUser
-        )
+        public DistrictGetByIdQueryHandler(IDistrictRepository districtRepository)
         {
             _districtRepository = districtRepository;
-            _currentUser = currentUser;
         }
 
         public async Task<Result<DistrictDto>> Handle(
@@ -28,29 +20,18 @@ namespace SMIS.Application.Features.Districts.Queries
             CancellationToken cancellationToken
         )
         {
-            var userLangId = _currentUser.GetLangId();
+            var entity = await _districtRepository.GetByIdAsync(request.Id);
 
-            var district = await _districtRepository.GetAllQueryable()
-                .Include(d => d.TranslationKey)
-                .ThenInclude(tk => tk.Translations)
-                .Where(d => d.Id == request.Id)
-                .Select(d => new DistrictDto
-                {
-                    Id = d.Id,
-                    TranslationKeyId = d.TranslationKeyId,
-                    Name = d.TranslationKey.Translations
-                        .Where(t => t.LanguageNo == userLangId)
-                        .Select(t => t.Name)
-                        .FirstOrDefault() ?? d.Name
-                })
-                .FirstOrDefaultAsync(cancellationToken);
-
-            if (district == null)
+            if (entity == null)
             {
                 return Result<DistrictDto>.NotFoundResult(nameof(DistrictDto));
             }
 
-            return Result<DistrictDto>.SuccessResult(district);
+            return Result<DistrictDto>.SuccessResult(new DistrictDto
+            {
+                Id = entity.Id,
+                Name = entity.Name
+            });
         }
     }
 }

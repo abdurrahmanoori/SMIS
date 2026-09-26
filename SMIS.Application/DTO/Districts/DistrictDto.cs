@@ -4,6 +4,5 @@ namespace SMIS.Application.DTO.Districts
     {
         public string Id { get; set; } = string.Empty;
         public string Name { get; set; } = string.Empty;
-        public string? TranslationKeyId { get; set; }
     }
 }

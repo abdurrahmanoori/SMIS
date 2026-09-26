@@ -4,8 +4,6 @@ using SMIS.Application.Common.Response;
 using SMIS.Application.DTO.Districts;
 using SMIS.Application.Repositories.Base;
 using SMIS.Application.Repositories.Districts;
-using SMIS.Application.Repositories.Localization;
-using SMIS.Domain.Entities.Localization;
 using SMIS.Domain.Entities.LocationEntities;
 
 namespace SMIS.Application.Features.Districts.Commands
@@ -15,21 +13,18 @@ namespace SMIS.Application.Features.Districts.Commands
     internal sealed class DistrictCreateCommandHandler : IRequestHandler<DistrictCreateCommand, Result<DistrictDto>>
     {
         private readonly IDistrictRepository _districtRepository;
-        private readonly ITranslationKeyRepository _translationKeyRepository;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
 
         public DistrictCreateCommandHandler(
             IUnitOfWork unitOfWork,
             IMapper mapper,
-            IDistrictRepository districtRepository,
-            ITranslationKeyRepository translationKeyRepository
+            IDistrictRepository districtRepository
         )
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _districtRepository = districtRepository;
-            _translationKeyRepository = translationKeyRepository;
         }
 
         public async Task<Result<DistrictDto>> Handle(
@@ -37,13 +32,7 @@ namespace SMIS.Application.Features.Districts.Commands
             CancellationToken cancellationToken
         )
         {
-            var translationKey = new TranslationKey
-            {
-                Name = request.DistrictCreateDto.Name,
-                IsActive = true
-            };
             var entity = _mapper.Map<District>(request.DistrictCreateDto);
-            entity.TranslationKey = translationKey;
 
             await _districtRepository.AddAsync(entity);
             await _unitOfWork.SaveChanges(cancellationToken);

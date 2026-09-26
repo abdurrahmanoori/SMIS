@@ -10,8 +10,6 @@ using System.Globalization;
 using SMIS.Application.DTO.Categories;
 using SMIS.Application.DTO.ProductUnits;
 using SMIS.Application.DTO.StockBatches;
-using SMIS.Application.DTO.TranslationKeys;
-using SMIS.Application.DTO.Translations;
 using SMIS.Application.DTO.StockMovements;
 using SMIS.Domain.Entities;
 using SMIS.Domain.Entities.Localization;
@@ -165,14 +163,6 @@ public class MappingProfile : Profile
                 src.EffectiveDate
             ))
             .AfterMap((src, dest) => { dest.SetEndDate(src.EndDate); });
-
-        // TranslationKey mapping
-        CreateMap<TranslationKey, TranslationKeyDto>().ReverseMap();
-        CreateMap<TranslationKey, TranslationKeyCreateDto>().ReverseMap();
-
-        // Translation mapping
-        CreateMap<Translation, TranslationEntityDto>().ReverseMap();
-        CreateMap<Translation, TranslationEntityCreateDto>().ReverseMap();
 
         // Inventory mapping. Creation is handled explicitly because conversion,
         // tenant checks and ledger posting are domain/application operations.

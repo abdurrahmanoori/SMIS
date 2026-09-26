@@ -2,9 +2,7 @@ using AutoMapper;
 using MediatR;
 using SMIS.Application.Common.Response;
 using SMIS.Application.DTO.Products;
-using SMIS.Application.Extensions;
 using SMIS.Application.Repositories.Categories;
-using SMIS.Application.Repositories.Localization;
 using SMIS.Application.Repositories.Products;
 using SMIS.Application.Repositories.ProductUnits;
 using SMIS.Application.Repositories.Shops;
@@ -20,7 +18,6 @@ public record ProductCreateCommand(ProductCreateDto ProductCreateDto) : IRequest
 internal sealed class ProductCreateCommandHandler : IRequestHandler<ProductCreateCommand, Result<ProductDto>>
 {
     private readonly IProductRepository _productRepository;
-    private readonly ITranslationKeyRepository _translationKeyRepository;
     private readonly IShopRepository _shopRepository;
     private readonly IUnitOfMeasureRepository _unitOfMeasureRepository;
     private readonly IProductUnitRepository _productUnitRepository;
@@ -33,7 +30,6 @@ internal sealed class ProductCreateCommandHandler : IRequestHandler<ProductCreat
         IApplicationDbContext db,
         IMapper mapper,
         IProductRepository productRepository,
-        ITranslationKeyRepository translationKeyRepository,
         IShopRepository shopRepository,
         IUnitOfMeasureRepository unitOfMeasureRepository,
         ICategoryRepository categoryRepository,
@@ -44,7 +40,6 @@ internal sealed class ProductCreateCommandHandler : IRequestHandler<ProductCreat
         _db = db;
         _mapper = mapper;
         _productRepository = productRepository;
-        _translationKeyRepository = translationKeyRepository;
         _shopRepository = shopRepository;
         _unitOfMeasureRepository = unitOfMeasureRepository;
         _categoryRepository = categoryRepository;
@@ -57,8 +52,6 @@ internal sealed class ProductCreateCommandHandler : IRequestHandler<ProductCreat
         CancellationToken cancellationToken
     )
     {
-        await _translationKeyRepository.AddTranslationKeysForEntity(request.ProductCreateDto);
-
         var activeShopId = _currentUser.GetShopId();
         if (string.IsNullOrWhiteSpace(activeShopId))
             return Result<ProductDto>.FailureResult("ShopContextRequired", "An active shop is required.");

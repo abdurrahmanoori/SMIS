@@ -1,13 +1,11 @@
-using SMIS.Application.Attributes;
-
 namespace SMIS.Application.DTO.Products
 {
     public class ProductCreateDto
     {
-        [Translatable] public string Name { get; set; } = string.Empty;
+        public string Name { get; set; } = string.Empty;
 
         public string BaseUnitId { get; set; } = string.Empty;
-        [Translatable] public string? Description { get; set; }
+        public string? Description { get; set; }
         public bool IsActive { get; set; } = true;
         public string? SKU { get; set; } // Optional unique identifier
         public string? Barcode { get; set; }

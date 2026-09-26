@@ -2,9 +2,6 @@ using AutoMapper;
 using MediatR;
 using SMIS.Application.Common.Response;
 using SMIS.Application.DTO.Shops;
-using SMIS.Application.Extensions;
-using SMIS.Application.Identity.IServices;
-using SMIS.Application.Repositories.Localization;
 using SMIS.Application.Repositories.Shops;
 
 namespace SMIS.Application.Features.Shops.Queries
@@ -14,20 +11,14 @@ namespace SMIS.Application.Features.Shops.Queries
     internal sealed class ShopGetByIdQueryHandler : IRequestHandler<ShopGetByIdQuery, Result<ShopDto>>
     {
         private readonly IShopRepository _shopRepository;
-        private readonly ITranslationKeyRepository _translationKeyRepository;
-        private readonly ICurrentUser _currentUser;
         private readonly IMapper _mapper;
 
         public ShopGetByIdQueryHandler(
             IShopRepository shopRepository,
-            ITranslationKeyRepository translationKeyRepository,
-            ICurrentUser currentUser,
             IMapper mapper
         )
         {
             _shopRepository = shopRepository;
-            _translationKeyRepository = translationKeyRepository;
-            _currentUser = currentUser;
             _mapper = mapper;
         }
 
@@ -43,10 +34,7 @@ namespace SMIS.Application.Features.Shops.Queries
                 return Result<ShopDto>.NotFoundResult(nameof(ShopDto));
             }
 
-            var shop = _mapper.Map<ShopDto>(dbShop);
-            shop.TranslateEntityByAttributes(_translationKeyRepository.GetAllQueryable(), _currentUser.GetLangId());
-
-            return Result<ShopDto>.SuccessResult(shop);
+            return Result<ShopDto>.SuccessResult(_mapper.Map<ShopDto>(dbShop));
         }
     }
 }

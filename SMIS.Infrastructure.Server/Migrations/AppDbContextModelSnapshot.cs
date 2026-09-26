@@ -2041,412 +2041,6 @@ namespace SMIS.Infrastructure.Server.Migrations
                         });
                 });
 
-            modelBuilder.Entity("SMIS.Domain.Entities.Localization.Translation", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("CreatedBy")
-                        .HasMaxLength(450)
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<DateTime?>("CreatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("DeletedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("EntityState")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsPublic")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsSyncedToServer")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("LanguageNo")
-                        .IsRequired()
-                        .HasMaxLength(450)
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("LastModifiedUtc")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("LastSyncedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
-
-                    b.Property<string>("TranslationKeyId")
-                        .IsRequired()
-                        .HasMaxLength(450)
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("UpdatedBy")
-                        .HasMaxLength(450)
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<DateTime?>("UpdatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("Version")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CreatedBy");
-
-                    b.HasIndex("LanguageNo");
-
-                    b.HasIndex("UpdatedBy");
-
-                    b.HasIndex("TranslationKeyId", "LanguageNo")
-                        .IsUnique();
-
-                    b.ToTable("Translations");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = "66666666-0000-0000-0000-000000000001",
-                            EntityState = "Unchanged",
-                            IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
-                            LanguageNo = "22222222-0000-0000-0000-000000000001",
-                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
-                            Name = "Kabul Center District",
-                            TranslationKeyId = "55555555-0000-0000-0000-000000000001",
-                            Version = 0
-                        },
-                        new
-                        {
-                            Id = "66666666-0000-0000-0000-000000000002",
-                            EntityState = "Unchanged",
-                            IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
-                            LanguageNo = "22222222-0000-0000-0000-000000000002",
-                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
-                            Name = "منطقه مرکز کابل",
-                            TranslationKeyId = "55555555-0000-0000-0000-000000000001",
-                            Version = 0
-                        },
-                        new
-                        {
-                            Id = "66666666-0000-0000-0000-000000000003",
-                            EntityState = "Unchanged",
-                            IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
-                            LanguageNo = "22222222-0000-0000-0000-000000000001",
-                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
-                            Name = "Kabul North District",
-                            TranslationKeyId = "55555555-0000-0000-0000-000000000002",
-                            Version = 0
-                        },
-                        new
-                        {
-                            Id = "66666666-0000-0000-0000-000000000004",
-                            EntityState = "Unchanged",
-                            IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
-                            LanguageNo = "22222222-0000-0000-0000-000000000002",
-                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
-                            Name = "منطقه شمال کابل",
-                            TranslationKeyId = "55555555-0000-0000-0000-000000000002",
-                            Version = 0
-                        },
-                        new
-                        {
-                            Id = "66666666-0000-0000-0000-000000000005",
-                            EntityState = "Unchanged",
-                            IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
-                            LanguageNo = "22222222-0000-0000-0000-000000000001",
-                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
-                            Name = "Herat Center District",
-                            TranslationKeyId = "55555555-0000-0000-0000-000000000003",
-                            Version = 0
-                        },
-                        new
-                        {
-                            Id = "66666666-0000-0000-0000-000000000006",
-                            EntityState = "Unchanged",
-                            IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
-                            LanguageNo = "22222222-0000-0000-0000-000000000002",
-                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
-                            Name = "منطقه مرکز هرات",
-                            TranslationKeyId = "55555555-0000-0000-0000-000000000003",
-                            Version = 0
-                        },
-                        new
-                        {
-                            Id = "66666666-0000-0000-0000-000000000007",
-                            EntityState = "Unchanged",
-                            IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
-                            LanguageNo = "22222222-0000-0000-0000-000000000001",
-                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
-                            Name = "Kabul Province",
-                            TranslationKeyId = "55555555-0000-0000-0000-000000000004",
-                            Version = 0
-                        },
-                        new
-                        {
-                            Id = "66666666-0000-0000-0000-000000000008",
-                            EntityState = "Unchanged",
-                            IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
-                            LanguageNo = "22222222-0000-0000-0000-000000000002",
-                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
-                            Name = "ولایت کابل",
-                            TranslationKeyId = "55555555-0000-0000-0000-000000000004",
-                            Version = 0
-                        },
-                        new
-                        {
-                            Id = "66666666-0000-0000-0000-000000000009",
-                            EntityState = "Unchanged",
-                            IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
-                            LanguageNo = "22222222-0000-0000-0000-000000000001",
-                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
-                            Name = "Herat Province",
-                            TranslationKeyId = "55555555-0000-0000-0000-000000000005",
-                            Version = 0
-                        },
-                        new
-                        {
-                            Id = "66666666-0000-0000-0000-000000000010",
-                            EntityState = "Unchanged",
-                            IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
-                            LanguageNo = "22222222-0000-0000-0000-000000000002",
-                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
-                            Name = "ولایت هرات",
-                            TranslationKeyId = "55555555-0000-0000-0000-000000000005",
-                            Version = 0
-                        },
-                        new
-                        {
-                            Id = "66666666-0000-0000-0000-000000000011",
-                            EntityState = "Unchanged",
-                            IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
-                            LanguageNo = "22222222-0000-0000-0000-000000000001",
-                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
-                            Name = "Welcome Message",
-                            TranslationKeyId = "55555555-0000-0000-0000-000000000006",
-                            Version = 0
-                        },
-                        new
-                        {
-                            Id = "66666666-0000-0000-0000-000000000012",
-                            EntityState = "Unchanged",
-                            IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
-                            LanguageNo = "22222222-0000-0000-0000-000000000002",
-                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
-                            Name = "پیام خوش آمدید",
-                            TranslationKeyId = "55555555-0000-0000-0000-000000000006",
-                            Version = 0
-                        });
-                });
-
-            modelBuilder.Entity("SMIS.Domain.Entities.Localization.TranslationKey", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("CreatedBy")
-                        .HasMaxLength(450)
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<DateTime?>("CreatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("DeletedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("EntityState")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsPublic")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsSyncedToServer")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("LastModifiedUtc")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("LastSyncedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("MessageCode")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.Property<string>("UpdatedBy")
-                        .HasMaxLength(450)
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<DateTime?>("UpdatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("Version")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CreatedBy");
-
-                    b.HasIndex("MessageCode");
-
-                    b.HasIndex("UpdatedBy");
-
-                    b.ToTable("TranslationKeys");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = "55555555-0000-0000-0000-000000000001",
-                            EntityState = "Unchanged",
-                            IsActive = true,
-                            IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
-                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
-                            MessageCode = "1001",
-                            Name = "Kabul Center District",
-                            Version = 0
-                        },
-                        new
-                        {
-                            Id = "55555555-0000-0000-0000-000000000002",
-                            EntityState = "Unchanged",
-                            IsActive = true,
-                            IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
-                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
-                            MessageCode = "1002",
-                            Name = "Kabul North District",
-                            Version = 0
-                        },
-                        new
-                        {
-                            Id = "55555555-0000-0000-0000-000000000003",
-                            EntityState = "Unchanged",
-                            IsActive = true,
-                            IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
-                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
-                            MessageCode = "1003",
-                            Name = "Herat Center District",
-                            Version = 0
-                        },
-                        new
-                        {
-                            Id = "55555555-0000-0000-0000-000000000004",
-                            EntityState = "Unchanged",
-                            IsActive = true,
-                            IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
-                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
-                            MessageCode = "2001",
-                            Name = "Kabul Province",
-                            Version = 0
-                        },
-                        new
-                        {
-                            Id = "55555555-0000-0000-0000-000000000005",
-                            EntityState = "Unchanged",
-                            IsActive = true,
-                            IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
-                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
-                            MessageCode = "2002",
-                            Name = "Herat Province",
-                            Version = 0
-                        },
-                        new
-                        {
-                            Id = "55555555-0000-0000-0000-000000000006",
-                            EntityState = "Unchanged",
-                            IsActive = true,
-                            IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
-                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
-                            MessageCode = "3001",
-                            Name = "Welcome Message",
-                            Version = 0
-                        },
-                        new
-                        {
-                            Id = "55555555-0000-0000-0000-000000000007",
-                            EntityState = "Unchanged",
-                            IsActive = true,
-                            IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
-                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
-                            MessageCode = "3002",
-                            Name = "Error Message",
-                            Version = 0
-                        },
-                        new
-                        {
-                            Id = "55555555-0000-0000-0000-000000000008",
-                            EntityState = "Unchanged",
-                            IsActive = true,
-                            IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
-                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
-                            MessageCode = "3003",
-                            Name = "Success Message",
-                            Version = 0
-                        });
-                });
-
             modelBuilder.Entity("SMIS.Domain.Entities.LocationEntities.District", b =>
                 {
                     b.Property<string>("Id")
@@ -2487,10 +2081,6 @@ namespace SMIS.Infrastructure.Server.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
 
-                    b.Property<string>("TranslationKeyId")
-                        .HasMaxLength(450)
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<string>("UpdatedBy")
                         .HasMaxLength(450)
                         .HasColumnType("nvarchar(450)");
@@ -2504,10 +2094,6 @@ namespace SMIS.Infrastructure.Server.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("CreatedBy");
-
-                    b.HasIndex("TranslationKeyId")
-                        .IsUnique()
-                        .HasFilter("[TranslationKeyId] IS NOT NULL");
 
                     b.HasIndex("UpdatedBy");
 
@@ -2523,7 +2109,6 @@ namespace SMIS.Infrastructure.Server.Migrations
                             IsSyncedToServer = true,
                             LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             Name = "Kabul Center",
-                            TranslationKeyId = "55555555-0000-0000-0000-000000000001",
                             Version = 0
                         },
                         new
@@ -2535,7 +2120,6 @@ namespace SMIS.Infrastructure.Server.Migrations
                             IsSyncedToServer = true,
                             LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             Name = "Kabul North",
-                            TranslationKeyId = "55555555-0000-0000-0000-000000000002",
                             Version = 0
                         },
                         new
@@ -2547,7 +2131,6 @@ namespace SMIS.Infrastructure.Server.Migrations
                             IsSyncedToServer = true,
                             LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             Name = "Herat Center",
-                            TranslationKeyId = "55555555-0000-0000-0000-000000000003",
                             Version = 0
                         });
                 });
@@ -6341,48 +5924,6 @@ namespace SMIS.Infrastructure.Server.Migrations
                     b.Navigation("LocalizedText");
                 });
 
-            modelBuilder.Entity("SMIS.Domain.Entities.Localization.Translation", b =>
-                {
-                    b.HasOne("SMIS.Domain.Entities.Identity.Entity.ApplicationUser", null)
-                        .WithMany()
-                        .HasForeignKey("CreatedBy")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("SMIS.Domain.Entities.Localization.Language", "Language")
-                        .WithMany()
-                        .HasForeignKey("LanguageNo")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("SMIS.Domain.Entities.Localization.TranslationKey", "TranslationKey")
-                        .WithMany("Translations")
-                        .HasForeignKey("TranslationKeyId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("SMIS.Domain.Entities.Identity.Entity.ApplicationUser", null)
-                        .WithMany()
-                        .HasForeignKey("UpdatedBy")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.Navigation("Language");
-
-                    b.Navigation("TranslationKey");
-                });
-
-            modelBuilder.Entity("SMIS.Domain.Entities.Localization.TranslationKey", b =>
-                {
-                    b.HasOne("SMIS.Domain.Entities.Identity.Entity.ApplicationUser", null)
-                        .WithMany()
-                        .HasForeignKey("CreatedBy")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("SMIS.Domain.Entities.Identity.Entity.ApplicationUser", null)
-                        .WithMany()
-                        .HasForeignKey("UpdatedBy")
-                        .OnDelete(DeleteBehavior.Restrict);
-                });
-
             modelBuilder.Entity("SMIS.Domain.Entities.LocationEntities.District", b =>
                 {
                     b.HasOne("SMIS.Domain.Entities.Identity.Entity.ApplicationUser", null)
@@ -6390,17 +5931,10 @@ namespace SMIS.Infrastructure.Server.Migrations
                         .HasForeignKey("CreatedBy")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("SMIS.Domain.Entities.Localization.TranslationKey", "TranslationKey")
-                        .WithOne()
-                        .HasForeignKey("SMIS.Domain.Entities.LocationEntities.District", "TranslationKeyId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
                     b.HasOne("SMIS.Domain.Entities.Identity.Entity.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UpdatedBy")
                         .OnDelete(DeleteBehavior.Restrict);
-
-                    b.Navigation("TranslationKey");
                 });
 
             modelBuilder.Entity("SMIS.Domain.Entities.LocationEntities.Province", b =>
@@ -6883,11 +6417,6 @@ namespace SMIS.Infrastructure.Server.Migrations
                 });
 
             modelBuilder.Entity("SMIS.Domain.Entities.Localization.LocalizedText", b =>
-                {
-                    b.Navigation("Translations");
-                });
-
-            modelBuilder.Entity("SMIS.Domain.Entities.Localization.TranslationKey", b =>
                 {
                     b.Navigation("Translations");
                 });

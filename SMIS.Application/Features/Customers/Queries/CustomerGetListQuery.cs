@@ -3,9 +3,6 @@ using MediatR;
 using SMIS.Application.Common;
 using SMIS.Application.Common.Response;
 using SMIS.Application.DTO.Customers;
-using SMIS.Application.Extensions;
-using SMIS.Application.Identity.IServices;
-using SMIS.Application.Repositories.Localization;
 using SMIS.Application.Repositories.Customers;
 
 namespace SMIS.Application.Features.Customers.Queries
@@ -17,20 +14,14 @@ namespace SMIS.Application.Features.Customers.Queries
         CustomerGetListQueryHandler : IRequestHandler<CustomerGetListQuery, Result<PagedList<CustomerDto>>>
     {
         private readonly ICustomerRepository _customerRepository;
-        private readonly ITranslationKeyRepository _translationKeyRepository;
-        private readonly ICurrentUser _currentUser;
         private readonly IMapper _mapper;
 
         public CustomerGetListQueryHandler(
             ICustomerRepository customerRepository,
-            ITranslationKeyRepository translationKeyRepository,
-            ICurrentUser currentUser,
             IMapper mapper
         )
         {
             _customerRepository = customerRepository;
-            _translationKeyRepository = translationKeyRepository;
-            _currentUser = currentUser;
             _mapper = mapper;
         }
 
@@ -48,11 +39,6 @@ namespace SMIS.Application.Features.Customers.Queries
             }
 
             var customerDtos = _mapper.Map<List<CustomerDto>>(customers.Items);
-            var translationKeys = _translationKeyRepository.GetAllQueryable();
-            var userLangId = _currentUser.GetLangId();
-
-            customerDtos.ForEach(customer => customer.TranslateEntityByAttributes(translationKeys, userLangId));
-
             return Result<PagedList<CustomerDto>>.SuccessResult(new PagedList<CustomerDto>
             {
                 Items = customerDtos,

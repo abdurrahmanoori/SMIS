@@ -65,7 +65,6 @@ namespace SMIS.Infrastructure.Server.Extensions
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             // Register services
-            services.AddScoped<ITranslationService, TranslationService>();
             services.AddScoped<IGenericQueryService, GenericQueryService>();
             services.AddSingleton<IPublicIdGenerator, PublicIdGenerator>();
             services.AddAutoMapper((serviceProvider, cfg) =>

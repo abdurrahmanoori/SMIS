@@ -1,9 +1,7 @@
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 using SMIS.Application.Common;
 using SMIS.Application.Common.Response;
 using SMIS.Application.DTO.Districts;
-using SMIS.Application.Identity.IServices;
 using SMIS.Application.Repositories.Districts;
 
 namespace SMIS.Application.Features.Districts.Queries
@@ -15,15 +13,9 @@ namespace SMIS.Application.Features.Districts.Queries
         DistrictGetListQueryHandler : IRequestHandler<DistrictGetListQuery, Result<PagedList<DistrictDto>>>
     {
         private readonly IDistrictRepository _districtRepository;
-        private readonly ICurrentUser _currentUser;
-
-        public DistrictGetListQueryHandler(
-            IDistrictRepository districtRepository,
-            ICurrentUser currentUser
-        )
+        public DistrictGetListQueryHandler(IDistrictRepository districtRepository)
         {
             _districtRepository = districtRepository;
-            _currentUser = currentUser;
         }
 
         public async Task<Result<PagedList<DistrictDto>>> Handle(
@@ -31,19 +23,11 @@ namespace SMIS.Application.Features.Districts.Queries
             CancellationToken cancellationToken
         )
         {
-            var userLangId = _currentUser.GetLangId();
-
             var query = _districtRepository.GetAllQueryable()
-                .Include(d => d.TranslationKey)
-                .ThenInclude(tk => tk.Translations)
                 .Select(d => new DistrictDto
                 {
                     Id = d.Id,
-                    TranslationKeyId = d.TranslationKeyId,
-                    Name = d.TranslationKey.Translations
-                        .Where(t => t.LanguageNo == userLangId)
-                        .Select(t => t.Name)
-                        .FirstOrDefault() ?? d.Name
+                    Name = d.Name
                 });
 
             var pagedEntities = await query.ToPagedList(request.PageNumber, request.PageSize);
@@ -52,7 +36,13 @@ namespace SMIS.Application.Features.Districts.Queries
                 return Result<PagedList<DistrictDto>>.EmptyResult(nameof(DistrictDto));
             }
 
-            return Result<PagedList<DistrictDto>>.SuccessResult(default);
+            return Result<PagedList<DistrictDto>>.SuccessResult(new PagedList<DistrictDto>
+            {
+                Items = pagedEntities.Items,
+                TotalCount = pagedEntities.TotalCount,
+                PageNumber = pagedEntities.PageNumber,
+                PageSize = pagedEntities.PageSize
+            });
         }
     }
 }

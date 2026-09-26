@@ -4,7 +4,6 @@ using SMIS.Application.Common.Response;
 using SMIS.Application.DTO.Districts;
 using SMIS.Application.Repositories.Base;
 using SMIS.Application.Repositories.Districts;
-using SMIS.Application.Repositories.Localization;
 
 namespace SMIS.Application.Features.Districts.Commands
 {
@@ -13,21 +12,18 @@ namespace SMIS.Application.Features.Districts.Commands
     internal sealed class DistrictUpdateCommandHandler : IRequestHandler<DistrictUpdateCommand, Result<DistrictDto>>
     {
         private readonly IDistrictRepository _districtRepository;
-        private readonly ITranslationKeyRepository _translationKeyRepository;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
 
         public DistrictUpdateCommandHandler(
             IUnitOfWork unitOfWork,
             IMapper mapper,
-            IDistrictRepository districtRepository,
-            ITranslationKeyRepository translationKeyRepository
+            IDistrictRepository districtRepository
         )
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _districtRepository = districtRepository;
-            _translationKeyRepository = translationKeyRepository;
         }
 
         public async Task<Result<DistrictDto>> Handle(
@@ -43,18 +39,6 @@ namespace SMIS.Application.Features.Districts.Commands
 
             _mapper.Map(request.DistrictCreateDto, entity);
 
-            //// Update TranslationKey name
-            //if (!string.IsNullOrEmpty(entity.TranslationKeyId))
-            //{
-            //    var translationKey = await _translationKeyRepository.GetByIdAsync(entity.TranslationKeyId);
-            //    if (translationKey != null)
-            //    {
-            //        translationKey.Name = request.DistrictCreateDto.Name;
-            //        await _translationKeyRepository.UpdateAsync(translationKey);
-            //    }
-            //}
-
-            //await _districtRepository.UpdateAsync(entity);
             await _unitOfWork.SaveChanges(cancellationToken);
 
             var dto = _mapper.Map<DistrictDto>(entity);

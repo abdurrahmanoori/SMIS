@@ -13,8 +13,6 @@ public interface IApplicationDbContext
     public DbSet<District> Districts { get; set; }
     public DbSet<Language> Languages { get; set; }
     public DbSet<AppLog> AppLogs { get; set; }
-    public DbSet<TranslationKey> TranslationKeys { get; set; }
-    public DbSet<Translation> Translations { get; set; }
     public DbSet<LocalizedText> LocalizedTexts { get; set; }
     public DbSet<LocalizedTextTranslation> LocalizedTextTranslations { get; set; }
     public DbSet<Shop> Shops { get; set; }
