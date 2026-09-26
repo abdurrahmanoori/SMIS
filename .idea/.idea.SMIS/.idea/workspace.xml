@@ -130,7 +130,9 @@
     <setting file="file://$PROJECT_DIR$/SMIS.Application/DTO/Auth/SwitchShopDto.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/SMIS.Application/Features/Categories/Queries/CategoryQuery.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/SMIS.Application/Services/IApplicationDbContext.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="mock://E:/Repo/SMIS/SMIS.Application/DTO/Categories/CategoryDto.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/SMIS.Infrastructure.Server/Migrations/20260903101403_InitialMigration.Designer.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://E:/Repo/SMIS/SMIS.Infrastructure.Server/Migrations/20260926120331_DisableCategoryLocalization.Designer.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://E:/Repo/SMIS/SMIS.Infrastructure.Server/Migrations/20260926120331_DisableCategoryLocalization.cs" root0="SKIP_HIGHLIGHTING" />
   </component>
   <component name="InvalidFacetManager">
     <ignored-facets>
@@ -825,7 +827,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
-    <MESSAGE value="feat: introduce StockMovement and related DTOs; implement StockMovementController and validation logic, and replace StockTransaction references with StockMovement" />
     <MESSAGE value="feat: add XML documentation comments for clarity on domain entities and services" />
     <MESSAGE value="feat: implement Sale domain with related DTOs, commands, and validation; remove LoanAccount entities" />
     <MESSAGE value="feat(Sale): implement Sale domain with related DTOs, commands, and validation; remove LoanAccount entities" />
@@ -850,6 +851,7 @@
     <MESSAGE value="refactor: standardize seed timestamps across various seed files" />
     <MESSAGE value="refactor: update database configurations and enhance UI layout for product screens" />
     <MESSAGE value="fix: return paged result in LanguageGetListQuery" />
+    <MESSAGE value="refactor: disable category localization" />
     <option name="LAST_COMMIT_MESSAGE" value="" />
   </component>
   <component name="XDebuggerManager">
