@@ -52,7 +52,7 @@ void main() {
 
       await expectLater(store.syncNow(), throwsA(isA<RemoteTransientException>()));
       expect((await store.pending()).single.payload['idempotencyKey'], id);
-      await database!.close();
+      await database.close();
 
       database = PowerSyncDatabase(schema: appPowerSyncSchema, path: path);
       await database.initialize();
