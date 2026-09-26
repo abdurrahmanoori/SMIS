@@ -41,6 +41,6 @@ internal sealed class
             return Result<PagedList<LanguageDto>>.EmptyResult(nameof(LanguageDto));
         }
 
-        return Result<PagedList<LanguageDto>>.SuccessResult(default);
+        return Result<PagedList<LanguageDto>>.SuccessResult(paged);
     }
 }
