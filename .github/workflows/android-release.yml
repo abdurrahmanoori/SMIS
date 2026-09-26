@@ -1,0 +1,67 @@
+name: Build and Release Android APK
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "smis_flutter/**"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build-android:
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: smis_flutter
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+
+      - name: Show Flutter version
+        run: flutter --version
+
+      - name: Get dependencies
+        run: flutter pub get
+
+      - name: Build release APK
+        run: flutter build apk --release --build-number "${GITHUB_RUN_NUMBER}"
+
+      - name: Prepare APK
+        run: cp build/app/outputs/flutter-apk/app-release.apk "../SMIS-${GITHUB_RUN_NUMBER}.apk"
+
+      - name: Upload APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: SMIS-APK
+          path: SMIS-${{ github.run_number }}.apk
+          if-no-files-found: error
+
+      - name: Create GitHub Release
+        working-directory: .
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          TAG="android-build-${GITHUB_RUN_NUMBER}"
+          gh release create "$TAG" "SMIS-${GITHUB_RUN_NUMBER}.apk" \
+            --repo "${GITHUB_REPOSITORY}" \
+            --target "${GITHUB_SHA}" \
+            --title "SMIS Android Build #${GITHUB_RUN_NUMBER}" \
+            --notes "Automated Flutter release APK built from commit ${GITHUB_SHA}. Android build number: ${GITHUB_RUN_NUMBER}."
