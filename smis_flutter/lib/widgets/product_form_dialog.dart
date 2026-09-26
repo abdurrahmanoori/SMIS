@@ -28,6 +28,8 @@ class _ProductFormDialogState extends State<ProductFormDialog> {
   late final TextEditingController _description;
   late final TextEditingController _barcode;
   late final TextEditingController _imageUrl;
+  late final TextEditingController _reorderPoint;
+  late final TextEditingController _reorderQuantity;
   late String? _baseUnitId;
   late String? _categoryId;
   late bool _isActive;
@@ -40,6 +42,12 @@ class _ProductFormDialogState extends State<ProductFormDialog> {
     _description = TextEditingController(text: widget.product?.description);
     _barcode = TextEditingController(text: widget.product?.barcode);
     _imageUrl = TextEditingController(text: widget.product?.imageUrl);
+    _reorderPoint = TextEditingController(
+      text: (widget.product?.reorderPointBase ?? 0).toString(),
+    );
+    _reorderQuantity = TextEditingController(
+      text: (widget.product?.reorderQuantityBase ?? 0).toString(),
+    );
     _baseUnitId = widget.product?.baseUnitId;
     _categoryId = widget.product?.categoryId;
     _isActive = widget.product?.isActive ?? true;
@@ -52,6 +60,8 @@ class _ProductFormDialogState extends State<ProductFormDialog> {
     _description.dispose();
     _barcode.dispose();
     _imageUrl.dispose();
+    _reorderPoint.dispose();
+    _reorderQuantity.dispose();
     super.dispose();
   }
 
@@ -179,6 +189,24 @@ class _ProductFormDialogState extends State<ProductFormDialog> {
                   labelText: context.l10n.text('Description'),
                 ),
               ),
+              const SizedBox(height: 12),
+              TextFormField(
+                controller: _reorderPoint,
+                keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                decoration: InputDecoration(
+                  labelText: context.l10n.text('Reorder point (base units)'),
+                ),
+                validator: _validateStockQuantity,
+              ),
+              const SizedBox(height: 12),
+              TextFormField(
+                controller: _reorderQuantity,
+                keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                decoration: InputDecoration(
+                  labelText: context.l10n.text('Reorder quantity (base units)'),
+                ),
+                validator: _validateStockQuantity,
+              ),
               SwitchListTile.adaptive(
                 contentPadding: EdgeInsets.zero,
                 title: Text(context.l10n.text('Active')),
@@ -209,6 +237,8 @@ class _ProductFormDialogState extends State<ProductFormDialog> {
               isActive: _isActive,
               barcode: _barcode.text,
               imageUrl: _imageUrl.text,
+              reorderPointBase: double.parse(_reorderPoint.text.trim()),
+              reorderQuantityBase: double.parse(_reorderQuantity.text.trim()),
             ),
           );
         },
@@ -216,4 +246,11 @@ class _ProductFormDialogState extends State<ProductFormDialog> {
       ),
     ],
   );
+
+  String? _validateStockQuantity(String? value) {
+    final number = double.tryParse(value?.trim() ?? '');
+    return number != null && number.isFinite && number >= 0
+        ? null
+        : context.l10n.text('Enter a non-negative quantity.');
+  }
 }

@@ -67,6 +67,16 @@ class ProductDetailsScreen extends StatelessWidget {
                       ),
                       const Divider(height: 1),
                       _DetailTile(
+                        label: context.l10n.text('Reorder point (base units)'),
+                        value: product.reorderPointBase.toString(),
+                      ),
+                      const Divider(height: 1),
+                      _DetailTile(
+                        label: context.l10n.text('Reorder quantity (base units)'),
+                        value: product.reorderQuantityBase.toString(),
+                      ),
+                      const Divider(height: 1),
+                      _DetailTile(
                         label: context.l10n.text('SKU'),
                         value: _valueOrNotSet(context, product.sku),
                       ),
