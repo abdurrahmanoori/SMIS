@@ -8,12 +8,12 @@ using SMIS.Application.Repositories.Localization;
 
 namespace SMIS.Application.Features.Localization.Queries;
 
-public record LanguageGetListQuery(int PageNumber = 1, int PageSize = 25) : IRequest<Result<PagedList<LanguageDto>>>
+public record LanguageGetListQuery(int PageNumber = 1, int PageSize = 25) : IRequest<Result<PagedListNew<LanguageDto>>>
 {
 }
 
 internal sealed class
-    LanguageGetListQueryHandler : IRequestHandler<LanguageGetListQuery, Result<PagedList<LanguageDto>>>
+    LanguageGetListQueryHandler : IRequestHandler<LanguageGetListQuery, Result<PagedListNew<LanguageDto>>>
 {
     private readonly ILanguageRepository _languageRepository;
     private readonly IMapper _mapper;
@@ -27,7 +27,7 @@ internal sealed class
         _mapper = mapper;
     }
 
-    public async Task<Result<PagedList<LanguageDto>>> Handle(
+    public async Task<Result<PagedListNew<LanguageDto>>> Handle(
         LanguageGetListQuery request,
         CancellationToken cancellationToken
     )
@@ -38,9 +38,9 @@ internal sealed class
         var paged = await dtoQuery.ToPagedList(request.PageNumber, request.PageSize);
         if (paged.Items.Any() == false)
         {
-            return Result<PagedList<LanguageDto>>.EmptyResult(nameof(LanguageDto));
+            return Result<PagedListNew<LanguageDto>>.EmptyResult(nameof(LanguageDto));
         }
 
-        return Result<PagedList<LanguageDto>>.SuccessResult(paged);
+        return Result<PagedListNew<LanguageDto>>.SuccessResult(paged);
     }
 }
