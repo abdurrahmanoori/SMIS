@@ -15,8 +15,7 @@ class CategoryFormDialog extends StatefulWidget {
 class _CategoryFormDialogState extends State<CategoryFormDialog> {
   final _formKey = GlobalKey<FormState>();
 
-  late final TextEditingController _englishName;
-  late final TextEditingController _dariName;
+  late final TextEditingController _name;
   late final TextEditingController _code;
   late final TextEditingController _description;
   late bool _isActive;
@@ -24,8 +23,7 @@ class _CategoryFormDialogState extends State<CategoryFormDialog> {
   @override
   void initState() {
     super.initState();
-    _englishName = TextEditingController(text: widget.category?.englishName);
-    _dariName = TextEditingController(text: widget.category?.dariName);
+    _name = TextEditingController(text: widget.category?.name);
     _code = TextEditingController(text: widget.category?.code);
     _description = TextEditingController(text: widget.category?.description);
     _isActive = widget.category?.isActive ?? true;
@@ -33,8 +31,7 @@ class _CategoryFormDialogState extends State<CategoryFormDialog> {
 
   @override
   void dispose() {
-    _englishName.dispose();
-    _dariName.dispose();
+    _name.dispose();
     _code.dispose();
     _description.dispose();
     super.dispose();
@@ -56,24 +53,15 @@ class _CategoryFormDialogState extends State<CategoryFormDialog> {
             mainAxisSize: MainAxisSize.min,
             children: [
               TextFormField(
-                controller: _englishName,
+                controller: _name,
                 autofocus: true,
                 maxLength: 200,
                 decoration: InputDecoration(
-                  labelText: context.l10n.text('English name *'),
+                  labelText: context.l10n.text('Name *'),
                 ),
                 validator: (value) => value == null || value.trim().isEmpty
-                    ? context.l10n.text('English name is required.')
+                    ? context.l10n.text('Name is required.')
                     : null,
-              ),
-              const SizedBox(height: 12),
-              TextFormField(
-                controller: _dariName,
-                maxLength: 200,
-                textDirection: TextDirection.rtl,
-                decoration: InputDecoration(
-                  labelText: context.l10n.text('Dari name'),
-                ),
               ),
               const SizedBox(height: 12),
               TextFormField(
@@ -116,8 +104,7 @@ class _CategoryFormDialogState extends State<CategoryFormDialog> {
           Navigator.pop(
             context,
             CategoryDraft(
-              name: _englishName.text,
-              dariName: _dariName.text,
+              name: _name.text,
               code: _code.text,
               description: _description.text,
               isActive: _isActive,

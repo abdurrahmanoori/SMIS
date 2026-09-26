@@ -31,16 +31,13 @@ namespace SMIS.Application.Features.Categories.Queries
             CancellationToken cancellationToken
         )
         {
-            var query = _categoryRepository
-                .GetAllQueryable()
-                .IncludeNameLocalization();
+            var query = _categoryRepository.GetAllQueryable();
 
             if (!string.IsNullOrWhiteSpace(request.SearchTerm))
             {
                 var term = request.SearchTerm.ToLower();
                 query = query.Where(c =>
                     c.Name.ToLower().Contains(term) ||
-                    c.NameLocalizedText.Translations.Any(t => t.Value.ToLower().Contains(term)) ||
                     (c.Code != null && c.Code.ToLower().Contains(term)) ||
                     (c.Description != null && c.Description.ToLower().Contains(term)));
             }
@@ -50,9 +47,8 @@ namespace SMIS.Application.Features.Categories.Queries
             if (!categories.Items.Any())
                 return Result<PagedList<CategoryDto>>.EmptyResult(nameof(CategoryDto));
 
-            var userLanguageId = _currentUser.GetLangId();
             var categoryDtos = categories.Items
-                .Select(category => CategoryLocalization.ToDto(category, userLanguageId))
+                .Select(CategoryMapping.ToDto)
                 .ToList();
 
             return Result<PagedList<CategoryDto>>.SuccessResult(new PagedList<CategoryDto>

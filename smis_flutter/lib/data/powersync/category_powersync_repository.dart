@@ -2,7 +2,6 @@ import 'package:powersync/powersync.dart';
 import 'package:uuid/uuid.dart';
 
 import '../../models/category.dart';
-import '../../models/language_defaults.dart';
 import '../data_exception.dart';
 import 'powersync_repository_support.dart';
 
@@ -19,7 +18,7 @@ class CategoryPowerSyncRepository extends PowerSyncRepositorySupport {
     final database = await this.database;
     return database
         .watch(
-          'SELECT id, name, name_dari, name_localized_text_id, code, '
+          'SELECT id, name, code, '
           'description, is_active, shop_id, last_modified_utc '
           'FROM category WHERE shop_id = ?',
           parameters: [shopId],
@@ -42,13 +41,12 @@ class CategoryPowerSyncRepository extends PowerSyncRepositorySupport {
 
     if (searchQuery != null && searchQuery.trim().isNotEmpty) {
       final search = '%${searchQuery.trim()}%';
-      where +=
-          ' AND (name LIKE ? OR name_dari LIKE ? OR code LIKE ? OR description LIKE ?)';
-      args.addAll([search, search, search, search]);
+      where += ' AND (name LIKE ? OR code LIKE ? OR description LIKE ?)';
+      args.addAll([search, search, search]);
     }
 
     var sql =
-        'SELECT id, name, name_dari, name_localized_text_id, code, '
+        'SELECT id, name, code, '
         'description, is_active, shop_id, last_modified_utc '
         'FROM category WHERE $where ORDER BY name COLLATE NOCASE ASC';
     if (limit != null) {
@@ -73,9 +71,8 @@ class CategoryPowerSyncRepository extends PowerSyncRepositorySupport {
 
     if (searchQuery != null && searchQuery.trim().isNotEmpty) {
       final search = '%${searchQuery.trim()}%';
-      where +=
-          ' AND (name LIKE ? OR name_dari LIKE ? OR code LIKE ? OR description LIKE ?)';
-      args.addAll([search, search, search, search]);
+      where += ' AND (name LIKE ? OR code LIKE ? OR description LIKE ?)';
+      args.addAll([search, search, search]);
     }
 
     final row = await database.get(
@@ -97,14 +94,11 @@ class CategoryPowerSyncRepository extends PowerSyncRepositorySupport {
     final id = _idGenerator();
     await database.execute(
       'INSERT INTO category('
-      'id, name, name_dari, name_localized_text_id, code, description, '
-      'is_active, shop_id, last_modified_utc'
-      ') VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
+      'id, name, code, description, is_active, shop_id, last_modified_utc'
+      ') VALUES (?, ?, ?, ?, ?, ?, ?)',
       [
         id,
         normalized.name,
-        normalized.dariName,
-        null,
         normalized.code,
         normalized.description,
         normalized.isActive ? 1 : 0,
@@ -135,12 +129,11 @@ class CategoryPowerSyncRepository extends PowerSyncRepositorySupport {
     await _ensureUniqueName(database, shopId, normalized.name, excludeId: id);
 
     await database.execute(
-      'UPDATE category SET name = ?, name_dari = ?, code = ?, '
+      'UPDATE category SET name = ?, code = ?, '
       'description = ?, is_active = ?, shop_id = ?, last_modified_utc = ? '
       'WHERE id = ?',
       [
         normalized.name,
-        normalized.dariName,
         normalized.code,
         normalized.description,
         normalized.isActive ? 1 : 0,
@@ -188,7 +181,7 @@ class CategoryPowerSyncRepository extends PowerSyncRepositorySupport {
     String languageId,
   ) async {
     final row = await database.getOptional(
-      'SELECT id, name, name_dari, name_localized_text_id, code, '
+      'SELECT id, name, code, '
       'description, is_active, shop_id, last_modified_utc '
       'FROM category WHERE id = ?',
       [id],
@@ -227,21 +220,9 @@ class CategoryPowerSyncRepository extends PowerSyncRepositorySupport {
     String languageId,
   ) {
     final changedAt = timestamp(row['last_modified_utc']);
-    final englishName = row['name']! as String;
-    final dariName = row['name_dari'] as String?;
-    final displayName =
-        languageId == LanguageDefaults.dariId &&
-            dariName != null &&
-            dariName.trim().isNotEmpty
-        ? dariName
-        : englishName;
-
     return Category(
       id: row['id']! as String,
-      name: displayName,
-      englishName: englishName,
-      dariName: dariName,
-      nameLocalizedTextId: row['name_localized_text_id'] as String?,
+      name: row['name']! as String,
       code: row['code'] as String?,
       description: row['description'] as String?,
       isActive: row['is_active'] == 1,

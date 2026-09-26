@@ -29,8 +29,6 @@ const appPowerSyncSchema = Schema([
   ], trackPreviousValues: _trackTimestamp),
   Table('category', [
     Column.text('name'),
-    Column.text('name_dari'),
-    Column.text('name_localized_text_id'),
     Column.text('code'),
     Column.text('description'),
     Column.integer('is_active'),

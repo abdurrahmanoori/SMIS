@@ -45,7 +45,6 @@ internal sealed class CategorySyncCreateCommandHandler : IRequestHandler<Categor
 
         var existing = await _db.Categories
             .IgnoreQueryFilters()
-            .IncludeNameLocalization()
             .FirstOrDefaultAsync(category => category.Id == id, cancellationToken);
 
         if (existing is not null)
@@ -56,7 +55,7 @@ internal sealed class CategorySyncCreateCommandHandler : IRequestHandler<Categor
             if (clientModified <= existing.GetConflictModifiedUtc())
             {
                 return Result<CategoryDto>.SuccessResult(
-                    CategoryLocalization.ToDto(existing, _currentUser.GetLangId()));
+                    CategoryMapping.ToDto(existing));
             }
 
             if (await _repository.NameExistsInShopAsync(
@@ -69,14 +68,13 @@ internal sealed class CategorySyncCreateCommandHandler : IRequestHandler<Categor
             }
 
             CategoryCommandRules.Apply(existing, request.Dto);
-            CategoryLocalization.ApplyName(existing, request.Dto);
             existing.SetClientModificationMetadata(clientModified);
             existing.Restore();
 
             await _db.SaveChangesAsync(cancellationToken);
 
             return Result<CategoryDto>.SuccessResult(
-                CategoryLocalization.ToDto(existing, _currentUser.GetLangId()));
+                CategoryMapping.ToDto(existing));
         }
 
         var shopId = _currentUser.GetShopId();
@@ -89,18 +87,15 @@ internal sealed class CategorySyncCreateCommandHandler : IRequestHandler<Categor
         }
 
         var category = CategoryCommandRules.Create(request.Dto, shopId);
-        var localizedName = CategoryLocalization.CreateName(request.Dto);
 
         category.Id = id;
-        category.SetNameLocalizedText(localizedName);
         category.SetClientModificationMetadata(clientModified);
 
-        _db.LocalizedTexts.Add(localizedName);
         await _repository.AddAsync(category);
         await _db.SaveChangesAsync(cancellationToken);
 
         return Result<CategoryDto>.SuccessResult(
-            CategoryLocalization.ToDto(category, _currentUser.GetLangId()));
+            CategoryMapping.ToDto(category));
     }
 }
 
@@ -131,7 +126,6 @@ internal sealed class CategorySyncUpdateCommandHandler
 
         var category = await _db.Categories
             .IgnoreQueryFilters()
-            .IncludeNameLocalization()
             .FirstOrDefaultAsync(entity => entity.Id == id, cancellationToken);
 
         if (category is null)
@@ -145,7 +139,7 @@ internal sealed class CategorySyncUpdateCommandHandler
         if (clientModified < category.GetConflictModifiedUtc())
         {
             return Result<CategoryDto>.SuccessResult(
-                CategoryLocalization.ToDto(category, _currentUser.GetLangId()));
+                CategoryMapping.ToDto(category));
         }
 
         if (await _repository.NameExistsInShopAsync(
@@ -158,14 +152,13 @@ internal sealed class CategorySyncUpdateCommandHandler
         }
 
         CategoryCommandRules.Apply(category, request.Dto);
-        CategoryLocalization.ApplyName(category, request.Dto);
         category.SetClientModificationMetadata(clientModified);
         category.Restore();
 
         await _db.SaveChangesAsync(cancellationToken);
 
         return Result<CategoryDto>.SuccessResult(
-            CategoryLocalization.ToDto(category, _currentUser.GetLangId()));
+            CategoryMapping.ToDto(category));
     }
 }
 
@@ -199,7 +192,6 @@ internal sealed class CategorySyncDeleteCommandHandler
 
         var category = await _db.Categories
             .IgnoreQueryFilters()
-            .IncludeNameLocalization()
             .FirstOrDefaultAsync(entity => entity.Id == id, cancellationToken);
 
         if (category is null)
@@ -213,7 +205,7 @@ internal sealed class CategorySyncDeleteCommandHandler
         if (clientModified < category.GetConflictModifiedUtc())
         {
             return Result<CategoryDto>.SuccessResult(
-                CategoryLocalization.ToDto(category, _currentUser.GetLangId()));
+                CategoryMapping.ToDto(category));
         }
 
         var productCount = await _productRepository.CountByCategoryIdAsync(
@@ -227,7 +219,7 @@ internal sealed class CategorySyncDeleteCommandHandler
         }
 
         category.SetClientModificationMetadata(clientModified);
-        var response = CategoryLocalization.ToDto(category, _currentUser.GetLangId());
+        var response = CategoryMapping.ToDto(category);
 
         await _repository.RemoveAsync(category);
         await _db.SaveChangesAsync(cancellationToken);

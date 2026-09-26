@@ -4,7 +4,6 @@ using SMIS.Application.Common.Response;
 using SMIS.Application.DTO.Categories;
 using SMIS.Application.Identity.IServices;
 using SMIS.Application.Services;
-using SMIS.Domain.Entities.Localization;
 
 namespace SMIS.Application.Features.Categories.Queries;
 
@@ -41,27 +40,11 @@ internal sealed class CategoryQueryHandler
         CancellationToken cancellationToken
     )
     {
-        var userLanguageId = _currentUser.GetLangId();
-
         var query = _context.Categories
             .Select(x => new CategoryDto
             {
                 Id = x.Id,
-                Name = x.NameLocalizedText.Translations
-                           .Where(t => t.LanguageId == userLanguageId)
-                           .Select(t => t.Value)
-                           .FirstOrDefault()
-                       ?? x.NameLocalizedText.DefaultValue,
-                EnglishName = x.NameLocalizedText.Translations
-                                  .Where(t => t.LanguageId == LanguageDefaults.EnglishId)
-                                  .Select(t => t.Value)
-                                  .FirstOrDefault()
-                              ?? x.NameLocalizedText.DefaultValue,
-                DariName = x.NameLocalizedText.Translations
-                    .Where(t => t.LanguageId == LanguageDefaults.DariId)
-                    .Select(t => t.Value)
-                    .FirstOrDefault(),
-                NameLocalizedTextId = x.NameLocalizedTextId,
+                Name = x.Name,
                 Code = x.Code,
                 Description = x.Description,
                 IsActive = x.IsActive,

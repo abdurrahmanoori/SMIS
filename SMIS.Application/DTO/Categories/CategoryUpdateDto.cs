@@ -1,12 +1,8 @@
-using SMIS.Application.DTO.Localization;
-
 namespace SMIS.Application.DTO.Categories
 {
     public class CategoryUpdateDto
     {
         public string Name { get; set; } = string.Empty;
-
-        public List<LocalizedTextValueDto> NameTranslations { get; set; } = [];
 
         public string? Code { get; set; }
 

@@ -1,18 +1,10 @@
-using SMIS.Application.DTO.Localization;
-
 namespace SMIS.Application.DTO.Categories
 {
     public class CategoryDto
     {
         public string Id { get; set; } = string.Empty;
 
-        // Resolved for the signed-in user's preferred language.
         public string Name { get; set; } = string.Empty;
-
-        public string EnglishName { get; set; } = string.Empty;
-        public string? DariName { get; set; }
-        public string NameLocalizedTextId { get; set; } = string.Empty;
-        public List<LocalizedTextValueDto> NameTranslations { get; set; } = [];
 
         public string? Code { get; set; } = string.Empty;
         public string? Description { get; set; }

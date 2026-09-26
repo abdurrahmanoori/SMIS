@@ -34,7 +34,6 @@ namespace SMIS.Application.Features.Categories.Commands
         )
         {
             var entity = await _db.Categories
-                .IncludeNameLocalization()
                 .FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
 
             if (entity == null)
@@ -57,14 +56,13 @@ namespace SMIS.Application.Features.Categories.Commands
             }
 
             CategoryCommandRules.Apply(entity, request.CategoryUpdateDto);
-            CategoryLocalization.ApplyName(entity, request.CategoryUpdateDto);
 
             entity.ClearClientModificationMetadata();
 
             await _db.SaveChangesAsync(cancellationToken);
 
             return Result<CategoryDto>.SuccessResult(
-                CategoryLocalization.ToDto(entity, _currentUser.GetLangId()));
+                CategoryMapping.ToDto(entity));
         }
     }
 }

@@ -31,14 +31,13 @@ namespace SMIS.Application.Features.Categories.Queries
         {
             var dbCategory = await _categoryRepository
                 .GetAllQueryable()
-                .IncludeNameLocalization()
                 .FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
 
             if (dbCategory == null)
                 return Result<CategoryDto>.NotFoundResult(nameof(CategoryDto));
 
             return Result<CategoryDto>.SuccessResult(
-                CategoryLocalization.ToDto(dbCategory, _currentUser.GetLangId()));
+                CategoryMapping.ToDto(dbCategory));
         }
     }
 }

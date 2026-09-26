@@ -43,15 +43,11 @@ namespace SMIS.Application.Features.Categories.Commands
             }
 
             var entity = CategoryCommandRules.Create(request.CategoryCreateDto, shopId);
-            var localizedName = CategoryLocalization.CreateName(request.CategoryCreateDto);
-            entity.SetNameLocalizedText(localizedName);
-
-            _db.LocalizedTexts.Add(localizedName);
             await _categoryRepository.AddAsync(entity);
             await _db.SaveChangesAsync(cancellationToken);
 
             return Result<CategoryDto>.SuccessResult(
-                CategoryLocalization.ToDto(entity, _currentUser.GetLangId()),
+                CategoryMapping.ToDto(entity),
                 "Category Created Successfully.");
         }
     }

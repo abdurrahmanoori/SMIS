@@ -50,17 +50,12 @@ streams:
       SELECT
         category."Id" AS id,
         category."Name" AS name,
-        dari_name."Value" AS name_dari,
-        category."NameLocalizedTextId" AS name_localized_text_id,
         category."Code" AS code,
         category."Description" AS description,
         category."IsActive" AS is_active,
         category."ShopId" AS shop_id,
         category."LastModifiedUtc" AS last_modified_utc
       FROM "Category" AS category
-      LEFT JOIN "LocalizedTextTranslation" AS dari_name
-        ON dari_name."LocalizedTextId" = category."NameLocalizedTextId"
-       AND dari_name."LanguageId" = '22222222-0000-0000-0000-000000000003'
       WHERE category."ShopId" = auth.parameter('ShopId')
         AND category."IsDeleted" = 0
 

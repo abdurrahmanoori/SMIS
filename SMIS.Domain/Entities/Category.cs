@@ -1,18 +1,13 @@
 using SMIS.Domain.Common.BaseAbstract;
 using SMIS.Domain.Exceptions;
 using SMIS.Domain.Common.Interfaces;
-using SMIS.Domain.Entities.Localization;
 using SMIS.Domain.ValueObjects;
 
 namespace SMIS.Domain.Entities;
 
 public class Category : BaseSyncableAuditableEntity, IShopEntity
 {
-    // English/default value retained during the Category localization proof-of-concept
-    // so existing offline PowerSync writes remain backward-compatible.
     public string Name { get; private set; } = string.Empty;
-
-    public string NameLocalizedTextId { get; private set; } = string.Empty;
 
     public string? Code { get; private set; }
 
@@ -23,7 +18,6 @@ public class Category : BaseSyncableAuditableEntity, IShopEntity
     public string ShopId { get; private set; } = string.Empty;
 
     // Navigation Properties
-    public virtual LocalizedText NameLocalizedText { get; private set; } = null!;
     public virtual Shop Shop { get; set; } = null!;
     public virtual ICollection<Product> Products { get; set; } = new List<Product>();
 
@@ -56,23 +50,6 @@ public class Category : BaseSyncableAuditableEntity, IShopEntity
             throw new DomainValidationException("Category name cannot be empty.");
 
         Name = name.Trim();
-    }
-
-    public void SetNameLocalizedText(LocalizedText localizedText)
-    {
-        ArgumentNullException.ThrowIfNull(localizedText);
-
-        NameLocalizedText = localizedText;
-        NameLocalizedTextId = localizedText.Id;
-        Name = localizedText.DefaultValue;
-    }
-
-    public void SetNameLocalizedTextId(string localizedTextId)
-    {
-        if (string.IsNullOrWhiteSpace(localizedTextId))
-            throw new DomainValidationException("Category localized text ID cannot be empty.");
-
-        NameLocalizedTextId = localizedTextId.Trim();
     }
 
     public void SetShopId(

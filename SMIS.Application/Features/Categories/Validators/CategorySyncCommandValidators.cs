@@ -1,7 +1,5 @@
 using FluentValidation;
-using SMIS.Application.DTO.Localization;
 using SMIS.Application.Features.Categories.Commands;
-using SMIS.Domain.Entities.Localization;
 using SMIS.Domain.Services;
 
 namespace SMIS.Application.Features.Categories.Validators;
@@ -30,21 +28,6 @@ public sealed class CategorySyncCreateCommandValidator
 
                 RuleFor(x => x.Dto.Description)
                     .MaximumLength(500);
-
-                RuleFor(x => x.Dto.NameTranslations)
-                    .Must(CategoryTranslationValidationRules.HaveUniqueSupportedLanguages)
-                    .WithMessage("Category name translations may contain English and Dari once each.");
-
-                RuleForEach(x => x.Dto.NameTranslations)
-                    .ChildRules(translation =>
-                    {
-                        translation.RuleFor(x => x.LanguageId)
-                            .Must(CategoryTranslationValidationRules.BeSupportedLanguage)
-                            .WithMessage("Only English and Dari category translations are supported in this proof-of-concept.");
-
-                        translation.RuleFor(x => x.Value)
-                            .MaximumLength(200);
-                    });
 
                 RuleFor(x => x.Dto.ClientModifiedDate)
                     .Cascade(CascadeMode.Stop)
@@ -91,21 +74,6 @@ public sealed class CategorySyncUpdateCommandValidator
 
                 RuleFor(x => x.Dto.Description)
                     .MaximumLength(500);
-
-                RuleFor(x => x.Dto.NameTranslations)
-                    .Must(CategoryTranslationValidationRules.HaveUniqueSupportedLanguages)
-                    .WithMessage("Category name translations may contain English and Dari once each.");
-
-                RuleForEach(x => x.Dto.NameTranslations)
-                    .ChildRules(translation =>
-                    {
-                        translation.RuleFor(x => x.LanguageId)
-                            .Must(CategoryTranslationValidationRules.BeSupportedLanguage)
-                            .WithMessage("Only English and Dari category translations are supported in this proof-of-concept.");
-
-                        translation.RuleFor(x => x.Value)
-                            .MaximumLength(200);
-                    });
 
                 RuleFor(x => x.Dto.ClientModifiedDate)
                     .Cascade(CascadeMode.Stop)
@@ -161,21 +129,5 @@ public sealed class CategorySyncDeleteCommandValidator
 
         return DateTimeService.NormalizeUtc(value)
                <= DateTimeService.NowUtc.AddMinutes(5);
-    }
-}
-
-internal static class CategoryTranslationValidationRules
-{
-    public static bool BeSupportedLanguage(string languageId) =>
-        languageId == LanguageDefaults.EnglishId ||
-        languageId == LanguageDefaults.DariId;
-
-    public static bool HaveUniqueSupportedLanguages(
-        IEnumerable<LocalizedTextValueDto> translations
-    )
-    {
-        var ids = translations.Select(x => x.LanguageId).ToList();
-        return ids.All(BeSupportedLanguage) &&
-               ids.Distinct(StringComparer.Ordinal).Count() == ids.Count;
     }
 }
