@@ -128,17 +128,5 @@ namespace SMIS.Api.Controllers
         ) =>
             HandleResultResponseOld(await Mediator.Send(new ProductSyncDeleteCommand(id, dto)));
 
-        /// <summary>
-        /// Gets product changes made after a given time for offline synchronization.
-        /// </summary>
-        /// <remarks>
-        /// The result can include deleted records so an offline client can keep its local product list in sync.
-        /// </remarks>
-        /// <param name="changedSince">Return products changed after this date and time.</param>
-        [HttpGet("pull")]
-        public async Task<ActionResult<List<ProductDto>>> Pull(
-            [FromQuery] DateTime changedSince
-        ) =>
-            HandleResultResponseOld(await Mediator.Send(new ProductPullQuery(changedSince)));
     }
 }

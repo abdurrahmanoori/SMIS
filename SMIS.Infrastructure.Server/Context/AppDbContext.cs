@@ -41,14 +41,6 @@ public partial class AppDbContext : IdentityDbContext<ApplicationUser, Applicati
 
         foreach (var entityType in modelBuilder.Model.GetEntityTypes())
         {
-            var entityStateProperty = entityType.FindProperty(nameof(BaseEntity.EntityState));
-            if (entityStateProperty != null)
-            {
-                modelBuilder.Entity(entityType.ClrType)
-                    .Property(nameof(BaseEntity.EntityState))
-                    .HasConversion<string>();
-            }
-
             var lastModifiedProperty = entityType.FindProperty(nameof(BaseEntity.LastModifiedUtc));
             if (lastModifiedProperty != null)
             {

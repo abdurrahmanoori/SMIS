@@ -1,10 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
-using SMIS.Application.Identity.IServices;
 using SMIS.Application.Services;
 using SMIS.Domain.Common.Interfaces;
 using SMIS.Domain.Entities;
-using SMIS.Domain.Services;
 
 namespace SMIS.Infrastructure.Server.Interceptors;
 
@@ -15,15 +13,12 @@ namespace SMIS.Infrastructure.Server.Interceptors;
 /// </summary>
 public class EntityPKInterceptor : SaveChangesInterceptor
 {
-    private readonly ICurrentUser _currentUser;
     private readonly IPublicIdGenerator _publicIdGenerator;
 
     public EntityPKInterceptor(
-        ICurrentUser currentUser,
         IPublicIdGenerator publicIdGenerator
     )
     {
-        _currentUser = currentUser;
         _publicIdGenerator = publicIdGenerator;
     }
 
@@ -73,43 +68,7 @@ public class EntityPKInterceptor : SaveChangesInterceptor
                 }
             }
 
-            //if (entry.State == EntityStateEnum.Modified)
-            //{
-            //    entry.Entity.UpdatedDate = DateTimeService.NowUtc;
-            //    entry.Entity.UpdatedBy = _currentUser.GetId();
-            //    entry.Property(e => e.CreatedDate).IsModified = false; // Ensure CreatedDate is not updated
-            //}
-            //if (entry.State == EntityStateEnum.Deleted)
-            //{
-            //    //entry.State = EntityStateEnum.Modified; // Soft-delete the entity
-            //    //entry.Entity.IsDeleted = true;
-            //    //entry.Entity.DeletedAt = DateTimeService.NowUtc;
-            //    //entry.Entity.DeletedBy = _currentUser.GetId();
-            //}
         }
-
-        //foreach (var entry in context.ChangeTracker.Entries<AuditableEntity>())
-        //{
-        //    if (entry.State == EntityStateEnum.Added)
-        //    {
-        //        entry.Entity.CreatedAt = DateTimeService.NowUtc;
-        //        entry.Entity.CreatedBy = _currentUser.GetId();
-        //    }
-
-        //    if (entry.State == EntityStateEnum.Modified)
-        //    {
-        //        entry.Entity.UpdatedAt = DateTimeService.NowUtc;
-        //        entry.Entity.UpdatedBy = _currentUser.GetId();
-        //        entry.Property(e => e.CreatedAt).IsModified = false; // Ensure CreatedDate is not updated
-        //    }
-        //    if (entry.State == EntityStateEnum.Deleted)
-        //    {
-        //        entry.State = EntityStateEnum.Modified; // Soft-delete the entity
-        //        entry.Entity.IsDeleted = true;
-        //        entry.Entity.DeletedAt = DateTimeService.NowUtc;
-        //        entry.Entity.DeletedBy = _currentUser.GetId();
-        //    }
-        //}
 
         return await base.SavingChangesAsync(eventData, result, cancellationToken);
     }

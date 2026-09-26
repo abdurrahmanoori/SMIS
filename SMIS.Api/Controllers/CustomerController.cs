@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Authorization;
 namespace SMIS.Api.Controllers
 {
     /// <summary>
-    /// Manages customers and customer synchronization for offline clients.
+    /// Manages customers.
     /// </summary>
     [Route("api/[controller]")]
     [ApiController]
@@ -24,19 +24,6 @@ namespace SMIS.Api.Controllers
             CustomerCreateDto dto
         ) =>
             HandleResultResponseOld(await Mediator.Send(new CustomerCreateCommand(dto)));
-
-        /// <summary>
-        /// Creates or updates a customer sent by an offline client.
-        /// </summary>
-        /// <remarks>
-        /// The client sends its own ID and change time. Older client changes do not overwrite a newer server version.
-        /// Use the normal create endpoint for regular online requests.
-        /// </remarks>
-        [HttpPost("sync")]
-        public async Task<ActionResult<CustomerDto>> SyncCreate(
-            CustomerSyncCreateDto dto
-        ) =>
-            HandleResultResponseOld(await Mediator.Send(new CustomerSyncCreateCommand(dto)));
 
         /// <summary>
         /// Gets customers in pages.
@@ -79,19 +66,6 @@ namespace SMIS.Api.Controllers
             HandleResultResponseOld(await Mediator.Send(new CustomerUpdateCommand(id, dto)));
 
         /// <summary>
-        /// Applies a customer update sent by an offline client.
-        /// </summary>
-        /// <remarks>
-        /// If the server already has a newer change, the older client version is ignored instead of overwriting it.
-        /// </remarks>
-        [HttpPut("{id}/sync")]
-        public async Task<ActionResult<CustomerDto>> SyncUpdate(
-            string id,
-            CustomerSyncUpdateDto dto
-        ) =>
-            HandleResultResponseOld(await Mediator.Send(new CustomerSyncUpdateCommand(id, dto)));
-
-        /// <summary>
         /// Deletes a customer.
         /// </summary>
         [HttpDelete("{id}")]
@@ -100,30 +74,5 @@ namespace SMIS.Api.Controllers
         ) =>
             HandleResultResponseOld(await Mediator.Send(new CustomerDeleteCommand(id)));
 
-        /// <summary>
-        /// Applies a customer delete sent by an offline client.
-        /// </summary>
-        /// <remarks>
-        /// The delete uses the client's change time so an older offline request does not replace newer server data.
-        /// </remarks>
-        [HttpDelete("{id}/sync")]
-        public async Task<ActionResult<CustomerDto>> SyncDelete(
-            string id,
-            CustomerSyncDeleteDto dto
-        ) =>
-            HandleResultResponseOld(await Mediator.Send(new CustomerSyncDeleteCommand(id, dto)));
-
-        /// <summary>
-        /// Gets customer changes made after a given time for offline synchronization.
-        /// </summary>
-        /// <remarks>
-        /// The result can include records that were deleted after the supplied time so offline clients can remove them locally.
-        /// </remarks>
-        /// <param name="changedSince">Return customers changed after this date and time.</param>
-        [HttpGet("pull")]
-        public async Task<ActionResult<List<CustomerDto>>> Pull(
-            [FromQuery] DateTime changedSince
-        ) =>
-            HandleResultResponseOld(await Mediator.Send(new CustomerPullQuery(changedSince)));
     }
 }

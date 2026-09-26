@@ -184,14 +184,8 @@ public class MappingProfile : Profile
                 opt => opt.MapFrom(src => AsUtc(src.CreatedDate)))
             .ForMember(dest => dest.UpdatedDate,
                 opt => opt.MapFrom(src => AsUtc(src.UpdatedDate)))
-            .ForMember(dest => dest.ClientCreatedDate,
-                opt => opt.MapFrom(src => AsUtc(src.ClientCreatedDate)))
-            .ForMember(dest => dest.ClientModifiedDate,
-                opt => opt.MapFrom(src => AsUtc(src.ClientModifiedDate)))
             .ForMember(dest => dest.LastModifiedUtc,
-                opt => opt.MapFrom(src => AsUtc(src.LastModifiedUtc)))
-            .ForMember(dest => dest.ConflictModifiedUtc,
-                opt => opt.MapFrom(src => src.GetConflictModifiedUtc()));
+                opt => opt.MapFrom(src => AsUtc(src.LastModifiedUtc)));
         // ShopOwner mapping
         CreateMap<ShopOwner, ShopOwnerDto>().ReverseMap();
         // LoanAccount is a receivable linked to a sale. Product/unit details live on SaleLine.

@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Identity;
 using SMIS.Domain.Common.Interfaces;
 using SMIS.Domain.Entities.Localization;
-using SMIS.Domain.Enums;
 using SMIS.Domain.Exceptions;
 
 namespace SMIS.Domain.Entities.Identity.Entity;
@@ -15,7 +14,6 @@ public class ApplicationUser : IdentityUser<string>, IEntityPK
     public string LanguageId { get; private set; } = LanguageDefaults.EnglishId;
     public string? ShopName { get; set; }
     public int Version { get; set; }
-    public EntityStateEnum EntityState { get; set; }
     public DateTime LastModifiedUtc { get; set; }
 
     // Navigation Properties

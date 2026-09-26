@@ -99,18 +99,5 @@ namespace SMIS.Api.Controllers
         ) =>
             HandleResultResponseOld(await Mediator.Send(new ShopSyncDeleteCommand(id, dto)));
 
-        /// <summary>
-        /// Gets shop changes made after a given time for offline synchronization.
-        /// </summary>
-        /// <remarks>
-        /// Regular users receive changes for their own shop. Super administrators can receive shop changes more broadly.
-        /// Deleted shops can be included so offline clients can update their local state correctly.
-        /// </remarks>
-        /// <param name="changedSince">Return shops changed after this date and time.</param>
-        [HttpGet("pull")]
-        public async Task<ActionResult<List<ShopDto>>> Pull(
-            [FromQuery] DateTime changedSince
-        ) =>
-            HandleResultResponseOld(await Mediator.Send(new ShopPullQuery(changedSince)));
     }
 }

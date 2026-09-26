@@ -144,18 +144,5 @@ namespace SMIS.Api.Controllers
         ) =>
             HandleResultResponseOld(await Mediator.Send(new CategorySyncDeleteCommand(id, dto)));
 
-        /// <summary>
-        /// Gets category changes made after a given time for offline synchronization.
-        /// </summary>
-        /// <remarks>
-        /// This includes changed records that may normally be hidden by soft-delete filtering, so an offline client
-        /// can also learn that a category was deleted.
-        /// </remarks>
-        /// <param name="changedSince">Return categories changed after this date and time.</param>
-        [HttpGet("pull")]
-        public async Task<ActionResult<List<CategoryDto>>> Pull(
-            [FromQuery] DateTime changedSince
-        )
-            => HandleResultResponseOld(await Mediator.Send(new CategoryPullQuery(changedSince)));
     }
 }

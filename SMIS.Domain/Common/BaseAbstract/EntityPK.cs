@@ -1,6 +1,5 @@
 using Microsoft.EntityFrameworkCore;
 using SMIS.Domain.Common.Interfaces;
-using SMIS.Domain.Enums;
 using System.ComponentModel.DataAnnotations;
 using SMIS.Domain.Services;
 
@@ -10,7 +9,6 @@ namespace SMIS.Domain.Common.BaseAbstract
     {
         [Key] public string Id { get; set; } = Guid.NewGuid().ToString();
         public int Version { get; set; } = 0; // increment on every change
-        public EntityStateEnum EntityState { get; set; } = EntityStateEnum.Added;
         public DateTime LastModifiedUtc { get; set; } = DateTimeService.NowUtc;
     }
 }

@@ -100,16 +100,5 @@ namespace SMIS.Api.Controllers
             UnitOfMeasureSyncDeleteDto dto
         ) => HandleResultResponseOld(await Mediator.Send(new UnitOfMeasureSyncDeleteCommand(id, dto)));
 
-        /// <summary>
-        /// Gets unit-of-measure changes made after a given time for offline synchronization.
-        /// </summary>
-        /// <remarks>
-        /// Deleted records can be returned so an offline client can remove them from its local data.
-        /// </remarks>
-        /// <param name="changedSince">Return units changed after this date and time.</param>
-        [HttpGet("pull")]
-        public async Task<ActionResult<List<UnitOfMeasureDto>>> Pull(
-            [FromQuery] DateTime changedSince
-        ) => HandleResultResponseOld(await Mediator.Send(new UnitOfMeasurePullQuery(changedSince)));
     }
 }

@@ -50,8 +50,6 @@ namespace SMIS.Application.Features.Customers.Commands
             entity.SetDistrictId(request.CustomerCreateDto.DistrictId);
             if (request.CustomerCreateDto.IsActive) entity.Activate();
             else entity.Deactivate();
-            entity.ClearClientModificationMetadata();
-
             await _unitOfWork.SaveChanges(cancellationToken);
 
             var dto = _mapper.Map<CustomerDto>(entity);

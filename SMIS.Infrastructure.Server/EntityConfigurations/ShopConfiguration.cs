@@ -11,7 +11,6 @@ namespace SMIS.Infrastructure.Server.EntityConfigurations
         )
         {
             builder.ConfigureAuditUserRelationships();
-            builder.IgnoreLegacySyncMetadata();
             builder.ToTable(nameof(Shop));
 
             builder.HasKey(s => s.Id);

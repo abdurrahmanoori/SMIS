@@ -7,7 +7,7 @@ using SMIS.Domain.Services;
 
 namespace SMIS.Domain.Entities;
 
-public class Customer : BaseSyncableAuditableEntity, IShopEntity
+public class Customer : BaseAuditableEntity, IShopEntity
 {
     public string FirstName { get; private set; } = string.Empty;
     public string? LastName { get; private set; }
@@ -184,11 +184,4 @@ public class Customer : BaseSyncableAuditableEntity, IShopEntity
         Deactivate();
     }
 
-    public override void Restore()
-    {
-        IsDeleted = false;
-        DeletedAt = null;
-        DeletedBy = null;
-        Activate();
-    }
 }

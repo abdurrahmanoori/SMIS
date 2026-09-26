@@ -61,8 +61,8 @@ namespace SMIS.Infrastructure.Server.Interceptors
                 {
                     // Convert physical delete to soft delete so the row is never removed.
                     // Flipping state to Modified causes EF Core to issue UPDATE instead of DELETE.
-                    // LastModifiedUtc is bumped so the pull endpoint's changedSince cursor
-                    // picks up this record and propagates the deletion to all other clients.
+                    // LastModifiedUtc is bumped so replication publishes the tombstone
+                    // and other clients can observe the deletion.
                     entry.State = EntityState.Modified;
 
                     softDeletable.IsDeleted = true;
