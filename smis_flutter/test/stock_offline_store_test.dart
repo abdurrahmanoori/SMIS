@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:dio/dio.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:powersync/powersync.dart';
 import 'package:smis_flutter/data/data_exception.dart';
@@ -8,6 +9,8 @@ import 'package:smis_flutter/data/stock_api.dart';
 import 'package:smis_flutter/data/stock_offline_store.dart';
 
 class _StockApiStub extends StockApi {
+  _StockApiStub() : super(dio: Dio());
+
   bool online = false;
   final sent = <StockJson>[];
 
