@@ -58,4 +58,15 @@ const appPowerSyncSchema = Schema([
     Column.text('end_date'),
     Column.text('last_modified_utc'),
   ], trackPreviousValues: _trackTimestamp),
+  Table.localOnly('stock_cache', [
+    Column.text('payload'),
+    Column.text('cached_at_utc'),
+  ]),
+  Table.localOnly('stock_outbox', [
+    Column.text('kind'),
+    Column.text('payload'),
+    Column.text('created_at_utc'),
+    Column.text('state'),
+    Column.text('error'),
+  ]),
 ]);

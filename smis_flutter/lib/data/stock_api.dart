@@ -35,6 +35,64 @@ class StockApi {
   final Dio _dio;
   static const _uuid = Uuid();
 
+  /// Dispatches a previously persisted command without generating a new key.
+  Future<void> sendQueued(String kind, StockJson payload) => _request(() async {
+    final path = switch (kind) {
+      'receipt' => AppConfig.stockBatchEndpoint,
+      'transfer' => AppConfig.inventoryEndpoint + '/transfers',
+      'adjustment' => AppConfig.inventoryEndpoint + '/adjustments',
+      'damage' => AppConfig.inventoryEndpoint + '/damaged-stock',
+      'expiration' => AppConfig.inventoryEndpoint + '/expired-stock',
+      'customer-return' => AppConfig.inventoryEndpoint + '/customer-returns',
+      'supplier-return' => AppConfig.inventoryEndpoint + '/supplier-returns',
+      'count-complete' => AppConfig.inventoryEndpoint +
+          '/stock-counts/' + (payload['sessionId'] as String) + '/complete',
+      'batch-update' => AppConfig.stockBatchEndpoint +
+          '/' + (payload['batchId'] as String),
+      'reverse' => AppConfig.stockMovementEndpoint +
+          '/' + (payload['movementId'] as String) + '/reverse',
+      _ => throw ArgumentError.value(kind, 'kind', 'Unknown stock command'),
+    };
+    final body = Map<String, dynamic>.from(payload)
+      ..remove('sessionId')
+      ..remove('batchId')
+      ..remove('movementId');
+    if (kind == 'batch-update') {
+      body.remove('idempotencyKey');
+      await _dio.put<Object?>(path, data: body);
+      return;
+    }
+    if (kind == 'reverse') {
+      try {
+        await _dio.post<Object?>(path);
+      } on DioException catch (error) {
+        final response = error.response?.data;
+        if (error.response?.statusCode == 400 &&
+            response is List &&
+            response.any((item) => item is Map &&
+                (item['code'] ?? item['Code']) == 'MovementAlreadyReversed')) {
+          return;
+        }
+        rethrow;
+      }
+      return;
+    }
+    try {
+      await _dio.post<Object?>(path, data: body);
+    } on DioException catch (error) {
+      final response = error.response?.data;
+      // A response can be lost after the server commits. The backend records
+      // the stable idempotency key and rejects a replay with this exact code.
+      if (error.response?.statusCode == 400 &&
+          response is List &&
+          response.any((item) => item is Map &&
+              (item['code'] ?? item['Code']) == 'DuplicateOperation')) {
+        return;
+      }
+      rethrow;
+    }
+  });
+
   Future<T> _request<T>(Future<T> Function() action) async {
     try {
       return await action();
