@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/foundation.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
@@ -5,6 +7,8 @@ import 'package:powersync/powersync.dart';
 
 import '../../services/auth_session_store.dart';
 import '../../services/date_time_service.dart';
+import '../stock_api.dart';
+import '../stock_offline_store.dart';
 import 'app_powersync_connector.dart';
 import 'app_powersync_schema.dart';
 import 'app_powersync_write_api.dart';
@@ -15,11 +19,16 @@ class AppPowerSyncDatabase {
 
   final AuthSessionStore _sessionStore;
   final DateTimeService _dateTimeService;
+  late final StockOfflineStore stockStore = StockOfflineStore(
+    databaseForCurrentSession,
+    StockApi(sessionStore: _sessionStore),
+  );
   PowerSyncDatabase? _database;
   String? _databaseContextKey;
   String? _connectedContextKey;
   Future<void>? _switchFuture;
   Future<void>? _connectFuture;
+  StreamSubscription<SyncStatus>? _stockSyncSubscription;
 
   Future<PowerSyncDatabase> databaseForCurrentSession() async {
     final session = await _sessionStore.read();
@@ -64,14 +73,28 @@ class AppPowerSyncDatabase {
       ),
     );
     _connectedContextKey = contextKey;
+    await _stockSyncSubscription?.cancel();
+    var wasConnected = false;
+    _stockSyncSubscription = database.statusStream.listen((status) {
+      if (status.connected && !wasConnected) {
+        unawaited(stockStore.syncNow().catchError((Object _) {}));
+      }
+      wasConnected = status.connected;
+    });
+    if (database.currentStatus.connected) {
+      unawaited(stockStore.syncNow().catchError((Object _) {}));
+    }
   }
 
   Future<int> pendingCountForCurrentContext() async {
     final database = await databaseForCurrentSession();
-    return (await database.getUploadQueueStats()).count;
+    return (await database.getUploadQueueStats()).count +
+        await stockStore.pendingCount();
   }
 
   Future<void> _switchToUser(String userId, String shopId) async {
+    await _stockSyncSubscription?.cancel();
+    _stockSyncSubscription = null;
     final existing = _database;
     if (existing != null) await existing.close();
 
@@ -119,6 +142,8 @@ class AppPowerSyncDatabase {
   }
 
   Future<void> close() async {
+    await _stockSyncSubscription?.cancel();
+    _stockSyncSubscription = null;
     await _database?.close();
     _database = null;
     _databaseContextKey = null;

@@ -1,14 +1,18 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import '../controllers/auth_controller.dart';
+import '../controllers/app_dependencies.dart';
 import '../controllers/product_controller.dart';
 import '../controllers/product_unit_controller.dart';
 import '../controllers/unit_of_measure_controller.dart';
 import '../data/data_exception.dart';
 import '../data/stock_api.dart';
+import '../data/stock_offline_store.dart';
 import '../l10n/app_localizations.dart';
 import '../models/product.dart';
 import '../models/product_unit.dart';
@@ -19,22 +23,33 @@ import '../widgets/app_error_view.dart';
 import '../widgets/home_action.dart';
 
 final stockApiProvider = Provider<StockApi>((ref) => StockApi());
+final stockStoreProvider = Provider<StockOfflineStore>(
+  (ref) => ref.watch(appPowerSyncDatabaseProvider).stockStore,
+);
+final stockPendingCountProvider = FutureProvider.autoDispose<int>(
+  (ref) => ref.watch(stockStoreProvider).pendingCount(),
+);
 
 class StockScreen extends ConsumerWidget {
   const StockScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final shopId = ref.watch(
-      authControllerProvider.select((state) => state.session?.shopId),
+    final session = ref.watch(
+      authControllerProvider.select((state) => state.session),
     );
-    return _StockContent(key: ValueKey(shopId), shopId: shopId);
+    return _StockContent(
+      key: ValueKey('${session?.userId}/${session?.shopId}'),
+      shopId: session?.shopId,
+      userId: session?.userId,
+    );
   }
 }
 
 class _StockContent extends ConsumerStatefulWidget {
-  const _StockContent({super.key, required this.shopId});
+  const _StockContent({super.key, required this.shopId, required this.userId});
   final String? shopId;
+  final String? userId;
 
   @override
   ConsumerState<_StockContent> createState() => _StockContentState();
@@ -47,15 +62,35 @@ class _StockContentState extends ConsumerState<_StockContent> {
   String _report = 'current-stock';
   bool _busy = false;
   String? _countId;
+  StreamSubscription<dynamic>? _cacheSubscription;
+  Object? _syncError;
 
   @override
   void initState() {
     super.initState();
     _data = _load();
     _restoreCount();
+    _watchCache();
+    _syncInBackground();
   }
 
-  String get _countStorageKey => 'stock-count-' + (widget.shopId ?? '');
+  Future<void> _watchCache() async {
+    final db = await ref.read(appPowerSyncDatabaseProvider).databaseForCurrentSession();
+    if (!mounted) return;
+    _cacheSubscription = db.watch(
+      'SELECT id, cached_at_utc FROM stock_cache',
+      throttle: const Duration(milliseconds: 300),
+    ).skip(1).listen((_) => _refreshLocal());
+  }
+
+  @override
+  void dispose() {
+    _cacheSubscription?.cancel();
+    super.dispose();
+  }
+
+  String get _countStorageKey =>
+      'stock-count-${widget.userId ?? ''}-${widget.shopId ?? ''}';
 
   Future<void> _restoreCount() async {
     final id = await _storage.read(key: _countStorageKey);
@@ -64,47 +99,95 @@ class _StockContentState extends ConsumerState<_StockContent> {
     }
   }
 
+  Future<void> _discard(String id) async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Discard failed stock action?'),
+        content: const Text(
+          'This removes the local command. Review the confirmed stock balance first.',
+        ),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(context, false),
+            child: const Text('Keep')),
+          FilledButton(onPressed: () => Navigator.pop(context, true),
+            child: const Text('Discard')),
+        ],
+      ),
+    );
+    if (confirmed == true && mounted) {
+      await _run(() => _store.discard(id));
+    }
+  }
+
   StockApi get _api => ref.read(stockApiProvider);
+  StockOfflineStore get _store => ref.read(stockStoreProvider);
 
   Future<_StockData> _load() async {
     if (widget.shopId == null) {
       throw const AuthenticationException('Sign in to view stock.');
     }
-    final results = await Future.wait<Object>([
-      _api.batches(),
+    final results = await Future.wait<Object?>([
+      _store.cachedList('batches'),
       ref.read(productLookupProvider.future),
       ref.read(productUnitLookupProvider.future),
       ref.read(unitOfMeasureLookupProvider.future),
       if (_tab == 1)
-        _report == 'valuation'
-            ? _api.valuation()
+          _report == 'valuation'
+            ? _store.cachedObject('valuation')
             : _report == 'reconciliation'
-            ? _api.reconciliation()
-            : _api.report(_report),
-      if (_tab == 2) _api.report('movements', query: {'limit': 250}),
+            ? _store.cachedList('reconciliation')
+            : _store.cachedList(_report),
+      if (_tab == 2) _store.cachedList('movements'),
+      _store.pending(),
     ]);
     return _StockData(
-      batches: results[0] as List<StockJson>,
+      batches: results[0] as List<StockJson>? ?? const [],
+      hasCache: results[0] != null,
       products: results[1] as List<Product>,
       units: results[2] as List<ProductUnit>,
       measures: results[3] as List<UnitOfMeasure>,
       report: _tab == 1 ? results[4] : null,
-      movements: _tab == 2 ? results[4] as List<StockJson> : const [],
+      movements: _tab == 2 ? results[4] as List<StockJson>? ?? const [] : const [],
+      pending: results.last as List<PendingStockCommand>,
     );
   }
 
-  void _refresh() => setState(() => _data = _load());
+  void _refreshLocal() {
+    if (mounted) setState(() => _data = _load());
+  }
 
-  Future<bool> _run(Future<void> Function() action) async {
+  Future<void> _syncInBackground() async {
+    try {
+      await _store.syncNow();
+      if (mounted) setState(() => _syncError = null);
+    } catch (error) {
+      if (mounted) setState(() => _syncError = error);
+    }
+    _refreshLocal();
+  }
+
+  Future<void> _refresh() async {
+    await _syncInBackground();
+    if (_syncError != null && mounted) {
+      AppErrorNotification.show(context, _syncError!);
+    }
+  }
+
+  Future<bool> _run(Future<void> Function() action, {bool queued = false}) async {
     if (_busy) return false;
     setState(() => _busy = true);
     try {
       await action();
       if (!mounted) return false;
-      _refresh();
+      ref.invalidate(stockPendingCountProvider);
+      _refreshLocal();
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(context.l10n.text('Stock updated.'))),
+        SnackBar(content: Text(context.l10n.text(queued
+            ? 'Stock action saved locally. It will sync when connected.'
+            : 'Stock updated.'))),
       );
+      if (queued) unawaited(_syncInBackground());
       return true;
     } catch (error, stackTrace) {
       if (mounted) AppErrorNotification.show(context, error, stackTrace);
@@ -161,11 +244,17 @@ class _StockContentState extends ConsumerState<_StockContent> {
             return const Center(child: CircularProgressIndicator());
           }
           final data = snapshot.data!;
-          return switch (_tab) {
+          return Column(children: [
+            if (!data.hasCache)
+              const ListTile(title: Text('No cached stock yet. Connect to load stock.')),
+            if (_syncError != null)
+              const ListTile(title: Text('Offline: showing last saved stock data.')),
+            Expanded(child: switch (_tab) {
             0 => _batches(data),
             1 => _reports(data),
             _ => _movements(data),
-          };
+          }),
+          ]);
         },
       ),
       if (_busy) const LinearProgressIndicator(),
@@ -176,7 +265,7 @@ class _StockContentState extends ConsumerState<_StockContent> {
     Padding(
       padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
       child: Text(context.l10n.text(
-        'Stock transactions require a connection and synced products and units.',
+        'Stock actions are saved locally; confirmed balances refresh after upload.',
       )),
     ),
     Padding(
@@ -206,11 +295,30 @@ class _StockContentState extends ConsumerState<_StockContent> {
         onTap: () => _openCount(_countId!),
       ),
     Expanded(child: RefreshIndicator(
-      onRefresh: () async { _refresh(); await _data; },
+      onRefresh: _refresh,
       child: ListView.builder(
-        itemCount: data.batches.length,
+        itemCount: data.pending.length + data.batches.length,
         itemBuilder: (context, index) {
-          final batch = data.batches[index];
+          if (index < data.pending.length) {
+            final command = data.pending[index];
+            return ListTile(
+              leading: Icon(command.state == 'failed'
+                  ? Icons.error_outline : Icons.cloud_upload_outlined),
+              title: Text('${command.kind} • ${command.state}'),
+              subtitle: command.error == null ? null : Text(command.error!),
+              trailing: command.state == 'failed'
+                  ? PopupMenuButton<String>(
+                      onSelected: (choice) => choice == 'retry'
+                          ? _run(() => _store.retry(command.id))
+                          : _discard(command.id),
+                      itemBuilder: (_) => const [
+                        PopupMenuItem(value: 'retry', child: Text('Retry')),
+                        PopupMenuItem(value: 'discard', child: Text('Discard failed action')),
+                      ],
+                    ) : null,
+            );
+          }
+          final batch = data.batches[index - data.pending.length];
           final product = data.product(stockText(batch, 'productId'));
           return ListTile(
             title: Text(product?.name ?? stockText(batch, 'productId')),
@@ -251,6 +359,9 @@ class _StockContentState extends ConsumerState<_StockContent> {
   ]);
 
   Widget _reportList(Object? report) {
+    if (report == null) {
+      return const Center(child: Text('No saved report yet. Connect to download it.'));
+    }
     if (report is StockJson) {
       final items = (report['products'] as List? ?? []).cast<Map>();
       return ListView(children: [
@@ -373,12 +484,16 @@ class _StockContentState extends ConsumerState<_StockContent> {
       }),
     );
     if (accepted == true && mounted) {
-      await _run(() => _api.receive(
-        productId: productId!, productUnitId: unitId!,
-        quantity: num.parse(quantity.text), unitCostBase: int.parse(cost.text),
-        batchNumber: batchNumber.text.trim().isEmpty ? null : batchNumber.text.trim(),
-        expirationDate: expiry?.toUtc().toIso8601String(),
-      ));
+      await _run(() async {
+        await _store.enqueue('receipt', {
+          'productId': productId!,
+          'receivedProductUnitId': unitId!,
+          'receivedQuantity': num.parse(quantity.text),
+          'unitCostBase': int.parse(cost.text),
+          'batchNumber': batchNumber.text.trim().isEmpty ? null : batchNumber.text.trim(),
+          'expirationDate': expiry?.toUtc().toIso8601String(),
+        });
+      }, queued: true);
     }
     quantity.dispose(); cost.dispose(); batchNumber.dispose();
   }
@@ -428,9 +543,14 @@ class _StockContentState extends ConsumerState<_StockContent> {
       )),
     );
     if (accepted == true && mounted) {
-      await _run(() => _api.updateBatch(stockText(batch, 'id'),
-        batchNumber: number.text.trim(), status: status,
-        expirationDate: expiry?.toUtc().toIso8601String()));
+      await _run(() async {
+        await _store.enqueue('batch-update', {
+          'batchId': stockText(batch, 'id'),
+          'batchNumber': number.text.trim(),
+          'status': status,
+          'expirationDate': expiry?.toUtc().toIso8601String(),
+        });
+      }, queued: true);
     }
     number.dispose();
   }
@@ -496,13 +616,30 @@ class _StockContentState extends ConsumerState<_StockContent> {
       )),
     );
     if (accepted == true && mounted) {
-      await _run(() => path == 'transfers'
-          ? _api.transfer(sourceId: stockText(batch, 'id'),
-              destinationId: destination!, productUnitId: unitId,
-              quantity: num.parse(quantity.text))
-          : _api.postBatchOperation(path: path, batchId: stockText(batch, 'id'),
-              productUnitId: unitId, quantity: num.parse(quantity.text),
-              direction: path == 'adjustments' ? direction : null));
+      final kind = switch (path) {
+        'transfers' => 'transfer',
+        'adjustments' => 'adjustment',
+        'damaged-stock' => 'damage',
+        'expired-stock' => 'expiration',
+        'customer-returns' => 'customer-return',
+        'supplier-returns' => 'supplier-return',
+        _ => throw StateError('Unsupported stock operation: $path'),
+      };
+      await _run(() async {
+        await _store.enqueue(kind, path == 'transfers'
+            ? {
+                'sourceStockBatchId': stockText(batch, 'id'),
+                'destinationStockBatchId': destination!,
+                'productUnitId': unitId,
+                'quantityEntered': num.parse(quantity.text),
+              }
+            : {
+                'stockBatchId': stockText(batch, 'id'),
+                'productUnitId': unitId,
+                'quantityEntered': num.parse(quantity.text),
+                if (path == 'adjustments') 'direction': direction,
+              });
+      }, queued: true);
     }
     quantity.dispose();
   }
@@ -514,6 +651,7 @@ class _StockContentState extends ConsumerState<_StockContent> {
             .map((b) => stockText(b, 'id')).toList(),
       );
       _countId = stockText(session, 'id');
+      await _store.cacheCount(session);
       await _storage.write(key: _countStorageKey, value: _countId);
     });
     if (_countId != null && _countId!.isNotEmpty && mounted) {
@@ -523,7 +661,8 @@ class _StockContentState extends ConsumerState<_StockContent> {
 
   Future<void> _openCount(String id) async {
     try {
-      final session = await _api.getCount(id);
+      final session = await _store.cachedObject('count/' + id) ??
+          await _api.getCount(id);
       if (!mounted) return;
       final lines = (session['lines'] as List? ?? []).map((e) => Map<String, dynamic>.from(e as Map)).toList();
       final controllers = [
@@ -556,10 +695,15 @@ class _StockContentState extends ConsumerState<_StockContent> {
         if (values.any((v) => v == null || v < 0)) {
           AppErrorNotification.show(context, const ValidationException('Enter a non-negative count for every batch.'));
         } else {
-          final saved = await _run(() => _api.completeCount(id, [
-            for (var i = 0; i < lines.length; i++)
-              {'stockBatchId': lines[i]['stockBatchId'], 'countedQuantityBase': values[i]},
-          ]));
+          final saved = await _run(() async {
+            await _store.enqueue('count-complete', {
+              'sessionId': id,
+              'counts': [
+                for (var i = 0; i < lines.length; i++)
+                  {'stockBatchId': lines[i]['stockBatchId'], 'countedQuantityBase': values[i]},
+              ],
+            });
+          }, queued: true);
           if (saved) {
             _countId = null;
             await _storage.delete(key: _countStorageKey);
@@ -601,7 +745,11 @@ class _StockContentState extends ConsumerState<_StockContent> {
         ],
       ));
     if (confirm == true && mounted) {
-      await _run(() => _api.reverse(stockText(movement, 'id')));
+      await _run(() async {
+        await _store.enqueue('reverse', {
+          'movementId': stockText(movement, 'id'),
+        });
+      }, queued: true);
     }
   }
 }
@@ -609,9 +757,11 @@ class _StockContentState extends ConsumerState<_StockContent> {
 class _StockData {
   const _StockData({
     required this.batches, required this.products, required this.units,
-    required this.measures,
+    required this.measures, required this.hasCache, required this.pending,
     required this.report, required this.movements,
   });
+  final bool hasCache;
+  final List<PendingStockCommand> pending;
   final List<StockJson> batches;
   final List<Product> products;
   final List<ProductUnit> units;

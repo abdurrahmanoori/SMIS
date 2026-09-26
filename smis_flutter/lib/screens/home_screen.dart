@@ -19,6 +19,7 @@ import 'product_prices_screen.dart';
 import 'products_screen.dart';
 import 'product_units_screen.dart';
 import 'shops_screen.dart';
+import 'stock_screen.dart';
 import 'unit_of_measures_screen.dart';
 
 class HomeScreen extends ConsumerWidget {
@@ -40,13 +41,15 @@ class HomeScreen extends ConsumerWidget {
     final productUnitPendingCount = productUnitState.value?.pendingCount ?? 0;
     final productPriceState = ref.watch(productPriceControllerProvider);
     final productPricePendingCount = productPriceState.value?.pendingCount ?? 0;
+    final stockPendingCount = ref.watch(stockPendingCountProvider).value ?? 0;
     final totalPendingCount =
         pendingCount +
         unitPendingCount +
         shopPendingCount +
         productPendingCount +
         productUnitPendingCount +
-        productPricePendingCount;
+        productPricePendingCount +
+        stockPendingCount;
 
     // HomeScreen is only shown by the authentication gate after a session is
     // restored or created, but keep this defensive fallback for state changes.
@@ -195,6 +198,25 @@ class HomeScreen extends ConsumerWidget {
                             }),
                       onTap: () => _openProductPrices(context),
                     );
+                    final stockCard = _HomeActionCard(
+                      icon: Icons.warehouse_outlined,
+                      title: l10n.text('Stock management'),
+                      description: stockPendingCount == 0
+                          ? l10n.text('View saved stock and inventory history.')
+                          : l10n.text('{count} stock actions waiting to sync.', {
+                              'count': stockPendingCount,
+                            }),
+                      badgeLabel: stockPendingCount == 0
+                          ? null
+                          : l10n.text('{count} pending', {
+                              'count': stockPendingCount,
+                            }),
+                      onTap: () => Navigator.of(context).push(
+                        MaterialPageRoute<void>(
+                          builder: (_) => const StockScreen(),
+                        ),
+                      ),
+                    );
                     return wideLayout
                         ? Wrap(
                             spacing: 16,
@@ -226,6 +248,10 @@ class HomeScreen extends ConsumerWidget {
                               ),
                               SizedBox(
                                 width: (constraints.maxWidth - 16) / 2,
+                                child: stockCard,
+                              ),
+                              SizedBox(
+                                width: (constraints.maxWidth - 16) / 2,
                                 child: profileCard,
                               ),
                             ],
@@ -243,6 +269,8 @@ class HomeScreen extends ConsumerWidget {
                               productUnitsCard,
                               const SizedBox(height: 16),
                               productPricesCard,
+                              const SizedBox(height: 16),
+                              stockCard,
                               const SizedBox(height: 16),
                               profileCard,
                             ],
