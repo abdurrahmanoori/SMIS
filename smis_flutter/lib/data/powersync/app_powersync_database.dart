@@ -29,6 +29,7 @@ class AppPowerSyncDatabase {
   Future<void>? _switchFuture;
   Future<void>? _connectFuture;
   StreamSubscription<SyncStatus>? _stockSyncSubscription;
+  Timer? _stockRetryTimer;
 
   Future<PowerSyncDatabase> databaseForCurrentSession() async {
     final session = await _sessionStore.read();
@@ -74,12 +75,18 @@ class AppPowerSyncDatabase {
     );
     _connectedContextKey = contextKey;
     await _stockSyncSubscription?.cancel();
+    _stockRetryTimer?.cancel();
     var wasConnected = false;
     _stockSyncSubscription = database.statusStream.listen((status) {
       if (status.connected && !wasConnected) {
         unawaited(stockStore.syncNow().catchError((Object _) {}));
       }
       wasConnected = status.connected;
+    });
+    _stockRetryTimer = Timer.periodic(const Duration(seconds: 30), (_) async {
+      if (!database.currentStatus.connected) return;
+      if (await stockStore.retryableCount() == 0) return;
+      unawaited(stockStore.syncNow().catchError((Object _) {}));
     });
     if (database.currentStatus.connected) {
       unawaited(stockStore.syncNow().catchError((Object _) {}));
@@ -95,6 +102,8 @@ class AppPowerSyncDatabase {
   Future<void> _switchToUser(String userId, String shopId) async {
     await _stockSyncSubscription?.cancel();
     _stockSyncSubscription = null;
+    _stockRetryTimer?.cancel();
+    _stockRetryTimer = null;
     final existing = _database;
     if (existing != null) await existing.close();
 
@@ -144,6 +153,8 @@ class AppPowerSyncDatabase {
   Future<void> close() async {
     await _stockSyncSubscription?.cancel();
     _stockSyncSubscription = null;
+    _stockRetryTimer?.cancel();
+    _stockRetryTimer = null;
     await _database?.close();
     _database = null;
     _databaseContextKey = null;
