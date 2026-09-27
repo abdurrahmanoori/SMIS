@@ -1,11 +1,22 @@
-name: CI/CD Pipeline
+name: API Build Artifact
 
 on:
   push:
     branches: [ main ]
+    paths:
+      - 'SMIS.Api/**'
+      - 'SMIS.Application/**'
+      - 'SMIS.Domain/**'
+      - 'SMIS.Infrastructure.Server/**'
+      - 'SMIS.Test/**'
+      - 'Directory.Packages.props'
+      - 'appsettings.shared.json'
+      - 'SMIS.sln'
+      - '.github/workflows/ci-cd.yml'
+  workflow_dispatch:
 
 jobs:
-  build-test-publish-api:
+  build-api-artifact:
     runs-on: ubuntu-latest
 
     steps:

@@ -10,7 +10,11 @@
             {
                 options.AddPolicy("AllowReactApp", policy =>
                 {
-                    policy.SetIsOriginAllowed(origin => new Uri(origin).Host == "localhost")
+                    policy.SetIsOriginAllowed(origin =>
+                        Uri.TryCreate(origin, UriKind.Absolute, out var uri) &&
+                        (uri.Host == "localhost" ||
+                         (uri.Scheme == Uri.UriSchemeHttp &&
+                          uri.Host.Equals("smis-flutter-web.runasp.net", StringComparison.OrdinalIgnoreCase))))
                         .AllowAnyMethod()
                         .AllowAnyHeader()
                         .AllowCredentials();
