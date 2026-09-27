@@ -74,6 +74,15 @@ class StockOfflineStore {
     return row['count'] as int;
   }
 
+  Future<int> retryableCount() async {
+    final db = await _database();
+    final row = await db.get(
+      'SELECT COUNT(*) AS count FROM stock_outbox WHERE state = ?',
+      ['pending'],
+    );
+    return row['count'] as int;
+  }
+
   Future<void> retry(String id) async {
     final db = await _database();
     await db.execute(
