@@ -4,10 +4,6 @@ using SMIS.Domain.Services;
 
 namespace SMIS.Application.Features.Categories.Validators;
 
-// ------------------------------------------------------------
-// Create Validator
-// ------------------------------------------------------------
-
 public sealed class CategorySyncCreateCommandValidator
     : AbstractValidator<CategorySyncCreateCommand>
 {
@@ -21,8 +17,7 @@ public sealed class CategorySyncCreateCommandValidator
                     .Cascade(CascadeMode.Stop)
                     .NotEmpty()
                     .Must(BeValidGuid)
-                    .WithMessage(
-                        "Category sync ID must be a valid GUID.");
+                    .WithMessage("Category sync ID must be a valid GUID.");
 
                 RuleFor(x => x.Dto.Name)
                     .NotEmpty()
@@ -38,19 +33,14 @@ public sealed class CategorySyncCreateCommandValidator
                     .Cascade(CascadeMode.Stop)
                     .NotEmpty()
                     .Must(BeReasonableUtcTimestamp)
-                    .WithMessage(
-                        "ClientModifiedDate must contain a valid UTC timestamp.");
+                    .WithMessage("ClientModifiedDate must contain a valid UTC timestamp.");
             });
     }
 
-    private static bool BeValidGuid(
-        string value
-    ) =>
+    private static bool BeValidGuid(string value) =>
         Guid.TryParse(value, out _);
 
-    private static bool BeReasonableUtcTimestamp(
-        DateTime value
-    )
+    private static bool BeReasonableUtcTimestamp(DateTime value)
     {
         if (value == default)
             return false;
@@ -58,12 +48,7 @@ public sealed class CategorySyncCreateCommandValidator
         return DateTimeService.NormalizeUtc(value)
                <= DateTimeService.NowUtc.AddMinutes(5);
     }
-
 }
-
-// ------------------------------------------------------------
-// Update Validator
-// ------------------------------------------------------------
 
 public sealed class CategorySyncUpdateCommandValidator
     : AbstractValidator<CategorySyncUpdateCommand>
@@ -74,8 +59,7 @@ public sealed class CategorySyncUpdateCommandValidator
             .Cascade(CascadeMode.Stop)
             .NotEmpty()
             .Must(BeValidGuid)
-            .WithMessage(
-                "Category sync ID must be a valid GUID.");
+            .WithMessage("Category sync ID must be a valid GUID.");
 
         RuleFor(x => x.Dto)
             .NotNull()
@@ -95,20 +79,14 @@ public sealed class CategorySyncUpdateCommandValidator
                     .Cascade(CascadeMode.Stop)
                     .NotEmpty()
                     .Must(BeReasonableUtcTimestamp)
-                    .WithMessage(
-                        "ClientModifiedDate must contain a valid UTC timestamp.");
-
+                    .WithMessage("ClientModifiedDate must contain a valid UTC timestamp.");
             });
     }
 
-    private static bool BeValidGuid(
-        string value
-    ) =>
+    private static bool BeValidGuid(string value) =>
         Guid.TryParse(value, out _);
 
-    private static bool BeReasonableUtcTimestamp(
-        DateTime value
-    )
+    private static bool BeReasonableUtcTimestamp(DateTime value)
     {
         if (value == default)
             return false;
@@ -117,10 +95,6 @@ public sealed class CategorySyncUpdateCommandValidator
                <= DateTimeService.NowUtc.AddMinutes(5);
     }
 }
-
-// ------------------------------------------------------------
-// Delete Validator
-// ------------------------------------------------------------
 
 public sealed class CategorySyncDeleteCommandValidator
     : AbstractValidator<CategorySyncDeleteCommand>
@@ -131,8 +105,7 @@ public sealed class CategorySyncDeleteCommandValidator
             .Cascade(CascadeMode.Stop)
             .NotEmpty()
             .Must(BeValidGuid)
-            .WithMessage(
-                "Category sync ID must be a valid GUID.");
+            .WithMessage("Category sync ID must be a valid GUID.");
 
         RuleFor(x => x.Dto)
             .NotNull()
@@ -142,20 +115,14 @@ public sealed class CategorySyncDeleteCommandValidator
                     .Cascade(CascadeMode.Stop)
                     .NotEmpty()
                     .Must(BeReasonableUtcTimestamp)
-                    .WithMessage(
-                        "ClientModifiedDate must contain a valid UTC timestamp.");
-
+                    .WithMessage("ClientModifiedDate must contain a valid UTC timestamp.");
             });
     }
 
-    private static bool BeValidGuid(
-        string value
-    ) =>
+    private static bool BeValidGuid(string value) =>
         Guid.TryParse(value, out _);
 
-    private static bool BeReasonableUtcTimestamp(
-        DateTime value
-    )
+    private static bool BeReasonableUtcTimestamp(DateTime value)
     {
         if (value == default)
             return false;

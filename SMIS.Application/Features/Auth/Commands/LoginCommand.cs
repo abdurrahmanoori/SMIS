@@ -5,7 +5,9 @@ using SMIS.Application.DTO.Auth;
 using SMIS.Application.Identity.IServices;
 using SMIS.Domain.Entities.Identity.Entity;
 using SMIS.Application.Common.Contants;
+using SMIS.Application.Repositories.Localization;
 using SMIS.Application.Repositories.Shops;
+using SMIS.Domain.Entities.Localization;
 
 namespace SMIS.Application.Features.Auth.Commands
 {
@@ -16,16 +18,19 @@ namespace SMIS.Application.Features.Auth.Commands
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly ITokenGenerator _tokenGenerator;
         private readonly IShopRepository _shopRepository;
+        private readonly ILanguageRepository _languageRepository;
 
         public LoginCommandHandler(
             UserManager<ApplicationUser> userManager,
             ITokenGenerator tokenGenerator,
-            IShopRepository shopRepository
+            IShopRepository shopRepository,
+            ILanguageRepository languageRepository
         )
         {
             _userManager = userManager;
             _tokenGenerator = tokenGenerator;
             _shopRepository = shopRepository;
+            _languageRepository = languageRepository;
         }
 
         public async Task<Result<LoginResponseDto>> Handle(
@@ -58,6 +63,10 @@ namespace SMIS.Application.Features.Auth.Commands
             // Token generation is delegated to the infrastructure layer.
             // Each host provides its own ITokenGenerator implementation.
             var token = _tokenGenerator.Generate(user, roles, activeShopId);
+            var language = await _languageRepository.GetByIdAsync(user.LanguageId);
+            var languageCode = string.IsNullOrWhiteSpace(language?.Code)
+                ? LanguageDefaults.EnglishCode
+                : language.Code!;
 
             return Result<LoginResponseDto>.SuccessResult(new LoginResponseDto
             {
@@ -66,6 +75,8 @@ namespace SMIS.Application.Features.Auth.Commands
                 UserName = user.UserName!,
                 Email = user.Email!,
                 ShopId = activeShopId,
+                LanguageId = user.LanguageId,
+                LanguageCode = languageCode,
                 Roles = roles
             }, "Login successful");
         }

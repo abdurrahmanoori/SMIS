@@ -26,7 +26,6 @@ public class Shop : BaseSyncableAuditableEntity
 
     internal Shop()
     {
-        IsSyncedToServer = false;
     } // EF Core & Seeding
 
     public static Shop Create(

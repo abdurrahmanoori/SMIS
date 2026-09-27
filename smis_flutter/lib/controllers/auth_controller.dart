@@ -5,6 +5,7 @@ import '../data/data_exception.dart';
 import '../models/auth_session.dart';
 import '../services/auth_session_store.dart';
 import 'app_dependencies.dart';
+import 'locale_controller.dart';
 
 class AuthState {
   const AuthState({
@@ -68,6 +69,7 @@ class AuthController extends Notifier<AuthState> {
       final session = await _sessionStore.read();
       final savedSessions = await _sessionStore.readAll();
       state = AuthState(session: session, savedSessions: savedSessions);
+      if (session != null) await _applySessionLocale(session);
     } catch (error) {
       state = AuthState(
         error: error is AppException
@@ -85,6 +87,7 @@ class AuthController extends Notifier<AuthState> {
     try {
       final session = await _api.login(email: email, password: password);
       await _sessionStore.save(session);
+      await _applySessionLocale(session);
       final savedSessions = await _sessionStore.readAll();
       state = state.copyWith(
         session: session,
@@ -129,6 +132,7 @@ class AuthController extends Notifier<AuthState> {
     try {
       await powerSync.close();
       await _sessionStore.save(target);
+      await _applySessionLocale(target);
       await _connectCurrentPowerSyncContext(
         'The account changed, but PowerSync could not refresh the new account yet.',
       );
@@ -174,6 +178,7 @@ class AuthController extends Notifier<AuthState> {
     try {
       final session = await _api.switchShop(shopId);
       await _sessionStore.save(session);
+      await _applySessionLocale(session);
       final savedSessions = await _sessionStore.readAll();
       state = state.copyWith(
         session: session,
@@ -264,6 +269,19 @@ class AuthController extends Notifier<AuthState> {
       savedSessions: savedSessions,
     );
   }
+
+  Future<AuthSession> refreshSession() async {
+    final refreshed = await _api.refreshSession();
+    await _sessionStore.save(refreshed);
+    await _applySessionLocale(refreshed);
+    final savedSessions = await _sessionStore.readAll();
+    state = state.copyWith(session: refreshed, savedSessions: savedSessions);
+    return refreshed;
+  }
+
+  Future<void> _applySessionLocale(AuthSession session) => ref
+      .read(localeControllerProvider.notifier)
+      .setLanguageCode(session.languageCode);
 }
 
 final authSessionStoreProvider = Provider<AuthSessionStore>(

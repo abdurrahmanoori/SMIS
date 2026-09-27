@@ -8,7 +8,7 @@ namespace SMIS.Application.Features.Categories.Validators
         public CategoryCreateCommandValidator()
         {
             RuleFor(x => x.CategoryCreateDto.Name)
-                .NotEmpty().WithMessage("Categoyr Name is required")
+                .NotEmpty().WithMessage("Category Name is required")
                 .MaximumLength(200).WithMessage("Name must not exceed 200 characters");
 
             RuleFor(x => x.CategoryCreateDto.Code)
@@ -19,7 +19,6 @@ namespace SMIS.Application.Features.Categories.Validators
                 .MaximumLength(500).WithMessage("Description must not exceed 500 characters")
                 .When(x => !string.IsNullOrEmpty(x.CategoryCreateDto.Description));
 
-            // ShopId validation removed - it comes from ICurrentUser, not client
         }
     }
 }

@@ -37,12 +37,14 @@ class CategoryUploadHandler implements PowerSyncUploadHandler {
     );
   }
 
-  Map<String, Object?> _payload(Map<String, dynamic> row) => {
-    'name': row['name'] as String,
-    'code': row['code'] as String?,
-    'description': row['description'] as String?,
-    'isActive': _asBool(row['is_active']),
-  };
+  Map<String, Object?> _payload(Map<String, dynamic> row) {
+    return {
+      'name': row['name'] as String,
+      'code': row['code'] as String?,
+      'description': row['description'] as String?,
+      'isActive': _asBool(row['is_active']),
+    };
+  }
 
   bool _asBool(Object? value) => value == true || value == 1;
 

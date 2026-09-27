@@ -1,4 +1,5 @@
 using SMIS.Domain.Common.Interfaces;
+using SMIS.Domain.Entities.Localization;
 
 namespace SMIS.Infrastructure.Server.DatabaseSeeders;
 
@@ -10,7 +11,9 @@ public static class SeedIds
 {
     public static readonly DateTime SeedTimestampUtc = new(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc);
 
-    public static T[] Stamp<T>(params T[] entities)
+    public static T[] Stamp<T>(
+        params T[] entities
+    )
         where T : IEntityPK
     {
         foreach (var entity in entities)
@@ -28,7 +31,7 @@ public static class SeedIds
     public const string ShopWasil = "11111111-0000-0000-0000-000000000004";
 
     // Languages
-    public const string LangEn = "22222222-0000-0000-0000-000000000001";
+    public const string LangEn = LanguageDefaults.EnglishId;
     public const string LangPs = "22222222-0000-0000-0000-000000000002";
     public const string LangFa = "22222222-0000-0000-0000-000000000003";
 
@@ -59,30 +62,6 @@ public static class SeedIds
     public const string UserBranchEditor = "44444444-0000-0000-0000-000000000014";
     public const string UserBranchUser = "44444444-0000-0000-0000-000000000015";
     public const string UserWasilAdmin = "44444444-0000-0000-0000-000000000016";
-
-    // TranslationKeys
-    public const string TKey1 = "55555555-0000-0000-0000-000000000001";
-    public const string TKey2 = "55555555-0000-0000-0000-000000000002";
-    public const string TKey3 = "55555555-0000-0000-0000-000000000003";
-    public const string TKey4 = "55555555-0000-0000-0000-000000000004";
-    public const string TKey5 = "55555555-0000-0000-0000-000000000005";
-    public const string TKey6 = "55555555-0000-0000-0000-000000000006";
-    public const string TKey7 = "55555555-0000-0000-0000-000000000007";
-    public const string TKey8 = "55555555-0000-0000-0000-000000000008";
-
-    // Translations
-    public const string Trans1 = "66666666-0000-0000-0000-000000000001";
-    public const string Trans2 = "66666666-0000-0000-0000-000000000002";
-    public const string Trans3 = "66666666-0000-0000-0000-000000000003";
-    public const string Trans4 = "66666666-0000-0000-0000-000000000004";
-    public const string Trans5 = "66666666-0000-0000-0000-000000000005";
-    public const string Trans6 = "66666666-0000-0000-0000-000000000006";
-    public const string Trans7 = "66666666-0000-0000-0000-000000000007";
-    public const string Trans8 = "66666666-0000-0000-0000-000000000008";
-    public const string Trans9 = "66666666-0000-0000-0000-000000000009";
-    public const string Trans10 = "66666666-0000-0000-0000-000000000010";
-    public const string Trans11 = "66666666-0000-0000-0000-000000000011";
-    public const string Trans12 = "66666666-0000-0000-0000-000000000012";
 
     // Provinces
     public const string ProvinceKabul = "77777777-0000-0000-0000-000000000001";
@@ -128,6 +107,27 @@ public static class SeedIds
     public const string CatGrocery = "bbbbbbbb-0000-0000-0000-000000000004";
     public const string CatPersonalCare = "bbbbbbbb-0000-0000-0000-000000000005";
     public const string CatElectronics = "bbbbbbbb-0000-0000-0000-000000000006";
+
+    // Category localized text values
+    public const string CatTextBeverages = "abababab-0000-0000-0000-000000000001";
+    public const string CatTextFood = "abababab-0000-0000-0000-000000000002";
+    public const string CatTextStationery = "abababab-0000-0000-0000-000000000003";
+    public const string CatTextGrocery = "abababab-0000-0000-0000-000000000004";
+    public const string CatTextPersonalCare = "abababab-0000-0000-0000-000000000005";
+    public const string CatTextElectronics = "abababab-0000-0000-0000-000000000006";
+
+    public const string CatTextTransEnBeverages = "acacacac-0000-0000-0000-000000000001";
+    public const string CatTextTransEnFood = "acacacac-0000-0000-0000-000000000002";
+    public const string CatTextTransEnStationery = "acacacac-0000-0000-0000-000000000003";
+    public const string CatTextTransEnGrocery = "acacacac-0000-0000-0000-000000000004";
+    public const string CatTextTransEnPersonalCare = "acacacac-0000-0000-0000-000000000005";
+    public const string CatTextTransEnElectronics = "acacacac-0000-0000-0000-000000000006";
+    public const string CatTextTransFaBeverages = "acacacac-0000-0000-0000-000000000007";
+    public const string CatTextTransFaFood = "acacacac-0000-0000-0000-000000000008";
+    public const string CatTextTransFaStationery = "acacacac-0000-0000-0000-000000000009";
+    public const string CatTextTransFaGrocery = "acacacac-0000-0000-0000-000000000010";
+    public const string CatTextTransFaPersonalCare = "acacacac-0000-0000-0000-000000000011";
+    public const string CatTextTransFaElectronics = "acacacac-0000-0000-0000-000000000012";
 
     // Products
     public const string ProdCocaCola = "cccccccc-0000-0000-0000-000000000001";

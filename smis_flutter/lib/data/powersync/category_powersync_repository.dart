@@ -18,8 +18,8 @@ class CategoryPowerSyncRepository extends PowerSyncRepositorySupport {
     final database = await this.database;
     return database
         .watch(
-          'SELECT id, name, code, description, is_active, shop_id, '
-          'last_modified_utc '
+          'SELECT id, name, code, '
+          'description, is_active, shop_id, last_modified_utc '
           'FROM category WHERE shop_id = ?',
           parameters: [shopId],
           throttle: const Duration(milliseconds: 250),
@@ -29,6 +29,7 @@ class CategoryPowerSyncRepository extends PowerSyncRepositorySupport {
 
   Future<List<Category>> getAll(
     String shopId, {
+    required String languageId,
     String? searchQuery,
     int? limit,
     int? offset,
@@ -45,8 +46,8 @@ class CategoryPowerSyncRepository extends PowerSyncRepositorySupport {
     }
 
     var sql =
-        'SELECT id, name, code, description, is_active, shop_id, '
-        'last_modified_utc '
+        'SELECT id, name, code, '
+        'description, is_active, shop_id, last_modified_utc '
         'FROM category WHERE $where ORDER BY name COLLATE NOCASE ASC';
     if (limit != null) {
       sql += ' LIMIT ?';
@@ -59,7 +60,7 @@ class CategoryPowerSyncRepository extends PowerSyncRepositorySupport {
 
     final rows = await database.getAll(sql, args);
     return rows
-        .map((row) => _toCategory(row, pending[row['id']]))
+        .map((row) => _toCategory(row, pending[row['id']], languageId))
         .toList(growable: false);
   }
 
@@ -81,7 +82,11 @@ class CategoryPowerSyncRepository extends PowerSyncRepositorySupport {
     return row['count'] as int;
   }
 
-  Future<Category> create(CategoryDraft draft, String shopId) async {
+  Future<Category> create(
+    CategoryDraft draft,
+    String shopId, {
+    required String languageId,
+  }) async {
     final normalized = draft.normalized();
     final database = await this.database;
     await _ensureUniqueName(database, shopId, normalized.name);
@@ -102,10 +107,14 @@ class CategoryPowerSyncRepository extends PowerSyncRepositorySupport {
       ],
     );
 
-    return _byId(database, id);
+    return _byId(database, id, languageId);
   }
 
-  Future<Category> update(String id, CategoryDraft draft) async {
+  Future<Category> update(
+    String id,
+    CategoryDraft draft, {
+    required String languageId,
+  }) async {
     final normalized = draft.normalized();
     final database = await this.database;
     final current = await database.getOptional(
@@ -120,8 +129,9 @@ class CategoryPowerSyncRepository extends PowerSyncRepositorySupport {
     await _ensureUniqueName(database, shopId, normalized.name, excludeId: id);
 
     await database.execute(
-      'UPDATE category SET name = ?, code = ?, description = ?, '
-      'is_active = ?, shop_id = ?, last_modified_utc = ? WHERE id = ?',
+      'UPDATE category SET name = ?, code = ?, '
+      'description = ?, is_active = ?, shop_id = ?, last_modified_utc = ? '
+      'WHERE id = ?',
       [
         normalized.name,
         normalized.code,
@@ -133,7 +143,7 @@ class CategoryPowerSyncRepository extends PowerSyncRepositorySupport {
       ],
     );
 
-    return _byId(database, id);
+    return _byId(database, id, languageId);
   }
 
   Future<void> delete(String id) async {
@@ -165,10 +175,14 @@ class CategoryPowerSyncRepository extends PowerSyncRepositorySupport {
     return result['count'] as int;
   }
 
-  Future<Category> _byId(PowerSyncDatabase database, String id) async {
+  Future<Category> _byId(
+    PowerSyncDatabase database,
+    String id,
+    String languageId,
+  ) async {
     final row = await database.getOptional(
-      'SELECT id, name, code, description, is_active, shop_id, '
-      'last_modified_utc '
+      'SELECT id, name, code, '
+      'description, is_active, shop_id, last_modified_utc '
       'FROM category WHERE id = ?',
       [id],
     );
@@ -176,7 +190,7 @@ class CategoryPowerSyncRepository extends PowerSyncRepositorySupport {
       throw const LocalStorageException('Category was not found.');
     }
     final pending = await pendingOperations('category');
-    return _toCategory(row, pending[id]);
+    return _toCategory(row, pending[id], languageId);
   }
 
   Future<void> _ensureUniqueName(
@@ -200,7 +214,11 @@ class CategoryPowerSyncRepository extends PowerSyncRepositorySupport {
     }
   }
 
-  Category _toCategory(Map<String, Object?> row, String? operation) {
+  Category _toCategory(
+    Map<String, Object?> row,
+    String? operation,
+    String languageId,
+  ) {
     final changedAt = timestamp(row['last_modified_utc']);
     return Category(
       id: row['id']! as String,

@@ -10,8 +10,6 @@ using System.Globalization;
 using SMIS.Application.DTO.Categories;
 using SMIS.Application.DTO.ProductUnits;
 using SMIS.Application.DTO.StockBatches;
-using SMIS.Application.DTO.TranslationKeys;
-using SMIS.Application.DTO.Translations;
 using SMIS.Application.DTO.StockMovements;
 using SMIS.Domain.Entities;
 using SMIS.Domain.Entities.Localization;
@@ -166,14 +164,6 @@ public class MappingProfile : Profile
             ))
             .AfterMap((src, dest) => { dest.SetEndDate(src.EndDate); });
 
-        // TranslationKey mapping
-        CreateMap<TranslationKey, TranslationKeyDto>().ReverseMap();
-        CreateMap<TranslationKey, TranslationKeyCreateDto>().ReverseMap();
-
-        // Translation mapping
-        CreateMap<Translation, TranslationEntityDto>().ReverseMap();
-        CreateMap<Translation, TranslationEntityCreateDto>().ReverseMap();
-
         // Inventory mapping. Creation is handled explicitly because conversion,
         // tenant checks and ledger posting are domain/application operations.
         CreateMap<StockBatch, StockBatchDto>();
@@ -194,14 +184,8 @@ public class MappingProfile : Profile
                 opt => opt.MapFrom(src => AsUtc(src.CreatedDate)))
             .ForMember(dest => dest.UpdatedDate,
                 opt => opt.MapFrom(src => AsUtc(src.UpdatedDate)))
-            .ForMember(dest => dest.ClientCreatedDate,
-                opt => opt.MapFrom(src => AsUtc(src.ClientCreatedDate)))
-            .ForMember(dest => dest.ClientModifiedDate,
-                opt => opt.MapFrom(src => AsUtc(src.ClientModifiedDate)))
             .ForMember(dest => dest.LastModifiedUtc,
-                opt => opt.MapFrom(src => AsUtc(src.LastModifiedUtc)))
-            .ForMember(dest => dest.ConflictModifiedUtc,
-                opt => opt.MapFrom(src => src.GetConflictModifiedUtc()));
+                opt => opt.MapFrom(src => AsUtc(src.LastModifiedUtc)));
         // ShopOwner mapping
         CreateMap<ShopOwner, ShopOwnerDto>().ReverseMap();
         // LoanAccount is a receivable linked to a sale. Product/unit details live on SaleLine.

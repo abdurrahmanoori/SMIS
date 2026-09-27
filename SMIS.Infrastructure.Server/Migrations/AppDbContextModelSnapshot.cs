@@ -124,28 +124,15 @@ namespace SMIS.Infrastructure.Server.Migrations
                     b.Property<DateTime?>("DeletedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("EntityState")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Exception")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<bool>("IsPublic")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsSyncedToServer")
-                        .HasColumnType("bit");
-
                     b.Property<string>("LastModifiedUtc")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("LastSyncedAt")
-                        .HasColumnType("datetime2");
 
                     b.Property<string>("Level")
                         .IsRequired()
@@ -347,20 +334,6 @@ namespace SMIS.Infrastructure.Server.Migrations
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 
-                    b.Property<string>("ClientCreatedBy")
-                        .HasMaxLength(450)
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<DateTime?>("ClientCreatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("ClientModifiedBy")
-                        .HasMaxLength(450)
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<DateTime?>("ClientModifiedDate")
-                        .HasColumnType("datetime2");
-
                     b.Property<string>("CreatedBy")
                         .HasMaxLength(450)
                         .HasColumnType("nvarchar(450)");
@@ -387,10 +360,6 @@ namespace SMIS.Infrastructure.Server.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<string>("EntityState")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("FatherName")
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
@@ -404,9 +373,6 @@ namespace SMIS.Infrastructure.Server.Migrations
                         .HasColumnType("bit");
 
                     b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsPublic")
                         .HasColumnType("bit");
 
                     b.Property<string>("LastModifiedUtc")
@@ -450,10 +416,6 @@ namespace SMIS.Infrastructure.Server.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ClientCreatedBy");
-
-                    b.HasIndex("ClientModifiedBy");
-
                     b.HasIndex("CreatedBy");
 
                     b.HasIndex("DeletedBy");
@@ -487,12 +449,10 @@ namespace SMIS.Infrastructure.Server.Migrations
                             CustomerType = "Individual",
                             DistrictId = "99999999-0000-0000-0000-000000000001",
                             Email = "john.doe@email.com",
-                            EntityState = "Unchanged",
                             FatherName = "Smith",
                             FirstName = "John",
                             IsActive = true,
                             IsDeleted = false,
-                            IsPublic = false,
                             LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             LastName = "Doe",
                             PhoneNumber = "+855123456789",
@@ -511,12 +471,10 @@ namespace SMIS.Infrastructure.Server.Migrations
                             CustomerType = "Individual",
                             DistrictId = "99999999-0000-0000-0000-000000000002",
                             Email = "jane.smith@email.com",
-                            EntityState = "Unchanged",
                             FatherName = "Johnson",
                             FirstName = "Jane",
                             IsActive = true,
                             IsDeleted = false,
-                            IsPublic = false,
                             LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             LastName = "Smith",
                             PhoneNumber = "+855987654321",
@@ -535,12 +493,10 @@ namespace SMIS.Infrastructure.Server.Migrations
                             CustomerType = "Enterprise",
                             DistrictId = "99999999-0000-0000-0000-000000000003",
                             Email = "michael.brown@email.com",
-                            EntityState = "Unchanged",
                             FatherName = "Davis",
                             FirstName = "Michael",
                             IsActive = true,
                             IsDeleted = false,
-                            IsPublic = false,
                             LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             LastName = "Brown",
                             PhoneNumber = "+855555123456",
@@ -558,12 +514,10 @@ namespace SMIS.Infrastructure.Server.Migrations
                             CustomerType = "Individual",
                             DistrictId = "99999999-0000-0000-0000-000000000001",
                             Email = "sarah.wilson@email.com",
-                            EntityState = "Unchanged",
                             FatherName = "Miller",
                             FirstName = "Sarah",
                             IsActive = true,
                             IsDeleted = false,
-                            IsPublic = false,
                             LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             LastName = "Wilson",
                             PhoneNumber = "+855444987654",
@@ -582,12 +536,10 @@ namespace SMIS.Infrastructure.Server.Migrations
                             CustomerType = "Individual",
                             DistrictId = "99999999-0000-0000-0000-000000000002",
                             Email = "david.taylor@email.com",
-                            EntityState = "Unchanged",
                             FatherName = "Anderson",
                             FirstName = "David",
                             IsActive = true,
                             IsDeleted = false,
-                            IsPublic = false,
                             LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             LastName = "Taylor",
                             PhoneNumber = "+855333456789",
@@ -605,12 +557,10 @@ namespace SMIS.Infrastructure.Server.Migrations
                             CustomerType = "Enterprise",
                             DistrictId = "99999999-0000-0000-0000-000000000003",
                             Email = "lisa.garcia@email.com",
-                            EntityState = "Unchanged",
                             FatherName = "Martinez",
                             FirstName = "Lisa",
                             IsActive = true,
                             IsDeleted = false,
-                            IsPublic = false,
                             LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             LastName = "Garcia",
                             PhoneNumber = "+855222123456",
@@ -629,12 +579,10 @@ namespace SMIS.Infrastructure.Server.Migrations
                             CustomerType = "Individual",
                             DistrictId = "99999999-0000-0000-0000-000000000001",
                             Email = "robert.martinez@email.com",
-                            EntityState = "Unchanged",
                             FatherName = "Rodriguez",
                             FirstName = "Robert",
                             IsActive = true,
                             IsDeleted = false,
-                            IsPublic = false,
                             LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             LastName = "Martinez",
                             PhoneNumber = "+855111987654",
@@ -652,12 +600,10 @@ namespace SMIS.Infrastructure.Server.Migrations
                             CustomerType = "Individual",
                             DistrictId = "99999999-0000-0000-0000-000000000002",
                             Email = "emily.lopez@email.com",
-                            EntityState = "Unchanged",
                             FatherName = "Hernandez",
                             FirstName = "Emily",
                             IsActive = true,
                             IsDeleted = false,
-                            IsPublic = false,
                             LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             LastName = "Lopez",
                             PhoneNumber = "+855666456789",
@@ -676,12 +622,10 @@ namespace SMIS.Infrastructure.Server.Migrations
                             CustomerType = "Enterprise",
                             DistrictId = "99999999-0000-0000-0000-000000000003",
                             Email = "james.gonzalez@email.com",
-                            EntityState = "Unchanged",
                             FatherName = "Perez",
                             FirstName = "James",
                             IsActive = true,
                             IsDeleted = false,
-                            IsPublic = false,
                             LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             LastName = "Gonzalez",
                             PhoneNumber = "+855777123456",
@@ -699,12 +643,10 @@ namespace SMIS.Infrastructure.Server.Migrations
                             CustomerType = "Individual",
                             DistrictId = "99999999-0000-0000-0000-000000000001",
                             Email = "maria.rodriguez@email.com",
-                            EntityState = "Unchanged",
                             FatherName = "Sanchez",
                             FirstName = "Maria",
                             IsActive = true,
                             IsDeleted = false,
-                            IsPublic = false,
                             LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             LastName = "Rodriguez",
                             PhoneNumber = "+855888987654",
@@ -733,13 +675,6 @@ namespace SMIS.Infrastructure.Server.Migrations
 
                     b.Property<DateTime?>("CreatedDate")
                         .HasColumnType("datetime2");
-
-                    b.Property<string>("EntityState")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("IsPublic")
-                        .HasColumnType("bit");
 
                     b.Property<string>("Key")
                         .IsRequired()
@@ -787,10 +722,6 @@ namespace SMIS.Infrastructure.Server.Migrations
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("EntityState")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("LastModifiedUtc")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -819,7 +750,6 @@ namespace SMIS.Infrastructure.Server.Migrations
                         new
                         {
                             Id = "33333333-0000-0000-0000-000000000001",
-                            EntityState = "Unchanged",
                             LastModifiedUtc = "0001-01-01 00:00:00.000000",
                             Name = "SuperAdmin",
                             NormalizedName = "SUPERADMIN",
@@ -828,7 +758,6 @@ namespace SMIS.Infrastructure.Server.Migrations
                         new
                         {
                             Id = "33333333-0000-0000-0000-000000000002",
-                            EntityState = "Unchanged",
                             LastModifiedUtc = "0001-01-01 00:00:00.000000",
                             Name = "Admin",
                             NormalizedName = "ADMIN",
@@ -837,7 +766,6 @@ namespace SMIS.Infrastructure.Server.Migrations
                         new
                         {
                             Id = "33333333-0000-0000-0000-000000000003",
-                            EntityState = "Unchanged",
                             LastModifiedUtc = "0001-01-01 00:00:00.000000",
                             Name = "Administration",
                             NormalizedName = "ADMINISTRATION",
@@ -846,7 +774,6 @@ namespace SMIS.Infrastructure.Server.Migrations
                         new
                         {
                             Id = "33333333-0000-0000-0000-000000000004",
-                            EntityState = "Unchanged",
                             LastModifiedUtc = "0001-01-01 00:00:00.000000",
                             Name = "Manager",
                             NormalizedName = "MANAGER",
@@ -855,7 +782,6 @@ namespace SMIS.Infrastructure.Server.Migrations
                         new
                         {
                             Id = "33333333-0000-0000-0000-000000000005",
-                            EntityState = "Unchanged",
                             LastModifiedUtc = "0001-01-01 00:00:00.000000",
                             Name = "Staff",
                             NormalizedName = "STAFF",
@@ -864,7 +790,6 @@ namespace SMIS.Infrastructure.Server.Migrations
                         new
                         {
                             Id = "33333333-0000-0000-0000-000000000006",
-                            EntityState = "Unchanged",
                             LastModifiedUtc = "0001-01-01 00:00:00.000000",
                             Name = "Viewer",
                             NormalizedName = "VIEWER",
@@ -873,7 +798,6 @@ namespace SMIS.Infrastructure.Server.Migrations
                         new
                         {
                             Id = "33333333-0000-0000-0000-000000000007",
-                            EntityState = "Unchanged",
                             LastModifiedUtc = "0001-01-01 00:00:00.000000",
                             Name = "Editor",
                             NormalizedName = "EDITOR",
@@ -882,7 +806,6 @@ namespace SMIS.Infrastructure.Server.Migrations
                         new
                         {
                             Id = "33333333-0000-0000-0000-000000000008",
-                            EntityState = "Unchanged",
                             LastModifiedUtc = "0001-01-01 00:00:00.000000",
                             Name = "User",
                             NormalizedName = "USER",
@@ -910,18 +833,16 @@ namespace SMIS.Infrastructure.Server.Migrations
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("bit");
 
-                    b.Property<string>("EntityState")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("FirstName")
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("LanguageId")
                         .IsRequired()
+                        .ValueGeneratedOnAdd()
                         .HasMaxLength(450)
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(450)")
+                        .HasDefaultValue("22222222-0000-0000-0000-000000000001");
 
                     b.Property<string>("LastModifiedUtc")
                         .IsRequired()
@@ -1008,7 +929,6 @@ namespace SMIS.Infrastructure.Server.Migrations
                             ConcurrencyStamp = "44444444-0000-0000-0000-000000000001",
                             Email = "superadmin@mainstore.com",
                             EmailConfirmed = true,
-                            EntityState = "Unchanged",
                             FirstName = "Main Store",
                             LanguageId = "22222222-0000-0000-0000-000000000001",
                             LastModifiedUtc = "0001-01-01 00:00:00.000000",
@@ -1032,7 +952,6 @@ namespace SMIS.Infrastructure.Server.Migrations
                             ConcurrencyStamp = "44444444-0000-0000-0000-000000000002",
                             Email = "admin@mainstore.com",
                             EmailConfirmed = true,
-                            EntityState = "Unchanged",
                             FirstName = "Main Store",
                             LanguageId = "22222222-0000-0000-0000-000000000001",
                             LastModifiedUtc = "0001-01-01 00:00:00.000000",
@@ -1056,7 +975,6 @@ namespace SMIS.Infrastructure.Server.Migrations
                             ConcurrencyStamp = "44444444-0000-0000-0000-000000000003",
                             Email = "administration@mainstore.com",
                             EmailConfirmed = true,
-                            EntityState = "Unchanged",
                             FirstName = "Main Store",
                             LanguageId = "22222222-0000-0000-0000-000000000001",
                             LastModifiedUtc = "0001-01-01 00:00:00.000000",
@@ -1080,7 +998,6 @@ namespace SMIS.Infrastructure.Server.Migrations
                             ConcurrencyStamp = "44444444-0000-0000-0000-000000000004",
                             Email = "manager@mainstore.com",
                             EmailConfirmed = true,
-                            EntityState = "Unchanged",
                             FirstName = "Main Store",
                             LanguageId = "22222222-0000-0000-0000-000000000001",
                             LastModifiedUtc = "0001-01-01 00:00:00.000000",
@@ -1104,7 +1021,6 @@ namespace SMIS.Infrastructure.Server.Migrations
                             ConcurrencyStamp = "44444444-0000-0000-0000-000000000005",
                             Email = "staff@mainstore.com",
                             EmailConfirmed = true,
-                            EntityState = "Unchanged",
                             FirstName = "Main Store",
                             LanguageId = "22222222-0000-0000-0000-000000000001",
                             LastModifiedUtc = "0001-01-01 00:00:00.000000",
@@ -1128,7 +1044,6 @@ namespace SMIS.Infrastructure.Server.Migrations
                             ConcurrencyStamp = "44444444-0000-0000-0000-000000000006",
                             Email = "viewer@mainstore.com",
                             EmailConfirmed = true,
-                            EntityState = "Unchanged",
                             FirstName = "Main Store",
                             LanguageId = "22222222-0000-0000-0000-000000000001",
                             LastModifiedUtc = "0001-01-01 00:00:00.000000",
@@ -1152,7 +1067,6 @@ namespace SMIS.Infrastructure.Server.Migrations
                             ConcurrencyStamp = "44444444-0000-0000-0000-000000000007",
                             Email = "editor@mainstore.com",
                             EmailConfirmed = true,
-                            EntityState = "Unchanged",
                             FirstName = "Main Store",
                             LanguageId = "22222222-0000-0000-0000-000000000001",
                             LastModifiedUtc = "0001-01-01 00:00:00.000000",
@@ -1176,7 +1090,6 @@ namespace SMIS.Infrastructure.Server.Migrations
                             ConcurrencyStamp = "44444444-0000-0000-0000-000000000008",
                             Email = "user@mainstore.com",
                             EmailConfirmed = true,
-                            EntityState = "Unchanged",
                             FirstName = "Main Store",
                             LanguageId = "22222222-0000-0000-0000-000000000001",
                             LastModifiedUtc = "0001-01-01 00:00:00.000000",
@@ -1200,7 +1113,6 @@ namespace SMIS.Infrastructure.Server.Migrations
                             ConcurrencyStamp = "44444444-0000-0000-0000-000000000009",
                             Email = "admin@branchstore.com",
                             EmailConfirmed = true,
-                            EntityState = "Unchanged",
                             FirstName = "Branch Store",
                             LanguageId = "22222222-0000-0000-0000-000000000001",
                             LastModifiedUtc = "0001-01-01 00:00:00.000000",
@@ -1224,7 +1136,6 @@ namespace SMIS.Infrastructure.Server.Migrations
                             ConcurrencyStamp = "44444444-0000-0000-0000-000000000010",
                             Email = "administration@branchstore.com",
                             EmailConfirmed = true,
-                            EntityState = "Unchanged",
                             FirstName = "Branch Store",
                             LanguageId = "22222222-0000-0000-0000-000000000001",
                             LastModifiedUtc = "0001-01-01 00:00:00.000000",
@@ -1248,7 +1159,6 @@ namespace SMIS.Infrastructure.Server.Migrations
                             ConcurrencyStamp = "44444444-0000-0000-0000-000000000011",
                             Email = "manager@branchstore.com",
                             EmailConfirmed = true,
-                            EntityState = "Unchanged",
                             FirstName = "Branch Store",
                             LanguageId = "22222222-0000-0000-0000-000000000001",
                             LastModifiedUtc = "0001-01-01 00:00:00.000000",
@@ -1272,7 +1182,6 @@ namespace SMIS.Infrastructure.Server.Migrations
                             ConcurrencyStamp = "44444444-0000-0000-0000-000000000012",
                             Email = "staff@branchstore.com",
                             EmailConfirmed = true,
-                            EntityState = "Unchanged",
                             FirstName = "Branch Store",
                             LanguageId = "22222222-0000-0000-0000-000000000001",
                             LastModifiedUtc = "0001-01-01 00:00:00.000000",
@@ -1296,7 +1205,6 @@ namespace SMIS.Infrastructure.Server.Migrations
                             ConcurrencyStamp = "44444444-0000-0000-0000-000000000013",
                             Email = "viewer@branchstore.com",
                             EmailConfirmed = true,
-                            EntityState = "Unchanged",
                             FirstName = "Branch Store",
                             LanguageId = "22222222-0000-0000-0000-000000000001",
                             LastModifiedUtc = "0001-01-01 00:00:00.000000",
@@ -1320,7 +1228,6 @@ namespace SMIS.Infrastructure.Server.Migrations
                             ConcurrencyStamp = "44444444-0000-0000-0000-000000000014",
                             Email = "editor@branchstore.com",
                             EmailConfirmed = true,
-                            EntityState = "Unchanged",
                             FirstName = "Branch Store",
                             LanguageId = "22222222-0000-0000-0000-000000000001",
                             LastModifiedUtc = "0001-01-01 00:00:00.000000",
@@ -1344,7 +1251,6 @@ namespace SMIS.Infrastructure.Server.Migrations
                             ConcurrencyStamp = "44444444-0000-0000-0000-000000000015",
                             Email = "user@branchstore.com",
                             EmailConfirmed = true,
-                            EntityState = "Unchanged",
                             FirstName = "Branch Store",
                             LanguageId = "22222222-0000-0000-0000-000000000001",
                             LastModifiedUtc = "0001-01-01 00:00:00.000000",
@@ -1368,7 +1274,6 @@ namespace SMIS.Infrastructure.Server.Migrations
                             ConcurrencyStamp = "44444444-0000-0000-0000-000000000016",
                             Email = "admin@wasilshop.com",
                             EmailConfirmed = true,
-                            EntityState = "Unchanged",
                             FirstName = "Wasil Shop",
                             LanguageId = "22222222-0000-0000-0000-000000000001",
                             LastModifiedUtc = "0001-01-01 00:00:00.000000",
@@ -1556,28 +1461,15 @@ namespace SMIS.Infrastructure.Server.Migrations
                     b.Property<DateTime?>("DueDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("EntityState")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<bool>("IsPublic")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsSyncedToServer")
-                        .HasColumnType("bit");
-
                     b.Property<string>("LastModifiedUtc")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("LastSyncedAt")
-                        .HasColumnType("datetime2");
 
                     b.Property<DateTime>("LoanDate")
                         .HasColumnType("datetime2");
@@ -1652,28 +1544,15 @@ namespace SMIS.Infrastructure.Server.Migrations
                     b.Property<DateTime?>("DeletedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("EntityState")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<bool>("IsPublic")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsSyncedToServer")
-                        .HasColumnType("bit");
-
                     b.Property<string>("LastModifiedUtc")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("LastSyncedAt")
-                        .HasColumnType("datetime2");
 
                     b.Property<string>("LoanAccountId")
                         .IsRequired()
@@ -1725,10 +1604,6 @@ namespace SMIS.Infrastructure.Server.Migrations
                         .HasMaxLength(10)
                         .HasColumnType("nvarchar(10)");
 
-                    b.Property<string>("EntityState")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
 
@@ -1757,7 +1632,6 @@ namespace SMIS.Infrastructure.Server.Migrations
                         {
                             Id = "22222222-0000-0000-0000-000000000001",
                             Code = "en",
-                            EntityState = "Added",
                             IsActive = true,
                             LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             Name = "English",
@@ -1767,7 +1641,6 @@ namespace SMIS.Infrastructure.Server.Migrations
                         {
                             Id = "22222222-0000-0000-0000-000000000002",
                             Code = "ps",
-                            EntityState = "Added",
                             IsActive = true,
                             LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             Name = "Pashto",
@@ -1777,7 +1650,6 @@ namespace SMIS.Infrastructure.Server.Migrations
                         {
                             Id = "22222222-0000-0000-0000-000000000003",
                             Code = "fa",
-                            EntityState = "Added",
                             IsActive = true,
                             LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             Name = "Farsi",
@@ -1785,408 +1657,215 @@ namespace SMIS.Infrastructure.Server.Migrations
                         });
                 });
 
-            modelBuilder.Entity("SMIS.Domain.Entities.Localization.Translation", b =>
+            modelBuilder.Entity("SMIS.Domain.Entities.Localization.LocalizedText", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("CreatedBy")
-                        .HasMaxLength(450)
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<DateTime?>("CreatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("DeletedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("EntityState")
+                    b.Property<string>("DefaultValue")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsPublic")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsSyncedToServer")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("LanguageNo")
-                        .IsRequired()
-                        .HasMaxLength(450)
-                        .HasColumnType("nvarchar(450)");
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
 
                     b.Property<string>("LastModifiedUtc")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("LastSyncedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
-
-                    b.Property<string>("TranslationKeyId")
-                        .IsRequired()
-                        .HasMaxLength(450)
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("UpdatedBy")
-                        .HasMaxLength(450)
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<DateTime?>("UpdatedDate")
-                        .HasColumnType("datetime2");
 
                     b.Property<int>("Version")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CreatedBy");
-
-                    b.HasIndex("LanguageNo");
-
-                    b.HasIndex("UpdatedBy");
-
-                    b.HasIndex("TranslationKeyId", "LanguageNo")
-                        .IsUnique();
-
-                    b.ToTable("Translations");
+                    b.ToTable("LocalizedText", (string)null);
 
                     b.HasData(
                         new
                         {
-                            Id = "66666666-0000-0000-0000-000000000001",
-                            EntityState = "Unchanged",
-                            IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
-                            LanguageNo = "22222222-0000-0000-0000-000000000001",
+                            Id = "abababab-0000-0000-0000-000000000001",
+                            DefaultValue = "Beverages",
                             LastModifiedUtc = "2026-01-01 00:00:00.000000",
-                            Name = "Kabul Center District",
-                            TranslationKeyId = "55555555-0000-0000-0000-000000000001",
                             Version = 0
                         },
                         new
                         {
-                            Id = "66666666-0000-0000-0000-000000000002",
-                            EntityState = "Unchanged",
-                            IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
-                            LanguageNo = "22222222-0000-0000-0000-000000000002",
+                            Id = "abababab-0000-0000-0000-000000000002",
+                            DefaultValue = "Food Items",
                             LastModifiedUtc = "2026-01-01 00:00:00.000000",
-                            Name = "منطقه مرکز کابل",
-                            TranslationKeyId = "55555555-0000-0000-0000-000000000001",
                             Version = 0
                         },
                         new
                         {
-                            Id = "66666666-0000-0000-0000-000000000003",
-                            EntityState = "Unchanged",
-                            IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
-                            LanguageNo = "22222222-0000-0000-0000-000000000001",
+                            Id = "abababab-0000-0000-0000-000000000003",
+                            DefaultValue = "Stationery",
                             LastModifiedUtc = "2026-01-01 00:00:00.000000",
-                            Name = "Kabul North District",
-                            TranslationKeyId = "55555555-0000-0000-0000-000000000002",
                             Version = 0
                         },
                         new
                         {
-                            Id = "66666666-0000-0000-0000-000000000004",
-                            EntityState = "Unchanged",
-                            IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
-                            LanguageNo = "22222222-0000-0000-0000-000000000002",
+                            Id = "abababab-0000-0000-0000-000000000004",
+                            DefaultValue = "Grocery",
                             LastModifiedUtc = "2026-01-01 00:00:00.000000",
-                            Name = "منطقه شمال کابل",
-                            TranslationKeyId = "55555555-0000-0000-0000-000000000002",
                             Version = 0
                         },
                         new
                         {
-                            Id = "66666666-0000-0000-0000-000000000005",
-                            EntityState = "Unchanged",
-                            IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
-                            LanguageNo = "22222222-0000-0000-0000-000000000001",
+                            Id = "abababab-0000-0000-0000-000000000005",
+                            DefaultValue = "Personal Care",
                             LastModifiedUtc = "2026-01-01 00:00:00.000000",
-                            Name = "Herat Center District",
-                            TranslationKeyId = "55555555-0000-0000-0000-000000000003",
                             Version = 0
                         },
                         new
                         {
-                            Id = "66666666-0000-0000-0000-000000000006",
-                            EntityState = "Unchanged",
-                            IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
-                            LanguageNo = "22222222-0000-0000-0000-000000000002",
+                            Id = "abababab-0000-0000-0000-000000000006",
+                            DefaultValue = "Electronics",
                             LastModifiedUtc = "2026-01-01 00:00:00.000000",
-                            Name = "منطقه مرکز هرات",
-                            TranslationKeyId = "55555555-0000-0000-0000-000000000003",
-                            Version = 0
-                        },
-                        new
-                        {
-                            Id = "66666666-0000-0000-0000-000000000007",
-                            EntityState = "Unchanged",
-                            IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
-                            LanguageNo = "22222222-0000-0000-0000-000000000001",
-                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
-                            Name = "Kabul Province",
-                            TranslationKeyId = "55555555-0000-0000-0000-000000000004",
-                            Version = 0
-                        },
-                        new
-                        {
-                            Id = "66666666-0000-0000-0000-000000000008",
-                            EntityState = "Unchanged",
-                            IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
-                            LanguageNo = "22222222-0000-0000-0000-000000000002",
-                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
-                            Name = "ولایت کابل",
-                            TranslationKeyId = "55555555-0000-0000-0000-000000000004",
-                            Version = 0
-                        },
-                        new
-                        {
-                            Id = "66666666-0000-0000-0000-000000000009",
-                            EntityState = "Unchanged",
-                            IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
-                            LanguageNo = "22222222-0000-0000-0000-000000000001",
-                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
-                            Name = "Herat Province",
-                            TranslationKeyId = "55555555-0000-0000-0000-000000000005",
-                            Version = 0
-                        },
-                        new
-                        {
-                            Id = "66666666-0000-0000-0000-000000000010",
-                            EntityState = "Unchanged",
-                            IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
-                            LanguageNo = "22222222-0000-0000-0000-000000000002",
-                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
-                            Name = "ولایت هرات",
-                            TranslationKeyId = "55555555-0000-0000-0000-000000000005",
-                            Version = 0
-                        },
-                        new
-                        {
-                            Id = "66666666-0000-0000-0000-000000000011",
-                            EntityState = "Unchanged",
-                            IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
-                            LanguageNo = "22222222-0000-0000-0000-000000000001",
-                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
-                            Name = "Welcome Message",
-                            TranslationKeyId = "55555555-0000-0000-0000-000000000006",
-                            Version = 0
-                        },
-                        new
-                        {
-                            Id = "66666666-0000-0000-0000-000000000012",
-                            EntityState = "Unchanged",
-                            IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
-                            LanguageNo = "22222222-0000-0000-0000-000000000002",
-                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
-                            Name = "پیام خوش آمدید",
-                            TranslationKeyId = "55555555-0000-0000-0000-000000000006",
                             Version = 0
                         });
                 });
 
-            modelBuilder.Entity("SMIS.Domain.Entities.Localization.TranslationKey", b =>
+            modelBuilder.Entity("SMIS.Domain.Entities.Localization.LocalizedTextTranslation", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("CreatedBy")
+                    b.Property<string>("LanguageId")
+                        .IsRequired()
                         .HasMaxLength(450)
                         .HasColumnType("nvarchar(450)");
-
-                    b.Property<DateTime?>("CreatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("DeletedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("EntityState")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsPublic")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsSyncedToServer")
-                        .HasColumnType("bit");
 
                     b.Property<string>("LastModifiedUtc")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime?>("LastSyncedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("MessageCode")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<string>("Name")
+                    b.Property<string>("LocalizedTextId")
                         .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.Property<string>("UpdatedBy")
                         .HasMaxLength(450)
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<DateTime?>("UpdatedDate")
-                        .HasColumnType("datetime2");
+                    b.Property<string>("Value")
+                        .IsRequired()
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
 
                     b.Property<int>("Version")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CreatedBy");
+                    b.HasIndex("LanguageId");
 
-                    b.HasIndex("MessageCode");
+                    b.HasIndex("LocalizedTextId", "LanguageId")
+                        .IsUnique();
 
-                    b.HasIndex("UpdatedBy");
-
-                    b.ToTable("TranslationKeys");
+                    b.ToTable("LocalizedTextTranslation", (string)null);
 
                     b.HasData(
                         new
                         {
-                            Id = "55555555-0000-0000-0000-000000000001",
-                            EntityState = "Unchanged",
-                            IsActive = true,
-                            IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
+                            Id = "acacacac-0000-0000-0000-000000000001",
+                            LanguageId = "22222222-0000-0000-0000-000000000001",
                             LastModifiedUtc = "2026-01-01 00:00:00.000000",
-                            MessageCode = "1001",
-                            Name = "Kabul Center District",
+                            LocalizedTextId = "abababab-0000-0000-0000-000000000001",
+                            Value = "Beverages",
                             Version = 0
                         },
                         new
                         {
-                            Id = "55555555-0000-0000-0000-000000000002",
-                            EntityState = "Unchanged",
-                            IsActive = true,
-                            IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
+                            Id = "acacacac-0000-0000-0000-000000000002",
+                            LanguageId = "22222222-0000-0000-0000-000000000001",
                             LastModifiedUtc = "2026-01-01 00:00:00.000000",
-                            MessageCode = "1002",
-                            Name = "Kabul North District",
+                            LocalizedTextId = "abababab-0000-0000-0000-000000000002",
+                            Value = "Food Items",
                             Version = 0
                         },
                         new
                         {
-                            Id = "55555555-0000-0000-0000-000000000003",
-                            EntityState = "Unchanged",
-                            IsActive = true,
-                            IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
+                            Id = "acacacac-0000-0000-0000-000000000003",
+                            LanguageId = "22222222-0000-0000-0000-000000000001",
                             LastModifiedUtc = "2026-01-01 00:00:00.000000",
-                            MessageCode = "1003",
-                            Name = "Herat Center District",
+                            LocalizedTextId = "abababab-0000-0000-0000-000000000003",
+                            Value = "Stationery",
                             Version = 0
                         },
                         new
                         {
-                            Id = "55555555-0000-0000-0000-000000000004",
-                            EntityState = "Unchanged",
-                            IsActive = true,
-                            IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
+                            Id = "acacacac-0000-0000-0000-000000000004",
+                            LanguageId = "22222222-0000-0000-0000-000000000001",
                             LastModifiedUtc = "2026-01-01 00:00:00.000000",
-                            MessageCode = "2001",
-                            Name = "Kabul Province",
+                            LocalizedTextId = "abababab-0000-0000-0000-000000000004",
+                            Value = "Grocery",
                             Version = 0
                         },
                         new
                         {
-                            Id = "55555555-0000-0000-0000-000000000005",
-                            EntityState = "Unchanged",
-                            IsActive = true,
-                            IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
+                            Id = "acacacac-0000-0000-0000-000000000005",
+                            LanguageId = "22222222-0000-0000-0000-000000000001",
                             LastModifiedUtc = "2026-01-01 00:00:00.000000",
-                            MessageCode = "2002",
-                            Name = "Herat Province",
+                            LocalizedTextId = "abababab-0000-0000-0000-000000000005",
+                            Value = "Personal Care",
                             Version = 0
                         },
                         new
                         {
-                            Id = "55555555-0000-0000-0000-000000000006",
-                            EntityState = "Unchanged",
-                            IsActive = true,
-                            IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
+                            Id = "acacacac-0000-0000-0000-000000000006",
+                            LanguageId = "22222222-0000-0000-0000-000000000001",
                             LastModifiedUtc = "2026-01-01 00:00:00.000000",
-                            MessageCode = "3001",
-                            Name = "Welcome Message",
+                            LocalizedTextId = "abababab-0000-0000-0000-000000000006",
+                            Value = "Electronics",
                             Version = 0
                         },
                         new
                         {
-                            Id = "55555555-0000-0000-0000-000000000007",
-                            EntityState = "Unchanged",
-                            IsActive = true,
-                            IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
+                            Id = "acacacac-0000-0000-0000-000000000007",
+                            LanguageId = "22222222-0000-0000-0000-000000000003",
                             LastModifiedUtc = "2026-01-01 00:00:00.000000",
-                            MessageCode = "3002",
-                            Name = "Error Message",
+                            LocalizedTextId = "abababab-0000-0000-0000-000000000001",
+                            Value = "نوشیدنی‌ها",
                             Version = 0
                         },
                         new
                         {
-                            Id = "55555555-0000-0000-0000-000000000008",
-                            EntityState = "Unchanged",
-                            IsActive = true,
-                            IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
+                            Id = "acacacac-0000-0000-0000-000000000008",
+                            LanguageId = "22222222-0000-0000-0000-000000000003",
                             LastModifiedUtc = "2026-01-01 00:00:00.000000",
-                            MessageCode = "3003",
-                            Name = "Success Message",
+                            LocalizedTextId = "abababab-0000-0000-0000-000000000002",
+                            Value = "مواد غذایی",
+                            Version = 0
+                        },
+                        new
+                        {
+                            Id = "acacacac-0000-0000-0000-000000000009",
+                            LanguageId = "22222222-0000-0000-0000-000000000003",
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
+                            LocalizedTextId = "abababab-0000-0000-0000-000000000003",
+                            Value = "لوازم تحریر",
+                            Version = 0
+                        },
+                        new
+                        {
+                            Id = "acacacac-0000-0000-0000-000000000010",
+                            LanguageId = "22222222-0000-0000-0000-000000000003",
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
+                            LocalizedTextId = "abababab-0000-0000-0000-000000000004",
+                            Value = "مواد خوراکی",
+                            Version = 0
+                        },
+                        new
+                        {
+                            Id = "acacacac-0000-0000-0000-000000000011",
+                            LanguageId = "22222222-0000-0000-0000-000000000003",
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
+                            LocalizedTextId = "abababab-0000-0000-0000-000000000005",
+                            Value = "مراقبت شخصی",
+                            Version = 0
+                        },
+                        new
+                        {
+                            Id = "acacacac-0000-0000-0000-000000000012",
+                            LanguageId = "22222222-0000-0000-0000-000000000003",
+                            LastModifiedUtc = "2026-01-01 00:00:00.000000",
+                            LocalizedTextId = "abababab-0000-0000-0000-000000000006",
+                            Value = "وسایل الکترونیکی",
                             Version = 0
                         });
                 });
@@ -2206,34 +1885,17 @@ namespace SMIS.Infrastructure.Server.Migrations
                     b.Property<DateTime?>("DeletedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("EntityState")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsPublic")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsSyncedToServer")
                         .HasColumnType("bit");
 
                     b.Property<string>("LastModifiedUtc")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime?>("LastSyncedAt")
-                        .HasColumnType("datetime2");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
-
-                    b.Property<string>("TranslationKeyId")
-                        .HasMaxLength(450)
-                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("UpdatedBy")
                         .HasMaxLength(450)
@@ -2249,10 +1911,6 @@ namespace SMIS.Infrastructure.Server.Migrations
 
                     b.HasIndex("CreatedBy");
 
-                    b.HasIndex("TranslationKeyId")
-                        .IsUnique()
-                        .HasFilter("[TranslationKeyId] IS NOT NULL");
-
                     b.HasIndex("UpdatedBy");
 
                     b.ToTable("Districts");
@@ -2261,37 +1919,25 @@ namespace SMIS.Infrastructure.Server.Migrations
                         new
                         {
                             Id = "99999999-0000-0000-0000-000000000001",
-                            EntityState = "Unchanged",
                             IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
                             LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             Name = "Kabul Center",
-                            TranslationKeyId = "55555555-0000-0000-0000-000000000001",
                             Version = 0
                         },
                         new
                         {
                             Id = "99999999-0000-0000-0000-000000000002",
-                            EntityState = "Unchanged",
                             IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
                             LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             Name = "Kabul North",
-                            TranslationKeyId = "55555555-0000-0000-0000-000000000002",
                             Version = 0
                         },
                         new
                         {
                             Id = "99999999-0000-0000-0000-000000000003",
-                            EntityState = "Unchanged",
                             IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
                             LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             Name = "Herat Center",
-                            TranslationKeyId = "55555555-0000-0000-0000-000000000003",
                             Version = 0
                         });
                 });
@@ -2311,25 +1957,12 @@ namespace SMIS.Infrastructure.Server.Migrations
                     b.Property<DateTime?>("DeletedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("EntityState")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsPublic")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsSyncedToServer")
                         .HasColumnType("bit");
 
                     b.Property<string>("LastModifiedUtc")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("LastSyncedAt")
-                        .HasColumnType("datetime2");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -2358,10 +1991,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                         new
                         {
                             Id = "77777777-0000-0000-0000-000000000001",
-                            EntityState = "Unchanged",
                             IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
                             LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             Name = "Kabul",
                             Version = 0
@@ -2369,10 +1999,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                         new
                         {
                             Id = "77777777-0000-0000-0000-000000000002",
-                            EntityState = "Unchanged",
                             IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
                             LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             Name = "Herat",
                             Version = 0
@@ -2380,10 +2007,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                         new
                         {
                             Id = "77777777-0000-0000-0000-000000000003",
-                            EntityState = "Unchanged",
                             IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
                             LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             Name = "Kandahar",
                             Version = 0
@@ -2391,10 +2015,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                         new
                         {
                             Id = "77777777-0000-0000-0000-000000000004",
-                            EntityState = "Unchanged",
                             IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
                             LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             Name = "Balkh",
                             Version = 0
@@ -2405,10 +2026,6 @@ namespace SMIS.Infrastructure.Server.Migrations
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("EntityState")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsDefault")
                         .HasColumnType("bit");
@@ -2451,7 +2068,6 @@ namespace SMIS.Infrastructure.Server.Migrations
                         new
                         {
                             Id = "88888888-0000-0000-0000-000000000001",
-                            EntityState = "Added",
                             IsDefault = true,
                             LanguageCode = "en",
                             LanguageId = "22222222-0000-0000-0000-000000000001",
@@ -2463,7 +2079,6 @@ namespace SMIS.Infrastructure.Server.Migrations
                         new
                         {
                             Id = "88888888-0000-0000-0000-000000000002",
-                            EntityState = "Added",
                             IsDefault = false,
                             LanguageCode = "ps",
                             LanguageId = "22222222-0000-0000-0000-000000000002",
@@ -2475,7 +2090,6 @@ namespace SMIS.Infrastructure.Server.Migrations
                         new
                         {
                             Id = "88888888-0000-0000-0000-000000000003",
-                            EntityState = "Added",
                             IsDefault = false,
                             LanguageCode = "fa",
                             LanguageId = "22222222-0000-0000-0000-000000000003",
@@ -2487,7 +2101,6 @@ namespace SMIS.Infrastructure.Server.Migrations
                         new
                         {
                             Id = "88888888-0000-0000-0000-000000000004",
-                            EntityState = "Added",
                             IsDefault = true,
                             LanguageCode = "en",
                             LanguageId = "22222222-0000-0000-0000-000000000001",
@@ -2499,7 +2112,6 @@ namespace SMIS.Infrastructure.Server.Migrations
                         new
                         {
                             Id = "88888888-0000-0000-0000-000000000005",
-                            EntityState = "Added",
                             IsDefault = false,
                             LanguageCode = "ps",
                             LanguageId = "22222222-0000-0000-0000-000000000002",
@@ -2511,7 +2123,6 @@ namespace SMIS.Infrastructure.Server.Migrations
                         new
                         {
                             Id = "88888888-0000-0000-0000-000000000006",
-                            EntityState = "Added",
                             IsDefault = false,
                             LanguageCode = "fa",
                             LanguageId = "22222222-0000-0000-0000-000000000003",
@@ -2523,7 +2134,6 @@ namespace SMIS.Infrastructure.Server.Migrations
                         new
                         {
                             Id = "88888888-0000-0000-0000-000000000007",
-                            EntityState = "Added",
                             IsDefault = true,
                             LanguageCode = "en",
                             LanguageId = "22222222-0000-0000-0000-000000000001",
@@ -2535,7 +2145,6 @@ namespace SMIS.Infrastructure.Server.Migrations
                         new
                         {
                             Id = "88888888-0000-0000-0000-000000000008",
-                            EntityState = "Added",
                             IsDefault = false,
                             LanguageCode = "ps",
                             LanguageId = "22222222-0000-0000-0000-000000000002",
@@ -2547,7 +2156,6 @@ namespace SMIS.Infrastructure.Server.Migrations
                         new
                         {
                             Id = "88888888-0000-0000-0000-000000000009",
-                            EntityState = "Added",
                             IsDefault = false,
                             LanguageCode = "fa",
                             LanguageId = "22222222-0000-0000-0000-000000000003",
@@ -2559,7 +2167,6 @@ namespace SMIS.Infrastructure.Server.Migrations
                         new
                         {
                             Id = "88888888-0000-0000-0000-000000000010",
-                            EntityState = "Added",
                             IsDefault = true,
                             LanguageCode = "en",
                             LanguageId = "22222222-0000-0000-0000-000000000001",
@@ -2571,7 +2178,6 @@ namespace SMIS.Infrastructure.Server.Migrations
                         new
                         {
                             Id = "88888888-0000-0000-0000-000000000011",
-                            EntityState = "Added",
                             IsDefault = false,
                             LanguageCode = "ps",
                             LanguageId = "22222222-0000-0000-0000-000000000002",
@@ -2583,7 +2189,6 @@ namespace SMIS.Infrastructure.Server.Migrations
                         new
                         {
                             Id = "88888888-0000-0000-0000-000000000012",
-                            EntityState = "Added",
                             IsDefault = false,
                             LanguageCode = "fa",
                             LanguageId = "22222222-0000-0000-0000-000000000003",
@@ -4349,25 +3954,12 @@ namespace SMIS.Infrastructure.Server.Migrations
                     b.Property<DateTime?>("DeletedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("EntityState")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsPublic")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsSyncedToServer")
                         .HasColumnType("bit");
 
                     b.Property<string>("LastModifiedUtc")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("LastSyncedAt")
-                        .HasColumnType("datetime2");
 
                     b.Property<string>("Notes")
                         .HasMaxLength(500)
@@ -4439,25 +4031,12 @@ namespace SMIS.Infrastructure.Server.Migrations
                     b.Property<DateTime?>("DeletedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("EntityState")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsPublic")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsSyncedToServer")
                         .HasColumnType("bit");
 
                     b.Property<string>("LastModifiedUtc")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("LastSyncedAt")
-                        .HasColumnType("datetime2");
 
                     b.Property<decimal>("OrderedQuantityEntered")
                         .HasPrecision(18, 4)
@@ -4533,13 +4112,6 @@ namespace SMIS.Infrastructure.Server.Migrations
                         .HasMaxLength(450)
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("EntityState")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("IsPublic")
-                        .HasColumnType("bit");
-
                     b.Property<string>("LastModifiedUtc")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -4612,13 +4184,6 @@ namespace SMIS.Infrastructure.Server.Migrations
 
                     b.Property<DateTime?>("CreatedDate")
                         .HasColumnType("datetime2");
-
-                    b.Property<string>("EntityState")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("IsPublic")
-                        .HasColumnType("bit");
 
                     b.Property<string>("LastModifiedUtc")
                         .IsRequired()
@@ -4853,10 +4418,6 @@ namespace SMIS.Infrastructure.Server.Migrations
                     b.Property<DateTime?>("EndDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("EntityState")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("FirstName")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -4868,12 +4429,6 @@ namespace SMIS.Infrastructure.Server.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<bool>("IsPublic")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsSyncedToServer")
-                        .HasColumnType("bit");
-
                     b.Property<string>("LastModifiedUtc")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -4881,9 +4436,6 @@ namespace SMIS.Infrastructure.Server.Migrations
                     b.Property<string>("LastName")
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
-
-                    b.Property<DateTime?>("LastSyncedAt")
-                        .HasColumnType("datetime2");
 
                     b.Property<string>("NationalIdCardNumber")
                         .HasMaxLength(50)
@@ -4950,12 +4502,9 @@ namespace SMIS.Infrastructure.Server.Migrations
                             ApplicationUserId = "44444444-0000-0000-0000-000000000001",
                             CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Email = "john.doe@example.com",
-                            EntityState = "Unchanged",
                             FirstName = "John",
                             IsActive = true,
                             IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
                             LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             LastName = "Doe",
                             NationalIdCardNumber = "123456789",
@@ -4974,12 +4523,9 @@ namespace SMIS.Infrastructure.Server.Migrations
                             ApplicationUserId = "44444444-0000-0000-0000-000000000002",
                             CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Email = "jane.smith@example.com",
-                            EntityState = "Unchanged",
                             FirstName = "Jane",
                             IsActive = true,
                             IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
                             LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             LastName = "Smith",
                             NationalIdCardNumber = "987654321",
@@ -4998,12 +4544,9 @@ namespace SMIS.Infrastructure.Server.Migrations
                             ApplicationUserId = "44444444-0000-0000-0000-000000000004",
                             CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Email = "bob.johnson@example.com",
-                            EntityState = "Unchanged",
                             FirstName = "Bob",
                             IsActive = true,
                             IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
                             LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             LastName = "Johnson",
                             NationalIdCardNumber = "555666777",
@@ -5022,12 +4565,9 @@ namespace SMIS.Infrastructure.Server.Migrations
                             ApplicationUserId = "44444444-0000-0000-0000-000000000016",
                             CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Email = "wasil@wasilshop.com",
-                            EntityState = "Unchanged",
                             FirstName = "Wasil",
                             IsActive = true,
                             IsDeleted = false,
-                            IsPublic = false,
-                            IsSyncedToServer = true,
                             LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             LastName = "Admin",
                             NationalIdCardNumber = "123456789",
@@ -5057,15 +4597,8 @@ namespace SMIS.Infrastructure.Server.Migrations
                     b.Property<DateTime?>("CreatedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("EntityState")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<DateTime?>("ExpirationDate")
                         .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsPublic")
-                        .HasColumnType("bit");
 
                     b.Property<string>("LastModifiedUtc")
                         .IsRequired()
@@ -5154,9 +4687,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                             Id = "11111111-1111-0000-0000-000000000001",
                             BatchNumber = "CC-001",
                             CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            EntityState = "Unchanged",
                             ExpirationDate = new DateTime(2026, 7, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            IsPublic = false,
                             LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             ProductId = "cccccccc-0000-0000-0000-000000000001",
                             ReceivedAtUtc = new DateTime(2025, 12, 22, 0, 0, 0, 0, DateTimeKind.Utc),
@@ -5175,9 +4706,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                             Id = "11111111-1111-0000-0000-000000000002",
                             BatchNumber = "CC-002",
                             CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            EntityState = "Unchanged",
                             ExpirationDate = new DateTime(2026, 8, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            IsPublic = false,
                             LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             ProductId = "cccccccc-0000-0000-0000-000000000001",
                             ReceivedAtUtc = new DateTime(2025, 12, 27, 0, 0, 0, 0, DateTimeKind.Utc),
@@ -5196,9 +4725,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                             Id = "11111111-1111-0000-0000-000000000003",
                             BatchNumber = "OREO-101",
                             CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            EntityState = "Unchanged",
                             ExpirationDate = new DateTime(2026, 4, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            IsPublic = false,
                             LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             ProductId = "cccccccc-0000-0000-0000-000000000004",
                             ReceivedAtUtc = new DateTime(2025, 12, 17, 0, 0, 0, 0, DateTimeKind.Utc),
@@ -5217,8 +4744,6 @@ namespace SMIS.Infrastructure.Server.Migrations
                             Id = "11111111-1111-0000-0000-000000000004",
                             BatchNumber = "NB-009",
                             CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            EntityState = "Unchanged",
-                            IsPublic = false,
                             LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             ProductId = "cccccccc-0000-0000-0000-000000000007",
                             ReceivedAtUtc = new DateTime(2025, 12, 12, 0, 0, 0, 0, DateTimeKind.Utc),
@@ -5257,10 +4782,6 @@ namespace SMIS.Infrastructure.Server.Migrations
                         .HasPrecision(18, 4)
                         .HasColumnType("decimal(18,4)");
 
-                    b.Property<string>("EntityState")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<decimal>("ExpectedQuantityBase")
                         .HasPrecision(18, 4)
                         .HasColumnType("decimal(18,4)");
@@ -5268,18 +4789,9 @@ namespace SMIS.Infrastructure.Server.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<bool>("IsPublic")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsSyncedToServer")
-                        .HasColumnType("bit");
-
                     b.Property<string>("LastModifiedUtc")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("LastSyncedAt")
-                        .HasColumnType("datetime2");
 
                     b.Property<string>("StockBatchId")
                         .IsRequired()
@@ -5333,25 +4845,12 @@ namespace SMIS.Infrastructure.Server.Migrations
                     b.Property<DateTime?>("DeletedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("EntityState")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsPublic")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsSyncedToServer")
                         .HasColumnType("bit");
 
                     b.Property<string>("LastModifiedUtc")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("LastSyncedAt")
-                        .HasColumnType("datetime2");
 
                     b.Property<string>("Notes")
                         .HasMaxLength(500)
@@ -5411,13 +4910,6 @@ namespace SMIS.Infrastructure.Server.Migrations
                         .IsRequired()
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)");
-
-                    b.Property<string>("EntityState")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("IsPublic")
-                        .HasColumnType("bit");
 
                     b.Property<string>("LastModifiedUtc")
                         .IsRequired()
@@ -5505,8 +4997,6 @@ namespace SMIS.Infrastructure.Server.Migrations
                             Id = "22222222-2222-0000-0000-000000000001",
                             CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Direction = "In",
-                            EntityState = "Unchanged",
-                            IsPublic = false,
                             LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             OccurredAtUtc = new DateTime(2025, 12, 22, 0, 0, 0, 0, DateTimeKind.Utc),
                             OperationId = "22222222-2222-0000-0000-000000000001",
@@ -5526,8 +5016,6 @@ namespace SMIS.Infrastructure.Server.Migrations
                             Id = "22222222-2222-0000-0000-000000000002",
                             CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Direction = "In",
-                            EntityState = "Unchanged",
-                            IsPublic = false,
                             LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             OccurredAtUtc = new DateTime(2025, 12, 27, 0, 0, 0, 0, DateTimeKind.Utc),
                             OperationId = "22222222-2222-0000-0000-000000000002",
@@ -5547,8 +5035,6 @@ namespace SMIS.Infrastructure.Server.Migrations
                             Id = "22222222-2222-0000-0000-000000000003",
                             CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Direction = "In",
-                            EntityState = "Unchanged",
-                            IsPublic = false,
                             LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             OccurredAtUtc = new DateTime(2025, 12, 17, 0, 0, 0, 0, DateTimeKind.Utc),
                             OperationId = "22222222-2222-0000-0000-000000000003",
@@ -5568,8 +5054,6 @@ namespace SMIS.Infrastructure.Server.Migrations
                             Id = "22222222-2222-0000-0000-000000000004",
                             CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Direction = "In",
-                            EntityState = "Unchanged",
-                            IsPublic = false,
                             LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             OccurredAtUtc = new DateTime(2025, 12, 12, 0, 0, 0, 0, DateTimeKind.Utc),
                             OperationId = "22222222-2222-0000-0000-000000000004",
@@ -5601,28 +5085,15 @@ namespace SMIS.Infrastructure.Server.Migrations
                     b.Property<DateTime?>("DeletedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("EntityState")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<bool>("IsPublic")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsSyncedToServer")
-                        .HasColumnType("bit");
-
                     b.Property<string>("LastModifiedUtc")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("LastSyncedAt")
-                        .HasColumnType("datetime2");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -5907,16 +5378,6 @@ namespace SMIS.Infrastructure.Server.Migrations
                 {
                     b.HasOne("SMIS.Domain.Entities.Identity.Entity.ApplicationUser", null)
                         .WithMany()
-                        .HasForeignKey("ClientCreatedBy")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("SMIS.Domain.Entities.Identity.Entity.ApplicationUser", null)
-                        .WithMany()
-                        .HasForeignKey("ClientModifiedBy")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("SMIS.Domain.Entities.Identity.Entity.ApplicationUser", null)
-                        .WithMany()
                         .HasForeignKey("CreatedBy")
                         .OnDelete(DeleteBehavior.Restrict);
 
@@ -6058,46 +5519,23 @@ namespace SMIS.Infrastructure.Server.Migrations
                     b.Navigation("LoanAccount");
                 });
 
-            modelBuilder.Entity("SMIS.Domain.Entities.Localization.Translation", b =>
+            modelBuilder.Entity("SMIS.Domain.Entities.Localization.LocalizedTextTranslation", b =>
                 {
-                    b.HasOne("SMIS.Domain.Entities.Identity.Entity.ApplicationUser", null)
-                        .WithMany()
-                        .HasForeignKey("CreatedBy")
-                        .OnDelete(DeleteBehavior.Restrict);
-
                     b.HasOne("SMIS.Domain.Entities.Localization.Language", "Language")
                         .WithMany()
-                        .HasForeignKey("LanguageNo")
+                        .HasForeignKey("LanguageId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("SMIS.Domain.Entities.Localization.TranslationKey", "TranslationKey")
+                    b.HasOne("SMIS.Domain.Entities.Localization.LocalizedText", "LocalizedText")
                         .WithMany("Translations")
-                        .HasForeignKey("TranslationKeyId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .HasForeignKey("LocalizedTextId")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.HasOne("SMIS.Domain.Entities.Identity.Entity.ApplicationUser", null)
-                        .WithMany()
-                        .HasForeignKey("UpdatedBy")
-                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("Language");
 
-                    b.Navigation("TranslationKey");
-                });
-
-            modelBuilder.Entity("SMIS.Domain.Entities.Localization.TranslationKey", b =>
-                {
-                    b.HasOne("SMIS.Domain.Entities.Identity.Entity.ApplicationUser", null)
-                        .WithMany()
-                        .HasForeignKey("CreatedBy")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("SMIS.Domain.Entities.Identity.Entity.ApplicationUser", null)
-                        .WithMany()
-                        .HasForeignKey("UpdatedBy")
-                        .OnDelete(DeleteBehavior.Restrict);
+                    b.Navigation("LocalizedText");
                 });
 
             modelBuilder.Entity("SMIS.Domain.Entities.LocationEntities.District", b =>
@@ -6107,17 +5545,10 @@ namespace SMIS.Infrastructure.Server.Migrations
                         .HasForeignKey("CreatedBy")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("SMIS.Domain.Entities.Localization.TranslationKey", "TranslationKey")
-                        .WithOne()
-                        .HasForeignKey("SMIS.Domain.Entities.LocationEntities.District", "TranslationKeyId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
                     b.HasOne("SMIS.Domain.Entities.Identity.Entity.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UpdatedBy")
                         .OnDelete(DeleteBehavior.Restrict);
-
-                    b.Navigation("TranslationKey");
                 });
 
             modelBuilder.Entity("SMIS.Domain.Entities.LocationEntities.Province", b =>
@@ -6599,7 +6030,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                     b.Navigation("Payments");
                 });
 
-            modelBuilder.Entity("SMIS.Domain.Entities.Localization.TranslationKey", b =>
+            modelBuilder.Entity("SMIS.Domain.Entities.Localization.LocalizedText", b =>
                 {
                     b.Navigation("Translations");
                 });

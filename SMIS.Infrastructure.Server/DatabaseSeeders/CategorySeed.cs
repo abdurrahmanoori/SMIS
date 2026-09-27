@@ -1,6 +1,5 @@
 using Microsoft.EntityFrameworkCore;
 using SMIS.Domain.Entities;
-using SMIS.Domain.Services;
 
 namespace SMIS.Infrastructure.Server.DatabaseSeeders;
 
@@ -36,11 +35,5 @@ public static class CategorySeed
         category.UpdatedDate = SeedIds.SeedTimestampUtc;
         category.LastModifiedUtc = SeedIds.SeedTimestampUtc;
         return category;
-
-
-        //typeof(Category).GetProperty(nameof(Category.Id))!.SetValue(category, id);
-        //typeof(Category).GetProperty(nameof(Category.CreatedDate))!.SetValue(category, DateTimeService.Now);
-        //typeof(Category).GetProperty(nameof(Category.UpdatedDate))!.SetValue(category, DateTimeService.Now);
-        //typeof(Category).GetProperty(nameof(Category.LastModifiedUtc))!.SetValue(category, DateTimeService.NowUtc);
     }
 }

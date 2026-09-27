@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using SMIS.Domain.Entities.Identity.Entity;
+using SMIS.Domain.Entities.Localization;
 
 namespace SMIS.Infrastructure.Server.EntityConfigurations
 {
@@ -26,6 +27,7 @@ namespace SMIS.Infrastructure.Server.EntityConfigurations
 
             builder.Property(u => u.LanguageId)
                 .IsRequired()
+                .HasDefaultValue(LanguageDefaults.EnglishId)
                 .HasMaxLength(450);
 
             builder.Property(u => u.ShopName)

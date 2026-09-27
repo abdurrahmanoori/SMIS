@@ -21,9 +21,14 @@ jobs:
           java-version: '17'
       - uses: subosito/flutter-action@v2
         with:
+          flutter-version: '3.44.9'
           channel: stable
           cache: true
       - run: flutter pub get
       - run: flutter analyze --no-fatal-infos lib/data/stock_api.dart lib/data/stock_offline_store.dart lib/data/powersync/app_powersync_database.dart lib/data/powersync/app_powersync_schema.dart lib/screens/stock_screen.dart lib/screens/home_screen.dart test/stock_offline_store_test.dart
       - run: flutter test test/stock_offline_store_test.dart
       - run: flutter build apk --debug
+      - name: Build Flutter web
+        run: |
+          flutter build web --release -t lib/main_production.dart
+          cp web/web.config build/web/web.config

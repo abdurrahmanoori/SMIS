@@ -7,6 +7,16 @@ const _trackTimestamp = TrackPreviousValuesOptions(
 /// Only entities that currently exist in the Flutter application are included.
 /// Adding a .NET entity does not automatically make it part of offline sync.
 const appPowerSyncSchema = Schema([
+  Table('language', [
+    Column.text('name'),
+    Column.text('code'),
+    Column.integer('is_active'),
+    Column.text('last_modified_utc'),
+  ]),
+  Table('app_user', [
+    Column.text('language_id'),
+    Column.text('last_modified_utc'),
+  ]),
   Table('shop', [
     Column.text('name'),
     Column.text('shop_type'),

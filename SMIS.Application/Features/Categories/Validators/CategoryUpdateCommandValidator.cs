@@ -21,6 +21,7 @@ namespace SMIS.Application.Features.Categories.Validators
             RuleFor(x => x.CategoryUpdateDto.Description)
                 .MaximumLength(500).WithMessage("Description must not exceed 500 characters")
                 .When(x => !string.IsNullOrEmpty(x.CategoryUpdateDto.Description));
+
         }
     }
 }

@@ -28,7 +28,7 @@ namespace SMIS.Api.Controllers
         /// Gets languages in pages.
         /// </summary>
         [HttpGet]
-        public async Task<ActionResult<PagedList<LanguageDto>>> GetAll(
+        public async Task<ActionResult<PagedListNew<LanguageDto>>> GetAll(
             [FromQuery] int pageNumber = 1,
             [FromQuery] int pageSize = 25
         ) =>

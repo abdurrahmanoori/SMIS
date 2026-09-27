@@ -10,9 +10,8 @@ public class ProductPriceConfiguration : IEntityTypeConfiguration<ProductPrice>
         EntityTypeBuilder<ProductPrice> builder
     )
     {
-        builder.ConfigureAuditUserRelationships();
-        builder.IgnoreLegacySyncMetadata();
-        builder.ToTable(nameof(ProductPrice));
+            builder.ConfigureAuditUserRelationships();
+            builder.ToTable(nameof(ProductPrice));
 
         builder.HasKey(p => p.Id);
 

@@ -101,15 +101,4 @@ public class ProductPriceController : BaseApiController
         ProductPriceSyncDeleteDto dto
     ) => HandleResultResponseOld(await Mediator.Send(new ProductPriceSyncDeleteCommand(id, dto)));
 
-    /// <summary>
-    /// Gets product-price changes made after a given time for offline synchronization.
-    /// </summary>
-    /// <remarks>
-    /// The result can include deleted records so an offline client can update or remove its local prices.
-    /// </remarks>
-    /// <param name="changedSince">Return product prices changed after this date and time.</param>
-    [HttpGet("pull")]
-    public async Task<ActionResult<List<ProductPriceDto>>> Pull(
-        [FromQuery] DateTime changedSince
-    ) => HandleResultResponseOld(await Mediator.Send(new ProductPricePullQuery(changedSince)));
 }

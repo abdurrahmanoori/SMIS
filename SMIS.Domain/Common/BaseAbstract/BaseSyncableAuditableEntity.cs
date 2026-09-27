@@ -3,34 +3,17 @@ using SMIS.Domain.Services;
 namespace SMIS.Domain.Common.BaseAbstract;
 
 /// <summary>
-/// Shared offline-sync state for entities that can be created, updated, or
-/// deleted on a client. Server audit fields remain in <see cref="BaseAuditableEntity"/>.
+/// Shared server-side conflict metadata for entities uploaded by PowerSync.
+/// PowerSync owns client queue state; this type stores only the client change
+/// timestamp still required by the API's conflict policy.
 /// </summary>
 public abstract class BaseSyncableAuditableEntity : BaseAuditableEntity
 {
-    /// <summary>
-    /// Original client-side creation timestamp. This is intentionally separate
-    /// from CreatedDate, which records when the server persisted the entity.
-    /// </summary>
-    public DateTime? ClientCreatedDate { get; private set; }
-
     /// <summary>
     /// Most recent modification timestamp reported by an offline client.
     /// It participates in last-write-wins conflict comparison.
     /// </summary>
     public DateTime? ClientModifiedDate { get; private set; }
-
-    public string? ClientCreatedBy { get; private set; }
-    public string? ClientModifiedBy { get; private set; }
-
-    public void SetClientCreationMetadata(
-        DateTime createdDateUtc,
-        string? createdBy
-    )
-    {
-        ClientCreatedDate = DateTimeService.NormalizeUtc(createdDateUtc);
-        ClientCreatedBy = NormalizeUserId(createdBy);
-    }
 
     public void SetClientModificationMetadata(
         DateTime modifiedDateUtc
@@ -39,19 +22,9 @@ public abstract class BaseSyncableAuditableEntity : BaseAuditableEntity
         ClientModifiedDate = DateTimeService.NormalizeUtc(modifiedDateUtc);
     }
 
-    public void SetClientModificationMetadata(
-        DateTime modifiedDateUtc,
-        string? modifiedBy
-    )
-    {
-        SetClientModificationMetadata(modifiedDateUtc);
-        ClientModifiedBy = NormalizeUserId(modifiedBy);
-    }
-
     public void ClearClientModificationMetadata()
     {
         ClientModifiedDate = null;
-        ClientModifiedBy = null;
     }
 
     public virtual void Restore()
@@ -70,12 +43,6 @@ public abstract class BaseSyncableAuditableEntity : BaseAuditableEntity
     public DateTime GetConflictModifiedUtc() => DateTimeService.NormalizeUtc(
         ClientModifiedDate
         ?? UpdatedDate
-        ?? ClientCreatedDate
         ?? CreatedDate
         ?? LastModifiedUtc);
-
-    private static string? NormalizeUserId(
-        string? value
-    ) =>
-        string.IsNullOrWhiteSpace(value) ? null : value.Trim();
 }

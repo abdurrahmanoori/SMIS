@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../controllers/locale_controller.dart';
+import '../controllers/auth_controller.dart';
+import '../controllers/profile_controller.dart';
+import '../data/data_exception.dart';
 import '../l10n/app_localizations.dart';
 
 class LocaleAction extends ConsumerWidget {
@@ -18,7 +21,24 @@ class LocaleAction extends ConsumerWidget {
     return PopupMenuButton<Locale>(
       tooltip: l10n.text('Language'),
       initialValue: locale,
-      onSelected: ref.read(localeControllerProvider.notifier).setLocale,
+      onSelected: (selectedLocale) async {
+        final auth = ref.read(authControllerProvider);
+        try {
+          if (auth.isAuthenticated) {
+            await ref
+                .read(profileControllerProvider.notifier)
+                .updateLanguageByCode(selectedLocale.languageCode);
+          } else {
+            await ref
+                .read(localeControllerProvider.notifier)
+                .setLocale(selectedLocale);
+          }
+        } catch (error, stackTrace) {
+          if (context.mounted) {
+            AppErrorNotification.show(context, error, stackTrace);
+          }
+        }
+      },
       itemBuilder: (context) => AppLocalizations.supportedLocales
           .map(
             (item) => PopupMenuItem<Locale>(

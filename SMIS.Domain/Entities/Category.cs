@@ -9,7 +9,6 @@ public class Category : BaseSyncableAuditableEntity, IShopEntity
 {
     public string Name { get; private set; } = string.Empty;
 
-
     public string? Code { get; private set; }
 
     public string? Description { get; private set; }
@@ -47,6 +46,9 @@ public class Category : BaseSyncableAuditableEntity, IShopEntity
         string name
     )
     {
+        if (string.IsNullOrWhiteSpace(name))
+            throw new DomainValidationException("Category name cannot be empty.");
+
         Name = name.Trim();
     }
 
@@ -78,16 +80,3 @@ public class Category : BaseSyncableAuditableEntity, IShopEntity
     public void Activate() => IsActive = true;
     public void Deactivate() => IsActive = false;
 }
-
-/*
- Purpose
-
-Groups products (Drink, Food, Stationery, etc.)
-| Id | Name       |
-| -- | ---------- |
-| 1  | Drinks     |
-| 2  | Food       |
-| 3  | Stationery |
-| 4  | Grocery    |
-
- */

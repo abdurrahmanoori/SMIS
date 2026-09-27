@@ -26,4 +26,16 @@
         <ProjectReference Include="..\SMIS.Domain\SMIS.Domain.csproj"/>
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="DTO\Translations\" />
+      <Folder Include="Features\Translations\Commands\" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Remove="DTO\Translations\TranslationCreateDto.cs" />
+      <Compile Remove="DTO\TranslationKeys\TranslationKeyDto.cs" />
+      <Compile Remove="Features\Translations\Commands\TranslationCreateCommand.cs" />
+      <Compile Remove="Features\Translations\Commands\TranslationDeleteCommand.cs" />
+    </ItemGroup>
+
 </Project>

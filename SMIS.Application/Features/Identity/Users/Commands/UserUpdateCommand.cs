@@ -3,7 +3,6 @@ using MediatR;
 using Microsoft.AspNetCore.Identity;
 using SMIS.Application.Common.Response;
 using SMIS.Application.DTO.Users;
-using SMIS.Application.Extensions;
 using SMIS.Application.Repositories.Base;
 using SMIS.Application.Repositories.Localization;
 using SMIS.Application.Repositories.Shops;
@@ -16,7 +15,7 @@ namespace SMIS.Application.Features.Identity.Users.Commands
 
     public class UserUpdateCommandHandler : IRequestHandler<UserUpdateCommand, Result<UserDto>>
     {
-        private readonly ITranslationKeyRepository _translationKeyRepository;
+        private readonly ILanguageRepository _languageRepository;
         private readonly IShopRepository _shopRepository;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly RoleManager<ApplicationRole> _roleManager;
@@ -25,7 +24,7 @@ namespace SMIS.Application.Features.Identity.Users.Commands
         private readonly ICurrentUser _currentUser;
 
         public UserUpdateCommandHandler(
-            ITranslationKeyRepository translationKeyRepository,
+            ILanguageRepository languageRepository,
             IShopRepository shopRepository,
             UserManager<ApplicationUser> userManager,
             RoleManager<ApplicationRole> roleManager,
@@ -34,7 +33,7 @@ namespace SMIS.Application.Features.Identity.Users.Commands
             ICurrentUser currentUser
         )
         {
-            _translationKeyRepository = translationKeyRepository;
+            _languageRepository = languageRepository;
             _shopRepository = shopRepository;
             _userManager = userManager;
             _roleManager = roleManager;
@@ -74,8 +73,6 @@ namespace SMIS.Application.Features.Identity.Users.Commands
             var user = await _userManager.FindByIdAsync(request.UserId);
             if (user == null) return Result<UserDto>.NotFoundResult(request.UserId);
 
-            await _translationKeyRepository.AddTranslationKeysForEntity(request.UserUpdateDto, _unitOfWork);
-
             if (!string.IsNullOrWhiteSpace(request.UserUpdateDto.UserName))
                 user.SetUserName(request.UserUpdateDto.UserName);
             if (!string.IsNullOrWhiteSpace(request.UserUpdateDto.Email)) user.SetEmail(request.UserUpdateDto.Email);
@@ -101,7 +98,17 @@ namespace SMIS.Application.Features.Identity.Users.Commands
             }
 
             if (!string.IsNullOrWhiteSpace(request.UserUpdateDto.LanguageId))
-                user.SetLanguageId(request.UserUpdateDto.LanguageId);
+            {
+                var language = await _languageRepository.GetByIdAsync(request.UserUpdateDto.LanguageId);
+                if (language is null || !language.IsActive)
+                {
+                    return Result<UserDto>.FailureResult(
+                        "InvalidLanguage",
+                        "The selected language does not exist or is inactive.");
+                }
+
+                user.SetLanguageId(language.Id);
+            }
 
             // Update shop name
             var shop = await _shopRepository.GetByIdAsync(user.ShopId);

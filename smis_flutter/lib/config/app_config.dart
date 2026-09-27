@@ -17,6 +17,7 @@ class AppConfig {
   static const languageEndpoint = '/api/Language';
   static const loginEndpoint = '/api/Account/login';
   static const switchShopEndpoint = '/api/Account/switch-shop';
+  static const refreshSessionEndpoint = '/api/Account/refresh-session';
   static const powerSyncCredentialsEndpoint = '/api/PowerSync/credentials';
   static const categoryEndpoint = '/api/Category';
   static const unitOfMeasureEndpoint = '/api/UnitOfMeasure';

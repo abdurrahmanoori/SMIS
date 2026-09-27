@@ -1,17 +1,16 @@
-using SMIS.Application.Attributes;
 using SMIS.Domain.Enums;
 
 namespace SMIS.Application.DTO.Customers
 {
     public class CustomerCreateDto
     {
-        [Translatable] public string FirstName { get; set; } = string.Empty;
-        [Translatable] public string? LastName { get; set; }
+        public string FirstName { get; set; } = string.Empty;
+        public string? LastName { get; set; }
         public CustomerType CustomerType { get; set; } = CustomerType.Individual;
-        [Translatable] public string? FatherName { get; set; }
+        public string? FatherName { get; set; }
         public string? Email { get; set; }
         public string? PhoneNumber { get; set; }
-        [Translatable] public string? Address { get; set; }
+        public string? Address { get; set; }
         public string? TaxNumber { get; set; }
         public string? ProvinceId { get; set; }
         public string? DistrictId { get; set; }

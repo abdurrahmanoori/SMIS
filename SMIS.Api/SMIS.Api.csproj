@@ -50,4 +50,8 @@
         <Content Update="appsettings.Production.json" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" Condition="Exists('appsettings.Production.json')"/>
     </ItemGroup>
 
+    <ItemGroup>
+      <Compile Remove="Controllers\TranslationKeyController.cs" />
+    </ItemGroup>
+
 </Project>

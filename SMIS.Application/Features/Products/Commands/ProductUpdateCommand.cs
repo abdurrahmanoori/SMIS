@@ -2,9 +2,7 @@ using AutoMapper;
 using MediatR;
 using SMIS.Application.Common.Response;
 using SMIS.Application.DTO.Products;
-using SMIS.Application.Extensions;
 using SMIS.Application.Repositories.Categories;
-using SMIS.Application.Repositories.Localization;
 using SMIS.Application.Repositories.Products;
 using SMIS.Application.Repositories.ProductUnits;
 using SMIS.Application.Repositories.Shops;
@@ -18,7 +16,6 @@ namespace SMIS.Application.Features.Products.Commands
     internal sealed class ProductUpdateCommandHandler : IRequestHandler<ProductUpdateCommand, Result<ProductDto>>
     {
         private readonly IProductRepository _productRepository;
-        private readonly ITranslationKeyRepository _translationKeyRepository;
         private readonly IShopRepository _shopRepository;
         private readonly IUnitOfMeasureRepository _unitOfMeasureRepository;
         private readonly IProductUnitRepository _productUnitRepository;
@@ -30,7 +27,6 @@ namespace SMIS.Application.Features.Products.Commands
             IApplicationDbContext db,
             IMapper mapper,
             IProductRepository productRepository,
-            ITranslationKeyRepository translationKeyRepository,
             IShopRepository shopRepository,
             IUnitOfMeasureRepository unitOfMeasureRepository,
             ICategoryRepository categoryRepository,
@@ -40,7 +36,6 @@ namespace SMIS.Application.Features.Products.Commands
             _db = db;
             _mapper = mapper;
             _productRepository = productRepository;
-            _translationKeyRepository = translationKeyRepository;
             _shopRepository = shopRepository;
             _unitOfMeasureRepository = unitOfMeasureRepository;
             _categoryRepository = categoryRepository;
@@ -63,8 +58,6 @@ namespace SMIS.Application.Features.Products.Commands
             {
                 return ProductCommandRules.BaseUnitIsLocked();
             }
-
-            await _translationKeyRepository.AddTranslationKeysForChangedProperties(request.ProductCreateDto, entity);
 
             var oldBaseUnitId = entity.BaseUnitId;
             var baseUnitChanged = ProductCommandRules.Apply(entity, request.ProductCreateDto);
