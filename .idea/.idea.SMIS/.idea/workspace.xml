@@ -421,14 +421,6 @@
       <option name="project" value="LOCAL" />
       <updated>1789462942314</updated>
     </task>
-    <task id="LOCAL-00051" summary="feat: implement pagination support in CategoryController and enhance Category API for page retrieval">
-      <option name="closed" value="true" />
-      <created>1789220802506</created>
-      <option name="number" value="00051" />
-      <option name="presentableId" value="LOCAL-00051" />
-      <option name="project" value="LOCAL" />
-      <updated>1789220802507</updated>
-    </task>
     <task id="LOCAL-00052" summary="feat: add web database factory initialization and update CORS middleware usage">
       <option name="closed" value="true" />
       <created>1789220884683</created>
@@ -797,7 +789,15 @@
       <option name="project" value="LOCAL" />
       <updated>1790513779559</updated>
     </task>
-    <option name="localTasksCounter" value="98" />
+    <task id="LOCAL-00098" summary="refactor: update Flutter web configuration and clean up workspace.xml">
+      <option name="closed" value="true" />
+      <created>1790514501374</created>
+      <option name="number" value="00098" />
+      <option name="presentableId" value="LOCAL-00098" />
+      <option name="project" value="LOCAL" />
+      <updated>1790514501375</updated>
+    </task>
+    <option name="localTasksCounter" value="99" />
     <option name="clearContext" value="false" />
     <option name="createChangelist" value="false" />
     <option name="createBranch" value="false" />
@@ -829,7 +829,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
-    <MESSAGE value="feat(Sale): implement Sale domain with related DTOs, commands, and validation; remove LoanAccount entities" />
     <MESSAGE value="feat: add Inventory domain with related DTOs, commands, and queries" />
     <MESSAGE value="feat: implement InventoryController with endpoints for stock operations and reporting" />
     <MESSAGE value="feat: add Sale, StockCount, and Idempotency domains with related DTOs, commands, and validation; implement return and void operations for sales" />
@@ -854,6 +853,7 @@
     <MESSAGE value="refactor: disable category localization" />
     <MESSAGE value="refactor: improve code formatting and readability in workspace.xml and stock_screen.dart" />
     <MESSAGE value="refactor: update workspace.xml for improved settings and formatting" />
+    <MESSAGE value="refactor: update Flutter web configuration and clean up workspace.xml" />
     <option name="LAST_COMMIT_MESSAGE" value="" />
   </component>
   <component name="XDebuggerManager">
