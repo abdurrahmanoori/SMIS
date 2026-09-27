@@ -102,8 +102,8 @@ class ProductPowerSyncRepository extends PowerSyncRepositorySupport {
         normalized.imageUrl,
         normalized.categoryId,
         shopId,
-        0,
-        0,
+        normalized.reorderPointBase,
+        normalized.reorderQuantityBase,
         nowIso(),
       ],
     );
@@ -135,6 +135,7 @@ class ProductPowerSyncRepository extends PowerSyncRepositorySupport {
     await db.execute(
       'UPDATE product SET name = ?, base_unit_id = ?, sku = ?, description = ?, '
       'is_active = ?, barcode = ?, image_url = ?, category_id = ?, '
+      'reorder_point_base = ?, reorder_quantity_base = ?, '
       'last_modified_utc = ? WHERE id = ?',
       [
         normalized.name,
@@ -145,6 +146,8 @@ class ProductPowerSyncRepository extends PowerSyncRepositorySupport {
         normalized.barcode,
         normalized.imageUrl,
         normalized.categoryId,
+        normalized.reorderPointBase,
+        normalized.reorderQuantityBase,
         nowIso(),
         id,
       ],
@@ -230,6 +233,9 @@ class ProductPowerSyncRepository extends PowerSyncRepositorySupport {
       imageUrl: row['image_url'] as String?,
       categoryId: row['category_id']! as String,
       shopId: row['shop_id'] as String?,
+      reorderPointBase: (row['reorder_point_base'] as num?)?.toDouble() ?? 0,
+      reorderQuantityBase:
+          (row['reorder_quantity_base'] as num?)?.toDouble() ?? 0,
       createdAt: changedAt,
       updatedAt: changedAt,
       lastModifiedUtc: changedAt,

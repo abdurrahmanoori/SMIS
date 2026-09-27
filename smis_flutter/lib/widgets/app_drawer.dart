@@ -16,6 +16,7 @@ import '../screens/products_screen.dart';
 import '../screens/product_prices_screen.dart';
 import '../screens/product_units_screen.dart';
 import '../screens/shops_screen.dart';
+import '../screens/stock_screen.dart';
 import '../screens/unit_of_measures_screen.dart';
 import '../l10n/app_localizations.dart';
 import 'active_shop_context.dart';
@@ -156,6 +157,18 @@ class AppDrawer extends ConsumerWidget {
               Navigator.of(context).pushReplacement(
                 MaterialPageRoute<void>(
                   builder: (context) => const ProductsScreen(),
+                ),
+              );
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.warehouse_outlined),
+            title: Text(l10n.text('Stock management')),
+            onTap: () {
+              Navigator.of(context).pop();
+              Navigator.of(context).pushReplacement(
+                MaterialPageRoute<void>(
+                  builder: (context) => const StockScreen(),
                 ),
               );
             },

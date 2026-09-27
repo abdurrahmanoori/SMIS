@@ -19,6 +19,8 @@ class Product {
     required this.updatedAt,
     required this.lastModifiedUtc,
     required this.syncStatus,
+    this.reorderPointBase = 0,
+    this.reorderQuantityBase = 0,
     this.sku,
     this.description,
     this.barcode,
@@ -41,6 +43,8 @@ class Product {
   final DateTime updatedAt;
   final DateTime lastModifiedUtc;
   final ProductSyncStatus syncStatus;
+  final double reorderPointBase;
+  final double reorderQuantityBase;
   final String? lastSyncError;
 }
 
@@ -54,6 +58,8 @@ class ProductDraft {
     this.description,
     this.barcode,
     this.imageUrl,
+    this.reorderPointBase = 0,
+    this.reorderQuantityBase = 0,
   });
 
   final String name;
@@ -64,6 +70,8 @@ class ProductDraft {
   final String? barcode;
   final String? imageUrl;
   final String categoryId;
+  final double reorderPointBase;
+  final double reorderQuantityBase;
 
   ProductDraft normalized() {
     final normalizedName = name.trim();
@@ -118,6 +126,12 @@ class ProductDraft {
         'Category ID cannot exceed 450 characters.',
       );
     }
+    if (!reorderPointBase.isFinite || reorderPointBase < 0 ||
+        !reorderQuantityBase.isFinite || reorderQuantityBase < 0) {
+      throw const ProductValidationException(
+        'Reorder quantities must be non-negative numbers.',
+      );
+    }
 
     return ProductDraft(
       name: normalizedName,
@@ -128,6 +142,8 @@ class ProductDraft {
       barcode: _emptyToNull(normalizedBarcode),
       imageUrl: _emptyToNull(normalizedImageUrl),
       categoryId: normalizedCategoryId,
+      reorderPointBase: reorderPointBase,
+      reorderQuantityBase: reorderQuantityBase,
     );
   }
 
