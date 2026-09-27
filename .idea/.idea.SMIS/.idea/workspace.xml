@@ -146,61 +146,61 @@
   <component name="MetaFilesCheckinStateConfiguration" checkMetaFiles="true" />
   <component name="NextEditCompletionFeaturesState">
     <decayedCancelled>
-      <entry key="MS100" value="2.995730992822216E-43" />
-      <entry key="MS500" value="3.128243583977745E-9" />
-      <entry key="S2" value="0.007478683272959362" />
-      <entry key="S5" value="0.14123163065254493" />
-      <entry key="S10" value="0.4133302944100272" />
-      <entry key="S30" value="2.377881717709393" />
-      <entry key="S60" value="5.117238358512661" />
-      <entry key="M2" value="7.7737209785090045" />
-      <entry key="M5" value="10.122666144971873" />
-      <entry key="M10" value="11.219378388847385" />
-      <entry key="M15" value="11.691418479900252" />
-      <entry key="M30" value="12.322994631042176" />
-      <entry key="H1" value="13.498436855644096" />
-      <entry key="H2" value="17.236142274940363" />
-      <entry key="H4" value="27.92469728851102" />
-      <entry key="D1" value="207.32096311454148" />
-      <entry key="W1" value="386.29222562335264" />
+      <entry key="MS100" value="1.5296582286864289" />
+      <entry key="MS500" value="3.0718399287054665" />
+      <entry key="S2" value="3.7384481914636227" />
+      <entry key="S5" value="4.022729315287272" />
+      <entry key="S10" value="4.345600217879953" />
+      <entry key="S30" value="6.336033852881346" />
+      <entry key="S60" value="9.082916676382933" />
+      <entry key="M2" value="11.750058172993183" />
+      <entry key="M5" value="14.110899920502465" />
+      <entry key="M10" value="15.212958112272307" />
+      <entry key="M15" value="15.686984206965922" />
+      <entry key="M30" value="16.32067445311275" />
+      <entry key="H1" value="17.49718099166484" />
+      <entry key="H2" value="21.235362125435515" />
+      <entry key="H4" value="31.924089580337107" />
+      <entry key="D1" value="211.32025304287572" />
+      <entry key="W1" value="390.29203742086025" />
     </decayedCancelled>
     <decayedSelected>
-      <entry key="MS100" value="1.0000000000297153" />
-      <entry key="MS500" value="1.007845087389737" />
-      <entry key="S2" value="1.3152638782703294" />
-      <entry key="S5" value="1.9088727661036957" />
-      <entry key="S10" value="2.54648146474739" />
-      <entry key="S30" value="3.3704822962106125" />
-      <entry key="S60" value="3.6619902349988593" />
-      <entry key="M2" value="3.8247059063476545" />
-      <entry key="M5" value="3.928307316232132" />
-      <entry key="M10" value="3.96388850118042" />
-      <entry key="M15" value="3.9761973272240647" />
-      <entry key="M30" value="4.0359306258462215" />
-      <entry key="H1" value="4.709279300179318" />
-      <entry key="H2" value="7.171514844542189" />
-      <entry key="H4" value="13.954199528235792" />
-      <entry key="D1" value="111.09295857346977" />
-      <entry key="W1" value="195.6625990073109" />
+      <entry key="MS100" value="0.053289680737080805" />
+      <entry key="MS500" value="0.5606894790075118" />
+      <entry key="S2" value="1.1359129452912506" />
+      <entry key="S5" value="1.8001547646131157" />
+      <entry key="S10" value="2.4729022549304287" />
+      <entry key="S30" value="3.3377017571541514" />
+      <entry key="S60" value="3.644138885151061" />
+      <entry key="M2" value="3.8153722421594303" />
+      <entry key="M5" value="3.9244699096100573" />
+      <entry key="M10" value="3.9619519458982473" />
+      <entry key="M15" value="3.974902175917825" />
+      <entry key="M30" value="4.035273268311479" />
+      <entry key="H1" value="4.708895769516665" />
+      <entry key="H2" value="7.171222809214846" />
+      <entry key="H4" value="13.953915406902816" />
+      <entry key="D1" value="111.09258157648053" />
+      <entry key="W1" value="195.6625041519767" />
     </decayedSelected>
     <decayedShown>
-      <entry key="MS100" value="2.0415178812694378E-5" />
-      <entry key="MS500" value="0.12288919464405039" />
-      <entry key="S2" value="0.8941258410884679" />
-      <entry key="S5" value="1.785687594453084" />
-      <entry key="S10" value="2.7621404645107117" />
-      <entry key="S30" value="5.649740141610481" />
-      <entry key="S60" value="8.723345982441874" />
-      <entry key="M2" value="11.568492502561465" />
-      <entry key="M5" value="14.038433230426369" />
-      <entry key="M10" value="15.176854956446642" />
-      <entry key="M15" value="15.663293327226947" />
-      <entry key="M30" value="16.356671735641896" />
-      <entry key="H1" value="18.20616755496052" />
-      <entry key="H2" value="24.40613700306834" />
-      <entry key="H4" value="41.87713837509887" />
-      <entry key="D1" value="318.4112400969066" />
-      <entry key="W1" value="581.9541440772621" />
+      <entry key="MS100" value="1.4440696939387048" />
+      <entry key="MS500" value="3.0526975030992816" />
+      <entry key="S2" value="4.472885480560897" />
+      <entry key="S5" value="5.560059040660752" />
+      <entry key="S10" value="6.61964294521764" />
+      <entry key="S30" value="9.57373331184296" />
+      <entry key="S60" value="12.670271795586434" />
+      <entry key="M2" value="15.534981104901325" />
+      <entry key="M5" value="18.022606370898544" />
+      <entry key="M10" value="19.16838347001374" />
+      <entry key="M15" value="19.657486775540402" />
+      <entry key="M30" value="20.353655294205605" />
+      <entry key="H1" value="22.204508648599603" />
+      <entry key="H2" value="28.405055060885317" />
+      <entry key="H4" value="45.876241671686245" />
+      <entry key="D1" value="322.41015221905525" />
+      <entry key="W1" value="585.9538609028656" />
     </decayedShown>
   </component>
   <component name="ProblemsViewState">
@@ -392,6 +392,7 @@
       <item itemvalue=".NET Launch Settings Profile.SMIS.WebMaui: https" />
       <item itemvalue=".NET Launch Settings Profile.SMIS.WebMaui: Production" />
       <item itemvalue="Dart Command Line App.Run &amp; Debug Flutter" />
+      <item itemvalue="Shell Script.Flutter Web (Remote)" />
       <item itemvalue="Shell Script.Run Flutter App" />
     </list>
   </component>
