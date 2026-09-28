@@ -792,6 +792,31 @@ class _StockContentState extends ConsumerState<_StockContent> {
     String direction = 'in';
     String? destination;
     final quantity = TextEditingController();
+    bool isCompatibleTransferDestination(StockJson candidate) =>
+        stockText(candidate, 'id') != stockText(batch, 'id') &&
+        stockText(candidate, 'productId') == stockText(batch, 'productId') &&
+        stockNumber(candidate, 'unitCostBase') ==
+            stockNumber(batch, 'unitCostBase') &&
+        stockText(candidate, 'batchNumber') ==
+            stockText(batch, 'batchNumber') &&
+        stockText(candidate, 'expirationDate') ==
+            stockText(batch, 'expirationDate') &&
+        stockText(candidate, 'status') == 'active';
+
+    num selectedQuantityBase() {
+      final entered = num.tryParse(quantity.text.trim()) ?? 0;
+      final unit = units.firstWhere((u) => u.id == unitId);
+      return entered * unit.baseUnitQuantity;
+    }
+
+    bool exceedsAvailableStock() {
+      if (path == 'customer-returns' ||
+          (path == 'adjustments' && direction == 'in')) {
+        return false;
+      }
+      return selectedQuantityBase() >
+          stockNumber(batch, 'remainingQuantityBase');
+    }
     final accepted = await showDialog<bool>(
       context: context,
       builder: (context) => StatefulBuilder(
@@ -841,13 +866,8 @@ class _StockContentState extends ConsumerState<_StockContent> {
                   decoration: const InputDecoration(
                     labelText: 'Destination batch',
                   ),
-                  items: data.batches
-                      .where(
-                        (b) =>
-                            stockText(b, 'id') != stockText(batch, 'id') &&
-                            stockText(b, 'productId') ==
-                                stockText(batch, 'productId'),
-                      )
+                   items: data.batches
+                       .where(isCompatibleTransferDestination)
                       .map(
                         (b) => DropdownMenuItem(
                           value: stockText(b, 'id'),
@@ -870,8 +890,9 @@ class _StockContentState extends ConsumerState<_StockContent> {
             ),
             FilledButton(
               onPressed:
-                  (num.tryParse(quantity.text) ?? 0) <= 0 ||
-                      (path == 'transfers' && destination == null)
+                   (num.tryParse(quantity.text) ?? 0) <= 0 ||
+                       exceedsAvailableStock() ||
+                       (path == 'transfers' && destination == null)
                   ? null
                   : () => Navigator.pop(context, true),
               child: const Text('Post movement'),
