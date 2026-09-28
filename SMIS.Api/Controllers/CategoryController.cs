@@ -24,6 +24,12 @@ namespace SMIS.Api.Controllers
         ) =>
             HandleResultResponseOld(await Mediator.Send(new CategoryCreateCommand(dto)));
 
+        [HttpGet("teste")]
+        public ActionResult<string> Teste()
+        {
+            return "teste";
+        }
+
         /// <summary>
         /// Creates or updates a category sent by an offline client.
         /// </summary>
