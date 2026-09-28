@@ -13,7 +13,7 @@
                     policy.SetIsOriginAllowed(origin =>
                         Uri.TryCreate(origin, UriKind.Absolute, out var uri) &&
                         (uri.Host == "localhost" ||
-                         ((uri.Scheme == Uri.UriSchemeHttp || uri.Scheme == Uri.UriSchemeHttps) &&
+                         (uri.Scheme == Uri.UriSchemeHttps &&
                           uri.Host.Equals("smis-flutter-web.runasp.net", StringComparison.OrdinalIgnoreCase))))
                         .AllowAnyMethod()
                         .AllowAnyHeader()

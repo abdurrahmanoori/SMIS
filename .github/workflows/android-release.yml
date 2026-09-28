@@ -1,13 +1,7 @@
 name: Build and Release Android APK
 
 on:
-  push:
-    branches:
-      - main
-    paths:
-      - "smis_flutter/**"
   workflow_dispatch:
-
 permissions:
   contents: write
 

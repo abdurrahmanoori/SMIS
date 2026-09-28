@@ -12,7 +12,7 @@ import 'config/flavor_config.dart';
 Future<void> main() async {
   FlavorConfig.initialize(
     flavor: Flavor.production,
-    apiBaseUrl: 'http://api-smis.runasp.net',
+    apiBaseUrl: 'https://api-smis.runasp.net',
     appTitle: 'SMIS',
   );
 
