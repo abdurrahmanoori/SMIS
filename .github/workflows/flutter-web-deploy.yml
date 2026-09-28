@@ -128,7 +128,7 @@ jobs:
 
           lftp -u "$MONSTER_FTP_USERNAME","$MONSTER_FTP_PASSWORD" "sftp://$MONSTER_FTP_HOST:22" <<EOF
           set sftp:auto-confirm yes
-          mirror --reverse --delete --verbose \
+          mirror --reverse --delete --verbose --no-perms \
             --exclude-glob .well-known \
             --exclude-glob .well-known/** \
             "$WEB_BUILD_DIR" /wwwroot
