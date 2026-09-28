@@ -5,9 +5,9 @@ on:
     branches:
       - main
     paths:
-      - "smis_flutter/**"
-  workflow_dispatch:
 
+    - "smis_flutter/**"
+  workflow_dispatch:
 permissions:
   contents: write
 
