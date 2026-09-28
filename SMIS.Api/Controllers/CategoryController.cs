@@ -20,10 +20,15 @@ namespace SMIS.Api.Controllers
         /// </summary>
         [HttpPost]
         public async Task<ActionResult<CategoryDto>> Create(
-
             CategoryCreateDto dto
         ) =>
             HandleResultResponseOld(await Mediator.Send(new CategoryCreateCommand(dto)));
+
+        [HttpGet("teste")]
+        public ActionResult<string> Teste()
+        {
+            return "teste";
+        }
 
         /// <summary>
         /// Creates or updates a category sent by an offline client.
@@ -144,6 +149,5 @@ namespace SMIS.Api.Controllers
             CategorySyncDeleteDto dto
         ) =>
             HandleResultResponseOld(await Mediator.Send(new CategorySyncDeleteCommand(id, dto)));
-
     }
 }
