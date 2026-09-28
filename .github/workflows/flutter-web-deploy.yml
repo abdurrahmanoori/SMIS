@@ -1,0 +1,109 @@
+name: Deploy Flutter Web
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'smis_flutter/**'
+      - '.github/workflows/flutter-web-deploy.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: flutter-web-production
+  cancel-in-progress: true
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: smis_flutter
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.44.9'
+          channel: stable
+          cache: true
+
+      - name: Show Flutter version
+        run: flutter --version
+
+      - name: Get dependencies
+        run: flutter pub get
+
+      - name: Build production web app
+        run: |
+          flutter build web --release -t lib/main_production.dart
+          cat > build/web/web.config <<'EOF'
+          <?xml version="1.0" encoding="UTF-8"?>
+          <configuration>
+            <system.webServer>
+              <rewrite>
+                <rules>
+                  <rule name="Flutter Routes" stopProcessing="true">
+                    <match url=".*" />
+                    <conditions logicalGrouping="MatchAll">
+                      <add input="{REQUEST_FILENAME}" matchType="IsFile" negate="true" />
+                      <add input="{REQUEST_FILENAME}" matchType="IsDirectory" negate="true" />
+                    </conditions>
+                    <action type="Rewrite" url="./index.html" />
+                  </rule>
+                </rules>
+              </rewrite>
+            </system.webServer>
+          </configuration>
+          EOF
+
+      - name: Verify deployment bundle
+        run: |
+          test -f build/web/index.html
+          test -f build/web/main.dart.js
+          test -f build/web/web.config
+          test -f build/web/sqlite3.wasm
+          test -f build/web/powersync_db.worker.js
+
+      - name: Upload web artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: smis-flutter-web
+          path: smis_flutter/build/web
+          if-no-files-found: error
+          retention-days: 7
+
+      - name: Install SFTP client
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y lftp
+        working-directory: .
+
+      - name: Deploy to MonsterASP.NET
+        env:
+          MONSTER_FTP_HOST: ${{ secrets.MONSTER_FTP_HOST }}
+          MONSTER_FTP_USERNAME: ${{ secrets.MONSTER_FTP_USERNAME }}
+          MONSTER_FTP_PASSWORD: ${{ secrets.MONSTER_FTP_PASSWORD }}
+        run: |
+          test -n "$MONSTER_FTP_HOST"
+          test -n "$MONSTER_FTP_USERNAME"
+          test -n "$MONSTER_FTP_PASSWORD"
+
+          MONSTER_FTP_HOST="${MONSTER_FTP_HOST#ftp://}"
+          MONSTER_FTP_HOST="${MONSTER_FTP_HOST#sftp://}"
+          MONSTER_FTP_HOST="${MONSTER_FTP_HOST%/}"
+
+          lftp -u "$MONSTER_FTP_USERNAME","$MONSTER_FTP_PASSWORD" "sftp://$MONSTER_FTP_HOST:22" <<'EOF'
+          set sftp:auto-confirm yes
+          mirror --reverse --delete --verbose \
+            --exclude-glob .well-known \
+            --exclude-glob .well-known/** \
+            build/web /wwwroot
+          bye
+          EOF
