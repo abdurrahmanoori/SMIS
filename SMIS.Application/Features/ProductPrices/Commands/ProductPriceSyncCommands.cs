@@ -120,6 +120,24 @@ internal sealed class
         if (productUnit is null) return ProductPriceCommandRules.ProductUnitNotFoundOrForbidden();
 
         var latest = await _repository.GetLatestForProductUnitAsync(existing.ProductUnitId, ct);
+        // PowerSync records the client's automatic closure of the previous price as an
+        // UPDATE before it uploads the successor INSERT. Accept only that narrow
+        // timeline-maintenance update; normal price edits remain append-only.
+        if (request.Dto.EffectiveDate == existing.EffectiveDate &&
+            request.Dto.SellPrice == existing.SellPrice)
+        {
+            if (!request.Dto.EndDate.HasValue ||
+                request.Dto.EndDate.Value < existing.EffectiveDate)
+                return Result<ProductPriceDto>.FailureResult(
+                    "InvalidPriceEndDate",
+                    "The price end date must be on or after its effective date.");
+
+            existing.SetEndDate(request.Dto.EndDate);
+            existing.SetClientModificationMetadata(request.Dto.ClientModifiedDate);
+            await _db.SaveChangesAsync(ct);
+            return Result<ProductPriceDto>.SuccessResult(_mapper.Map<ProductPriceDto>(existing));
+        }
+
         // Historical prices are immutable. A sync "update" is allowed only against
         // the latest row and is implemented by adding a successor price below.
         if (latest is null || !string.Equals(latest.Id, existing.Id, StringComparison.Ordinal))
