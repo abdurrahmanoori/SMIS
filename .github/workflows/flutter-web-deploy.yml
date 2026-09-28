@@ -57,6 +57,13 @@ jobs:
             <system.webServer>
               <rewrite>
                 <rules>
+                  <rule name="Redirect to HTTPS" stopProcessing="true">
+                    <match url="(.*)" />
+                    <conditions>
+                      <add input="{HTTPS}" pattern="^OFF$" ignoreCase="true" />
+                    </conditions>
+                    <action type="Redirect" url="https://{HTTP_HOST}/{R:1}" redirectType="Permanent" />
+                  </rule>
                   <rule name="Flutter Routes" stopProcessing="true">
                     <match url=".*" />
                     <conditions logicalGrouping="MatchAll">
