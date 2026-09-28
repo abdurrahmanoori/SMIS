@@ -38,6 +38,10 @@ jobs:
         working-directory: smis_flutter
         run: flutter pub get
 
+      - name: Prepare PowerSync web assets
+        working-directory: smis_flutter
+        run: dart run powersync:setup_web
+
       - name: Build production web app
         working-directory: smis_flutter
         run: |
@@ -84,6 +88,7 @@ jobs:
           test -f "$WEB_BUILD_DIR/main.dart.js"
           test -f "$WEB_BUILD_DIR/web.config"
           test -f "$WEB_BUILD_DIR/sqlite3.wasm"
+          test -f "$WEB_BUILD_DIR/powersync_db.worker.js"
           test -f "$WEB_BUILD_DIR/sqflite_sw.js"
 
           echo "Deployment bundle verified at $WEB_BUILD_DIR"
