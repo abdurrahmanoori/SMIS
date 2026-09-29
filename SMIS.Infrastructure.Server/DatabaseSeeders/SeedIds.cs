@@ -37,31 +37,31 @@ public static class SeedIds
 
     // Roles
     public const string RoleSuperAdmin = "33333333-0000-0000-0000-000000000001";
-    public const string RoleAdmin = "33333333-0000-0000-0000-000000000002";
-    public const string RoleAdministration = "33333333-0000-0000-0000-000000000003";
+    public const string RoleShopAdmin = "33333333-0000-0000-0000-000000000002";
+    public const string RoleInventoryManager = "33333333-0000-0000-0000-000000000003";
     public const string RoleManager = "33333333-0000-0000-0000-000000000004";
     public const string RoleStaff = "33333333-0000-0000-0000-000000000005";
     public const string RoleViewer = "33333333-0000-0000-0000-000000000006";
-    public const string RoleEditor = "33333333-0000-0000-0000-000000000007";
-    public const string RoleUser = "33333333-0000-0000-0000-000000000008";
+    public const string RoleSalesManager = "33333333-0000-0000-0000-000000000007";
+    public const string RoleCashier = "33333333-0000-0000-0000-000000000008";
 
     // Users
     public const string UserSuperAdmin = "44444444-0000-0000-0000-000000000001";
-    public const string UserMainAdmin = "44444444-0000-0000-0000-000000000002";
-    public const string UserMainAdministration = "44444444-0000-0000-0000-000000000003";
+    public const string UserMainShopAdmin = "44444444-0000-0000-0000-000000000002";
+    public const string UserMainInventoryManager = "44444444-0000-0000-0000-000000000003";
     public const string UserMainManager = "44444444-0000-0000-0000-000000000004";
     public const string UserMainStaff = "44444444-0000-0000-0000-000000000005";
     public const string UserMainViewer = "44444444-0000-0000-0000-000000000006";
-    public const string UserMainEditor = "44444444-0000-0000-0000-000000000007";
-    public const string UserMainUser = "44444444-0000-0000-0000-000000000008";
-    public const string UserBranchAdmin = "44444444-0000-0000-0000-000000000009";
-    public const string UserBranchAdministration = "44444444-0000-0000-0000-000000000010";
+    public const string UserMainSalesManager = "44444444-0000-0000-0000-000000000007";
+    public const string UserMainCashier = "44444444-0000-0000-0000-000000000008";
+    public const string UserBranchShopAdmin = "44444444-0000-0000-0000-000000000009";
+    public const string UserBranchInventoryManager = "44444444-0000-0000-0000-000000000010";
     public const string UserBranchManager = "44444444-0000-0000-0000-000000000011";
     public const string UserBranchStaff = "44444444-0000-0000-0000-000000000012";
     public const string UserBranchViewer = "44444444-0000-0000-0000-000000000013";
-    public const string UserBranchEditor = "44444444-0000-0000-0000-000000000014";
-    public const string UserBranchUser = "44444444-0000-0000-0000-000000000015";
-    public const string UserWasilAdmin = "44444444-0000-0000-0000-000000000016";
+    public const string UserBranchSalesManager = "44444444-0000-0000-0000-000000000014";
+    public const string UserBranchCashier = "44444444-0000-0000-0000-000000000015";
+    public const string UserWasilShopAdmin = "44444444-0000-0000-0000-000000000016";
 
     // Provinces
     public const string ProvinceKabul = "77777777-0000-0000-0000-000000000001";

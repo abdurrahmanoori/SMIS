@@ -1,6 +1,7 @@
 using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
+using SMIS.Application.Common.Contants;
 using SMIS.Application.Common.Response;
 using SMIS.Application.DTO.Users;
 using SMIS.Application.Repositories.Base;
@@ -126,9 +127,24 @@ namespace SMIS.Application.Features.Identity.Users.Commands
 
             if (isSuperAdmin && request.UserUpdateDto.Roles != null)
             {
+                var requestedRoles = request.UserUpdateDto.Roles
+                    .Distinct(StringComparer.OrdinalIgnoreCase)
+                    .ToArray();
+                var canonicalRoles = requestedRoles
+                    .Select(SD.GetCanonicalRole)
+                    .ToArray();
+
+                if (canonicalRoles.Any(role => role is null))
+                {
+                    return Result<UserDto>.FailureResult(
+                        "InvalidRole",
+                        $"Roles must be one of: {string.Join(", ", SD.AllRoles)}.");
+                }
+
+                var roles = canonicalRoles.Cast<string>().ToArray();
                 var currentRoles = await _userManager.GetRolesAsync(user);
-                var toRemove = currentRoles.Except(request.UserUpdateDto.Roles).ToArray();
-                var toAdd = request.UserUpdateDto.Roles.Except(currentRoles).ToArray();
+                var toRemove = currentRoles.Except(roles, StringComparer.OrdinalIgnoreCase).ToArray();
+                var toAdd = roles.Except(currentRoles, StringComparer.OrdinalIgnoreCase).ToArray();
 
                 if (toRemove.Length > 0)
                 {
@@ -143,7 +159,7 @@ namespace SMIS.Application.Features.Identity.Users.Commands
                     foreach (var role in toAdd)
                     {
                         if (!await _roleManager.RoleExistsAsync(role))
-                            await _roleManager.CreateAsync(new ApplicationRole { Name = role });
+                            return Result<UserDto>.FailureResult("InvalidRole", $"Role '{role}' is not configured.");
                     }
 
                     var addResult = await _userManager.AddToRolesAsync(user, toAdd);

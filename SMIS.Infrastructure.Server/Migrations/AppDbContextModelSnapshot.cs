@@ -759,16 +759,8 @@ namespace SMIS.Infrastructure.Server.Migrations
                         {
                             Id = "33333333-0000-0000-0000-000000000002",
                             LastModifiedUtc = "0001-01-01 00:00:00.000000",
-                            Name = "Admin",
-                            NormalizedName = "ADMIN",
-                            Version = 0
-                        },
-                        new
-                        {
-                            Id = "33333333-0000-0000-0000-000000000003",
-                            LastModifiedUtc = "0001-01-01 00:00:00.000000",
-                            Name = "Administration",
-                            NormalizedName = "ADMINISTRATION",
+                            Name = "ShopAdmin",
+                            NormalizedName = "SHOPADMIN",
                             Version = 0
                         },
                         new
@@ -777,6 +769,30 @@ namespace SMIS.Infrastructure.Server.Migrations
                             LastModifiedUtc = "0001-01-01 00:00:00.000000",
                             Name = "Manager",
                             NormalizedName = "MANAGER",
+                            Version = 0
+                        },
+                        new
+                        {
+                            Id = "33333333-0000-0000-0000-000000000003",
+                            LastModifiedUtc = "0001-01-01 00:00:00.000000",
+                            Name = "InventoryManager",
+                            NormalizedName = "INVENTORYMANAGER",
+                            Version = 0
+                        },
+                        new
+                        {
+                            Id = "33333333-0000-0000-0000-000000000007",
+                            LastModifiedUtc = "0001-01-01 00:00:00.000000",
+                            Name = "SalesManager",
+                            NormalizedName = "SALESMANAGER",
+                            Version = 0
+                        },
+                        new
+                        {
+                            Id = "33333333-0000-0000-0000-000000000008",
+                            LastModifiedUtc = "0001-01-01 00:00:00.000000",
+                            Name = "Cashier",
+                            NormalizedName = "CASHIER",
                             Version = 0
                         },
                         new
@@ -793,22 +809,6 @@ namespace SMIS.Infrastructure.Server.Migrations
                             LastModifiedUtc = "0001-01-01 00:00:00.000000",
                             Name = "Viewer",
                             NormalizedName = "VIEWER",
-                            Version = 0
-                        },
-                        new
-                        {
-                            Id = "33333333-0000-0000-0000-000000000007",
-                            LastModifiedUtc = "0001-01-01 00:00:00.000000",
-                            Name = "Editor",
-                            NormalizedName = "EDITOR",
-                            Version = 0
-                        },
-                        new
-                        {
-                            Id = "33333333-0000-0000-0000-000000000008",
-                            LastModifiedUtc = "0001-01-01 00:00:00.000000",
-                            Name = "User",
-                            NormalizedName = "USER",
                             Version = 0
                         });
                 });
@@ -950,45 +950,22 @@ namespace SMIS.Infrastructure.Server.Migrations
                             Id = "44444444-0000-0000-0000-000000000002",
                             AccessFailedCount = 0,
                             ConcurrencyStamp = "44444444-0000-0000-0000-000000000002",
-                            Email = "admin@mainstore.com",
+                            Email = "shopadmin@mainstore.com",
                             EmailConfirmed = true,
                             FirstName = "Main Store",
                             LanguageId = "22222222-0000-0000-0000-000000000001",
                             LastModifiedUtc = "0001-01-01 00:00:00.000000",
-                            LastName = "Admin",
+                            LastName = "ShopAdmin",
                             LockoutEnabled = false,
-                            NormalizedEmail = "ADMIN@MAINSTORE.COM",
-                            NormalizedUserName = "ADMIN@MAINSTORE.COM",
+                            NormalizedEmail = "SHOPADMIN@MAINSTORE.COM",
+                            NormalizedUserName = "SHOPADMIN@MAINSTORE.COM",
                             PasswordHash = "AQAAAAIAAYagAAAAEE0b5rQqY7JDcZPxjM2CJxuH16YriSpqTeSLO+7ys67UK89RbdA3SnUC2ymyF8fZEw==",
                             PhoneNumberConfirmed = true,
                             SecurityStamp = "44444444-0000-0000-0000-000000000002",
                             ShopId = "11111111-0000-0000-0000-000000000001",
                             ShopName = "Main Store",
                             TwoFactorEnabled = false,
-                            UserName = "admin@mainstore.com",
-                            Version = 0
-                        },
-                        new
-                        {
-                            Id = "44444444-0000-0000-0000-000000000003",
-                            AccessFailedCount = 0,
-                            ConcurrencyStamp = "44444444-0000-0000-0000-000000000003",
-                            Email = "administration@mainstore.com",
-                            EmailConfirmed = true,
-                            FirstName = "Main Store",
-                            LanguageId = "22222222-0000-0000-0000-000000000001",
-                            LastModifiedUtc = "0001-01-01 00:00:00.000000",
-                            LastName = "Administration",
-                            LockoutEnabled = false,
-                            NormalizedEmail = "ADMINISTRATION@MAINSTORE.COM",
-                            NormalizedUserName = "ADMINISTRATION@MAINSTORE.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEE0b5rQqY7JDcZPxjM2CJxuH16YriSpqTeSLO+7ys67UK89RbdA3SnUC2ymyF8fZEw==",
-                            PhoneNumberConfirmed = true,
-                            SecurityStamp = "44444444-0000-0000-0000-000000000003",
-                            ShopId = "11111111-0000-0000-0000-000000000001",
-                            ShopName = "Main Store",
-                            TwoFactorEnabled = false,
-                            UserName = "administration@mainstore.com",
+                            UserName = "shopadmin@mainstore.com",
                             Version = 0
                         },
                         new
@@ -1012,6 +989,75 @@ namespace SMIS.Infrastructure.Server.Migrations
                             ShopName = "Main Store",
                             TwoFactorEnabled = false,
                             UserName = "manager@mainstore.com",
+                            Version = 0
+                        },
+                        new
+                        {
+                            Id = "44444444-0000-0000-0000-000000000003",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "44444444-0000-0000-0000-000000000003",
+                            Email = "inventorymanager@mainstore.com",
+                            EmailConfirmed = true,
+                            FirstName = "Main Store",
+                            LanguageId = "22222222-0000-0000-0000-000000000001",
+                            LastModifiedUtc = "0001-01-01 00:00:00.000000",
+                            LastName = "InventoryManager",
+                            LockoutEnabled = false,
+                            NormalizedEmail = "INVENTORYMANAGER@MAINSTORE.COM",
+                            NormalizedUserName = "INVENTORYMANAGER@MAINSTORE.COM",
+                            PasswordHash = "AQAAAAIAAYagAAAAEE0b5rQqY7JDcZPxjM2CJxuH16YriSpqTeSLO+7ys67UK89RbdA3SnUC2ymyF8fZEw==",
+                            PhoneNumberConfirmed = true,
+                            SecurityStamp = "44444444-0000-0000-0000-000000000003",
+                            ShopId = "11111111-0000-0000-0000-000000000001",
+                            ShopName = "Main Store",
+                            TwoFactorEnabled = false,
+                            UserName = "inventorymanager@mainstore.com",
+                            Version = 0
+                        },
+                        new
+                        {
+                            Id = "44444444-0000-0000-0000-000000000007",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "44444444-0000-0000-0000-000000000007",
+                            Email = "salesmanager@mainstore.com",
+                            EmailConfirmed = true,
+                            FirstName = "Main Store",
+                            LanguageId = "22222222-0000-0000-0000-000000000001",
+                            LastModifiedUtc = "0001-01-01 00:00:00.000000",
+                            LastName = "SalesManager",
+                            LockoutEnabled = false,
+                            NormalizedEmail = "SALESMANAGER@MAINSTORE.COM",
+                            NormalizedUserName = "SALESMANAGER@MAINSTORE.COM",
+                            PasswordHash = "AQAAAAIAAYagAAAAEE0b5rQqY7JDcZPxjM2CJxuH16YriSpqTeSLO+7ys67UK89RbdA3SnUC2ymyF8fZEw==",
+                            PhoneNumberConfirmed = true,
+                            SecurityStamp = "44444444-0000-0000-0000-000000000007",
+                            ShopId = "11111111-0000-0000-0000-000000000001",
+                            ShopName = "Main Store",
+                            TwoFactorEnabled = false,
+                            UserName = "salesmanager@mainstore.com",
+                            Version = 0
+                        },
+                        new
+                        {
+                            Id = "44444444-0000-0000-0000-000000000008",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "44444444-0000-0000-0000-000000000008",
+                            Email = "cashier@mainstore.com",
+                            EmailConfirmed = true,
+                            FirstName = "Main Store",
+                            LanguageId = "22222222-0000-0000-0000-000000000001",
+                            LastModifiedUtc = "0001-01-01 00:00:00.000000",
+                            LastName = "Cashier",
+                            LockoutEnabled = false,
+                            NormalizedEmail = "CASHIER@MAINSTORE.COM",
+                            NormalizedUserName = "CASHIER@MAINSTORE.COM",
+                            PasswordHash = "AQAAAAIAAYagAAAAEE0b5rQqY7JDcZPxjM2CJxuH16YriSpqTeSLO+7ys67UK89RbdA3SnUC2ymyF8fZEw==",
+                            PhoneNumberConfirmed = true,
+                            SecurityStamp = "44444444-0000-0000-0000-000000000008",
+                            ShopId = "11111111-0000-0000-0000-000000000001",
+                            ShopName = "Main Store",
+                            TwoFactorEnabled = false,
+                            UserName = "cashier@mainstore.com",
                             Version = 0
                         },
                         new
@@ -1062,94 +1108,25 @@ namespace SMIS.Infrastructure.Server.Migrations
                         },
                         new
                         {
-                            Id = "44444444-0000-0000-0000-000000000007",
-                            AccessFailedCount = 0,
-                            ConcurrencyStamp = "44444444-0000-0000-0000-000000000007",
-                            Email = "editor@mainstore.com",
-                            EmailConfirmed = true,
-                            FirstName = "Main Store",
-                            LanguageId = "22222222-0000-0000-0000-000000000001",
-                            LastModifiedUtc = "0001-01-01 00:00:00.000000",
-                            LastName = "Editor",
-                            LockoutEnabled = false,
-                            NormalizedEmail = "EDITOR@MAINSTORE.COM",
-                            NormalizedUserName = "EDITOR@MAINSTORE.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEE0b5rQqY7JDcZPxjM2CJxuH16YriSpqTeSLO+7ys67UK89RbdA3SnUC2ymyF8fZEw==",
-                            PhoneNumberConfirmed = true,
-                            SecurityStamp = "44444444-0000-0000-0000-000000000007",
-                            ShopId = "11111111-0000-0000-0000-000000000001",
-                            ShopName = "Main Store",
-                            TwoFactorEnabled = false,
-                            UserName = "editor@mainstore.com",
-                            Version = 0
-                        },
-                        new
-                        {
-                            Id = "44444444-0000-0000-0000-000000000008",
-                            AccessFailedCount = 0,
-                            ConcurrencyStamp = "44444444-0000-0000-0000-000000000008",
-                            Email = "user@mainstore.com",
-                            EmailConfirmed = true,
-                            FirstName = "Main Store",
-                            LanguageId = "22222222-0000-0000-0000-000000000001",
-                            LastModifiedUtc = "0001-01-01 00:00:00.000000",
-                            LastName = "User",
-                            LockoutEnabled = false,
-                            NormalizedEmail = "USER@MAINSTORE.COM",
-                            NormalizedUserName = "USER@MAINSTORE.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEE0b5rQqY7JDcZPxjM2CJxuH16YriSpqTeSLO+7ys67UK89RbdA3SnUC2ymyF8fZEw==",
-                            PhoneNumberConfirmed = true,
-                            SecurityStamp = "44444444-0000-0000-0000-000000000008",
-                            ShopId = "11111111-0000-0000-0000-000000000001",
-                            ShopName = "Main Store",
-                            TwoFactorEnabled = false,
-                            UserName = "user@mainstore.com",
-                            Version = 0
-                        },
-                        new
-                        {
                             Id = "44444444-0000-0000-0000-000000000009",
                             AccessFailedCount = 0,
                             ConcurrencyStamp = "44444444-0000-0000-0000-000000000009",
-                            Email = "admin@branchstore.com",
+                            Email = "shopadmin@branchstore.com",
                             EmailConfirmed = true,
                             FirstName = "Branch Store",
                             LanguageId = "22222222-0000-0000-0000-000000000001",
                             LastModifiedUtc = "0001-01-01 00:00:00.000000",
-                            LastName = "Admin",
+                            LastName = "ShopAdmin",
                             LockoutEnabled = false,
-                            NormalizedEmail = "ADMIN@BRANCHSTORE.COM",
-                            NormalizedUserName = "ADMIN@BRANCHSTORE.COM",
+                            NormalizedEmail = "SHOPADMIN@BRANCHSTORE.COM",
+                            NormalizedUserName = "SHOPADMIN@BRANCHSTORE.COM",
                             PasswordHash = "AQAAAAIAAYagAAAAEE0b5rQqY7JDcZPxjM2CJxuH16YriSpqTeSLO+7ys67UK89RbdA3SnUC2ymyF8fZEw==",
                             PhoneNumberConfirmed = true,
                             SecurityStamp = "44444444-0000-0000-0000-000000000009",
                             ShopId = "11111111-0000-0000-0000-000000000002",
                             ShopName = "Branch Store",
                             TwoFactorEnabled = false,
-                            UserName = "admin@branchstore.com",
-                            Version = 0
-                        },
-                        new
-                        {
-                            Id = "44444444-0000-0000-0000-000000000010",
-                            AccessFailedCount = 0,
-                            ConcurrencyStamp = "44444444-0000-0000-0000-000000000010",
-                            Email = "administration@branchstore.com",
-                            EmailConfirmed = true,
-                            FirstName = "Branch Store",
-                            LanguageId = "22222222-0000-0000-0000-000000000001",
-                            LastModifiedUtc = "0001-01-01 00:00:00.000000",
-                            LastName = "Administration",
-                            LockoutEnabled = false,
-                            NormalizedEmail = "ADMINISTRATION@BRANCHSTORE.COM",
-                            NormalizedUserName = "ADMINISTRATION@BRANCHSTORE.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEE0b5rQqY7JDcZPxjM2CJxuH16YriSpqTeSLO+7ys67UK89RbdA3SnUC2ymyF8fZEw==",
-                            PhoneNumberConfirmed = true,
-                            SecurityStamp = "44444444-0000-0000-0000-000000000010",
-                            ShopId = "11111111-0000-0000-0000-000000000002",
-                            ShopName = "Branch Store",
-                            TwoFactorEnabled = false,
-                            UserName = "administration@branchstore.com",
+                            UserName = "shopadmin@branchstore.com",
                             Version = 0
                         },
                         new
@@ -1173,6 +1150,75 @@ namespace SMIS.Infrastructure.Server.Migrations
                             ShopName = "Branch Store",
                             TwoFactorEnabled = false,
                             UserName = "manager@branchstore.com",
+                            Version = 0
+                        },
+                        new
+                        {
+                            Id = "44444444-0000-0000-0000-000000000010",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "44444444-0000-0000-0000-000000000010",
+                            Email = "inventorymanager@branchstore.com",
+                            EmailConfirmed = true,
+                            FirstName = "Branch Store",
+                            LanguageId = "22222222-0000-0000-0000-000000000001",
+                            LastModifiedUtc = "0001-01-01 00:00:00.000000",
+                            LastName = "InventoryManager",
+                            LockoutEnabled = false,
+                            NormalizedEmail = "INVENTORYMANAGER@BRANCHSTORE.COM",
+                            NormalizedUserName = "INVENTORYMANAGER@BRANCHSTORE.COM",
+                            PasswordHash = "AQAAAAIAAYagAAAAEE0b5rQqY7JDcZPxjM2CJxuH16YriSpqTeSLO+7ys67UK89RbdA3SnUC2ymyF8fZEw==",
+                            PhoneNumberConfirmed = true,
+                            SecurityStamp = "44444444-0000-0000-0000-000000000010",
+                            ShopId = "11111111-0000-0000-0000-000000000002",
+                            ShopName = "Branch Store",
+                            TwoFactorEnabled = false,
+                            UserName = "inventorymanager@branchstore.com",
+                            Version = 0
+                        },
+                        new
+                        {
+                            Id = "44444444-0000-0000-0000-000000000014",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "44444444-0000-0000-0000-000000000014",
+                            Email = "salesmanager@branchstore.com",
+                            EmailConfirmed = true,
+                            FirstName = "Branch Store",
+                            LanguageId = "22222222-0000-0000-0000-000000000001",
+                            LastModifiedUtc = "0001-01-01 00:00:00.000000",
+                            LastName = "SalesManager",
+                            LockoutEnabled = false,
+                            NormalizedEmail = "SALESMANAGER@BRANCHSTORE.COM",
+                            NormalizedUserName = "SALESMANAGER@BRANCHSTORE.COM",
+                            PasswordHash = "AQAAAAIAAYagAAAAEE0b5rQqY7JDcZPxjM2CJxuH16YriSpqTeSLO+7ys67UK89RbdA3SnUC2ymyF8fZEw==",
+                            PhoneNumberConfirmed = true,
+                            SecurityStamp = "44444444-0000-0000-0000-000000000014",
+                            ShopId = "11111111-0000-0000-0000-000000000002",
+                            ShopName = "Branch Store",
+                            TwoFactorEnabled = false,
+                            UserName = "salesmanager@branchstore.com",
+                            Version = 0
+                        },
+                        new
+                        {
+                            Id = "44444444-0000-0000-0000-000000000015",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "44444444-0000-0000-0000-000000000015",
+                            Email = "cashier@branchstore.com",
+                            EmailConfirmed = true,
+                            FirstName = "Branch Store",
+                            LanguageId = "22222222-0000-0000-0000-000000000001",
+                            LastModifiedUtc = "0001-01-01 00:00:00.000000",
+                            LastName = "Cashier",
+                            LockoutEnabled = false,
+                            NormalizedEmail = "CASHIER@BRANCHSTORE.COM",
+                            NormalizedUserName = "CASHIER@BRANCHSTORE.COM",
+                            PasswordHash = "AQAAAAIAAYagAAAAEE0b5rQqY7JDcZPxjM2CJxuH16YriSpqTeSLO+7ys67UK89RbdA3SnUC2ymyF8fZEw==",
+                            PhoneNumberConfirmed = true,
+                            SecurityStamp = "44444444-0000-0000-0000-000000000015",
+                            ShopId = "11111111-0000-0000-0000-000000000002",
+                            ShopName = "Branch Store",
+                            TwoFactorEnabled = false,
+                            UserName = "cashier@branchstore.com",
                             Version = 0
                         },
                         new
@@ -1223,71 +1269,25 @@ namespace SMIS.Infrastructure.Server.Migrations
                         },
                         new
                         {
-                            Id = "44444444-0000-0000-0000-000000000014",
-                            AccessFailedCount = 0,
-                            ConcurrencyStamp = "44444444-0000-0000-0000-000000000014",
-                            Email = "editor@branchstore.com",
-                            EmailConfirmed = true,
-                            FirstName = "Branch Store",
-                            LanguageId = "22222222-0000-0000-0000-000000000001",
-                            LastModifiedUtc = "0001-01-01 00:00:00.000000",
-                            LastName = "Editor",
-                            LockoutEnabled = false,
-                            NormalizedEmail = "EDITOR@BRANCHSTORE.COM",
-                            NormalizedUserName = "EDITOR@BRANCHSTORE.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEE0b5rQqY7JDcZPxjM2CJxuH16YriSpqTeSLO+7ys67UK89RbdA3SnUC2ymyF8fZEw==",
-                            PhoneNumberConfirmed = true,
-                            SecurityStamp = "44444444-0000-0000-0000-000000000014",
-                            ShopId = "11111111-0000-0000-0000-000000000002",
-                            ShopName = "Branch Store",
-                            TwoFactorEnabled = false,
-                            UserName = "editor@branchstore.com",
-                            Version = 0
-                        },
-                        new
-                        {
-                            Id = "44444444-0000-0000-0000-000000000015",
-                            AccessFailedCount = 0,
-                            ConcurrencyStamp = "44444444-0000-0000-0000-000000000015",
-                            Email = "user@branchstore.com",
-                            EmailConfirmed = true,
-                            FirstName = "Branch Store",
-                            LanguageId = "22222222-0000-0000-0000-000000000001",
-                            LastModifiedUtc = "0001-01-01 00:00:00.000000",
-                            LastName = "User",
-                            LockoutEnabled = false,
-                            NormalizedEmail = "USER@BRANCHSTORE.COM",
-                            NormalizedUserName = "USER@BRANCHSTORE.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEE0b5rQqY7JDcZPxjM2CJxuH16YriSpqTeSLO+7ys67UK89RbdA3SnUC2ymyF8fZEw==",
-                            PhoneNumberConfirmed = true,
-                            SecurityStamp = "44444444-0000-0000-0000-000000000015",
-                            ShopId = "11111111-0000-0000-0000-000000000002",
-                            ShopName = "Branch Store",
-                            TwoFactorEnabled = false,
-                            UserName = "user@branchstore.com",
-                            Version = 0
-                        },
-                        new
-                        {
                             Id = "44444444-0000-0000-0000-000000000016",
                             AccessFailedCount = 0,
                             ConcurrencyStamp = "44444444-0000-0000-0000-000000000016",
-                            Email = "admin@wasilshop.com",
+                            Email = "shopadmin@wasilshop.com",
                             EmailConfirmed = true,
                             FirstName = "Wasil Shop",
                             LanguageId = "22222222-0000-0000-0000-000000000001",
                             LastModifiedUtc = "0001-01-01 00:00:00.000000",
-                            LastName = "Admin",
+                            LastName = "ShopAdmin",
                             LockoutEnabled = false,
-                            NormalizedEmail = "ADMIN@WASILSHOP.COM",
-                            NormalizedUserName = "ADMIN@WASILSHOP.COM",
+                            NormalizedEmail = "SHOPADMIN@WASILSHOP.COM",
+                            NormalizedUserName = "SHOPADMIN@WASILSHOP.COM",
                             PasswordHash = "AQAAAAIAAYagAAAAEE0b5rQqY7JDcZPxjM2CJxuH16YriSpqTeSLO+7ys67UK89RbdA3SnUC2ymyF8fZEw==",
                             PhoneNumberConfirmed = true,
                             SecurityStamp = "44444444-0000-0000-0000-000000000016",
                             ShopId = "11111111-0000-0000-0000-000000000004",
                             ShopName = "Wasil Shop",
                             TwoFactorEnabled = false,
-                            UserName = "admin@wasilshop.com",
+                            UserName = "shopadmin@wasilshop.com",
                             Version = 0
                         });
                 });
@@ -1328,15 +1328,8 @@ namespace SMIS.Infrastructure.Server.Migrations
                         {
                             UserId = "44444444-0000-0000-0000-000000000002",
                             RoleId = "33333333-0000-0000-0000-000000000002",
-                            RoleName = "Admin",
-                            UserName = "admin@mainstore.com"
-                        },
-                        new
-                        {
-                            UserId = "44444444-0000-0000-0000-000000000003",
-                            RoleId = "33333333-0000-0000-0000-000000000003",
-                            RoleName = "Administration",
-                            UserName = "administration@mainstore.com"
+                            RoleName = "ShopAdmin",
+                            UserName = "shopadmin@mainstore.com"
                         },
                         new
                         {
@@ -1344,6 +1337,27 @@ namespace SMIS.Infrastructure.Server.Migrations
                             RoleId = "33333333-0000-0000-0000-000000000004",
                             RoleName = "Manager",
                             UserName = "manager@mainstore.com"
+                        },
+                        new
+                        {
+                            UserId = "44444444-0000-0000-0000-000000000003",
+                            RoleId = "33333333-0000-0000-0000-000000000003",
+                            RoleName = "InventoryManager",
+                            UserName = "inventorymanager@mainstore.com"
+                        },
+                        new
+                        {
+                            UserId = "44444444-0000-0000-0000-000000000007",
+                            RoleId = "33333333-0000-0000-0000-000000000007",
+                            RoleName = "SalesManager",
+                            UserName = "salesmanager@mainstore.com"
+                        },
+                        new
+                        {
+                            UserId = "44444444-0000-0000-0000-000000000008",
+                            RoleId = "33333333-0000-0000-0000-000000000008",
+                            RoleName = "Cashier",
+                            UserName = "cashier@mainstore.com"
                         },
                         new
                         {
@@ -1361,31 +1375,10 @@ namespace SMIS.Infrastructure.Server.Migrations
                         },
                         new
                         {
-                            UserId = "44444444-0000-0000-0000-000000000007",
-                            RoleId = "33333333-0000-0000-0000-000000000007",
-                            RoleName = "Editor",
-                            UserName = "editor@mainstore.com"
-                        },
-                        new
-                        {
-                            UserId = "44444444-0000-0000-0000-000000000008",
-                            RoleId = "33333333-0000-0000-0000-000000000008",
-                            RoleName = "User",
-                            UserName = "user@mainstore.com"
-                        },
-                        new
-                        {
                             UserId = "44444444-0000-0000-0000-000000000009",
                             RoleId = "33333333-0000-0000-0000-000000000002",
-                            RoleName = "Admin",
-                            UserName = "admin@branchstore.com"
-                        },
-                        new
-                        {
-                            UserId = "44444444-0000-0000-0000-000000000010",
-                            RoleId = "33333333-0000-0000-0000-000000000003",
-                            RoleName = "Administration",
-                            UserName = "administration@branchstore.com"
+                            RoleName = "ShopAdmin",
+                            UserName = "shopadmin@branchstore.com"
                         },
                         new
                         {
@@ -1393,6 +1386,27 @@ namespace SMIS.Infrastructure.Server.Migrations
                             RoleId = "33333333-0000-0000-0000-000000000004",
                             RoleName = "Manager",
                             UserName = "manager@branchstore.com"
+                        },
+                        new
+                        {
+                            UserId = "44444444-0000-0000-0000-000000000010",
+                            RoleId = "33333333-0000-0000-0000-000000000003",
+                            RoleName = "InventoryManager",
+                            UserName = "inventorymanager@branchstore.com"
+                        },
+                        new
+                        {
+                            UserId = "44444444-0000-0000-0000-000000000014",
+                            RoleId = "33333333-0000-0000-0000-000000000007",
+                            RoleName = "SalesManager",
+                            UserName = "salesmanager@branchstore.com"
+                        },
+                        new
+                        {
+                            UserId = "44444444-0000-0000-0000-000000000015",
+                            RoleId = "33333333-0000-0000-0000-000000000008",
+                            RoleName = "Cashier",
+                            UserName = "cashier@branchstore.com"
                         },
                         new
                         {
@@ -1410,24 +1424,10 @@ namespace SMIS.Infrastructure.Server.Migrations
                         },
                         new
                         {
-                            UserId = "44444444-0000-0000-0000-000000000014",
-                            RoleId = "33333333-0000-0000-0000-000000000007",
-                            RoleName = "Editor",
-                            UserName = "editor@branchstore.com"
-                        },
-                        new
-                        {
-                            UserId = "44444444-0000-0000-0000-000000000015",
-                            RoleId = "33333333-0000-0000-0000-000000000008",
-                            RoleName = "User",
-                            UserName = "user@branchstore.com"
-                        },
-                        new
-                        {
                             UserId = "44444444-0000-0000-0000-000000000016",
                             RoleId = "33333333-0000-0000-0000-000000000002",
-                            RoleName = "Admin",
-                            UserName = "admin@wasilshop.com"
+                            RoleName = "ShopAdmin",
+                            UserName = "shopadmin@wasilshop.com"
                         });
                 });
 

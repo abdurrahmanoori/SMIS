@@ -20,21 +20,33 @@ namespace SMIS.Infrastructure.Server.DatabaseSeeders
                 },
                 new ApplicationUserRole
                 {
-                    UserId = SeedIds.UserMainAdmin, RoleId = SeedIds.RoleAdmin,
-                    UserName = UserSeed.GetSeedEmail(SD.Role_Admin, SeedIds.Shop1),
-                    RoleName = SD.Role_Admin
-                },
-                new ApplicationUserRole
-                {
-                    UserId = SeedIds.UserMainAdministration, RoleId = SeedIds.RoleAdministration,
-                    UserName = UserSeed.GetSeedEmail(SD.Role_Administration, SeedIds.Shop1),
-                    RoleName = SD.Role_Administration
+                    UserId = SeedIds.UserMainShopAdmin, RoleId = SeedIds.RoleShopAdmin,
+                    UserName = UserSeed.GetSeedEmail(SD.Role_Shop_Admin, SeedIds.Shop1),
+                    RoleName = SD.Role_Shop_Admin
                 },
                 new ApplicationUserRole
                 {
                     UserId = SeedIds.UserMainManager, RoleId = SeedIds.RoleManager,
                     UserName = UserSeed.GetSeedEmail(SD.Role_Manager, SeedIds.Shop1),
                     RoleName = SD.Role_Manager
+                },
+                new ApplicationUserRole
+                {
+                    UserId = SeedIds.UserMainInventoryManager, RoleId = SeedIds.RoleInventoryManager,
+                    UserName = UserSeed.GetSeedEmail(SD.Role_Inventory_Manager, SeedIds.Shop1),
+                    RoleName = SD.Role_Inventory_Manager
+                },
+                new ApplicationUserRole
+                {
+                    UserId = SeedIds.UserMainSalesManager, RoleId = SeedIds.RoleSalesManager,
+                    UserName = UserSeed.GetSeedEmail(SD.Role_Sales_Manager, SeedIds.Shop1),
+                    RoleName = SD.Role_Sales_Manager
+                },
+                new ApplicationUserRole
+                {
+                    UserId = SeedIds.UserMainCashier, RoleId = SeedIds.RoleCashier,
+                    UserName = UserSeed.GetSeedEmail(SD.Role_Cashier, SeedIds.Shop1),
+                    RoleName = SD.Role_Cashier
                 },
                 new ApplicationUserRole
                 {
@@ -48,36 +60,36 @@ namespace SMIS.Infrastructure.Server.DatabaseSeeders
                     UserName = UserSeed.GetSeedEmail(SD.Role_Viewer, SeedIds.Shop1),
                     RoleName = SD.Role_Viewer
                 },
-                new ApplicationUserRole
-                {
-                    UserId = SeedIds.UserMainEditor, RoleId = SeedIds.RoleEditor,
-                    UserName = UserSeed.GetSeedEmail(SD.Role_Editor, SeedIds.Shop1),
-                    RoleName = SD.Role_Editor
-                },
-                new ApplicationUserRole
-                {
-                    UserId = SeedIds.UserMainUser, RoleId = SeedIds.RoleUser,
-                    UserName = UserSeed.GetSeedEmail(SD.Role_User, SeedIds.Shop1), RoleName = SD.Role_User
-                },
-
                 // Branch Store
                 new ApplicationUserRole
                 {
-                    UserId = SeedIds.UserBranchAdmin, RoleId = SeedIds.RoleAdmin,
-                    UserName = UserSeed.GetSeedEmail(SD.Role_Admin, SeedIds.Shop2),
-                    RoleName = SD.Role_Admin
-                },
-                new ApplicationUserRole
-                {
-                    UserId = SeedIds.UserBranchAdministration, RoleId = SeedIds.RoleAdministration,
-                    UserName = UserSeed.GetSeedEmail(SD.Role_Administration, SeedIds.Shop2),
-                    RoleName = SD.Role_Administration
+                    UserId = SeedIds.UserBranchShopAdmin, RoleId = SeedIds.RoleShopAdmin,
+                    UserName = UserSeed.GetSeedEmail(SD.Role_Shop_Admin, SeedIds.Shop2),
+                    RoleName = SD.Role_Shop_Admin
                 },
                 new ApplicationUserRole
                 {
                     UserId = SeedIds.UserBranchManager, RoleId = SeedIds.RoleManager,
                     UserName = UserSeed.GetSeedEmail(SD.Role_Manager, SeedIds.Shop2),
                     RoleName = SD.Role_Manager
+                },
+                new ApplicationUserRole
+                {
+                    UserId = SeedIds.UserBranchInventoryManager, RoleId = SeedIds.RoleInventoryManager,
+                    UserName = UserSeed.GetSeedEmail(SD.Role_Inventory_Manager, SeedIds.Shop2),
+                    RoleName = SD.Role_Inventory_Manager
+                },
+                new ApplicationUserRole
+                {
+                    UserId = SeedIds.UserBranchSalesManager, RoleId = SeedIds.RoleSalesManager,
+                    UserName = UserSeed.GetSeedEmail(SD.Role_Sales_Manager, SeedIds.Shop2),
+                    RoleName = SD.Role_Sales_Manager
+                },
+                new ApplicationUserRole
+                {
+                    UserId = SeedIds.UserBranchCashier, RoleId = SeedIds.RoleCashier,
+                    UserName = UserSeed.GetSeedEmail(SD.Role_Cashier, SeedIds.Shop2),
+                    RoleName = SD.Role_Cashier
                 },
                 new ApplicationUserRole
                 {
@@ -91,23 +103,12 @@ namespace SMIS.Infrastructure.Server.DatabaseSeeders
                     UserName = UserSeed.GetSeedEmail(SD.Role_Viewer, SeedIds.Shop2),
                     RoleName = SD.Role_Viewer
                 },
-                new ApplicationUserRole
-                {
-                    UserId = SeedIds.UserBranchEditor, RoleId = SeedIds.RoleEditor,
-                    UserName = UserSeed.GetSeedEmail(SD.Role_Editor, SeedIds.Shop2),
-                    RoleName = SD.Role_Editor
-                },
-                new ApplicationUserRole
-                {
-                    UserId = SeedIds.UserBranchUser, RoleId = SeedIds.RoleUser,
-                    UserName = UserSeed.GetSeedEmail(SD.Role_User, SeedIds.Shop2), RoleName = SD.Role_User
-                },
-
                 // Wasil Shop
                 new ApplicationUserRole
                 {
-                    UserId = SeedIds.UserWasilAdmin, RoleId = SeedIds.RoleAdmin,
-                    UserName = UserSeed.GetSeedEmail(SD.Role_Admin, SeedIds.ShopWasil), RoleName = SD.Role_Admin
+                    UserId = SeedIds.UserWasilShopAdmin, RoleId = SeedIds.RoleShopAdmin,
+                    UserName = UserSeed.GetSeedEmail(SD.Role_Shop_Admin, SeedIds.ShopWasil),
+                    RoleName = SD.Role_Shop_Admin
                 }
             );
         }

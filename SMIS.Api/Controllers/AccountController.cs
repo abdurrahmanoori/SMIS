@@ -147,7 +147,7 @@ namespace SMIS.Api.Controllers
         /// </summary>
         /// <remarks>
         /// This is not an "add one role" endpoint. Roles missing from the submitted list are removed, and new names in the list are added.
-        /// If a submitted role name does not already exist, the current implementation creates that role before assigning it.
+        /// Submitted roles must be one of the application's configured roles.
         /// </remarks>
         [Authorize(Roles = SD.Role_Super_Admin)]
         [HttpPost("{id}/roles")]

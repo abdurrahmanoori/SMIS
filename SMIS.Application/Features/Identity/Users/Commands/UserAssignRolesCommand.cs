@@ -1,5 +1,6 @@
 using MediatR;
 using Microsoft.AspNetCore.Identity;
+using SMIS.Application.Common.Contants;
 using SMIS.Application.Common.Response;
 using SMIS.Domain.Entities.Identity.Entity;
 
@@ -29,9 +30,25 @@ namespace SMIS.Application.Features.Identity.Users.Commands
             var user = await _userManager.FindByIdAsync(request.UserId);
             if (user == null) return Result<Unit>.NotFoundResult(request.UserId);
 
+            var requestedRoles = request.Roles
+                .Distinct(StringComparer.OrdinalIgnoreCase)
+                .ToArray();
+            var canonicalRoles = requestedRoles
+                .Select(SD.GetCanonicalRole)
+                .ToArray();
+
+            if (canonicalRoles.Any(role => role is null))
+            {
+                return Result<Unit>.FailureResult(
+                    "InvalidRole",
+                    $"Roles must be one of: {string.Join(", ", SD.AllRoles)}.");
+            }
+
+            var roles = canonicalRoles.Cast<string>().ToArray();
+
             var currentRoles = await _userManager.GetRolesAsync(user);
-            var toRemove = currentRoles.Except(request.Roles).ToArray();
-            var toAdd = request.Roles.Except(currentRoles).ToArray();
+            var toRemove = currentRoles.Except(roles, StringComparer.OrdinalIgnoreCase).ToArray();
+            var toAdd = roles.Except(currentRoles, StringComparer.OrdinalIgnoreCase).ToArray();
 
             if (toRemove.Length > 0)
             {
@@ -46,12 +63,7 @@ namespace SMIS.Application.Features.Identity.Users.Commands
                 foreach (var role in toAdd)
                 {
                     if (!await _roleManager.RoleExistsAsync(role))
-                    {
-                        var createRoleResult = await _roleManager.CreateAsync(new ApplicationRole { Name = role });
-                        if (!createRoleResult.Succeeded)
-                            return Result<Unit>.WithErrors(createRoleResult.Errors.Select(e => new ValidationError
-                                { Code = e.Code, Description = e.Description }).ToList());
-                    }
+                        return Result<Unit>.FailureResult("InvalidRole", $"Role '{role}' is not configured.");
                 }
 
                 var addResult = await _userManager.AddToRolesAsync(user, toAdd);
