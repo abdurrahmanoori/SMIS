@@ -7,10 +7,7 @@ namespace SMIS.Infrastructure.Server.DatabaseSeeders;
 public static class UserSeed
 {
     // Every seeded account uses its canonical role name at its shop domain.
-    // Example: admin@mainstore.com, admin@branchstore.com.
-    // Password for all seeded users: Pass123!
-    private const string SeedPasswordHash =
-        "AQAAAAIAAYagAAAAEE0b5rQqY7JDcZPxjM2CJxuH16YriSpqTeSLO+7ys67UK89RbdA3SnUC2ymyF8fZEw==";
+    // The password for each seeded account is exactly the same as its username.
 
     public static void DataSeed(
         ModelBuilder modelBuilder
@@ -65,10 +62,50 @@ public static class UserSeed
         typeof(ApplicationUser).GetProperty(nameof(ApplicationUser.NormalizedUserName))!.SetValue(user,
             email.ToUpperInvariant());
         typeof(ApplicationUser).GetProperty(nameof(ApplicationUser.NormalizedEmail))!.SetValue(user, email.ToUpper());
-        typeof(ApplicationUser).GetProperty(nameof(ApplicationUser.PasswordHash))!.SetValue(user, SeedPasswordHash);
+        typeof(ApplicationUser).GetProperty(nameof(ApplicationUser.PasswordHash))!.SetValue(user,
+            GetSeedPasswordHash(email));
 
         return user;
     }
+
+    private static string GetSeedPasswordHash(
+        string userName
+    ) => userName switch
+    {
+        "superadmin@mainstore.com" =>
+            "AQAAAAIAAYagAAAAEKlhy7lx1/qM3NGtL0ETO5AXxyobVtC66UBBAmw+bxawQIYCLg/C7sxqZ3YZ7gtibw==",
+        "shopadmin@mainstore.com" =>
+            "AQAAAAIAAYagAAAAEAFyC/O4IYX4EqJ6uemvh6qLpM+RL+BzKde7gcjIZ+EeBVHOMYioelyn63fO2B6l4Q==",
+        "inventorymanager@mainstore.com" =>
+            "AQAAAAIAAYagAAAAEEqFdgkYefuwPNEn1jTrnNDT2cXrDJjRORjUibCLxCbqp+d/Kr5OMbAlYu4ecVLJCw==",
+        "manager@mainstore.com" =>
+            "AQAAAAIAAYagAAAAEACWFVheXXg44bF1SnLnHmLMlQio+gXK/CewFdlElgv/87pZMNXarSylYHHQM9TDzw==",
+        "staff@mainstore.com" =>
+            "AQAAAAIAAYagAAAAEDmcAaC68oLRPp7N62uOQxou38wJStu0PDnRTX7dYoBbT8wnkzWzn2Fzm7FDRCDRzw==",
+        "viewer@mainstore.com" =>
+            "AQAAAAIAAYagAAAAEB7prP7koVE/OUlR9s4TSx0GR+FdUNWA27pdMMmjDqKs6M7hBNN8p4/i/xKH6NPLug==",
+        "salesmanager@mainstore.com" =>
+            "AQAAAAIAAYagAAAAEO1n88zJKKBvI/cGAfFb7BVkPvG1N5u7XG3fLVxfrTyKxpdaLJzpsdiPt6TBWNtFtQ==",
+        "cashier@mainstore.com" =>
+            "AQAAAAIAAYagAAAAED9+2xjrPAaZ+O1VQQy0sIgJ0EplJ5KrJspahcT6o3VFNrdy0SvSC6oqfg2lVAmtug==",
+        "shopadmin@branchstore.com" =>
+            "AQAAAAIAAYagAAAAED0yMSW4bbZ6Wgcrk1YnSidOV95fGUDyNIQ4L4hB4b5pVdp2NN/RInGrFcwCIFRcFg==",
+        "inventorymanager@branchstore.com" =>
+            "AQAAAAIAAYagAAAAEP2Dxp0S7KUBx6SLgPX0gGv5eBzRIhYkQUuP+FL1OUD8X34glIKrFNRnqMgsgvtEnQ==",
+        "manager@branchstore.com" =>
+            "AQAAAAIAAYagAAAAEPtblkwvX2iBlaKTmNy5Es40KZ04OXcOKC0Y0J2ZAHrbhbg8AChjPMIG2KI/Caq0nA==",
+        "staff@branchstore.com" =>
+            "AQAAAAIAAYagAAAAECbKJmJ0XQ08tMqwegOAlUNXOVYOfcFTRZ/bvegWVIDBLAwked7Mt1piJlMWzVusjw==",
+        "viewer@branchstore.com" =>
+            "AQAAAAIAAYagAAAAEOXSRj3/KMViNcF6fj3Z2pE5+MWC7CEBL3uziK5Pg+pvt44SYOn5L+ZrqH5tBehhDg==",
+        "salesmanager@branchstore.com" =>
+            "AQAAAAIAAYagAAAAEIxjMnDpe8QRnCOUl5C5oxwfF4A48n+oSX4yqe6nUhfGgASCAZlnqD0mVh/FrDOIsA==",
+        "cashier@branchstore.com" =>
+            "AQAAAAIAAYagAAAAEIoxjwiSMSqM3gzeKFCKj5vPuGOl/5qjBMCmV1j3YT1FXFVc6GHZiArNXc3kZ8VBOw==",
+        "shopadmin@wasilshop.com" =>
+            "AQAAAAIAAYagAAAAEJOEjUXSHxHnUnYrH7jcO97NRqThEvOEb7hL5hWacH9PLNP1VHRAPfLih3PUZc1utQ==",
+        _ => throw new InvalidOperationException($"No seeded password hash is configured for '{userName}'.")
+    };
 
     private static string GetShopDomain(
         string shopId
