@@ -5,6 +5,9 @@ using SMIS.Application.DTO.StockBatches;
 using SMIS.Application.Features.StockBatches.Commands;
 using SMIS.Application.Features.StockBatches.Queries;
 using SMIS.Api.Controllers.Base;
+using SMIS.Api.Authorization;
+using SMIS.Domain.Entities.Identity;
+using SMIS.Domain.Enums;
 
 namespace SMIS.Api.Controllers
 {
@@ -27,6 +30,7 @@ namespace SMIS.Api.Controllers
         /// The batch and its opening purchase-receipt movement are saved together. An idempotency key can be used to avoid creating the same receipt twice after a retry.
         /// </remarks>
         [HttpPost]
+        [HasPermission(ApplicationComponentKeys.Inventory, PermissionAction.Create)]
         public async Task<ActionResult<StockBatchDto>> Create(
             StockBatchCreateDto dto
         ) =>
@@ -36,6 +40,7 @@ namespace SMIS.Api.Controllers
         /// Gets stock batches in pages.
         /// </summary>
         [HttpGet]
+        [HasPermission(ApplicationComponentKeys.Inventory, PermissionAction.Read)]
         public async Task<ActionResult<PagedList<StockBatchDto>>> GetAll(
             [FromQuery] int pageNumber = 1,
             [FromQuery] int pageSize = 25
@@ -46,6 +51,7 @@ namespace SMIS.Api.Controllers
         /// Gets one stock batch by its ID.
         /// </summary>
         [HttpGet("{id}")]
+        [HasPermission(ApplicationComponentKeys.Inventory, PermissionAction.Read)]
         public async Task<ActionResult<StockBatchDto>> GetById(
             string id
         ) =>
@@ -59,6 +65,7 @@ namespace SMIS.Api.Controllers
         /// Batch status rules also prevent invalid changes such as reactivating a cancelled batch.
         /// </remarks>
         [HttpPut("{id}")]
+        [HasPermission(ApplicationComponentKeys.Inventory, PermissionAction.Update)]
         public async Task<ActionResult<StockBatchDto>> Update(
             string id,
             StockBatchUpdateDto dto

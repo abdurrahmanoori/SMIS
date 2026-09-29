@@ -5,6 +5,9 @@ using SMIS.Application.Common;
 using SMIS.Application.DTO.StockMovements;
 using SMIS.Application.Features.StockMovements.Commands;
 using SMIS.Application.Features.StockMovements.Queries;
+using SMIS.Api.Authorization;
+using SMIS.Domain.Entities.Identity;
+using SMIS.Domain.Enums;
 
 namespace SMIS.Api.Controllers;
 
@@ -27,6 +30,7 @@ public sealed class StockMovementController : BaseApiController
     /// </remarks>
     /// <param name="id">The stock movement ID to reverse.</param>
     [HttpPost("{id}/reverse")]
+    [HasPermission(ApplicationComponentKeys.Inventory, PermissionAction.Update)]
     public async Task<ActionResult<List<StockMovementDto>>> Reverse(
         string id
     ) =>
@@ -36,6 +40,7 @@ public sealed class StockMovementController : BaseApiController
     /// Gets stock movements in pages.
     /// </summary>
     [HttpGet]
+    [HasPermission(ApplicationComponentKeys.Inventory, PermissionAction.Read)]
     public async Task<ActionResult<PagedList<StockMovementDto>>> GetAll(
         [FromQuery] int pageNumber = 1,
         [FromQuery] int pageSize = 25
@@ -46,6 +51,7 @@ public sealed class StockMovementController : BaseApiController
     /// Gets one stock movement by its ID.
     /// </summary>
     [HttpGet("{id}")]
+    [HasPermission(ApplicationComponentKeys.Inventory, PermissionAction.Read)]
     public async Task<ActionResult<StockMovementDto>> GetById(
         string id
     ) =>

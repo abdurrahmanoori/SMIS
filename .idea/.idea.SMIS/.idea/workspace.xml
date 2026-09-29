@@ -132,8 +132,14 @@
     <setting file="file://$PROJECT_DIR$/SMIS.Application/Features/Categories/Queries/CategoryQuery.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/SMIS.Application/Services/IApplicationDbContext.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/SMIS.Infrastructure.Server/Migrations/20260903101403_InitialMigration.Designer.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://E:/Repo/SMIS/SMIS.Infrastructure.Server/Migrations/20260926120331_DisableCategoryLocalization.Designer.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://E:/Repo/SMIS/SMIS.Infrastructure.Server/Migrations/20260926120331_DisableCategoryLocalization.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="gitIndexFs://ce9ec9ff:E\:/Repo/SMIS:E\:/Repo/SMIS/SMIS.Domain/Entities/Identity/Entity/ApplicationComponent.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://E:/Repo/SMIS/SMIS.Api/Authorization/HasPermissionAttribute.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://E:/Repo/SMIS/SMIS.Api/Authorization/PermissionAuthorizationHandler.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://E:/Repo/SMIS/SMIS.Api/Authorization/PermissionPolicyProvider.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://E:/Repo/SMIS/SMIS.Api/Authorization/PermissionRequirement.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://E:/Repo/SMIS/SMIS.Application/Features/Identity/Users/Queries/UserGetPermissionsQuery.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://E:/Repo/SMIS/SMIS.Application/Identity/Services/ComponentPermissionService.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://E:/Repo/SMIS/SMIS.Domain/Entities/Identity/ApplicationComponentKeys.cs" root0="SKIP_HIGHLIGHTING" />
   </component>
   <component name="InvalidFacetManager">
     <ignored-facets>
@@ -420,14 +426,6 @@
       <option name="presentableId" value="LOCAL-00038" />
       <option name="project" value="LOCAL" />
       <updated>1789462942314</updated>
-    </task>
-    <task id="LOCAL-00054" summary="feat: add search functionality to categories and update filtering in repository">
-      <option name="closed" value="true" />
-      <created>1789303720700</created>
-      <option name="number" value="00054" />
-      <option name="presentableId" value="LOCAL-00054" />
-      <option name="project" value="LOCAL" />
-      <updated>1789303720700</updated>
     </task>
     <task id="LOCAL-00055" summary="feat: standardize user roles and update role assignments in the database">
       <option name="closed" value="true" />
@@ -797,7 +795,15 @@
       <option name="project" value="LOCAL" />
       <updated>1790684780106</updated>
     </task>
-    <option name="localTasksCounter" value="101" />
+    <task id="LOCAL-00101" summary="feat: implement permission management with role-based access control for categories">
+      <option name="closed" value="true" />
+      <created>1790686283785</created>
+      <option name="number" value="00101" />
+      <option name="presentableId" value="LOCAL-00101" />
+      <option name="project" value="LOCAL" />
+      <updated>1790686283785</updated>
+    </task>
+    <option name="localTasksCounter" value="102" />
     <option name="clearContext" value="false" />
     <option name="createChangelist" value="false" />
     <option name="createBranch" value="false" />
@@ -829,7 +835,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
-    <MESSAGE value="feat: add Sale, StockCount, and Idempotency domains with related DTOs, commands, and validation; implement return and void operations for sales" />
     <MESSAGE value="feat: enhance API documentation with XML comments and improve code readability; add nullable reference types and suppress warnings" />
     <MESSAGE value="feat: enhance PowerSync integration with new repositories and services; add support for super admin claims in token generation" />
     <MESSAGE value="feat: implement shop context management; remove ShopId from various DTOs and commands, and enforce active shop validation in related operations" />
@@ -854,7 +859,8 @@
     <MESSAGE value="refactor: update Flutter web configuration and clean up workspace.xml" />
     <MESSAGE value="feat: add GitHub Actions workflow for deploying Flutter web app" />
     <MESSAGE value="feat: update role management and user seeding for new roles" />
-    <option name="LAST_COMMIT_MESSAGE" value="" />
+    <MESSAGE value="feat: implement permission management with role-based access control for categories" />
+    <option name="LAST_COMMIT_MESSAGE" value="feat: implement permission management with role-based access control for categories" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

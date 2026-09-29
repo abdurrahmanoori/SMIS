@@ -39,6 +39,18 @@ class AuthSession {
   bool canViewComponent(String componentKey) =>
       permissionFor(componentKey)?.canView ?? false;
 
+  bool canReadComponent(String componentKey) =>
+      permissionFor(componentKey)?.canRead ?? false;
+
+  bool canCreateComponent(String componentKey) =>
+      permissionFor(componentKey)?.canCreate ?? false;
+
+  bool canUpdateComponent(String componentKey) =>
+      permissionFor(componentKey)?.canUpdate ?? false;
+
+  bool canDeleteComponent(String componentKey) =>
+      permissionFor(componentKey)?.canDelete ?? false;
+
   AuthSession copyWith({
     String? token,
     String? userName,

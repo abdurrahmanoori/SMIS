@@ -6,9 +6,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../controllers/product_controller.dart';
 import '../controllers/product_unit_controller.dart';
 import '../controllers/unit_of_measure_controller.dart';
+import '../controllers/auth_controller.dart';
 import '../data/data_exception.dart';
 import '../l10n/app_localizations.dart';
 import '../models/product_unit.dart';
+import '../models/application_component_keys.dart';
 import '../widgets/app_drawer.dart';
 import '../widgets/active_shop_context.dart';
 import '../widgets/app_error_view.dart';
@@ -54,6 +56,24 @@ class _ProductUnitsScreenState extends ConsumerState<ProductUnitsScreen>
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(productUnitControllerProvider);
+    final session = ref.watch(authControllerProvider).session;
+    final permission = session?.permissionFor(
+      ApplicationComponentKeys.productUnits,
+    );
+
+    if (permission == null || !permission.canView || !permission.canRead) {
+      return Scaffold(
+        appBar: AppBar(title: Text(context.l10n.text('Product units'))),
+        drawer: const AppDrawer(),
+        body: Center(
+          child: Text(
+            context.l10n.text(
+              'You do not have permission to access product units.',
+            ),
+          ),
+        ),
+      );
+    }
     return Scaffold(
       appBar: AppBar(
         title: _isSearching
@@ -105,6 +125,8 @@ class _ProductUnitsScreenState extends ConsumerState<ProductUnitsScreen>
               ),
               data: (value) => _Content(
                 state: value,
+                canUpdate: permission.canUpdate,
+                canDelete: permission.canDelete,
                 onEdit: _edit,
                 onDelete: _delete,
                 onLoadMore: () => ref
@@ -115,11 +137,13 @@ class _ProductUnitsScreenState extends ConsumerState<ProductUnitsScreen>
           ),
         ),
       ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: _create,
-        icon: const Icon(Icons.add),
-        label: Text(context.l10n.text('Add product unit')),
-      ),
+      floatingActionButton: permission.canCreate
+          ? FloatingActionButton.extended(
+              onPressed: _create,
+              icon: const Icon(Icons.add),
+              label: Text(context.l10n.text('Add product unit')),
+            )
+          : null,
     );
   }
 
@@ -222,12 +246,16 @@ class _ProductUnitsScreenState extends ConsumerState<ProductUnitsScreen>
 class _Content extends ConsumerWidget {
   const _Content({
     required this.state,
+    required this.canUpdate,
+    required this.canDelete,
     required this.onEdit,
     required this.onDelete,
     required this.onLoadMore,
   });
 
   final ProductUnitScreenState state;
+  final bool canUpdate;
+  final bool canDelete;
   final ValueChanged<ProductUnit> onEdit;
   final ValueChanged<ProductUnit> onDelete;
   final VoidCallback onLoadMore;
@@ -315,21 +343,24 @@ class _Content extends ConsumerWidget {
                                     : Icons.cloud_upload_outlined,
                               ),
                             ),
-                            PopupMenuButton<String>(
-                              onSelected: (value) => value == 'edit'
-                                  ? onEdit(item)
-                                  : onDelete(item),
-                              itemBuilder: (context) => [
-                                PopupMenuItem(
-                                  value: 'edit',
-                                  child: Text(context.l10n.text('Edit')),
-                                ),
-                                PopupMenuItem(
-                                  value: 'delete',
-                                  child: Text(context.l10n.text('Delete')),
-                                ),
-                              ],
-                            ),
+                            if (canUpdate || canDelete)
+                              PopupMenuButton<String>(
+                                onSelected: (value) => value == 'edit'
+                                    ? onEdit(item)
+                                    : onDelete(item),
+                                itemBuilder: (context) => [
+                                  if (canUpdate)
+                                    PopupMenuItem(
+                                      value: 'edit',
+                                      child: Text(context.l10n.text('Edit')),
+                                    ),
+                                  if (canDelete)
+                                    PopupMenuItem(
+                                      value: 'delete',
+                                      child: Text(context.l10n.text('Delete')),
+                                    ),
+                                ],
+                              ),
                           ],
                         ),
                       ),

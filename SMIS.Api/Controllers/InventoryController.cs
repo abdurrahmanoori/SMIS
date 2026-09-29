@@ -7,6 +7,8 @@ using SMIS.Application.Features.Inventory.Commands;
 using SMIS.Application.Features.Inventory.Queries;
 using SMIS.Application.Features.StockBatches.Commands;
 using SMIS.Domain.Enums;
+using SMIS.Api.Authorization;
+using SMIS.Domain.Entities.Identity;
 
 namespace SMIS.Api.Controllers;
 
@@ -29,6 +31,7 @@ public sealed class InventoryController : BaseApiController
     /// <c>POST /api/PurchaseOrder/{id}/receipts</c> so the purchase-order quantities and status are also updated.
     /// </remarks>
     [HttpPost("purchase-receipts")]
+    [HasPermission(ApplicationComponentKeys.Inventory, PermissionAction.Create)]
     public async Task<ActionResult<StockBatchDto>> ReceivePurchase(
         StockBatchCreateDto dto
     ) =>
@@ -42,6 +45,7 @@ public sealed class InventoryController : BaseApiController
     /// use <c>POST /api/Sale/{id}/returns</c> so the sale totals, returnable quantities, refunds, and credit balance are also updated.
     /// </remarks>
     [HttpPost("customer-returns")]
+    [HasPermission(ApplicationComponentKeys.Inventory, PermissionAction.Update)]
     public async Task<ActionResult<StockMovementDto>> CustomerReturn(
         InventoryBatchOperationDto dto
     ) =>
@@ -58,6 +62,7 @@ public sealed class InventoryController : BaseApiController
     /// <c>POST /api/PurchaseOrder/{id}/supplier-returns</c> so the purchase-order line is also updated and validated.
     /// </remarks>
     [HttpPost("supplier-returns")]
+    [HasPermission(ApplicationComponentKeys.Inventory, PermissionAction.Update)]
     public async Task<ActionResult<StockMovementDto>> SupplierReturn(
         InventoryBatchOperationDto dto
     ) =>
@@ -73,6 +78,7 @@ public sealed class InventoryController : BaseApiController
     /// The quantity is recorded as an outgoing damage movement, leaving an audit trail of the stock loss.
     /// </remarks>
     [HttpPost("damaged-stock")]
+    [HasPermission(ApplicationComponentKeys.Inventory, PermissionAction.Update)]
     public async Task<ActionResult<StockMovementDto>> Damage(
         InventoryBatchOperationDto dto
     ) =>
@@ -88,6 +94,7 @@ public sealed class InventoryController : BaseApiController
     /// This posts an outgoing expiration movement. The expired-stock report only identifies expired stock; it does not automatically post this movement.
     /// </remarks>
     [HttpPost("expired-stock")]
+    [HasPermission(ApplicationComponentKeys.Inventory, PermissionAction.Update)]
     public async Task<ActionResult<StockMovementDto>> Expire(
         InventoryBatchOperationDto dto
     ) =>
@@ -104,6 +111,7 @@ public sealed class InventoryController : BaseApiController
     /// The request direction decides whether stock moves in or out.
     /// </remarks>
     [HttpPost("adjustments")]
+    [HasPermission(ApplicationComponentKeys.Inventory, PermissionAction.Update)]
     public async Task<ActionResult<StockMovementDto>> Adjust(
         InventoryAdjustmentDto dto
     ) =>
@@ -120,6 +128,7 @@ public sealed class InventoryController : BaseApiController
     /// The destination keeps the same product, cost, batch number, and expiration information needed to trace the transferred stock.
     /// </remarks>
     [HttpPost("transfers")]
+    [HasPermission(ApplicationComponentKeys.Inventory, PermissionAction.Update)]
     public async Task<ActionResult<List<StockMovementDto>>> Transfer(
         InventoryTransferDto dto
     ) =>
@@ -135,6 +144,7 @@ public sealed class InventoryController : BaseApiController
     /// <param name="stockBatchId">Optional batch ID. Leave empty to check all visible batches.</param>
     /// <param name="onlyMismatches">When true, returns only batches with a balance difference.</param>
     [HttpGet("reconciliation")]
+    [HasPermission(ApplicationComponentKeys.Inventory, PermissionAction.Read)]
     public async Task<ActionResult<List<InventoryReconciliationDto>>> Reconcile(
         [FromQuery] string? stockBatchId = null,
         [FromQuery] bool onlyMismatches = false
@@ -150,6 +160,7 @@ public sealed class InventoryController : BaseApiController
     /// No stock is changed when the count is started.
     /// </remarks>
     [HttpPost("stock-counts")]
+    [HasPermission(ApplicationComponentKeys.Inventory, PermissionAction.Create)]
     public async Task<ActionResult<StockCountSessionDto>> StartStockCount(
         StockCountStartDto dto
     ) =>
@@ -164,6 +175,7 @@ public sealed class InventoryController : BaseApiController
     /// An idempotency key can protect against processing the same completion twice.
     /// </remarks>
     [HttpPost("stock-counts/{id}/complete")]
+    [HasPermission(ApplicationComponentKeys.Inventory, PermissionAction.Update)]
     public async Task<ActionResult<StockCountSessionDto>> CompleteStockCount(
         string id,
         StockCountCompleteDto dto
@@ -174,6 +186,7 @@ public sealed class InventoryController : BaseApiController
     /// Gets one physical stock-count session and its batch lines.
     /// </summary>
     [HttpGet("stock-counts/{id}")]
+    [HasPermission(ApplicationComponentKeys.Inventory, PermissionAction.Read)]
     public async Task<ActionResult<StockCountSessionDto>> GetStockCount(
         string id
     ) =>
@@ -183,6 +196,7 @@ public sealed class InventoryController : BaseApiController
     /// Cancels a physical stock count without posting quantity adjustments.
     /// </summary>
     [HttpPost("stock-counts/{id}/cancel")]
+    [HasPermission(ApplicationComponentKeys.Inventory, PermissionAction.Update)]
     public async Task<ActionResult<StockCountSessionDto>> CancelStockCount(
         string id
     ) =>
@@ -198,6 +212,7 @@ public sealed class InventoryController : BaseApiController
     /// <param name="lowStockThresholdBase">Optional threshold that replaces each product's reorder point for this report.</param>
     /// <param name="includePresentationUnits">When true, also shows equivalent quantities in configured product units.</param>
     [HttpGet("reports/current-stock")]
+    [HasPermission(ApplicationComponentKeys.Inventory, PermissionAction.Read)]
     public async Task<ActionResult<List<CurrentStockReportDto>>> CurrentStock(
         [FromQuery] decimal? lowStockThresholdBase = null,
         [FromQuery] bool includePresentationUnits = true
@@ -214,6 +229,7 @@ public sealed class InventoryController : BaseApiController
     /// <param name="thresholdBase">Optional threshold to use for every product instead of its configured reorder point.</param>
     /// <param name="includePresentationUnits">When true, also shows equivalent quantities in configured product units.</param>
     [HttpGet("reports/low-stock")]
+    [HasPermission(ApplicationComponentKeys.Inventory, PermissionAction.Read)]
     public async Task<ActionResult<List<CurrentStockReportDto>>> LowStock(
         [FromQuery] decimal? thresholdBase = null,
         [FromQuery] bool includePresentationUnits = true
@@ -230,6 +246,7 @@ public sealed class InventoryController : BaseApiController
     /// </remarks>
     /// <param name="daysAhead">How many days into the future to check. Default is 30.</param>
     [HttpGet("reports/expiring")]
+    [HasPermission(ApplicationComponentKeys.Inventory, PermissionAction.Read)]
     public async Task<ActionResult<List<ExpiringStockReportDto>>> Expiring(
         [FromQuery] int daysAhead = 30
     ) =>
@@ -243,6 +260,7 @@ public sealed class InventoryController : BaseApiController
     /// This is a report only. It does not automatically remove expired stock; use the expired-stock operation when the quantity should be posted out of inventory.
     /// </remarks>
     [HttpGet("reports/expired")]
+    [HasPermission(ApplicationComponentKeys.Inventory, PermissionAction.Read)]
     public async Task<ActionResult<List<ExpiringStockReportDto>>> Expired() =>
         HandleResultResponseOld(await Mediator.Send(
             new InventoryExpirationReportQuery(0, true)));
@@ -254,6 +272,7 @@ public sealed class InventoryController : BaseApiController
     /// Valuation is calculated in base units so display conversions such as boxes or cartons do not change the inventory cost calculation.
     /// </remarks>
     [HttpGet("reports/valuation")]
+    [HasPermission(ApplicationComponentKeys.Inventory, PermissionAction.Read)]
     public async Task<ActionResult<InventoryValuationReportDto>> Valuation() =>
         HandleResultResponseOld(await Mediator.Send(new InventoryValuationQuery()));
 
@@ -271,6 +290,7 @@ public sealed class InventoryController : BaseApiController
     /// <param name="direction">Optional stock direction: in or out.</param>
     /// <param name="limit">Maximum number of movements to return. Default is 250 and the server caps it at 1000.</param>
     [HttpGet("reports/movements")]
+    [HasPermission(ApplicationComponentKeys.Inventory, PermissionAction.Read)]
     public async Task<ActionResult<List<InventoryMovementHistoryDto>>> MovementHistory(
         [FromQuery] string? productId = null,
         [FromQuery] DateTime? fromUtc = null,

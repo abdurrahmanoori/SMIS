@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../controllers/app_dependencies.dart';
+import '../controllers/auth_controller.dart';
 import '../controllers/product_controller.dart';
 import '../controllers/product_price_controller.dart';
 import '../controllers/product_unit_controller.dart';
@@ -12,6 +13,7 @@ import '../data/data_exception.dart';
 import '../l10n/app_localizations.dart';
 import '../models/product_price.dart';
 import '../models/product_unit.dart';
+import '../models/application_component_keys.dart';
 import '../widgets/active_shop_context.dart';
 import '../widgets/app_drawer.dart';
 import '../widgets/app_error_view.dart';
@@ -58,6 +60,24 @@ class _ProductPricesScreenState extends ConsumerState<ProductPricesScreen>
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(productPriceControllerProvider);
+    final session = ref.watch(authControllerProvider).session;
+    final permission = session?.permissionFor(
+      ApplicationComponentKeys.productPrices,
+    );
+
+    if (permission == null || !permission.canView || !permission.canRead) {
+      return Scaffold(
+        appBar: AppBar(title: Text(context.l10n.text('Product prices'))),
+        drawer: const AppDrawer(),
+        body: Center(
+          child: Text(
+            context.l10n.text(
+              'You do not have permission to access product prices.',
+            ),
+          ),
+        ),
+      );
+    }
     return Scaffold(
       appBar: AppBar(
         title: _isSearching
@@ -109,6 +129,8 @@ class _ProductPricesScreenState extends ConsumerState<ProductPricesScreen>
               ),
               data: (value) => _Content(
                 state: value,
+                canUpdate: permission.canUpdate,
+                canDelete: permission.canDelete,
                 onEdit: _edit,
                 onDelete: _delete,
                 onLoadMore: () => ref
@@ -119,11 +141,13 @@ class _ProductPricesScreenState extends ConsumerState<ProductPricesScreen>
           ),
         ),
       ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: _create,
-        icon: const Icon(Icons.add),
-        label: Text(context.l10n.text('Add product price')),
-      ),
+      floatingActionButton: permission.canCreate
+          ? FloatingActionButton.extended(
+              onPressed: _create,
+              icon: const Icon(Icons.add),
+              label: Text(context.l10n.text('Add product price')),
+            )
+          : null,
     );
   }
 
@@ -236,12 +260,16 @@ class _ProductPricesScreenState extends ConsumerState<ProductPricesScreen>
 class _Content extends ConsumerWidget {
   const _Content({
     required this.state,
+    required this.canUpdate,
+    required this.canDelete,
     required this.onEdit,
     required this.onDelete,
     required this.onLoadMore,
   });
 
   final ProductPriceScreenState state;
+  final bool canUpdate;
+  final bool canDelete;
   final ValueChanged<ProductPrice> onEdit;
   final ValueChanged<ProductPrice> onDelete;
   final VoidCallback onLoadMore;
@@ -336,23 +364,28 @@ class _Content extends ConsumerWidget {
                                     : Icons.cloud_upload_outlined,
                               ),
                             ),
-                            PopupMenuButton<String>(
-                              onSelected: (value) => value == 'edit'
-                                  ? onEdit(item)
-                                  : onDelete(item),
-                              itemBuilder: (context) => [
-                                PopupMenuItem(
-                                  value: 'edit',
-                                  child: Text(
-                                    context.l10n.text('Add successor price'),
-                                  ),
-                                ),
-                                PopupMenuItem(
-                                  value: 'delete',
-                                  child: Text(context.l10n.text('Delete')),
-                                ),
-                              ],
-                            ),
+                            if (canUpdate || canDelete)
+                              PopupMenuButton<String>(
+                                onSelected: (value) => value == 'edit'
+                                    ? onEdit(item)
+                                    : onDelete(item),
+                                itemBuilder: (context) => [
+                                  if (canUpdate)
+                                    PopupMenuItem(
+                                      value: 'edit',
+                                      child: Text(
+                                        context.l10n.text(
+                                          'Add successor price',
+                                        ),
+                                      ),
+                                    ),
+                                  if (canDelete)
+                                    PopupMenuItem(
+                                      value: 'delete',
+                                      child: Text(context.l10n.text('Delete')),
+                                    ),
+                                ],
+                              ),
                           ],
                         ),
                       ),

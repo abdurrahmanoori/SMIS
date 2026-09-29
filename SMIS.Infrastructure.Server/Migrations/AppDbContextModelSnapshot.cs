@@ -751,8 +751,62 @@ namespace SMIS.Infrastructure.Server.Migrations
                             Id = "55555555-0000-0000-0000-000000000001",
                             DisplayOrder = 1,
                             IsActive = true,
+                            Key = "Shops",
+                            Name = "Shops",
+                            ShowInMenu = true
+                        },
+                        new
+                        {
+                            Id = "55555555-0000-0000-0000-000000000002",
+                            DisplayOrder = 2,
+                            IsActive = true,
+                            Key = "UnitsOfMeasure",
+                            Name = "Units of measure",
+                            ShowInMenu = true
+                        },
+                        new
+                        {
+                            Id = "55555555-0000-0000-0000-000000000003",
+                            DisplayOrder = 3,
+                            IsActive = true,
                             Key = "Categories",
                             Name = "Categories",
+                            ShowInMenu = true
+                        },
+                        new
+                        {
+                            Id = "55555555-0000-0000-0000-000000000004",
+                            DisplayOrder = 4,
+                            IsActive = true,
+                            Key = "Products",
+                            Name = "Products",
+                            ShowInMenu = true
+                        },
+                        new
+                        {
+                            Id = "55555555-0000-0000-0000-000000000005",
+                            DisplayOrder = 5,
+                            IsActive = true,
+                            Key = "ProductUnits",
+                            Name = "Product units",
+                            ShowInMenu = true
+                        },
+                        new
+                        {
+                            Id = "55555555-0000-0000-0000-000000000006",
+                            DisplayOrder = 6,
+                            IsActive = true,
+                            Key = "ProductPrices",
+                            Name = "Product prices",
+                            ShowInMenu = true
+                        },
+                        new
+                        {
+                            Id = "55555555-0000-0000-0000-000000000007",
+                            DisplayOrder = 7,
+                            IsActive = true,
+                            Key = "Inventory",
+                            Name = "Inventory",
                             ShowInMenu = true
                         });
                 });
@@ -1531,20 +1585,20 @@ namespace SMIS.Infrastructure.Server.Migrations
                         {
                             RoleId = "33333333-0000-0000-0000-000000000004",
                             ComponentId = "55555555-0000-0000-0000-000000000001",
-                            CanCreate = true,
-                            CanDelete = true,
+                            CanCreate = false,
+                            CanDelete = false,
                             CanRead = true,
-                            CanUpdate = true,
+                            CanUpdate = false,
                             CanView = true
                         },
                         new
                         {
                             RoleId = "33333333-0000-0000-0000-000000000003",
                             ComponentId = "55555555-0000-0000-0000-000000000001",
-                            CanCreate = true,
-                            CanDelete = true,
+                            CanCreate = false,
+                            CanDelete = false,
                             CanRead = true,
-                            CanUpdate = true,
+                            CanUpdate = false,
                             CanView = true
                         },
                         new
@@ -1581,6 +1635,486 @@ namespace SMIS.Infrastructure.Server.Migrations
                         {
                             RoleId = "33333333-0000-0000-0000-000000000006",
                             ComponentId = "55555555-0000-0000-0000-000000000001",
+                            CanCreate = false,
+                            CanDelete = false,
+                            CanRead = true,
+                            CanUpdate = false,
+                            CanView = true
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000001",
+                            ComponentId = "55555555-0000-0000-0000-000000000002",
+                            CanCreate = true,
+                            CanDelete = true,
+                            CanRead = true,
+                            CanUpdate = true,
+                            CanView = true
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000002",
+                            ComponentId = "55555555-0000-0000-0000-000000000002",
+                            CanCreate = true,
+                            CanDelete = true,
+                            CanRead = true,
+                            CanUpdate = true,
+                            CanView = true
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000004",
+                            ComponentId = "55555555-0000-0000-0000-000000000002",
+                            CanCreate = true,
+                            CanDelete = true,
+                            CanRead = true,
+                            CanUpdate = true,
+                            CanView = true
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000003",
+                            ComponentId = "55555555-0000-0000-0000-000000000002",
+                            CanCreate = true,
+                            CanDelete = true,
+                            CanRead = true,
+                            CanUpdate = true,
+                            CanView = true
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000007",
+                            ComponentId = "55555555-0000-0000-0000-000000000002",
+                            CanCreate = false,
+                            CanDelete = false,
+                            CanRead = true,
+                            CanUpdate = false,
+                            CanView = true
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000008",
+                            ComponentId = "55555555-0000-0000-0000-000000000002",
+                            CanCreate = false,
+                            CanDelete = false,
+                            CanRead = true,
+                            CanUpdate = false,
+                            CanView = true
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000005",
+                            ComponentId = "55555555-0000-0000-0000-000000000002",
+                            CanCreate = false,
+                            CanDelete = false,
+                            CanRead = true,
+                            CanUpdate = false,
+                            CanView = true
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000006",
+                            ComponentId = "55555555-0000-0000-0000-000000000002",
+                            CanCreate = false,
+                            CanDelete = false,
+                            CanRead = true,
+                            CanUpdate = false,
+                            CanView = true
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000001",
+                            ComponentId = "55555555-0000-0000-0000-000000000003",
+                            CanCreate = true,
+                            CanDelete = true,
+                            CanRead = true,
+                            CanUpdate = true,
+                            CanView = true
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000002",
+                            ComponentId = "55555555-0000-0000-0000-000000000003",
+                            CanCreate = true,
+                            CanDelete = true,
+                            CanRead = true,
+                            CanUpdate = true,
+                            CanView = true
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000004",
+                            ComponentId = "55555555-0000-0000-0000-000000000003",
+                            CanCreate = true,
+                            CanDelete = true,
+                            CanRead = true,
+                            CanUpdate = true,
+                            CanView = true
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000003",
+                            ComponentId = "55555555-0000-0000-0000-000000000003",
+                            CanCreate = true,
+                            CanDelete = true,
+                            CanRead = true,
+                            CanUpdate = true,
+                            CanView = true
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000007",
+                            ComponentId = "55555555-0000-0000-0000-000000000003",
+                            CanCreate = false,
+                            CanDelete = false,
+                            CanRead = true,
+                            CanUpdate = false,
+                            CanView = true
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000008",
+                            ComponentId = "55555555-0000-0000-0000-000000000003",
+                            CanCreate = false,
+                            CanDelete = false,
+                            CanRead = true,
+                            CanUpdate = false,
+                            CanView = true
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000005",
+                            ComponentId = "55555555-0000-0000-0000-000000000003",
+                            CanCreate = false,
+                            CanDelete = false,
+                            CanRead = true,
+                            CanUpdate = false,
+                            CanView = true
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000006",
+                            ComponentId = "55555555-0000-0000-0000-000000000003",
+                            CanCreate = false,
+                            CanDelete = false,
+                            CanRead = true,
+                            CanUpdate = false,
+                            CanView = true
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000001",
+                            ComponentId = "55555555-0000-0000-0000-000000000004",
+                            CanCreate = true,
+                            CanDelete = true,
+                            CanRead = true,
+                            CanUpdate = true,
+                            CanView = true
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000002",
+                            ComponentId = "55555555-0000-0000-0000-000000000004",
+                            CanCreate = true,
+                            CanDelete = true,
+                            CanRead = true,
+                            CanUpdate = true,
+                            CanView = true
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000004",
+                            ComponentId = "55555555-0000-0000-0000-000000000004",
+                            CanCreate = true,
+                            CanDelete = true,
+                            CanRead = true,
+                            CanUpdate = true,
+                            CanView = true
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000003",
+                            ComponentId = "55555555-0000-0000-0000-000000000004",
+                            CanCreate = true,
+                            CanDelete = true,
+                            CanRead = true,
+                            CanUpdate = true,
+                            CanView = true
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000007",
+                            ComponentId = "55555555-0000-0000-0000-000000000004",
+                            CanCreate = false,
+                            CanDelete = false,
+                            CanRead = true,
+                            CanUpdate = false,
+                            CanView = true
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000008",
+                            ComponentId = "55555555-0000-0000-0000-000000000004",
+                            CanCreate = false,
+                            CanDelete = false,
+                            CanRead = true,
+                            CanUpdate = false,
+                            CanView = true
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000005",
+                            ComponentId = "55555555-0000-0000-0000-000000000004",
+                            CanCreate = false,
+                            CanDelete = false,
+                            CanRead = true,
+                            CanUpdate = false,
+                            CanView = true
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000006",
+                            ComponentId = "55555555-0000-0000-0000-000000000004",
+                            CanCreate = false,
+                            CanDelete = false,
+                            CanRead = true,
+                            CanUpdate = false,
+                            CanView = true
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000001",
+                            ComponentId = "55555555-0000-0000-0000-000000000005",
+                            CanCreate = true,
+                            CanDelete = true,
+                            CanRead = true,
+                            CanUpdate = true,
+                            CanView = true
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000002",
+                            ComponentId = "55555555-0000-0000-0000-000000000005",
+                            CanCreate = true,
+                            CanDelete = true,
+                            CanRead = true,
+                            CanUpdate = true,
+                            CanView = true
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000004",
+                            ComponentId = "55555555-0000-0000-0000-000000000005",
+                            CanCreate = true,
+                            CanDelete = true,
+                            CanRead = true,
+                            CanUpdate = true,
+                            CanView = true
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000003",
+                            ComponentId = "55555555-0000-0000-0000-000000000005",
+                            CanCreate = true,
+                            CanDelete = true,
+                            CanRead = true,
+                            CanUpdate = true,
+                            CanView = true
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000007",
+                            ComponentId = "55555555-0000-0000-0000-000000000005",
+                            CanCreate = false,
+                            CanDelete = false,
+                            CanRead = true,
+                            CanUpdate = false,
+                            CanView = true
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000008",
+                            ComponentId = "55555555-0000-0000-0000-000000000005",
+                            CanCreate = false,
+                            CanDelete = false,
+                            CanRead = true,
+                            CanUpdate = false,
+                            CanView = true
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000005",
+                            ComponentId = "55555555-0000-0000-0000-000000000005",
+                            CanCreate = false,
+                            CanDelete = false,
+                            CanRead = true,
+                            CanUpdate = false,
+                            CanView = true
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000006",
+                            ComponentId = "55555555-0000-0000-0000-000000000005",
+                            CanCreate = false,
+                            CanDelete = false,
+                            CanRead = true,
+                            CanUpdate = false,
+                            CanView = true
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000001",
+                            ComponentId = "55555555-0000-0000-0000-000000000006",
+                            CanCreate = true,
+                            CanDelete = true,
+                            CanRead = true,
+                            CanUpdate = true,
+                            CanView = true
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000002",
+                            ComponentId = "55555555-0000-0000-0000-000000000006",
+                            CanCreate = true,
+                            CanDelete = true,
+                            CanRead = true,
+                            CanUpdate = true,
+                            CanView = true
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000004",
+                            ComponentId = "55555555-0000-0000-0000-000000000006",
+                            CanCreate = true,
+                            CanDelete = true,
+                            CanRead = true,
+                            CanUpdate = true,
+                            CanView = true
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000003",
+                            ComponentId = "55555555-0000-0000-0000-000000000006",
+                            CanCreate = true,
+                            CanDelete = true,
+                            CanRead = true,
+                            CanUpdate = true,
+                            CanView = true
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000007",
+                            ComponentId = "55555555-0000-0000-0000-000000000006",
+                            CanCreate = true,
+                            CanDelete = true,
+                            CanRead = true,
+                            CanUpdate = true,
+                            CanView = true
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000008",
+                            ComponentId = "55555555-0000-0000-0000-000000000006",
+                            CanCreate = false,
+                            CanDelete = false,
+                            CanRead = true,
+                            CanUpdate = false,
+                            CanView = true
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000005",
+                            ComponentId = "55555555-0000-0000-0000-000000000006",
+                            CanCreate = false,
+                            CanDelete = false,
+                            CanRead = true,
+                            CanUpdate = false,
+                            CanView = true
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000006",
+                            ComponentId = "55555555-0000-0000-0000-000000000006",
+                            CanCreate = false,
+                            CanDelete = false,
+                            CanRead = true,
+                            CanUpdate = false,
+                            CanView = true
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000001",
+                            ComponentId = "55555555-0000-0000-0000-000000000007",
+                            CanCreate = true,
+                            CanDelete = true,
+                            CanRead = true,
+                            CanUpdate = true,
+                            CanView = true
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000002",
+                            ComponentId = "55555555-0000-0000-0000-000000000007",
+                            CanCreate = true,
+                            CanDelete = true,
+                            CanRead = true,
+                            CanUpdate = true,
+                            CanView = true
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000004",
+                            ComponentId = "55555555-0000-0000-0000-000000000007",
+                            CanCreate = true,
+                            CanDelete = true,
+                            CanRead = true,
+                            CanUpdate = true,
+                            CanView = true
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000003",
+                            ComponentId = "55555555-0000-0000-0000-000000000007",
+                            CanCreate = true,
+                            CanDelete = true,
+                            CanRead = true,
+                            CanUpdate = true,
+                            CanView = true
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000007",
+                            ComponentId = "55555555-0000-0000-0000-000000000007",
+                            CanCreate = false,
+                            CanDelete = false,
+                            CanRead = true,
+                            CanUpdate = false,
+                            CanView = true
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000008",
+                            ComponentId = "55555555-0000-0000-0000-000000000007",
+                            CanCreate = false,
+                            CanDelete = false,
+                            CanRead = true,
+                            CanUpdate = false,
+                            CanView = true
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000005",
+                            ComponentId = "55555555-0000-0000-0000-000000000007",
+                            CanCreate = false,
+                            CanDelete = false,
+                            CanRead = true,
+                            CanUpdate = false,
+                            CanView = true
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000006",
+                            ComponentId = "55555555-0000-0000-0000-000000000007",
                             CanCreate = false,
                             CanDelete = false,
                             CanRead = true,

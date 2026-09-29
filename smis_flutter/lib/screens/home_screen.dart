@@ -55,8 +55,26 @@ class HomeScreen extends ConsumerWidget {
     // HomeScreen is only shown by the authentication gate after a session is
     // restored or created, but keep this defensive fallback for state changes.
     if (session == null) return const SizedBox.shrink();
+    final canViewShops = session.canViewComponent(
+      ApplicationComponentKeys.shops,
+    );
+    final canViewUnits = session.canViewComponent(
+      ApplicationComponentKeys.unitsOfMeasure,
+    );
     final canViewCategories = session.canViewComponent(
       ApplicationComponentKeys.categories,
+    );
+    final canViewProducts = session.canViewComponent(
+      ApplicationComponentKeys.products,
+    );
+    final canViewProductUnits = session.canViewComponent(
+      ApplicationComponentKeys.productUnits,
+    );
+    final canViewProductPrices = session.canViewComponent(
+      ApplicationComponentKeys.productPrices,
+    );
+    final canViewInventory = session.canViewComponent(
+      ApplicationComponentKeys.inventory,
     );
 
     return Scaffold(
@@ -232,30 +250,36 @@ class HomeScreen extends ConsumerWidget {
                                   width: (constraints.maxWidth - 16) / 2,
                                   child: categoriesCard,
                                 ),
-                              SizedBox(
-                                width: (constraints.maxWidth - 16) / 2,
-                                child: unitsCard,
-                              ),
-                              SizedBox(
-                                width: (constraints.maxWidth - 16) / 2,
-                                child: shopsCard,
-                              ),
-                              SizedBox(
-                                width: (constraints.maxWidth - 16) / 2,
-                                child: productsCard,
-                              ),
-                              SizedBox(
-                                width: (constraints.maxWidth - 16) / 2,
-                                child: productUnitsCard,
-                              ),
-                              SizedBox(
-                                width: (constraints.maxWidth - 16) / 2,
-                                child: productPricesCard,
-                              ),
-                              SizedBox(
-                                width: (constraints.maxWidth - 16) / 2,
-                                child: stockCard,
-                              ),
+                              if (canViewUnits)
+                                SizedBox(
+                                  width: (constraints.maxWidth - 16) / 2,
+                                  child: unitsCard,
+                                ),
+                              if (canViewShops)
+                                SizedBox(
+                                  width: (constraints.maxWidth - 16) / 2,
+                                  child: shopsCard,
+                                ),
+                              if (canViewProducts)
+                                SizedBox(
+                                  width: (constraints.maxWidth - 16) / 2,
+                                  child: productsCard,
+                                ),
+                              if (canViewProductUnits)
+                                SizedBox(
+                                  width: (constraints.maxWidth - 16) / 2,
+                                  child: productUnitsCard,
+                                ),
+                              if (canViewProductPrices)
+                                SizedBox(
+                                  width: (constraints.maxWidth - 16) / 2,
+                                  child: productPricesCard,
+                                ),
+                              if (canViewInventory)
+                                SizedBox(
+                                  width: (constraints.maxWidth - 16) / 2,
+                                  child: stockCard,
+                                ),
                               SizedBox(
                                 width: (constraints.maxWidth - 16) / 2,
                                 child: profileCard,
@@ -268,18 +292,30 @@ class HomeScreen extends ConsumerWidget {
                                 categoriesCard,
                                 const SizedBox(height: 16),
                               ],
-                              unitsCard,
-                              const SizedBox(height: 16),
-                              shopsCard,
-                              const SizedBox(height: 16),
-                              productsCard,
-                              const SizedBox(height: 16),
-                              productUnitsCard,
-                              const SizedBox(height: 16),
-                              productPricesCard,
-                              const SizedBox(height: 16),
-                              stockCard,
-                              const SizedBox(height: 16),
+                              if (canViewUnits) ...[
+                                unitsCard,
+                                const SizedBox(height: 16),
+                              ],
+                              if (canViewShops) ...[
+                                shopsCard,
+                                const SizedBox(height: 16),
+                              ],
+                              if (canViewProducts) ...[
+                                productsCard,
+                                const SizedBox(height: 16),
+                              ],
+                              if (canViewProductUnits) ...[
+                                productUnitsCard,
+                                const SizedBox(height: 16),
+                              ],
+                              if (canViewProductPrices) ...[
+                                productPricesCard,
+                                const SizedBox(height: 16),
+                              ],
+                              if (canViewInventory) ...[
+                                stockCard,
+                                const SizedBox(height: 16),
+                              ],
                               profileCard,
                             ],
                           );

@@ -2,5 +2,11 @@ namespace SMIS.Infrastructure.Server.DatabaseSeeders;
 
 public static class AuthorizationSeedIds
 {
-    public const string ComponentCategories = "55555555-0000-0000-0000-000000000001";
+    public const string ComponentShops = "55555555-0000-0000-0000-000000000001";
+    public const string ComponentUnitsOfMeasure = "55555555-0000-0000-0000-000000000002";
+    public const string ComponentCategories = "55555555-0000-0000-0000-000000000003";
+    public const string ComponentProducts = "55555555-0000-0000-0000-000000000004";
+    public const string ComponentProductUnits = "55555555-0000-0000-0000-000000000005";
+    public const string ComponentProductPrices = "55555555-0000-0000-0000-000000000006";
+    public const string ComponentInventory = "55555555-0000-0000-0000-000000000007";
 }

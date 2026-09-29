@@ -5,6 +5,9 @@ using SMIS.Application.DTO.ProductUnits;
 using SMIS.Application.Features.ProductUnits.Commands;
 using SMIS.Application.Features.ProductUnits.Queries;
 using SMIS.Api.Controllers.Base;
+using SMIS.Api.Authorization;
+using SMIS.Domain.Entities.Identity;
+using SMIS.Domain.Enums;
 
 namespace SMIS.Api.Controllers
 {
@@ -22,6 +25,7 @@ namespace SMIS.Api.Controllers
         /// Creates a unit conversion for a product.
         /// </summary>
         [HttpPost]
+        [HasPermission(ApplicationComponentKeys.ProductUnits, PermissionAction.Create)]
         public async Task<ActionResult<ProductUnitDto>> Create(
             ProductUnitCreateDto dto
         ) =>
@@ -34,6 +38,7 @@ namespace SMIS.Api.Controllers
         /// The synchronization request carries the client's ID and change time. Older client changes do not overwrite newer server data.
         /// </remarks>
         [HttpPost("sync")]
+        [HasPermission(ApplicationComponentKeys.ProductUnits, PermissionAction.Create)]
         public async Task<ActionResult<ProductUnitDto>> SyncCreate(
             ProductUnitSyncCreateDto dto
         ) => HandleResultResponseOld(await Mediator.Send(new ProductUnitSyncCreateCommand(dto)));
@@ -45,6 +50,7 @@ namespace SMIS.Api.Controllers
         /// Use <c>includeProduct</c> and <c>includeUnitOfMeasure</c> when the response should also include those related records.
         /// </remarks>
         [HttpGet]
+        [HasPermission(ApplicationComponentKeys.ProductUnits, PermissionAction.Read)]
         public async Task<ActionResult<PagedList<ProductUnitDto>>> GetAll(
             [FromQuery] int pageNumber = 1,
             [FromQuery] int pageSize = 25,
@@ -64,6 +70,7 @@ namespace SMIS.Api.Controllers
         /// while <c>columns</c> can limit which fields are returned.
         /// </remarks>
         [HttpGet("query")]
+        [HasPermission(ApplicationComponentKeys.ProductUnits, PermissionAction.Read)]
         public async Task<ActionResult<PagedListNew<ProductUnitDto>>> Query(
             [FromQuery] ProductUnitQueryCriteria criteria,
             [FromQuery] string[]? columns,
@@ -88,6 +95,7 @@ namespace SMIS.Api.Controllers
         /// Related product and unit-of-measure information can be included with the two query flags.
         /// </remarks>
         [HttpGet("{id}")]
+        [HasPermission(ApplicationComponentKeys.ProductUnits, PermissionAction.Read)]
         public async Task<ActionResult<ProductUnitDto>> GetById(
             string id,
             [FromQuery] bool includeProduct = false,
@@ -100,6 +108,7 @@ namespace SMIS.Api.Controllers
         /// Updates an existing product unit conversion.
         /// </summary>
         [HttpPut("{id}")]
+        [HasPermission(ApplicationComponentKeys.ProductUnits, PermissionAction.Update)]
         public async Task<ActionResult<ProductUnitDto>> Update(
             string id,
             ProductUnitCreateDto dto
@@ -113,6 +122,7 @@ namespace SMIS.Api.Controllers
         /// A stale offline update is ignored instead of replacing newer server data.
         /// </remarks>
         [HttpPut("{id}/sync")]
+        [HasPermission(ApplicationComponentKeys.ProductUnits, PermissionAction.Update)]
         public async Task<ActionResult<ProductUnitDto>> SyncUpdate(
             string id,
             ProductUnitSyncUpdateDto dto
@@ -122,6 +132,7 @@ namespace SMIS.Api.Controllers
         /// Deletes a product unit.
         /// </summary>
         [HttpDelete("{id}")]
+        [HasPermission(ApplicationComponentKeys.ProductUnits, PermissionAction.Delete)]
         public async Task<ActionResult<Unit>> Delete(
             string id
         ) =>
@@ -131,6 +142,7 @@ namespace SMIS.Api.Controllers
         /// Applies a product-unit delete sent by an offline client.
         /// </summary>
         [HttpDelete("{id}/sync")]
+        [HasPermission(ApplicationComponentKeys.ProductUnits, PermissionAction.Delete)]
         public async Task<ActionResult<ProductUnitDto>> SyncDelete(
             string id,
             ProductUnitSyncDeleteDto dto

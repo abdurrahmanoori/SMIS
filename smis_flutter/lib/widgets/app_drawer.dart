@@ -43,8 +43,26 @@ class AppDrawer extends ConsumerWidget {
     final productPricePendingCount = productPriceState.value?.pendingCount ?? 0;
 
     if (session == null) return const SizedBox.shrink();
+    final canViewProductUnits = session.canViewComponent(
+      ApplicationComponentKeys.productUnits,
+    );
+    final canViewProductPrices = session.canViewComponent(
+      ApplicationComponentKeys.productPrices,
+    );
+    final canViewShops = session.canViewComponent(
+      ApplicationComponentKeys.shops,
+    );
+    final canViewUnits = session.canViewComponent(
+      ApplicationComponentKeys.unitsOfMeasure,
+    );
     final canViewCategories = session.canViewComponent(
       ApplicationComponentKeys.categories,
+    );
+    final canViewProducts = session.canViewComponent(
+      ApplicationComponentKeys.products,
+    );
+    final canViewInventory = session.canViewComponent(
+      ApplicationComponentKeys.inventory,
     );
 
     return Drawer(
@@ -67,74 +85,79 @@ class AppDrawer extends ConsumerWidget {
           ),
           const ActiveShopDrawerTile(),
           const Divider(height: 1),
-          ListTile(
-            leading: const Icon(Icons.home_outlined),
-            title: Text(l10n.text('Home')),
-            onTap: () {
-              Navigator.of(context).pop();
-              Navigator.of(context).popUntil((route) => route.isFirst);
-            },
-          ),
-          ListTile(
-            leading: const Icon(Icons.scale_outlined),
-            title: Text(l10n.text('Product units')),
-            trailing: productUnitPendingCount > 0
-                ? Badge(label: Text('$productUnitPendingCount'))
-                : null,
-            onTap: () {
-              Navigator.of(context).pop();
-              Navigator.of(context).pushReplacement(
-                MaterialPageRoute<void>(
-                  builder: (context) => const ProductUnitsScreen(),
-                ),
-              );
-            },
-          ),
-          ListTile(
-            leading: const Icon(Icons.price_change_outlined),
-            title: Text(l10n.text('Product prices')),
-            trailing: productPricePendingCount > 0
-                ? Badge(label: Text('$productPricePendingCount'))
-                : null,
-            onTap: () {
-              Navigator.of(context).pop();
-              Navigator.of(context).pushReplacement(
-                MaterialPageRoute<void>(
-                  builder: (context) => const ProductPricesScreen(),
-                ),
-              );
-            },
-          ),
-          ListTile(
-            leading: const Icon(Icons.storefront_outlined),
-            title: Text(l10n.text('Shops')),
-            trailing: shopPendingCount > 0
-                ? Badge(label: Text('$shopPendingCount'))
-                : null,
-            onTap: () {
-              Navigator.of(context).pop();
-              Navigator.of(context).pushReplacement(
-                MaterialPageRoute<void>(
-                  builder: (context) => const ShopsScreen(),
-                ),
-              );
-            },
-          ),
-          ListTile(
-            leading: const Icon(Icons.straighten_outlined),
-            title: Text(l10n.text('Units of measurement')),
-            trailing: unitPendingCount > 0
-                ? Badge(label: Text('$unitPendingCount'))
-                : null,
-            onTap: () {
-              Navigator.of(context).pop();
-              Navigator.of(context).pushReplacement(
-                MaterialPageRoute<void>(
-                  builder: (context) => const UnitOfMeasuresScreen(),
-                ),
-              );
-            },
-          ),
+          if (canViewProductUnits)
+            ListTile(
+              leading: const Icon(Icons.home_outlined),
+              title: Text(l10n.text('Home')),
+              onTap: () {
+                Navigator.of(context).pop();
+                Navigator.of(context).popUntil((route) => route.isFirst);
+              },
+            ),
+          if (canViewProductPrices)
+            ListTile(
+              leading: const Icon(Icons.scale_outlined),
+              title: Text(l10n.text('Product units')),
+              trailing: productUnitPendingCount > 0
+                  ? Badge(label: Text('$productUnitPendingCount'))
+                  : null,
+              onTap: () {
+                Navigator.of(context).pop();
+                Navigator.of(context).pushReplacement(
+                  MaterialPageRoute<void>(
+                    builder: (context) => const ProductUnitsScreen(),
+                  ),
+                );
+              },
+            ),
+          if (canViewShops)
+            ListTile(
+              leading: const Icon(Icons.price_change_outlined),
+              title: Text(l10n.text('Product prices')),
+              trailing: productPricePendingCount > 0
+                  ? Badge(label: Text('$productPricePendingCount'))
+                  : null,
+              onTap: () {
+                Navigator.of(context).pop();
+                Navigator.of(context).pushReplacement(
+                  MaterialPageRoute<void>(
+                    builder: (context) => const ProductPricesScreen(),
+                  ),
+                );
+              },
+            ),
+          if (canViewUnits)
+            ListTile(
+              leading: const Icon(Icons.storefront_outlined),
+              title: Text(l10n.text('Shops')),
+              trailing: shopPendingCount > 0
+                  ? Badge(label: Text('$shopPendingCount'))
+                  : null,
+              onTap: () {
+                Navigator.of(context).pop();
+                Navigator.of(context).pushReplacement(
+                  MaterialPageRoute<void>(
+                    builder: (context) => const ShopsScreen(),
+                  ),
+                );
+              },
+            ),
+          if (canViewProducts)
+            ListTile(
+              leading: const Icon(Icons.straighten_outlined),
+              title: Text(l10n.text('Units of measurement')),
+              trailing: unitPendingCount > 0
+                  ? Badge(label: Text('$unitPendingCount'))
+                  : null,
+              onTap: () {
+                Navigator.of(context).pop();
+                Navigator.of(context).pushReplacement(
+                  MaterialPageRoute<void>(
+                    builder: (context) => const UnitOfMeasuresScreen(),
+                  ),
+                );
+              },
+            ),
           if (canViewCategories)
             ListTile(
               leading: const Icon(Icons.category_outlined),
@@ -151,21 +174,22 @@ class AppDrawer extends ConsumerWidget {
                 );
               },
             ),
-          ListTile(
-            leading: const Icon(Icons.inventory_2_outlined),
-            title: Text(l10n.text('Products')),
-            trailing: productPendingCount > 0
-                ? Badge(label: Text('$productPendingCount'))
-                : null,
-            onTap: () {
-              Navigator.of(context).pop();
-              Navigator.of(context).pushReplacement(
-                MaterialPageRoute<void>(
-                  builder: (context) => const ProductsScreen(),
-                ),
-              );
-            },
-          ),
+          if (canViewInventory)
+            ListTile(
+              leading: const Icon(Icons.inventory_2_outlined),
+              title: Text(l10n.text('Products')),
+              trailing: productPendingCount > 0
+                  ? Badge(label: Text('$productPendingCount'))
+                  : null,
+              onTap: () {
+                Navigator.of(context).pop();
+                Navigator.of(context).pushReplacement(
+                  MaterialPageRoute<void>(
+                    builder: (context) => const ProductsScreen(),
+                  ),
+                );
+              },
+            ),
           ListTile(
             leading: const Icon(Icons.warehouse_outlined),
             title: Text(l10n.text('Stock management')),
