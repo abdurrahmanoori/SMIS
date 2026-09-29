@@ -5,6 +5,9 @@ using SMIS.Application.Common;
 using SMIS.Application.DTO.Categories;
 using SMIS.Application.Features.Categories.Commands;
 using SMIS.Application.Features.Categories.Queries;
+using SMIS.Api.Authorization;
+using SMIS.Domain.Entities.Identity;
+using SMIS.Domain.Enums;
 
 namespace SMIS.Api.Controllers
 {
@@ -19,6 +22,7 @@ namespace SMIS.Api.Controllers
         /// Creates a new product category.
         /// </summary>
         [HttpPost]
+        [HasPermission(ApplicationComponentKeys.Categories, PermissionAction.Create)]
         public async Task<ActionResult<CategoryDto>> Create(
             CategoryCreateDto dto
         ) =>
@@ -33,6 +37,7 @@ namespace SMIS.Api.Controllers
         /// not normal online category creation.
         /// </remarks>
         [HttpPost("sync")]
+        [HasPermission(ApplicationComponentKeys.Categories, PermissionAction.Create)]
         public async Task<ActionResult<CategoryDto>> SyncCreate(
             CategorySyncCreateDto dto
         ) =>
@@ -42,6 +47,7 @@ namespace SMIS.Api.Controllers
         /// Gets categories in pages.
         /// </summary>
         [HttpGet]
+        [HasPermission(ApplicationComponentKeys.Categories, PermissionAction.Read)]
         public async Task<ActionResult<PagedList<CategoryDto>>> GetAll(
             [FromQuery] int pageNumber = 1,
             [FromQuery] int pageSize = 25
@@ -58,6 +64,7 @@ namespace SMIS.Api.Controllers
         /// while <c>columns</c> can limit which fields are returned for dropdowns or lightweight screens.
         /// </remarks>
         [HttpGet("query")]
+        [HasPermission(ApplicationComponentKeys.Categories, PermissionAction.Read)]
         public async Task<ActionResult<PagedListNew<CategoryDto>>> Query(
             [FromQuery] CategoryQueryCriteria criteria,
             [FromQuery] string[]? columns,
@@ -89,6 +96,7 @@ namespace SMIS.Api.Controllers
         /// Gets one category by its ID.
         /// </summary>
         [HttpGet("{id}")]
+        [HasPermission(ApplicationComponentKeys.Categories, PermissionAction.Read)]
         public async Task<ActionResult<CategoryDto>> GetById(
             string id
         ) =>
@@ -98,6 +106,7 @@ namespace SMIS.Api.Controllers
         /// Updates an existing category.
         /// </summary>
         [HttpPut("{id}")]
+        [HasPermission(ApplicationComponentKeys.Categories, PermissionAction.Update)]
         public async Task<ActionResult<CategoryDto>> Update(
             string id,
             CategoryUpdateDto dto
@@ -112,6 +121,7 @@ namespace SMIS.Api.Controllers
         /// a category that had been deleted if the incoming change is newer.
         /// </remarks>
         [HttpPut("{id}/sync")]
+        [HasPermission(ApplicationComponentKeys.Categories, PermissionAction.Update)]
         public async Task<ActionResult<CategoryDto>> SyncUpdate(
             string id,
             CategorySyncUpdateDto dto
@@ -125,6 +135,7 @@ namespace SMIS.Api.Controllers
         /// A category that is still used by products cannot be deleted until those products are moved to another category.
         /// </remarks>
         [HttpDelete("{id}")]
+        [HasPermission(ApplicationComponentKeys.Categories, PermissionAction.Delete)]
         public async Task<ActionResult<Unit>> Delete(
             string id
         ) =>
@@ -138,6 +149,7 @@ namespace SMIS.Api.Controllers
         /// The category also cannot be deleted while products still use it.
         /// </remarks>
         [HttpDelete("{id}/sync")]
+        [HasPermission(ApplicationComponentKeys.Categories, PermissionAction.Delete)]
         public async Task<ActionResult<CategoryDto>> SyncDelete(
             string id,
             CategorySyncDeleteDto dto

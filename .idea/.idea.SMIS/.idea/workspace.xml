@@ -147,61 +147,61 @@
   <component name="MetaFilesCheckinStateConfiguration" checkMetaFiles="true" />
   <component name="NextEditCompletionFeaturesState">
     <decayedCancelled>
-      <entry key="MS100" value="1.5296582286864289" />
-      <entry key="MS500" value="3.0718399287054665" />
-      <entry key="S2" value="3.7384481914636227" />
-      <entry key="S5" value="4.022729315287272" />
-      <entry key="S10" value="4.345600217879953" />
-      <entry key="S30" value="6.336033852881346" />
-      <entry key="S60" value="9.082916676382933" />
-      <entry key="M2" value="11.750058172993183" />
-      <entry key="M5" value="14.110899920502465" />
-      <entry key="M10" value="15.212958112272307" />
-      <entry key="M15" value="15.686984206965922" />
-      <entry key="M30" value="16.32067445311275" />
-      <entry key="H1" value="17.49718099166484" />
-      <entry key="H2" value="21.235362125435515" />
-      <entry key="H4" value="31.924089580337107" />
-      <entry key="D1" value="211.32025304287572" />
-      <entry key="W1" value="390.29203742086025" />
+      <entry key="MS100" value="1.0" />
+      <entry key="MS500" value="1.000052889925885" />
+      <entry key="S2" value="1.2238487076264" />
+      <entry key="S5" value="2.572348494694635" />
+      <entry key="S10" value="4.210680696274672" />
+      <entry key="S30" value="7.5971447048709075" />
+      <entry key="S60" value="10.83644635778406" />
+      <entry key="M2" value="13.945076828298328" />
+      <entry key="M5" value="16.724232291738062" />
+      <entry key="M10" value="18.004635340411316" />
+      <entry key="M15" value="18.543851709038876" />
+      <entry key="M30" value="19.246304775435327" />
+      <entry key="H1" value="20.45748919961159" />
+      <entry key="H2" value="24.211581843319617" />
+      <entry key="H4" value="34.90658460589744" />
+      <entry key="D1" value="214.30163379722396" />
+      <entry key="W1" value="393.2871396341279" />
     </decayedCancelled>
     <decayedSelected>
-      <entry key="MS100" value="0.053289680737080805" />
-      <entry key="MS500" value="0.5606894790075118" />
-      <entry key="S2" value="1.1359129452912506" />
-      <entry key="S5" value="1.8001547646131157" />
-      <entry key="S10" value="2.4729022549304287" />
-      <entry key="S30" value="3.3377017571541514" />
-      <entry key="S60" value="3.644138885151061" />
-      <entry key="M2" value="3.8153722421594303" />
-      <entry key="M5" value="3.9244699096100573" />
-      <entry key="M10" value="3.9619519458982473" />
-      <entry key="M15" value="3.974902175917825" />
-      <entry key="M30" value="4.035273268311479" />
-      <entry key="H1" value="4.708895769516665" />
-      <entry key="H2" value="7.171222809214846" />
-      <entry key="H4" value="13.953915406902816" />
-      <entry key="D1" value="111.09258157648053" />
-      <entry key="W1" value="195.6625041519767" />
+      <entry key="MS100" value="4.358968899649218E-28" />
+      <entry key="MS500" value="3.523358481512369E-6" />
+      <entry key="S2" value="0.06874743789577746" />
+      <entry key="S5" value="0.6803533677325485" />
+      <entry key="S10" value="1.6934600473269104" />
+      <entry key="S30" value="3.4046016506162635" />
+      <entry key="S60" value="4.112931535067876" />
+      <entry key="M2" value="4.531206327082299" />
+      <entry key="M5" value="4.805999361415772" />
+      <entry key="M10" value="4.901884864380011" />
+      <entry key="M15" value="4.934667475376335" />
+      <entry key="M30" value="5.014861780515274" />
+      <entry key="H1" value="5.697266072254207" />
+      <entry key="H2" value="8.162820133209385" />
+      <entry key="H4" value="14.946151953325113" />
+      <entry key="D1" value="112.0827856122289" />
+      <entry key="W1" value="196.66004724603542" />
     </decayedSelected>
     <decayedShown>
-      <entry key="MS100" value="1.4440696939387048" />
-      <entry key="MS500" value="3.0526975030992816" />
-      <entry key="S2" value="4.472885480560897" />
-      <entry key="S5" value="5.560059040660752" />
-      <entry key="S10" value="6.61964294521764" />
-      <entry key="S30" value="9.57373331184296" />
-      <entry key="S60" value="12.670271795586434" />
-      <entry key="M2" value="15.534981104901325" />
-      <entry key="M5" value="18.022606370898544" />
-      <entry key="M10" value="19.16838347001374" />
-      <entry key="M15" value="19.657486775540402" />
-      <entry key="M30" value="20.353655294205605" />
-      <entry key="H1" value="22.204508648599603" />
-      <entry key="H2" value="28.405055060885317" />
-      <entry key="H4" value="45.876241671686245" />
-      <entry key="D1" value="322.41015221905525" />
-      <entry key="W1" value="585.9538609028656" />
+      <entry key="MS100" value="1.2804396804461292E-19" />
+      <entry key="MS500" value="1.8909182421262893E-4" />
+      <entry key="S2" value="0.35209686022326137" />
+      <entry key="S5" value="2.4995265833085303" />
+      <entry key="S10" value="5.350984144844611" />
+      <entry key="S30" value="10.734592811633885" />
+      <entry key="S60" value="14.799110023546849" />
+      <entry key="M2" value="18.396130253377105" />
+      <entry key="M5" value="21.496798753064105" />
+      <entry key="M10" value="22.889520473289068" />
+      <entry key="M15" value="23.467106099370888" />
+      <entry key="M30" value="24.25535172571224" />
+      <entry key="H1" value="26.151422722198824" />
+      <entry key="H2" value="32.371989414321995" />
+      <entry key="H4" value="49.85053191450862" />
+      <entry key="D1" value="326.38166351980107" />
+      <entry key="W1" value="589.946495686319" />
     </decayedShown>
   </component>
   <component name="ProblemsViewState">
@@ -244,7 +244,7 @@
     "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
     "copilot.chat.legacySessionMetadata.migrated": "true",
     "dart.analysis.tool.window.visible": "false",
-    "git-widget-placeholder": "#292 on fix/product-price-overlap",
+    "git-widget-placeholder": "fix/product-price-overlap",
     "ignore.virus.scanning.warn.message": "true",
     "junie.onboarding.icon.badge.shown": "true",
     "node.js.detected.package.eslint": "true",
@@ -420,14 +420,6 @@
       <option name="presentableId" value="LOCAL-00038" />
       <option name="project" value="LOCAL" />
       <updated>1789462942314</updated>
-    </task>
-    <task id="LOCAL-00053" summary="feat: remove deprecated flutterDev.db data source and update pagination logic in Category API">
-      <option name="closed" value="true" />
-      <created>1789300684365</created>
-      <option name="number" value="00053" />
-      <option name="presentableId" value="LOCAL-00053" />
-      <option name="project" value="LOCAL" />
-      <updated>1789300684365</updated>
     </task>
     <task id="LOCAL-00054" summary="feat: add search functionality to categories and update filtering in repository">
       <option name="closed" value="true" />
@@ -797,7 +789,15 @@
       <option name="project" value="LOCAL" />
       <updated>1790573655139</updated>
     </task>
-    <option name="localTasksCounter" value="100" />
+    <task id="LOCAL-00100" summary="feat: update role management and user seeding for new roles">
+      <option name="closed" value="true" />
+      <created>1790684780105</created>
+      <option name="number" value="00100" />
+      <option name="presentableId" value="LOCAL-00100" />
+      <option name="project" value="LOCAL" />
+      <updated>1790684780106</updated>
+    </task>
+    <option name="localTasksCounter" value="101" />
     <option name="clearContext" value="false" />
     <option name="createChangelist" value="false" />
     <option name="createBranch" value="false" />
@@ -829,7 +829,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
-    <MESSAGE value="feat: implement InventoryController with endpoints for stock operations and reporting" />
     <MESSAGE value="feat: add Sale, StockCount, and Idempotency domains with related DTOs, commands, and validation; implement return and void operations for sales" />
     <MESSAGE value="feat: enhance API documentation with XML comments and improve code readability; add nullable reference types and suppress warnings" />
     <MESSAGE value="feat: enhance PowerSync integration with new repositories and services; add support for super admin claims in token generation" />
@@ -854,6 +853,7 @@
     <MESSAGE value="refactor: update workspace.xml for improved settings and formatting" />
     <MESSAGE value="refactor: update Flutter web configuration and clean up workspace.xml" />
     <MESSAGE value="feat: add GitHub Actions workflow for deploying Flutter web app" />
+    <MESSAGE value="feat: update role management and user seeding for new roles" />
     <option name="LAST_COMMIT_MESSAGE" value="" />
   </component>
   <component name="XDebuggerManager">

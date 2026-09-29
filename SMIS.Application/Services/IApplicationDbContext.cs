@@ -36,6 +36,9 @@ public interface IApplicationDbContext
     public DbSet<LoanAccount> LoanAccounts { get; set; }
     public DbSet<LoanAccountPayment> LoanAccountPayments { get; set; }
     public DbSet<ApplicationUserRole> UserRoles { get; set; }
+    public DbSet<ApplicationRole> Roles { get; set; }
+    public DbSet<ApplicationComponent> ApplicationComponents { get; set; }
+    public DbSet<RoleComponentPermission> RoleComponentPermissions { get; set; }
 
     Task<int> SaveChangesAsync(
         CancellationToken cancellationToken

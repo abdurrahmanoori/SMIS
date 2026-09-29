@@ -19,6 +19,7 @@ import '../screens/shops_screen.dart';
 import '../screens/stock_screen.dart';
 import '../screens/unit_of_measures_screen.dart';
 import '../l10n/app_localizations.dart';
+import '../models/application_component_keys.dart';
 import 'active_shop_context.dart';
 
 class AppDrawer extends ConsumerWidget {
@@ -42,6 +43,9 @@ class AppDrawer extends ConsumerWidget {
     final productPricePendingCount = productPriceState.value?.pendingCount ?? 0;
 
     if (session == null) return const SizedBox.shrink();
+    final canViewCategories = session.canViewComponent(
+      ApplicationComponentKeys.categories,
+    );
 
     return Drawer(
       child: ListView(
@@ -131,21 +135,22 @@ class AppDrawer extends ConsumerWidget {
               );
             },
           ),
-          ListTile(
-            leading: const Icon(Icons.category_outlined),
-            title: Text(l10n.text('Categories')),
-            trailing: pendingCount > 0
-                ? Badge(label: Text('$pendingCount'))
-                : null,
-            onTap: () {
-              Navigator.of(context).pop();
-              Navigator.of(context).pushReplacement(
-                MaterialPageRoute<void>(
-                  builder: (context) => CategoriesScreen(),
-                ),
-              );
-            },
-          ),
+          if (canViewCategories)
+            ListTile(
+              leading: const Icon(Icons.category_outlined),
+              title: Text(l10n.text('Categories')),
+              trailing: pendingCount > 0
+                  ? Badge(label: Text('$pendingCount'))
+                  : null,
+              onTap: () {
+                Navigator.of(context).pop();
+                Navigator.of(context).pushReplacement(
+                  MaterialPageRoute<void>(
+                    builder: (context) => const CategoriesScreen(),
+                  ),
+                );
+              },
+            ),
           ListTile(
             leading: const Icon(Icons.inventory_2_outlined),
             title: Text(l10n.text('Products')),

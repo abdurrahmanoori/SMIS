@@ -713,6 +713,50 @@ namespace SMIS.Infrastructure.Server.Migrations
                     b.ToTable("IdempotencyRecord", (string)null);
                 });
 
+            modelBuilder.Entity("SMIS.Domain.Entities.Identity.Entity.ApplicationComponent", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("DisplayOrder")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Key")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<bool>("ShowInMenu")
+                        .HasColumnType("bit");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Key")
+                        .IsUnique();
+
+                    b.ToTable("ApplicationComponents", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "55555555-0000-0000-0000-000000000001",
+                            DisplayOrder = 1,
+                            IsActive = true,
+                            Key = "Categories",
+                            Name = "Categories",
+                            ShowInMenu = true
+                        });
+                });
+
             modelBuilder.Entity("SMIS.Domain.Entities.Identity.Entity.ApplicationRole", b =>
                 {
                     b.Property<string>("Id")
@@ -1428,6 +1472,120 @@ namespace SMIS.Infrastructure.Server.Migrations
                             RoleId = "33333333-0000-0000-0000-000000000002",
                             RoleName = "ShopAdmin",
                             UserName = "shopadmin@wasilshop.com"
+                        });
+                });
+
+            modelBuilder.Entity("SMIS.Domain.Entities.Identity.Entity.RoleComponentPermission", b =>
+                {
+                    b.Property<string>("RoleId")
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("ComponentId")
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<bool>("CanCreate")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("CanDelete")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("CanRead")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("CanUpdate")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("CanView")
+                        .HasColumnType("bit");
+
+                    b.HasKey("RoleId", "ComponentId");
+
+                    b.HasIndex("ComponentId");
+
+                    b.ToTable("RoleComponentPermissions", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000001",
+                            ComponentId = "55555555-0000-0000-0000-000000000001",
+                            CanCreate = true,
+                            CanDelete = true,
+                            CanRead = true,
+                            CanUpdate = true,
+                            CanView = true
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000002",
+                            ComponentId = "55555555-0000-0000-0000-000000000001",
+                            CanCreate = true,
+                            CanDelete = true,
+                            CanRead = true,
+                            CanUpdate = true,
+                            CanView = true
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000004",
+                            ComponentId = "55555555-0000-0000-0000-000000000001",
+                            CanCreate = true,
+                            CanDelete = true,
+                            CanRead = true,
+                            CanUpdate = true,
+                            CanView = true
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000003",
+                            ComponentId = "55555555-0000-0000-0000-000000000001",
+                            CanCreate = true,
+                            CanDelete = true,
+                            CanRead = true,
+                            CanUpdate = true,
+                            CanView = true
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000007",
+                            ComponentId = "55555555-0000-0000-0000-000000000001",
+                            CanCreate = false,
+                            CanDelete = false,
+                            CanRead = true,
+                            CanUpdate = false,
+                            CanView = true
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000008",
+                            ComponentId = "55555555-0000-0000-0000-000000000001",
+                            CanCreate = false,
+                            CanDelete = false,
+                            CanRead = true,
+                            CanUpdate = false,
+                            CanView = true
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000005",
+                            ComponentId = "55555555-0000-0000-0000-000000000001",
+                            CanCreate = false,
+                            CanDelete = false,
+                            CanRead = true,
+                            CanUpdate = false,
+                            CanView = true
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000006",
+                            ComponentId = "55555555-0000-0000-0000-000000000001",
+                            CanCreate = false,
+                            CanDelete = false,
+                            CanRead = true,
+                            CanUpdate = false,
+                            CanView = true
                         });
                 });
 
@@ -5459,6 +5617,25 @@ namespace SMIS.Infrastructure.Server.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("SMIS.Domain.Entities.Identity.Entity.RoleComponentPermission", b =>
+                {
+                    b.HasOne("SMIS.Domain.Entities.Identity.Entity.ApplicationComponent", "Component")
+                        .WithMany()
+                        .HasForeignKey("ComponentId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("SMIS.Domain.Entities.Identity.Entity.ApplicationRole", "Role")
+                        .WithMany()
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Component");
+
+                    b.Navigation("Role");
                 });
 
             modelBuilder.Entity("SMIS.Domain.Entities.LoanAccount", b =>

@@ -3,6 +3,8 @@ using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using SMIS.Application.Common.Behaviors;
 using SMIS.Application.Services;
+using SMIS.Application.Identity.IServices;
+using SMIS.Application.Identity.Services;
 using SMIS.Domain.Services;
 using System.Reflection;
 
@@ -32,6 +34,7 @@ public static class ApplicationServiceRegistration
         // update StockBatch balances or create StockMovement rows independently.
         services.AddScoped<IInventoryService, InventoryService>();
         services.AddScoped<IIdempotencyService, IdempotencyService>();
+        services.AddScoped<IComponentPermissionService, ComponentPermissionService>();
 
         return services;
     }

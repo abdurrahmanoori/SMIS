@@ -13,6 +13,7 @@ import '../widgets/active_shop_context.dart';
 import '../widgets/locale_action.dart';
 import '../widgets/theme_mode_action.dart';
 import '../l10n/app_localizations.dart';
+import '../models/application_component_keys.dart';
 import 'categories_screen.dart';
 import 'profile_screen.dart';
 import 'product_prices_screen.dart';
@@ -54,6 +55,9 @@ class HomeScreen extends ConsumerWidget {
     // HomeScreen is only shown by the authentication gate after a session is
     // restored or created, but keep this defensive fallback for state changes.
     if (session == null) return const SizedBox.shrink();
+    final canViewCategories = session.canViewComponent(
+      ApplicationComponentKeys.categories,
+    );
 
     return Scaffold(
       appBar: AppBar(
@@ -203,9 +207,10 @@ class HomeScreen extends ConsumerWidget {
                       title: l10n.text('Stock management'),
                       description: stockPendingCount == 0
                           ? l10n.text('View saved stock and inventory history.')
-                          : l10n.text('{count} stock actions waiting to sync.', {
-                              'count': stockPendingCount,
-                            }),
+                          : l10n.text(
+                              '{count} stock actions waiting to sync.',
+                              {'count': stockPendingCount},
+                            ),
                       badgeLabel: stockPendingCount == 0
                           ? null
                           : l10n.text('{count} pending', {
@@ -222,10 +227,11 @@ class HomeScreen extends ConsumerWidget {
                             spacing: 16,
                             runSpacing: 16,
                             children: [
-                              SizedBox(
-                                width: (constraints.maxWidth - 16) / 2,
-                                child: categoriesCard,
-                              ),
+                              if (canViewCategories)
+                                SizedBox(
+                                  width: (constraints.maxWidth - 16) / 2,
+                                  child: categoriesCard,
+                                ),
                               SizedBox(
                                 width: (constraints.maxWidth - 16) / 2,
                                 child: unitsCard,
@@ -258,8 +264,10 @@ class HomeScreen extends ConsumerWidget {
                           )
                         : Column(
                             children: [
-                              categoriesCard,
-                              const SizedBox(height: 16),
+                              if (canViewCategories) ...[
+                                categoriesCard,
+                                const SizedBox(height: 16),
+                              ],
                               unitsCard,
                               const SizedBox(height: 16),
                               shopsCard,
