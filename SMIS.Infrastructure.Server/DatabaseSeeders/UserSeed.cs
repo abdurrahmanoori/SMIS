@@ -19,25 +19,25 @@ public static class UserSeed
         modelBuilder.Entity<ApplicationUser>().HasData(
             // Main Store
             CreateUser(SeedIds.UserSuperAdmin, SD.Role_Super_Admin, SeedIds.Shop1),
-            CreateUser(SeedIds.UserMainAdmin, SD.Role_Admin, SeedIds.Shop1),
-            CreateUser(SeedIds.UserMainAdministration, SD.Role_Administration, SeedIds.Shop1),
+            CreateUser(SeedIds.UserMainShopAdmin, SD.Role_Shop_Admin, SeedIds.Shop1),
             CreateUser(SeedIds.UserMainManager, SD.Role_Manager, SeedIds.Shop1),
+            CreateUser(SeedIds.UserMainInventoryManager, SD.Role_Inventory_Manager, SeedIds.Shop1),
+            CreateUser(SeedIds.UserMainSalesManager, SD.Role_Sales_Manager, SeedIds.Shop1),
+            CreateUser(SeedIds.UserMainCashier, SD.Role_Cashier, SeedIds.Shop1),
             CreateUser(SeedIds.UserMainStaff, SD.Role_Staff, SeedIds.Shop1),
             CreateUser(SeedIds.UserMainViewer, SD.Role_Viewer, SeedIds.Shop1),
-            CreateUser(SeedIds.UserMainEditor, SD.Role_Editor, SeedIds.Shop1),
-            CreateUser(SeedIds.UserMainUser, SD.Role_User, SeedIds.Shop1),
 
             // Branch Store
-            CreateUser(SeedIds.UserBranchAdmin, SD.Role_Admin, SeedIds.Shop2),
-            CreateUser(SeedIds.UserBranchAdministration, SD.Role_Administration, SeedIds.Shop2),
+            CreateUser(SeedIds.UserBranchShopAdmin, SD.Role_Shop_Admin, SeedIds.Shop2),
             CreateUser(SeedIds.UserBranchManager, SD.Role_Manager, SeedIds.Shop2),
+            CreateUser(SeedIds.UserBranchInventoryManager, SD.Role_Inventory_Manager, SeedIds.Shop2),
+            CreateUser(SeedIds.UserBranchSalesManager, SD.Role_Sales_Manager, SeedIds.Shop2),
+            CreateUser(SeedIds.UserBranchCashier, SD.Role_Cashier, SeedIds.Shop2),
             CreateUser(SeedIds.UserBranchStaff, SD.Role_Staff, SeedIds.Shop2),
             CreateUser(SeedIds.UserBranchViewer, SD.Role_Viewer, SeedIds.Shop2),
-            CreateUser(SeedIds.UserBranchEditor, SD.Role_Editor, SeedIds.Shop2),
-            CreateUser(SeedIds.UserBranchUser, SD.Role_User, SeedIds.Shop2),
 
             // Wasil Shop
-            CreateUser(SeedIds.UserWasilAdmin, SD.Role_Admin, SeedIds.ShopWasil)
+            CreateUser(SeedIds.UserWasilShopAdmin, SD.Role_Shop_Admin, SeedIds.ShopWasil)
         );
     }
 

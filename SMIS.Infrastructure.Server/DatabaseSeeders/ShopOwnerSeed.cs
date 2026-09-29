@@ -13,11 +13,11 @@ public static class ShopOwnerSeed
         modelBuilder.Entity<ShopOwner>().HasData(
             CreateShopOwner(SeedIds.ShopOwner1, SeedIds.UserSuperAdmin, SeedIds.Shop1, "John", "Doe", "123456789",
                 "+1234567890", "john.doe@example.com", "123 Main St", 100.0m, true),
-            CreateShopOwner(SeedIds.ShopOwner2, SeedIds.UserMainAdmin, SeedIds.Shop2, "Jane", "Smith", "987654321",
+            CreateShopOwner(SeedIds.ShopOwner2, SeedIds.UserMainShopAdmin, SeedIds.Shop2, "Jane", "Smith", "987654321",
                 "+0987654321", "jane.smith@example.com", "456 Oak Ave", 75.0m, true),
             CreateShopOwner(SeedIds.ShopOwner3, SeedIds.UserMainManager, SeedIds.Shop3, "Bob", "Johnson", "555666777",
                 "+1555666777", "bob.johnson@example.com", "789 Pine Rd", 50.0m, true),
-            CreateShopOwner(SeedIds.ShopOwnerWasil, SeedIds.UserWasilAdmin, SeedIds.ShopWasil, "Wasil", "Admin",
+            CreateShopOwner(SeedIds.ShopOwnerWasil, SeedIds.UserWasilShopAdmin, SeedIds.ShopWasil, "Wasil", "Admin",
                 "123456789", "+1234567890", "wasil@wasilshop.com", "Kabul Center", 100.0m, true)
         );
     }

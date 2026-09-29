@@ -1,6 +1,7 @@
 using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
+using SMIS.Application.Common.Contants;
 using SMIS.Application.Common.Response;
 using SMIS.Application.DTO.Users;
 using SMIS.Application.Repositories.Base;
@@ -51,6 +52,31 @@ namespace SMIS.Application.Features.Identity.Users.Commands
                     "The selected language does not exist or is inactive.");
             }
 
+            var roles = Array.Empty<string>();
+            if (request.UserCreateDto.Roles != null)
+            {
+                var requestedRoles = request.UserCreateDto.Roles
+                    .Distinct(StringComparer.OrdinalIgnoreCase)
+                    .ToArray();
+                var canonicalRoles = requestedRoles
+                    .Select(SD.GetCanonicalRole)
+                    .ToArray();
+
+                if (canonicalRoles.Any(role => role is null))
+                {
+                    return Result<UserDto>.FailureResult(
+                        "InvalidRole",
+                        $"Roles must be one of: {string.Join(", ", SD.AllRoles)}.");
+                }
+
+                roles = canonicalRoles.Cast<string>().ToArray();
+                foreach (var role in roles)
+                {
+                    if (!await _roleManager.RoleExistsAsync(role))
+                        return Result<UserDto>.FailureResult("InvalidRole", $"Role '{role}' is not configured.");
+                }
+            }
+
             var entity = _mapper.Map<ApplicationUser>(request.UserCreateDto);
 
             // Populate shop name
@@ -67,17 +93,9 @@ namespace SMIS.Application.Features.Identity.Users.Commands
                 }).ToList());
             }
 
-            if (request.UserCreateDto.Roles != null)
+            if (roles.Length > 0)
             {
-                foreach (var role in request.UserCreateDto.Roles.Distinct())
-                {
-                    if (!await _roleManager.RoleExistsAsync(role))
-                    {
-                        await _roleManager.CreateAsync(new ApplicationRole { Name = role });
-                    }
-                }
-
-                var addToRoles = await _userManager.AddToRolesAsync(entity, request.UserCreateDto.Roles.Distinct());
+                var addToRoles = await _userManager.AddToRolesAsync(entity, roles);
                 if (!addToRoles.Succeeded)
                 {
                     return Result<UserDto>.WithErrors(addToRoles.Errors.Select(e => new ValidationError

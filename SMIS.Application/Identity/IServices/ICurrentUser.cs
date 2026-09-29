@@ -5,8 +5,7 @@
         string GetId();
         string GetLangId();
         string GetShopId();
-        bool IsWholesaleAdmin();
-        bool IsRetailAdmin();
+        bool IsShopAdmin();
         bool IsSuperAdmin();
         public List<string> Roles();
     }

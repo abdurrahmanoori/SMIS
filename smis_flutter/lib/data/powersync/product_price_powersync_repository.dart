@@ -95,13 +95,22 @@ class ProductPricePowerSyncRepository extends PowerSyncRepositorySupport {
   Future<ProductPrice> create(ProductPriceDraft draft, String shopId) async {
     final normalized = draft.normalized();
     await _ensureProductUnit(shopId, normalized.productUnitId);
-    await _ensureChronological(
+    final latest = await _ensureChronological(
       normalized.productUnitId,
       normalized.effectiveDate,
     );
 
     final db = await database;
     final id = _idGenerator();
+    if (latest != null) {
+      final previousEndDate = normalized.effectiveDate.subtract(
+        const Duration(microseconds: 1),
+      );
+      await db.execute(
+        'UPDATE product_price SET end_date = ?, last_modified_utc = ? WHERE id = ?',
+        [previousEndDate.toIso8601String(), nowIso(), latest],
+      );
+    }
     await db.execute(
       'INSERT INTO product_price('
       'id, product_unit_id, sell_price, effective_date, end_date, last_modified_utc'
@@ -199,18 +208,18 @@ class ProductPricePowerSyncRepository extends PowerSyncRepositorySupport {
     }
   }
 
-  Future<void> _ensureChronological(
+  Future<String?> _ensureChronological(
     String productUnitId,
     DateTime effectiveDate,
   ) async {
     final db = await database;
     final latest = await db.getOptional(
-      'SELECT effective_date FROM product_price '
+      'SELECT id, effective_date FROM product_price '
       'WHERE product_unit_id = ? '
       'ORDER BY effective_date DESC LIMIT 1',
       [productUnitId],
     );
-    if (latest == null) return;
+    if (latest == null) return null;
 
     final latestEffectiveDate = DateTime.parse(
       latest['effective_date']! as String,
@@ -220,6 +229,7 @@ class ProductPricePowerSyncRepository extends PowerSyncRepositorySupport {
         'A new price must become effective after the latest price for this product unit.',
       );
     }
+    return latest['id']! as String;
   }
 
   Future<ProductPrice> _byId(String id) async {
