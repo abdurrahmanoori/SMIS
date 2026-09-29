@@ -3,8 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../controllers/category_controller.dart';
+import '../controllers/auth_controller.dart';
 import '../data/data_exception.dart';
 import '../models/category.dart';
+import '../models/application_component_keys.dart';
 import '../l10n/app_localizations.dart';
 import '../widgets/app_drawer.dart';
 import '../widgets/active_shop_context.dart';
@@ -68,6 +70,24 @@ class _CategoriesScreenState extends ConsumerState<CategoriesScreen>
   @override
   Widget build(BuildContext context) {
     final categories = ref.watch(categoryControllerProvider);
+    final session = ref.watch(authControllerProvider).session;
+    final permission = session?.permissionFor(
+      ApplicationComponentKeys.categories,
+    );
+
+    if (permission == null || !permission.canView || !permission.canRead) {
+      return Scaffold(
+        appBar: AppBar(title: Text(context.l10n.text('Categories'))),
+        drawer: const AppDrawer(),
+        body: Center(
+          child: Text(
+            context.l10n.text(
+              'You do not have permission to access categories.',
+            ),
+          ),
+        ),
+      );
+    }
 
     return Scaffold(
       appBar: AppBar(
@@ -124,6 +144,8 @@ class _CategoriesScreenState extends ConsumerState<CategoriesScreen>
               ),
               data: (value) => _CategoryContent(
                 state: value,
+                canUpdate: permission.canUpdate,
+                canDelete: permission.canDelete,
                 onEdit: _edit,
                 onDelete: _delete,
                 onLoadMore: () {
@@ -134,11 +156,13 @@ class _CategoriesScreenState extends ConsumerState<CategoriesScreen>
           ),
         ),
       ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: _create,
-        icon: const Icon(Icons.add),
-        label: Text(context.l10n.text('Add category')),
-      ),
+      floatingActionButton: permission.canCreate
+          ? FloatingActionButton.extended(
+              onPressed: _create,
+              icon: const Icon(Icons.add),
+              label: Text(context.l10n.text('Add category')),
+            )
+          : null,
     );
   }
 
@@ -259,12 +283,16 @@ class _CategoriesScreenState extends ConsumerState<CategoriesScreen>
 class _CategoryContent extends StatelessWidget {
   const _CategoryContent({
     required this.state,
+    required this.canUpdate,
+    required this.canDelete,
     required this.onEdit,
     required this.onDelete,
     required this.onLoadMore,
   });
 
   final CategoryScreenState state;
+  final bool canUpdate;
+  final bool canDelete;
   final ValueChanged<Category> onEdit;
   final ValueChanged<Category> onDelete;
   final VoidCallback onLoadMore;
@@ -283,6 +311,8 @@ class _CategoryContent extends StatelessWidget {
                   final category = state.categories[index];
                   return _CategoryCard(
                     category: category,
+                    canUpdate: canUpdate,
+                    canDelete: canDelete,
                     onEdit: () => onEdit(category),
                     onDelete: () => onDelete(category),
                   );
@@ -313,11 +343,15 @@ class _CategoryContent extends StatelessWidget {
 class _CategoryCard extends StatelessWidget {
   const _CategoryCard({
     required this.category,
+    required this.canUpdate,
+    required this.canDelete,
     required this.onEdit,
     required this.onDelete,
   });
 
   final Category category;
+  final bool canUpdate;
+  final bool canDelete;
   final VoidCallback onEdit;
   final VoidCallback onDelete;
 
@@ -378,19 +412,22 @@ class _CategoryCard extends StatelessWidget {
                 ],
               ),
             ),
-            PopupMenuButton<String>(
-              onSelected: (value) => value == 'edit' ? onEdit() : onDelete(),
-              itemBuilder: (context) => [
-                PopupMenuItem(
-                  value: 'edit',
-                  child: Text(context.l10n.text('Edit')),
-                ),
-                PopupMenuItem(
-                  value: 'delete',
-                  child: Text(context.l10n.text('Delete')),
-                ),
-              ],
-            ),
+            if (canUpdate || canDelete)
+              PopupMenuButton<String>(
+                onSelected: (value) => value == 'edit' ? onEdit() : onDelete(),
+                itemBuilder: (context) => [
+                  if (canUpdate)
+                    PopupMenuItem(
+                      value: 'edit',
+                      child: Text(context.l10n.text('Edit')),
+                    ),
+                  if (canDelete)
+                    PopupMenuItem(
+                      value: 'delete',
+                      child: Text(context.l10n.text('Delete')),
+                    ),
+                ],
+              ),
           ],
         ),
       ),

@@ -17,6 +17,7 @@ import '../l10n/app_localizations.dart';
 import '../models/product.dart';
 import '../models/product_unit.dart';
 import '../models/unit_of_measure.dart';
+import '../models/application_component_keys.dart';
 import '../widgets/active_shop_context.dart';
 import '../widgets/app_drawer.dart';
 import '../widgets/app_error_view.dart';
@@ -38,19 +39,46 @@ class StockScreen extends ConsumerWidget {
     final session = ref.watch(
       authControllerProvider.select((state) => state.session),
     );
+    final permission = session?.permissionFor(
+      ApplicationComponentKeys.inventory,
+    );
+
+    if (permission == null || !permission.canView || !permission.canRead) {
+      return Scaffold(
+        appBar: AppBar(title: Text(context.l10n.text('Stock management'))),
+        drawer: const AppDrawer(),
+        body: Center(
+          child: Text(
+            context.l10n.text(
+              'You do not have permission to access stock management.',
+            ),
+          ),
+        ),
+      );
+    }
     return _StockContent(
       key: ValueKey('${session?.userId}/${session?.shopId}'),
       shopId: session?.shopId,
       userId: session?.userId,
+      canCreate: permission.canCreate,
+      canUpdate: permission.canUpdate,
     );
   }
 }
 
 class _StockContent extends ConsumerStatefulWidget {
-  const _StockContent({super.key, required this.shopId, required this.userId});
+  const _StockContent({
+    super.key,
+    required this.shopId,
+    required this.userId,
+    required this.canCreate,
+    required this.canUpdate,
+  });
 
   final String? shopId;
   final String? userId;
+  final bool canCreate;
+  final bool canUpdate;
 
   @override
   ConsumerState<_StockContent> createState() => _StockContentState();
@@ -316,24 +344,26 @@ class _StockContentState extends ConsumerState<_StockContent> {
         padding: const EdgeInsets.all(12),
         child: Row(
           children: [
-            FilledButton.icon(
-              onPressed: _busy ? null : () => _receive(data),
-              icon: const Icon(Icons.add),
-              label: Text(context.l10n.text('Receive stock')),
-            ),
-            const SizedBox(width: 8),
-            OutlinedButton.icon(
-              onPressed:
-                  _busy ||
-                      _countId != null ||
-                      !data.batches.any(
-                        (b) => stockText(b, 'status') != 'cancelled',
-                      )
-                  ? null
-                  : () => _startCount(data),
-              icon: const Icon(Icons.fact_check_outlined),
-              label: Text(context.l10n.text('Stock count')),
-            ),
+            if (widget.canCreate) ...[
+              FilledButton.icon(
+                onPressed: _busy ? null : () => _receive(data),
+                icon: const Icon(Icons.add),
+                label: Text(context.l10n.text('Receive stock')),
+              ),
+              const SizedBox(width: 8),
+              OutlinedButton.icon(
+                onPressed:
+                    _busy ||
+                        _countId != null ||
+                        !data.batches.any(
+                          (b) => stockText(b, 'status') != 'cancelled',
+                        )
+                    ? null
+                    : () => _startCount(data),
+                icon: const Icon(Icons.fact_check_outlined),
+                label: Text(context.l10n.text('Stock count')),
+              ),
+            ],
           ],
         ),
       ),
@@ -343,7 +373,7 @@ class _StockContentState extends ConsumerState<_StockContent> {
           title: Text(context.l10n.text('Count in progress')),
           subtitle: Text(_countId!),
           trailing: const Icon(Icons.chevron_right),
-          onTap: () => _openCount(_countId!),
+          onTap: widget.canUpdate ? () => _openCount(_countId!) : null,
         ),
       Expanded(
         child: RefreshIndicator(
@@ -361,7 +391,9 @@ class _StockContentState extends ConsumerState<_StockContent> {
                   ),
                   title: Text('${command.kind} • ${command.state}'),
                   subtitle: command.error == null ? null : Text(command.error!),
-                  trailing: command.state == 'failed'
+                  trailing:
+                      command.state == 'failed' &&
+                          (widget.canCreate || widget.canUpdate)
                       ? PopupMenuButton<String>(
                           onSelected: (choice) => choice == 'retry'
                               ? _run(() => _store.retry(command.id))
@@ -389,7 +421,9 @@ class _StockContentState extends ConsumerState<_StockContent> {
                 trailing: Text(
                   stockNumber(batch, 'remainingQuantityBase').toString(),
                 ),
-                onTap: () => _batchActions(data, batch),
+                onTap: widget.canUpdate
+                    ? () => _batchActions(data, batch)
+                    : null,
               );
             },
           ),
@@ -502,7 +536,7 @@ class _StockContentState extends ConsumerState<_StockContent> {
           '${stockText(row, 'direction') == 'out' ? '-' : '+'}'
           '${stockNumber(row, 'quantityBase')}',
         ),
-        onTap: () => _movementActions(row),
+        onTap: widget.canUpdate ? () => _movementActions(row) : null,
       );
     },
   );
@@ -817,6 +851,7 @@ class _StockContentState extends ConsumerState<_StockContent> {
       return selectedQuantityBase() >
           stockNumber(batch, 'remainingQuantityBase');
     }
+
     final accepted = await showDialog<bool>(
       context: context,
       builder: (context) => StatefulBuilder(
@@ -866,8 +901,8 @@ class _StockContentState extends ConsumerState<_StockContent> {
                   decoration: const InputDecoration(
                     labelText: 'Destination batch',
                   ),
-                   items: data.batches
-                       .where(isCompatibleTransferDestination)
+                  items: data.batches
+                      .where(isCompatibleTransferDestination)
                       .map(
                         (b) => DropdownMenuItem(
                           value: stockText(b, 'id'),
@@ -890,9 +925,9 @@ class _StockContentState extends ConsumerState<_StockContent> {
             ),
             FilledButton(
               onPressed:
-                   (num.tryParse(quantity.text) ?? 0) <= 0 ||
-                       exceedsAvailableStock() ||
-                       (path == 'transfers' && destination == null)
+                  (num.tryParse(quantity.text) ?? 0) <= 0 ||
+                      exceedsAvailableStock() ||
+                      (path == 'transfers' && destination == null)
                   ? null
                   : () => Navigator.pop(context, true),
               child: const Text('Post movement'),

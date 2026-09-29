@@ -3,10 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../controllers/category_controller.dart';
+import '../controllers/auth_controller.dart';
 import '../controllers/product_controller.dart';
 import '../controllers/unit_of_measure_controller.dart';
 import '../data/data_exception.dart';
 import '../models/category.dart';
+import '../models/application_component_keys.dart';
 import '../models/product.dart';
 import '../models/unit_of_measure.dart';
 import '../l10n/app_localizations.dart';
@@ -75,6 +77,22 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen>
   @override
   Widget build(BuildContext context) {
     final productState = ref.watch(productControllerProvider);
+    final session = ref.watch(authControllerProvider).session;
+    final permission = session?.permissionFor(
+      ApplicationComponentKeys.products,
+    );
+
+    if (permission == null || !permission.canView || !permission.canRead) {
+      return Scaffold(
+        appBar: AppBar(title: Text(context.l10n.text('Products'))),
+        drawer: const AppDrawer(),
+        body: Center(
+          child: Text(
+            context.l10n.text('You do not have permission to access products.'),
+          ),
+        ),
+      );
+    }
     final units =
         ref.watch(unitOfMeasureLookupProvider).value ?? const <UnitOfMeasure>[];
     final categories =
@@ -138,6 +156,8 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen>
                 hasUnits: hasUnits,
                 units: units,
                 categories: categories,
+                canUpdate: permission.canUpdate,
+                canDelete: permission.canDelete,
                 onEdit: _edit,
                 onDelete: _delete,
               ),
@@ -145,11 +165,13 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen>
           ),
         ),
       ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: hasUnits ? _create : null,
-        icon: const Icon(Icons.add),
-        label: Text(context.l10n.text('Add product')),
-      ),
+      floatingActionButton: permission.canCreate
+          ? FloatingActionButton.extended(
+              onPressed: hasUnits ? _create : null,
+              icon: const Icon(Icons.add),
+              label: Text(context.l10n.text('Add product')),
+            )
+          : null,
     );
   }
 
@@ -261,6 +283,8 @@ class _Content extends StatelessWidget {
     required this.hasUnits,
     required this.units,
     required this.categories,
+    required this.canUpdate,
+    required this.canDelete,
     required this.onEdit,
     required this.onDelete,
   });
@@ -269,6 +293,8 @@ class _Content extends StatelessWidget {
   final bool hasUnits;
   final List<UnitOfMeasure> units;
   final List<Category> categories;
+  final bool canUpdate;
+  final bool canDelete;
   final ValueChanged<Product> onEdit;
   final ValueChanged<Product> onDelete;
 
@@ -291,6 +317,8 @@ class _Content extends StatelessWidget {
                     product: product,
                     unitName: unitName,
                     categoryName: categoryName,
+                    canUpdate: canUpdate,
+                    canDelete: canDelete,
                     onTap: () => Navigator.of(context).push(
                       MaterialPageRoute<void>(
                         builder: (context) => ProductDetailsScreen(
@@ -329,6 +357,8 @@ class _ProductCard extends StatelessWidget {
     required this.product,
     required this.unitName,
     required this.categoryName,
+    required this.canUpdate,
+    required this.canDelete,
     required this.onTap,
     required this.onEdit,
     required this.onDelete,
@@ -337,6 +367,8 @@ class _ProductCard extends StatelessWidget {
   final Product product;
   final String unitName;
   final String? categoryName;
+  final bool canUpdate;
+  final bool canDelete;
   final VoidCallback onTap;
   final VoidCallback onEdit;
   final VoidCallback onDelete;
@@ -370,16 +402,23 @@ class _ProductCard extends StatelessWidget {
         ],
       ),
       isThreeLine: true,
-      trailing: PopupMenuButton<String>(
-        onSelected: (value) => value == 'edit' ? onEdit() : onDelete(),
-        itemBuilder: (context) => [
-          PopupMenuItem(value: 'edit', child: Text(context.l10n.text('Edit'))),
-          PopupMenuItem(
-            value: 'delete',
-            child: Text(context.l10n.text('Delete')),
-          ),
-        ],
-      ),
+      trailing: canUpdate || canDelete
+          ? PopupMenuButton<String>(
+              onSelected: (value) => value == 'edit' ? onEdit() : onDelete(),
+              itemBuilder: (context) => [
+                if (canUpdate)
+                  PopupMenuItem(
+                    value: 'edit',
+                    child: Text(context.l10n.text('Edit')),
+                  ),
+                if (canDelete)
+                  PopupMenuItem(
+                    value: 'delete',
+                    child: Text(context.l10n.text('Delete')),
+                  ),
+              ],
+            )
+          : null,
     ),
   );
 }

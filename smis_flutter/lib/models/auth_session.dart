@@ -1,4 +1,5 @@
 import 'language_defaults.dart';
+import 'component_permission.dart';
 
 class AuthSession {
   const AuthSession({
@@ -10,6 +11,7 @@ class AuthSession {
     required this.shopId,
     required this.languageId,
     required this.languageCode,
+    this.permissions = const [],
   });
 
   final String token;
@@ -20,9 +22,34 @@ class AuthSession {
   final String shopId;
   final String languageId;
   final String languageCode;
+  final List<ComponentPermission> permissions;
 
   bool get isSuperAdmin =>
       roles.any((role) => role.trim().toLowerCase() == 'superadmin');
+
+  ComponentPermission? permissionFor(String componentKey) {
+    for (final permission in permissions) {
+      if (permission.componentKey.toLowerCase() == componentKey.toLowerCase()) {
+        return permission;
+      }
+    }
+    return null;
+  }
+
+  bool canViewComponent(String componentKey) =>
+      permissionFor(componentKey)?.canView ?? false;
+
+  bool canReadComponent(String componentKey) =>
+      permissionFor(componentKey)?.canRead ?? false;
+
+  bool canCreateComponent(String componentKey) =>
+      permissionFor(componentKey)?.canCreate ?? false;
+
+  bool canUpdateComponent(String componentKey) =>
+      permissionFor(componentKey)?.canUpdate ?? false;
+
+  bool canDeleteComponent(String componentKey) =>
+      permissionFor(componentKey)?.canDelete ?? false;
 
   AuthSession copyWith({
     String? token,
@@ -32,6 +59,7 @@ class AuthSession {
     String? shopId,
     String? languageId,
     String? languageCode,
+    List<ComponentPermission>? permissions,
   }) => AuthSession(
     token: token ?? this.token,
     userId: userId,
@@ -41,6 +69,7 @@ class AuthSession {
     shopId: shopId ?? this.shopId,
     languageId: languageId ?? this.languageId,
     languageCode: languageCode ?? this.languageCode,
+    permissions: permissions ?? this.permissions,
   );
 
   factory AuthSession.fromJson(Map<String, dynamic> json) {
@@ -62,6 +91,8 @@ class AuthSession {
     }
 
     final rawRoles = json['roles'] ?? json['Roles'] ?? const <dynamic>[];
+    final rawPermissions =
+        json['permissions'] ?? json['Permissions'] ?? const <dynamic>[];
     return AuthSession(
       token: requiredString('token', 'Token'),
       userId: requiredString('userId', 'UserId'),
@@ -81,6 +112,16 @@ class AuthSession {
       roles: rawRoles is List
           ? rawRoles.whereType<String>().toList(growable: false)
           : const <String>[],
+      permissions: rawPermissions is List
+          ? rawPermissions
+                .whereType<Map>()
+                .map(
+                  (item) => ComponentPermission.fromJson(
+                    Map<String, dynamic>.from(item),
+                  ),
+                )
+                .toList(growable: false)
+          : const <ComponentPermission>[],
     );
   }
 
@@ -93,6 +134,9 @@ class AuthSession {
     'shopId': shopId,
     'languageId': languageId,
     'languageCode': languageCode,
+    'permissions': permissions
+        .map((permission) => permission.toJson())
+        .toList(),
   };
 }
 

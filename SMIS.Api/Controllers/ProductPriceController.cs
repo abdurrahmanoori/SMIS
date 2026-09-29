@@ -5,6 +5,9 @@ using SMIS.Application.DTO.ProductPrices;
 using SMIS.Application.Features.ProductPrices.Commands;
 using SMIS.Application.Features.ProductPrices.Queries;
 using SMIS.Api.Controllers.Base;
+using SMIS.Api.Authorization;
+using SMIS.Domain.Entities.Identity;
+using SMIS.Domain.Enums;
 
 namespace SMIS.Api.Controllers;
 
@@ -23,6 +26,7 @@ public class ProductPriceController : BaseApiController
     /// Creates a selling price for a product unit.
     /// </summary>
     [HttpPost]
+    [HasPermission(ApplicationComponentKeys.ProductPrices, PermissionAction.Create)]
     public async Task<ActionResult<ProductPriceDto>> Create(
         ProductPriceCreateDto dto
     ) =>
@@ -35,6 +39,7 @@ public class ProductPriceController : BaseApiController
     /// The synchronization version uses the client's ID and change time. Older client data does not overwrite a newer server version.
     /// </remarks>
     [HttpPost("sync")]
+    [HasPermission(ApplicationComponentKeys.ProductPrices, PermissionAction.Create)]
     public async Task<ActionResult<ProductPriceDto>> SyncCreate(
         ProductPriceSyncCreateDto dto
     ) => HandleResultResponseOld(await Mediator.Send(new ProductPriceSyncCreateCommand(dto)));
@@ -43,6 +48,7 @@ public class ProductPriceController : BaseApiController
     /// Searches product prices using flexible filters and optional returned columns.
     /// </summary>
     [HttpGet("query")]
+    [HasPermission(ApplicationComponentKeys.ProductPrices, PermissionAction.Read)]
     public async Task<ActionResult<PagedListNew<ProductPriceDto>>> Query(
         [FromQuery] ProductPriceQueryCriteria criteria,
         [FromQuery] string[]? columns,
@@ -65,6 +71,7 @@ public class ProductPriceController : BaseApiController
     /// Updates an existing product price.
     /// </summary>
     [HttpPut("{id}")]
+    [HasPermission(ApplicationComponentKeys.ProductPrices, PermissionAction.Update)]
     public async Task<ActionResult<ProductPriceDto>> Update(
         string id,
         ProductPriceCreateDto dto
@@ -78,6 +85,7 @@ public class ProductPriceController : BaseApiController
     /// A stale offline change is ignored instead of replacing newer server data.
     /// </remarks>
     [HttpPut("{id}/sync")]
+    [HasPermission(ApplicationComponentKeys.ProductPrices, PermissionAction.Update)]
     public async Task<ActionResult<ProductPriceDto>> SyncUpdate(
         string id,
         ProductPriceSyncUpdateDto dto
@@ -87,6 +95,7 @@ public class ProductPriceController : BaseApiController
     /// Deletes a product price.
     /// </summary>
     [HttpDelete("{id}")]
+    [HasPermission(ApplicationComponentKeys.ProductPrices, PermissionAction.Delete)]
     public async Task<ActionResult<Unit>> Delete(
         string id
     ) =>
@@ -96,6 +105,7 @@ public class ProductPriceController : BaseApiController
     /// Applies a product-price delete sent by an offline client.
     /// </summary>
     [HttpDelete("{id}/sync")]
+    [HasPermission(ApplicationComponentKeys.ProductPrices, PermissionAction.Delete)]
     public async Task<ActionResult<ProductPriceDto>> SyncDelete(
         string id,
         ProductPriceSyncDeleteDto dto

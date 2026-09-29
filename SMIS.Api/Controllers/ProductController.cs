@@ -6,6 +6,9 @@ using SMIS.Application.Features.Products.Commands;
 using SMIS.Application.Features.Products.Queries;
 using SMIS.Api.Controllers.Base;
 using Microsoft.AspNetCore.Authorization;
+using SMIS.Api.Authorization;
+using SMIS.Domain.Entities.Identity;
+using SMIS.Domain.Enums;
 
 namespace SMIS.Api.Controllers
 {
@@ -20,6 +23,7 @@ namespace SMIS.Api.Controllers
         /// Creates a new product.
         /// </summary>
         [HttpPost]
+        [HasPermission(ApplicationComponentKeys.Products, PermissionAction.Create)]
         public async Task<ActionResult<ProductDto>> Create(
             ProductCreateDto dto
         ) =>
@@ -33,6 +37,7 @@ namespace SMIS.Api.Controllers
         /// This endpoint is intended for synchronization, not normal online product creation.
         /// </remarks>
         [HttpPost("sync")]
+        [HasPermission(ApplicationComponentKeys.Products, PermissionAction.Create)]
         public async Task<ActionResult<ProductDto>> SyncCreate(
             ProductSyncCreateDto dto
         ) =>
@@ -45,7 +50,7 @@ namespace SMIS.Api.Controllers
         /// Set <c>includeCategory</c> to true when category information should be returned with each product.
         /// </remarks>
         [HttpGet]
-        [Authorize]
+        [HasPermission(ApplicationComponentKeys.Products, PermissionAction.Read)]
         public async Task<ActionResult<PagedList<ProductDto>>> GetAll(
             [FromQuery] int pageNumber = 1,
             [FromQuery] int pageSize = 25,
@@ -63,6 +68,7 @@ namespace SMIS.Api.Controllers
         /// Set <c>includeCategory</c> to true to include the related category information.
         /// </remarks>
         [HttpGet("{id}")]
+        [HasPermission(ApplicationComponentKeys.Products, PermissionAction.Read)]
         public async Task<ActionResult<ProductDto>> GetById(
             string id,
             [FromQuery] bool includeCategory = false
@@ -78,6 +84,7 @@ namespace SMIS.Api.Controllers
         /// This endpoint only reads pricing and stock information; it does not create a loan or change stock.
         /// </remarks>
         [HttpGet("{id}/loan-info")]
+        [HasPermission(ApplicationComponentKeys.Products, PermissionAction.Read)]
         public async Task<ActionResult<ProductLoanInfoDto>> GetLoanInfo(
             string id
         ) =>
@@ -87,6 +94,7 @@ namespace SMIS.Api.Controllers
         /// Updates an existing product.
         /// </summary>
         [HttpPut("{id}")]
+        [HasPermission(ApplicationComponentKeys.Products, PermissionAction.Update)]
         public async Task<ActionResult<ProductDto>> Update(
             string id,
             ProductCreateDto dto
@@ -100,6 +108,7 @@ namespace SMIS.Api.Controllers
         /// A stale offline change is ignored instead of replacing newer server data.
         /// </remarks>
         [HttpPut("{id}/sync")]
+        [HasPermission(ApplicationComponentKeys.Products, PermissionAction.Update)]
         public async Task<ActionResult<ProductDto>> SyncUpdate(
             string id,
             ProductSyncUpdateDto dto
@@ -110,6 +119,7 @@ namespace SMIS.Api.Controllers
         /// Deletes a product.
         /// </summary>
         [HttpDelete("{id}")]
+        [HasPermission(ApplicationComponentKeys.Products, PermissionAction.Delete)]
         public async Task<ActionResult<Unit>> Delete(
             string id
         ) =>
@@ -122,6 +132,7 @@ namespace SMIS.Api.Controllers
         /// The client change time is used so an older offline delete does not overwrite newer server data.
         /// </remarks>
         [HttpDelete("{id}/sync")]
+        [HasPermission(ApplicationComponentKeys.Products, PermissionAction.Delete)]
         public async Task<ActionResult<ProductDto>> SyncDelete(
             string id,
             ProductSyncDeleteDto dto

@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 
 import '../config/app_config.dart';
 import '../models/auth_session.dart';
+import '../models/component_permission.dart';
 import '../services/auth_session_store.dart';
 import 'data_exception.dart';
 
@@ -45,7 +46,7 @@ class DioAuthApi implements AuthApi {
       if (data == null) {
         throw const AuthenticationException('The login response was empty.');
       }
-      return AuthSession.fromJson(data);
+      return _withPermissions(AuthSession.fromJson(data));
     } catch (error, stackTrace) {
       ApiErrorParser.mapAndThrow(
         error,
@@ -81,7 +82,7 @@ class DioAuthApi implements AuthApi {
           'The shop switch response was empty.',
         );
       }
-      return AuthSession.fromJson(data);
+      return _withPermissions(AuthSession.fromJson(data));
     } catch (error, stackTrace) {
       ApiErrorParser.mapAndThrow(
         error,
@@ -111,7 +112,7 @@ class DioAuthApi implements AuthApi {
           'The session refresh response was empty.',
         );
       }
-      return AuthSession.fromJson(data);
+      return _withPermissions(AuthSession.fromJson(data));
     } catch (error, stackTrace) {
       ApiErrorParser.mapAndThrow(
         error,
@@ -119,5 +120,22 @@ class DioAuthApi implements AuthApi {
         fallbackMessage: 'Unable to refresh the signed-in session.',
       );
     }
+  }
+
+  Future<AuthSession> _withPermissions(AuthSession session) async {
+    final response = await _dio.get<List<dynamic>>(
+      AppConfig.permissionsEndpoint,
+      options: Options(headers: {'Authorization': 'Bearer ${session.token}'}),
+    );
+
+    final permissions = (response.data ?? const <dynamic>[])
+        .whereType<Map>()
+        .map(
+          (item) =>
+              ComponentPermission.fromJson(Map<String, dynamic>.from(item)),
+        )
+        .toList(growable: false);
+
+    return session.copyWith(permissions: permissions);
   }
 }

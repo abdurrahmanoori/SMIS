@@ -11,6 +11,8 @@ public partial class AppDbContext
     {
         // Register additional seeds without modifying the main AppDbContext file
         RoleSeeder.DataSeed(modelBuilder);
+        ApplicationComponentSeeder.DataSeed(modelBuilder);
+        RoleComponentPermissionSeeder.DataSeed(modelBuilder);
         UserSeed.DataSeed(modelBuilder);
         UserRoleSeeder.DataSeed(modelBuilder);
         LanguageSeed.DataSeed(modelBuilder);

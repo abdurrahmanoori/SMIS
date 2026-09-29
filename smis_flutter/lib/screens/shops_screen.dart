@@ -6,6 +6,7 @@ import '../controllers/auth_controller.dart';
 import '../controllers/shop_controller.dart';
 import '../data/data_exception.dart';
 import '../models/shop.dart';
+import '../models/application_component_keys.dart';
 import '../l10n/app_localizations.dart';
 import '../widgets/app_drawer.dart';
 import '../widgets/active_shop_context.dart';
@@ -69,11 +70,19 @@ class _ShopsScreenState extends ConsumerState<ShopsScreen>
   Widget build(BuildContext context) {
     final shops = ref.watch(shopControllerProvider);
     final session = ref.watch(authControllerProvider).session;
-    final canCreate =
-        session?.roles.any(
-          (role) => role.trim().toLowerCase() == 'superadmin',
-        ) ??
-        false;
+    final permission = session?.permissionFor(ApplicationComponentKeys.shops);
+
+    if (permission == null || !permission.canView || !permission.canRead) {
+      return Scaffold(
+        appBar: AppBar(title: Text(context.l10n.text('Shops'))),
+        drawer: const AppDrawer(),
+        body: Center(
+          child: Text(
+            context.l10n.text('You do not have permission to access shops.'),
+          ),
+        ),
+      );
+    }
     return Scaffold(
       appBar: AppBar(
         title: _isSearching
@@ -129,7 +138,8 @@ class _ShopsScreenState extends ConsumerState<ShopsScreen>
               ),
               data: (state) => _Content(
                 state: state,
-                canCreate: canCreate,
+                canUpdate: permission.canUpdate,
+                canDelete: permission.canDelete,
                 onEdit: _edit,
                 onDelete: _delete,
               ),
@@ -137,7 +147,7 @@ class _ShopsScreenState extends ConsumerState<ShopsScreen>
           ),
         ),
       ),
-      floatingActionButton: canCreate
+      floatingActionButton: permission.canCreate
           ? FloatingActionButton.extended(
               onPressed: _create,
               icon: const Icon(Icons.add_business_outlined),
@@ -253,20 +263,21 @@ class _ShopsScreenState extends ConsumerState<ShopsScreen>
 class _Content extends StatelessWidget {
   const _Content({
     required this.state,
-    required this.canCreate,
+    required this.canUpdate,
+    required this.canDelete,
     required this.onEdit,
     required this.onDelete,
   });
 
   final ShopScreenState state;
-  final bool canCreate;
+  final bool canUpdate;
+  final bool canDelete;
   final ValueChanged<Shop> onEdit;
   final ValueChanged<Shop> onDelete;
 
   @override
   Widget build(BuildContext context) => Column(
     children: [
-      if (!canCreate) const _ShopPermissionNotice(),
       Expanded(
         child: state.shops.isEmpty
             ? _EmptyView(isSearch: state.searchQuery.isNotEmpty)
@@ -278,6 +289,8 @@ class _Content extends StatelessWidget {
                   final shop = state.shops[index];
                   return _ShopCard(
                     shop: shop,
+                    canUpdate: canUpdate,
+                    canDelete: canDelete,
                     onEdit: () => onEdit(shop),
                     onDelete: () => onDelete(shop),
                   );
@@ -291,11 +304,15 @@ class _Content extends StatelessWidget {
 class _ShopCard extends StatelessWidget {
   const _ShopCard({
     required this.shop,
+    required this.canUpdate,
+    required this.canDelete,
     required this.onEdit,
     required this.onDelete,
   });
 
   final Shop shop;
+  final bool canUpdate;
+  final bool canDelete;
   final VoidCallback onEdit;
   final VoidCallback onDelete;
 
@@ -328,16 +345,23 @@ class _ShopCard extends StatelessWidget {
         ],
       ),
       isThreeLine: true,
-      trailing: PopupMenuButton<String>(
-        onSelected: (value) => value == 'edit' ? onEdit() : onDelete(),
-        itemBuilder: (context) => [
-          PopupMenuItem(value: 'edit', child: Text(context.l10n.text('Edit'))),
-          PopupMenuItem(
-            value: 'delete',
-            child: Text(context.l10n.text('Delete')),
-          ),
-        ],
-      ),
+      trailing: canUpdate || canDelete
+          ? PopupMenuButton<String>(
+              onSelected: (value) => value == 'edit' ? onEdit() : onDelete(),
+              itemBuilder: (context) => [
+                if (canUpdate)
+                  PopupMenuItem(
+                    value: 'edit',
+                    child: Text(context.l10n.text('Edit')),
+                  ),
+                if (canDelete)
+                  PopupMenuItem(
+                    value: 'delete',
+                    child: Text(context.l10n.text('Delete')),
+                  ),
+              ],
+            )
+          : null,
     ),
   );
 }
@@ -406,29 +430,6 @@ class _EmptyView extends StatelessWidget {
           ),
         ],
       ),
-    ),
-  );
-}
-
-class _ShopPermissionNotice extends StatelessWidget {
-  const _ShopPermissionNotice();
-
-  @override
-  Widget build(BuildContext context) => Padding(
-    padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
-    child: MaterialBanner(
-      content: Text(
-        context.l10n.text(
-          'Your account can view and update its assigned shop. Only a SuperAdmin can create or delete shops.',
-        ),
-      ),
-      leading: const Icon(Icons.admin_panel_settings_outlined),
-      actions: [
-        TextButton(
-          onPressed: () => ScaffoldMessenger.of(context).clearMaterialBanners(),
-          child: Text(context.l10n.text('OK')),
-        ),
-      ],
     ),
   );
 }

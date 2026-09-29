@@ -66,7 +66,16 @@ class AuthController extends Notifier<AuthState> {
 
   Future<void> _restoreSession() async {
     try {
-      final session = await _sessionStore.read();
+      var session = await _sessionStore.read();
+      if (session != null && session.permissions.isEmpty) {
+        try {
+          session = await _api.refreshSession();
+          await _sessionStore.save(session);
+        } catch (_) {
+          // Keep the saved session usable offline. Missing permissions remain
+          // conservative, so protected features stay hidden until refreshed.
+        }
+      }
       final savedSessions = await _sessionStore.readAll();
       state = AuthState(session: session, savedSessions: savedSessions);
       if (session != null) await _applySessionLocale(session);
