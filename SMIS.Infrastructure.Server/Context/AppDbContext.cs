@@ -119,7 +119,7 @@ public partial class AppDbContext : IdentityDbContext<ApplicationUser, Applicati
     public DbSet<ShopOwner> ShopOwners { get; set; }
     public DbSet<LoanAccount> LoanAccounts { get; set; }
     public DbSet<LoanAccountPayment> LoanAccountPayments { get; set; }
-    public DbSet<ApplicationUserRole> UserRoles { get; set; }
+    public override DbSet<ApplicationUserRole> UserRoles { get; set; }
     public DbSet<ApplicationComponent> ApplicationComponents { get; set; }
     public DbSet<RoleComponentPermission> RoleComponentPermissions { get; set; }
     public DbSet<ApplicationTask> ApplicationTasks { get; set; }

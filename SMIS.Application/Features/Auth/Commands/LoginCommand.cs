@@ -16,18 +16,21 @@ namespace SMIS.Application.Features.Auth.Commands
     public class LoginCommandHandler : IRequestHandler<LoginCommand, Result<LoginResponseDto>>
     {
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly ITokenGenerator _tokenGenerator;
         private readonly IShopRepository _shopRepository;
         private readonly ILanguageRepository _languageRepository;
 
         public LoginCommandHandler(
             UserManager<ApplicationUser> userManager,
+            SignInManager<ApplicationUser> signInManager,
             ITokenGenerator tokenGenerator,
             IShopRepository shopRepository,
             ILanguageRepository languageRepository
         )
         {
             _userManager = userManager;
+            _signInManager = signInManager;
             _tokenGenerator = tokenGenerator;
             _shopRepository = shopRepository;
             _languageRepository = languageRepository;
@@ -39,17 +42,37 @@ namespace SMIS.Application.Features.Auth.Commands
         )
         {
             var user = await _userManager.FindByEmailAsync(request.LoginDto.Email);
-            if (user == null || !await _userManager.CheckPasswordAsync(user, request.LoginDto.Password))
+            if (user == null)
+                return Result<LoginResponseDto>.FailureResult("Invalid email or password");
+
+            var signInResult = await _signInManager.CheckPasswordSignInAsync(
+                user,
+                request.LoginDto.Password,
+                lockoutOnFailure: true);
+            if (signInResult.IsLockedOut)
+                return Result<LoginResponseDto>.FailureResult(
+                    "AccountLocked",
+                    "The account is temporarily locked after repeated failed sign-in attempts.");
+            if (!signInResult.Succeeded)
                 return Result<LoginResponseDto>.FailureResult("Invalid email or password");
 
             var roles = await _userManager.GetRolesAsync(user);
+            var isSuperAdmin = roles.Any(role => string.Equals(
+                role,
+                SD.Role_Super_Admin,
+                StringComparison.OrdinalIgnoreCase));
 
-            var activeShopId = user.ShopId;
-            if (string.IsNullOrWhiteSpace(activeShopId) &&
-                roles.Any(role => string.Equals(
-                    role,
-                    SD.Role_Super_Admin,
-                    StringComparison.OrdinalIgnoreCase)))
+            string? activeShopId = null;
+            if (!string.IsNullOrWhiteSpace(user.ShopId))
+            {
+                var assignedShop = await _shopRepository.GetByIdIncludingDeletedAsync(
+                    user.ShopId,
+                    cancellationToken);
+                if (assignedShop is not null && !assignedShop.IsDeleted && assignedShop.IsActive)
+                    activeShopId = assignedShop.Id;
+            }
+
+            if (string.IsNullOrWhiteSpace(activeShopId) && isSuperAdmin)
             {
                 var defaultShop = await _shopRepository.GetFirstOrDefaultAsync(shop => shop.IsActive);
                 activeShopId = defaultShop?.Id;
@@ -57,8 +80,8 @@ namespace SMIS.Application.Features.Auth.Commands
 
             if (string.IsNullOrWhiteSpace(activeShopId))
                 return Result<LoginResponseDto>.FailureResult(
-                    "ShopContextRequired",
-                    "No active shop is available for this account.");
+                    "InvalidShop",
+                    "The account is not assigned to an active shop.");
 
             // Token generation is delegated to the infrastructure layer.
             // Each host provides its own ITokenGenerator implementation.

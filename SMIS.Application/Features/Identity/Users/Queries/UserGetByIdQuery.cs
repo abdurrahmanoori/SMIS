@@ -40,6 +40,7 @@ namespace SMIS.Application.Features.Identity.Users.Queries
             if (user == null) return Result<UserDto>.NotFoundResult(request.UserId);
 
             var userDto = _mapper.Map<UserDto>(user);
+            userDto.Roles = (await _userManager.GetRolesAsync(user)).ToList();
             return Result<UserDto>.SuccessResult(userDto);
         }
     }

@@ -7,6 +7,7 @@ using SMIS.Application.DTO.Users;
 using SMIS.Application.Repositories.Base;
 using SMIS.Application.Repositories.Localization;
 using SMIS.Application.Repositories.Shops;
+using SMIS.Application.Identity.IServices;
 using SMIS.Domain.Entities.Identity.Entity;
 
 namespace SMIS.Application.Features.Identity.Users.Commands
@@ -21,6 +22,7 @@ namespace SMIS.Application.Features.Identity.Users.Commands
         private readonly RoleManager<ApplicationRole> _roleManager;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
+        private readonly IUserRoleMetadataService _userRoleMetadataService;
 
         public UserCreateCommandHandler(
             ILanguageRepository languageRepository,
@@ -28,7 +30,8 @@ namespace SMIS.Application.Features.Identity.Users.Commands
             UserManager<ApplicationUser> userManager,
             RoleManager<ApplicationRole> roleManager,
             IUnitOfWork unitOfWork,
-            IMapper mapper
+            IMapper mapper,
+            IUserRoleMetadataService userRoleMetadataService
         )
         {
             _languageRepository = languageRepository;
@@ -37,6 +40,7 @@ namespace SMIS.Application.Features.Identity.Users.Commands
             _roleManager = roleManager;
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _userRoleMetadataService = userRoleMetadataService;
         }
 
         public async Task<Result<UserDto>> Handle(
@@ -50,6 +54,16 @@ namespace SMIS.Application.Features.Identity.Users.Commands
                 return Result<UserDto>.FailureResult(
                     "InvalidLanguage",
                     "The selected language does not exist or is inactive.");
+            }
+
+            var shop = await _shopRepository.GetByIdIncludingDeletedAsync(
+                request.UserCreateDto.ShopId,
+                cancellationToken);
+            if (shop is null || shop.IsDeleted || !shop.IsActive)
+            {
+                return Result<UserDto>.FailureResult(
+                    "InvalidShop",
+                    "The assigned shop does not exist or is inactive.");
             }
 
             var roles = Array.Empty<string>();
@@ -78,35 +92,52 @@ namespace SMIS.Application.Features.Identity.Users.Commands
             }
 
             var entity = _mapper.Map<ApplicationUser>(request.UserCreateDto);
+            entity.ShopName = shop.Name;
 
-            // Populate shop name
-            var shop = await _shopRepository.GetByIdAsync(request.UserCreateDto.ShopId);
-            entity.ShopName = shop?.Name;
-
-            var createResult = await _userManager.CreateAsync(entity, request.UserCreateDto.Password);
-            if (!createResult.Succeeded)
+            await _unitOfWork.StartTransactionAsync(cancellationToken);
+            try
             {
-                return Result<UserDto>.WithErrors(createResult.Errors.Select(e => new ValidationError
+                var createResult = await _userManager.CreateAsync(entity, request.UserCreateDto.Password);
+                if (!createResult.Succeeded)
                 {
-                    Code = e.Code,
-                    Description = e.Description
-                }).ToList());
-            }
-
-            if (roles.Length > 0)
-            {
-                var addToRoles = await _userManager.AddToRolesAsync(entity, roles);
-                if (!addToRoles.Succeeded)
-                {
-                    return Result<UserDto>.WithErrors(addToRoles.Errors.Select(e => new ValidationError
+                    await _unitOfWork.RollbackTransactionAsync(cancellationToken);
+                    return Result<UserDto>.WithErrors(createResult.Errors.Select(e => new ValidationError
                     {
                         Code = e.Code,
                         Description = e.Description
                     }).ToList());
                 }
-            }
 
-            return Result<UserDto>.SuccessResult(_mapper.Map<UserDto>(entity));
+                if (roles.Length > 0)
+                {
+                    var addToRoles = await _userManager.AddToRolesAsync(entity, roles);
+                    if (!addToRoles.Succeeded)
+                    {
+                        await _unitOfWork.RollbackTransactionAsync(cancellationToken);
+                        return Result<UserDto>.WithErrors(addToRoles.Errors.Select(e => new ValidationError
+                        {
+                            Code = e.Code,
+                            Description = e.Description
+                        }).ToList());
+                    }
+                }
+
+                await _userRoleMetadataService.SynchronizeAsync(
+                    entity.Id,
+                    entity.UserName ?? string.Empty,
+                    cancellationToken);
+                await _unitOfWork.CommitTransactionAsync(cancellationToken);
+
+                var dto = _mapper.Map<UserDto>(entity);
+                dto.Roles = roles.ToList();
+                return Result<UserDto>.SuccessResult(dto);
+            }
+            catch
+            {
+                if (_unitOfWork.HasActiveTransaction)
+                    await _unitOfWork.RollbackTransactionAsync(cancellationToken);
+                throw;
+            }
         }
     }
 }

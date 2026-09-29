@@ -9,6 +9,7 @@ using SMIS.Application.Features.Identity.Users.Queries;
 using SMIS.Application.Features.Auth.Commands;
 using SMIS.Application.Common.Contants;
 using SMIS.Api.Controllers.Base;
+using SMIS.Api.Authorization;
 
 namespace SMIS.Api.Controllers
 {
@@ -16,7 +17,7 @@ namespace SMIS.Api.Controllers
     /// Handles sign-in, user accounts, passwords, and user roles.
     /// </summary>
     /// <remarks>
-    /// Login and registration can be used without being signed in. Other endpoints require authentication through the API's normal authorization rules.
+    /// Login is public. User administration requires a current SuperAdmin role from the database.
     /// </remarks>
     [Route("api/[controller]")]
     [ApiController]
@@ -67,7 +68,7 @@ namespace SMIS.Api.Controllers
         /// Changes the active shop context for a SuperAdmin and returns a fresh
         /// access token whose ShopId claim is the selected shop.
         /// </summary>
-        [Authorize(Roles = SD.Role_Super_Admin)]
+        [HasCurrentRole(SD.Role_Super_Admin)]
         [HttpPost("switch-shop")]
         public async Task<ActionResult<LoginResponseDto>> SwitchShop(
             SwitchShopDto dto
@@ -86,11 +87,8 @@ namespace SMIS.Api.Controllers
         /// <summary>
         /// Creates a new user account.
         /// </summary>
-        /// <remarks>
-        /// This endpoint is currently available without authentication.
-        /// </remarks>
         [HttpPost("register")]
-        [AllowAnonymous]
+        [HasCurrentRole(SD.Role_Super_Admin)]
         public async Task<ActionResult<UserDto>> Create(
             UserCreateDto dto
         ) =>
@@ -102,7 +100,7 @@ namespace SMIS.Api.Controllers
         /// <remarks>
         /// Set <c>includeShop</c> to true when shop information should be included with each user.
         /// </remarks>
-        [Authorize(Roles = SD.Role_Super_Admin)]
+        [HasCurrentRole(SD.Role_Super_Admin)]
         [HttpGet]
         public async Task<ActionResult<PagedList<UserDto>>> GetAll(
             [FromQuery] int pageNumber = 1,
@@ -117,7 +115,7 @@ namespace SMIS.Api.Controllers
         /// <remarks>
         /// Set <c>includeShop</c> to true to include the related shop information.
         /// </remarks>
-        [Authorize(Roles = SD.Role_Super_Admin)]
+        [HasCurrentRole(SD.Role_Super_Admin)]
         [HttpGet("{id}")]
         public async Task<ActionResult<UserDto>> GetById(
             string id,
@@ -138,7 +136,7 @@ namespace SMIS.Api.Controllers
         /// <summary>
         /// Deletes a user account.
         /// </summary>
-        [Authorize(Roles = SD.Role_Super_Admin)]
+        [HasCurrentRole(SD.Role_Super_Admin)]
         [HttpDelete("{id}")]
         public async Task<ActionResult<Unit>> Delete(
             string id
@@ -165,7 +163,7 @@ namespace SMIS.Api.Controllers
         /// This is not an "add one role" endpoint. Roles missing from the submitted list are removed, and new names in the list are added.
         /// Submitted roles must be one of the application's configured roles.
         /// </remarks>
-        [Authorize(Roles = SD.Role_Super_Admin)]
+        [HasCurrentRole(SD.Role_Super_Admin)]
         [HttpPost("{id}/roles")]
         public async Task<ActionResult<Unit>> AssignRoles(
             string id,
@@ -176,7 +174,7 @@ namespace SMIS.Api.Controllers
         /// <summary>
         /// Gets all roles currently assigned to a user.
         /// </summary>
-        [Authorize(Roles = SD.Role_Super_Admin)]
+        [HasCurrentRole(SD.Role_Super_Admin)]
         [HttpGet("{id}/roles")]
         public async Task<ActionResult<IList<string>>> GetUserRoles(
             string id
@@ -188,7 +186,7 @@ namespace SMIS.Api.Controllers
         /// </summary>
         /// <param name="id">The user ID.</param>
         /// <param name="role">The role name to remove.</param>
-        [Authorize(Roles = SD.Role_Super_Admin)]
+        [HasCurrentRole(SD.Role_Super_Admin)]
         [HttpDelete("{id}/roles/{role}")]
         public async Task<ActionResult<Unit>> RemoveRole(
             string id,

@@ -8,6 +8,7 @@ public sealed class PermissionPolicyProvider : IAuthorizationPolicyProvider
 {
     private const string Prefix = "Permission:";
     private const string TaskPrefix = "Task:";
+    private const string CurrentRolePrefix = "CurrentRole:";
     private readonly DefaultAuthorizationPolicyProvider _fallbackPolicyProvider;
 
     public PermissionPolicyProvider(
@@ -47,6 +48,16 @@ public sealed class PermissionPolicyProvider : IAuthorizationPolicyProvider
             return Task.FromResult<AuthorizationPolicy?>(taskPolicy);
         }
 
+        if (TryParseCurrentRole(policyName, out var roleName))
+        {
+            var currentRolePolicy = new AuthorizationPolicyBuilder()
+                .RequireAuthenticatedUser()
+                .AddRequirements(new CurrentRoleRequirement(roleName))
+                .Build();
+
+            return Task.FromResult<AuthorizationPolicy?>(currentRolePolicy);
+        }
+
         return _fallbackPolicyProvider.GetPolicyAsync(policyName);
     }
 
@@ -58,6 +69,10 @@ public sealed class PermissionPolicyProvider : IAuthorizationPolicyProvider
     public static string BuildTaskPolicyName(
         string taskKey
     ) => $"{TaskPrefix}{taskKey}";
+
+    public static string BuildCurrentRolePolicyName(
+        string roleName
+    ) => $"{CurrentRolePrefix}{roleName}";
 
     private static bool TryParse(
         string policyName,
@@ -87,5 +102,17 @@ public sealed class PermissionPolicyProvider : IAuthorizationPolicyProvider
 
         taskKey = policyName[TaskPrefix.Length..];
         return !string.IsNullOrWhiteSpace(taskKey);
+    }
+
+    private static bool TryParseCurrentRole(
+        string policyName,
+        out string roleName
+    )
+    {
+        roleName = string.Empty;
+        if (!policyName.StartsWith(CurrentRolePrefix, StringComparison.Ordinal)) return false;
+
+        roleName = policyName[CurrentRolePrefix.Length..];
+        return !string.IsNullOrWhiteSpace(roleName);
     }
 }

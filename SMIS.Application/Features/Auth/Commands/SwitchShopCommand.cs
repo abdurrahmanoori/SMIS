@@ -41,18 +41,22 @@ internal sealed class SwitchShopCommandHandler
         CancellationToken cancellationToken
     )
     {
-        if (!_currentUser.IsSuperAdmin())
-        {
-            return Result<LoginResponseDto>.FailureResult(
-                "Forbidden",
-                "Only a SuperAdmin can switch the active shop.");
-        }
-
         if (string.IsNullOrWhiteSpace(request.ShopId))
         {
             return Result<LoginResponseDto>.FailureResult(
                 "InvalidShop",
                 "A shop must be selected.");
+        }
+
+        var user = await _userManager.FindByIdAsync(_currentUser.GetId());
+        if (user is null)
+            return Result<LoginResponseDto>.FailureResult("UserNotFound", "The current user no longer exists.");
+
+        if (!await _userManager.IsInRoleAsync(user, SMIS.Application.Common.Contants.SD.Role_Super_Admin))
+        {
+            return Result<LoginResponseDto>.FailureResult(
+                "Forbidden",
+                "Only a SuperAdmin can switch the active shop.");
         }
 
         var shop = await _shopRepository.GetByIdIncludingDeletedAsync(
@@ -65,10 +69,6 @@ internal sealed class SwitchShopCommandHandler
                 "InvalidShop",
                 "The selected shop does not exist or is inactive.");
         }
-
-        var user = await _userManager.FindByIdAsync(_currentUser.GetId());
-        if (user is null)
-            return Result<LoginResponseDto>.FailureResult("UserNotFound", "The current user no longer exists.");
 
         var roles = await _userManager.GetRolesAsync(user);
         var token = _tokenGenerator.Generate(user, roles, shop.Id);

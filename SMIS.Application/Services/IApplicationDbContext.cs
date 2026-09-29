@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 using SMIS.Domain.Entities;
 using SMIS.Domain.Entities.Identity.Entity;
 using SMIS.Domain.Entities.Localization;
@@ -37,6 +38,9 @@ public interface IApplicationDbContext
     public DbSet<LoanAccountPayment> LoanAccountPayments { get; set; }
     public DbSet<ApplicationUserRole> UserRoles { get; set; }
     public DbSet<ApplicationRole> Roles { get; set; }
+    public DbSet<IdentityUserClaim<string>> UserClaims { get; set; }
+    public DbSet<IdentityUserLogin<string>> UserLogins { get; set; }
+    public DbSet<IdentityUserToken<string>> UserTokens { get; set; }
     public DbSet<ApplicationComponent> ApplicationComponents { get; set; }
     public DbSet<RoleComponentPermission> RoleComponentPermissions { get; set; }
     public DbSet<ApplicationTask> ApplicationTasks { get; set; }
