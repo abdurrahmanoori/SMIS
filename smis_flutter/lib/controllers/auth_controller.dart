@@ -67,7 +67,8 @@ class AuthController extends Notifier<AuthState> {
   Future<void> _restoreSession() async {
     try {
       var session = await _sessionStore.read();
-      if (session != null && session.permissions.isEmpty) {
+      if (session != null &&
+          (session.permissions.isEmpty || !session.taskPermissionsLoaded)) {
         try {
           session = await _api.refreshSession();
           await _sessionStore.save(session);

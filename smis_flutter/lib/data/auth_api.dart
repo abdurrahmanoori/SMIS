@@ -123,12 +123,12 @@ class DioAuthApi implements AuthApi {
   }
 
   Future<AuthSession> _withPermissions(AuthSession session) async {
-    final response = await _dio.get<List<dynamic>>(
+    final componentResponse = await _dio.get<List<dynamic>>(
       AppConfig.permissionsEndpoint,
       options: Options(headers: {'Authorization': 'Bearer ${session.token}'}),
     );
 
-    final permissions = (response.data ?? const <dynamic>[])
+    final permissions = (componentResponse.data ?? const <dynamic>[])
         .whereType<Map>()
         .map(
           (item) =>
@@ -136,6 +136,18 @@ class DioAuthApi implements AuthApi {
         )
         .toList(growable: false);
 
-    return session.copyWith(permissions: permissions);
+    final taskResponse = await _dio.get<List<dynamic>>(
+      AppConfig.taskPermissionsEndpoint,
+      options: Options(headers: {'Authorization': 'Bearer ${session.token}'}),
+    );
+    final taskPermissions = (taskResponse.data ?? const <dynamic>[])
+        .whereType<String>()
+        .toList(growable: false);
+
+    return session.copyWith(
+      permissions: permissions,
+      taskPermissions: taskPermissions,
+      taskPermissionsLoaded: true,
+    );
   }
 }

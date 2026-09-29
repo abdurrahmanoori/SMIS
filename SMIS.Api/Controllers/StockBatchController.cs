@@ -31,6 +31,7 @@ namespace SMIS.Api.Controllers
         /// </remarks>
         [HttpPost]
         [HasPermission(ApplicationComponentKeys.Inventory, PermissionAction.Create)]
+        [HasTaskPermission(ApplicationTaskKeys.ReceiveStock)]
         public async Task<ActionResult<StockBatchDto>> Create(
             StockBatchCreateDto dto
         ) =>

@@ -32,6 +32,7 @@ public sealed class InventoryController : BaseApiController
     /// </remarks>
     [HttpPost("purchase-receipts")]
     [HasPermission(ApplicationComponentKeys.Inventory, PermissionAction.Create)]
+    [HasTaskPermission(ApplicationTaskKeys.ReceiveStock)]
     public async Task<ActionResult<StockBatchDto>> ReceivePurchase(
         StockBatchCreateDto dto
     ) =>
@@ -46,6 +47,7 @@ public sealed class InventoryController : BaseApiController
     /// </remarks>
     [HttpPost("customer-returns")]
     [HasPermission(ApplicationComponentKeys.Inventory, PermissionAction.Update)]
+    [HasTaskPermission(ApplicationTaskKeys.ProcessCustomerReturn)]
     public async Task<ActionResult<StockMovementDto>> CustomerReturn(
         InventoryBatchOperationDto dto
     ) =>
@@ -63,6 +65,7 @@ public sealed class InventoryController : BaseApiController
     /// </remarks>
     [HttpPost("supplier-returns")]
     [HasPermission(ApplicationComponentKeys.Inventory, PermissionAction.Update)]
+    [HasTaskPermission(ApplicationTaskKeys.ProcessSupplierReturn)]
     public async Task<ActionResult<StockMovementDto>> SupplierReturn(
         InventoryBatchOperationDto dto
     ) =>
@@ -79,6 +82,7 @@ public sealed class InventoryController : BaseApiController
     /// </remarks>
     [HttpPost("damaged-stock")]
     [HasPermission(ApplicationComponentKeys.Inventory, PermissionAction.Update)]
+    [HasTaskPermission(ApplicationTaskKeys.MarkDamagedStock)]
     public async Task<ActionResult<StockMovementDto>> Damage(
         InventoryBatchOperationDto dto
     ) =>
@@ -95,6 +99,7 @@ public sealed class InventoryController : BaseApiController
     /// </remarks>
     [HttpPost("expired-stock")]
     [HasPermission(ApplicationComponentKeys.Inventory, PermissionAction.Update)]
+    [HasTaskPermission(ApplicationTaskKeys.MarkExpiredStock)]
     public async Task<ActionResult<StockMovementDto>> Expire(
         InventoryBatchOperationDto dto
     ) =>
@@ -112,6 +117,7 @@ public sealed class InventoryController : BaseApiController
     /// </remarks>
     [HttpPost("adjustments")]
     [HasPermission(ApplicationComponentKeys.Inventory, PermissionAction.Update)]
+    [HasTaskPermission(ApplicationTaskKeys.AdjustStock)]
     public async Task<ActionResult<StockMovementDto>> Adjust(
         InventoryAdjustmentDto dto
     ) =>
@@ -129,6 +135,7 @@ public sealed class InventoryController : BaseApiController
     /// </remarks>
     [HttpPost("transfers")]
     [HasPermission(ApplicationComponentKeys.Inventory, PermissionAction.Update)]
+    [HasTaskPermission(ApplicationTaskKeys.TransferStock)]
     public async Task<ActionResult<List<StockMovementDto>>> Transfer(
         InventoryTransferDto dto
     ) =>
@@ -161,6 +168,7 @@ public sealed class InventoryController : BaseApiController
     /// </remarks>
     [HttpPost("stock-counts")]
     [HasPermission(ApplicationComponentKeys.Inventory, PermissionAction.Create)]
+    [HasTaskPermission(ApplicationTaskKeys.StartStockCount)]
     public async Task<ActionResult<StockCountSessionDto>> StartStockCount(
         StockCountStartDto dto
     ) =>
@@ -176,6 +184,7 @@ public sealed class InventoryController : BaseApiController
     /// </remarks>
     [HttpPost("stock-counts/{id}/complete")]
     [HasPermission(ApplicationComponentKeys.Inventory, PermissionAction.Update)]
+    [HasTaskPermission(ApplicationTaskKeys.CompleteStockCount)]
     public async Task<ActionResult<StockCountSessionDto>> CompleteStockCount(
         string id,
         StockCountCompleteDto dto
@@ -197,6 +206,7 @@ public sealed class InventoryController : BaseApiController
     /// </summary>
     [HttpPost("stock-counts/{id}/cancel")]
     [HasPermission(ApplicationComponentKeys.Inventory, PermissionAction.Update)]
+    [HasTaskPermission(ApplicationTaskKeys.CancelStockCount)]
     public async Task<ActionResult<StockCountSessionDto>> CancelStockCount(
         string id
     ) =>

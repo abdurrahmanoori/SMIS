@@ -43,6 +43,14 @@ namespace SMIS.Api.Controllers
             HandleResultResponseOld(await Mediator.Send(new UserGetPermissionsQuery()));
 
         /// <summary>
+        /// Gets the current user's effective task privileges.
+        /// </summary>
+        [Authorize]
+        [HttpGet("me/task-permissions")]
+        public async Task<ActionResult<IReadOnlyList<string>>> GetCurrentUserTaskPermissions() =>
+            HandleResultResponseOld(await Mediator.Send(new UserGetTaskPermissionsQuery()));
+
+        /// <summary>
         /// Signs in a user and returns the login response.
         /// </summary>
         /// <remarks>

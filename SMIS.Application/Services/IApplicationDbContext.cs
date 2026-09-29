@@ -39,6 +39,8 @@ public interface IApplicationDbContext
     public DbSet<ApplicationRole> Roles { get; set; }
     public DbSet<ApplicationComponent> ApplicationComponents { get; set; }
     public DbSet<RoleComponentPermission> RoleComponentPermissions { get; set; }
+    public DbSet<ApplicationTask> ApplicationTasks { get; set; }
+    public DbSet<RoleTaskPermission> RoleTaskPermissions { get; set; }
 
     Task<int> SaveChangesAsync(
         CancellationToken cancellationToken
