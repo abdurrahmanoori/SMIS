@@ -36,13 +36,17 @@ class StockOfflineStore {
   Future<String> enqueue(String kind, StockJson payload) async {
     final id = _uuid.v4();
     final db = await _database();
-    final body = Map<String, dynamic>.from(payload)
-      ..['idempotencyKey'] = id;
+    final body = Map<String, dynamic>.from(payload)..['idempotencyKey'] = id;
     await db.execute(
       'INSERT INTO stock_outbox (id, kind, payload, created_at_utc, state) '
       'VALUES (?, ?, ?, ?, ?)',
-      [id, kind, jsonEncode(body), DateTime.now().toUtc().toIso8601String(),
-        'pending'],
+      [
+        id,
+        kind,
+        jsonEncode(body),
+        DateTime.now().toUtc().toIso8601String(),
+        'pending',
+      ],
     );
     return id;
   }
@@ -57,20 +61,24 @@ class StockOfflineStore {
       'SELECT id, kind, payload, state, error FROM stock_outbox '
       'ORDER BY created_at_utc, id',
     );
-    return rows.map((row) => PendingStockCommand(
-      id: row['id'] as String,
-      kind: row['kind'] as String,
-      payload: Map<String, dynamic>.from(jsonDecode(row['payload'] as String) as Map),
-      state: row['state'] as String,
-      error: row['error'] as String?,
-    )).toList();
+    return rows
+        .map(
+          (row) => PendingStockCommand(
+            id: row['id'] as String,
+            kind: row['kind'] as String,
+            payload: Map<String, dynamic>.from(
+              jsonDecode(row['payload'] as String) as Map,
+            ),
+            state: row['state'] as String,
+            error: row['error'] as String?,
+          ),
+        )
+        .toList();
   }
 
   Future<int> pendingCount() async {
     final db = await _database();
-    final row = await db.get(
-      'SELECT COUNT(*) AS count FROM stock_outbox',
-    );
+    final row = await db.get('SELECT COUNT(*) AS count FROM stock_outbox');
     return row['count'] as int;
   }
 
@@ -91,7 +99,11 @@ class StockOfflineStore {
     );
     final active = _syncFuture;
     if (active != null) {
-      try { await active; } catch (_) { /* The next attempt reports its result. */ }
+      try {
+        await active;
+      } catch (_) {
+        /* The next attempt reports its result. */
+      }
     }
     await syncNow();
   }
@@ -99,7 +111,8 @@ class StockOfflineStore {
   Future<void> discard(String id) async {
     final db = await _database();
     await db.execute('DELETE FROM stock_outbox WHERE id = ? AND state = ?', [
-      id, 'failed',
+      id,
+      'failed',
     ]);
   }
 
@@ -107,8 +120,9 @@ class StockOfflineStore {
     final value = await _cached(name);
     return value == null
         ? null
-        : (value as List).map((item) =>
-            Map<String, dynamic>.from(item as Map)).toList();
+        : (value as List)
+              .map((item) => Map<String, dynamic>.from(item as Map))
+              .toList();
   }
 
   Future<StockJson?> cachedObject(String name) async {
@@ -116,8 +130,14 @@ class StockOfflineStore {
     return value == null ? null : Map<String, dynamic>.from(value as Map);
   }
 
-  Future<void> cacheCount(StockJson session) =>
-      _cacheCount(session);
+  Future<List<StockJson>> refreshBatches() async {
+    final db = await _database();
+    final batches = await _api.batches();
+    await _cache(db, 'batches', batches);
+    return batches;
+  }
+
+  Future<void> cacheCount(StockJson session) => _cacheCount(session);
 
   Future<void> _cacheCount(StockJson session) async {
     final db = await _database();
@@ -127,7 +147,8 @@ class StockOfflineStore {
   Future<Object?> _cached(String name) async {
     final db = await _database();
     final row = await db.getOptional(
-      'SELECT payload FROM stock_cache WHERE id = ?', [name],
+      'SELECT payload FROM stock_cache WHERE id = ?',
+      [name],
     );
     return row == null ? null : jsonDecode(row['payload'] as String);
   }
@@ -140,9 +161,8 @@ class StockOfflineStore {
     );
   }
 
-  Future<void> syncNow() => _syncFuture ??= _sync().whenComplete(
-    () => _syncFuture = null,
-  );
+  Future<void> syncNow() =>
+      _syncFuture ??= _sync().whenComplete(() => _syncFuture = null);
 
   Future<void> _sync() async {
     lastSyncError = null;
@@ -152,7 +172,9 @@ class StockOfflineStore {
         if (command.state != 'pending') continue;
         try {
           await _api.sendQueued(command.kind, command.payload);
-          await db.execute('DELETE FROM stock_outbox WHERE id = ?', [command.id]);
+          await db.execute('DELETE FROM stock_outbox WHERE id = ?', [
+            command.id,
+          ]);
         } on AuthenticationException {
           rethrow;
         } on RemotePermanentException catch (error) {
@@ -164,9 +186,17 @@ class StockOfflineStore {
       }
 
       await _cache(db, 'batches', await _api.batches());
-      await _cache(db, 'movements', await _api.report('movements',
-        query: {'limit': 250}));
-      for (final name in ['current-stock', 'low-stock', 'expiring', 'expired']) {
+      await _cache(
+        db,
+        'movements',
+        await _api.report('movements', query: {'limit': 250}),
+      );
+      for (final name in [
+        'current-stock',
+        'low-stock',
+        'expiring',
+        'expired',
+      ]) {
         await _cache(db, name, await _api.report(name));
       }
       await _cache(db, 'valuation', await _api.valuation());
