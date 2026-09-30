@@ -225,7 +225,11 @@ class _StockContentState extends ConsumerState<_StockContent> {
   }
 
   void _refreshLocal() {
-    if (mounted) setState(() => _data = _load());
+    if (mounted) {
+      setState(() {
+        _data = _load();
+      });
+    }
   }
 
   Future<void> _syncInBackground() async {
@@ -1043,23 +1047,52 @@ class _StockContentState extends ConsumerState<_StockContent> {
         builder: (context) => AlertDialog(
           title: const Text('Physical stock count (base units)'),
           content: SizedBox(
-            width: 450,
-            height: 400,
-            child: ListView.builder(
-              itemCount: lines.length,
-              itemBuilder: (context, index) => TextField(
-                controller: controllers[index],
-                enabled:
-                    widget.canUpdate &&
-                    _hasTask(ApplicationTaskKeys.completeStockCount),
-                keyboardType: const TextInputType.numberWithOptions(
-                  decimal: true,
-                ),
-                decoration: InputDecoration(
-                  labelText: stockText(lines[index], 'productName'),
-                  helperText:
-                      'Expected: ${stockNumber(lines[index], 'expectedQuantityBase')}',
-                ),
+            width: 500,
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxHeight: 440),
+              child: ListView.separated(
+                shrinkWrap: true,
+                itemCount: lines.length,
+                separatorBuilder: (_, _) => const SizedBox(height: 18),
+                itemBuilder: (context, index) {
+                  final line = lines[index];
+                  final productName = stockText(line, 'productName');
+                  final batchNumber = stockText(line, 'batchNumber');
+                  final expected = stockNumber(line, 'expectedQuantityBase');
+
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        batchNumber.isEmpty
+                            ? productName
+                            : '$productName · $batchNumber',
+                        style: Theme.of(context).textTheme.titleSmall,
+                      ),
+                      const SizedBox(height: 8),
+                      TextField(
+                        controller: controllers[index],
+                        enabled:
+                            widget.canUpdate &&
+                            _hasTask(ApplicationTaskKeys.completeStockCount),
+                        keyboardType: const TextInputType.numberWithOptions(
+                          decimal: true,
+                        ),
+                        decoration: const InputDecoration(
+                          labelText: 'Counted quantity',
+                          suffixText: 'base units',
+                          border: OutlineInputBorder(),
+                          isDense: true,
+                        ),
+                      ),
+                      const SizedBox(height: 6),
+                      Text(
+                        'Expected: $expected base units',
+                        style: Theme.of(context).textTheme.bodySmall,
+                      ),
+                    ],
+                  );
+                },
               ),
             ),
           ),
