@@ -50,7 +50,7 @@ namespace SMIS.Application.Features.Products.Commands
             var entity = await _productRepository.GetByIdAsync(request.Id);
             if (entity == null)
             {
-                return Result<ProductDto>.NotFoundResult(nameof(ProductDto.Id));
+                return Result<ProductDto>.NotFound(nameof(ProductDto.Id));
             }
 
             if (entity.IsBaseUnitChange(request.ProductCreateDto.BaseUnitId) &&
@@ -89,7 +89,7 @@ namespace SMIS.Application.Features.Products.Commands
             await _db.SaveChangesAsync(cancellationToken);
 
             var dto = _mapper.Map<ProductDto>(entity);
-            return Result<ProductDto>.SuccessResult(dto);
+            return Result<ProductDto>.Success(dto);
         }
     }
 }

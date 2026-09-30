@@ -59,7 +59,7 @@ internal sealed class
         if (value is not null)
         {
             if (modified <= value.GetConflictModifiedUtc())
-                return Result<ProductUnitDto>.SuccessResult(_mapper.Map<ProductUnitDto>(value));
+                return Result<ProductUnitDto>.Success(_mapper.Map<ProductUnitDto>(value));
 
             var currentProduct =
                 await ProductUnitSyncRules.GetAccessibleProductAsync(value.ProductId, _products, _user);
@@ -86,7 +86,7 @@ internal sealed class
             value.SetClientModificationMetadata(modified);
             value.Restore();
             await _db.SaveChangesAsync(ct);
-            return Result<ProductUnitDto>.SuccessResult(_mapper.Map<ProductUnitDto>(value));
+            return Result<ProductUnitDto>.Success(_mapper.Map<ProductUnitDto>(value));
         }
 
         var createGuard = await ProductUnitCommandRules.ValidateCreateAsync(
@@ -104,7 +104,7 @@ internal sealed class
         value.SetClientModificationMetadata(modified);
         await _repository.AddAsync(value);
         await _db.SaveChangesAsync(ct);
-        return Result<ProductUnitDto>.SuccessResult(_mapper.Map<ProductUnitDto>(value));
+        return Result<ProductUnitDto>.Success(_mapper.Map<ProductUnitDto>(value));
     }
 }
 
@@ -141,11 +141,11 @@ internal sealed class
         var value = await _db.ProductUnits
             .IgnoreQueryFilters()
             .FirstOrDefaultAsync(productUnit => productUnit.Id == id, ct);
-        if (value is null) return Result<ProductUnitDto>.NotFoundResult(request.Id);
+        if (value is null) return Result<ProductUnitDto>.NotFound(request.Id);
 
         var modified = DateTimeService.NormalizeUtc(request.Dto.ClientModifiedDate);
         if (modified < value.GetConflictModifiedUtc())
-            return Result<ProductUnitDto>.SuccessResult(_mapper.Map<ProductUnitDto>(value));
+            return Result<ProductUnitDto>.Success(_mapper.Map<ProductUnitDto>(value));
 
         var currentProduct = await ProductUnitSyncRules.GetAccessibleProductAsync(value.ProductId, _products, _user);
         var targetProduct =
@@ -171,7 +171,7 @@ internal sealed class
         value.SetClientModificationMetadata(modified);
         value.Restore();
         await _db.SaveChangesAsync(ct);
-        return Result<ProductUnitDto>.SuccessResult(_mapper.Map<ProductUnitDto>(value));
+        return Result<ProductUnitDto>.Success(_mapper.Map<ProductUnitDto>(value));
     }
 }
 
@@ -208,7 +208,7 @@ internal sealed class
         var value = await _db.ProductUnits
             .IgnoreQueryFilters()
             .FirstOrDefaultAsync(productUnit => productUnit.Id == id, ct);
-        if (value is null) return Result<ProductUnitDto>.NotFoundResult(request.Id);
+        if (value is null) return Result<ProductUnitDto>.NotFound(request.Id);
 
         var product = await ProductUnitSyncRules.GetAccessibleProductAsync(value.ProductId, _products, _user);
         if (product is null) return ProductUnitSyncRules.Forbidden();
@@ -219,12 +219,12 @@ internal sealed class
 
         var modified = DateTimeService.NormalizeUtc(request.Dto.ClientModifiedDate);
         if (modified < value.GetConflictModifiedUtc())
-            return Result<ProductUnitDto>.SuccessResult(_mapper.Map<ProductUnitDto>(value));
+            return Result<ProductUnitDto>.Success(_mapper.Map<ProductUnitDto>(value));
 
         value.SetClientModificationMetadata(modified);
         await _repository.RemoveAsync(value);
         await _db.SaveChangesAsync(ct);
-        return Result<ProductUnitDto>.SuccessResult(_mapper.Map<ProductUnitDto>(value));
+        return Result<ProductUnitDto>.Success(_mapper.Map<ProductUnitDto>(value));
     }
 }
 
@@ -247,7 +247,7 @@ internal static class ProductUnitSyncRules
     }
 
     public static Result<ProductUnitDto> Forbidden() =>
-        Result<ProductUnitDto>.FailureResult(
+        Result<ProductUnitDto>.Forbidden(
             "Forbidden",
             "You can only synchronize product units from your own shop.");
 }

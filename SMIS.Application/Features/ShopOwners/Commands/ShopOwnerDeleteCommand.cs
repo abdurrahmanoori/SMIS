@@ -5,9 +5,9 @@ using SMIS.Application.Repositories.ShopOwners;
 
 namespace SMIS.Application.Features.ShopOwners.Commands;
 
-public record ShopOwnerDeleteCommand(string Id) : IRequest<Result<Unit>>;
+public record ShopOwnerDeleteCommand(string Id) : IRequest<Result>;
 
-internal sealed class ShopOwnerDeleteCommandHandler : IRequestHandler<ShopOwnerDeleteCommand, Result<Unit>>
+internal sealed class ShopOwnerDeleteCommandHandler : IRequestHandler<ShopOwnerDeleteCommand, Result>
 {
     private readonly IShopOwnerRepository _shopOwnerRepository;
     private readonly IUnitOfWork _unitOfWork;
@@ -21,18 +21,18 @@ internal sealed class ShopOwnerDeleteCommandHandler : IRequestHandler<ShopOwnerD
         _shopOwnerRepository = shopOwnerRepository;
     }
 
-    public async Task<Result<Unit>> Handle(
+    public async Task<Result> Handle(
         ShopOwnerDeleteCommand request,
         CancellationToken cancellationToken
     )
     {
         var entity = await _shopOwnerRepository.GetByIdAsync(request.Id);
         if (entity == null)
-            return Result<Unit>.NotFoundResult(request.Id);
+            return Result.NotFound(request.Id);
 
         await _shopOwnerRepository.RemoveAsync(entity);
         await _unitOfWork.SaveChanges(cancellationToken);
 
-        return Result<Unit>.SuccessResult(Unit.Value);
+        return Result.Success();
     }
 }

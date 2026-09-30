@@ -43,9 +43,7 @@ internal sealed class RefreshSessionCommandHandler
     {
         var user = await _userManager.FindByIdAsync(_currentUser.GetId());
         if (user is null)
-            return Result<LoginResponseDto>.FailureResult(
-                "UserNotFound",
-                "The current user no longer exists.");
+            return Result<LoginResponseDto>.NotFound(_currentUser.GetId());
 
         var roles = await _userManager.GetRolesAsync(user);
         var isSuperAdmin = roles.Any(role => string.Equals(
@@ -58,8 +56,8 @@ internal sealed class RefreshSessionCommandHandler
         var activeShopId = isSuperAdmin ? _currentUser.GetShopId() : user.ShopId;
         if (string.IsNullOrWhiteSpace(activeShopId)) activeShopId = user.ShopId;
         if (string.IsNullOrWhiteSpace(activeShopId))
-            return Result<LoginResponseDto>.FailureResult(
-                "ShopContextRequired",
+            return Result<LoginResponseDto>.Forbidden(
+                "auth.shop_context_required",
                 "No active shop is available for this account.");
 
         var activeShop = await _shopRepository.GetByIdIncludingDeletedAsync(
@@ -67,20 +65,18 @@ internal sealed class RefreshSessionCommandHandler
             cancellationToken);
         if (activeShop is null || activeShop.IsDeleted || !activeShop.IsActive)
         {
-            return Result<LoginResponseDto>.FailureResult(
-                "InvalidShop",
-                "The active shop does not exist or is inactive.");
+            return Result<LoginResponseDto>.NotFound(activeShopId);
         }
 
         var language = await _languageRepository.GetByIdAsync(user.LanguageId);
         if (language is null || !language.IsActive)
-            return Result<LoginResponseDto>.FailureResult(
-                "InvalidLanguage",
+            return Result<LoginResponseDto>.BusinessRule(
+                "auth.invalid_language",
                 "The user's selected language does not exist or is inactive.");
 
         var token = _tokenGenerator.Generate(user, roles, activeShopId);
 
-        return Result<LoginResponseDto>.SuccessResult(new LoginResponseDto
+        return Result<LoginResponseDto>.Success(new LoginResponseDto
         {
             Token = token,
             UserId = user.Id,

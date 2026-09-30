@@ -42,6 +42,6 @@ internal sealed class DistrictQueryHandler
                 request.Query.GetPageSize(),
                 cancellationToken);
 
-        return Result<PagedListNew<DistrictDto>>.SuccessResult(pagedList);
+        return Result<PagedListNew<DistrictDto>>.Success(pagedList);
     }
 }

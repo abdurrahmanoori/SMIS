@@ -37,7 +37,7 @@ namespace SMIS.Application.Features.Provinces.Commands
                 includeProperties: nameof(Province.Translations));
             if (existing is null)
             {
-                return Result<ProvinceDto>.NotFoundResult(request.Id);
+                return Result<ProvinceDto>.NotFound(request.Id);
             }
 
             // Map simple fields (keeping backward compatibility)
@@ -93,7 +93,7 @@ namespace SMIS.Application.Features.Provinces.Commands
             await _unitOfWork.SaveChanges(cancellationToken);
 
             var response = _mapper.Map<ProvinceDto>(existing);
-            return Result<ProvinceDto>.SuccessResult(response);
+            return Result<ProvinceDto>.Success(response);
         }
     }
 }

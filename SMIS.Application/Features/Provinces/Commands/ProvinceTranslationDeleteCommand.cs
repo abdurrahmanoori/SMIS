@@ -6,10 +6,10 @@ using SMIS.Domain.Entities.LocationEntities;
 
 namespace SMIS.Application.Features.Provinces.Commands
 {
-    public record ProvinceTranslationDeleteCommand(string Id) : IRequest<Result<Unit>>;
+    public record ProvinceTranslationDeleteCommand(string Id) : IRequest<Result>;
 
     internal sealed class
-        ProvinceTranslationDeleteCommandHandler : IRequestHandler<ProvinceTranslationDeleteCommand, Result<Unit>>
+        ProvinceTranslationDeleteCommandHandler : IRequestHandler<ProvinceTranslationDeleteCommand, Result>
     {
         private readonly IProvinceRepository _repo;
         private readonly IUnitOfWork _uow;
@@ -23,22 +23,22 @@ namespace SMIS.Application.Features.Provinces.Commands
             _uow = uow;
         }
 
-        public async Task<Result<Unit>> Handle(
+        public async Task<Result> Handle(
             ProvinceTranslationDeleteCommand request,
             CancellationToken cancellationToken
         )
         {
             var province = await _repo.GetFirstOrDefaultAsync(x => x.Translations.Any(t => t.Id == request.Id),
                 includeProperties: nameof(Province.Translations));
-            if (province is null) return Result<Unit>.NotFoundResult(request.Id);
+            if (province is null) return Result.NotFound(request.Id);
 
             var trans = province.Translations.FirstOrDefault(t => t.Id == request.Id);
-            if (trans is null) return Result<Unit>.NotFoundResult(request.Id);
+            if (trans is null) return Result.NotFound(request.Id);
 
             province.Translations.Remove(trans);
             await _uow.SaveChanges(cancellationToken);
 
-            return Result<Unit>.SuccessResult(Unit.Value);
+            return Result.Success();
         }
     }
 }

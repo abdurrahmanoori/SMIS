@@ -46,7 +46,7 @@ public class
             .ToListAsync(cancellationToken);
 
         if (!loans.Any())
-            return Result<CustomerDebtSummaryDto>.NotFoundResult(request.CustomerId);
+            return Result<CustomerDebtSummaryDto>.NotFound(request.CustomerId);
 
         var summary = new CustomerDebtSummaryDto
         {
@@ -60,6 +60,6 @@ public class
             PaidLoansCount = loans.Count(l => l.Status == LoanStatus.Paid)
         };
 
-        return Result<CustomerDebtSummaryDto>.SuccessResult(summary);
+        return Result<CustomerDebtSummaryDto>.Success(summary);
     }
 }

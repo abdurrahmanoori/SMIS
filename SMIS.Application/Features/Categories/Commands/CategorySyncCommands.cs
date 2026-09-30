@@ -54,7 +54,7 @@ internal sealed class CategorySyncCreateCommandHandler : IRequestHandler<Categor
 
             if (clientModified <= existing.GetConflictModifiedUtc())
             {
-                return Result<CategoryDto>.SuccessResult(
+                return Result<CategoryDto>.Success(
                     CategoryMapping.ToDto(existing));
             }
 
@@ -73,7 +73,7 @@ internal sealed class CategorySyncCreateCommandHandler : IRequestHandler<Categor
 
             await _db.SaveChangesAsync(cancellationToken);
 
-            return Result<CategoryDto>.SuccessResult(
+            return Result<CategoryDto>.Success(
                 CategoryMapping.ToDto(existing));
         }
 
@@ -94,7 +94,7 @@ internal sealed class CategorySyncCreateCommandHandler : IRequestHandler<Categor
         await _repository.AddAsync(category);
         await _db.SaveChangesAsync(cancellationToken);
 
-        return Result<CategoryDto>.SuccessResult(
+        return Result<CategoryDto>.Success(
             CategoryMapping.ToDto(category));
     }
 }
@@ -129,7 +129,7 @@ internal sealed class CategorySyncUpdateCommandHandler
             .FirstOrDefaultAsync(entity => entity.Id == id, cancellationToken);
 
         if (category is null)
-            return Result<CategoryDto>.NotFoundResult(id);
+            return Result<CategoryDto>.NotFound(id);
 
         if (!CategorySyncRules.CanAccess(category, _currentUser))
             return CategorySyncRules.Forbidden();
@@ -138,7 +138,7 @@ internal sealed class CategorySyncUpdateCommandHandler
 
         if (clientModified < category.GetConflictModifiedUtc())
         {
-            return Result<CategoryDto>.SuccessResult(
+            return Result<CategoryDto>.Success(
                 CategoryMapping.ToDto(category));
         }
 
@@ -157,7 +157,7 @@ internal sealed class CategorySyncUpdateCommandHandler
 
         await _db.SaveChangesAsync(cancellationToken);
 
-        return Result<CategoryDto>.SuccessResult(
+        return Result<CategoryDto>.Success(
             CategoryMapping.ToDto(category));
     }
 }
@@ -195,7 +195,7 @@ internal sealed class CategorySyncDeleteCommandHandler
             .FirstOrDefaultAsync(entity => entity.Id == id, cancellationToken);
 
         if (category is null)
-            return Result<CategoryDto>.NotFoundResult(id);
+            return Result<CategoryDto>.NotFound(id);
 
         if (!CategorySyncRules.CanAccess(category, _currentUser))
             return CategorySyncRules.Forbidden();
@@ -204,7 +204,7 @@ internal sealed class CategorySyncDeleteCommandHandler
 
         if (clientModified < category.GetConflictModifiedUtc())
         {
-            return Result<CategoryDto>.SuccessResult(
+            return Result<CategoryDto>.Success(
                 CategoryMapping.ToDto(category));
         }
 
@@ -213,7 +213,7 @@ internal sealed class CategorySyncDeleteCommandHandler
             cancellationToken);
         if (productCount > 0)
         {
-            return Result<CategoryDto>.FailureResult(
+            return Result<CategoryDto>.BusinessRule(
                 "CategoryInUse",
                 $"Category is used by {productCount} product(s). Reassign them before deleting the category.");
         }
@@ -224,7 +224,7 @@ internal sealed class CategorySyncDeleteCommandHandler
         await _repository.RemoveAsync(category);
         await _db.SaveChangesAsync(cancellationToken);
 
-        return Result<CategoryDto>.SuccessResult(response);
+        return Result<CategoryDto>.Success(response);
     }
 }
 
@@ -244,7 +244,7 @@ internal static class CategorySyncRules
     }
 
     public static Result<CategoryDto> Forbidden() =>
-        Result<CategoryDto>.FailureResult(
+        Result<CategoryDto>.Forbidden(
             "Forbidden",
             "You can only synchronize categories from your own shop.");
 }

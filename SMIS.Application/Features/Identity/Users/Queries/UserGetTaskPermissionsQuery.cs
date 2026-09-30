@@ -30,6 +30,6 @@ public sealed class UserGetTaskPermissionsQueryHandler
             _currentUser.GetId(),
             cancellationToken);
 
-        return Result<IReadOnlyList<string>>.SuccessResult(permissions);
+        return Result<IReadOnlyList<string>>.Success(permissions);
     }
 }

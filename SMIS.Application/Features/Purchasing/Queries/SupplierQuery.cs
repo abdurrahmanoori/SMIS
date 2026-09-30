@@ -46,6 +46,6 @@ internal sealed class SupplierQueryHandler
                 request.Query.GetPageSize(),
                 cancellationToken);
 
-        return Result<PagedListNew<SupplierDto>>.SuccessResult(page);
+        return Result<PagedListNew<SupplierDto>>.Success(page);
     }
 }

@@ -34,7 +34,7 @@ namespace SMIS.Application.Features.Shops.Commands
             var entity = await _shopRepository.GetByIdAsync(request.Id);
             if (entity == null)
             {
-                return Result<ShopDto>.NotFoundResult(nameof(ShopDto.Id));
+                return Result<ShopDto>.NotFound(nameof(ShopDto.Id));
             }
 
             ShopCommandRules.Apply(entity, request.ShopUpdateDto);
@@ -44,7 +44,7 @@ namespace SMIS.Application.Features.Shops.Commands
             await _db.SaveChangesAsync(cancellationToken);
 
             var dto = _mapper.Map<ShopDto>(entity);
-            return Result<ShopDto>.SuccessResult(dto);
+            return Result<ShopDto>.Success(dto);
         }
     }
 }

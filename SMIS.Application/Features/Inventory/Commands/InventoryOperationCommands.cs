@@ -52,7 +52,7 @@ internal sealed class InventoryBatchOperationCommandHandler
             $"inventory:{request.Reason}",
             dto.IdempotencyKey,
             cancellationToken);
-        if (!reservation.Success)
+        if (!reservation.IsSuccess)
             return Failure(reservation);
 
         var result = await _inventory.PostMovementAsync(
@@ -67,23 +67,18 @@ internal sealed class InventoryBatchOperationCommandHandler
                 dto.ReferenceId),
             cancellationToken);
 
-        if (!result.Success)
+        if (!result.IsSuccess)
             return Failure(result);
 
         // The inventory workflow stages both the batch balance change and immutable
         // movement. One SaveChanges persists them atomically.
         await _unitOfWork.SaveChanges(cancellationToken);
-        return Result<StockMovementDto>.SuccessResult(_mapper.Map<StockMovementDto>(result.Response));
+        return Result<StockMovementDto>.Success(_mapper.Map<StockMovementDto>(result.Value));
     }
 
     private static Result<StockMovementDto> Failure<T>(
         Result<T> source
-    ) => new()
-    {
-        Success = false,
-        Message = source.Message,
-        Errors = source.Errors
-    };
+    ) => Result<StockMovementDto>.Failure(source.Errors);
 }
 
 public sealed record InventoryTransferCommand(InventoryTransferDto Dto)
@@ -120,13 +115,8 @@ internal sealed class InventoryTransferCommandHandler
             "inventory:transfer",
             dto.IdempotencyKey,
             cancellationToken);
-        if (!reservation.Success)
-            return new Result<List<StockMovementDto>>
-            {
-                Success = false,
-                Message = reservation.Message,
-                Errors = reservation.Errors
-            };
+        if (!reservation.IsSuccess)
+            return Result<List<StockMovementDto>>.Failure(reservation.Errors);
 
         var result = await _inventory.TransferAsync(
             new InventoryTransferRequest(
@@ -139,19 +129,14 @@ internal sealed class InventoryTransferCommandHandler
                 dto.ReferenceId),
             cancellationToken);
 
-        if (!result.Success)
-            return new Result<List<StockMovementDto>>
-            {
-                Success = false,
-                Message = result.Message,
-                Errors = result.Errors
-            };
+        if (!result.IsSuccess)
+            return Result<List<StockMovementDto>>.Failure(result.Errors);
 
         // TransferAsync stages the source OUT, destination IN, and both cached-balance
         // changes. Persisting once here keeps the paired transfer atomic without adding
         // an unnecessary explicit transaction around a single EF Core SaveChanges.
         await _unitOfWork.SaveChanges(cancellationToken);
-        return Result<List<StockMovementDto>>.SuccessResult(
-            _mapper.Map<List<StockMovementDto>>(result.Response));
+        return Result<List<StockMovementDto>>.Success(
+            _mapper.Map<List<StockMovementDto>>(result.Value));
     }
 }

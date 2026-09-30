@@ -50,18 +50,13 @@ internal sealed class StockMovementFifoIssueCommandHandler
                 dto.ReferenceId),
             cancellationToken);
 
-        if (!result.Success)
-            return new Result<List<StockMovementDto>>
-            {
-                Success = false,
-                Message = result.Message,
-                Errors = result.Errors
-            };
+        if (!result.IsSuccess)
+            return Result<List<StockMovementDto>>.Failure(result.Errors);
 
         // All FIFO batch deductions and generated movements are committed together.
         await _unitOfWork.SaveChanges(cancellationToken);
 
-        return Result<List<StockMovementDto>>.SuccessResult(
-            _mapper.Map<List<StockMovementDto>>(result.Response));
+        return Result<List<StockMovementDto>>.Success(
+            _mapper.Map<List<StockMovementDto>>(result.Value));
     }
 }

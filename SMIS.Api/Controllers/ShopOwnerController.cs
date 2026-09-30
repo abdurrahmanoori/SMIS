@@ -23,7 +23,7 @@ namespace SMIS.Api.Controllers
         public async Task<ActionResult<ShopOwnerDto>> Create(
             ShopOwnerCreateDto dto
         ) =>
-            HandleResultResponseOld(await Mediator.Send(new ShopOwnerCreateCommand(dto)));
+            HandleResultResponse(await Mediator.Send(new ShopOwnerCreateCommand(dto)));
 
         /// <summary>
         /// Gets shop owners in pages.
@@ -55,15 +55,15 @@ namespace SMIS.Api.Controllers
             string id,
             ShopOwnerCreateDto dto
         ) =>
-            HandleResultResponseOld(await Mediator.Send(new ShopOwnerUpdateCommand(id, dto)));
+            HandleResultResponse(await Mediator.Send(new ShopOwnerUpdateCommand(id, dto)));
 
         /// <summary>
         /// Deletes a shop owner.
         /// </summary>
         [HttpDelete("{id}")]
-        public async Task<ActionResult<Unit>> Delete(
+        public async Task<IActionResult> Delete(
             string id
         ) =>
-            HandleResultResponseOld(await Mediator.Send(new ShopOwnerDeleteCommand(id)));
+            HandleResultResponse(await Mediator.Send(new ShopOwnerDeleteCommand(id)));
     }
 }

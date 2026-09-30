@@ -55,7 +55,7 @@ internal sealed class StockCountCommandHandler :
         var shopId = _currentUser.GetShopId();
 
         if (string.IsNullOrWhiteSpace(shopId))
-            return Result<StockCountSessionDto>.FailureResult(
+            return Result<StockCountSessionDto>.BusinessRule(
                 "StockCountShopRequired",
                 "A shop is required to start a stock count.");
 
@@ -77,12 +77,12 @@ internal sealed class StockCountCommandHandler :
             .ToListAsync(cancellationToken);
 
         if (requestedBatchIds.Count > 0 && batches.Count != requestedBatchIds.Count)
-            return Result<StockCountSessionDto>.FailureResult(
+            return Result<StockCountSessionDto>.NotFound(
                 "StockCountBatchNotFound",
                 "One or more requested stock batches do not exist in the selected shop.");
 
         if (batches.Count == 0)
-            return Result<StockCountSessionDto>.FailureResult(
+            return Result<StockCountSessionDto>.BusinessRule(
                 "NoStockBatches",
                 "No stock batches are available to count.");
 
@@ -98,7 +98,7 @@ internal sealed class StockCountCommandHandler :
         await _db.StockCountSessions.AddAsync(session, cancellationToken);
         await _unitOfWork.SaveChanges(cancellationToken);
 
-        return Result<StockCountSessionDto>.SuccessResult(StockCountDtoMapper.ToDto(session, batches));
+        return Result<StockCountSessionDto>.Success(StockCountDtoMapper.ToDto(session, batches));
     }
 
     public async Task<Result<StockCountSessionDto>> Handle(
@@ -113,10 +113,10 @@ internal sealed class StockCountCommandHandler :
             .FirstOrDefaultAsync(item => item.Id == request.Id, cancellationToken);
 
         if (session is null)
-            return Result<StockCountSessionDto>.NotFoundResult(request.Id);
+            return Result<StockCountSessionDto>.NotFound(request.Id);
 
         if (session.Status != StockCountStatus.Draft)
-            return Result<StockCountSessionDto>.FailureResult(
+            return Result<StockCountSessionDto>.BusinessRule(
                 "StockCountNotDraft",
                 "Only a draft stock count can be completed.");
 
@@ -124,19 +124,19 @@ internal sealed class StockCountCommandHandler :
             $"stock-count:complete:{session.Id}",
             request.Dto.IdempotencyKey,
             cancellationToken);
-        if (!reservation.Success)
+        if (!reservation.IsSuccess)
             return Failure(reservation);
 
         var counts = request.Dto.Counts;
         if (counts.Count != session.Lines.Count ||
             counts.Select(count => count.StockBatchId).Distinct(StringComparer.Ordinal).Count() != counts.Count)
-            return Result<StockCountSessionDto>.FailureResult(
+            return Result<StockCountSessionDto>.BusinessRule(
                 "IncompleteStockCount",
                 "Every stock-count batch must be supplied exactly once.");
 
         var countByBatch = counts.ToDictionary(count => count.StockBatchId, StringComparer.Ordinal);
         if (session.Lines.Any(line => !countByBatch.ContainsKey(line.StockBatchId)))
-            return Result<StockCountSessionDto>.FailureResult(
+            return Result<StockCountSessionDto>.BusinessRule(
                 "IncompleteStockCount",
                 "The submitted count set does not match the stock-count snapshot.");
 
@@ -147,7 +147,7 @@ internal sealed class StockCountCommandHandler :
         {
             var currentBalance = line.StockBatch.RemainingQuantityBase;
             if (Math.Abs(currentBalance - line.ExpectedQuantityBase) > QuantityTolerance)
-                return Result<StockCountSessionDto>.FailureResult(
+                return Result<StockCountSessionDto>.BusinessRule(
                     "StockChangedDuringCount",
                     $"Stock batch '{line.StockBatchId}' changed after the count started. Restart or recount before posting adjustments.");
 
@@ -163,7 +163,7 @@ internal sealed class StockCountCommandHandler :
                     cancellationToken);
 
             if (baseProductUnit is null)
-                return Result<StockCountSessionDto>.FailureResult(
+                return Result<StockCountSessionDto>.BusinessRule(
                     "BaseProductUnitMissing",
                     "The product base-unit conversion required for stock-count adjustment is missing.");
 
@@ -182,14 +182,14 @@ internal sealed class StockCountCommandHandler :
                     operationId),
                 cancellationToken);
 
-            if (!inventoryResult.Success)
+            if (!inventoryResult.IsSuccess)
                 return Failure(inventoryResult);
         }
 
         session.Complete(occurredAtUtc);
         await _unitOfWork.SaveChanges(cancellationToken);
 
-        return Result<StockCountSessionDto>.SuccessResult(
+        return Result<StockCountSessionDto>.Success(
             StockCountDtoMapper.ToDto(session, session.Lines.Select(line => line.StockBatch).ToList()));
     }
 
@@ -205,12 +205,12 @@ internal sealed class StockCountCommandHandler :
             .FirstOrDefaultAsync(item => item.Id == request.Id, cancellationToken);
 
         if (session is null)
-            return Result<StockCountSessionDto>.NotFoundResult(request.Id);
+            return Result<StockCountSessionDto>.NotFound(request.Id);
 
         session.Cancel();
         await _unitOfWork.SaveChanges(cancellationToken);
 
-        return Result<StockCountSessionDto>.SuccessResult(
+        return Result<StockCountSessionDto>.Success(
             StockCountDtoMapper.ToDto(
                 session,
                 session.Lines.Select(line => line.StockBatch).ToList()));
@@ -218,12 +218,7 @@ internal sealed class StockCountCommandHandler :
 
     private static Result<StockCountSessionDto> Failure<T>(
         Result<T> source
-    ) => new()
-    {
-        Success = false,
-        Message = source.Message,
-        Errors = source.Errors
-    };
+    ) => Result<StockCountSessionDto>.Failure(source.Errors);
 }
 
 internal static class StockCountDtoMapper

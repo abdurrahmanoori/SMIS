@@ -51,7 +51,7 @@ namespace SMIS.Application.Features.Identity.Users.Commands
             var language = await _languageRepository.GetByIdAsync(request.UserCreateDto.LanguageId);
             if (language is null || !language.IsActive)
             {
-                return Result<UserDto>.FailureResult(
+                return Result<UserDto>.BusinessRule(
                     "InvalidLanguage",
                     "The selected language does not exist or is inactive.");
             }
@@ -61,7 +61,7 @@ namespace SMIS.Application.Features.Identity.Users.Commands
                 cancellationToken);
             if (shop is null || shop.IsDeleted || !shop.IsActive)
             {
-                return Result<UserDto>.FailureResult(
+                return Result<UserDto>.BusinessRule(
                     "InvalidShop",
                     "The assigned shop does not exist or is inactive.");
             }
@@ -78,7 +78,7 @@ namespace SMIS.Application.Features.Identity.Users.Commands
 
                 if (canonicalRoles.Any(role => role is null))
                 {
-                    return Result<UserDto>.FailureResult(
+                    return Result<UserDto>.BusinessRule(
                         "InvalidRole",
                         $"Roles must be one of: {string.Join(", ", SD.AllRoles)}.");
                 }
@@ -87,7 +87,7 @@ namespace SMIS.Application.Features.Identity.Users.Commands
                 foreach (var role in roles)
                 {
                     if (!await _roleManager.RoleExistsAsync(role))
-                        return Result<UserDto>.FailureResult("InvalidRole", $"Role '{role}' is not configured.");
+                        return Result<UserDto>.BusinessRule("InvalidRole", $"Role '{role}' is not configured.");
                 }
             }
 
@@ -101,7 +101,7 @@ namespace SMIS.Application.Features.Identity.Users.Commands
                 if (!createResult.Succeeded)
                 {
                     await _unitOfWork.RollbackTransactionAsync(cancellationToken);
-                    return Result<UserDto>.WithErrors(createResult.Errors.Select(e => new ValidationError
+                    return Result<UserDto>.Failure(createResult.Errors.Select(e => new Error
                     {
                         Code = e.Code,
                         Description = e.Description
@@ -114,7 +114,7 @@ namespace SMIS.Application.Features.Identity.Users.Commands
                     if (!addToRoles.Succeeded)
                     {
                         await _unitOfWork.RollbackTransactionAsync(cancellationToken);
-                        return Result<UserDto>.WithErrors(addToRoles.Errors.Select(e => new ValidationError
+                        return Result<UserDto>.Failure(addToRoles.Errors.Select(e => new Error
                         {
                             Code = e.Code,
                             Description = e.Description
@@ -130,7 +130,7 @@ namespace SMIS.Application.Features.Identity.Users.Commands
 
                 var dto = _mapper.Map<UserDto>(entity);
                 dto.Roles = roles.ToList();
-                return Result<UserDto>.SuccessResult(dto);
+                return Result<UserDto>.Success(dto);
             }
             catch
             {

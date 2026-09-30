@@ -1,134 +1,229 @@
-﻿namespace SMIS.Application.Common.Response;
+namespace SMIS.Application.Common.Response;
 
-public class Result
+public enum ErrorType
 {
-    public string? Id { get; set; }
-
-    public bool Success { get; set; } = true;
-
-    public string? Message { get; set; }
-
-    public List<string>? Errors { get; set; }
-    //public List<ValidationError>? Errorssss { get; set; }
+    Validation,
+    NotFound,
+    Conflict,
+    Unauthorized,
+    Forbidden,
+    BusinessRule,
+    Failure
 }
 
-public class Result<T>
+public sealed record Error
 {
-    public string? Id { get; set; }
+    public string Code { get; init; } = "common.failure";
+    public string? Property { get; init; }
+    public string Description { get; init; } = "The operation could not be completed.";
+    public ErrorType Type { get; init; } = ErrorType.BusinessRule;
 
-    public T? Response { get; set; }
+    public static Error Validation(
+        string code,
+        string description,
+        string? property = null
+    ) =>
+        new() { Code = code, Description = description, Property = property, Type = ErrorType.Validation };
 
-    public bool Success { get; set; } = true;
-
-    public string? Message { get; set; }
-
-    public List<ValidationError>? Errors { get; set; }
-
-    public static Result<T> SuccessResult(
-        T? result,
-        string? message = null
-    )
-    {
-        return new Result<T>
-        {
-            Success = true,
-            Response = result,
-        };
-    }
-
-    public static Result<T> NotFoundResult(
-        string? Id = null
-    )
-    {
-        return new Result<T>
-        {
-            Success = false,
-            Message = $"Entity with the {Id} not found",
-        };
-    }
-
-    public static Result<T> EmptyResult(
-        string? entity = null
-    )
-    {
-        return new Result<T>
-        {
-            Success = false,
-            Errors = new List<ValidationError>
-            {
-                new ValidationError
-                {
-                    Code = "EmptyList",
-                    Description = $"The list of entity {entity} is empty.",
-                    Property = "List"
-                }
-            }
-        };
-    }
-
-    public static Result<T> FailureResult(
+    public static Error NotFound(
         string code,
         string description
-    )
-    {
-        return new Result<T>
-        {
-            Success = false,
-            Errors = new List<ValidationError>
-            {
-                new ValidationError { Code = code, Description = description }
-            },
-        };
-    }
+    ) =>
+        new() { Code = code, Description = description, Type = ErrorType.NotFound };
 
-    public static Result<T> FailureResult(
+    public static Error Conflict(
+        string code,
+        string description,
+        string? property = null
+    ) =>
+        new() { Code = code, Description = description, Property = property, Type = ErrorType.Conflict };
+
+    public static Error Unauthorized(
+        string code,
         string description
-    )
-    {
-        return new Result<T>
-        {
-            Success = false,
-            Errors = new List<ValidationError>
-            {
-                new() { Description = description }
-            },
-        };
-    }
+    ) =>
+        new() { Code = code, Description = description, Type = ErrorType.Unauthorized };
 
-    public static Result<T> WithError(
-        ValidationError error
-    )
-    {
-        return new Result<T>
-        {
-            Success = false,
-            Errors = new List<ValidationError> { error },
-        };
-    }
+    public static Error Forbidden(
+        string code,
+        string description
+    ) =>
+        new() { Code = code, Description = description, Type = ErrorType.Forbidden };
 
-    public static Result<T> WithErrors(
-        List<ValidationError> errors
-    )
-    {
-        return new Result<T>
-        {
-            Success = false,
-            Errors = errors,
-        };
-    }
+    public static Error BusinessRule(
+        string code,
+        string description,
+        string? property = null
+    ) =>
+        new() { Code = code, Description = description, Property = property, Type = ErrorType.BusinessRule };
+
+    public static Error Failure(
+        string code,
+        string description
+    ) =>
+        new() { Code = code, Description = description, Type = ErrorType.Failure };
+
+    public override string ToString() =>
+        $"Code: {Code}, Property: {Property}, Description: {Description}, Type: {Type}";
 }
 
-public class ValidationError
+public interface IResult
 {
-    public override string ToString()
-    {
-        return $"Code: {this.Code}, Property: {this.Property}, Description: {this.Description}";
-    }
+    bool IsSuccess { get; }
+    IReadOnlyList<Error> Errors { get; }
+}
 
-    public string? Code { get; set; }
+public interface IResult<TSelf> : IResult where TSelf : IResult<TSelf>
+{
+    static abstract TSelf Failure(
+        IReadOnlyCollection<Error> errors
+    );
+}
 
-    public string? Property { get; set; }
+public sealed class Result : IResult<Result>
+{
+    public bool IsSuccess { get; init; }
+    public IReadOnlyList<Error> Errors { get; init; } = Array.Empty<Error>();
 
-    public string? Description { get; set; }
-    //public List<string>? Descriptions { get; set; }
+    public static Result Success() =>
+        new() { IsSuccess = true };
+
+    public static Result NotFound(
+        string? id = null
+    ) =>
+        Failure(Error.NotFound(
+            "common.not_found",
+            id is null ? "The requested resource was not found." : $"Entity with id '{id}' was not found."));
+
+    public static Result NotFound(
+        string code,
+        string description
+    ) =>
+        Failure(Error.NotFound(code, description));
+
+    public static Result BusinessRule(
+        string code,
+        string description
+    ) =>
+        Failure(Error.BusinessRule(code, description));
+
+    public static Result BusinessRule(
+        string description
+    ) =>
+        Failure(Error.BusinessRule("common.business_rule", description));
+
+    public static Result Conflict(
+        string code,
+        string description,
+        string? property = null
+    ) =>
+        Failure(Error.Conflict(code, description, property));
+
+    public static Result Unauthorized(
+        string code,
+        string description
+    ) =>
+        Failure(Error.Unauthorized(code, description));
+
+    public static Result Forbidden(
+        string code,
+        string description
+    ) =>
+        Failure(Error.Forbidden(code, description));
+
+    public static Result Validation(
+        string code,
+        string description,
+        string? property = null
+    ) =>
+        Failure(Error.Validation(code, description, property));
+
+    public static Result Failure(
+        IReadOnlyCollection<Error> errors
+    ) =>
+        new() { IsSuccess = false, Errors = errors.ToArray() };
+
+    public static Result Failure(
+        Error error
+    ) => Failure(new[] { error });
+}
+
+public sealed class Result<T> : IResult<Result<T>>
+{
+    public T? Value { get; init; }
+    public bool IsSuccess { get; init; }
+    public IReadOnlyList<Error> Errors { get; init; } = Array.Empty<Error>();
+
+    public static Result<T> Success(
+        T? result
+    ) =>
+        new()
+        {
+            IsSuccess = true,
+            Value = result
+        };
+
+    public static Result<T> NotFound(
+        string? id = null
+    ) =>
+        Failure(Error.NotFound(
+            "common.not_found",
+            id is null ? "The requested resource was not found." : $"Entity with id '{id}' was not found."));
+
+    public static Result<T> NotFound(
+        string code,
+        string description
+    ) =>
+        Failure(Error.NotFound(code, description));
+
+    // Expected application/business-rule failures belong in Result rather than exceptions.
+    public static Result<T> BusinessRule(
+        string code,
+        string description
+    ) =>
+        Failure(Error.BusinessRule(code, description));
+
+    public static Result<T> BusinessRule(
+        string description
+    ) =>
+        Failure(Error.BusinessRule("common.business_rule", description));
+
+    public static Result<T> Conflict(
+        string code,
+        string description,
+        string? property = null
+    ) =>
+        Failure(Error.Conflict(code, description, property));
+
+    public static Result<T> Unauthorized(
+        string code,
+        string description
+    ) =>
+        Failure(Error.Unauthorized(code, description));
+
+    public static Result<T> Forbidden(
+        string code,
+        string description
+    ) =>
+        Failure(Error.Forbidden(code, description));
+
+    public static Result<T> Validation(
+        string code,
+        string description,
+        string? property = null
+    ) =>
+        Failure(Error.Validation(code, description, property));
+
+    public static Result<T> Failure(
+        IReadOnlyCollection<Error> errors
+    ) =>
+        new()
+        {
+            IsSuccess = false,
+            Errors = errors.ToArray()
+        };
+
+    public static Result<T> Failure(
+        Error error
+    ) => Failure(new[] { error });
 }

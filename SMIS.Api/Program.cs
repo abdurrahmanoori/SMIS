@@ -33,6 +33,9 @@ builder.Services.AddControllers()
         options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter(JsonNamingPolicy.CamelCase));
     });
 
+builder.Services.AddProblemDetails();
+builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+
 builder.Services.AddFluentValidationAutoValidation();
 builder.Services.AddEndpointsApiExplorer();
 
@@ -63,7 +66,7 @@ builder.Services.AddMiniProfilerServices();
 
 var app = builder.Build();
 
-app.UseMiddleware<ExceptionMiddleware>();
+app.UseExceptionHandler();
 
 app.UseSwaggerWithUI();
 app.UseMiniProfiler();
@@ -78,7 +81,7 @@ app.UseMiddleware<RequestResponseLoggingMiddleware>();
 app.UseMiddleware<DevelopmentJwtMiddleware>();
 
 app.UseAuthentication();
-app.UseMiddleware<UnauthorizedMiddleware>();
+app.UseMiddleware<AuthorizationProblemDetailsMiddleware>();
 app.UseCors("AllowReactApp");
 app.UseAuthorization();
 app.MapControllers();

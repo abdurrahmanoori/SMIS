@@ -42,13 +42,8 @@ internal sealed class StockBatchCreateCommandHandler
             "inventory:purchase-receipt",
             dto.IdempotencyKey,
             cancellationToken);
-        if (!reservation.Success)
-            return new Result<StockBatchDto>
-            {
-                Success = false,
-                Message = reservation.Message,
-                Errors = reservation.Errors
-            };
+        if (!reservation.IsSuccess)
+            return Result<StockBatchDto>.Failure(reservation.Errors);
 
         var result = await _inventory.ReceiveBatchAsync(
             new InventoryReceiptRequest(
@@ -63,18 +58,13 @@ internal sealed class StockBatchCreateCommandHandler
                 dto.ReferenceId),
             cancellationToken);
 
-        if (!result.Success)
-            return new Result<StockBatchDto>
-            {
-                Success = false,
-                Message = result.Message,
-                Errors = result.Errors
-            };
+        if (!result.IsSuccess)
+            return Result<StockBatchDto>.Failure(result.Errors);
 
         // Batch and opening movement are already staged in the same DbContext.
         // One SaveChanges call is sufficient; EF Core wraps it in a transaction.
         await _unitOfWork.SaveChanges(cancellationToken);
 
-        return Result<StockBatchDto>.SuccessResult(_mapper.Map<StockBatchDto>(result.Response));
+        return Result<StockBatchDto>.Success(_mapper.Map<StockBatchDto>(result.Value));
     }
 }

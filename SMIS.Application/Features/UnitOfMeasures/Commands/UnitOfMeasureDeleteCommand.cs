@@ -5,9 +5,9 @@ using SMIS.Application.Services;
 
 namespace SMIS.Application.Features.UnitOfMeasures.Commands
 {
-    public record UnitOfMeasureDeleteCommand(string Id) : IRequest<Result<Unit>>;
+    public record UnitOfMeasureDeleteCommand(string Id) : IRequest<Result>;
 
-    internal sealed class UnitOfMeasureDeleteCommandHandler : IRequestHandler<UnitOfMeasureDeleteCommand, Result<Unit>>
+    internal sealed class UnitOfMeasureDeleteCommandHandler : IRequestHandler<UnitOfMeasureDeleteCommand, Result>
     {
         private readonly IUnitOfMeasureRepository _unitOfMeasureRepository;
         private readonly IApplicationDbContext _db;
@@ -21,7 +21,7 @@ namespace SMIS.Application.Features.UnitOfMeasures.Commands
             _unitOfMeasureRepository = unitOfMeasureRepository;
         }
 
-        public async Task<Result<Unit>> Handle(
+        public async Task<Result> Handle(
             UnitOfMeasureDeleteCommand request,
             CancellationToken cancellationToken
         )
@@ -29,21 +29,21 @@ namespace SMIS.Application.Features.UnitOfMeasures.Commands
             var entity = await _unitOfMeasureRepository.GetByIdAsync(request.Id);
             if (entity == null)
             {
-                return Result<Unit>.NotFoundResult(request.Id);
+                return Result.NotFound(request.Id);
             }
 
             var referenceCount = await _unitOfMeasureRepository.CountReferencesAsync(
                 entity.Id,
                 cancellationToken);
             if (referenceCount > 0)
-                return Result<Unit>.FailureResult(
+                return Result.BusinessRule(
                     "UnitOfMeasureInUse",
                     $"Unit of measurement is used by {referenceCount} record(s). Reassign them before deleting the unit.");
 
             entity.ClearClientModificationMetadata();
             await _unitOfMeasureRepository.RemoveAsync(entity);
             await _db.SaveChangesAsync(cancellationToken);
-            return Result<Unit>.SuccessResult(Unit.Value);
+            return Result.Success();
         }
     }
 }

@@ -59,6 +59,6 @@ internal sealed class LoanAccountQueryHandler
                 request.Query.GetPageSize(),
                 cancellationToken);
 
-        return Result<PagedListNew<LoanAccountDto>>.SuccessResult(page);
+        return Result<PagedListNew<LoanAccountDto>>.Success(page);
     }
 }

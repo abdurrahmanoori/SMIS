@@ -35,7 +35,7 @@ namespace SMIS.Api.Controllers
         public async Task<ActionResult<StockBatchDto>> Create(
             StockBatchCreateDto dto
         ) =>
-            HandleResultResponseOld(await Mediator.Send(new StockBatchCreateCommand(dto)));
+            HandleResultResponse(await Mediator.Send(new StockBatchCreateCommand(dto)));
 
         /// <summary>
         /// Gets stock batches with flexible filtering, optional returned columns, and pagination.
@@ -70,6 +70,6 @@ namespace SMIS.Api.Controllers
             string id,
             StockBatchUpdateDto dto
         ) =>
-            HandleResultResponseOld(await Mediator.Send(new StockBatchUpdateCommand(id, dto)));
+            HandleResultResponse(await Mediator.Send(new StockBatchUpdateCommand(id, dto)));
     }
 }

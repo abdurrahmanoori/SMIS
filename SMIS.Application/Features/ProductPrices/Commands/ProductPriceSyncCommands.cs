@@ -54,7 +54,7 @@ internal sealed class
             .IgnoreQueryFilters()
             .FirstOrDefaultAsync(price => price.Id == id, ct);
         if (existing is not null)
-            return Result<ProductPriceDto>.SuccessResult(_mapper.Map<ProductPriceDto>(existing));
+            return Result<ProductPriceDto>.Success(_mapper.Map<ProductPriceDto>(existing));
 
         var productUnit = await ProductPriceCommandRules.GetAccessibleProductUnitAsync(
             request.Dto.ProductUnitId,
@@ -72,7 +72,7 @@ internal sealed class
         value.SetClientModificationMetadata(request.Dto.ClientModifiedDate);
         await _repository.AddAsync(value);
         await _db.SaveChangesAsync(ct);
-        return Result<ProductPriceDto>.SuccessResult(_mapper.Map<ProductPriceDto>(value));
+        return Result<ProductPriceDto>.Success(_mapper.Map<ProductPriceDto>(value));
     }
 }
 
@@ -109,7 +109,7 @@ internal sealed class
         var existing = await _db.ProductPrices
             .IgnoreQueryFilters()
             .FirstOrDefaultAsync(price => price.Id == id, ct);
-        if (existing is null) return Result<ProductPriceDto>.NotFoundResult(request.Id);
+        if (existing is null) return Result<ProductPriceDto>.NotFound(request.Id);
         if (!string.Equals(existing.ProductUnitId, request.Dto.ProductUnitId, StringComparison.Ordinal))
             return ProductPriceCommandRules.ProductUnitCannotChange();
 
@@ -128,14 +128,14 @@ internal sealed class
         {
             if (!request.Dto.EndDate.HasValue ||
                 request.Dto.EndDate.Value < existing.EffectiveDate)
-                return Result<ProductPriceDto>.FailureResult(
+                return Result<ProductPriceDto>.BusinessRule(
                     "InvalidPriceEndDate",
                     "The price end date must be on or after its effective date.");
 
             existing.SetEndDate(request.Dto.EndDate);
             existing.SetClientModificationMetadata(request.Dto.ClientModifiedDate);
             await _db.SaveChangesAsync(ct);
-            return Result<ProductPriceDto>.SuccessResult(_mapper.Map<ProductPriceDto>(existing));
+            return Result<ProductPriceDto>.Success(_mapper.Map<ProductPriceDto>(existing));
         }
 
         // Historical prices are immutable. A sync "update" is allowed only against
@@ -151,7 +151,7 @@ internal sealed class
         successor.SetClientModificationMetadata(request.Dto.ClientModifiedDate);
         await _repository.AddAsync(successor);
         await _db.SaveChangesAsync(ct);
-        return Result<ProductPriceDto>.SuccessResult(_mapper.Map<ProductPriceDto>(successor));
+        return Result<ProductPriceDto>.Success(_mapper.Map<ProductPriceDto>(successor));
     }
 }
 
@@ -188,7 +188,7 @@ internal sealed class
         var value = await _db.ProductPrices
             .IgnoreQueryFilters()
             .FirstOrDefaultAsync(price => price.Id == id, ct);
-        if (value is null) return Result<ProductPriceDto>.NotFoundResult(request.Id);
+        if (value is null) return Result<ProductPriceDto>.NotFound(request.Id);
 
         var productUnit = await ProductPriceCommandRules.GetAccessibleProductUnitAsync(
             value.ProductUnitId,
@@ -198,12 +198,12 @@ internal sealed class
 
         var modified = DateTimeService.NormalizeUtc(request.Dto.ClientModifiedDate);
         if (modified < value.GetConflictModifiedUtc())
-            return Result<ProductPriceDto>.SuccessResult(_mapper.Map<ProductPriceDto>(value));
+            return Result<ProductPriceDto>.Success(_mapper.Map<ProductPriceDto>(value));
 
         value.SetClientModificationMetadata(modified);
         await _repository.RemoveAsync(value);
         await _db.SaveChangesAsync(ct);
-        return Result<ProductPriceDto>.SuccessResult(_mapper.Map<ProductPriceDto>(value));
+        return Result<ProductPriceDto>.Success(_mapper.Map<ProductPriceDto>(value));
     }
 }
 

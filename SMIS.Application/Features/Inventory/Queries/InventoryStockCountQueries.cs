@@ -35,9 +35,9 @@ internal sealed class StockCountGetByIdQueryHandler
             .FirstOrDefaultAsync(item => item.Id == request.Id, cancellationToken);
 
         if (session is null)
-            return Result<StockCountSessionDto>.NotFoundResult(request.Id);
+            return Result<StockCountSessionDto>.NotFound(request.Id);
 
-        return Result<StockCountSessionDto>.SuccessResult(
+        return Result<StockCountSessionDto>.Success(
             StockCountDtoMapper.ToDto(
                 session,
                 session.Lines.Select(line => line.StockBatch).ToList()));

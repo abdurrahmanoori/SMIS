@@ -26,11 +26,11 @@ public sealed class IdempotencyService : IIdempotencyService
     )
     {
         if (string.IsNullOrWhiteSpace(key))
-            return Result<bool>.SuccessResult(false);
+            return Result<bool>.Success(false);
 
         var actorId = _currentUser.GetId();
         if (string.IsNullOrWhiteSpace(actorId))
-            return Result<bool>.FailureResult(
+            return Result<bool>.BusinessRule(
                 "AuthenticatedUserRequired",
                 "An authenticated user is required for idempotent operations.");
 
@@ -44,7 +44,7 @@ public sealed class IdempotencyService : IIdempotencyService
                 cancellationToken);
 
         if (exists)
-            return Result<bool>.FailureResult(
+            return Result<bool>.Conflict(
                 "DuplicateOperation",
                 "This request has already been accepted. Reuse of the same idempotency key is not allowed.");
 
@@ -52,6 +52,6 @@ public sealed class IdempotencyService : IIdempotencyService
             IdempotencyRecord.Create(actorId, normalizedScope, normalizedKey),
             cancellationToken);
 
-        return Result<bool>.SuccessResult(true);
+        return Result<bool>.Success(true);
     }
 }

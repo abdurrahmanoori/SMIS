@@ -51,12 +51,12 @@ public class
             .ToListAsync(cancellationToken);
 
         if (!unpaidLoans.Any())
-            return Result<PaymentAllocationResultDto>.FailureResult("No unpaid loans found for this customer");
+            return Result<PaymentAllocationResultDto>.BusinessRule("No unpaid loans found for this customer");
 
         // Step 2: Validate payment doesn't exceed total debt
         var totalDebt = unpaidLoans.Sum(l => l.RemainingAmount);
         if (request.PaymentAmount > totalDebt)
-            return Result<PaymentAllocationResultDto>.FailureResult(
+            return Result<PaymentAllocationResultDto>.BusinessRule(
                 $"Payment amount ({request.PaymentAmount}) exceeds total debt ({totalDebt})");
 
         // Step 3: Use domain service to allocate payment across loans (FIFO)
@@ -106,6 +106,6 @@ public class
             RemainingUnallocated = request.PaymentAmount - allocations.Sum(a => a.AllocatedAmount)
         };
 
-        return Result<PaymentAllocationResultDto>.SuccessResult(result, "Payment processed successfully");
+        return Result<PaymentAllocationResultDto>.Success(result);
     }
 }

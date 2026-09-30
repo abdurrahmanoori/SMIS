@@ -44,19 +44,19 @@ namespace SMIS.Application.Features.ProductUnits.Commands
             var entity = await _productUnitRepository.GetByIdAsync(request.Id);
             if (entity == null)
             {
-                return Result<ProductUnitDto>.NotFoundResult(nameof(ProductUnitDto.Id));
+                return Result<ProductUnitDto>.NotFound(nameof(ProductUnitDto.Id));
             }
 
             var currentProduct = await _productRepository.GetByIdAsync(entity.ProductId);
             if (currentProduct == null)
             {
-                return Result<ProductUnitDto>.NotFoundResult(nameof(ProductUnitCreateDto.ProductId));
+                return Result<ProductUnitDto>.NotFound(nameof(ProductUnitCreateDto.ProductId));
             }
 
             var targetProduct = await _productRepository.GetByIdAsync(request.ProductUnitCreateDto.ProductId);
             if (targetProduct == null)
             {
-                return Result<ProductUnitDto>.NotFoundResult(nameof(ProductUnitCreateDto.ProductId));
+                return Result<ProductUnitDto>.NotFound(nameof(ProductUnitCreateDto.ProductId));
             }
 
             var guard = await ProductUnitCommandRules.ValidateMutationAsync(
@@ -86,7 +86,7 @@ namespace SMIS.Application.Features.ProductUnits.Commands
             await _db.SaveChangesAsync(cancellationToken);
 
             var dto = _mapper.Map<ProductUnitDto>(entity);
-            return Result<ProductUnitDto>.SuccessResult(dto);
+            return Result<ProductUnitDto>.Success(dto);
         }
     }
 }

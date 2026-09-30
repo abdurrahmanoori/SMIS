@@ -53,6 +53,6 @@ internal sealed class CategoryQueryHandler
                 request.Query.GetPageSize(),
                 cancellationToken);
 
-        return Result<PagedListNew<CategoryDto>>.SuccessResult(pagedList);
+        return Result<PagedListNew<CategoryDto>>.Success(pagedList);
     }
 }

@@ -8,9 +8,9 @@ using SMIS.Domain.Entities.Identity.Entity;
 
 namespace SMIS.Application.Features.Identity.Users.Commands
 {
-    public record UserAssignRolesCommand(string UserId, IEnumerable<string> Roles) : IRequest<Result<Unit>>;
+    public record UserAssignRolesCommand(string UserId, IEnumerable<string> Roles) : IRequest<Result>;
 
-    public class UserAssignRolesCommandHandler : IRequestHandler<UserAssignRolesCommand, Result<Unit>>
+    public class UserAssignRolesCommandHandler : IRequestHandler<UserAssignRolesCommand, Result>
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly RoleManager<ApplicationRole> _roleManager;
@@ -33,13 +33,13 @@ namespace SMIS.Application.Features.Identity.Users.Commands
             _userAdministrationGuard = userAdministrationGuard;
         }
 
-        public async Task<Result<Unit>> Handle(
+        public async Task<Result> Handle(
             UserAssignRolesCommand request,
             CancellationToken cancellationToken
         )
         {
             var user = await _userManager.FindByIdAsync(request.UserId);
-            if (user == null) return Result<Unit>.NotFoundResult(request.UserId);
+            if (user == null) return Result.NotFound(request.UserId);
 
             var requestedRoles = request.Roles
                 .Distinct(StringComparer.OrdinalIgnoreCase)
@@ -50,7 +50,7 @@ namespace SMIS.Application.Features.Identity.Users.Commands
 
             if (canonicalRoles.Any(role => role is null))
             {
-                return Result<Unit>.FailureResult(
+                return Result.BusinessRule(
                     "InvalidRole",
                     $"Roles must be one of: {string.Join(", ", SD.AllRoles)}.");
             }
@@ -60,7 +60,7 @@ namespace SMIS.Application.Features.Identity.Users.Commands
             foreach (var role in roles)
             {
                 if (!await _roleManager.RoleExistsAsync(role))
-                    return Result<Unit>.FailureResult("InvalidRole", $"Role '{role}' is not configured.");
+                    return Result.BusinessRule("InvalidRole", $"Role '{role}' is not configured.");
             }
 
             if (!roles.Contains(SD.Role_Super_Admin, StringComparer.OrdinalIgnoreCase) &&
@@ -68,7 +68,7 @@ namespace SMIS.Application.Features.Identity.Users.Commands
                     user.Id,
                     cancellationToken))
             {
-                return Result<Unit>.FailureResult(
+                return Result.BusinessRule(
                     "LastSuperAdmin",
                     "The SuperAdmin role cannot be removed from the last SuperAdmin account.");
             }
@@ -86,7 +86,7 @@ namespace SMIS.Application.Features.Identity.Users.Commands
                     if (!removeResult.Succeeded)
                     {
                         await _unitOfWork.RollbackTransactionAsync(cancellationToken);
-                        return Result<Unit>.WithErrors(removeResult.Errors.Select(e => new ValidationError
+                        return Result.Failure(removeResult.Errors.Select(e => new Error
                             { Code = e.Code, Description = e.Description }).ToList());
                     }
                 }
@@ -97,7 +97,7 @@ namespace SMIS.Application.Features.Identity.Users.Commands
                     if (!addResult.Succeeded)
                     {
                         await _unitOfWork.RollbackTransactionAsync(cancellationToken);
-                        return Result<Unit>.WithErrors(addResult.Errors.Select(e => new ValidationError
+                        return Result.Failure(addResult.Errors.Select(e => new Error
                             { Code = e.Code, Description = e.Description }).ToList());
                     }
                 }
@@ -108,7 +108,7 @@ namespace SMIS.Application.Features.Identity.Users.Commands
                     cancellationToken);
                 await _unitOfWork.CommitTransactionAsync(cancellationToken);
 
-                return Result<Unit>.SuccessResult(Unit.Value, "Roles assigned successfully");
+                return Result.Success();
             }
             catch
             {

@@ -5,9 +5,9 @@ using SMIS.Application.Repositories.Districts;
 
 namespace SMIS.Application.Features.Districts.Commands
 {
-    public record DistrictDeleteCommand(string Id) : IRequest<Result<Unit>>;
+    public record DistrictDeleteCommand(string Id) : IRequest<Result>;
 
-    internal sealed class DistrictDeleteCommandHandler : IRequestHandler<DistrictDeleteCommand, Result<Unit>>
+    internal sealed class DistrictDeleteCommandHandler : IRequestHandler<DistrictDeleteCommand, Result>
     {
         private readonly IDistrictRepository _districtRepository;
         private readonly IUnitOfWork _unitOfWork;
@@ -21,7 +21,7 @@ namespace SMIS.Application.Features.Districts.Commands
             _districtRepository = districtRepository;
         }
 
-        public async Task<Result<Unit>> Handle(
+        public async Task<Result> Handle(
             DistrictDeleteCommand request,
             CancellationToken cancellationToken
         )
@@ -30,12 +30,12 @@ namespace SMIS.Application.Features.Districts.Commands
 
             if (entity == null)
             {
-                return Result<Unit>.NotFoundResult(request?.Id);
+                return Result.NotFound(request?.Id);
             }
 
             await _districtRepository.RemoveAsync(entity);
             await _unitOfWork.SaveChanges(cancellationToken);
-            return Result<Unit>.SuccessResult(Unit.Value);
+            return Result.Success();
         }
     }
 }

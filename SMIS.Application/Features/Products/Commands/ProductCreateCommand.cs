@@ -54,7 +54,7 @@ internal sealed class ProductCreateCommandHandler : IRequestHandler<ProductCreat
     {
         var activeShopId = _currentUser.GetShopId();
         if (string.IsNullOrWhiteSpace(activeShopId))
-            return Result<ProductDto>.FailureResult("ShopContextRequired", "An active shop is required.");
+            return Result<ProductDto>.Forbidden("product.shop_context_required", "An active shop is required.");
 
         var entity = ProductCommandRules.Create(request.ProductCreateDto, activeShopId);
 
@@ -77,6 +77,6 @@ internal sealed class ProductCreateCommandHandler : IRequestHandler<ProductCreat
 
         await _db.SaveChangesAsync(cancellationToken);
 
-        return Result<ProductDto>.SuccessResult(_mapper.Map<ProductDto>(entity));
+        return Result<ProductDto>.Success(_mapper.Map<ProductDto>(entity));
     }
 }

@@ -30,7 +30,7 @@ public class ProductPriceController : BaseApiController
     public async Task<ActionResult<ProductPriceDto>> Create(
         ProductPriceCreateDto dto
     ) =>
-        HandleResultResponseOld(await Mediator.Send(new ProductPriceCreateCommand(dto)));
+        HandleResultResponse(await Mediator.Send(new ProductPriceCreateCommand(dto)));
 
     /// <summary>
     /// Creates or updates a product price sent by an offline client.
@@ -42,7 +42,7 @@ public class ProductPriceController : BaseApiController
     [HasPermission(ApplicationComponentKeys.ProductPrices, PermissionAction.Create)]
     public async Task<ActionResult<ProductPriceDto>> SyncCreate(
         ProductPriceSyncCreateDto dto
-    ) => HandleResultResponseOld(await Mediator.Send(new ProductPriceSyncCreateCommand(dto)));
+    ) => HandleResultResponse(await Mediator.Send(new ProductPriceSyncCreateCommand(dto)));
 
     /// <summary>
     /// Gets product prices with flexible filtering, optional returned columns, and pagination.
@@ -76,7 +76,7 @@ public class ProductPriceController : BaseApiController
         string id,
         ProductPriceCreateDto dto
     ) =>
-        HandleResultResponseOld(await Mediator.Send(new ProductPriceUpdateCommand(id, dto)));
+        HandleResultResponse(await Mediator.Send(new ProductPriceUpdateCommand(id, dto)));
 
     /// <summary>
     /// Applies a product-price update sent by an offline client.
@@ -89,17 +89,17 @@ public class ProductPriceController : BaseApiController
     public async Task<ActionResult<ProductPriceDto>> SyncUpdate(
         string id,
         ProductPriceSyncUpdateDto dto
-    ) => HandleResultResponseOld(await Mediator.Send(new ProductPriceSyncUpdateCommand(id, dto)));
+    ) => HandleResultResponse(await Mediator.Send(new ProductPriceSyncUpdateCommand(id, dto)));
 
     /// <summary>
     /// Deletes a product price.
     /// </summary>
     [HttpDelete("{id}")]
     [HasPermission(ApplicationComponentKeys.ProductPrices, PermissionAction.Delete)]
-    public async Task<ActionResult<Unit>> Delete(
+    public async Task<IActionResult> Delete(
         string id
     ) =>
-        HandleResultResponseOld(await Mediator.Send(new ProductPriceDeleteCommand(id)));
+        HandleResultResponse(await Mediator.Send(new ProductPriceDeleteCommand(id)));
 
     /// <summary>
     /// Applies a product-price delete sent by an offline client.
@@ -109,5 +109,5 @@ public class ProductPriceController : BaseApiController
     public async Task<ActionResult<ProductPriceDto>> SyncDelete(
         string id,
         ProductPriceSyncDeleteDto dto
-    ) => HandleResultResponseOld(await Mediator.Send(new ProductPriceSyncDeleteCommand(id, dto)));
+    ) => HandleResultResponse(await Mediator.Send(new ProductPriceSyncDeleteCommand(id, dto)));
 }

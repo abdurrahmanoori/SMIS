@@ -52,6 +52,6 @@ internal sealed class StockMovementQueryHandler
                 request.Query.GetPageSize(),
                 cancellationToken);
 
-        return Result<PagedListNew<StockMovementDto>>.SuccessResult(pagedList);
+        return Result<PagedListNew<StockMovementDto>>.Success(pagedList);
     }
 }

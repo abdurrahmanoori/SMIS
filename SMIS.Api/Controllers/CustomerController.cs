@@ -23,7 +23,7 @@ namespace SMIS.Api.Controllers
         public async Task<ActionResult<CustomerDto>> Create(
             CustomerCreateDto dto
         ) =>
-            HandleResultResponseOld(await Mediator.Send(new CustomerCreateCommand(dto)));
+            HandleResultResponse(await Mediator.Send(new CustomerCreateCommand(dto)));
 
         /// <summary>
         /// Gets customers in pages.
@@ -57,15 +57,15 @@ namespace SMIS.Api.Controllers
             string id,
             CustomerCreateDto dto
         ) =>
-            HandleResultResponseOld(await Mediator.Send(new CustomerUpdateCommand(id, dto)));
+            HandleResultResponse(await Mediator.Send(new CustomerUpdateCommand(id, dto)));
 
         /// <summary>
         /// Deletes a customer.
         /// </summary>
         [HttpDelete("{id}")]
-        public async Task<ActionResult<Unit>> Delete(
+        public async Task<IActionResult> Delete(
             string id
         ) =>
-            HandleResultResponseOld(await Mediator.Send(new CustomerDeleteCommand(id)));
+            HandleResultResponse(await Mediator.Send(new CustomerDeleteCommand(id)));
     }
 }

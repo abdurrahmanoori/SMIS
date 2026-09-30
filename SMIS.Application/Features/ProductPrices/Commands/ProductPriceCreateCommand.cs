@@ -61,7 +61,7 @@ internal sealed class
         await _productPriceRepository.AddAsync(entity);
         await _db.SaveChangesAsync(cancellationToken);
 
-        return Result<ProductPriceDto>.SuccessResult(_mapper.Map<ProductPriceDto>(entity));
+        return Result<ProductPriceDto>.Success(_mapper.Map<ProductPriceDto>(entity));
     }
 }
 
@@ -98,7 +98,7 @@ internal static class ProductPriceCommandRules
         // effective timestamp would create overlapping/ambiguous price periods.
         if (newEffectiveDate <= latest.EffectiveDate)
         {
-            return Result<ProductPriceDto>.FailureResult(
+            return Result<ProductPriceDto>.BusinessRule(
                 "PriceEffectiveDateOutOfOrder",
                 "A new price must become effective after the latest price for this product unit.");
         }
@@ -112,17 +112,17 @@ internal static class ProductPriceCommandRules
     }
 
     public static Result<ProductPriceDto> ProductUnitNotFoundOrForbidden() =>
-        Result<ProductPriceDto>.FailureResult(
+        Result<ProductPriceDto>.NotFound(
             "ProductUnitNotFoundOrForbidden",
             "The selected product unit does not exist or does not belong to your shop.");
 
     public static Result<ProductPriceDto> ProductUnitCannotChange() =>
-        Result<ProductPriceDto>.FailureResult(
+        Result<ProductPriceDto>.BusinessRule(
             "ProductPriceUnitCannotChange",
             "A historical price cannot be moved to another product unit. Create a price for that product unit instead.");
 
     public static Result<ProductPriceDto> HistoricalPriceImmutable() =>
-        Result<ProductPriceDto>.FailureResult(
+        Result<ProductPriceDto>.BusinessRule(
             "HistoricalPriceImmutable",
             "Historical prices cannot be rewritten. Add a new effective price instead.");
 }
