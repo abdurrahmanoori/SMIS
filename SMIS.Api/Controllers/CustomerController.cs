@@ -32,28 +32,22 @@ namespace SMIS.Api.Controllers
         /// Set <c>includeShop</c> to true when shop information should be included with each customer.
         /// </remarks>
         [HttpGet]
-        public async Task<ActionResult<PagedList<CustomerDto>>> GetAll(
+        public async Task<ActionResult<PagedListNew<CustomerDto>>> GetAll(
+            [FromQuery] CustomerQueryCriteria criteria,
+            [FromQuery] string[]? columns,
             [FromQuery] int pageNumber = 1,
             [FromQuery] int pageSize = 25,
-            [FromQuery] bool includeShop = false
+            CancellationToken cancellationToken = default
         )
         {
-            return HandleResultResponseOld(
-                await Mediator.Send(new CustomerGetListQuery(pageNumber, pageSize, includeShop)));
+            return await HandleRequest(new CustomerQuery(new EntityDropdown<CustomerQueryCriteria>
+            {
+                Criteria = criteria,
+                Columns = columns,
+                PageNumber = pageNumber,
+                PageSize = pageSize
+            }), cancellationToken);
         }
-
-        /// <summary>
-        /// Gets one customer by its ID.
-        /// </summary>
-        /// <remarks>
-        /// Set <c>includeShop</c> to true to include the related shop information.
-        /// </remarks>
-        [HttpGet("{id}")]
-        public async Task<ActionResult<CustomerDto>> GetById(
-            string id,
-            [FromQuery] bool includeShop = false
-        ) =>
-            HandleResultResponseOld(await Mediator.Send(new CustomerGetByIdQuery(id, includeShop)));
 
         /// <summary>
         /// Updates an existing customer.
@@ -73,6 +67,5 @@ namespace SMIS.Api.Controllers
             string id
         ) =>
             HandleResultResponseOld(await Mediator.Send(new CustomerDeleteCommand(id)));
-
     }
 }

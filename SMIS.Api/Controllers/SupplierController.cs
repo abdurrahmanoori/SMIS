@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using SMIS.Api.Controllers.Base;
+using SMIS.Application.Common;
 using SMIS.Application.DTO.Purchasing;
 using SMIS.Application.Features.Purchasing.Commands;
 using SMIS.Application.Features.Purchasing.Queries;
@@ -30,8 +31,20 @@ public sealed class SupplierController : BaseApiController
     /// Gets the suppliers visible to the current user.
     /// </summary>
     [HttpGet]
-    public async Task<ActionResult<List<SupplierDto>>> GetAll(
-        CancellationToken cancellationToken
-    ) =>
-        await HandleRequest(new SupplierGetListQuery(), cancellationToken);
+    public async Task<ActionResult<PagedListNew<SupplierDto>>> GetAll(
+        [FromQuery] SupplierQueryCriteria criteria,
+        [FromQuery] string[]? columns,
+        [FromQuery] int pageNumber = 1,
+        [FromQuery] int pageSize = 25,
+        CancellationToken cancellationToken = default
+    )
+    {
+        return await HandleRequest(new SupplierQuery(new EntityDropdown<SupplierQueryCriteria>
+        {
+            Criteria = criteria,
+            Columns = columns,
+            PageNumber = pageNumber,
+            PageSize = pageSize
+        }), cancellationToken);
+    }
 }

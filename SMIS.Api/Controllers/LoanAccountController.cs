@@ -34,28 +34,22 @@ public class LoanAccountController : BaseApiController
     /// Use <c>includeCustomer</c> and <c>includeSale</c> when the response should also contain those related records.
     /// </remarks>
     [HttpGet]
-    public async Task<ActionResult<PagedList<LoanAccountDto>>> GetAll(
+    public async Task<ActionResult<PagedListNew<LoanAccountDto>>> GetAll(
+        [FromQuery] LoanAccountQueryCriteria criteria,
+        [FromQuery] string[]? columns,
         [FromQuery] int pageNumber = 1,
         [FromQuery] int pageSize = 25,
-        [FromQuery] bool includeCustomer = false,
-        [FromQuery] bool includeSale = false
-    ) =>
-        HandleResultResponseOld(
-            await Mediator.Send(new LoanAccountGetListQuery(pageNumber, pageSize, includeCustomer, includeSale)));
-
-    /// <summary>
-    /// Gets one loan account by its ID.
-    /// </summary>
-    /// <remarks>
-    /// Customer and sale details can be included with the two query flags.
-    /// </remarks>
-    [HttpGet("{id}")]
-    public async Task<ActionResult<LoanAccountDto>> GetById(
-        string id,
-        [FromQuery] bool includeCustomer = false,
-        [FromQuery] bool includeSale = false
-    ) =>
-        HandleResultResponseOld(await Mediator.Send(new LoanAccountGetByIdQuery(id, includeCustomer, includeSale)));
+        CancellationToken cancellationToken = default
+    )
+    {
+        return await HandleRequest(new LoanAccountQuery(new EntityDropdown<LoanAccountQueryCriteria>
+        {
+            Criteria = criteria,
+            Columns = columns,
+            PageNumber = pageNumber,
+            PageSize = pageSize
+        }), cancellationToken);
+    }
 
     /// <summary>
     /// Updates an existing loan account.

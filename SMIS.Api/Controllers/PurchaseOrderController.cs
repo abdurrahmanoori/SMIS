@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using SMIS.Api.Controllers.Base;
+using SMIS.Application.Common;
 using SMIS.Application.DTO.Purchasing;
 using SMIS.Application.Features.Purchasing.Commands;
 using SMIS.Application.Features.Purchasing.Queries;
@@ -34,20 +35,22 @@ public sealed class PurchaseOrderController : BaseApiController
     /// Gets purchase orders visible to the current user.
     /// </summary>
     [HttpGet]
-    public async Task<ActionResult<List<PurchaseOrderDto>>> GetAll(
-        CancellationToken cancellationToken
-    ) =>
-        await HandleRequest(new PurchaseOrderGetListQuery(), cancellationToken);
-
-    /// <summary>
-    /// Gets one purchase order with its supplier and lines.
-    /// </summary>
-    [HttpGet("{id}")]
-    public async Task<ActionResult<PurchaseOrderDto>> GetById(
-        string id,
-        CancellationToken cancellationToken
-    ) =>
-        await HandleRequest(new PurchaseOrderGetByIdQuery(id), cancellationToken);
+    public async Task<ActionResult<PagedListNew<PurchaseOrderDto>>> GetAll(
+        [FromQuery] PurchaseOrderQueryCriteria criteria,
+        [FromQuery] string[]? columns,
+        [FromQuery] int pageNumber = 1,
+        [FromQuery] int pageSize = 25,
+        CancellationToken cancellationToken = default
+    )
+    {
+        return await HandleRequest(new PurchaseOrderQuery(new EntityDropdown<PurchaseOrderQueryCriteria>
+        {
+            Criteria = criteria,
+            Columns = columns,
+            PageNumber = pageNumber,
+            PageSize = pageSize
+        }), cancellationToken);
+    }
 
     /// <summary>
     /// Receives some or all remaining items from a purchase order into stock.

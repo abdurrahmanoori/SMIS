@@ -48,34 +48,29 @@ public sealed class SaleController : BaseApiController
     /// Regular shop users see sales from their own shop. Super administrators can see sales from all shops.
     /// Results include sale lines and credit information when available.
     /// </remarks>
+    /// <param name="criteria">Optional field-based filters.</param>
+    /// <param name="columns">Optional DTO columns to project.</param>
     /// <param name="pageNumber">The page number. Default is 1.</param>
     /// <param name="pageSize">The number of sales per page. Default is 25.</param>
     /// <param name="cancellationToken">Stops the request if it is cancelled.</param>
     /// <returns>A page of sales.</returns>
     [HttpGet]
-    public async Task<ActionResult<PagedList<SaleDto>>> GetAll(
+    public async Task<ActionResult<PagedListNew<SaleDto>>> GetAll(
+        [FromQuery] SaleQueryCriteria criteria,
+        [FromQuery] string[]? columns,
         [FromQuery] int pageNumber = 1,
         [FromQuery] int pageSize = 25,
         CancellationToken cancellationToken = default
-    ) =>
-        await HandleRequest(new SaleGetListQuery(pageNumber, pageSize), cancellationToken);
-
-    /// <summary>
-    /// Gets one sale by its ID.
-    /// </summary>
-    /// <remarks>
-    /// The sale is returned only if the current user is allowed to see it.
-    /// The result includes sale lines and credit information when available.
-    /// </remarks>
-    /// <param name="id">The sale ID.</param>
-    /// <param name="cancellationToken">Stops the request if it is cancelled.</param>
-    /// <returns>The sale if it exists and the user can access it.</returns>
-    [HttpGet("{id}")]
-    public async Task<ActionResult<SaleDto>> GetById(
-        string id,
-        CancellationToken cancellationToken
-    ) =>
-        await HandleRequest(new SaleGetByIdQuery(id), cancellationToken);
+    )
+    {
+        return await HandleRequest(new SaleQuery(new EntityDropdown<SaleQueryCriteria>
+        {
+            Criteria = criteria,
+            Columns = columns,
+            PageNumber = pageNumber,
+            PageSize = pageSize
+        }), cancellationToken);
+    }
 
     /// <summary>
     /// Returns items from an existing sale.

@@ -102,26 +102,25 @@ namespace SMIS.Api.Controllers
         /// </remarks>
         [HasCurrentRole(SD.Role_Super_Admin)]
         [HttpGet]
-        public async Task<ActionResult<PagedList<UserDto>>> GetAll(
+        public async Task<ActionResult<PagedListNew<UserDto>>> GetAll(
+            [FromQuery] UserQueryCriteria criteria,
+            [FromQuery] string[]? columns,
             [FromQuery] int pageNumber = 1,
             [FromQuery] int pageSize = 25,
-            [FromQuery] bool includeShop = false
-        ) =>
-            HandleResultResponseOld(await Mediator.Send(new UserGetListQuery(pageNumber, pageSize, includeShop)));
-
-        /// <summary>
-        /// Gets one user by its ID.
-        /// </summary>
-        /// <remarks>
-        /// Set <c>includeShop</c> to true to include the related shop information.
-        /// </remarks>
-        [HasCurrentRole(SD.Role_Super_Admin)]
-        [HttpGet("{id}")]
-        public async Task<ActionResult<UserDto>> GetById(
-            string id,
-            [FromQuery] bool includeShop = false
-        ) =>
-            HandleResultResponseOld(await Mediator.Send(new UserGetByIdQuery(id, includeShop)));
+            [FromQuery] bool includeShop = false,
+            CancellationToken cancellationToken = default
+        )
+        {
+            return await HandleRequest(new UserQuery(
+                new EntityDropdown<UserQueryCriteria>
+                {
+                    Criteria = criteria,
+                    Columns = columns,
+                    PageNumber = pageNumber,
+                    PageSize = pageSize
+                },
+                includeShop), cancellationToken);
+        }
 
         /// <summary>
         /// Updates an existing user account.
