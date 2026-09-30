@@ -5,6 +5,7 @@ using SMIS.Application.DTO.Customers;
 using SMIS.Application.DTO.ShopOwners;
 using SMIS.Application.DTO.LoanAccounts;
 using SMIS.Application.DTO.Sales;
+using SMIS.Application.DTO.StockMovements;
 using SMIS.Domain.Entities;
 using SMIS.Domain.Entities.Localization;
 using SMIS.Domain.Entities.LocationEntities;
@@ -26,6 +27,10 @@ public class MappingProfile : Profile
             .ReverseMap()
             .ForMember(dest => dest.LanguageCode, opt => opt.MapFrom(src => src.LanguageCode))
             .ForMember(dest => dest.LanguageId, opt => opt.MapFrom(src => src.LanguageId));
+
+        // Compatibility mapping for backend-only sale-return code. Flutter stock handlers
+        // use StockMovementMapping directly; this remains until Sale is migrated separately.
+        CreateMap<StockMovement, StockMovementDto>();
 
         // Sales contain commercial facts only. Inventory allocation remains represented
         // by StockMovement rows that reference each SaleLine.Id.
