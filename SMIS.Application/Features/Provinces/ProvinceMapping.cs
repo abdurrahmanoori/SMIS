@@ -9,7 +9,16 @@ internal static class ProvinceMapping
     public static Province Create(ProvinceCreateDto dto)
     {
         var province = new Province { Name = dto.Name };
-        ReplaceTranslations(province, dto);
+
+        if (dto.Translations is { Count: > 0 })
+        {
+            AddTranslations(province, dto);
+        }
+        else if (!string.IsNullOrWhiteSpace(dto.Name))
+        {
+            province.Translations.Add(CreateDefaultTranslation(dto.Name));
+        }
+
         return province;
     }
 
@@ -19,7 +28,12 @@ internal static class ProvinceMapping
 
         if (dto.Translations is { Count: > 0 })
         {
-            ReplaceTranslations(province, dto);
+            province.Translations.Clear();
+            AddTranslations(province, dto);
+
+            var defaults = province.Translations.Where(t => t.IsDefault).ToList();
+            foreach (var translation in defaults.Skip(1)) translation.IsDefault = false;
+            if (defaults.Count == 0) province.Translations.First().IsDefault = true;
             return;
         }
 
@@ -42,31 +56,18 @@ internal static class ProvinceMapping
         Name = ResolveName(province)
     };
 
-    private static void ReplaceTranslations(Province province, ProvinceCreateDto dto)
+    private static void AddTranslations(Province province, ProvinceCreateDto dto)
     {
-        province.Translations.Clear();
-
-        if (dto.Translations is { Count: > 0 })
+        foreach (var translation in dto.Translations!)
         {
-            foreach (var translation in dto.Translations)
+            province.Translations.Add(new ProvinceTranslation
             {
-                province.Translations.Add(new ProvinceTranslation
-                {
-                    LanguageCode = translation.LanguageCode,
-                    LanguageId = translation.LanguageId,
-                    IsDefault = translation.IsDefault,
-                    Name = translation.Name
-                });
-            }
-
-            var defaults = province.Translations.Where(t => t.IsDefault).ToList();
-            foreach (var translation in defaults.Skip(1)) translation.IsDefault = false;
-            if (defaults.Count == 0) province.Translations.First().IsDefault = true;
-            return;
+                LanguageCode = translation.LanguageCode,
+                LanguageId = translation.LanguageId,
+                IsDefault = translation.IsDefault,
+                Name = translation.Name
+            });
         }
-
-        if (!string.IsNullOrWhiteSpace(dto.Name))
-            province.Translations.Add(CreateDefaultTranslation(dto.Name));
     }
 
     private static ProvinceTranslation CreateDefaultTranslation(string name) => new()
@@ -79,7 +80,7 @@ internal static class ProvinceMapping
 
     private static string ResolveName(Province province)
     {
-        if (province.Translations.Count == 0) return province.Name ?? string.Empty;
+        if (province.Translations is not { Count: > 0 }) return province.Name ?? string.Empty;
 
         var current = CultureInfo.CurrentUICulture;
         var exact = province.Translations.FirstOrDefault(t =>
