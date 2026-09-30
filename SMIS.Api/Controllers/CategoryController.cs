@@ -44,28 +44,12 @@ namespace SMIS.Api.Controllers
             HandleResultResponseOld(await Mediator.Send(new CategorySyncCreateCommand(dto)));
 
         /// <summary>
-        /// Gets categories in pages.
+        /// Gets categories with flexible filtering, optional returned columns, and pagination.
         /// </summary>
         [HttpGet]
-        [HasPermission(ApplicationComponentKeys.Categories, PermissionAction.Read)]
-        public async Task<ActionResult<PagedList<CategoryDto>>> GetAll(
-            [FromQuery] int pageNumber = 1,
-            [FromQuery] int pageSize = 25
-        )
-        {
-            return HandleResultResponseOld(await Mediator.Send(new CategoryGetListQuery(pageNumber, pageSize)));
-        }
-
-        /// <summary>
-        /// Searches categories using flexible filters and optional returned columns.
-        /// </summary>
-        /// <remarks>
-        /// Use this endpoint when the normal category list is not enough. The criteria object controls filtering,
-        /// while <c>columns</c> can limit which fields are returned for dropdowns or lightweight screens.
-        /// </remarks>
         [HttpGet("query")]
         [HasPermission(ApplicationComponentKeys.Categories, PermissionAction.Read)]
-        public async Task<ActionResult<PagedListNew<CategoryDto>>> Query(
+        public async Task<ActionResult<PagedListNew<CategoryDto>>> GetAll(
             [FromQuery] CategoryQueryCriteria criteria,
             [FromQuery] string[]? columns,
             [FromQuery] int pageNumber = 1,
@@ -83,15 +67,6 @@ namespace SMIS.Api.Controllers
                 }), cancellationToken);
         }
 
-        //
-        // [HttpGet("query")]
-        // public async Task<ActionResult<PagedList<CategoryDto>>> Query(
-        //     [FromQuery] CategoryQuery query,
-        //     CancellationToken cancellationToken
-        // ) =>
-        //     HandleResultResponseOld(await Mediator.Send(
-        //         new CategoryGetFilteredListQuery(query),
-        //         cancellationToken));
         /// <summary>
         /// Gets one category by its ID.
         /// </summary>
