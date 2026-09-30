@@ -1,7 +1,7 @@
-using AutoMapper;
 using MediatR;
 using SMIS.Application.Common.Response;
 using SMIS.Application.DTO.Products;
+using SMIS.Application.Features.Products;
 using SMIS.Application.Repositories.Categories;
 using SMIS.Application.Repositories.Products;
 using SMIS.Application.Repositories.ProductUnits;
@@ -21,11 +21,9 @@ namespace SMIS.Application.Features.Products.Commands
         private readonly IProductUnitRepository _productUnitRepository;
         private readonly ICategoryRepository _categoryRepository;
         private readonly IApplicationDbContext _db;
-        private readonly IMapper _mapper;
 
         public ProductUpdateCommandHandler(
             IApplicationDbContext db,
-            IMapper mapper,
             IProductRepository productRepository,
             IShopRepository shopRepository,
             IUnitOfMeasureRepository unitOfMeasureRepository,
@@ -34,7 +32,6 @@ namespace SMIS.Application.Features.Products.Commands
         )
         {
             _db = db;
-            _mapper = mapper;
             _productRepository = productRepository;
             _shopRepository = shopRepository;
             _unitOfMeasureRepository = unitOfMeasureRepository;
@@ -42,27 +39,18 @@ namespace SMIS.Application.Features.Products.Commands
             _productUnitRepository = productUnitRepository;
         }
 
-        public async Task<Result<ProductDto>> Handle(
-            ProductUpdateCommand request,
-            CancellationToken cancellationToken
-        )
+        public async Task<Result<ProductDto>> Handle(ProductUpdateCommand request, CancellationToken cancellationToken)
         {
             var entity = await _productRepository.GetByIdAsync(request.Id);
-            if (entity == null)
-            {
-                return Result<ProductDto>.NotFoundResult(nameof(ProductDto.Id));
-            }
+            if (entity == null) return Result<ProductDto>.NotFoundResult(nameof(ProductDto.Id));
 
             if (entity.IsBaseUnitChange(request.ProductCreateDto.BaseUnitId) &&
                 await _productRepository.HasStockOrConversionsAsync(entity.Id, cancellationToken))
-            {
                 return ProductCommandRules.BaseUnitIsLocked();
-            }
 
             var oldBaseUnitId = entity.BaseUnitId;
             var baseUnitChanged = ProductCommandRules.Apply(entity, request.ProductCreateDto);
 
-            // Update name fields
             var shop = await _shopRepository.GetByIdAsync(entity.ShopId);
             entity.ShopName = shop?.Name;
 
@@ -72,24 +60,17 @@ namespace SMIS.Application.Features.Products.Commands
             if (baseUnitChanged)
             {
                 var baseProductUnit = await ProductCommandRules.EnsureBaseProductUnitAsync(
-                    entity,
-                    oldBaseUnitId,
-                    _productUnitRepository,
-                    cancellationToken);
+                    entity, oldBaseUnitId, _productUnitRepository, cancellationToken);
                 baseProductUnit.SetUnitName(unit?.Name);
                 baseProductUnit.ClearClientModificationMetadata();
             }
 
             var category = await _categoryRepository.GetByIdAsync(request.ProductCreateDto.CategoryId);
             entity.CategoryName = category?.Name;
-
-            // A direct API edit becomes the current server-originated version.
             entity.ClearClientModificationMetadata();
 
             await _db.SaveChangesAsync(cancellationToken);
-
-            var dto = _mapper.Map<ProductDto>(entity);
-            return Result<ProductDto>.SuccessResult(dto);
+            return Result<ProductDto>.SuccessResult(ProductMapping.ToDto(entity));
         }
     }
 }

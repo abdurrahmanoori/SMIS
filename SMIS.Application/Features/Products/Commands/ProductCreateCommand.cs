@@ -1,7 +1,7 @@
-using AutoMapper;
 using MediatR;
 using SMIS.Application.Common.Response;
 using SMIS.Application.DTO.Products;
+using SMIS.Application.Features.Products;
 using SMIS.Application.Repositories.Categories;
 using SMIS.Application.Repositories.Products;
 using SMIS.Application.Repositories.ProductUnits;
@@ -23,12 +23,10 @@ internal sealed class ProductCreateCommandHandler : IRequestHandler<ProductCreat
     private readonly IProductUnitRepository _productUnitRepository;
     private readonly ICategoryRepository _categoryRepository;
     private readonly IApplicationDbContext _db;
-    private readonly IMapper _mapper;
     private readonly ICurrentUser _currentUser;
 
     public ProductCreateCommandHandler(
         IApplicationDbContext db,
-        IMapper mapper,
         IProductRepository productRepository,
         IShopRepository shopRepository,
         IUnitOfMeasureRepository unitOfMeasureRepository,
@@ -38,7 +36,6 @@ internal sealed class ProductCreateCommandHandler : IRequestHandler<ProductCreat
     )
     {
         _db = db;
-        _mapper = mapper;
         _productRepository = productRepository;
         _shopRepository = shopRepository;
         _unitOfMeasureRepository = unitOfMeasureRepository;
@@ -47,18 +44,13 @@ internal sealed class ProductCreateCommandHandler : IRequestHandler<ProductCreat
         _currentUser = currentUser;
     }
 
-    public async Task<Result<ProductDto>> Handle(
-        ProductCreateCommand request,
-        CancellationToken cancellationToken
-    )
+    public async Task<Result<ProductDto>> Handle(ProductCreateCommand request, CancellationToken cancellationToken)
     {
         var activeShopId = _currentUser.GetShopId();
         if (string.IsNullOrWhiteSpace(activeShopId))
             return Result<ProductDto>.FailureResult("ShopContextRequired", "An active shop is required.");
 
         var entity = ProductCommandRules.Create(request.ProductCreateDto, activeShopId);
-
-        // Populate name fields
         var shop = await _shopRepository.GetByIdAsync(activeShopId);
         entity.ShopName = shop?.Name;
 
@@ -76,7 +68,6 @@ internal sealed class ProductCreateCommandHandler : IRequestHandler<ProductCreat
         await _productUnitRepository.AddAsync(baseProductUnit);
 
         await _db.SaveChangesAsync(cancellationToken);
-
-        return Result<ProductDto>.SuccessResult(_mapper.Map<ProductDto>(entity));
+        return Result<ProductDto>.SuccessResult(ProductMapping.ToDto(entity));
     }
 }
