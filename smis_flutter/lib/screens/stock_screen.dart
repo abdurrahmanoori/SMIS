@@ -393,7 +393,7 @@ class _StockContentState extends ConsumerState<_StockContent> {
                           (b) => stockText(b, 'status') != 'cancelled',
                         )
                     ? null
-                    : () => _startCount(data),
+                    : _startCount,
                 icon: const Icon(Icons.fact_check_outlined),
                 label: Text(context.l10n.text('Stock count')),
               ),
@@ -1010,14 +1010,11 @@ class _StockContentState extends ConsumerState<_StockContent> {
     quantity.dispose();
   }
 
-  Future<void> _startCount(_StockData data) async {
+  Future<void> _startCount() async {
     await _run(() async {
-      final session = await _api.startCount(
-        data.batches
-            .where((b) => stockText(b, 'status') != 'cancelled')
-            .map((b) => stockText(b, 'id'))
-            .toList(),
-      );
+      await _store.refreshBatches();
+      _refreshLocal();
+      final session = await _api.startCount(const []);
       _countId = stockText(session, 'id');
       await _store.cacheCount(session);
       await _storage.write(key: _countStorageKey, value: _countId);

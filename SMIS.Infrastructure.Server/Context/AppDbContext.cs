@@ -10,7 +10,6 @@ using SMIS.Domain.Entities;
 using SMIS.Domain.Entities.Identity.Entity;
 using SMIS.Domain.Entities.Localization;
 using SMIS.Domain.Entities.LocationEntities;
-using SMIS.Infrastructure.Server.DatabaseSeeders;
 using System.Reflection;
 using SMIS.Application.Services;
 
@@ -58,11 +57,13 @@ public partial class AppDbContext : IdentityDbContext<ApplicationUser, Applicati
         foreach (var entityType in modelBuilder.Model.GetEntityTypes())
         {
             var clrType = entityType.ClrType;
-            if (typeof(IShopEntity).IsAssignableFrom(clrType) &&
-                typeof(ISoftDeletable).IsAssignableFrom(clrType))
+            if (typeof(IShopEntity).IsAssignableFrom(clrType))
             {
+                var methodName = typeof(ISoftDeletable).IsAssignableFrom(clrType)
+                    ? nameof(SetSoftDeletedShopEntityFilter)
+                    : nameof(SetShopEntityFilter);
                 var method = typeof(AppDbContext)
-                    .GetMethod(nameof(SetShopEntityFilter), BindingFlags.NonPublic | BindingFlags.Instance)!
+                    .GetMethod(methodName, BindingFlags.NonPublic | BindingFlags.Instance)!
                     .MakeGenericMethod(clrType);
                 method.Invoke(this, new object[] { modelBuilder });
             }
