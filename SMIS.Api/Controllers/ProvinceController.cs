@@ -40,25 +40,26 @@ namespace SMIS.Api.Controllers
             HandleResultResponseOld(await Mediator.Send(new ProvinceCreateCommand(dto)));
 
         /// <summary>
-        /// Gets provinces in pages.
+        /// Gets provinces with flexible filtering, optional returned columns, and pagination.
         /// </summary>
         [HttpGet]
-        public async Task<ActionResult<PagedList<ProvinceDto>>> GetAll(
+        public async Task<ActionResult<PagedListNew<ProvinceDto>>> GetAll(
+            [FromQuery] ProvinceQueryCriteria criteria,
+            [FromQuery] string[]? columns,
             [FromQuery] int pageNumber = 1,
-            [FromQuery] int pageSize = 25
+            [FromQuery] int pageSize = 25,
+            CancellationToken cancellationToken = default
         )
         {
-            return HandleResultResponseOld(await Mediator.Send(new ProvinceGetListQuery(pageNumber, pageSize)));
+            return await HandleRequest(new ProvinceQuery(
+                new EntityDropdown<ProvinceQueryCriteria>
+                {
+                    Criteria = criteria,
+                    Columns = columns,
+                    PageNumber = pageNumber,
+                    PageSize = pageSize
+                }), cancellationToken);
         }
-
-        /// <summary>
-        /// Gets one province by its ID.
-        /// </summary>
-        [HttpGet("{id}")]
-        public async Task<ActionResult<ProvinceDto>> GetById(
-            string id
-        ) =>
-            HandleResultResponseOld(await Mediator.Send(new ProvinceGetByIdQuery(id)));
 
         /// <summary>
         /// Updates an existing province.

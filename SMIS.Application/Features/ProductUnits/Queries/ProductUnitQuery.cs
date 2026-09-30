@@ -1,21 +1,19 @@
 using MediatR;
 using SMIS.Application.Common;
 using SMIS.Application.Common.Response;
+using SMIS.Application.DTO.Products;
 using SMIS.Application.DTO.ProductUnits;
+using SMIS.Application.DTO.UnitOfMeasures;
 using SMIS.Application.Identity.IServices;
 using SMIS.Application.Services;
 
 namespace SMIS.Application.Features.ProductUnits.Queries;
 
-public sealed class ProductUnitQueryCriteria
-{
-    public string? Id { get; set; }
-    public string? ProductId { get; set; }
-    public string? UnitOfMeasureId { get; set; }
-    public decimal? BaseUnitQuantity { get; set; }
-}
-
-public record ProductUnitQuery(EntityDropdown<ProductUnitQueryCriteria> Query)
+public record ProductUnitQuery(
+    EntityDropdown<ProductUnitQueryCriteria> Query,
+    bool IncludeProduct = false,
+    bool IncludeUnitOfMeasure = false
+)
     : IRequest<Result<PagedListNew<ProductUnitDto>>>;
 
 internal sealed class ProductUnitQueryHandler
@@ -48,6 +46,42 @@ internal sealed class ProductUnitQueryHandler
                 ClientModifiedDate = x.ClientModifiedDate,
                 LastModifiedUtc = x.LastModifiedUtc,
                 IsDeleted = x.IsDeleted,
+                Product = request.IncludeProduct
+                    ? new ProductDto
+                    {
+                        Id = x.Product.Id,
+                        Name = x.Product.Name,
+                        ShopId = x.Product.ShopId,
+                        BaseUnitId = x.Product.BaseUnitId,
+                        Description = x.Product.Description,
+                        IsActive = x.Product.IsActive,
+                        SKU = x.Product.SKU,
+                        Barcode = x.Product.Barcode,
+                        ImageUrl = x.Product.ImageUrl,
+                        CategoryId = x.Product.CategoryId,
+                        ReorderPointBase = x.Product.ReorderPointBase,
+                        ReorderQuantityBase = x.Product.ReorderQuantityBase,
+                        CreatedDate = x.Product.CreatedDate,
+                        CreatedBy = x.Product.CreatedBy,
+                        UpdatedDate = x.Product.UpdatedDate,
+                        UpdatedBy = x.Product.UpdatedBy,
+                        ClientModifiedDate = x.Product.ClientModifiedDate,
+                        LastModifiedUtc = x.Product.LastModifiedUtc,
+                        IsDeleted = x.Product.IsDeleted
+                    }
+                    : null,
+                UnitOfMeasure = request.IncludeUnitOfMeasure
+                    ? new UnitOfMeasureDto
+                    {
+                        Id = x.UnitOfMeasure.Id,
+                        Name = x.UnitOfMeasure.Name,
+                        Symbol = x.UnitOfMeasure.Symbol,
+                        Description = x.UnitOfMeasure.Description,
+                        ClientModifiedDate = x.UnitOfMeasure.ClientModifiedDate,
+                        LastModifiedUtc = x.UnitOfMeasure.LastModifiedUtc,
+                        IsDeleted = x.UnitOfMeasure.IsDeleted
+                    }
+                    : null
             });
 
         var pagedList = await query

@@ -38,23 +38,22 @@ public sealed class StockMovementController : BaseApiController
         HandleResultResponseOld(await Mediator.Send(new StockMovementReverseCommand(id)));
 
     /// <summary>
-    /// Gets stock movements in pages.
+    /// Gets stock movements with flexible filtering, optional returned columns, and pagination.
     /// </summary>
     [HttpGet]
     [HasPermission(ApplicationComponentKeys.Inventory, PermissionAction.Read)]
-    public async Task<ActionResult<PagedList<StockMovementDto>>> GetAll(
+    public async Task<ActionResult<PagedListNew<StockMovementDto>>> GetAll(
+        [FromQuery] StockMovementQueryCriteria criteria,
+        [FromQuery] string[]? columns,
         [FromQuery] int pageNumber = 1,
-        [FromQuery] int pageSize = 25
-    ) =>
-        HandleResultResponseOld(await Mediator.Send(new StockMovementGetListQuery(pageNumber, pageSize)));
-
-    /// <summary>
-    /// Gets one stock movement by its ID.
-    /// </summary>
-    [HttpGet("{id}")]
-    [HasPermission(ApplicationComponentKeys.Inventory, PermissionAction.Read)]
-    public async Task<ActionResult<StockMovementDto>> GetById(
-        string id
-    ) =>
-        HandleResultResponseOld(await Mediator.Send(new StockMovementGetByIdQuery(id)));
+        [FromQuery] int pageSize = 25,
+        CancellationToken cancellationToken = default
+    ) => await HandleRequest(new StockMovementQuery(
+        new EntityDropdown<StockMovementQueryCriteria>
+        {
+            Criteria = criteria,
+            Columns = columns,
+            PageNumber = pageNumber,
+            PageSize = pageSize
+        }), cancellationToken);
 }

@@ -35,14 +35,9 @@ namespace SMIS.Application.Common
             CancellationToken ct = default
         )
         {
-            var count = 0;
-            if (pageNumber < 2)
-            {
-                count = entities.Count();
-            }
-
             pageNumber = pageNumber > 0 ? pageNumber : DefaultPageNumber;
             pageSize = pageSize > 0 ? pageSize : DefaultPageSize;
+            var count = await entities.CountAsync(ct);
             return new PagedListNew<T>()
             {
                 PageNumber = pageNumber,

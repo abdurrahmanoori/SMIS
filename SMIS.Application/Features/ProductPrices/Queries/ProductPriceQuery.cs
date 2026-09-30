@@ -7,15 +7,6 @@ using SMIS.Application.Services;
 
 namespace SMIS.Application.Features.ProductPrices.Queries;
 
-public sealed class ProductPriceQueryCriteria
-{
-    public string? Id { get; set; }
-    public string? ProductUnitId { get; set; }
-    public long? SellPrice { get; set; }
-    public DateTime? EffectiveDate { get; set; }
-    public DateTime? EndDate { get; set; }
-}
-
 public record ProductPriceQuery(EntityDropdown<ProductPriceQueryCriteria> Query)
     : IRequest<Result<PagedListNew<ProductPriceDto>>>;
 
