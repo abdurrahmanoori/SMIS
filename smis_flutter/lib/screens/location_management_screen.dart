@@ -20,9 +20,11 @@ class LocationManagementScreen extends ConsumerStatefulWidget {
 class _LocationManagementScreenState
     extends ConsumerState<LocationManagementScreen> {
   final _api = LocationAdminApi();
+
   List<LocationAdminItem> _provinces = const [];
   List<LocationAdminItem> _districts = const [];
   bool _loading = true;
+  bool _mutating = false;
   Object? _error;
 
   @override
@@ -32,15 +34,19 @@ class _LocationManagementScreenState
   }
 
   Future<void> _reload() async {
+    if (!mounted) return;
+
     setState(() {
       _loading = true;
       _error = null;
     });
+
     try {
       final results = await Future.wait([
         _api.provinces(),
         _api.districts(),
       ]);
+
       if (!mounted) return;
       setState(() {
         _provinces = results[0];
@@ -59,13 +65,16 @@ class _LocationManagementScreenState
   @override
   Widget build(BuildContext context) {
     final session = ref.watch(authControllerProvider).session;
+
     if (session == null || !session.isSuperAdmin) {
       return Scaffold(
         appBar: AppBar(title: Text(context.l10n.text('Locations'))),
         drawer: const AppDrawer(),
         body: Center(
           child: Text(
-            context.l10n.text('Only SuperAdmin can manage provinces and districts.'),
+            context.l10n.text(
+              'Only SuperAdmin can manage provinces and districts.',
+            ),
           ),
         ),
       );
@@ -76,11 +85,16 @@ class _LocationManagementScreenState
       child: Scaffold(
         appBar: AppBar(
           title: Text(context.l10n.text('Location management')),
-          actions: const [
-            HomeAction(),
-            LocaleAction(),
-            ThemeModeAction(),
-            SizedBox(width: 8),
+          actions: [
+            IconButton(
+              tooltip: context.l10n.text('Refresh'),
+              onPressed: _loading || _mutating ? null : _reload,
+              icon: const Icon(Icons.refresh),
+            ),
+            const HomeAction(),
+            const LocaleAction(),
+            const ThemeModeAction(),
+            const SizedBox(width: 8),
           ],
           bottom: TabBar(
             tabs: [
@@ -100,6 +114,7 @@ class _LocationManagementScreenState
                     items: _provinces,
                     emptyText: context.l10n.text('No provinces yet'),
                     addLabel: context.l10n.text('Add province'),
+                    enabled: !_mutating,
                     onCreate: () => _create(isProvince: true),
                     onEdit: (item) => _edit(item, isProvince: true),
                     onDelete: (item) => _delete(item, isProvince: true),
@@ -108,6 +123,7 @@ class _LocationManagementScreenState
                     items: _districts,
                     emptyText: context.l10n.text('No districts yet'),
                     addLabel: context.l10n.text('Add district'),
+                    enabled: !_mutating,
                     onCreate: () => _create(isProvince: false),
                     onEdit: (item) => _edit(item, isProvince: false),
                     onDelete: (item) => _delete(item, isProvince: false),
@@ -123,6 +139,7 @@ class _LocationManagementScreenState
       title: context.l10n.text(isProvince ? 'Add province' : 'Add district'),
     );
     if (name == null) return;
+
     await _mutate(
       () => isProvince
           ? _api.createProvince(name)
@@ -135,10 +152,14 @@ class _LocationManagementScreenState
     required bool isProvince,
   }) async {
     final name = await _nameDialog(
-      title: context.l10n.text(isProvince ? 'Edit province' : 'Edit district'),
+      title: context.l10n.text(
+        isProvince ? 'Edit province' : 'Edit district',
+      ),
       initialValue: item.name,
     );
+
     if (name == null || name == item.name) return;
+
     await _mutate(
       () => isProvince
           ? _api.updateProvince(item.id, name)
@@ -152,24 +173,28 @@ class _LocationManagementScreenState
   }) async {
     final confirmed = await showDialog<bool>(
       context: context,
-      builder: (context) => AlertDialog(
+      builder: (dialogContext) => AlertDialog(
         title: Text(
-          context.l10n.text(isProvince ? 'Delete province?' : 'Delete district?'),
+          dialogContext.l10n.text(
+            isProvince ? 'Delete province?' : 'Delete district?',
+          ),
         ),
         content: Text(item.name),
         actions: [
           TextButton(
-            onPressed: () => Navigator.pop(context, false),
-            child: Text(context.l10n.text('Cancel')),
+            onPressed: () => Navigator.pop(dialogContext, false),
+            child: Text(dialogContext.l10n.text('Cancel')),
           ),
           FilledButton.tonal(
-            onPressed: () => Navigator.pop(context, true),
-            child: Text(context.l10n.text('Delete')),
+            onPressed: () => Navigator.pop(dialogContext, true),
+            child: Text(dialogContext.l10n.text('Delete')),
           ),
         ],
       ),
     );
+
     if (confirmed != true) return;
+
     await _mutate(
       () => isProvince
           ? _api.deleteProvince(item.id)
@@ -182,49 +207,57 @@ class _LocationManagementScreenState
     String initialValue = '',
   }) async {
     final controller = TextEditingController(text: initialValue);
+
     final result = await showDialog<String>(
       context: context,
-      builder: (context) => AlertDialog(
+      builder: (dialogContext) => AlertDialog(
         title: Text(title),
         content: TextField(
           controller: controller,
           autofocus: true,
-          decoration: InputDecoration(labelText: context.l10n.text('Name')),
-          textInputAction: TextInputAction.done,
-          onSubmitted: (_) => Navigator.pop(
-            context,
-            controller.text.trim(),
+          decoration: InputDecoration(
+            labelText: dialogContext.l10n.text('Name'),
           ),
+          textInputAction: TextInputAction.done,
+          onSubmitted: (_) {
+            final value = controller.text.trim();
+            if (value.isNotEmpty) Navigator.pop(dialogContext, value);
+          },
         ),
         actions: [
           TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: Text(context.l10n.text('Cancel')),
+            onPressed: () => Navigator.pop(dialogContext),
+            child: Text(dialogContext.l10n.text('Cancel')),
           ),
           FilledButton(
-            onPressed: () => Navigator.pop(
-              context,
-              controller.text.trim(),
-            ),
-            child: Text(context.l10n.text('Save')),
+            onPressed: () {
+              final value = controller.text.trim();
+              if (value.isNotEmpty) Navigator.pop(dialogContext, value);
+            },
+            child: Text(dialogContext.l10n.text('Save')),
           ),
         ],
       ),
     );
+
     controller.dispose();
-    if (result == null || result.trim().isEmpty) return null;
-    return result.trim();
+    return result;
   }
 
   Future<void> _mutate(Future<void> Function() action) async {
+    if (_mutating) return;
+
+    setState(() => _mutating = true);
     try {
       await action();
       await _reload();
     } catch (error) {
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(error.toString())),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(error.toString())));
+    } finally {
+      if (mounted) setState(() => _mutating = false);
     }
   }
 }
@@ -234,6 +267,7 @@ class _LocationList extends StatelessWidget {
     required this.items,
     required this.emptyText,
     required this.addLabel,
+    required this.enabled,
     required this.onCreate,
     required this.onEdit,
     required this.onDelete,
@@ -242,6 +276,7 @@ class _LocationList extends StatelessWidget {
   final List<LocationAdminItem> items;
   final String emptyText;
   final String addLabel;
+  final bool enabled;
   final VoidCallback onCreate;
   final ValueChanged<LocationAdminItem> onEdit;
   final ValueChanged<LocationAdminItem> onDelete;
@@ -262,20 +297,22 @@ class _LocationList extends StatelessWidget {
               child: ListTile(
                 leading: const Icon(Icons.location_on_outlined),
                 title: Text(item.name),
-                trailing: PopupMenuButton<String>(
-                  onSelected: (value) =>
-                      value == 'edit' ? onEdit(item) : onDelete(item),
-                  itemBuilder: (context) => [
-                    PopupMenuItem(
-                      value: 'edit',
-                      child: Text(context.l10n.text('Edit')),
-                    ),
-                    PopupMenuItem(
-                      value: 'delete',
-                      child: Text(context.l10n.text('Delete')),
-                    ),
-                  ],
-                ),
+                trailing: enabled
+                    ? PopupMenuButton<String>(
+                        onSelected: (value) =>
+                            value == 'edit' ? onEdit(item) : onDelete(item),
+                        itemBuilder: (context) => [
+                          PopupMenuItem(
+                            value: 'edit',
+                            child: Text(context.l10n.text('Edit')),
+                          ),
+                          PopupMenuItem(
+                            value: 'delete',
+                            child: Text(context.l10n.text('Delete')),
+                          ),
+                        ],
+                      )
+                    : null,
               ),
             );
           },
@@ -284,7 +321,7 @@ class _LocationList extends StatelessWidget {
         right: 16,
         bottom: 16,
         child: FloatingActionButton.extended(
-          onPressed: onCreate,
+          onPressed: enabled ? onCreate : null,
           icon: const Icon(Icons.add),
           label: Text(addLabel),
         ),
