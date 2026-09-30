@@ -1,6 +1,8 @@
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SMIS.Application.Common;
+using SMIS.Application.Common.Contants;
 using SMIS.Application.DTO.Provinces;
 using SMIS.Application.Features.Provinces.Commands;
 using SMIS.Application.Features.Provinces.Queries;
@@ -13,6 +15,7 @@ namespace SMIS.Api.Controllers
     /// </summary>
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles = SD.Role_Super_Admin)]
     public class ProvinceController : BaseApiController
     {
         /// <summary>

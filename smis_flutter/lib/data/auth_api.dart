@@ -46,7 +46,16 @@ class DioAuthApi implements AuthApi {
       if (data == null) {
         throw const AuthenticationException('The login response was empty.');
       }
-      return _withPermissions(AuthSession.fromJson(data));
+      final session = AuthSession.fromJson(data);
+      try {
+        return await _withPermissions(session);
+      } catch (_) {
+        // Authentication succeeded even if the authorization metadata endpoint
+        // is temporarily unavailable. Keep the session, but fail closed: with
+        // no component/task permissions loaded, protected features remain hidden
+        // until the normal session-refresh path can retrieve them successfully.
+        return session;
+      }
     } catch (error, stackTrace) {
       ApiErrorParser.mapAndThrow(
         error,

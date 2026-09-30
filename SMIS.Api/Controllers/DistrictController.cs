@@ -1,6 +1,8 @@
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SMIS.Application.Common;
+using SMIS.Application.Common.Contants;
 using SMIS.Application.DTO.Districts;
 using SMIS.Application.Features.Districts.Commands;
 using SMIS.Application.Features.Districts.Queries;
@@ -13,6 +15,7 @@ namespace SMIS.Api.Controllers
     /// </summary>
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles = SD.Role_Super_Admin)]
     public class DistrictController : BaseApiController
     {
         /// <summary>
