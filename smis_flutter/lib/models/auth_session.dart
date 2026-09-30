@@ -12,6 +12,8 @@ class AuthSession {
     required this.languageId,
     required this.languageCode,
     this.permissions = const [],
+    this.taskPermissions = const [],
+    this.taskPermissionsLoaded = false,
   });
 
   final String token;
@@ -23,6 +25,8 @@ class AuthSession {
   final String languageId;
   final String languageCode;
   final List<ComponentPermission> permissions;
+  final List<String> taskPermissions;
+  final bool taskPermissionsLoaded;
 
   bool get isSuperAdmin =>
       roles.any((role) => role.trim().toLowerCase() == 'superadmin');
@@ -51,6 +55,10 @@ class AuthSession {
   bool canDeleteComponent(String componentKey) =>
       permissionFor(componentKey)?.canDelete ?? false;
 
+  bool hasTaskPermission(String taskKey) => taskPermissions.any(
+    (permission) => permission.toLowerCase() == taskKey.toLowerCase(),
+  );
+
   AuthSession copyWith({
     String? token,
     String? userName,
@@ -60,6 +68,8 @@ class AuthSession {
     String? languageId,
     String? languageCode,
     List<ComponentPermission>? permissions,
+    List<String>? taskPermissions,
+    bool? taskPermissionsLoaded,
   }) => AuthSession(
     token: token ?? this.token,
     userId: userId,
@@ -70,6 +80,8 @@ class AuthSession {
     languageId: languageId ?? this.languageId,
     languageCode: languageCode ?? this.languageCode,
     permissions: permissions ?? this.permissions,
+    taskPermissions: taskPermissions ?? this.taskPermissions,
+    taskPermissionsLoaded: taskPermissionsLoaded ?? this.taskPermissionsLoaded,
   );
 
   factory AuthSession.fromJson(Map<String, dynamic> json) {
@@ -93,6 +105,8 @@ class AuthSession {
     final rawRoles = json['roles'] ?? json['Roles'] ?? const <dynamic>[];
     final rawPermissions =
         json['permissions'] ?? json['Permissions'] ?? const <dynamic>[];
+    final rawTaskPermissions =
+        json['taskPermissions'] ?? json['TaskPermissions'] ?? const <dynamic>[];
     return AuthSession(
       token: requiredString('token', 'Token'),
       userId: requiredString('userId', 'UserId'),
@@ -122,6 +136,13 @@ class AuthSession {
                 )
                 .toList(growable: false)
           : const <ComponentPermission>[],
+      taskPermissions: rawTaskPermissions is List
+          ? rawTaskPermissions.whereType<String>().toList(growable: false)
+          : const <String>[],
+      taskPermissionsLoaded:
+          json['taskPermissionsLoaded'] ??
+          json['TaskPermissionsLoaded'] ??
+          false,
     );
   }
 
@@ -137,6 +158,8 @@ class AuthSession {
     'permissions': permissions
         .map((permission) => permission.toJson())
         .toList(),
+    'taskPermissions': taskPermissions,
+    'taskPermissionsLoaded': taskPermissionsLoaded,
   };
 }
 

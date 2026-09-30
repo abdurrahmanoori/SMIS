@@ -13,6 +13,8 @@ public partial class AppDbContext
         RoleSeeder.DataSeed(modelBuilder);
         ApplicationComponentSeeder.DataSeed(modelBuilder);
         RoleComponentPermissionSeeder.DataSeed(modelBuilder);
+        ApplicationTaskSeeder.DataSeed(modelBuilder);
+        RoleTaskPermissionSeeder.DataSeed(modelBuilder);
         UserSeed.DataSeed(modelBuilder);
         UserRoleSeeder.DataSeed(modelBuilder);
         LanguageSeed.DataSeed(modelBuilder);

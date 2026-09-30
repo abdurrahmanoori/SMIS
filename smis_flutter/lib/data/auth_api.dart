@@ -46,7 +46,16 @@ class DioAuthApi implements AuthApi {
       if (data == null) {
         throw const AuthenticationException('The login response was empty.');
       }
-      return _withPermissions(AuthSession.fromJson(data));
+      final session = AuthSession.fromJson(data);
+      try {
+        return await _withPermissions(session);
+      } catch (_) {
+        // Authentication succeeded even if the authorization metadata endpoint
+        // is temporarily unavailable. Keep the session, but fail closed: with
+        // no component/task permissions loaded, protected features remain hidden
+        // until the normal session-refresh path can retrieve them successfully.
+        return session;
+      }
     } catch (error, stackTrace) {
       ApiErrorParser.mapAndThrow(
         error,
@@ -123,12 +132,12 @@ class DioAuthApi implements AuthApi {
   }
 
   Future<AuthSession> _withPermissions(AuthSession session) async {
-    final response = await _dio.get<List<dynamic>>(
+    final componentResponse = await _dio.get<List<dynamic>>(
       AppConfig.permissionsEndpoint,
       options: Options(headers: {'Authorization': 'Bearer ${session.token}'}),
     );
 
-    final permissions = (response.data ?? const <dynamic>[])
+    final permissions = (componentResponse.data ?? const <dynamic>[])
         .whereType<Map>()
         .map(
           (item) =>
@@ -136,6 +145,18 @@ class DioAuthApi implements AuthApi {
         )
         .toList(growable: false);
 
-    return session.copyWith(permissions: permissions);
+    final taskResponse = await _dio.get<List<dynamic>>(
+      AppConfig.taskPermissionsEndpoint,
+      options: Options(headers: {'Authorization': 'Bearer ${session.token}'}),
+    );
+    final taskPermissions = (taskResponse.data ?? const <dynamic>[])
+        .whereType<String>()
+        .toList(growable: false);
+
+    return session.copyWith(
+      permissions: permissions,
+      taskPermissions: taskPermissions,
+      taskPermissionsLoaded: true,
+    );
   }
 }

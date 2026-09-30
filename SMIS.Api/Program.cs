@@ -54,6 +54,8 @@ builder.Services.AddAuthorization(options =>
 });
 builder.Services.AddSingleton<IAuthorizationPolicyProvider, PermissionPolicyProvider>();
 builder.Services.AddScoped<IAuthorizationHandler, PermissionAuthorizationHandler>();
+builder.Services.AddScoped<IAuthorizationHandler, TaskPermissionAuthorizationHandler>();
+builder.Services.AddScoped<IAuthorizationHandler, CurrentRoleAuthorizationHandler>();
 
 builder.Services.AddScoped<ICurrentUser, CurrentUser>();
 

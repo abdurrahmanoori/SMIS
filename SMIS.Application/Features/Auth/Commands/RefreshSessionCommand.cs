@@ -4,6 +4,7 @@ using SMIS.Application.Common.Response;
 using SMIS.Application.DTO.Auth;
 using SMIS.Application.Identity.IServices;
 using SMIS.Application.Repositories.Localization;
+using SMIS.Application.Repositories.Shops;
 using SMIS.Domain.Entities.Identity.Entity;
 using SMIS.Domain.Entities.Localization;
 
@@ -18,18 +19,21 @@ internal sealed class RefreshSessionCommandHandler
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly ITokenGenerator _tokenGenerator;
     private readonly ILanguageRepository _languageRepository;
+    private readonly IShopRepository _shopRepository;
 
     public RefreshSessionCommandHandler(
         ICurrentUser currentUser,
         UserManager<ApplicationUser> userManager,
         ITokenGenerator tokenGenerator,
-        ILanguageRepository languageRepository
+        ILanguageRepository languageRepository,
+        IShopRepository shopRepository
     )
     {
         _currentUser = currentUser;
         _userManager = userManager;
         _tokenGenerator = tokenGenerator;
         _languageRepository = languageRepository;
+        _shopRepository = shopRepository;
     }
 
     public async Task<Result<LoginResponseDto>> Handle(
@@ -43,12 +47,30 @@ internal sealed class RefreshSessionCommandHandler
                 "UserNotFound",
                 "The current user no longer exists.");
 
-        var activeShopId = _currentUser.GetShopId();
+        var roles = await _userManager.GetRolesAsync(user);
+        var isSuperAdmin = roles.Any(role => string.Equals(
+            role,
+            SMIS.Application.Common.Contants.SD.Role_Super_Admin,
+            StringComparison.OrdinalIgnoreCase));
+
+        // Only SuperAdmin may preserve a switched shop context from the JWT.
+        // Regular users must always refresh into their current database-assigned shop.
+        var activeShopId = isSuperAdmin ? _currentUser.GetShopId() : user.ShopId;
         if (string.IsNullOrWhiteSpace(activeShopId)) activeShopId = user.ShopId;
         if (string.IsNullOrWhiteSpace(activeShopId))
             return Result<LoginResponseDto>.FailureResult(
                 "ShopContextRequired",
                 "No active shop is available for this account.");
+
+        var activeShop = await _shopRepository.GetByIdIncludingDeletedAsync(
+            activeShopId,
+            cancellationToken);
+        if (activeShop is null || activeShop.IsDeleted || !activeShop.IsActive)
+        {
+            return Result<LoginResponseDto>.FailureResult(
+                "InvalidShop",
+                "The active shop does not exist or is inactive.");
+        }
 
         var language = await _languageRepository.GetByIdAsync(user.LanguageId);
         if (language is null || !language.IsActive)
@@ -56,7 +78,6 @@ internal sealed class RefreshSessionCommandHandler
                 "InvalidLanguage",
                 "The user's selected language does not exist or is inactive.");
 
-        var roles = await _userManager.GetRolesAsync(user);
         var token = _tokenGenerator.Generate(user, roles, activeShopId);
 
         return Result<LoginResponseDto>.SuccessResult(new LoginResponseDto

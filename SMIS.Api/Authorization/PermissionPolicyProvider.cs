@@ -7,6 +7,8 @@ namespace SMIS.Api.Authorization;
 public sealed class PermissionPolicyProvider : IAuthorizationPolicyProvider
 {
     private const string Prefix = "Permission:";
+    private const string TaskPrefix = "Task:";
+    private const string CurrentRolePrefix = "CurrentRole:";
     private readonly DefaultAuthorizationPolicyProvider _fallbackPolicyProvider;
 
     public PermissionPolicyProvider(
@@ -26,21 +28,51 @@ public sealed class PermissionPolicyProvider : IAuthorizationPolicyProvider
         string policyName
     )
     {
-        if (!TryParse(policyName, out var componentKey, out var action))
-            return _fallbackPolicyProvider.GetPolicyAsync(policyName);
+        if (TryParse(policyName, out var componentKey, out var action))
+        {
+            var permissionPolicy = new AuthorizationPolicyBuilder()
+                .RequireAuthenticatedUser()
+                .AddRequirements(new PermissionRequirement(componentKey, action))
+                .Build();
 
-        var policy = new AuthorizationPolicyBuilder()
-            .RequireAuthenticatedUser()
-            .AddRequirements(new PermissionRequirement(componentKey, action))
-            .Build();
+            return Task.FromResult<AuthorizationPolicy?>(permissionPolicy);
+        }
 
-        return Task.FromResult<AuthorizationPolicy?>(policy);
+        if (TryParseTask(policyName, out var taskKey))
+        {
+            var taskPolicy = new AuthorizationPolicyBuilder()
+                .RequireAuthenticatedUser()
+                .AddRequirements(new TaskPermissionRequirement(taskKey))
+                .Build();
+
+            return Task.FromResult<AuthorizationPolicy?>(taskPolicy);
+        }
+
+        if (TryParseCurrentRole(policyName, out var roleName))
+        {
+            var currentRolePolicy = new AuthorizationPolicyBuilder()
+                .RequireAuthenticatedUser()
+                .AddRequirements(new CurrentRoleRequirement(roleName))
+                .Build();
+
+            return Task.FromResult<AuthorizationPolicy?>(currentRolePolicy);
+        }
+
+        return _fallbackPolicyProvider.GetPolicyAsync(policyName);
     }
 
     public static string BuildPolicyName(
         string componentKey,
         PermissionAction action
     ) => $"{Prefix}{componentKey}:{action}";
+
+    public static string BuildTaskPolicyName(
+        string taskKey
+    ) => $"{TaskPrefix}{taskKey}";
+
+    public static string BuildCurrentRolePolicyName(
+        string roleName
+    ) => $"{CurrentRolePrefix}{roleName}";
 
     private static bool TryParse(
         string policyName,
@@ -58,5 +90,29 @@ public sealed class PermissionPolicyProvider : IAuthorizationPolicyProvider
 
         componentKey = parts[0];
         return !string.IsNullOrWhiteSpace(componentKey);
+    }
+
+    private static bool TryParseTask(
+        string policyName,
+        out string taskKey
+    )
+    {
+        taskKey = string.Empty;
+        if (!policyName.StartsWith(TaskPrefix, StringComparison.Ordinal)) return false;
+
+        taskKey = policyName[TaskPrefix.Length..];
+        return !string.IsNullOrWhiteSpace(taskKey);
+    }
+
+    private static bool TryParseCurrentRole(
+        string policyName,
+        out string roleName
+    )
+    {
+        roleName = string.Empty;
+        if (!policyName.StartsWith(CurrentRolePrefix, StringComparison.Ordinal)) return false;
+
+        roleName = policyName[CurrentRolePrefix.Length..];
+        return !string.IsNullOrWhiteSpace(roleName);
     }
 }

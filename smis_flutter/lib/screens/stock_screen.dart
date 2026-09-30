@@ -18,6 +18,7 @@ import '../models/product.dart';
 import '../models/product_unit.dart';
 import '../models/unit_of_measure.dart';
 import '../models/application_component_keys.dart';
+import '../models/application_task_keys.dart';
 import '../widgets/active_shop_context.dart';
 import '../widgets/app_drawer.dart';
 import '../widgets/app_error_view.dart';
@@ -62,6 +63,7 @@ class StockScreen extends ConsumerWidget {
       userId: session?.userId,
       canCreate: permission.canCreate,
       canUpdate: permission.canUpdate,
+      taskPermissions: session?.taskPermissions ?? const <String>[],
     );
   }
 }
@@ -73,12 +75,14 @@ class _StockContent extends ConsumerStatefulWidget {
     required this.userId,
     required this.canCreate,
     required this.canUpdate,
+    required this.taskPermissions,
   });
 
   final String? shopId;
   final String? userId;
   final bool canCreate;
   final bool canUpdate;
+  final List<String> taskPermissions;
 
   @override
   ConsumerState<_StockContent> createState() => _StockContentState();
@@ -93,6 +97,32 @@ class _StockContentState extends ConsumerState<_StockContent> {
   String? _countId;
   StreamSubscription<dynamic>? _cacheSubscription;
   Object? _syncError;
+
+  bool _hasTask(String taskKey) => widget.taskPermissions.any(
+    (permission) => permission.toLowerCase() == taskKey.toLowerCase(),
+  );
+
+  bool _canRetry(String kind) => switch (kind) {
+    'receipt' => widget.canCreate && _hasTask(ApplicationTaskKeys.receiveStock),
+    'transfer' =>
+      widget.canUpdate && _hasTask(ApplicationTaskKeys.transferStock),
+    'adjustment' =>
+      widget.canUpdate && _hasTask(ApplicationTaskKeys.adjustStock),
+    'damage' =>
+      widget.canUpdate && _hasTask(ApplicationTaskKeys.markDamagedStock),
+    'expiration' =>
+      widget.canUpdate && _hasTask(ApplicationTaskKeys.markExpiredStock),
+    'customer-return' =>
+      widget.canUpdate && _hasTask(ApplicationTaskKeys.processCustomerReturn),
+    'supplier-return' =>
+      widget.canUpdate && _hasTask(ApplicationTaskKeys.processSupplierReturn),
+    'count-complete' =>
+      widget.canUpdate && _hasTask(ApplicationTaskKeys.completeStockCount),
+    'reverse' =>
+      widget.canUpdate && _hasTask(ApplicationTaskKeys.reverseStockMovement),
+    'batch-update' => widget.canUpdate,
+    _ => false,
+  };
 
   @override
   void initState() {
@@ -344,13 +374,17 @@ class _StockContentState extends ConsumerState<_StockContent> {
         padding: const EdgeInsets.all(12),
         child: Row(
           children: [
-            if (widget.canCreate) ...[
+            if (widget.canCreate &&
+                _hasTask(ApplicationTaskKeys.receiveStock)) ...[
               FilledButton.icon(
                 onPressed: _busy ? null : () => _receive(data),
                 icon: const Icon(Icons.add),
                 label: Text(context.l10n.text('Receive stock')),
               ),
               const SizedBox(width: 8),
+            ],
+            if (widget.canCreate &&
+                _hasTask(ApplicationTaskKeys.startStockCount))
               OutlinedButton.icon(
                 onPressed:
                     _busy ||
@@ -363,7 +397,6 @@ class _StockContentState extends ConsumerState<_StockContent> {
                 icon: const Icon(Icons.fact_check_outlined),
                 label: Text(context.l10n.text('Stock count')),
               ),
-            ],
           ],
         ),
       ),
@@ -373,7 +406,7 @@ class _StockContentState extends ConsumerState<_StockContent> {
           title: Text(context.l10n.text('Count in progress')),
           subtitle: Text(_countId!),
           trailing: const Icon(Icons.chevron_right),
-          onTap: widget.canUpdate ? () => _openCount(_countId!) : null,
+          onTap: () => _openCount(_countId!),
         ),
       Expanded(
         child: RefreshIndicator(
@@ -391,16 +424,18 @@ class _StockContentState extends ConsumerState<_StockContent> {
                   ),
                   title: Text('${command.kind} • ${command.state}'),
                   subtitle: command.error == null ? null : Text(command.error!),
-                  trailing:
-                      command.state == 'failed' &&
-                          (widget.canCreate || widget.canUpdate)
+                  trailing: command.state == 'failed'
                       ? PopupMenuButton<String>(
                           onSelected: (choice) => choice == 'retry'
                               ? _run(() => _store.retry(command.id))
                               : _discard(command.id),
-                          itemBuilder: (_) => const [
-                            PopupMenuItem(value: 'retry', child: Text('Retry')),
-                            PopupMenuItem(
+                          itemBuilder: (_) => [
+                            if (_canRetry(command.kind))
+                              const PopupMenuItem(
+                                value: 'retry',
+                                child: Text('Retry'),
+                              ),
+                            const PopupMenuItem(
                               value: 'discard',
                               child: Text('Discard failed action'),
                             ),
@@ -536,7 +571,11 @@ class _StockContentState extends ConsumerState<_StockContent> {
           '${stockText(row, 'direction') == 'out' ? '-' : '+'}'
           '${stockNumber(row, 'quantityBase')}',
         ),
-        onTap: widget.canUpdate ? () => _movementActions(row) : null,
+        onTap:
+            widget.canUpdate &&
+                _hasTask(ApplicationTaskKeys.reverseStockMovement)
+            ? () => _movementActions(row)
+            : null,
       );
     },
   );
@@ -706,21 +745,24 @@ class _StockContentState extends ConsumerState<_StockContent> {
   }
 
   Future<void> _batchActions(_StockData data, StockJson batch) async {
+    final options = <String>[
+      if (_hasTask(ApplicationTaskKeys.adjustStock)) 'adjustments',
+      if (_hasTask(ApplicationTaskKeys.markDamagedStock)) 'damaged-stock',
+      if (_hasTask(ApplicationTaskKeys.markExpiredStock)) 'expired-stock',
+      if (_hasTask(ApplicationTaskKeys.processCustomerReturn))
+        'customer-returns',
+      if (_hasTask(ApplicationTaskKeys.processSupplierReturn))
+        'supplier-returns',
+      if (_hasTask(ApplicationTaskKeys.transferStock)) 'transfers',
+      'edit',
+    ];
     final choice = await showModalBottomSheet<String>(
       context: context,
       builder: (context) => SafeArea(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            for (final option in [
-              'adjustments',
-              'damaged-stock',
-              'expired-stock',
-              'customer-returns',
-              'supplier-returns',
-              'transfers',
-              'edit',
-            ])
+            for (final option in options)
               ListTile(
                 title: Text(option.replaceAll('-', ' ')),
                 onTap: () => Navigator.pop(context, option),
@@ -1010,6 +1052,9 @@ class _StockContentState extends ConsumerState<_StockContent> {
               itemCount: lines.length,
               itemBuilder: (context, index) => TextField(
                 controller: controllers[index],
+                enabled:
+                    widget.canUpdate &&
+                    _hasTask(ApplicationTaskKeys.completeStockCount),
                 keyboardType: const TextInputType.numberWithOptions(
                   decimal: true,
                 ),
@@ -1022,18 +1067,22 @@ class _StockContentState extends ConsumerState<_StockContent> {
             ),
           ),
           actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context, 'cancel'),
-              child: const Text('Cancel count'),
-            ),
+            if (widget.canUpdate &&
+                _hasTask(ApplicationTaskKeys.cancelStockCount))
+              TextButton(
+                onPressed: () => Navigator.pop(context, 'cancel'),
+                child: const Text('Cancel count'),
+              ),
             TextButton(
               onPressed: () => Navigator.pop(context),
               child: const Text('Keep draft'),
             ),
-            FilledButton(
-              onPressed: () => Navigator.pop(context, 'complete'),
-              child: const Text('Complete'),
-            ),
+            if (widget.canUpdate &&
+                _hasTask(ApplicationTaskKeys.completeStockCount))
+              FilledButton(
+                onPressed: () => Navigator.pop(context, 'complete'),
+                child: const Text('Complete'),
+              ),
           ],
         ),
       );

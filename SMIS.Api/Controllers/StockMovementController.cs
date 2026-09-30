@@ -31,6 +31,7 @@ public sealed class StockMovementController : BaseApiController
     /// <param name="id">The stock movement ID to reverse.</param>
     [HttpPost("{id}/reverse")]
     [HasPermission(ApplicationComponentKeys.Inventory, PermissionAction.Update)]
+    [HasTaskPermission(ApplicationTaskKeys.ReverseStockMovement)]
     public async Task<ActionResult<List<StockMovementDto>>> Reverse(
         string id
     ) =>

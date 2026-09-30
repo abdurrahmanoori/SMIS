@@ -19,6 +19,7 @@ class AppConfig {
   static const switchShopEndpoint = '/api/Account/switch-shop';
   static const refreshSessionEndpoint = '/api/Account/refresh-session';
   static const permissionsEndpoint = '/api/Account/me/permissions';
+  static const taskPermissionsEndpoint = '/api/Account/me/task-permissions';
   static const powerSyncCredentialsEndpoint = '/api/PowerSync/credentials';
   static const categoryEndpoint = '/api/Category';
   static const unitOfMeasureEndpoint = '/api/UnitOfMeasure';
@@ -26,6 +27,8 @@ class AppConfig {
   static const productEndpoint = '/api/Product';
   static const productUnitEndpoint = '/api/ProductUnit';
   static const productPriceEndpoint = '/api/ProductPrice';
+  static const provinceEndpoint = '/api/Province';
+  static const districtEndpoint = '/api/District';
   static const stockBatchEndpoint = '/api/StockBatch';
   static const stockMovementEndpoint = '/api/StockMovement';
   static const inventoryEndpoint = '/api/inventory';

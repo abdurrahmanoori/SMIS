@@ -35,6 +35,9 @@ public static class ApplicationServiceRegistration
         services.AddScoped<IInventoryService, InventoryService>();
         services.AddScoped<IIdempotencyService, IdempotencyService>();
         services.AddScoped<IComponentPermissionService, ComponentPermissionService>();
+        services.AddScoped<ITaskPermissionService, TaskPermissionService>();
+        services.AddScoped<IUserRoleMetadataService, UserRoleMetadataService>();
+        services.AddScoped<IUserAdministrationGuard, UserAdministrationGuard>();
 
         return services;
     }

@@ -911,6 +911,130 @@ namespace SMIS.Infrastructure.Server.Migrations
                         });
                 });
 
+            modelBuilder.Entity("SMIS.Domain.Entities.Identity.Entity.ApplicationTask", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("ComponentId")
+                        .IsRequired()
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Key")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ComponentId");
+
+                    b.HasIndex("Key")
+                        .IsUnique();
+
+                    b.ToTable("ApplicationTasks", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "66666666-0000-0000-0000-000000000001",
+                            ComponentId = "55555555-0000-0000-0000-000000000007",
+                            IsActive = true,
+                            Key = "Inventory.ReceiveStock",
+                            Name = "Receive stock"
+                        },
+                        new
+                        {
+                            Id = "66666666-0000-0000-0000-000000000002",
+                            ComponentId = "55555555-0000-0000-0000-000000000007",
+                            IsActive = true,
+                            Key = "Inventory.ProcessCustomerReturn",
+                            Name = "Process customer return"
+                        },
+                        new
+                        {
+                            Id = "66666666-0000-0000-0000-000000000003",
+                            ComponentId = "55555555-0000-0000-0000-000000000007",
+                            IsActive = true,
+                            Key = "Inventory.ProcessSupplierReturn",
+                            Name = "Process supplier return"
+                        },
+                        new
+                        {
+                            Id = "66666666-0000-0000-0000-000000000004",
+                            ComponentId = "55555555-0000-0000-0000-000000000007",
+                            IsActive = true,
+                            Key = "Inventory.MarkDamagedStock",
+                            Name = "Mark damaged stock"
+                        },
+                        new
+                        {
+                            Id = "66666666-0000-0000-0000-000000000005",
+                            ComponentId = "55555555-0000-0000-0000-000000000007",
+                            IsActive = true,
+                            Key = "Inventory.MarkExpiredStock",
+                            Name = "Mark expired stock"
+                        },
+                        new
+                        {
+                            Id = "66666666-0000-0000-0000-000000000006",
+                            ComponentId = "55555555-0000-0000-0000-000000000007",
+                            IsActive = true,
+                            Key = "Inventory.AdjustStock",
+                            Name = "Adjust stock"
+                        },
+                        new
+                        {
+                            Id = "66666666-0000-0000-0000-000000000007",
+                            ComponentId = "55555555-0000-0000-0000-000000000007",
+                            IsActive = true,
+                            Key = "Inventory.TransferStock",
+                            Name = "Transfer stock"
+                        },
+                        new
+                        {
+                            Id = "66666666-0000-0000-0000-000000000008",
+                            ComponentId = "55555555-0000-0000-0000-000000000007",
+                            IsActive = true,
+                            Key = "Inventory.StartStockCount",
+                            Name = "Start stock count"
+                        },
+                        new
+                        {
+                            Id = "66666666-0000-0000-0000-000000000009",
+                            ComponentId = "55555555-0000-0000-0000-000000000007",
+                            IsActive = true,
+                            Key = "Inventory.CompleteStockCount",
+                            Name = "Complete stock count"
+                        },
+                        new
+                        {
+                            Id = "66666666-0000-0000-0000-000000000010",
+                            ComponentId = "55555555-0000-0000-0000-000000000007",
+                            IsActive = true,
+                            Key = "Inventory.CancelStockCount",
+                            Name = "Cancel stock count"
+                        },
+                        new
+                        {
+                            Id = "66666666-0000-0000-0000-000000000011",
+                            ComponentId = "55555555-0000-0000-0000-000000000007",
+                            IsActive = true,
+                            Key = "Inventory.ReverseStockMovement",
+                            Name = "Reverse stock movement"
+                        });
+                });
+
             modelBuilder.Entity("SMIS.Domain.Entities.Identity.Entity.ApplicationUser", b =>
                 {
                     b.Property<string>("Id")
@@ -1034,7 +1158,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "SUPERADMIN@MAINSTORE.COM",
                             NormalizedUserName = "SUPERADMIN@MAINSTORE.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEE0b5rQqY7JDcZPxjM2CJxuH16YriSpqTeSLO+7ys67UK89RbdA3SnUC2ymyF8fZEw==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEKlhy7lx1/qM3NGtL0ETO5AXxyobVtC66UBBAmw+bxawQIYCLg/C7sxqZ3YZ7gtibw==",
                             PhoneNumberConfirmed = true,
                             SecurityStamp = "44444444-0000-0000-0000-000000000001",
                             ShopId = "11111111-0000-0000-0000-000000000001",
@@ -1057,7 +1181,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "SHOPADMIN@MAINSTORE.COM",
                             NormalizedUserName = "SHOPADMIN@MAINSTORE.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEE0b5rQqY7JDcZPxjM2CJxuH16YriSpqTeSLO+7ys67UK89RbdA3SnUC2ymyF8fZEw==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEAFyC/O4IYX4EqJ6uemvh6qLpM+RL+BzKde7gcjIZ+EeBVHOMYioelyn63fO2B6l4Q==",
                             PhoneNumberConfirmed = true,
                             SecurityStamp = "44444444-0000-0000-0000-000000000002",
                             ShopId = "11111111-0000-0000-0000-000000000001",
@@ -1080,7 +1204,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "MANAGER@MAINSTORE.COM",
                             NormalizedUserName = "MANAGER@MAINSTORE.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEE0b5rQqY7JDcZPxjM2CJxuH16YriSpqTeSLO+7ys67UK89RbdA3SnUC2ymyF8fZEw==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEACWFVheXXg44bF1SnLnHmLMlQio+gXK/CewFdlElgv/87pZMNXarSylYHHQM9TDzw==",
                             PhoneNumberConfirmed = true,
                             SecurityStamp = "44444444-0000-0000-0000-000000000004",
                             ShopId = "11111111-0000-0000-0000-000000000001",
@@ -1103,7 +1227,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "INVENTORYMANAGER@MAINSTORE.COM",
                             NormalizedUserName = "INVENTORYMANAGER@MAINSTORE.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEE0b5rQqY7JDcZPxjM2CJxuH16YriSpqTeSLO+7ys67UK89RbdA3SnUC2ymyF8fZEw==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEEqFdgkYefuwPNEn1jTrnNDT2cXrDJjRORjUibCLxCbqp+d/Kr5OMbAlYu4ecVLJCw==",
                             PhoneNumberConfirmed = true,
                             SecurityStamp = "44444444-0000-0000-0000-000000000003",
                             ShopId = "11111111-0000-0000-0000-000000000001",
@@ -1126,7 +1250,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "SALESMANAGER@MAINSTORE.COM",
                             NormalizedUserName = "SALESMANAGER@MAINSTORE.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEE0b5rQqY7JDcZPxjM2CJxuH16YriSpqTeSLO+7ys67UK89RbdA3SnUC2ymyF8fZEw==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEO1n88zJKKBvI/cGAfFb7BVkPvG1N5u7XG3fLVxfrTyKxpdaLJzpsdiPt6TBWNtFtQ==",
                             PhoneNumberConfirmed = true,
                             SecurityStamp = "44444444-0000-0000-0000-000000000007",
                             ShopId = "11111111-0000-0000-0000-000000000001",
@@ -1149,7 +1273,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "CASHIER@MAINSTORE.COM",
                             NormalizedUserName = "CASHIER@MAINSTORE.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEE0b5rQqY7JDcZPxjM2CJxuH16YriSpqTeSLO+7ys67UK89RbdA3SnUC2ymyF8fZEw==",
+                            PasswordHash = "AQAAAAIAAYagAAAAED9+2xjrPAaZ+O1VQQy0sIgJ0EplJ5KrJspahcT6o3VFNrdy0SvSC6oqfg2lVAmtug==",
                             PhoneNumberConfirmed = true,
                             SecurityStamp = "44444444-0000-0000-0000-000000000008",
                             ShopId = "11111111-0000-0000-0000-000000000001",
@@ -1172,7 +1296,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "STAFF@MAINSTORE.COM",
                             NormalizedUserName = "STAFF@MAINSTORE.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEE0b5rQqY7JDcZPxjM2CJxuH16YriSpqTeSLO+7ys67UK89RbdA3SnUC2ymyF8fZEw==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEDmcAaC68oLRPp7N62uOQxou38wJStu0PDnRTX7dYoBbT8wnkzWzn2Fzm7FDRCDRzw==",
                             PhoneNumberConfirmed = true,
                             SecurityStamp = "44444444-0000-0000-0000-000000000005",
                             ShopId = "11111111-0000-0000-0000-000000000001",
@@ -1195,7 +1319,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "VIEWER@MAINSTORE.COM",
                             NormalizedUserName = "VIEWER@MAINSTORE.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEE0b5rQqY7JDcZPxjM2CJxuH16YriSpqTeSLO+7ys67UK89RbdA3SnUC2ymyF8fZEw==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEB7prP7koVE/OUlR9s4TSx0GR+FdUNWA27pdMMmjDqKs6M7hBNN8p4/i/xKH6NPLug==",
                             PhoneNumberConfirmed = true,
                             SecurityStamp = "44444444-0000-0000-0000-000000000006",
                             ShopId = "11111111-0000-0000-0000-000000000001",
@@ -1218,7 +1342,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "SHOPADMIN@BRANCHSTORE.COM",
                             NormalizedUserName = "SHOPADMIN@BRANCHSTORE.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEE0b5rQqY7JDcZPxjM2CJxuH16YriSpqTeSLO+7ys67UK89RbdA3SnUC2ymyF8fZEw==",
+                            PasswordHash = "AQAAAAIAAYagAAAAED0yMSW4bbZ6Wgcrk1YnSidOV95fGUDyNIQ4L4hB4b5pVdp2NN/RInGrFcwCIFRcFg==",
                             PhoneNumberConfirmed = true,
                             SecurityStamp = "44444444-0000-0000-0000-000000000009",
                             ShopId = "11111111-0000-0000-0000-000000000002",
@@ -1241,7 +1365,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "MANAGER@BRANCHSTORE.COM",
                             NormalizedUserName = "MANAGER@BRANCHSTORE.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEE0b5rQqY7JDcZPxjM2CJxuH16YriSpqTeSLO+7ys67UK89RbdA3SnUC2ymyF8fZEw==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEPtblkwvX2iBlaKTmNy5Es40KZ04OXcOKC0Y0J2ZAHrbhbg8AChjPMIG2KI/Caq0nA==",
                             PhoneNumberConfirmed = true,
                             SecurityStamp = "44444444-0000-0000-0000-000000000011",
                             ShopId = "11111111-0000-0000-0000-000000000002",
@@ -1264,7 +1388,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "INVENTORYMANAGER@BRANCHSTORE.COM",
                             NormalizedUserName = "INVENTORYMANAGER@BRANCHSTORE.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEE0b5rQqY7JDcZPxjM2CJxuH16YriSpqTeSLO+7ys67UK89RbdA3SnUC2ymyF8fZEw==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEP2Dxp0S7KUBx6SLgPX0gGv5eBzRIhYkQUuP+FL1OUD8X34glIKrFNRnqMgsgvtEnQ==",
                             PhoneNumberConfirmed = true,
                             SecurityStamp = "44444444-0000-0000-0000-000000000010",
                             ShopId = "11111111-0000-0000-0000-000000000002",
@@ -1287,7 +1411,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "SALESMANAGER@BRANCHSTORE.COM",
                             NormalizedUserName = "SALESMANAGER@BRANCHSTORE.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEE0b5rQqY7JDcZPxjM2CJxuH16YriSpqTeSLO+7ys67UK89RbdA3SnUC2ymyF8fZEw==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEIxjMnDpe8QRnCOUl5C5oxwfF4A48n+oSX4yqe6nUhfGgASCAZlnqD0mVh/FrDOIsA==",
                             PhoneNumberConfirmed = true,
                             SecurityStamp = "44444444-0000-0000-0000-000000000014",
                             ShopId = "11111111-0000-0000-0000-000000000002",
@@ -1310,7 +1434,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "CASHIER@BRANCHSTORE.COM",
                             NormalizedUserName = "CASHIER@BRANCHSTORE.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEE0b5rQqY7JDcZPxjM2CJxuH16YriSpqTeSLO+7ys67UK89RbdA3SnUC2ymyF8fZEw==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEIoxjwiSMSqM3gzeKFCKj5vPuGOl/5qjBMCmV1j3YT1FXFVc6GHZiArNXc3kZ8VBOw==",
                             PhoneNumberConfirmed = true,
                             SecurityStamp = "44444444-0000-0000-0000-000000000015",
                             ShopId = "11111111-0000-0000-0000-000000000002",
@@ -1333,7 +1457,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "STAFF@BRANCHSTORE.COM",
                             NormalizedUserName = "STAFF@BRANCHSTORE.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEE0b5rQqY7JDcZPxjM2CJxuH16YriSpqTeSLO+7ys67UK89RbdA3SnUC2ymyF8fZEw==",
+                            PasswordHash = "AQAAAAIAAYagAAAAECbKJmJ0XQ08tMqwegOAlUNXOVYOfcFTRZ/bvegWVIDBLAwked7Mt1piJlMWzVusjw==",
                             PhoneNumberConfirmed = true,
                             SecurityStamp = "44444444-0000-0000-0000-000000000012",
                             ShopId = "11111111-0000-0000-0000-000000000002",
@@ -1356,7 +1480,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "VIEWER@BRANCHSTORE.COM",
                             NormalizedUserName = "VIEWER@BRANCHSTORE.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEE0b5rQqY7JDcZPxjM2CJxuH16YriSpqTeSLO+7ys67UK89RbdA3SnUC2ymyF8fZEw==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEOXSRj3/KMViNcF6fj3Z2pE5+MWC7CEBL3uziK5Pg+pvt44SYOn5L+ZrqH5tBehhDg==",
                             PhoneNumberConfirmed = true,
                             SecurityStamp = "44444444-0000-0000-0000-000000000013",
                             ShopId = "11111111-0000-0000-0000-000000000002",
@@ -1379,7 +1503,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "SHOPADMIN@WASILSHOP.COM",
                             NormalizedUserName = "SHOPADMIN@WASILSHOP.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEE0b5rQqY7JDcZPxjM2CJxuH16YriSpqTeSLO+7ys67UK89RbdA3SnUC2ymyF8fZEw==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEJOEjUXSHxHnUnYrH7jcO97NRqThEvOEb7hL5hWacH9PLNP1VHRAPfLih3PUZc1utQ==",
                             PhoneNumberConfirmed = true,
                             SecurityStamp = "44444444-0000-0000-0000-000000000016",
                             ShopId = "11111111-0000-0000-0000-000000000004",
@@ -2120,6 +2244,556 @@ namespace SMIS.Infrastructure.Server.Migrations
                             CanRead = true,
                             CanUpdate = false,
                             CanView = true
+                        });
+                });
+
+            modelBuilder.Entity("SMIS.Domain.Entities.Identity.Entity.RoleTaskPermission", b =>
+                {
+                    b.Property<string>("RoleId")
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("TaskId")
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<bool>("IsAllowed")
+                        .HasColumnType("bit");
+
+                    b.HasKey("RoleId", "TaskId");
+
+                    b.HasIndex("TaskId");
+
+                    b.ToTable("RoleTaskPermissions", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000001",
+                            TaskId = "66666666-0000-0000-0000-000000000001",
+                            IsAllowed = true
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000001",
+                            TaskId = "66666666-0000-0000-0000-000000000002",
+                            IsAllowed = true
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000001",
+                            TaskId = "66666666-0000-0000-0000-000000000003",
+                            IsAllowed = true
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000001",
+                            TaskId = "66666666-0000-0000-0000-000000000004",
+                            IsAllowed = true
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000001",
+                            TaskId = "66666666-0000-0000-0000-000000000005",
+                            IsAllowed = true
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000001",
+                            TaskId = "66666666-0000-0000-0000-000000000006",
+                            IsAllowed = true
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000001",
+                            TaskId = "66666666-0000-0000-0000-000000000007",
+                            IsAllowed = true
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000001",
+                            TaskId = "66666666-0000-0000-0000-000000000008",
+                            IsAllowed = true
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000001",
+                            TaskId = "66666666-0000-0000-0000-000000000009",
+                            IsAllowed = true
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000001",
+                            TaskId = "66666666-0000-0000-0000-000000000010",
+                            IsAllowed = true
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000001",
+                            TaskId = "66666666-0000-0000-0000-000000000011",
+                            IsAllowed = true
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000002",
+                            TaskId = "66666666-0000-0000-0000-000000000001",
+                            IsAllowed = true
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000002",
+                            TaskId = "66666666-0000-0000-0000-000000000002",
+                            IsAllowed = true
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000002",
+                            TaskId = "66666666-0000-0000-0000-000000000003",
+                            IsAllowed = true
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000002",
+                            TaskId = "66666666-0000-0000-0000-000000000004",
+                            IsAllowed = true
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000002",
+                            TaskId = "66666666-0000-0000-0000-000000000005",
+                            IsAllowed = true
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000002",
+                            TaskId = "66666666-0000-0000-0000-000000000006",
+                            IsAllowed = true
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000002",
+                            TaskId = "66666666-0000-0000-0000-000000000007",
+                            IsAllowed = true
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000002",
+                            TaskId = "66666666-0000-0000-0000-000000000008",
+                            IsAllowed = true
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000002",
+                            TaskId = "66666666-0000-0000-0000-000000000009",
+                            IsAllowed = true
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000002",
+                            TaskId = "66666666-0000-0000-0000-000000000010",
+                            IsAllowed = true
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000002",
+                            TaskId = "66666666-0000-0000-0000-000000000011",
+                            IsAllowed = true
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000004",
+                            TaskId = "66666666-0000-0000-0000-000000000001",
+                            IsAllowed = true
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000004",
+                            TaskId = "66666666-0000-0000-0000-000000000002",
+                            IsAllowed = true
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000004",
+                            TaskId = "66666666-0000-0000-0000-000000000003",
+                            IsAllowed = true
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000004",
+                            TaskId = "66666666-0000-0000-0000-000000000004",
+                            IsAllowed = true
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000004",
+                            TaskId = "66666666-0000-0000-0000-000000000005",
+                            IsAllowed = true
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000004",
+                            TaskId = "66666666-0000-0000-0000-000000000006",
+                            IsAllowed = true
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000004",
+                            TaskId = "66666666-0000-0000-0000-000000000007",
+                            IsAllowed = true
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000004",
+                            TaskId = "66666666-0000-0000-0000-000000000008",
+                            IsAllowed = true
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000004",
+                            TaskId = "66666666-0000-0000-0000-000000000009",
+                            IsAllowed = true
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000004",
+                            TaskId = "66666666-0000-0000-0000-000000000010",
+                            IsAllowed = true
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000004",
+                            TaskId = "66666666-0000-0000-0000-000000000011",
+                            IsAllowed = true
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000003",
+                            TaskId = "66666666-0000-0000-0000-000000000001",
+                            IsAllowed = true
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000003",
+                            TaskId = "66666666-0000-0000-0000-000000000002",
+                            IsAllowed = true
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000003",
+                            TaskId = "66666666-0000-0000-0000-000000000003",
+                            IsAllowed = true
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000003",
+                            TaskId = "66666666-0000-0000-0000-000000000004",
+                            IsAllowed = true
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000003",
+                            TaskId = "66666666-0000-0000-0000-000000000005",
+                            IsAllowed = true
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000003",
+                            TaskId = "66666666-0000-0000-0000-000000000006",
+                            IsAllowed = true
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000003",
+                            TaskId = "66666666-0000-0000-0000-000000000007",
+                            IsAllowed = true
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000003",
+                            TaskId = "66666666-0000-0000-0000-000000000008",
+                            IsAllowed = true
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000003",
+                            TaskId = "66666666-0000-0000-0000-000000000009",
+                            IsAllowed = true
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000003",
+                            TaskId = "66666666-0000-0000-0000-000000000010",
+                            IsAllowed = true
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000003",
+                            TaskId = "66666666-0000-0000-0000-000000000011",
+                            IsAllowed = true
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000007",
+                            TaskId = "66666666-0000-0000-0000-000000000001",
+                            IsAllowed = false
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000007",
+                            TaskId = "66666666-0000-0000-0000-000000000002",
+                            IsAllowed = false
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000007",
+                            TaskId = "66666666-0000-0000-0000-000000000003",
+                            IsAllowed = false
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000007",
+                            TaskId = "66666666-0000-0000-0000-000000000004",
+                            IsAllowed = false
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000007",
+                            TaskId = "66666666-0000-0000-0000-000000000005",
+                            IsAllowed = false
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000007",
+                            TaskId = "66666666-0000-0000-0000-000000000006",
+                            IsAllowed = false
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000007",
+                            TaskId = "66666666-0000-0000-0000-000000000007",
+                            IsAllowed = false
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000007",
+                            TaskId = "66666666-0000-0000-0000-000000000008",
+                            IsAllowed = false
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000007",
+                            TaskId = "66666666-0000-0000-0000-000000000009",
+                            IsAllowed = false
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000007",
+                            TaskId = "66666666-0000-0000-0000-000000000010",
+                            IsAllowed = false
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000007",
+                            TaskId = "66666666-0000-0000-0000-000000000011",
+                            IsAllowed = false
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000008",
+                            TaskId = "66666666-0000-0000-0000-000000000001",
+                            IsAllowed = false
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000008",
+                            TaskId = "66666666-0000-0000-0000-000000000002",
+                            IsAllowed = false
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000008",
+                            TaskId = "66666666-0000-0000-0000-000000000003",
+                            IsAllowed = false
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000008",
+                            TaskId = "66666666-0000-0000-0000-000000000004",
+                            IsAllowed = false
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000008",
+                            TaskId = "66666666-0000-0000-0000-000000000005",
+                            IsAllowed = false
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000008",
+                            TaskId = "66666666-0000-0000-0000-000000000006",
+                            IsAllowed = false
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000008",
+                            TaskId = "66666666-0000-0000-0000-000000000007",
+                            IsAllowed = false
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000008",
+                            TaskId = "66666666-0000-0000-0000-000000000008",
+                            IsAllowed = false
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000008",
+                            TaskId = "66666666-0000-0000-0000-000000000009",
+                            IsAllowed = false
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000008",
+                            TaskId = "66666666-0000-0000-0000-000000000010",
+                            IsAllowed = false
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000008",
+                            TaskId = "66666666-0000-0000-0000-000000000011",
+                            IsAllowed = false
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000005",
+                            TaskId = "66666666-0000-0000-0000-000000000001",
+                            IsAllowed = false
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000005",
+                            TaskId = "66666666-0000-0000-0000-000000000002",
+                            IsAllowed = false
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000005",
+                            TaskId = "66666666-0000-0000-0000-000000000003",
+                            IsAllowed = false
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000005",
+                            TaskId = "66666666-0000-0000-0000-000000000004",
+                            IsAllowed = false
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000005",
+                            TaskId = "66666666-0000-0000-0000-000000000005",
+                            IsAllowed = false
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000005",
+                            TaskId = "66666666-0000-0000-0000-000000000006",
+                            IsAllowed = false
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000005",
+                            TaskId = "66666666-0000-0000-0000-000000000007",
+                            IsAllowed = false
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000005",
+                            TaskId = "66666666-0000-0000-0000-000000000008",
+                            IsAllowed = false
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000005",
+                            TaskId = "66666666-0000-0000-0000-000000000009",
+                            IsAllowed = false
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000005",
+                            TaskId = "66666666-0000-0000-0000-000000000010",
+                            IsAllowed = false
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000005",
+                            TaskId = "66666666-0000-0000-0000-000000000011",
+                            IsAllowed = false
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000006",
+                            TaskId = "66666666-0000-0000-0000-000000000001",
+                            IsAllowed = false
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000006",
+                            TaskId = "66666666-0000-0000-0000-000000000002",
+                            IsAllowed = false
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000006",
+                            TaskId = "66666666-0000-0000-0000-000000000003",
+                            IsAllowed = false
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000006",
+                            TaskId = "66666666-0000-0000-0000-000000000004",
+                            IsAllowed = false
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000006",
+                            TaskId = "66666666-0000-0000-0000-000000000005",
+                            IsAllowed = false
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000006",
+                            TaskId = "66666666-0000-0000-0000-000000000006",
+                            IsAllowed = false
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000006",
+                            TaskId = "66666666-0000-0000-0000-000000000007",
+                            IsAllowed = false
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000006",
+                            TaskId = "66666666-0000-0000-0000-000000000008",
+                            IsAllowed = false
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000006",
+                            TaskId = "66666666-0000-0000-0000-000000000009",
+                            IsAllowed = false
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000006",
+                            TaskId = "66666666-0000-0000-0000-000000000010",
+                            IsAllowed = false
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000006",
+                            TaskId = "66666666-0000-0000-0000-000000000011",
+                            IsAllowed = false
                         });
                 });
 
@@ -6119,6 +6793,17 @@ namespace SMIS.Infrastructure.Server.Migrations
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
+            modelBuilder.Entity("SMIS.Domain.Entities.Identity.Entity.ApplicationTask", b =>
+                {
+                    b.HasOne("SMIS.Domain.Entities.Identity.Entity.ApplicationComponent", "Component")
+                        .WithMany()
+                        .HasForeignKey("ComponentId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Component");
+                });
+
             modelBuilder.Entity("SMIS.Domain.Entities.Identity.Entity.ApplicationUser", b =>
                 {
                     b.HasOne("SMIS.Domain.Entities.Localization.Language", "Language")
@@ -6170,6 +6855,25 @@ namespace SMIS.Infrastructure.Server.Migrations
                     b.Navigation("Component");
 
                     b.Navigation("Role");
+                });
+
+            modelBuilder.Entity("SMIS.Domain.Entities.Identity.Entity.RoleTaskPermission", b =>
+                {
+                    b.HasOne("SMIS.Domain.Entities.Identity.Entity.ApplicationRole", "Role")
+                        .WithMany()
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("SMIS.Domain.Entities.Identity.Entity.ApplicationTask", "Task")
+                        .WithMany()
+                        .HasForeignKey("TaskId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Role");
+
+                    b.Navigation("Task");
                 });
 
             modelBuilder.Entity("SMIS.Domain.Entities.LoanAccount", b =>

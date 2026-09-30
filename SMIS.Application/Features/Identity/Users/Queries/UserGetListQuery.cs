@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using SMIS.Application.Common;
 using SMIS.Application.Common.Response;
 using SMIS.Application.DTO.Users;
+using SMIS.Application.Services;
 using SMIS.Domain.Entities.Identity.Entity;
 
 namespace SMIS.Application.Features.Identity.Users.Queries
@@ -16,14 +17,17 @@ namespace SMIS.Application.Features.Identity.Users.Queries
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IMapper _mapper;
+        private readonly IApplicationDbContext _context;
 
         public UserGetListQueryHandler(
             UserManager<ApplicationUser> userManager,
-            IMapper mapper
+            IMapper mapper,
+            IApplicationDbContext context
         )
         {
             _userManager = userManager;
             _mapper = mapper;
+            _context = context;
         }
 
         public async Task<Result<PagedList<UserDto>>> Handle(
@@ -40,11 +44,36 @@ namespace SMIS.Application.Features.Identity.Users.Queries
 
             var totalCount = await query.CountAsync(cancellationToken);
             var users = await query
+                .OrderBy(user => user.UserName)
+                .ThenBy(user => user.Id)
                 .Skip((request.PageNumber - 1) * request.PageSize)
                 .Take(request.PageSize)
                 .ToListAsync(cancellationToken);
 
             var userDtos = _mapper.Map<List<UserDto>>(users);
+
+            var userIds = users.Select(user => user.Id).ToArray();
+            var roleRows = await (
+                    from userRole in _context.UserRoles.AsNoTracking()
+                    join role in _context.Roles.AsNoTracking()
+                        on userRole.RoleId equals role.Id
+                    where userIds.Contains(userRole.UserId)
+                    select new { userRole.UserId, RoleName = role.Name })
+                .ToListAsync(cancellationToken);
+
+            var roleLookup = roleRows
+                .Where(row => !string.IsNullOrWhiteSpace(row.RoleName))
+                .GroupBy(row => row.UserId)
+                .ToDictionary(
+                    group => group.Key,
+                    group => group.Select(row => row.RoleName!)
+                        .OrderBy(role => role, StringComparer.OrdinalIgnoreCase)
+                        .ToList());
+
+            foreach (var userDto in userDtos)
+            {
+                userDto.Roles = roleLookup.GetValueOrDefault(userDto.Id, []);
+            }
 
             var pagedList = new PagedList<UserDto>
             {
