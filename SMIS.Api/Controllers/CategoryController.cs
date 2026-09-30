@@ -47,7 +47,6 @@ namespace SMIS.Api.Controllers
         /// Gets categories with flexible filtering, optional returned columns, and pagination.
         /// </summary>
         [HttpGet]
-        [HttpGet("query")]
         [HasPermission(ApplicationComponentKeys.Categories, PermissionAction.Read)]
         public async Task<ActionResult<PagedListNew<CategoryDto>>> GetAll(
             [FromQuery] CategoryQueryCriteria criteria,
@@ -66,16 +65,6 @@ namespace SMIS.Api.Controllers
                     PageSize = pageSize
                 }), cancellationToken);
         }
-
-        /// <summary>
-        /// Gets one category by its ID.
-        /// </summary>
-        [HttpGet("{id}")]
-        [HasPermission(ApplicationComponentKeys.Categories, PermissionAction.Read)]
-        public async Task<ActionResult<CategoryDto>> GetById(
-            string id
-        ) =>
-            HandleResultResponseOld(await Mediator.Send(new CategoryGetByIdQuery(id)));
 
         /// <summary>
         /// Updates an existing category.
