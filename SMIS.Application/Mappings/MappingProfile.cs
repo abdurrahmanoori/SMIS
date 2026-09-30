@@ -7,7 +7,6 @@ using SMIS.Application.DTO.UnitOfMeasures;
 using SMIS.Application.DTO.Products;
 using SMIS.Application.DTO.Users;
 using System.Globalization;
-using SMIS.Application.DTO.Categories;
 using SMIS.Application.DTO.ProductUnits;
 using SMIS.Application.DTO.StockBatches;
 using SMIS.Application.DTO.StockMovements;
@@ -127,19 +126,6 @@ public class MappingProfile : Profile
                 src.Symbol,
                 src.Description
             ));
-
-        // Category mapping
-        CreateMap<Category, CategoryDto>()
-            .ForMember(dest => dest.CreatedDate,
-                opt => opt.MapFrom(src => AsUtc(src.CreatedDate)))
-            .ForMember(dest => dest.UpdatedDate,
-                opt => opt.MapFrom(src => AsUtc(src.UpdatedDate)))
-            .ForMember(dest => dest.ClientModifiedDate,
-                opt => opt.MapFrom(src => AsUtc(src.ClientModifiedDate)))
-            .ForMember(dest => dest.LastModifiedUtc,
-                opt => opt.MapFrom(src => AsUtc(src.LastModifiedUtc)));
-        // CategoryCreateDto mapping removed - use Category.Create() in handler with ICurrentUser.GetShopId()
-
 
         // ProductUnit mapping
         CreateMap<ProductUnit, ProductUnitDto>()
