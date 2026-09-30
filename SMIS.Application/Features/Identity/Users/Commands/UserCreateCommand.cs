@@ -1,9 +1,9 @@
-using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using SMIS.Application.Common.Contants;
 using SMIS.Application.Common.Response;
 using SMIS.Application.DTO.Users;
+using SMIS.Application.Features.Identity.Users;
 using SMIS.Application.Repositories.Base;
 using SMIS.Application.Repositories.Localization;
 using SMIS.Application.Repositories.Shops;
@@ -21,7 +21,6 @@ namespace SMIS.Application.Features.Identity.Users.Commands
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly RoleManager<ApplicationRole> _roleManager;
         private readonly IUnitOfWork _unitOfWork;
-        private readonly IMapper _mapper;
         private readonly IUserRoleMetadataService _userRoleMetadataService;
 
         public UserCreateCommandHandler(
@@ -30,41 +29,31 @@ namespace SMIS.Application.Features.Identity.Users.Commands
             UserManager<ApplicationUser> userManager,
             RoleManager<ApplicationRole> roleManager,
             IUnitOfWork unitOfWork,
-            IMapper mapper,
-            IUserRoleMetadataService userRoleMetadataService
-        )
+            IUserRoleMetadataService userRoleMetadataService)
         {
             _languageRepository = languageRepository;
             _shopRepository = shopRepository;
             _userManager = userManager;
             _roleManager = roleManager;
             _unitOfWork = unitOfWork;
-            _mapper = mapper;
             _userRoleMetadataService = userRoleMetadataService;
         }
 
-        public async Task<Result<UserDto>> Handle(
-            UserCreateCommand request,
-            CancellationToken cancellationToken
-        )
+        public async Task<Result<UserDto>> Handle(UserCreateCommand request, CancellationToken cancellationToken)
         {
             var language = await _languageRepository.GetByIdAsync(request.UserCreateDto.LanguageId);
             if (language is null || !language.IsActive)
-            {
                 return Result<UserDto>.FailureResult(
                     "InvalidLanguage",
                     "The selected language does not exist or is inactive.");
-            }
 
             var shop = await _shopRepository.GetByIdIncludingDeletedAsync(
                 request.UserCreateDto.ShopId,
                 cancellationToken);
             if (shop is null || shop.IsDeleted || !shop.IsActive)
-            {
                 return Result<UserDto>.FailureResult(
                     "InvalidShop",
                     "The assigned shop does not exist or is inactive.");
-            }
 
             var roles = Array.Empty<string>();
             if (request.UserCreateDto.Roles != null)
@@ -72,16 +61,12 @@ namespace SMIS.Application.Features.Identity.Users.Commands
                 var requestedRoles = request.UserCreateDto.Roles
                     .Distinct(StringComparer.OrdinalIgnoreCase)
                     .ToArray();
-                var canonicalRoles = requestedRoles
-                    .Select(SD.GetCanonicalRole)
-                    .ToArray();
+                var canonicalRoles = requestedRoles.Select(SD.GetCanonicalRole).ToArray();
 
                 if (canonicalRoles.Any(role => role is null))
-                {
                     return Result<UserDto>.FailureResult(
                         "InvalidRole",
                         $"Roles must be one of: {string.Join(", ", SD.AllRoles)}.");
-                }
 
                 roles = canonicalRoles.Cast<string>().ToArray();
                 foreach (var role in roles)
@@ -91,7 +76,7 @@ namespace SMIS.Application.Features.Identity.Users.Commands
                 }
             }
 
-            var entity = _mapper.Map<ApplicationUser>(request.UserCreateDto);
+            var entity = UserMapping.Create(request.UserCreateDto);
             entity.ShopName = shop.Name;
 
             await _unitOfWork.StartTransactionAsync(cancellationToken);
@@ -128,7 +113,7 @@ namespace SMIS.Application.Features.Identity.Users.Commands
                     cancellationToken);
                 await _unitOfWork.CommitTransactionAsync(cancellationToken);
 
-                var dto = _mapper.Map<UserDto>(entity);
+                var dto = UserMapping.ToDto(entity);
                 dto.Roles = roles.ToList();
                 return Result<UserDto>.SuccessResult(dto);
             }
