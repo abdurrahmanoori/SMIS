@@ -1,8 +1,7 @@
-using AutoMapper;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 using SMIS.Application.Common.Response;
 using SMIS.Application.DTO.Provinces;
+using SMIS.Application.Features.Provinces;
 using SMIS.Application.Repositories.Base;
 using SMIS.Application.Repositories.Provinces;
 using SMIS.Domain.Entities.LocationEntities;
@@ -15,85 +14,27 @@ namespace SMIS.Application.Features.Provinces.Commands
     {
         private readonly IProvinceRepository _provinceRepository;
         private readonly IUnitOfWork _unitOfWork;
-        private readonly IMapper _mapper;
 
         public ProvinceUpdateCommandHandler(
             IUnitOfWork unitOfWork,
-            IProvinceRepository provinceRepository,
-            IMapper mapper
-        )
+            IProvinceRepository provinceRepository)
         {
             _unitOfWork = unitOfWork;
             _provinceRepository = provinceRepository;
-            _mapper = mapper;
         }
 
         public async Task<Result<ProvinceDto>> Handle(
             ProvinceUpdateCommand request,
-            CancellationToken cancellationToken
-        )
+            CancellationToken cancellationToken)
         {
-            var existing = await _provinceRepository.GetFirstOrDefaultAsync(x => x.Id == request.Id,
+            var existing = await _provinceRepository.GetFirstOrDefaultAsync(
+                x => x.Id == request.Id,
                 includeProperties: nameof(Province.Translations));
-            if (existing is null)
-            {
-                return Result<ProvinceDto>.NotFoundResult(request.Id);
-            }
+            if (existing is null) return Result<ProvinceDto>.NotFoundResult(request.Id);
 
-            // Map simple fields (keeping backward compatibility)
-            _mapper.Map(request.ProvinceDto, existing);
-
-            // Update translations if provided
-            if (request.ProvinceDto.Translations != null && request.ProvinceDto.Translations.Any())
-            {
-                // Simple strategy: replace existing translations with the new set (could be improved to Upsert per language)
-                existing.Translations.Clear();
-                foreach (var t in request.ProvinceDto.Translations)
-                {
-                    existing.Translations.Add(new ProvinceTranslation
-                    {
-                        LanguageCode = t.LanguageCode,
-                        LanguageId = t.LanguageId,
-                        IsDefault = t.IsDefault,
-                        Name = t.Name
-                    });
-                }
-
-                // Ensure only one default
-                var defaults = existing.Translations.Where(t => t.IsDefault).ToList();
-                if (defaults.Count > 1)
-                {
-                    foreach (var t in defaults.Skip(1)) t.IsDefault = false;
-                }
-
-                if (defaults.Count == 0 && existing.Translations.Count > 0)
-                {
-                    existing.Translations.First().IsDefault = true;
-                }
-            }
-            else if (!string.IsNullOrWhiteSpace(request.ProvinceDto.Name))
-            {
-                // If only Name provided, ensure at least one translation exists (keep or set default)
-                if (existing.Translations == null || existing.Translations.Count == 0)
-                {
-                    existing.Translations = new List<ProvinceTranslation>
-                    {
-                        new ProvinceTranslation
-                            { LanguageCode = "en", LanguageId = "1", IsDefault = true, Name = request.ProvinceDto.Name }
-                    };
-                }
-                else
-                {
-                    // Update default translation's name if possible
-                    var def = existing.Translations.FirstOrDefault(t => t.IsDefault) ?? existing.Translations.First();
-                    def.Name = request.ProvinceDto.Name;
-                }
-            }
-
+            ProvinceMapping.Apply(existing, request.ProvinceDto);
             await _unitOfWork.SaveChanges(cancellationToken);
-
-            var response = _mapper.Map<ProvinceDto>(existing);
-            return Result<ProvinceDto>.SuccessResult(response);
+            return Result<ProvinceDto>.SuccessResult(ProvinceMapping.ToDto(existing));
         }
     }
 }

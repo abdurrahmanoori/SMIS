@@ -1,10 +1,9 @@
-using AutoMapper;
 using MediatR;
 using SMIS.Application.Common.Response;
 using SMIS.Application.DTO.Districts;
+using SMIS.Application.Features.Districts;
 using SMIS.Application.Repositories.Base;
 using SMIS.Application.Repositories.Districts;
-using SMIS.Domain.Entities.LocationEntities;
 
 namespace SMIS.Application.Features.Districts.Commands
 {
@@ -14,29 +13,23 @@ namespace SMIS.Application.Features.Districts.Commands
     {
         private readonly IDistrictRepository _districtRepository;
         private readonly IUnitOfWork _unitOfWork;
-        private readonly IMapper _mapper;
 
         public DistrictCreateCommandHandler(
             IUnitOfWork unitOfWork,
-            IMapper mapper,
-            IDistrictRepository districtRepository
-        )
+            IDistrictRepository districtRepository)
         {
             _unitOfWork = unitOfWork;
-            _mapper = mapper;
             _districtRepository = districtRepository;
         }
 
         public async Task<Result<DistrictDto>> Handle(
             DistrictCreateCommand request,
-            CancellationToken cancellationToken
-        )
+            CancellationToken cancellationToken)
         {
-            var entity = _mapper.Map<District>(request.DistrictCreateDto);
-
+            var entity = DistrictMapping.Create(request.DistrictCreateDto);
             await _districtRepository.AddAsync(entity);
             await _unitOfWork.SaveChanges(cancellationToken);
-            return Result<DistrictDto>.SuccessResult(_mapper.Map<DistrictDto>(entity));
+            return Result<DistrictDto>.SuccessResult(DistrictMapping.ToDto(entity));
         }
     }
 }
