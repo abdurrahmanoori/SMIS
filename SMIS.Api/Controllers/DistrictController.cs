@@ -28,25 +28,26 @@ namespace SMIS.Api.Controllers
             HandleResultResponseOld(await Mediator.Send(new DistrictCreateCommand(dto)));
 
         /// <summary>
-        /// Gets districts in pages.
+        /// Gets districts with flexible filtering, optional returned columns, and pagination.
         /// </summary>
         [HttpGet]
-        public async Task<ActionResult<PagedList<DistrictDto>>> GetAll(
+        public async Task<ActionResult<PagedListNew<DistrictDto>>> GetAll(
+            [FromQuery] DistrictQueryCriteria criteria,
+            [FromQuery] string[]? columns,
             [FromQuery] int pageNumber = 1,
-            [FromQuery] int pageSize = 25
+            [FromQuery] int pageSize = 25,
+            CancellationToken cancellationToken = default
         )
         {
-            return HandleResultResponseOld(await Mediator.Send(new DistrictGetListQuery(pageNumber, pageSize)));
+            return await HandleRequest(new DistrictQuery(
+                new EntityDropdown<DistrictQueryCriteria>
+                {
+                    Criteria = criteria,
+                    Columns = columns,
+                    PageNumber = pageNumber,
+                    PageSize = pageSize
+                }), cancellationToken);
         }
-
-        /// <summary>
-        /// Gets one district by its ID.
-        /// </summary>
-        [HttpGet("{id}")]
-        public async Task<ActionResult<DistrictDto>> GetById(
-            string id
-        ) =>
-            HandleResultResponseOld(await Mediator.Send(new DistrictGetByIdQuery(id)));
 
         /// <summary>
         /// Updates an existing district.

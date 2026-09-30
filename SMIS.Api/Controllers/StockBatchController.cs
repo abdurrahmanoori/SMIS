@@ -38,25 +38,24 @@ namespace SMIS.Api.Controllers
             HandleResultResponseOld(await Mediator.Send(new StockBatchCreateCommand(dto)));
 
         /// <summary>
-        /// Gets stock batches in pages.
+        /// Gets stock batches with flexible filtering, optional returned columns, and pagination.
         /// </summary>
         [HttpGet]
         [HasPermission(ApplicationComponentKeys.Inventory, PermissionAction.Read)]
-        public async Task<ActionResult<PagedList<StockBatchDto>>> GetAll(
+        public async Task<ActionResult<PagedListNew<StockBatchDto>>> GetAll(
+            [FromQuery] StockBatchQueryCriteria criteria,
+            [FromQuery] string[]? columns,
             [FromQuery] int pageNumber = 1,
-            [FromQuery] int pageSize = 25
-        ) =>
-            HandleResultResponseOld(await Mediator.Send(new StockBatchGetListQuery(pageNumber, pageSize)));
-
-        /// <summary>
-        /// Gets one stock batch by its ID.
-        /// </summary>
-        [HttpGet("{id}")]
-        [HasPermission(ApplicationComponentKeys.Inventory, PermissionAction.Read)]
-        public async Task<ActionResult<StockBatchDto>> GetById(
-            string id
-        ) =>
-            HandleResultResponseOld(await Mediator.Send(new StockBatchGetByIdQuery(id)));
+            [FromQuery] int pageSize = 25,
+            CancellationToken cancellationToken = default
+        ) => await HandleRequest(new StockBatchQuery(
+            new EntityDropdown<StockBatchQueryCriteria>
+            {
+                Criteria = criteria,
+                Columns = columns,
+                PageNumber = pageNumber,
+                PageSize = pageSize
+            }), cancellationToken);
 
         /// <summary>
         /// Updates stock-batch details or status without directly changing its quantity.

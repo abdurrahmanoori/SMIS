@@ -42,27 +42,27 @@ namespace SMIS.Api.Controllers
             HandleResultResponseOld(await Mediator.Send(new ShopSyncCreateCommand(dto)));
 
         /// <summary>
-        /// Gets shops in pages.
+        /// Gets shops with flexible filtering, optional returned columns, and pagination.
         /// </summary>
         [HttpGet]
         [HasPermission(ApplicationComponentKeys.Shops, PermissionAction.Read)]
-        public async Task<ActionResult<PagedList<ShopDto>>> GetAll(
+        public async Task<ActionResult<PagedListNew<ShopDto>>> GetAll(
+            [FromQuery] ShopQueryCriteria criteria,
+            [FromQuery] string[]? columns,
             [FromQuery] int pageNumber = 1,
-            [FromQuery] int pageSize = 25
+            [FromQuery] int pageSize = 25,
+            CancellationToken cancellationToken = default
         )
         {
-            return HandleResultResponseOld(await Mediator.Send(new ShopGetListQuery(pageNumber, pageSize)));
+            return await HandleRequest(new ShopQuery(
+                new EntityDropdown<ShopQueryCriteria>
+                {
+                    Criteria = criteria,
+                    Columns = columns,
+                    PageNumber = pageNumber,
+                    PageSize = pageSize
+                }), cancellationToken);
         }
-
-        /// <summary>
-        /// Gets one shop by its ID.
-        /// </summary>
-        [HttpGet("{id}")]
-        [HasPermission(ApplicationComponentKeys.Shops, PermissionAction.Read)]
-        public async Task<ActionResult<ShopDto>> GetById(
-            string id
-        ) =>
-            HandleResultResponseOld(await Mediator.Send(new ShopGetByIdQuery(id)));
 
         /// <summary>
         /// Updates an existing shop.
@@ -109,6 +109,5 @@ namespace SMIS.Api.Controllers
             ShopSyncDeleteDto dto
         ) =>
             HandleResultResponseOld(await Mediator.Send(new ShopSyncDeleteCommand(id, dto)));
-
     }
 }

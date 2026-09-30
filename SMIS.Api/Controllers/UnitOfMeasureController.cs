@@ -45,27 +45,27 @@ namespace SMIS.Api.Controllers
         ) => HandleResultResponseOld(await Mediator.Send(new UnitOfMeasureSyncCreateCommand(dto)));
 
         /// <summary>
-        /// Gets units of measure in pages.
+        /// Gets units of measure with flexible filtering, optional returned columns, and pagination.
         /// </summary>
         [HttpGet]
         [HasPermission(ApplicationComponentKeys.UnitsOfMeasure, PermissionAction.Read)]
-        public async Task<ActionResult<PagedList<UnitOfMeasureDto>>> GetAll(
+        public async Task<ActionResult<PagedListNew<UnitOfMeasureDto>>> GetAll(
+            [FromQuery] UnitOfMeasureQueryCriteria criteria,
+            [FromQuery] string[]? columns,
             [FromQuery] int pageNumber = 1,
-            [FromQuery] int pageSize = 25
+            [FromQuery] int pageSize = 25,
+            CancellationToken cancellationToken = default
         )
         {
-            return HandleResultResponseOld(await Mediator.Send(new UnitOfMeasureGetListQuery(pageNumber, pageSize)));
+            return await HandleRequest(new UnitOfMeasureQuery(
+                new EntityDropdown<UnitOfMeasureQueryCriteria>
+                {
+                    Criteria = criteria,
+                    Columns = columns,
+                    PageNumber = pageNumber,
+                    PageSize = pageSize
+                }), cancellationToken);
         }
-
-        /// <summary>
-        /// Gets one unit of measure by its ID.
-        /// </summary>
-        [HttpGet("{id}")]
-        [HasPermission(ApplicationComponentKeys.UnitsOfMeasure, PermissionAction.Read)]
-        public async Task<ActionResult<UnitOfMeasureDto>> GetById(
-            string id
-        ) =>
-            HandleResultResponseOld(await Mediator.Send(new UnitOfMeasureGetByIdQuery(id)));
 
         /// <summary>
         /// Updates an existing unit of measure.
@@ -110,6 +110,5 @@ namespace SMIS.Api.Controllers
             string id,
             UnitOfMeasureSyncDeleteDto dto
         ) => HandleResultResponseOld(await Mediator.Send(new UnitOfMeasureSyncDeleteCommand(id, dto)));
-
     }
 }

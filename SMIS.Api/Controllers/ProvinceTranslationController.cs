@@ -28,23 +28,26 @@ namespace SMIS.Api.Controllers
             HandleResultResponseOld(await Mediator.Send(new ProvinceTranslationCreateCommand(dto)));
 
         /// <summary>
-        /// Gets all translations for one province.
+        /// Gets province translations with flexible filtering, selected columns, and pagination.
         /// </summary>
-        /// <param name="provinceId">The province ID.</param>
-        [HttpGet("province/{provinceId}")]
-        public async Task<ActionResult<List<ProvinceTranslationDto>>> GetByProvince(
-            string provinceId
-        ) =>
-            HandleResultResponseOld(await Mediator.Send(new ProvinceTranslationGetListQuery(provinceId)));
-
-        /// <summary>
-        /// Gets one province translation by its ID.
-        /// </summary>
-        [HttpGet("{id}")]
-        public async Task<ActionResult<ProvinceTranslationDto>> GetById(
-            string id
-        ) =>
-            HandleResultResponseOld(await Mediator.Send(new ProvinceTranslationGetByIdQuery(id)));
+        [HttpGet]
+        public async Task<ActionResult<PagedListNew<ProvinceTranslationDto>>> GetAll(
+            [FromQuery] ProvinceTranslationQueryCriteria criteria,
+            [FromQuery] string[]? columns,
+            [FromQuery] int pageNumber = 1,
+            [FromQuery] int pageSize = 25,
+            CancellationToken cancellationToken = default
+        )
+        {
+            return await HandleRequest(new ProvinceTranslationQuery(
+                new EntityDropdown<ProvinceTranslationQueryCriteria>
+                {
+                    Criteria = criteria,
+                    Columns = columns,
+                    PageNumber = pageNumber,
+                    PageSize = pageSize
+                }), cancellationToken);
+        }
 
         /// <summary>
         /// Updates an existing province translation.

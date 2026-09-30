@@ -45,11 +45,11 @@ public class ProductPriceController : BaseApiController
     ) => HandleResultResponseOld(await Mediator.Send(new ProductPriceSyncCreateCommand(dto)));
 
     /// <summary>
-    /// Searches product prices using flexible filters and optional returned columns.
+    /// Gets product prices with flexible filtering, optional returned columns, and pagination.
     /// </summary>
-    [HttpGet("query")]
+    [HttpGet]
     [HasPermission(ApplicationComponentKeys.ProductPrices, PermissionAction.Read)]
-    public async Task<ActionResult<PagedListNew<ProductPriceDto>>> Query(
+    public async Task<ActionResult<PagedListNew<ProductPriceDto>>> GetAll(
         [FromQuery] ProductPriceQueryCriteria criteria,
         [FromQuery] string[]? columns,
         [FromQuery] int pageNumber = 1,
@@ -110,5 +110,4 @@ public class ProductPriceController : BaseApiController
         string id,
         ProductPriceSyncDeleteDto dto
     ) => HandleResultResponseOld(await Mediator.Send(new ProductPriceSyncDeleteCommand(id, dto)));
-
 }

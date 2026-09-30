@@ -44,65 +44,34 @@ namespace SMIS.Api.Controllers
         ) => HandleResultResponseOld(await Mediator.Send(new ProductUnitSyncCreateCommand(dto)));
 
         /// <summary>
-        /// Gets product units in pages.
+        /// Gets product units with flexible filtering, optional returned columns, and pagination.
         /// </summary>
         /// <remarks>
         /// Use <c>includeProduct</c> and <c>includeUnitOfMeasure</c> when the response should also include those related records.
         /// </remarks>
         [HttpGet]
         [HasPermission(ApplicationComponentKeys.ProductUnits, PermissionAction.Read)]
-        public async Task<ActionResult<PagedList<ProductUnitDto>>> GetAll(
-            [FromQuery] int pageNumber = 1,
-            [FromQuery] int pageSize = 25,
-            [FromQuery] bool includeProduct = false,
-            [FromQuery] bool includeUnitOfMeasure = false
-        )
-        {
-            return HandleResultResponseOld(await Mediator.Send(
-                new ProductUnitGetListQuery(pageNumber, pageSize, includeProduct, includeUnitOfMeasure)));
-        }
-
-        /// <summary>
-        /// Searches product units using flexible filters and optional returned columns.
-        /// </summary>
-        /// <remarks>
-        /// This endpoint is useful for dropdowns and filtered lookups. The criteria object controls filtering,
-        /// while <c>columns</c> can limit which fields are returned.
-        /// </remarks>
-        [HttpGet("query")]
-        [HasPermission(ApplicationComponentKeys.ProductUnits, PermissionAction.Read)]
-        public async Task<ActionResult<PagedListNew<ProductUnitDto>>> Query(
+        public async Task<ActionResult<PagedListNew<ProductUnitDto>>> GetAll(
             [FromQuery] ProductUnitQueryCriteria criteria,
             [FromQuery] string[]? columns,
             [FromQuery] int pageNumber = 1,
             [FromQuery] int pageSize = 25,
+            [FromQuery] bool includeProduct = false,
+            [FromQuery] bool includeUnitOfMeasure = false,
             CancellationToken cancellationToken = default
-        ) => await HandleRequest(
-            new ProductUnitQuery(
+        )
+        {
+            return await HandleRequest(new ProductUnitQuery(
                 new EntityDropdown<ProductUnitQueryCriteria>
                 {
                     Criteria = criteria,
                     Columns = columns,
                     PageNumber = pageNumber,
-                    PageSize = pageSize,
-                }),
-            cancellationToken);
-
-        /// <summary>
-        /// Gets one product unit by its ID.
-        /// </summary>
-        /// <remarks>
-        /// Related product and unit-of-measure information can be included with the two query flags.
-        /// </remarks>
-        [HttpGet("{id}")]
-        [HasPermission(ApplicationComponentKeys.ProductUnits, PermissionAction.Read)]
-        public async Task<ActionResult<ProductUnitDto>> GetById(
-            string id,
-            [FromQuery] bool includeProduct = false,
-            [FromQuery] bool includeUnitOfMeasure = false
-        ) =>
-            HandleResultResponseOld(
-                await Mediator.Send(new ProductUnitGetByIdQuery(id, includeProduct, includeUnitOfMeasure)));
+                    PageSize = pageSize
+                },
+                includeProduct,
+                includeUnitOfMeasure), cancellationToken);
+        }
 
         /// <summary>
         /// Updates an existing product unit conversion.
@@ -147,6 +116,5 @@ namespace SMIS.Api.Controllers
             string id,
             ProductUnitSyncDeleteDto dto
         ) => HandleResultResponseOld(await Mediator.Send(new ProductUnitSyncDeleteCommand(id, dto)));
-
     }
 }

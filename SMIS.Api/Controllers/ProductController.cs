@@ -44,36 +44,32 @@ namespace SMIS.Api.Controllers
             HandleResultResponseOld(await Mediator.Send(new ProductSyncCreateCommand(dto)));
 
         /// <summary>
-        /// Gets products in pages.
+        /// Gets products with flexible filtering, optional returned columns, and pagination.
         /// </summary>
         /// <remarks>
         /// Set <c>includeCategory</c> to true when category information should be returned with each product.
         /// </remarks>
         [HttpGet]
         [HasPermission(ApplicationComponentKeys.Products, PermissionAction.Read)]
-        public async Task<ActionResult<PagedList<ProductDto>>> GetAll(
+        public async Task<ActionResult<PagedListNew<ProductDto>>> GetAll(
+            [FromQuery] ProductQueryCriteria criteria,
+            [FromQuery] string[]? columns,
             [FromQuery] int pageNumber = 1,
             [FromQuery] int pageSize = 25,
-            [FromQuery] bool includeCategory = false
+            [FromQuery] bool includeCategory = false,
+            CancellationToken cancellationToken = default
         )
         {
-            return HandleResultResponseOld(
-                await Mediator.Send(new ProductGetListQuery(pageNumber, pageSize, includeCategory)));
+            return await HandleRequest(new ProductQuery(
+                new EntityDropdown<ProductQueryCriteria>
+                {
+                    Criteria = criteria,
+                    Columns = columns,
+                    PageNumber = pageNumber,
+                    PageSize = pageSize
+                },
+                includeCategory), cancellationToken);
         }
-
-        /// <summary>
-        /// Gets one product by its ID.
-        /// </summary>
-        /// <remarks>
-        /// Set <c>includeCategory</c> to true to include the related category information.
-        /// </remarks>
-        [HttpGet("{id}")]
-        [HasPermission(ApplicationComponentKeys.Products, PermissionAction.Read)]
-        public async Task<ActionResult<ProductDto>> GetById(
-            string id,
-            [FromQuery] bool includeCategory = false
-        ) =>
-            HandleResultResponseOld(await Mediator.Send(new ProductGetByIdQuery(id, includeCategory)));
 
         /// <summary>
         /// Gets pricing information used when a product is sold on credit.
@@ -138,6 +134,5 @@ namespace SMIS.Api.Controllers
             ProductSyncDeleteDto dto
         ) =>
             HandleResultResponseOld(await Mediator.Send(new ProductSyncDeleteCommand(id, dto)));
-
     }
 }

@@ -25,23 +25,23 @@ namespace SMIS.Api.Controllers
             HandleResultResponseOld(await Mediator.Send(new LanguageCreateCommand(dto)));
 
         /// <summary>
-        /// Gets languages in pages.
+        /// Gets languages with flexible filtering, optional returned columns, and pagination.
         /// </summary>
         [HttpGet]
         public async Task<ActionResult<PagedListNew<LanguageDto>>> GetAll(
+            [FromQuery] LanguageQueryCriteria criteria,
+            [FromQuery] string[]? columns,
             [FromQuery] int pageNumber = 1,
-            [FromQuery] int pageSize = 25
-        ) =>
-            HandleResultResponseOld(await Mediator.Send(new LanguageGetListQuery(pageNumber, pageSize)));
-
-        /// <summary>
-        /// Gets one language by its ID.
-        /// </summary>
-        [HttpGet("{id}")]
-        public async Task<ActionResult<LanguageDto>> GetById(
-            string id
-        ) =>
-            HandleResultResponseOld(await Mediator.Send(new LanguageGetByIdQuery(id)));
+            [FromQuery] int pageSize = 25,
+            CancellationToken cancellationToken = default
+        ) => await HandleRequest(new LanguageQuery(
+            new EntityDropdown<LanguageQueryCriteria>
+            {
+                Criteria = criteria,
+                Columns = columns,
+                PageNumber = pageNumber,
+                PageSize = pageSize
+            }), cancellationToken);
 
         /// <summary>
         /// Updates an existing language.

@@ -30,20 +30,22 @@ namespace SMIS.Api.Controllers
         /// </summary>
         [HttpGet]
         [Authorize]
-        public async Task<ActionResult<PagedList<ShopOwnerDto>>> GetAll(
+        public async Task<ActionResult<PagedListNew<ShopOwnerDto>>> GetAll(
+            [FromQuery] ShopOwnerQueryCriteria criteria,
+            [FromQuery] string[]? columns,
             [FromQuery] int pageNumber = 1,
-            [FromQuery] int pageSize = 25
-        ) =>
-            HandleResultResponseOld(await Mediator.Send(new ShopOwnerGetListQuery(pageNumber, pageSize)));
-
-        /// <summary>
-        /// Gets one shop owner by its ID.
-        /// </summary>
-        [HttpGet("{id}")]
-        public async Task<ActionResult<ShopOwnerDto>> GetById(
-            string id
-        ) =>
-            HandleResultResponseOld(await Mediator.Send(new ShopOwnerGetByIdQuery(id)));
+            [FromQuery] int pageSize = 25,
+            CancellationToken cancellationToken = default
+        )
+        {
+            return await HandleRequest(new ShopOwnerQuery(new EntityDropdown<ShopOwnerQueryCriteria>
+            {
+                Criteria = criteria,
+                Columns = columns,
+                PageNumber = pageNumber,
+                PageSize = pageSize
+            }), cancellationToken);
+        }
 
         /// <summary>
         /// Updates an existing shop owner.
