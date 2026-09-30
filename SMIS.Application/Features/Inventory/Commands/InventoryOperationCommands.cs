@@ -1,8 +1,8 @@
-using AutoMapper;
 using MediatR;
 using SMIS.Application.Common.Response;
 using SMIS.Application.DTO.Inventory;
 using SMIS.Application.DTO.StockMovements;
+using SMIS.Application.Features.StockMovements;
 using SMIS.Application.Repositories.Base;
 using SMIS.Application.Services;
 using SMIS.Domain.Enums;
@@ -10,15 +10,10 @@ using SMIS.Domain.Services;
 
 namespace SMIS.Application.Features.Inventory.Commands;
 
-/// <summary>
-/// Internal command used by the explicit inventory endpoints. Direction/reason are
-/// selected by the endpoint, not accepted as an arbitrary client combination.
-/// </summary>
 public sealed record InventoryBatchOperationCommand(
     InventoryBatchOperationDto Dto,
     StockMovementDirection Direction,
-    StockMovementReason Reason
-)
+    StockMovementReason Reason)
     : IRequest<Result<StockMovementDto>>;
 
 internal sealed class InventoryBatchOperationCommandHandler
@@ -27,33 +22,25 @@ internal sealed class InventoryBatchOperationCommandHandler
     private readonly IInventoryService _inventory;
     private readonly IIdempotencyService _idempotency;
     private readonly IUnitOfWork _unitOfWork;
-    private readonly IMapper _mapper;
 
     public InventoryBatchOperationCommandHandler(
         IInventoryService inventory,
         IIdempotencyService idempotency,
-        IUnitOfWork unitOfWork,
-        IMapper mapper
-    )
+        IUnitOfWork unitOfWork)
     {
         _inventory = inventory;
         _idempotency = idempotency;
         _unitOfWork = unitOfWork;
-        _mapper = mapper;
     }
 
     public async Task<Result<StockMovementDto>> Handle(
         InventoryBatchOperationCommand request,
-        CancellationToken cancellationToken
-    )
+        CancellationToken cancellationToken)
     {
         var dto = request.Dto;
         var reservation = await _idempotency.ReserveAsync(
-            $"inventory:{request.Reason}",
-            dto.IdempotencyKey,
-            cancellationToken);
-        if (!reservation.Success)
-            return Failure(reservation);
+            $"inventory:{request.Reason}", dto.IdempotencyKey, cancellationToken);
+        if (!reservation.Success) return Failure(reservation);
 
         var result = await _inventory.PostMovementAsync(
             new InventoryMovementRequest(
@@ -66,19 +53,13 @@ internal sealed class InventoryBatchOperationCommandHandler
                 dto.ReferenceType,
                 dto.ReferenceId),
             cancellationToken);
+        if (!result.Success) return Failure(result);
 
-        if (!result.Success)
-            return Failure(result);
-
-        // The inventory workflow stages both the batch balance change and immutable
-        // movement. One SaveChanges persists them atomically.
         await _unitOfWork.SaveChanges(cancellationToken);
-        return Result<StockMovementDto>.SuccessResult(_mapper.Map<StockMovementDto>(result.Response));
+        return Result<StockMovementDto>.SuccessResult(StockMovementMapping.ToDto(result.Response));
     }
 
-    private static Result<StockMovementDto> Failure<T>(
-        Result<T> source
-    ) => new()
+    private static Result<StockMovementDto> Failure<T>(Result<T> source) => new()
     {
         Success = false,
         Message = source.Message,
@@ -95,31 +76,24 @@ internal sealed class InventoryTransferCommandHandler
     private readonly IInventoryService _inventory;
     private readonly IIdempotencyService _idempotency;
     private readonly IUnitOfWork _unitOfWork;
-    private readonly IMapper _mapper;
 
     public InventoryTransferCommandHandler(
         IInventoryService inventory,
         IIdempotencyService idempotency,
-        IUnitOfWork unitOfWork,
-        IMapper mapper
-    )
+        IUnitOfWork unitOfWork)
     {
         _inventory = inventory;
         _idempotency = idempotency;
         _unitOfWork = unitOfWork;
-        _mapper = mapper;
     }
 
     public async Task<Result<List<StockMovementDto>>> Handle(
         InventoryTransferCommand request,
-        CancellationToken cancellationToken
-    )
+        CancellationToken cancellationToken)
     {
         var dto = request.Dto;
         var reservation = await _idempotency.ReserveAsync(
-            "inventory:transfer",
-            dto.IdempotencyKey,
-            cancellationToken);
+            "inventory:transfer", dto.IdempotencyKey, cancellationToken);
         if (!reservation.Success)
             return new Result<List<StockMovementDto>>
             {
@@ -138,7 +112,6 @@ internal sealed class InventoryTransferCommandHandler
                 dto.ReferenceType,
                 dto.ReferenceId),
             cancellationToken);
-
         if (!result.Success)
             return new Result<List<StockMovementDto>>
             {
@@ -147,11 +120,7 @@ internal sealed class InventoryTransferCommandHandler
                 Errors = result.Errors
             };
 
-        // TransferAsync stages the source OUT, destination IN, and both cached-balance
-        // changes. Persisting once here keeps the paired transfer atomic without adding
-        // an unnecessary explicit transaction around a single EF Core SaveChanges.
         await _unitOfWork.SaveChanges(cancellationToken);
-        return Result<List<StockMovementDto>>.SuccessResult(
-            _mapper.Map<List<StockMovementDto>>(result.Response));
+        return Result<List<StockMovementDto>>.SuccessResult(StockMovementMapping.ToDtos(result.Response));
     }
 }
