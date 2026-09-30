@@ -1,8 +1,8 @@
-﻿using AutoMapper;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using SMIS.Application.Common.Response;
 using SMIS.Application.DTO.ProductUnits;
+using SMIS.Application.Features.ProductUnits;
 using SMIS.Application.Identity.IServices;
 using SMIS.Application.Repositories.Products;
 using SMIS.Application.Repositories.ProductUnits;
@@ -13,58 +13,46 @@ using SMIS.Domain.Services;
 namespace SMIS.Application.Features.ProductUnits.Commands;
 
 public record ProductUnitSyncCreateCommand(ProductUnitSyncCreateDto Dto) : IRequest<Result<ProductUnitDto>>;
-
 public record ProductUnitSyncUpdateCommand(string Id, ProductUnitSyncUpdateDto Dto) : IRequest<Result<ProductUnitDto>>;
-
 public record ProductUnitSyncDeleteCommand(string Id, ProductUnitSyncDeleteDto Dto) : IRequest<Result<ProductUnitDto>>;
 
-internal sealed class
-    ProductUnitSyncCreateCommandHandler : IRequestHandler<ProductUnitSyncCreateCommand, Result<ProductUnitDto>>
+internal sealed class ProductUnitSyncCreateCommandHandler
+    : IRequestHandler<ProductUnitSyncCreateCommand, Result<ProductUnitDto>>
 {
     private readonly IProductUnitRepository _repository;
     private readonly IApplicationDbContext _db;
     private readonly IProductRepository _products;
     private readonly ICurrentUser _user;
-    private readonly IMapper _mapper;
 
     public ProductUnitSyncCreateCommandHandler(
         IProductUnitRepository repository,
         IApplicationDbContext db,
         IProductRepository products,
-        ICurrentUser user,
-        IMapper mapper
-    )
+        ICurrentUser user)
     {
         _repository = repository;
         _db = db;
         _products = products;
         _user = user;
-        _mapper = mapper;
     }
 
-    public async Task<Result<ProductUnitDto>> Handle(
-        ProductUnitSyncCreateCommand request,
-        CancellationToken ct
-    )
+    public async Task<Result<ProductUnitDto>> Handle(ProductUnitSyncCreateCommand request, CancellationToken ct)
     {
         var product = await ProductUnitSyncRules.GetAccessibleProductAsync(request.Dto.ProductId, _products, _user);
         if (product is null) return ProductUnitSyncRules.Forbidden();
 
         var id = ProductUnitSyncRules.Id(request.Dto.Id);
         var modified = DateTimeService.NormalizeUtc(request.Dto.ClientModifiedDate);
-        var value = await _db.ProductUnits
-            .IgnoreQueryFilters()
+        var value = await _db.ProductUnits.IgnoreQueryFilters()
             .FirstOrDefaultAsync(productUnit => productUnit.Id == id, ct);
 
         if (value is not null)
         {
             if (modified <= value.GetConflictModifiedUtc())
-                return Result<ProductUnitDto>.SuccessResult(_mapper.Map<ProductUnitDto>(value));
+                return Result<ProductUnitDto>.SuccessResult(ProductUnitMapping.ToDto(value));
 
-            var currentProduct =
-                await ProductUnitSyncRules.GetAccessibleProductAsync(value.ProductId, _products, _user);
-            var targetProduct =
-                await ProductUnitSyncRules.GetAccessibleProductAsync(request.Dto.ProductId, _products, _user);
+            var currentProduct = await ProductUnitSyncRules.GetAccessibleProductAsync(value.ProductId, _products, _user);
+            var targetProduct = await ProductUnitSyncRules.GetAccessibleProductAsync(request.Dto.ProductId, _products, _user);
             if (currentProduct is null || targetProduct is null) return ProductUnitSyncRules.Forbidden();
 
             var guard = await ProductUnitCommandRules.ValidateMutationAsync(
@@ -86,7 +74,7 @@ internal sealed class
             value.SetClientModificationMetadata(modified);
             value.Restore();
             await _db.SaveChangesAsync(ct);
-            return Result<ProductUnitDto>.SuccessResult(_mapper.Map<ProductUnitDto>(value));
+            return Result<ProductUnitDto>.SuccessResult(ProductUnitMapping.ToDto(value));
         }
 
         var createGuard = await ProductUnitCommandRules.ValidateCreateAsync(
@@ -104,52 +92,43 @@ internal sealed class
         value.SetClientModificationMetadata(modified);
         await _repository.AddAsync(value);
         await _db.SaveChangesAsync(ct);
-        return Result<ProductUnitDto>.SuccessResult(_mapper.Map<ProductUnitDto>(value));
+        return Result<ProductUnitDto>.SuccessResult(ProductUnitMapping.ToDto(value));
     }
 }
 
-internal sealed class
-    ProductUnitSyncUpdateCommandHandler : IRequestHandler<ProductUnitSyncUpdateCommand, Result<ProductUnitDto>>
+internal sealed class ProductUnitSyncUpdateCommandHandler
+    : IRequestHandler<ProductUnitSyncUpdateCommand, Result<ProductUnitDto>>
 {
     private readonly IProductUnitRepository _repository;
     private readonly IApplicationDbContext _db;
     private readonly IProductRepository _products;
     private readonly ICurrentUser _user;
-    private readonly IMapper _mapper;
 
     public ProductUnitSyncUpdateCommandHandler(
         IProductUnitRepository repository,
         IApplicationDbContext db,
         IProductRepository products,
-        ICurrentUser user,
-        IMapper mapper
-    )
+        ICurrentUser user)
     {
         _repository = repository;
         _db = db;
         _products = products;
         _user = user;
-        _mapper = mapper;
     }
 
-    public async Task<Result<ProductUnitDto>> Handle(
-        ProductUnitSyncUpdateCommand request,
-        CancellationToken ct
-    )
+    public async Task<Result<ProductUnitDto>> Handle(ProductUnitSyncUpdateCommand request, CancellationToken ct)
     {
         var id = ProductUnitSyncRules.Id(request.Id);
-        var value = await _db.ProductUnits
-            .IgnoreQueryFilters()
+        var value = await _db.ProductUnits.IgnoreQueryFilters()
             .FirstOrDefaultAsync(productUnit => productUnit.Id == id, ct);
         if (value is null) return Result<ProductUnitDto>.NotFoundResult(request.Id);
 
         var modified = DateTimeService.NormalizeUtc(request.Dto.ClientModifiedDate);
         if (modified < value.GetConflictModifiedUtc())
-            return Result<ProductUnitDto>.SuccessResult(_mapper.Map<ProductUnitDto>(value));
+            return Result<ProductUnitDto>.SuccessResult(ProductUnitMapping.ToDto(value));
 
         var currentProduct = await ProductUnitSyncRules.GetAccessibleProductAsync(value.ProductId, _products, _user);
-        var targetProduct =
-            await ProductUnitSyncRules.GetAccessibleProductAsync(request.Dto.ProductId, _products, _user);
+        var targetProduct = await ProductUnitSyncRules.GetAccessibleProductAsync(request.Dto.ProductId, _products, _user);
         if (currentProduct is null || targetProduct is null) return ProductUnitSyncRules.Forbidden();
 
         var guard = await ProductUnitCommandRules.ValidateMutationAsync(
@@ -171,42 +150,34 @@ internal sealed class
         value.SetClientModificationMetadata(modified);
         value.Restore();
         await _db.SaveChangesAsync(ct);
-        return Result<ProductUnitDto>.SuccessResult(_mapper.Map<ProductUnitDto>(value));
+        return Result<ProductUnitDto>.SuccessResult(ProductUnitMapping.ToDto(value));
     }
 }
 
-internal sealed class
-    ProductUnitSyncDeleteCommandHandler : IRequestHandler<ProductUnitSyncDeleteCommand, Result<ProductUnitDto>>
+internal sealed class ProductUnitSyncDeleteCommandHandler
+    : IRequestHandler<ProductUnitSyncDeleteCommand, Result<ProductUnitDto>>
 {
     private readonly IProductUnitRepository _repository;
     private readonly IApplicationDbContext _db;
     private readonly IProductRepository _products;
     private readonly ICurrentUser _user;
-    private readonly IMapper _mapper;
 
     public ProductUnitSyncDeleteCommandHandler(
         IProductUnitRepository repository,
         IApplicationDbContext db,
         IProductRepository products,
-        ICurrentUser user,
-        IMapper mapper
-    )
+        ICurrentUser user)
     {
         _repository = repository;
         _db = db;
         _products = products;
         _user = user;
-        _mapper = mapper;
     }
 
-    public async Task<Result<ProductUnitDto>> Handle(
-        ProductUnitSyncDeleteCommand request,
-        CancellationToken ct
-    )
+    public async Task<Result<ProductUnitDto>> Handle(ProductUnitSyncDeleteCommand request, CancellationToken ct)
     {
         var id = ProductUnitSyncRules.Id(request.Id);
-        var value = await _db.ProductUnits
-            .IgnoreQueryFilters()
+        var value = await _db.ProductUnits.IgnoreQueryFilters()
             .FirstOrDefaultAsync(productUnit => productUnit.Id == id, ct);
         if (value is null) return Result<ProductUnitDto>.NotFoundResult(request.Id);
 
@@ -219,31 +190,26 @@ internal sealed class
 
         var modified = DateTimeService.NormalizeUtc(request.Dto.ClientModifiedDate);
         if (modified < value.GetConflictModifiedUtc())
-            return Result<ProductUnitDto>.SuccessResult(_mapper.Map<ProductUnitDto>(value));
+            return Result<ProductUnitDto>.SuccessResult(ProductUnitMapping.ToDto(value));
 
         value.SetClientModificationMetadata(modified);
         await _repository.RemoveAsync(value);
         await _db.SaveChangesAsync(ct);
-        return Result<ProductUnitDto>.SuccessResult(_mapper.Map<ProductUnitDto>(value));
+        return Result<ProductUnitDto>.SuccessResult(ProductUnitMapping.ToDto(value));
     }
 }
 
 internal static class ProductUnitSyncRules
 {
-    public static string Id(
-        string value
-    ) => Guid.Parse(value).ToString("D");
+    public static string Id(string value) => Guid.Parse(value).ToString("D");
 
     public static async Task<Product?> GetAccessibleProductAsync(
         string productId,
         IProductRepository products,
-        ICurrentUser user
-    )
+        ICurrentUser user)
     {
         var product = await products.GetByIdAsync(productId);
-        return product is not null && product.ShopId == user.GetShopId()
-            ? product
-            : null;
+        return product is not null && product.ShopId == user.GetShopId() ? product : null;
     }
 
     public static Result<ProductUnitDto> Forbidden() =>
