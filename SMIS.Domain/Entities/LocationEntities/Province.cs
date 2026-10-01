@@ -7,4 +7,5 @@ public class Province : BaseAuditableEntity, IHasTranslations<ProvinceTranslatio
 {
     public string Name { get; set; } = string.Empty;
     public virtual ICollection<ProvinceTranslation> Translations { get; set; } = new List<ProvinceTranslation>();
+    public virtual ICollection<District> Districts { get; set; } = new List<District>();
 }

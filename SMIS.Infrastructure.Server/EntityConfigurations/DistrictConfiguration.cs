@@ -14,6 +14,12 @@ namespace SMIS.Infrastructure.Server.EntityConfigurations
             builder.HasKey(x => x.Id);
 
             builder.Property(x => x.Name).HasMaxLength(200).IsRequired();
+            builder.Property(x => x.ProvinceId).HasMaxLength(450).IsRequired();
+
+            builder.HasOne(x => x.Province)
+                .WithMany(x => x.Districts)
+                .HasForeignKey(x => x.ProvinceId)
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

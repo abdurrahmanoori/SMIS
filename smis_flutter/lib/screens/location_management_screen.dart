@@ -122,6 +122,7 @@ class _LocationManagementScreenState
                     items: _districts,
                     emptyText: context.l10n.text('No districts yet'),
                     addLabel: context.l10n.text('Add district'),
+                    showProvince: true,
                     enabled: !_mutating,
                     onCreate: () => _create(isProvince: false),
                     onEdit: (item) => _edit(item, isProvince: false),
@@ -134,28 +135,51 @@ class _LocationManagementScreenState
   }
 
   Future<void> _create({required bool isProvince}) async {
-    final name = await _nameDialog(
-      title: context.l10n.text(isProvince ? 'Add province' : 'Add district'),
+    if (isProvince) {
+      final name = await _nameDialog(title: context.l10n.text('Add province'));
+      if (name == null) return;
+
+      await _mutate(() => _api.createProvince(name));
+      return;
+    }
+
+    final district = await _districtDialog(
+      title: context.l10n.text('Add district'),
     );
-    if (name == null) return;
+    if (district == null) return;
 
     await _mutate(
-      () => isProvince ? _api.createProvince(name) : _api.createDistrict(name),
+      () => _api.createDistrict(district.name, district.provinceId),
     );
   }
 
   Future<void> _edit(LocationAdminItem item, {required bool isProvince}) async {
-    final name = await _nameDialog(
-      title: context.l10n.text(isProvince ? 'Edit province' : 'Edit district'),
-      initialValue: item.name,
+    if (isProvince) {
+      final name = await _nameDialog(
+        title: context.l10n.text('Edit province'),
+        initialValue: item.name,
+      );
+
+      if (name == null || name == item.name) return;
+
+      await _mutate(() => _api.updateProvince(item.id, name));
+      return;
+    }
+
+    final district = await _districtDialog(
+      title: context.l10n.text('Edit district'),
+      initialName: item.name,
+      initialProvinceId: item.provinceId,
     );
 
-    if (name == null || name == item.name) return;
+    if (district == null ||
+        (district.name == item.name &&
+            district.provinceId == item.provinceId)) {
+      return;
+    }
 
     await _mutate(
-      () => isProvince
-          ? _api.updateProvince(item.id, name)
-          : _api.updateDistrict(item.id, name),
+      () => _api.updateDistrict(item.id, district.name, district.provinceId),
     );
   }
 
@@ -236,6 +260,99 @@ class _LocationManagementScreenState
     return result;
   }
 
+  Future<_DistrictFormResult?> _districtDialog({
+    required String title,
+    String initialName = '',
+    String? initialProvinceId,
+  }) async {
+    if (_provinces.isEmpty) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              context.l10n.text('Create a province before adding a district.'),
+            ),
+          ),
+        );
+      }
+      return null;
+    }
+
+    final controller = TextEditingController(text: initialName);
+    var selectedProvinceId =
+        _provinces.any((province) => province.id == initialProvinceId)
+        ? initialProvinceId!
+        : _provinces.first.id;
+
+    final result = await showDialog<_DistrictFormResult>(
+      context: context,
+      builder: (dialogContext) => StatefulBuilder(
+        builder: (dialogContext, setDialogState) => AlertDialog(
+          title: Text(title),
+          content: SizedBox(
+            width: 420,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextField(
+                  controller: controller,
+                  autofocus: true,
+                  decoration: InputDecoration(
+                    labelText: dialogContext.l10n.text('Name'),
+                  ),
+                ),
+                const SizedBox(height: 16),
+                DropdownButtonFormField<String>(
+                  initialValue: selectedProvinceId,
+                  decoration: InputDecoration(
+                    labelText: dialogContext.l10n.text('Province'),
+                  ),
+                  items: _provinces
+                      .map(
+                        (province) => DropdownMenuItem<String>(
+                          value: province.id,
+                          child: Text(province.name),
+                        ),
+                      )
+                      .toList(growable: false),
+                  onChanged: (value) {
+                    if (value != null) {
+                      setDialogState(() => selectedProvinceId = value);
+                    }
+                  },
+                ),
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(dialogContext),
+              child: Text(dialogContext.l10n.text('Cancel')),
+            ),
+            FilledButton(
+              onPressed: () {
+                final name = controller.text.trim();
+                if (name.isEmpty) return;
+
+                Navigator.pop(
+                  dialogContext,
+                  _DistrictFormResult(
+                    name: name,
+                    provinceId: selectedProvinceId,
+                  ),
+                );
+              },
+              child: Text(dialogContext.l10n.text('Save')),
+            ),
+          ],
+        ),
+      ),
+    );
+
+    controller.dispose();
+    return result;
+  }
+
   Future<void> _mutate(Future<void> Function() action) async {
     if (_mutating) return;
 
@@ -261,12 +378,14 @@ class _LocationList extends StatelessWidget {
     required this.onCreate,
     required this.onEdit,
     required this.onDelete,
+    this.showProvince = false,
   });
 
   final List<LocationAdminItem> items;
   final String emptyText;
   final String addLabel;
   final bool enabled;
+  final bool showProvince;
   final VoidCallback onCreate;
   final ValueChanged<LocationAdminItem> onEdit;
   final ValueChanged<LocationAdminItem> onDelete;
@@ -287,6 +406,12 @@ class _LocationList extends StatelessWidget {
               child: ListTile(
                 leading: const Icon(Icons.location_on_outlined),
                 title: Text(item.name),
+                subtitle:
+                    showProvince &&
+                        item.provinceName != null &&
+                        item.provinceName!.isNotEmpty
+                    ? Text(item.provinceName!)
+                    : null,
                 trailing: enabled
                     ? PopupMenuButton<String>(
                         onSelected: (value) =>
@@ -318,4 +443,11 @@ class _LocationList extends StatelessWidget {
       ),
     ],
   );
+}
+
+class _DistrictFormResult {
+  const _DistrictFormResult({required this.name, required this.provinceId});
+
+  final String name;
+  final String provinceId;
 }

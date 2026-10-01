@@ -6,15 +6,25 @@ import '../services/bearer_token_interceptor.dart';
 import 'data_exception.dart';
 
 class LocationAdminItem {
-  const LocationAdminItem({required this.id, required this.name});
+  const LocationAdminItem({
+    required this.id,
+    required this.name,
+    this.provinceId,
+    this.provinceName,
+  });
 
   final String id;
   final String name;
+  final String? provinceId;
+  final String? provinceName;
 
   factory LocationAdminItem.fromJson(Map<String, dynamic> json) =>
       LocationAdminItem(
         id: (json['id'] ?? json['Id'] ?? '').toString(),
         name: (json['name'] ?? json['Name'] ?? '').toString(),
+        provinceId: (json['provinceId'] ?? json['ProvinceId'])?.toString(),
+        provinceName: (json['provinceName'] ?? json['ProvinceName'])
+            ?.toString(),
       );
 }
 
@@ -47,14 +57,24 @@ class LocationAdminApi {
   Future<void> createProvince(String name) =>
       _create(AppConfig.provinceEndpoint, name);
 
-  Future<void> createDistrict(String name) =>
-      _create(AppConfig.districtEndpoint, name);
+  Future<void> createDistrict(String name, String provinceId) =>
+      _request(() async {
+        await _dio.post<Object?>(
+          AppConfig.districtEndpoint,
+          data: {'name': name, 'provinceId': provinceId},
+        );
+      });
 
   Future<void> updateProvince(String id, String name) =>
       _update(AppConfig.provinceEndpoint, id, name);
 
-  Future<void> updateDistrict(String id, String name) =>
-      _update(AppConfig.districtEndpoint, id, name);
+  Future<void> updateDistrict(String id, String name, String provinceId) =>
+      _request(() async {
+        await _dio.put<Object?>(
+          '${AppConfig.districtEndpoint}/$id',
+          data: {'name': name, 'provinceId': provinceId},
+        );
+      });
 
   Future<void> deleteProvince(String id) =>
       _delete(AppConfig.provinceEndpoint, id);

@@ -10,9 +10,24 @@ public static class DistrictSeed
     )
     {
         modelBuilder.Entity<District>().HasData(SeedIds.Stamp(
-            new District { Id = SeedIds.DistrictKabulCenter, Name = "Kabul Center" },
-            new District { Id = SeedIds.DistrictKabulNorth, Name = "Kabul North" },
-            new District { Id = SeedIds.DistrictHeratCenter, Name = "Herat Center" }
+            new District
+            {
+                Id = SeedIds.DistrictKabulCenter,
+                Name = "Kabul Center",
+                ProvinceId = SeedIds.ProvinceKabul
+            },
+            new District
+            {
+                Id = SeedIds.DistrictKabulNorth,
+                Name = "Kabul North",
+                ProvinceId = SeedIds.ProvinceKabul
+            },
+            new District
+            {
+                Id = SeedIds.DistrictHeratCenter,
+                Name = "Herat Center",
+                ProvinceId = SeedIds.ProvinceHerat
+            }
         ));
     }
 }
