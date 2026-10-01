@@ -1,16 +1,12 @@
-﻿using AutoMapper;
-using AutoMapper.EquivalencyExpression;
-using Microsoft.AspNetCore.Hosting;
+﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Scrutor;
 using SMIS.Application.Identity.IServices;
-using SMIS.Application.Mappings;
 using SMIS.Application.Repositories.Base;
 using SMIS.Application.Services;
 using SMIS.Domain.Contracts;
-using SMIS.Infrastructure.Server.Context;
 using SMIS.Infrastructure.Server.ContractsImplementation;
 using SMIS.Infrastructure.Server.Interceptors;
 using SMIS.Infrastructure.Server.Repositories.Base;
@@ -46,14 +42,10 @@ namespace SMIS.Infrastructure.Server.Extensions
                 services.AddScoped<IPKGenerator, DevPKGenerator>();
             }
 
-            // Register ICurrentUser for Web API (uses HttpContext)
             services.AddScoped<ICurrentUser, CurrentUser>();
-
-            // Register JWT token generator — only the infrastructure layer knows about JWT
             services.AddScoped<ITokenGenerator, JwtTokenGenerator>();
             services.AddScoped<IPowerSyncTokenGenerator, PowerSyncTokenGenerator>();
 
-            // Automatically register repositories with Scrutor (no magic strings)
             services.Scan(scan => scan
                 .FromAssemblies(typeof(InfrastructureServicesRegistration).Assembly)
                 .AddClasses(c => c.InNamespaces(
@@ -63,16 +55,8 @@ namespace SMIS.Infrastructure.Server.Extensions
 
             services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
             services.AddScoped<IUnitOfWork, UnitOfWork>();
-
-            // Register services
             services.AddScoped<IGenericQueryService, GenericQueryService>();
             services.AddSingleton<IPublicIdGenerator, PublicIdGenerator>();
-            services.AddAutoMapper((serviceProvider, cfg) =>
-                {
-                    cfg.AddCollectionMappers();
-                    cfg.UseEntityFrameworkCoreModel<AppDbContext>(serviceProvider);
-                },
-                typeof(MappingProfile).Assembly);
 
             return services;
         }
