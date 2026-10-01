@@ -1,6 +1,6 @@
-using AutoMapper;
 using MediatR;
 using SMIS.Application.DTO.Provinces;
+using SMIS.Application.Features.Provinces;
 using SMIS.Application.Repositories.Provinces;
 using SMIS.Application.Repositories.Base;
 using SMIS.Application.Repositories.Localization;
@@ -18,19 +18,16 @@ namespace SMIS.Application.Features.Provinces.Commands
     {
         private readonly IProvinceRepository _repo;
         private readonly IUnitOfWork _uow;
-        private readonly IMapper _mapper;
         private readonly ILanguageRepository _languageRepo;
 
         public ProvinceTranslationUpdateCommandHandler(
             IProvinceRepository repo,
             IUnitOfWork uow,
-            IMapper mapper,
             ILanguageRepository languageRepo
         )
         {
             _repo = repo;
             _uow = uow;
-            _mapper = mapper;
             _languageRepo = languageRepo;
         }
 
@@ -46,10 +43,8 @@ namespace SMIS.Application.Features.Provinces.Commands
             var trans = province.Translations.FirstOrDefault(t => t.Id == request.Id);
             if (trans is null) return Result<ProvinceTranslationDto>.NotFoundResult(request.Id);
 
-            // Map incoming values onto the tracked entity
-            _mapper.Map(request.Dto, trans);
+            ProvinceTranslationMapping.Apply(trans, request.Dto);
 
-            // Resolve language id if provided or by code
             if (!string.IsNullOrEmpty(request.Dto.LanguageId))
             {
                 trans.LanguageId = request.Dto.LanguageId;
@@ -60,13 +55,11 @@ namespace SMIS.Application.Features.Provinces.Commands
                 if (lang != null) trans.LanguageId = lang.Id;
             }
 
-            // Ensure LanguageCode is synced
             trans.LanguageCode = request.Dto.LanguageCode;
 
             await _uow.SaveChanges(cancellationToken);
 
-            var dto = _mapper.Map<ProvinceTranslationDto>(trans);
-            return Result<ProvinceTranslationDto>.SuccessResult(dto);
+            return Result<ProvinceTranslationDto>.SuccessResult(ProvinceTranslationMapping.ToDto(trans));
         }
     }
 }

@@ -1,7 +1,7 @@
-using AutoMapper;
 using MediatR;
 using SMIS.Application.Common.Response;
 using SMIS.Application.DTO.Customers;
+using SMIS.Application.Features.Customers;
 using SMIS.Application.Repositories.Base;
 using SMIS.Application.Repositories.Customers;
 using SMIS.Application.Identity.IServices;
@@ -15,18 +15,15 @@ namespace SMIS.Application.Features.Customers.Commands
     {
         private readonly ICustomerRepository _customerRepository;
         private readonly IUnitOfWork _unitOfWork;
-        private readonly IMapper _mapper;
         private readonly ICurrentUser _currentUser;
 
         public CustomerCreateCommandHandler(
             IUnitOfWork unitOfWork,
-            IMapper mapper,
             ICustomerRepository customerRepository,
             ICurrentUser currentUser
         )
         {
             _unitOfWork = unitOfWork;
-            _mapper = mapper;
             _customerRepository = customerRepository;
             _currentUser = currentUser;
         }
@@ -58,7 +55,7 @@ namespace SMIS.Application.Features.Customers.Commands
             await _customerRepository.AddAsync(entity);
             await _unitOfWork.SaveChanges(cancellationToken);
 
-            return Result<CustomerDto>.SuccessResult(_mapper.Map<CustomerDto>(entity));
+            return Result<CustomerDto>.SuccessResult(CustomerMapping.ToDto(entity));
         }
     }
 }

@@ -1,7 +1,7 @@
-using AutoMapper;
 using MediatR;
 using SMIS.Application.Common.Response;
 using SMIS.Application.DTO.ShopOwners;
+using SMIS.Application.Features.ShopOwners;
 using SMIS.Application.Repositories.Base;
 using SMIS.Application.Repositories.ShopOwners;
 using SMIS.Application.Repositories.Shops;
@@ -15,17 +15,14 @@ internal sealed class ShopOwnerUpdateCommandHandler : IRequestHandler<ShopOwnerU
     private readonly IShopOwnerRepository _shopOwnerRepository;
     private readonly IShopRepository _shopRepository;
     private readonly IUnitOfWork _unitOfWork;
-    private readonly IMapper _mapper;
 
     public ShopOwnerUpdateCommandHandler(
         IUnitOfWork unitOfWork,
-        IMapper mapper,
         IShopOwnerRepository shopOwnerRepository,
         IShopRepository shopRepository
     )
     {
         _unitOfWork = unitOfWork;
-        _mapper = mapper;
         _shopOwnerRepository = shopOwnerRepository;
         _shopRepository = shopRepository;
     }
@@ -39,7 +36,6 @@ internal sealed class ShopOwnerUpdateCommandHandler : IRequestHandler<ShopOwnerU
         if (entity == null)
             return Result<ShopOwnerDto>.NotFoundResult(request.Id);
 
-        // Update using domain methods
         entity.SetUserId(request.ShopOwnerCreateDto.ApplicationUserId);
         entity.SetFirstName(request.ShopOwnerCreateDto.FirstName);
         entity.SetLastName(request.ShopOwnerCreateDto.LastName);
@@ -52,13 +48,12 @@ internal sealed class ShopOwnerUpdateCommandHandler : IRequestHandler<ShopOwnerU
         if (request.ShopOwnerCreateDto.IsActive) entity.Activate();
         else entity.Deactivate();
 
-        // Update name fields
         var shop = await _shopRepository.GetByIdAsync(entity.ShopId);
         entity.ShopName = shop?.Name ?? string.Empty;
 
         await _shopOwnerRepository.UpdateAsync(entity);
         await _unitOfWork.SaveChanges(cancellationToken);
 
-        return Result<ShopOwnerDto>.SuccessResult(_mapper.Map<ShopOwnerDto>(entity));
+        return Result<ShopOwnerDto>.SuccessResult(ShopOwnerMapping.ToDto(entity));
     }
 }

@@ -1,7 +1,7 @@
-using AutoMapper;
 using MediatR;
 using SMIS.Application.Common.Response;
 using SMIS.Application.DTO.Localization;
+using SMIS.Application.Features.Localization;
 using SMIS.Application.Repositories.Base;
 using SMIS.Application.Repositories.Localization;
 
@@ -15,16 +15,13 @@ namespace SMIS.Application.Features.Localization.Commands
     {
         private readonly ILanguageRepository _languageRepository;
         private readonly IUnitOfWork _unitOfWork;
-        private readonly IMapper _mapper;
 
         public LanguageUpdateCommandHandler(
             IUnitOfWork unitOfWork,
-            IMapper mapper,
             ILanguageRepository languageRepository
         )
         {
             _unitOfWork = unitOfWork;
-            _mapper = mapper;
             _languageRepository = languageRepository;
         }
 
@@ -39,10 +36,9 @@ namespace SMIS.Application.Features.Localization.Commands
                 return Result<LanguageDto>.NotFoundResult(request.Id);
             }
 
-            _mapper.Map(request.LanguageCreateDto, entity);
+            LanguageMapping.Apply(entity, request.LanguageCreateDto);
             await _unitOfWork.SaveChanges(cancellationToken);
-            var dto = _mapper.Map<LanguageDto>(entity);
-            return Result<LanguageDto>.SuccessResult(dto);
+            return Result<LanguageDto>.SuccessResult(LanguageMapping.ToDto(entity));
         }
     }
 }

@@ -1,7 +1,7 @@
-using AutoMapper;
 using MediatR;
 using SMIS.Application.Common.Response;
 using SMIS.Application.DTO.LoanAccounts;
+using SMIS.Application.Features.LoanAccounts;
 using SMIS.Application.Identity.IServices;
 using SMIS.Application.Repositories.Base;
 using SMIS.Application.Repositories.LoanAccounts;
@@ -21,21 +21,18 @@ internal sealed class LoanAccountCreateCommandHandler
     private readonly ISaleRepository _sales;
     private readonly IUnitOfWork _unitOfWork;
     private readonly ICurrentUser _currentUser;
-    private readonly IMapper _mapper;
 
     public LoanAccountCreateCommandHandler(
         ILoanAccountRepository receivables,
         ISaleRepository sales,
         IUnitOfWork unitOfWork,
-        ICurrentUser currentUser,
-        IMapper mapper
+        ICurrentUser currentUser
     )
     {
         _receivables = receivables;
         _sales = sales;
         _unitOfWork = unitOfWork;
         _currentUser = currentUser;
-        _mapper = mapper;
     }
 
     public async Task<Result<LoanAccountDto>> Handle(
@@ -75,6 +72,6 @@ internal sealed class LoanAccountCreateCommandHandler
         await _receivables.AddAsync(receivable);
         await _unitOfWork.SaveChanges(cancellationToken);
 
-        return Result<LoanAccountDto>.SuccessResult(_mapper.Map<LoanAccountDto>(receivable));
+        return Result<LoanAccountDto>.SuccessResult(LoanAccountMapping.ToDto(receivable));
     }
 }
