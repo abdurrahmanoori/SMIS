@@ -1,4 +1,3 @@
-using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using SMIS.Application.Common.Contants;
@@ -9,6 +8,7 @@ using SMIS.Application.Repositories.Localization;
 using SMIS.Application.Repositories.Shops;
 using SMIS.Application.Identity.IServices;
 using SMIS.Domain.Entities.Identity.Entity;
+using SMIS.Application.Mappings;
 
 namespace SMIS.Application.Features.Identity.Users.Commands
 {
@@ -21,7 +21,6 @@ namespace SMIS.Application.Features.Identity.Users.Commands
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly RoleManager<ApplicationRole> _roleManager;
         private readonly IUnitOfWork _unitOfWork;
-        private readonly IMapper _mapper;
         private readonly ICurrentUser _currentUser;
         private readonly IUserRoleMetadataService _userRoleMetadataService;
         private readonly IUserAdministrationGuard _userAdministrationGuard;
@@ -32,7 +31,6 @@ namespace SMIS.Application.Features.Identity.Users.Commands
             UserManager<ApplicationUser> userManager,
             RoleManager<ApplicationRole> roleManager,
             IUnitOfWork unitOfWork,
-            IMapper mapper,
             ICurrentUser currentUser,
             IUserRoleMetadataService userRoleMetadataService,
             IUserAdministrationGuard userAdministrationGuard
@@ -43,7 +41,6 @@ namespace SMIS.Application.Features.Identity.Users.Commands
             _userManager = userManager;
             _roleManager = roleManager;
             _unitOfWork = unitOfWork;
-            _mapper = mapper;
             _currentUser = currentUser;
             _userRoleMetadataService = userRoleMetadataService;
             _userAdministrationGuard = userAdministrationGuard;
@@ -220,7 +217,7 @@ namespace SMIS.Application.Features.Identity.Users.Commands
                     cancellationToken);
                 await _unitOfWork.CommitTransactionAsync(cancellationToken);
 
-                var dto = _mapper.Map<UserDto>(user);
+                var dto = user.ToDto();
                 dto.Roles = (await _userManager.GetRolesAsync(user)).ToList();
                 return Result<UserDto>.Success(dto);
             }

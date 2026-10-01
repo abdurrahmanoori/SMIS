@@ -1,4 +1,3 @@
-using AutoMapper;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using SMIS.Application.Common.Response;
@@ -9,6 +8,7 @@ using SMIS.Application.Repositories.ProductUnits;
 using SMIS.Application.Services;
 using SMIS.Domain.Entities;
 using SMIS.Domain.Services;
+using SMIS.Application.Mappings;
 
 namespace SMIS.Application.Features.ProductPrices.Commands;
 
@@ -27,21 +27,18 @@ internal sealed class
     private readonly IApplicationDbContext _db;
     private readonly IProductUnitRepository _productUnits;
     private readonly ICurrentUser _user;
-    private readonly IMapper _mapper;
 
     public ProductPriceSyncCreateCommandHandler(
         IProductPriceRepository repository,
         IApplicationDbContext db,
         IProductUnitRepository productUnits,
-        ICurrentUser user,
-        IMapper mapper
+        ICurrentUser user
     )
     {
         _repository = repository;
         _db = db;
         _productUnits = productUnits;
         _user = user;
-        _mapper = mapper;
     }
 
     public async Task<Result<ProductPriceDto>> Handle(
@@ -54,7 +51,7 @@ internal sealed class
             .IgnoreQueryFilters()
             .FirstOrDefaultAsync(price => price.Id == id, ct);
         if (existing is not null)
-            return Result<ProductPriceDto>.Success(_mapper.Map<ProductPriceDto>(existing));
+            return Result<ProductPriceDto>.Success(existing.ToDto());
 
         var productUnit = await ProductPriceCommandRules.GetAccessibleProductUnitAsync(
             request.Dto.ProductUnitId,
@@ -72,7 +69,7 @@ internal sealed class
         value.SetClientModificationMetadata(request.Dto.ClientModifiedDate);
         await _repository.AddAsync(value);
         await _db.SaveChangesAsync(ct);
-        return Result<ProductPriceDto>.Success(_mapper.Map<ProductPriceDto>(value));
+        return Result<ProductPriceDto>.Success(value.ToDto());
     }
 }
 
@@ -83,21 +80,18 @@ internal sealed class
     private readonly IApplicationDbContext _db;
     private readonly IProductUnitRepository _productUnits;
     private readonly ICurrentUser _user;
-    private readonly IMapper _mapper;
 
     public ProductPriceSyncUpdateCommandHandler(
         IProductPriceRepository repository,
         IApplicationDbContext db,
         IProductUnitRepository productUnits,
-        ICurrentUser user,
-        IMapper mapper
+        ICurrentUser user
     )
     {
         _repository = repository;
         _db = db;
         _productUnits = productUnits;
         _user = user;
-        _mapper = mapper;
     }
 
     public async Task<Result<ProductPriceDto>> Handle(
@@ -135,7 +129,7 @@ internal sealed class
             existing.SetEndDate(request.Dto.EndDate);
             existing.SetClientModificationMetadata(request.Dto.ClientModifiedDate);
             await _db.SaveChangesAsync(ct);
-            return Result<ProductPriceDto>.Success(_mapper.Map<ProductPriceDto>(existing));
+            return Result<ProductPriceDto>.Success(existing.ToDto());
         }
 
         // Historical prices are immutable. A sync "update" is allowed only against
@@ -151,7 +145,7 @@ internal sealed class
         successor.SetClientModificationMetadata(request.Dto.ClientModifiedDate);
         await _repository.AddAsync(successor);
         await _db.SaveChangesAsync(ct);
-        return Result<ProductPriceDto>.Success(_mapper.Map<ProductPriceDto>(successor));
+        return Result<ProductPriceDto>.Success(successor.ToDto());
     }
 }
 
@@ -162,21 +156,18 @@ internal sealed class
     private readonly IApplicationDbContext _db;
     private readonly IProductUnitRepository _productUnits;
     private readonly ICurrentUser _user;
-    private readonly IMapper _mapper;
 
     public ProductPriceSyncDeleteCommandHandler(
         IProductPriceRepository repository,
         IApplicationDbContext db,
         IProductUnitRepository productUnits,
-        ICurrentUser user,
-        IMapper mapper
+        ICurrentUser user
     )
     {
         _repository = repository;
         _db = db;
         _productUnits = productUnits;
         _user = user;
-        _mapper = mapper;
     }
 
     public async Task<Result<ProductPriceDto>> Handle(
@@ -198,12 +189,12 @@ internal sealed class
 
         var modified = DateTimeService.NormalizeUtc(request.Dto.ClientModifiedDate);
         if (modified < value.GetConflictModifiedUtc())
-            return Result<ProductPriceDto>.Success(_mapper.Map<ProductPriceDto>(value));
+            return Result<ProductPriceDto>.Success(value.ToDto());
 
         value.SetClientModificationMetadata(modified);
         await _repository.RemoveAsync(value);
         await _db.SaveChangesAsync(ct);
-        return Result<ProductPriceDto>.Success(_mapper.Map<ProductPriceDto>(value));
+        return Result<ProductPriceDto>.Success(value.ToDto());
     }
 }
 
@@ -213,5 +204,4 @@ internal static class ProductPriceSyncRules
     public static string Id(
         string value
     ) => Guid.Parse(value).ToString("D");
-
 }

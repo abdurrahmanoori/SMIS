@@ -1,10 +1,10 @@
-using AutoMapper;
 using MediatR;
 using SMIS.Application.Common.Response;
 using SMIS.Application.DTO.ShopOwners;
 using SMIS.Application.Repositories.Base;
 using SMIS.Application.Repositories.ShopOwners;
 using SMIS.Application.Repositories.Shops;
+using SMIS.Application.Mappings;
 
 namespace SMIS.Application.Features.ShopOwners.Commands;
 
@@ -15,17 +15,14 @@ internal sealed class ShopOwnerUpdateCommandHandler : IRequestHandler<ShopOwnerU
     private readonly IShopOwnerRepository _shopOwnerRepository;
     private readonly IShopRepository _shopRepository;
     private readonly IUnitOfWork _unitOfWork;
-    private readonly IMapper _mapper;
 
     public ShopOwnerUpdateCommandHandler(
         IUnitOfWork unitOfWork,
-        IMapper mapper,
         IShopOwnerRepository shopOwnerRepository,
         IShopRepository shopRepository
     )
     {
         _unitOfWork = unitOfWork;
-        _mapper = mapper;
         _shopOwnerRepository = shopOwnerRepository;
         _shopRepository = shopRepository;
     }
@@ -59,6 +56,6 @@ internal sealed class ShopOwnerUpdateCommandHandler : IRequestHandler<ShopOwnerU
         await _shopOwnerRepository.UpdateAsync(entity);
         await _unitOfWork.SaveChanges(cancellationToken);
 
-        return Result<ShopOwnerDto>.Success(_mapper.Map<ShopOwnerDto>(entity));
+        return Result<ShopOwnerDto>.Success(entity.ToDto());
     }
 }

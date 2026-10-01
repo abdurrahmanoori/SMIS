@@ -1,4 +1,3 @@
-using AutoMapper;
 using MediatR;
 using SMIS.Application.Common.Response;
 using SMIS.Application.DTO.Inventory;
@@ -7,6 +6,7 @@ using SMIS.Application.Repositories.Base;
 using SMIS.Application.Services;
 using SMIS.Domain.Enums;
 using SMIS.Domain.Services;
+using SMIS.Application.Mappings;
 
 namespace SMIS.Application.Features.Inventory.Commands;
 
@@ -27,19 +27,16 @@ internal sealed class InventoryBatchOperationCommandHandler
     private readonly IInventoryService _inventory;
     private readonly IIdempotencyService _idempotency;
     private readonly IUnitOfWork _unitOfWork;
-    private readonly IMapper _mapper;
 
     public InventoryBatchOperationCommandHandler(
         IInventoryService inventory,
         IIdempotencyService idempotency,
-        IUnitOfWork unitOfWork,
-        IMapper mapper
+        IUnitOfWork unitOfWork
     )
     {
         _inventory = inventory;
         _idempotency = idempotency;
         _unitOfWork = unitOfWork;
-        _mapper = mapper;
     }
 
     public async Task<Result<StockMovementDto>> Handle(
@@ -73,7 +70,7 @@ internal sealed class InventoryBatchOperationCommandHandler
         // The inventory workflow stages both the batch balance change and immutable
         // movement. One SaveChanges persists them atomically.
         await _unitOfWork.SaveChanges(cancellationToken);
-        return Result<StockMovementDto>.Success(_mapper.Map<StockMovementDto>(result.Value));
+        return Result<StockMovementDto>.Success(result.Value!.ToDto());
     }
 
     private static Result<StockMovementDto> Failure<T>(
@@ -90,19 +87,16 @@ internal sealed class InventoryTransferCommandHandler
     private readonly IInventoryService _inventory;
     private readonly IIdempotencyService _idempotency;
     private readonly IUnitOfWork _unitOfWork;
-    private readonly IMapper _mapper;
 
     public InventoryTransferCommandHandler(
         IInventoryService inventory,
         IIdempotencyService idempotency,
-        IUnitOfWork unitOfWork,
-        IMapper mapper
+        IUnitOfWork unitOfWork
     )
     {
         _inventory = inventory;
         _idempotency = idempotency;
         _unitOfWork = unitOfWork;
-        _mapper = mapper;
     }
 
     public async Task<Result<List<StockMovementDto>>> Handle(
@@ -137,6 +131,6 @@ internal sealed class InventoryTransferCommandHandler
         // an unnecessary explicit transaction around a single EF Core SaveChanges.
         await _unitOfWork.SaveChanges(cancellationToken);
         return Result<List<StockMovementDto>>.Success(
-            _mapper.Map<List<StockMovementDto>>(result.Value));
+            result.Value!.Select(value => value.ToDto()).ToList());
     }
 }

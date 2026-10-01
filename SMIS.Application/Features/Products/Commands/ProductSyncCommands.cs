@@ -1,4 +1,3 @@
-using AutoMapper;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using SMIS.Application.Common.Response;
@@ -9,6 +8,7 @@ using SMIS.Application.Repositories.ProductUnits;
 using SMIS.Application.Services;
 using SMIS.Domain.Entities;
 using SMIS.Domain.Services;
+using SMIS.Application.Mappings;
 
 namespace SMIS.Application.Features.Products.Commands;
 
@@ -24,16 +24,14 @@ internal sealed class ProductSyncCreateCommandHandler : IRequestHandler<ProductS
     private readonly IApplicationDbContext _db;
     private readonly IProductUnitRepository _productUnitRepository;
     private readonly ICurrentUser _currentUser;
-    private readonly IMapper _mapper;
 
     public ProductSyncCreateCommandHandler(
         IProductRepository repository,
         IApplicationDbContext db,
         IProductUnitRepository productUnitRepository,
-        ICurrentUser currentUser,
-        IMapper mapper
-    ) => (_repository, _db, _productUnitRepository, _currentUser, _mapper) =
-        (repository, db, productUnitRepository, currentUser, mapper);
+        ICurrentUser currentUser
+    ) => (_repository, _db, _productUnitRepository, _currentUser) =
+        (repository, db, productUnitRepository, currentUser);
 
     public async Task<Result<ProductDto>> Handle(
         ProductSyncCreateCommand request,
@@ -49,7 +47,7 @@ internal sealed class ProductSyncCreateCommandHandler : IRequestHandler<ProductS
         {
             if (!ProductSyncRules.CanAccess(existing, _currentUser)) return ProductSyncRules.Forbidden();
             if (modified <= existing.GetConflictModifiedUtc())
-                return Result<ProductDto>.Success(_mapper.Map<ProductDto>(existing));
+                return Result<ProductDto>.Success(existing.ToDto());
             if (existing.IsBaseUnitChange(request.Dto.BaseUnitId) &&
                 await _repository.HasStockOrConversionsAsync(existing.Id, cancellationToken))
                 return ProductCommandRules.BaseUnitIsLocked();
@@ -63,7 +61,7 @@ internal sealed class ProductSyncCreateCommandHandler : IRequestHandler<ProductS
             existing.SetClientModificationMetadata(modified);
             existing.Restore();
             await _db.SaveChangesAsync(cancellationToken);
-            return Result<ProductDto>.Success(_mapper.Map<ProductDto>(existing));
+            return Result<ProductDto>.Success(existing.ToDto());
         }
 
         var product = ProductCommandRules.Create(request.Dto, _currentUser.GetShopId());
@@ -76,7 +74,7 @@ internal sealed class ProductSyncCreateCommandHandler : IRequestHandler<ProductS
             _productUnitRepository,
             cancellationToken);
         await _db.SaveChangesAsync(cancellationToken);
-        return Result<ProductDto>.Success(_mapper.Map<ProductDto>(product));
+        return Result<ProductDto>.Success(product.ToDto());
     }
 }
 
@@ -86,16 +84,14 @@ internal sealed class ProductSyncUpdateCommandHandler : IRequestHandler<ProductS
     private readonly IApplicationDbContext _db;
     private readonly IProductUnitRepository _productUnitRepository;
     private readonly ICurrentUser _currentUser;
-    private readonly IMapper _mapper;
 
     public ProductSyncUpdateCommandHandler(
         IProductRepository repository,
         IApplicationDbContext db,
         IProductUnitRepository productUnitRepository,
-        ICurrentUser currentUser,
-        IMapper mapper
-    ) => (_repository, _db, _productUnitRepository, _currentUser, _mapper) =
-        (repository, db, productUnitRepository, currentUser, mapper);
+        ICurrentUser currentUser
+    ) => (_repository, _db, _productUnitRepository, _currentUser) =
+        (repository, db, productUnitRepository, currentUser);
 
     public async Task<Result<ProductDto>> Handle(
         ProductSyncUpdateCommand request,
@@ -110,7 +106,7 @@ internal sealed class ProductSyncUpdateCommandHandler : IRequestHandler<ProductS
         if (!ProductSyncRules.CanAccess(product, _currentUser)) return ProductSyncRules.Forbidden();
         var modified = DateTimeService.NormalizeUtc(request.Dto.ClientModifiedDate);
         if (modified <= product.GetConflictModifiedUtc())
-            return Result<ProductDto>.Success(_mapper.Map<ProductDto>(product));
+            return Result<ProductDto>.Success(product.ToDto());
         if (product.IsBaseUnitChange(request.Dto.BaseUnitId) &&
             await _repository.HasStockOrConversionsAsync(product.Id, cancellationToken))
             return ProductCommandRules.BaseUnitIsLocked();
@@ -124,7 +120,7 @@ internal sealed class ProductSyncUpdateCommandHandler : IRequestHandler<ProductS
         product.SetClientModificationMetadata(modified);
         product.Restore();
         await _db.SaveChangesAsync(cancellationToken);
-        return Result<ProductDto>.Success(_mapper.Map<ProductDto>(product));
+        return Result<ProductDto>.Success(product.ToDto());
     }
 }
 
@@ -133,14 +129,12 @@ internal sealed class ProductSyncDeleteCommandHandler : IRequestHandler<ProductS
     private readonly IProductRepository _repository;
     private readonly IApplicationDbContext _db;
     private readonly ICurrentUser _currentUser;
-    private readonly IMapper _mapper;
 
     public ProductSyncDeleteCommandHandler(
         IProductRepository repository,
         IApplicationDbContext db,
-        ICurrentUser currentUser,
-        IMapper mapper
-    ) => (_repository, _db, _currentUser, _mapper) = (repository, db, currentUser, mapper);
+        ICurrentUser currentUser
+    ) => (_repository, _db, _currentUser) = (repository, db, currentUser);
 
     public async Task<Result<ProductDto>> Handle(
         ProductSyncDeleteCommand request,
@@ -155,7 +149,7 @@ internal sealed class ProductSyncDeleteCommandHandler : IRequestHandler<ProductS
         if (!ProductSyncRules.CanAccess(product, _currentUser)) return ProductSyncRules.Forbidden();
         var modified = DateTimeService.NormalizeUtc(request.Dto.ClientModifiedDate);
         if (modified < product.GetConflictModifiedUtc())
-            return Result<ProductDto>.Success(_mapper.Map<ProductDto>(product));
+            return Result<ProductDto>.Success(product.ToDto());
         var referenceCount = await _repository.CountReferencesAsync(
             product.Id,
             cancellationToken);
@@ -166,7 +160,7 @@ internal sealed class ProductSyncDeleteCommandHandler : IRequestHandler<ProductS
         product.SetClientModificationMetadata(modified);
         await _repository.RemoveAsync(product);
         await _db.SaveChangesAsync(cancellationToken);
-        return Result<ProductDto>.Success(_mapper.Map<ProductDto>(product));
+        return Result<ProductDto>.Success(product.ToDto());
     }
 }
 

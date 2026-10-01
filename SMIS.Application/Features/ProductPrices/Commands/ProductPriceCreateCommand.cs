@@ -1,4 +1,3 @@
-using AutoMapper;
 using MediatR;
 using SMIS.Application.Common.Response;
 using SMIS.Application.DTO.ProductPrices;
@@ -7,6 +6,7 @@ using SMIS.Application.Repositories.ProductPrices;
 using SMIS.Application.Repositories.ProductUnits;
 using SMIS.Application.Services;
 using SMIS.Domain.Entities;
+using SMIS.Application.Mappings;
 
 namespace SMIS.Application.Features.ProductPrices.Commands;
 
@@ -20,18 +20,15 @@ internal sealed class
     private readonly IProductUnitRepository _productUnitRepository;
     private readonly IApplicationDbContext _db;
     private readonly ICurrentUser _currentUser;
-    private readonly IMapper _mapper;
 
     public ProductPriceCreateCommandHandler(
         IApplicationDbContext db,
-        IMapper mapper,
         IProductPriceRepository productPriceRepository,
         IProductUnitRepository productUnitRepository,
         ICurrentUser currentUser
     )
     {
         _db = db;
-        _mapper = mapper;
         _productPriceRepository = productPriceRepository;
         _productUnitRepository = productUnitRepository;
         _currentUser = currentUser;
@@ -61,7 +58,7 @@ internal sealed class
         await _productPriceRepository.AddAsync(entity);
         await _db.SaveChangesAsync(cancellationToken);
 
-        return Result<ProductPriceDto>.Success(_mapper.Map<ProductPriceDto>(entity));
+        return Result<ProductPriceDto>.Success(entity.ToDto());
     }
 }
 

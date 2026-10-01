@@ -1,10 +1,10 @@
-using AutoMapper;
 using MediatR;
 using SMIS.Application.Common.Response;
 using SMIS.Application.DTO.StockBatches;
 using SMIS.Application.Repositories.Base;
 using SMIS.Application.Services;
 using SMIS.Domain.Services;
+using SMIS.Application.Mappings;
 
 namespace SMIS.Application.Features.StockBatches.Commands;
 
@@ -17,19 +17,16 @@ internal sealed class StockBatchCreateCommandHandler
     private readonly IInventoryService _inventory;
     private readonly IIdempotencyService _idempotency;
     private readonly IUnitOfWork _unitOfWork;
-    private readonly IMapper _mapper;
 
     public StockBatchCreateCommandHandler(
         IInventoryService inventory,
         IIdempotencyService idempotency,
-        IUnitOfWork unitOfWork,
-        IMapper mapper
+        IUnitOfWork unitOfWork
     )
     {
         _inventory = inventory;
         _idempotency = idempotency;
         _unitOfWork = unitOfWork;
-        _mapper = mapper;
     }
 
     public async Task<Result<StockBatchDto>> Handle(
@@ -65,6 +62,6 @@ internal sealed class StockBatchCreateCommandHandler
         // One SaveChanges call is sufficient; EF Core wraps it in a transaction.
         await _unitOfWork.SaveChanges(cancellationToken);
 
-        return Result<StockBatchDto>.Success(_mapper.Map<StockBatchDto>(result.Value));
+        return Result<StockBatchDto>.Success(result.Value!.ToDto());
     }
 }

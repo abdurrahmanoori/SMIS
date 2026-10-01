@@ -1,4 +1,3 @@
-using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 
 namespace SMIS.Application.Common
@@ -13,20 +12,6 @@ namespace SMIS.Application.Common
         public int TotalCount { get; set; }
         public int TotalPages { get; set; }
         public List<T> Items { get; set; } = new List<T>();
-
-        public PagedListNew<TMap> Map<TMap>(
-            IMapper mapper
-        )
-        {
-            return new PagedListNew<TMap>()
-            {
-                PageNumber = PageNumber,
-                PageSize = PageSize,
-                TotalCount = TotalCount,
-                TotalPages = TotalPages,
-                Items = mapper.Map<List<TMap>>(Items)
-            };
-        }
 
         public static async Task<PagedListNew<T>> CreateList(
             IQueryable<T> entities,

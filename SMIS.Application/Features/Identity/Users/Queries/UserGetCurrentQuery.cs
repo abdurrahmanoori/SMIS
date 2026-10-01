@@ -1,4 +1,3 @@
-using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -6,6 +5,7 @@ using SMIS.Application.Common.Response;
 using SMIS.Application.DTO.Users;
 using SMIS.Application.Identity.IServices;
 using SMIS.Domain.Entities.Identity.Entity;
+using SMIS.Application.Mappings;
 
 namespace SMIS.Application.Features.Identity.Users.Queries;
 
@@ -15,17 +15,14 @@ public class UserGetCurrentQueryHandler : IRequestHandler<UserGetCurrentQuery, R
 {
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly ICurrentUser _currentUser;
-    private readonly IMapper _mapper;
 
     public UserGetCurrentQueryHandler(
         UserManager<ApplicationUser> userManager,
-        ICurrentUser currentUser,
-        IMapper mapper
+        ICurrentUser currentUser
     )
     {
         _userManager = userManager;
         _currentUser = currentUser;
-        _mapper = mapper;
     }
 
     public async Task<Result<UserDto>> Handle(
@@ -44,7 +41,7 @@ public class UserGetCurrentQueryHandler : IRequestHandler<UserGetCurrentQuery, R
         var user = await query.FirstOrDefaultAsync(u => u.Id == userId, cancellationToken);
         if (user == null) return Result<UserDto>.NotFound(userId);
 
-        var userDto = _mapper.Map<UserDto>(user);
+        var userDto = user.ToDto();
         userDto.Roles = (await _userManager.GetRolesAsync(user)).ToList();
 
         return Result<UserDto>.Success(userDto);

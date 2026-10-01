@@ -1,4 +1,3 @@
-using AutoMapper;
 using MediatR;
 using SMIS.Application.Common.Response;
 using SMIS.Application.DTO.Sales;
@@ -13,6 +12,7 @@ using SMIS.Application.Services;
 using SMIS.Domain.Entities;
 using SMIS.Domain.Enums;
 using SMIS.Domain.Services;
+using SMIS.Application.Mappings;
 
 namespace SMIS.Application.Features.Sales.Commands;
 
@@ -29,7 +29,6 @@ internal sealed class SaleCreateCommandHandler : IRequestHandler<SaleCreateComma
     private readonly IIdempotencyService _idempotency;
     private readonly IUnitOfWork _unitOfWork;
     private readonly ICurrentUser _currentUser;
-    private readonly IMapper _mapper;
 
     public SaleCreateCommandHandler(
         ISaleRepository sales,
@@ -40,8 +39,7 @@ internal sealed class SaleCreateCommandHandler : IRequestHandler<SaleCreateComma
         IInventoryService inventory,
         IIdempotencyService idempotency,
         IUnitOfWork unitOfWork,
-        ICurrentUser currentUser,
-        IMapper mapper
+        ICurrentUser currentUser
     )
     {
         _sales = sales;
@@ -53,7 +51,6 @@ internal sealed class SaleCreateCommandHandler : IRequestHandler<SaleCreateComma
         _idempotency = idempotency;
         _unitOfWork = unitOfWork;
         _currentUser = currentUser;
-        _mapper = mapper;
     }
 
     public async Task<Result<SaleDto>> Handle(
@@ -172,7 +169,7 @@ internal sealed class SaleCreateCommandHandler : IRequestHandler<SaleCreateComma
         // receivable are committed atomically by EF Core in this single SaveChanges.
         await _unitOfWork.SaveChanges(cancellationToken);
 
-        var result = _mapper.Map<SaleDto>(sale);
+        var result = sale.ToDto();
         result.ReceivableId = sale.Receivable?.Id;
         result.ReceivableRemainingAmount = sale.Receivable?.RemainingAmount;
         return Result<SaleDto>.Success(result);

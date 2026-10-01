@@ -1,9 +1,9 @@
-using AutoMapper;
 using MediatR;
 using SMIS.Application.Common.Response;
 using SMIS.Application.DTO.UnitOfMeasures;
 using SMIS.Application.Repositories.UnitOfMeasures;
 using SMIS.Application.Services;
+using SMIS.Application.Mappings;
 
 namespace SMIS.Application.Features.UnitOfMeasures.Commands
 {
@@ -15,16 +15,13 @@ namespace SMIS.Application.Features.UnitOfMeasures.Commands
     {
         private readonly IUnitOfMeasureRepository _unitOfMeasureRepository;
         private readonly IApplicationDbContext _db;
-        private readonly IMapper _mapper;
 
         public UnitOfMeasureCreateCommandHandler(
             IApplicationDbContext db,
-            IMapper mapper,
             IUnitOfMeasureRepository unitOfMeasureRepository
         )
         {
             _db = db;
-            _mapper = mapper;
             _unitOfMeasureRepository = unitOfMeasureRepository;
         }
 
@@ -42,7 +39,7 @@ namespace SMIS.Application.Features.UnitOfMeasures.Commands
             await _unitOfMeasureRepository.AddAsync(entity);
             await _db.SaveChangesAsync(cancellationToken);
 
-            return Result<UnitOfMeasureDto>.Success(_mapper.Map<UnitOfMeasureDto>(entity));
+            return Result<UnitOfMeasureDto>.Success(entity.ToDto());
         }
     }
 }

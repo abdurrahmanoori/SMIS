@@ -1,4 +1,3 @@
-using AutoMapper;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using SMIS.Application.Common.Response;
@@ -6,6 +5,7 @@ using SMIS.Application.DTO.Provinces;
 using SMIS.Application.Repositories.Base;
 using SMIS.Application.Repositories.Provinces;
 using SMIS.Domain.Entities.LocationEntities;
+using SMIS.Application.Mappings;
 
 namespace SMIS.Application.Features.Provinces.Commands
 {
@@ -15,17 +15,14 @@ namespace SMIS.Application.Features.Provinces.Commands
     {
         private readonly IProvinceRepository _provinceRepository;
         private readonly IUnitOfWork _unitOfWork;
-        private readonly IMapper _mapper;
 
         public ProvinceUpdateCommandHandler(
             IUnitOfWork unitOfWork,
-            IProvinceRepository provinceRepository,
-            IMapper mapper
+            IProvinceRepository provinceRepository
         )
         {
             _unitOfWork = unitOfWork;
             _provinceRepository = provinceRepository;
-            _mapper = mapper;
         }
 
         public async Task<Result<ProvinceDto>> Handle(
@@ -41,7 +38,7 @@ namespace SMIS.Application.Features.Provinces.Commands
             }
 
             // Map simple fields (keeping backward compatibility)
-            _mapper.Map(request.ProvinceDto, existing);
+            existing.Name = request.ProvinceDto.Name;
 
             // Update translations if provided
             if (request.ProvinceDto.Translations != null && request.ProvinceDto.Translations.Any())
@@ -92,7 +89,7 @@ namespace SMIS.Application.Features.Provinces.Commands
 
             await _unitOfWork.SaveChanges(cancellationToken);
 
-            var response = _mapper.Map<ProvinceDto>(existing);
+            var response = existing.ToDto();
             return Result<ProvinceDto>.Success(response);
         }
     }
