@@ -33,7 +33,7 @@ public abstract class BaseApiController : ControllerBase
         return CreateProblemResult(result.Errors);
     }
 
-    public async Task<ActionResult<T>> HandleRequest<T>(
+    protected async Task<ActionResult<T>> HandleRequest<T>(
         IRequest<Result<T>> request,
         CancellationToken cancellationToken = default
     )
@@ -41,7 +41,7 @@ public abstract class BaseApiController : ControllerBase
         return HandleResultResponse(await Mediator.Send(request, cancellationToken));
     }
 
-    public async Task<IActionResult> HandleRequest(
+    protected async Task<IActionResult> HandleRequest(
         IRequest<Result> request,
         CancellationToken cancellationToken = default
     )
