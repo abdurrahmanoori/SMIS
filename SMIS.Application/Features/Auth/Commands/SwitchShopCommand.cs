@@ -43,19 +43,20 @@ internal sealed class SwitchShopCommandHandler
     {
         if (string.IsNullOrWhiteSpace(request.ShopId))
         {
-            return Result<LoginResponseDto>.FailureResult(
-                "InvalidShop",
-                "A shop must be selected.");
+            return Result<LoginResponseDto>.Validation(
+                "auth.shop_required",
+                "A shop must be selected.",
+                nameof(request.ShopId));
         }
 
         var user = await _userManager.FindByIdAsync(_currentUser.GetId());
         if (user is null)
-            return Result<LoginResponseDto>.FailureResult("UserNotFound", "The current user no longer exists.");
+            return Result<LoginResponseDto>.NotFound(_currentUser.GetId());
 
         if (!await _userManager.IsInRoleAsync(user, SMIS.Application.Common.Contants.SD.Role_Super_Admin))
         {
-            return Result<LoginResponseDto>.FailureResult(
-                "Forbidden",
+            return Result<LoginResponseDto>.Forbidden(
+                "auth.shop_switch_forbidden",
                 "Only a SuperAdmin can switch the active shop.");
         }
 
@@ -65,9 +66,8 @@ internal sealed class SwitchShopCommandHandler
 
         if (shop is null || shop.IsDeleted || !shop.IsActive)
         {
-            return Result<LoginResponseDto>.FailureResult(
-                "InvalidShop",
-                "The selected shop does not exist or is inactive.");
+            return Result<LoginResponseDto>.NotFound(
+                request.ShopId);
         }
 
         var roles = await _userManager.GetRolesAsync(user);
@@ -77,7 +77,7 @@ internal sealed class SwitchShopCommandHandler
             ? LanguageDefaults.EnglishCode
             : language.Code!;
 
-        return Result<LoginResponseDto>.SuccessResult(
+        return Result<LoginResponseDto>.Success(
             new LoginResponseDto
             {
                 Token = token,
@@ -88,7 +88,6 @@ internal sealed class SwitchShopCommandHandler
                 LanguageId = user.LanguageId,
                 LanguageCode = languageCode,
                 Roles = roles
-            },
-            $"Active shop changed to {shop.Name}.");
+            });
     }
 }

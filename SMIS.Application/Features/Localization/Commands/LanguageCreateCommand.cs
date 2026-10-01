@@ -33,7 +33,7 @@ namespace SMIS.Application.Features.Localization.Commands
             var entity = LanguageMapping.Create(request.LanguageCreateDto);
             await _languageRepository.AddAsync(entity);
             await _unitOfWork.SaveChanges(cancellationToken);
-            return Result<LanguageDto>.SuccessResult(LanguageMapping.ToDto(entity));
+            return Result<LanguageDto>.Success(LanguageMapping.ToDto(entity));
         }
     }
 }

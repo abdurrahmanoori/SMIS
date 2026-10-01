@@ -37,7 +37,7 @@ internal sealed class
 
         if (product == null)
         {
-            return Result<ProductLoanInfoDto>.NotFoundResult(nameof(ProductLoanInfoDto));
+            return Result<ProductLoanInfoDto>.NotFound(nameof(ProductLoanInfoDto));
         }
 
         var now = DateTimeService.NowLocal;
@@ -72,6 +72,6 @@ internal sealed class
             HasActivePrice = activePrice != null
         };
 
-        return Result<ProductLoanInfoDto>.SuccessResult(dto);
+        return Result<ProductLoanInfoDto>.Success(dto);
     }
 }

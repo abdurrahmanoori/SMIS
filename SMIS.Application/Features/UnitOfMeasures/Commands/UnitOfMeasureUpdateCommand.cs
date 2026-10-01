@@ -26,13 +26,13 @@ namespace SMIS.Application.Features.UnitOfMeasures.Commands
             CancellationToken cancellationToken)
         {
             var entity = await _unitOfMeasureRepository.GetByIdAsync(request.Id);
-            if (entity == null) return Result<UnitOfMeasureDto>.NotFoundResult(nameof(UnitOfMeasureDto.Id));
+            if (entity == null) return Result<UnitOfMeasureDto>.NotFound(nameof(UnitOfMeasureDto.Id));
 
             var input = request.UnitOfMeasureCreateDto;
             UnitOfMeasureCommandRules.Apply(entity, input.Name, input.Symbol, input.Description);
             entity.ClearClientModificationMetadata();
             await _db.SaveChangesAsync(cancellationToken);
-            return Result<UnitOfMeasureDto>.SuccessResult(UnitOfMeasureMapping.ToDto(entity));
+            return Result<UnitOfMeasureDto>.Success(UnitOfMeasureMapping.ToDto(entity));
         }
     }
 }

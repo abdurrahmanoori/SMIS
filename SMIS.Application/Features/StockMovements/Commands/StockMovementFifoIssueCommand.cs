@@ -36,15 +36,10 @@ internal sealed class StockMovementFifoIssueCommandHandler
                 dto.ReferenceId),
             cancellationToken);
 
-        if (!result.Success)
-            return new Result<List<StockMovementDto>>
-            {
-                Success = false,
-                Message = result.Message,
-                Errors = result.Errors
-            };
+        if (!result.IsSuccess)
+            return Result<List<StockMovementDto>>.Failure(result.Errors);
 
         await _unitOfWork.SaveChanges(cancellationToken);
-        return Result<List<StockMovementDto>>.SuccessResult(StockMovementMapping.ToDtos(result.Response));
+        return Result<List<StockMovementDto>>.Success(StockMovementMapping.ToDtos(result.Value));
     }
 }

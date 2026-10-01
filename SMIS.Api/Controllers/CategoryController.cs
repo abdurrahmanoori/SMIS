@@ -26,7 +26,7 @@ namespace SMIS.Api.Controllers
         public async Task<ActionResult<CategoryDto>> Create(
             CategoryCreateDto dto
         ) =>
-            HandleResultResponseOld(await Mediator.Send(new CategoryCreateCommand(dto)));
+            HandleResultResponse(await Mediator.Send(new CategoryCreateCommand(dto)));
 
         /// <summary>
         /// Creates or updates a category sent by an offline client.
@@ -41,7 +41,7 @@ namespace SMIS.Api.Controllers
         public async Task<ActionResult<CategoryDto>> SyncCreate(
             CategorySyncCreateDto dto
         ) =>
-            HandleResultResponseOld(await Mediator.Send(new CategorySyncCreateCommand(dto)));
+            HandleResultResponse(await Mediator.Send(new CategorySyncCreateCommand(dto)));
 
         /// <summary>
         /// Gets categories with flexible filtering, optional returned columns, and pagination.
@@ -75,7 +75,7 @@ namespace SMIS.Api.Controllers
             string id,
             CategoryUpdateDto dto
         ) =>
-            HandleResultResponseOld(await Mediator.Send(new CategoryUpdateCommand(id, dto)));
+            HandleResultResponse(await Mediator.Send(new CategoryUpdateCommand(id, dto)));
 
         /// <summary>
         /// Applies a category update sent by an offline client.
@@ -90,7 +90,7 @@ namespace SMIS.Api.Controllers
             string id,
             CategorySyncUpdateDto dto
         ) =>
-            HandleResultResponseOld(await Mediator.Send(new CategorySyncUpdateCommand(id, dto)));
+            HandleResultResponse(await Mediator.Send(new CategorySyncUpdateCommand(id, dto)));
 
         /// <summary>
         /// Deletes a category.
@@ -100,10 +100,10 @@ namespace SMIS.Api.Controllers
         /// </remarks>
         [HttpDelete("{id}")]
         [HasPermission(ApplicationComponentKeys.Categories, PermissionAction.Delete)]
-        public async Task<ActionResult<Unit>> Delete(
+        public async Task<IActionResult> Delete(
             string id
         ) =>
-            HandleResultResponseOld(await Mediator.Send(new CategoryDeleteCommand(id)));
+            HandleResultResponse(await Mediator.Send(new CategoryDeleteCommand(id)));
 
         /// <summary>
         /// Applies a category delete sent by an offline client.
@@ -118,6 +118,6 @@ namespace SMIS.Api.Controllers
             string id,
             CategorySyncDeleteDto dto
         ) =>
-            HandleResultResponseOld(await Mediator.Send(new CategorySyncDeleteCommand(id, dto)));
+            HandleResultResponse(await Mediator.Send(new CategorySyncDeleteCommand(id, dto)));
     }
 }

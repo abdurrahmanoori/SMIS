@@ -34,12 +34,12 @@ internal sealed class UnitOfMeasureSyncCreateCommandHandler
         if (unit is not null)
         {
             if (modified <= unit.GetConflictModifiedUtc())
-                return Result<UnitOfMeasureDto>.SuccessResult(UnitOfMeasureMapping.ToDto(unit));
+                return Result<UnitOfMeasureDto>.Success(UnitOfMeasureMapping.ToDto(unit));
             UnitOfMeasureCommandRules.Apply(unit, request.Dto.Name, request.Dto.Symbol, request.Dto.Description);
             unit.SetClientModificationMetadata(modified);
             unit.Restore();
             await _db.SaveChangesAsync(cancellationToken);
-            return Result<UnitOfMeasureDto>.SuccessResult(UnitOfMeasureMapping.ToDto(unit));
+            return Result<UnitOfMeasureDto>.Success(UnitOfMeasureMapping.ToDto(unit));
         }
 
         unit = UnitOfMeasureCommandRules.Create(request.Dto.Name, request.Dto.Symbol, request.Dto.Description);
@@ -47,7 +47,7 @@ internal sealed class UnitOfMeasureSyncCreateCommandHandler
         unit.SetClientModificationMetadata(modified);
         await _repository.AddAsync(unit);
         await _db.SaveChangesAsync(cancellationToken);
-        return Result<UnitOfMeasureDto>.SuccessResult(UnitOfMeasureMapping.ToDto(unit));
+        return Result<UnitOfMeasureDto>.Success(UnitOfMeasureMapping.ToDto(unit));
     }
 }
 
@@ -67,15 +67,15 @@ internal sealed class UnitOfMeasureSyncUpdateCommandHandler
         var id = UnitOfMeasureSyncRules.Id(request.Id);
         var unit = await _db.UnitOfMeasures.IgnoreQueryFilters()
             .FirstOrDefaultAsync(value => value.Id == id, cancellationToken);
-        if (unit is null) return Result<UnitOfMeasureDto>.NotFoundResult(request.Id);
+        if (unit is null) return Result<UnitOfMeasureDto>.NotFound(request.Id);
         var modified = DateTimeService.NormalizeUtc(request.Dto.ClientModifiedDate);
         if (modified <= unit.GetConflictModifiedUtc())
-            return Result<UnitOfMeasureDto>.SuccessResult(UnitOfMeasureMapping.ToDto(unit));
+            return Result<UnitOfMeasureDto>.Success(UnitOfMeasureMapping.ToDto(unit));
         UnitOfMeasureCommandRules.Apply(unit, request.Dto.Name, request.Dto.Symbol, request.Dto.Description);
         unit.SetClientModificationMetadata(modified);
         unit.Restore();
         await _db.SaveChangesAsync(cancellationToken);
-        return Result<UnitOfMeasureDto>.SuccessResult(UnitOfMeasureMapping.ToDto(unit));
+        return Result<UnitOfMeasureDto>.Success(UnitOfMeasureMapping.ToDto(unit));
     }
 }
 
@@ -95,21 +95,21 @@ internal sealed class UnitOfMeasureSyncDeleteCommandHandler
         var id = UnitOfMeasureSyncRules.Id(request.Id);
         var unit = await _db.UnitOfMeasures.IgnoreQueryFilters()
             .FirstOrDefaultAsync(value => value.Id == id, cancellationToken);
-        if (unit is null) return Result<UnitOfMeasureDto>.NotFoundResult(request.Id);
+        if (unit is null) return Result<UnitOfMeasureDto>.NotFound(request.Id);
         var modified = DateTimeService.NormalizeUtc(request.Dto.ClientModifiedDate);
         if (modified < unit.GetConflictModifiedUtc())
-            return Result<UnitOfMeasureDto>.SuccessResult(UnitOfMeasureMapping.ToDto(unit));
+            return Result<UnitOfMeasureDto>.Success(UnitOfMeasureMapping.ToDto(unit));
 
         var referenceCount = await _repository.CountReferencesAsync(unit.Id, cancellationToken);
         if (referenceCount > 0)
-            return Result<UnitOfMeasureDto>.FailureResult(
+            return Result<UnitOfMeasureDto>.BusinessRule(
                 "UnitOfMeasureInUse",
                 $"Unit of measurement is used by {referenceCount} record(s). Reassign them before deleting the unit.");
 
         unit.SetClientModificationMetadata(modified);
         await _repository.RemoveAsync(unit);
         await _db.SaveChangesAsync(cancellationToken);
-        return Result<UnitOfMeasureDto>.SuccessResult(UnitOfMeasureMapping.ToDto(unit));
+        return Result<UnitOfMeasureDto>.Success(UnitOfMeasureMapping.ToDto(unit));
     }
 }
 

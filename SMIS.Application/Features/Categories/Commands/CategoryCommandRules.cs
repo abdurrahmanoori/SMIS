@@ -35,8 +35,8 @@ internal static class CategoryCommandRules
         Apply(category, dto.Name, dto.Code, dto.Description, dto.IsActive);
 
     public static Result<CategoryDto> DuplicateName() =>
-        Result<CategoryDto>.FailureResult(
-            "CategoryNameAlreadyExists",
+        Result<CategoryDto>.Conflict(
+            "category.name_conflict",
             "A category with this name already exists in this shop.");
 
     private static void Apply(

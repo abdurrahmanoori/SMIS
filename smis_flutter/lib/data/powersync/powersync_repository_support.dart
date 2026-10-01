@@ -22,6 +22,19 @@ abstract class PowerSyncRepositorySupport {
   Future<Map<String, String>> pendingOperations(String table) =>
       _pendingOperations(table);
 
+  Future<Map<String, String>> syncErrors(String table) async {
+    final db = await database;
+    final rows = await db.getAll(
+      'SELECT record_id, message FROM sync_error WHERE table_name = ?',
+      [table],
+    );
+    return {
+      for (final row in rows)
+        if (row['record_id'] != null && row['message'] != null)
+          row['record_id'].toString(): row['message'].toString(),
+    };
+  }
+
   Future<Map<String, String>> _pendingOperations(String table) async {
     final db = await database;
     final rows = await db.getAll('SELECT data FROM ps_crud ORDER BY id');

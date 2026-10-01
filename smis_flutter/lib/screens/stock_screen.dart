@@ -134,17 +134,24 @@ class _StockContentState extends ConsumerState<_StockContent> {
   }
 
   Future<void> _watchCache() async {
-    final db = await ref
-        .read(appPowerSyncDatabaseProvider)
-        .databaseForCurrentSession();
-    if (!mounted) return;
-    _cacheSubscription = db
-        .watch(
-          'SELECT id, cached_at_utc FROM stock_cache',
-          throttle: const Duration(milliseconds: 300),
-        )
-        .skip(1)
-        .listen((_) => _refreshLocal());
+    try {
+      final db = await ref
+          .read(appPowerSyncDatabaseProvider)
+          .databaseForCurrentSession();
+      if (!mounted) return;
+      _cacheSubscription = db
+          .watch(
+            'SELECT id, cached_at_utc FROM stock_cache',
+            throttle: const Duration(milliseconds: 300),
+          )
+          .skip(1)
+          .listen((_) => _refreshLocal());
+    } on AuthenticationException {
+      // The auth gate will move the user back to sign-in. Do not leave an
+      // unhandled background Future behind while this screen is being disposed.
+    } catch (error) {
+      if (mounted) setState(() => _syncError = error);
+    }
   }
 
   @override
@@ -157,9 +164,14 @@ class _StockContentState extends ConsumerState<_StockContent> {
       'stock-count-${widget.userId ?? ''}-${widget.shopId ?? ''}';
 
   Future<void> _restoreCount() async {
-    final id = await _storage.read(key: _countStorageKey);
-    if (mounted && id != null && id.isNotEmpty) {
-      setState(() => _countId = id);
+    try {
+      final id = await _storage.read(key: _countStorageKey);
+      if (mounted && id != null && id.isNotEmpty) {
+        setState(() => _countId = id);
+      }
+    } catch (_) {
+      // A corrupt Windows secure-storage file is removed by the storage plugin.
+      // A draft count can simply start fresh after the user signs in again.
     }
   }
 
@@ -225,13 +237,20 @@ class _StockContentState extends ConsumerState<_StockContent> {
   }
 
   void _refreshLocal() {
-    if (mounted) setState(() => _data = _load());
+    if (mounted) {
+      setState(() {
+        _data = _load();
+      });
+    }
   }
 
   Future<void> _syncInBackground() async {
     try {
       await _store.syncNow();
       if (mounted) setState(() => _syncError = null);
+    } on AuthenticationException catch (error) {
+      if (mounted) setState(() => _syncError = error);
+      return;
     } catch (error) {
       if (mounted) setState(() => _syncError = error);
     }
@@ -1043,23 +1062,52 @@ class _StockContentState extends ConsumerState<_StockContent> {
         builder: (context) => AlertDialog(
           title: const Text('Physical stock count (base units)'),
           content: SizedBox(
-            width: 450,
-            height: 400,
-            child: ListView.builder(
-              itemCount: lines.length,
-              itemBuilder: (context, index) => TextField(
-                controller: controllers[index],
-                enabled:
-                    widget.canUpdate &&
-                    _hasTask(ApplicationTaskKeys.completeStockCount),
-                keyboardType: const TextInputType.numberWithOptions(
-                  decimal: true,
-                ),
-                decoration: InputDecoration(
-                  labelText: stockText(lines[index], 'productName'),
-                  helperText:
-                      'Expected: ${stockNumber(lines[index], 'expectedQuantityBase')}',
-                ),
+            width: 500,
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxHeight: 440),
+              child: ListView.separated(
+                shrinkWrap: true,
+                itemCount: lines.length,
+                separatorBuilder: (_, _) => const SizedBox(height: 18),
+                itemBuilder: (context, index) {
+                  final line = lines[index];
+                  final productName = stockText(line, 'productName');
+                  final batchNumber = stockText(line, 'batchNumber');
+                  final expected = stockNumber(line, 'expectedQuantityBase');
+
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        batchNumber.isEmpty
+                            ? productName
+                            : '$productName · $batchNumber',
+                        style: Theme.of(context).textTheme.titleSmall,
+                      ),
+                      const SizedBox(height: 8),
+                      TextField(
+                        controller: controllers[index],
+                        enabled:
+                            widget.canUpdate &&
+                            _hasTask(ApplicationTaskKeys.completeStockCount),
+                        keyboardType: const TextInputType.numberWithOptions(
+                          decimal: true,
+                        ),
+                        decoration: const InputDecoration(
+                          labelText: 'Counted quantity',
+                          suffixText: 'base units',
+                          border: OutlineInputBorder(),
+                          isDense: true,
+                        ),
+                      ),
+                      const SizedBox(height: 6),
+                      Text(
+                        'Expected: $expected base units',
+                        style: Theme.of(context).textTheme.bodySmall,
+                      ),
+                    ],
+                  );
+                },
               ),
             ),
           ),

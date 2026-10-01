@@ -9,9 +9,9 @@ using SMIS.Domain.Entities.Identity.Entity;
 
 namespace SMIS.Application.Features.Identity.Users.Commands
 {
-    public record UserDeleteCommand(string UserId) : IRequest<Result<Unit>>;
+    public record UserDeleteCommand(string UserId) : IRequest<Result>;
 
-    public class UserDeleteCommandHandler : IRequestHandler<UserDeleteCommand, Result<Unit>>
+    public class UserDeleteCommandHandler : IRequestHandler<UserDeleteCommand, Result>
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IApplicationDbContext _context;
@@ -31,19 +31,19 @@ namespace SMIS.Application.Features.Identity.Users.Commands
             _userAdministrationGuard = userAdministrationGuard;
         }
 
-        public async Task<Result<Unit>> Handle(
+        public async Task<Result> Handle(
             UserDeleteCommand request,
             CancellationToken cancellationToken
         )
         {
             var user = await _userManager.FindByIdAsync(request.UserId);
-            if (user == null) return Result<Unit>.NotFoundResult(request.UserId);
+            if (user == null) return Result.NotFound(request.UserId);
 
             if (await _userAdministrationGuard.WouldRemoveLastSuperAdminAsync(
                     user.Id,
                     cancellationToken))
             {
-                return Result<Unit>.FailureResult(
+                return Result.BusinessRule(
                     "LastSuperAdmin",
                     "The last SuperAdmin account cannot be deleted.");
             }
@@ -73,7 +73,7 @@ namespace SMIS.Application.Features.Identity.Users.Commands
                 if (!result.Succeeded)
                 {
                     await _unitOfWork.RollbackTransactionAsync(cancellationToken);
-                    return Result<Unit>.WithErrors(result.Errors.Select(e => new ValidationError
+                    return Result.Failure(result.Errors.Select(e => new Error
                     {
                         Code = e.Code,
                         Description = e.Description
@@ -81,14 +81,14 @@ namespace SMIS.Application.Features.Identity.Users.Commands
                 }
 
                 await _unitOfWork.CommitTransactionAsync(cancellationToken);
-                return Result<Unit>.SuccessResult(Unit.Value, "User deleted successfully");
+                return Result.Success();
             }
             catch (DbUpdateException)
             {
                 if (_unitOfWork.HasActiveTransaction)
                     await _unitOfWork.RollbackTransactionAsync(cancellationToken);
 
-                return Result<Unit>.FailureResult(
+                return Result.BusinessRule(
                     "UserInUse",
                     "The user cannot be deleted because existing business or audit records reference this account.");
             }

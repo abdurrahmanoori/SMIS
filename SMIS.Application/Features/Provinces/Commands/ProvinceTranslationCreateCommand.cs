@@ -37,7 +37,7 @@ namespace SMIS.Application.Features.Provinces.Commands
         )
         {
             var province = await _repo.GetByIdAsync(request.Dto.ProvinceId);
-            if (province is null) return Result<ProvinceTranslationDto>.NotFoundResult(request.Dto.ProvinceId);
+            if (province is null) return Result<ProvinceTranslationDto>.NotFound(request.Dto.ProvinceId);
 
             var entity = ProvinceTranslationMapping.Create(request.Dto);
 
@@ -50,7 +50,7 @@ namespace SMIS.Application.Features.Provinces.Commands
                 }
                 else
                 {
-                    return Result<ProvinceTranslationDto>.FailureResult(
+                    return Result<ProvinceTranslationDto>.BusinessRule(
                         $"Language with code '{request.Dto.LanguageCode}' not found");
                 }
             }
@@ -59,7 +59,7 @@ namespace SMIS.Application.Features.Provinces.Commands
                 var lang = await _languageRepo.GetByIdAsync(request.Dto.LanguageId);
                 if (lang == null)
                 {
-                    return Result<ProvinceTranslationDto>.FailureResult(
+                    return Result<ProvinceTranslationDto>.BusinessRule(
                         $"Language with ID '{request.Dto.LanguageId}' not found");
                 }
 
@@ -67,7 +67,7 @@ namespace SMIS.Application.Features.Provinces.Commands
             }
             else
             {
-                return Result<ProvinceTranslationDto>.FailureResult(
+                return Result<ProvinceTranslationDto>.BusinessRule(
                     "Either LanguageId or LanguageCode must be provided");
             }
 
@@ -77,7 +77,7 @@ namespace SMIS.Application.Features.Provinces.Commands
 
             await _uow.SaveChanges(cancellationToken);
 
-            return Result<ProvinceTranslationDto>.SuccessResult(ProvinceTranslationMapping.ToDto(entity));
+            return Result<ProvinceTranslationDto>.Success(ProvinceTranslationMapping.ToDto(entity));
         }
     }
 }

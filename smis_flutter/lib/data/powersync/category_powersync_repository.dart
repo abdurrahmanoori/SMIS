@@ -18,10 +18,12 @@ class CategoryPowerSyncRepository extends PowerSyncRepositorySupport {
     final database = await this.database;
     return database
         .watch(
-          'SELECT id, name, code, '
-          'description, is_active, shop_id, last_modified_utc '
-          'FROM category WHERE shop_id = ?',
-          parameters: [shopId],
+          'SELECT category.id, category.name, category.code, '
+          'category.description, category.is_active, category.shop_id, category.last_modified_utc, '
+          'sync_error.message AS sync_error_message '
+          'FROM category LEFT JOIN sync_error ON sync_error.table_name = ? '
+          'AND sync_error.record_id = category.id WHERE category.shop_id = ?',
+          parameters: ['category', shopId],
           throttle: const Duration(milliseconds: 250),
         )
         .map((_) {});
@@ -36,6 +38,7 @@ class CategoryPowerSyncRepository extends PowerSyncRepositorySupport {
   }) async {
     final database = await this.database;
     final pending = await pendingOperations('category');
+    final errors = await syncErrors('category');
     final args = <Object?>[shopId];
     var where = 'shop_id = ?';
 
@@ -60,7 +63,14 @@ class CategoryPowerSyncRepository extends PowerSyncRepositorySupport {
 
     final rows = await database.getAll(sql, args);
     return rows
-        .map((row) => _toCategory(row, pending[row['id']], languageId))
+        .map(
+          (row) => _toCategory(
+            row,
+            pending[row['id']],
+            languageId,
+            errors[row['id']],
+          ),
+        )
         .toList(growable: false);
   }
 
@@ -190,7 +200,8 @@ class CategoryPowerSyncRepository extends PowerSyncRepositorySupport {
       throw const LocalStorageException('Category was not found.');
     }
     final pending = await pendingOperations('category');
-    return _toCategory(row, pending[id], languageId);
+    final errors = await syncErrors('category');
+    return _toCategory(row, pending[id], languageId, errors[id]);
   }
 
   Future<void> _ensureUniqueName(
@@ -218,6 +229,7 @@ class CategoryPowerSyncRepository extends PowerSyncRepositorySupport {
     Map<String, Object?> row,
     String? operation,
     String languageId,
+    String? syncError,
   ) {
     final changedAt = timestamp(row['last_modified_utc']);
     return Category(
@@ -230,11 +242,14 @@ class CategoryPowerSyncRepository extends PowerSyncRepositorySupport {
       createdAt: changedAt,
       updatedAt: changedAt,
       lastModifiedUtc: changedAt,
-      syncStatus: operation == null
+      syncStatus: syncError != null
+          ? CategorySyncStatus.failed
+          : operation == null
           ? CategorySyncStatus.synced
           : operation == 'PUT'
           ? CategorySyncStatus.pendingCreate
           : CategorySyncStatus.pendingUpdate,
+      lastSyncError: syncError,
     );
   }
 }

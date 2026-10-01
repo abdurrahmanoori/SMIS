@@ -43,18 +43,22 @@ namespace SMIS.Application.Features.Auth.Commands
         {
             var user = await _userManager.FindByEmailAsync(request.LoginDto.Email);
             if (user == null)
-                return Result<LoginResponseDto>.FailureResult("Invalid email or password");
+                return Result<LoginResponseDto>.Unauthorized(
+                    "auth.invalid_credentials",
+                    "Invalid email or password.");
 
             var signInResult = await _signInManager.CheckPasswordSignInAsync(
                 user,
                 request.LoginDto.Password,
                 lockoutOnFailure: true);
             if (signInResult.IsLockedOut)
-                return Result<LoginResponseDto>.FailureResult(
-                    "AccountLocked",
+                return Result<LoginResponseDto>.Unauthorized(
+                    "auth.account_locked",
                     "The account is temporarily locked after repeated failed sign-in attempts.");
             if (!signInResult.Succeeded)
-                return Result<LoginResponseDto>.FailureResult("Invalid email or password");
+                return Result<LoginResponseDto>.Unauthorized(
+                    "auth.invalid_credentials",
+                    "Invalid email or password.");
 
             var roles = await _userManager.GetRolesAsync(user);
             var isSuperAdmin = roles.Any(role => string.Equals(
@@ -79,8 +83,8 @@ namespace SMIS.Application.Features.Auth.Commands
             }
 
             if (string.IsNullOrWhiteSpace(activeShopId))
-                return Result<LoginResponseDto>.FailureResult(
-                    "InvalidShop",
+                return Result<LoginResponseDto>.Forbidden(
+                    "auth.no_active_shop",
                     "The account is not assigned to an active shop.");
 
             // Token generation is delegated to the infrastructure layer.
@@ -91,7 +95,7 @@ namespace SMIS.Application.Features.Auth.Commands
                 ? LanguageDefaults.EnglishCode
                 : language.Code!;
 
-            return Result<LoginResponseDto>.SuccessResult(new LoginResponseDto
+            return Result<LoginResponseDto>.Success(new LoginResponseDto
             {
                 Token = token,
                 UserId = user.Id,
@@ -101,7 +105,7 @@ namespace SMIS.Application.Features.Auth.Commands
                 LanguageId = user.LanguageId,
                 LanguageCode = languageCode,
                 Roles = roles
-            }, "Login successful");
+            });
         }
     }
 }

@@ -41,7 +41,7 @@ internal sealed class ProductSyncCreateCommandHandler : IRequestHandler<ProductS
         {
             if (!ProductSyncRules.CanAccess(existing, _currentUser)) return ProductSyncRules.Forbidden();
             if (modified <= existing.GetConflictModifiedUtc())
-                return Result<ProductDto>.SuccessResult(ProductMapping.ToDto(existing));
+                return Result<ProductDto>.Success(ProductMapping.ToDto(existing));
             if (existing.IsBaseUnitChange(request.Dto.BaseUnitId) &&
                 await _repository.HasStockOrConversionsAsync(existing.Id, cancellationToken))
                 return ProductCommandRules.BaseUnitIsLocked();
@@ -53,7 +53,7 @@ internal sealed class ProductSyncCreateCommandHandler : IRequestHandler<ProductS
             existing.SetClientModificationMetadata(modified);
             existing.Restore();
             await _db.SaveChangesAsync(cancellationToken);
-            return Result<ProductDto>.SuccessResult(ProductMapping.ToDto(existing));
+            return Result<ProductDto>.Success(ProductMapping.ToDto(existing));
         }
 
         var product = ProductCommandRules.Create(request.Dto, _currentUser.GetShopId());
@@ -63,7 +63,7 @@ internal sealed class ProductSyncCreateCommandHandler : IRequestHandler<ProductS
         await ProductCommandRules.EnsureBaseProductUnitAsync(
             product, product.BaseUnitId, _productUnitRepository, cancellationToken);
         await _db.SaveChangesAsync(cancellationToken);
-        return Result<ProductDto>.SuccessResult(ProductMapping.ToDto(product));
+        return Result<ProductDto>.Success(ProductMapping.ToDto(product));
     }
 }
 
@@ -87,11 +87,11 @@ internal sealed class ProductSyncUpdateCommandHandler : IRequestHandler<ProductS
         var id = ProductSyncRules.NormalizeGuid(request.Id);
         var product = await _db.Products.IgnoreQueryFilters()
             .FirstOrDefaultAsync(value => value.Id == id, cancellationToken);
-        if (product is null) return Result<ProductDto>.NotFoundResult(request.Id);
+        if (product is null) return Result<ProductDto>.NotFound(request.Id);
         if (!ProductSyncRules.CanAccess(product, _currentUser)) return ProductSyncRules.Forbidden();
         var modified = DateTimeService.NormalizeUtc(request.Dto.ClientModifiedDate);
         if (modified <= product.GetConflictModifiedUtc())
-            return Result<ProductDto>.SuccessResult(ProductMapping.ToDto(product));
+            return Result<ProductDto>.Success(ProductMapping.ToDto(product));
         if (product.IsBaseUnitChange(request.Dto.BaseUnitId) &&
             await _repository.HasStockOrConversionsAsync(product.Id, cancellationToken))
             return ProductCommandRules.BaseUnitIsLocked();
@@ -103,7 +103,7 @@ internal sealed class ProductSyncUpdateCommandHandler : IRequestHandler<ProductS
         product.SetClientModificationMetadata(modified);
         product.Restore();
         await _db.SaveChangesAsync(cancellationToken);
-        return Result<ProductDto>.SuccessResult(ProductMapping.ToDto(product));
+        return Result<ProductDto>.Success(ProductMapping.ToDto(product));
     }
 }
 
@@ -121,22 +121,22 @@ internal sealed class ProductSyncDeleteCommandHandler : IRequestHandler<ProductS
         var id = ProductSyncRules.NormalizeGuid(request.Id);
         var product = await _db.Products.IgnoreQueryFilters()
             .FirstOrDefaultAsync(value => value.Id == id, cancellationToken);
-        if (product is null) return Result<ProductDto>.NotFoundResult(request.Id);
+        if (product is null) return Result<ProductDto>.NotFound(request.Id);
         if (!ProductSyncRules.CanAccess(product, _currentUser)) return ProductSyncRules.Forbidden();
         var modified = DateTimeService.NormalizeUtc(request.Dto.ClientModifiedDate);
         if (modified < product.GetConflictModifiedUtc())
-            return Result<ProductDto>.SuccessResult(ProductMapping.ToDto(product));
+            return Result<ProductDto>.Success(ProductMapping.ToDto(product));
 
         var referenceCount = await _repository.CountReferencesAsync(product.Id, cancellationToken);
         if (referenceCount > 0)
-            return Result<ProductDto>.FailureResult(
+            return Result<ProductDto>.BusinessRule(
                 "ProductInUse",
                 $"Product is used by {referenceCount} record(s). Remove those references before deleting the product.");
 
         product.SetClientModificationMetadata(modified);
         await _repository.RemoveAsync(product);
         await _db.SaveChangesAsync(cancellationToken);
-        return Result<ProductDto>.SuccessResult(ProductMapping.ToDto(product));
+        return Result<ProductDto>.Success(ProductMapping.ToDto(product));
     }
 }
 
@@ -145,5 +145,7 @@ internal static class ProductSyncRules
     public static string NormalizeGuid(string value) => Guid.Parse(value).ToString("D");
     public static bool CanAccess(Product product, ICurrentUser currentUser) => product.ShopId == currentUser.GetShopId();
     public static Result<ProductDto> Forbidden() =>
-        Result<ProductDto>.FailureResult("Forbidden", "You can only synchronize products from your own shop.");
+        Result<ProductDto>.Forbidden(
+            "product.sync_forbidden",
+            "You can only synchronize products from your own shop.");
 }

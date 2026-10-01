@@ -29,7 +29,7 @@ namespace SMIS.Application.Features.UnitOfMeasures.Commands
             var entity = UnitOfMeasureCommandRules.Create(dto.Name, dto.Symbol, dto.Description);
             await _unitOfMeasureRepository.AddAsync(entity);
             await _db.SaveChangesAsync(cancellationToken);
-            return Result<UnitOfMeasureDto>.SuccessResult(UnitOfMeasureMapping.ToDto(entity));
+            return Result<UnitOfMeasureDto>.Success(UnitOfMeasureMapping.ToDto(entity));
         }
     }
 }

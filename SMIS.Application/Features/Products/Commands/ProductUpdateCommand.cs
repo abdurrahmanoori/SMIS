@@ -42,7 +42,7 @@ namespace SMIS.Application.Features.Products.Commands
         public async Task<Result<ProductDto>> Handle(ProductUpdateCommand request, CancellationToken cancellationToken)
         {
             var entity = await _productRepository.GetByIdAsync(request.Id);
-            if (entity == null) return Result<ProductDto>.NotFoundResult(nameof(ProductDto.Id));
+            if (entity == null) return Result<ProductDto>.NotFound(nameof(ProductDto.Id));
 
             if (entity.IsBaseUnitChange(request.ProductCreateDto.BaseUnitId) &&
                 await _productRepository.HasStockOrConversionsAsync(entity.Id, cancellationToken))
@@ -70,7 +70,7 @@ namespace SMIS.Application.Features.Products.Commands
             entity.ClearClientModificationMetadata();
 
             await _db.SaveChangesAsync(cancellationToken);
-            return Result<ProductDto>.SuccessResult(ProductMapping.ToDto(entity));
+            return Result<ProductDto>.Success(ProductMapping.ToDto(entity));
         }
     }
 }

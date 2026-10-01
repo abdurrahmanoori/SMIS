@@ -42,7 +42,7 @@ internal sealed class InventoryCurrentStockQueryHandler
     )
     {
         if (request.LowStockThresholdBase < 0)
-            return Result<List<CurrentStockReportDto>>.FailureResult(
+            return Result<List<CurrentStockReportDto>>.BusinessRule(
                 "InvalidLowStockThreshold",
                 "Low-stock threshold cannot be negative.");
 
@@ -136,7 +136,7 @@ internal sealed class InventoryCurrentStockQueryHandler
             .OrderBy(row => row.ProductName)
             .ToList();
 
-        return Result<List<CurrentStockReportDto>>.SuccessResult(rows);
+        return Result<List<CurrentStockReportDto>>.Success(rows);
     }
 }
 
@@ -164,7 +164,7 @@ internal sealed class InventoryExpirationReportQueryHandler
     )
     {
         if (request.DaysAhead < 0)
-            return Result<List<ExpiringStockReportDto>>.FailureResult(
+            return Result<List<ExpiringStockReportDto>>.BusinessRule(
                 "InvalidExpirationWindow",
                 "DaysAhead cannot be negative.");
 
@@ -213,7 +213,7 @@ internal sealed class InventoryExpirationReportQueryHandler
                 batch.RemainingQuantityBase * batch.UnitCostBase)
         }).ToList();
 
-        return Result<List<ExpiringStockReportDto>>.SuccessResult(rows);
+        return Result<List<ExpiringStockReportDto>>.Success(rows);
     }
 }
 
@@ -264,7 +264,7 @@ internal sealed class InventoryValuationQueryHandler
             .OrderBy(item => item.ProductName)
             .ToList();
 
-        return Result<InventoryValuationReportDto>.SuccessResult(new InventoryValuationReportDto
+        return Result<InventoryValuationReportDto>.Success(new InventoryValuationReportDto
         {
             Products = products,
             TotalInventoryValueMinor = products.Sum(item => item.InventoryValueMinor)
@@ -337,7 +337,7 @@ internal sealed class InventoryMovementHistoryQueryHandler
             })
             .ToListAsync(cancellationToken);
 
-        return Result<List<InventoryMovementHistoryDto>>.SuccessResult(rows);
+        return Result<List<InventoryMovementHistoryDto>>.Success(rows);
     }
 }
 
@@ -426,7 +426,7 @@ internal sealed class InventoryReconciliationQueryHandler
             .ThenBy(row => row.BatchNumber)
             .ToList();
 
-        return Result<List<InventoryReconciliationDto>>.SuccessResult(rows);
+        return Result<List<InventoryReconciliationDto>>.Success(rows);
     }
 }
 

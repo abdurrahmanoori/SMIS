@@ -27,7 +27,7 @@ namespace SMIS.Api.Controllers
         public async Task<ActionResult<ProductDto>> Create(
             ProductCreateDto dto
         ) =>
-            HandleResultResponseOld(await Mediator.Send(new ProductCreateCommand(dto)));
+            HandleResultResponse(await Mediator.Send(new ProductCreateCommand(dto)));
 
         /// <summary>
         /// Creates or updates a product sent by an offline client.
@@ -41,7 +41,7 @@ namespace SMIS.Api.Controllers
         public async Task<ActionResult<ProductDto>> SyncCreate(
             ProductSyncCreateDto dto
         ) =>
-            HandleResultResponseOld(await Mediator.Send(new ProductSyncCreateCommand(dto)));
+            HandleResultResponse(await Mediator.Send(new ProductSyncCreateCommand(dto)));
 
         /// <summary>
         /// Gets products with flexible filtering, optional returned columns, and pagination.
@@ -84,7 +84,7 @@ namespace SMIS.Api.Controllers
         public async Task<ActionResult<ProductLoanInfoDto>> GetLoanInfo(
             string id
         ) =>
-            HandleResultResponseOld(await Mediator.Send(new ProductGetLoanInfoQuery(id)));
+            HandleResultResponse(await Mediator.Send(new ProductGetLoanInfoQuery(id)));
 
         /// <summary>
         /// Updates an existing product.
@@ -95,7 +95,7 @@ namespace SMIS.Api.Controllers
             string id,
             ProductCreateDto dto
         ) =>
-            HandleResultResponseOld(await Mediator.Send(new ProductUpdateCommand(id, dto)));
+            HandleResultResponse(await Mediator.Send(new ProductUpdateCommand(id, dto)));
 
         /// <summary>
         /// Applies a product update sent by an offline client.
@@ -109,17 +109,17 @@ namespace SMIS.Api.Controllers
             string id,
             ProductSyncUpdateDto dto
         ) =>
-            HandleResultResponseOld(await Mediator.Send(new ProductSyncUpdateCommand(id, dto)));
+            HandleResultResponse(await Mediator.Send(new ProductSyncUpdateCommand(id, dto)));
 
         /// <summary>
         /// Deletes a product.
         /// </summary>
         [HttpDelete("{id}")]
         [HasPermission(ApplicationComponentKeys.Products, PermissionAction.Delete)]
-        public async Task<ActionResult<Unit>> Delete(
+        public async Task<IActionResult> Delete(
             string id
         ) =>
-            HandleResultResponseOld(await Mediator.Send(new ProductDeleteCommand(id)));
+            HandleResultResponse(await Mediator.Send(new ProductDeleteCommand(id)));
 
         /// <summary>
         /// Applies a product delete sent by an offline client.
@@ -133,6 +133,6 @@ namespace SMIS.Api.Controllers
             string id,
             ProductSyncDeleteDto dto
         ) =>
-            HandleResultResponseOld(await Mediator.Send(new ProductSyncDeleteCommand(id, dto)));
+            HandleResultResponse(await Mediator.Send(new ProductSyncDeleteCommand(id, dto)));
     }
 }

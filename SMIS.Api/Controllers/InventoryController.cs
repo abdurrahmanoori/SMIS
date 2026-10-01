@@ -36,7 +36,7 @@ public sealed class InventoryController : BaseApiController
     public async Task<ActionResult<StockBatchDto>> ReceivePurchase(
         StockBatchCreateDto dto
     ) =>
-        HandleResultResponseOld(await Mediator.Send(new StockBatchCreateCommand(dto)));
+        HandleResultResponse(await Mediator.Send(new StockBatchCreateCommand(dto)));
 
     /// <summary>
     /// Adds returned stock back into a specific batch without updating a sale.
@@ -51,7 +51,7 @@ public sealed class InventoryController : BaseApiController
     public async Task<ActionResult<StockMovementDto>> CustomerReturn(
         InventoryBatchOperationDto dto
     ) =>
-        HandleResultResponseOld(await Mediator.Send(new InventoryBatchOperationCommand(
+        HandleResultResponse(await Mediator.Send(new InventoryBatchOperationCommand(
             dto,
             StockMovementDirection.In,
             StockMovementReason.CustomerReturn)));
@@ -69,7 +69,7 @@ public sealed class InventoryController : BaseApiController
     public async Task<ActionResult<StockMovementDto>> SupplierReturn(
         InventoryBatchOperationDto dto
     ) =>
-        HandleResultResponseOld(await Mediator.Send(new InventoryBatchOperationCommand(
+        HandleResultResponse(await Mediator.Send(new InventoryBatchOperationCommand(
             dto,
             StockMovementDirection.Out,
             StockMovementReason.SupplierReturn)));
@@ -86,7 +86,7 @@ public sealed class InventoryController : BaseApiController
     public async Task<ActionResult<StockMovementDto>> Damage(
         InventoryBatchOperationDto dto
     ) =>
-        HandleResultResponseOld(await Mediator.Send(new InventoryBatchOperationCommand(
+        HandleResultResponse(await Mediator.Send(new InventoryBatchOperationCommand(
             dto,
             StockMovementDirection.Out,
             StockMovementReason.Damage)));
@@ -103,7 +103,7 @@ public sealed class InventoryController : BaseApiController
     public async Task<ActionResult<StockMovementDto>> Expire(
         InventoryBatchOperationDto dto
     ) =>
-        HandleResultResponseOld(await Mediator.Send(new InventoryBatchOperationCommand(
+        HandleResultResponse(await Mediator.Send(new InventoryBatchOperationCommand(
             dto,
             StockMovementDirection.Out,
             StockMovementReason.Expiration)));
@@ -121,7 +121,7 @@ public sealed class InventoryController : BaseApiController
     public async Task<ActionResult<StockMovementDto>> Adjust(
         InventoryAdjustmentDto dto
     ) =>
-        HandleResultResponseOld(await Mediator.Send(new InventoryBatchOperationCommand(
+        HandleResultResponse(await Mediator.Send(new InventoryBatchOperationCommand(
             dto,
             dto.Direction,
             StockMovementReason.Adjustment)));
@@ -139,7 +139,7 @@ public sealed class InventoryController : BaseApiController
     public async Task<ActionResult<List<StockMovementDto>>> Transfer(
         InventoryTransferDto dto
     ) =>
-        HandleResultResponseOld(await Mediator.Send(new InventoryTransferCommand(dto)));
+        HandleResultResponse(await Mediator.Send(new InventoryTransferCommand(dto)));
 
     /// <summary>
     /// Checks whether each stored batch balance matches the balance calculated from its movement history.
@@ -156,7 +156,7 @@ public sealed class InventoryController : BaseApiController
         [FromQuery] string? stockBatchId = null,
         [FromQuery] bool onlyMismatches = false
     ) =>
-        HandleResultResponseOld(await Mediator.Send(
+        HandleResultResponse(await Mediator.Send(
             new InventoryReconciliationQuery(stockBatchId, onlyMismatches)));
 
     /// <summary>
@@ -172,7 +172,7 @@ public sealed class InventoryController : BaseApiController
     public async Task<ActionResult<StockCountSessionDto>> StartStockCount(
         StockCountStartDto dto
     ) =>
-        HandleResultResponseOld(await Mediator.Send(new StockCountStartCommand(dto)));
+        HandleResultResponse(await Mediator.Send(new StockCountStartCommand(dto)));
 
     /// <summary>
     /// Completes a physical stock count and posts adjustments for any differences.
@@ -189,7 +189,7 @@ public sealed class InventoryController : BaseApiController
         string id,
         StockCountCompleteDto dto
     ) =>
-        HandleResultResponseOld(await Mediator.Send(new StockCountCompleteCommand(id, dto)));
+        HandleResultResponse(await Mediator.Send(new StockCountCompleteCommand(id, dto)));
 
     /// <summary>
     /// Gets one physical stock-count session and its batch lines.
@@ -199,7 +199,7 @@ public sealed class InventoryController : BaseApiController
     public async Task<ActionResult<StockCountSessionDto>> GetStockCount(
         string id
     ) =>
-        HandleResultResponseOld(await Mediator.Send(new StockCountGetByIdQuery(id)));
+        HandleResultResponse(await Mediator.Send(new StockCountGetByIdQuery(id)));
 
     /// <summary>
     /// Cancels a physical stock count without posting quantity adjustments.
@@ -210,7 +210,7 @@ public sealed class InventoryController : BaseApiController
     public async Task<ActionResult<StockCountSessionDto>> CancelStockCount(
         string id
     ) =>
-        HandleResultResponseOld(await Mediator.Send(new StockCountCancelCommand(id)));
+        HandleResultResponse(await Mediator.Send(new StockCountCancelCommand(id)));
 
     /// <summary>
     /// Gets the current stock position for products visible to the current user.
@@ -227,7 +227,7 @@ public sealed class InventoryController : BaseApiController
         [FromQuery] decimal? lowStockThresholdBase = null,
         [FromQuery] bool includePresentationUnits = true
     ) =>
-        HandleResultResponseOld(await Mediator.Send(
+        HandleResultResponse(await Mediator.Send(
             new InventoryCurrentStockQuery(lowStockThresholdBase, false, includePresentationUnits)));
 
     /// <summary>
@@ -244,7 +244,7 @@ public sealed class InventoryController : BaseApiController
         [FromQuery] decimal? thresholdBase = null,
         [FromQuery] bool includePresentationUnits = true
     ) =>
-        HandleResultResponseOld(await Mediator.Send(
+        HandleResultResponse(await Mediator.Send(
             new InventoryCurrentStockQuery(thresholdBase, true, includePresentationUnits)));
 
     /// <summary>
@@ -260,7 +260,7 @@ public sealed class InventoryController : BaseApiController
     public async Task<ActionResult<List<ExpiringStockReportDto>>> Expiring(
         [FromQuery] int daysAhead = 30
     ) =>
-        HandleResultResponseOld(await Mediator.Send(
+        HandleResultResponse(await Mediator.Send(
             new InventoryExpirationReportQuery(daysAhead, false)));
 
     /// <summary>
@@ -272,7 +272,7 @@ public sealed class InventoryController : BaseApiController
     [HttpGet("reports/expired")]
     [HasPermission(ApplicationComponentKeys.Inventory, PermissionAction.Read)]
     public async Task<ActionResult<List<ExpiringStockReportDto>>> Expired() =>
-        HandleResultResponseOld(await Mediator.Send(
+        HandleResultResponse(await Mediator.Send(
             new InventoryExpirationReportQuery(0, true)));
 
     /// <summary>
@@ -284,7 +284,7 @@ public sealed class InventoryController : BaseApiController
     [HttpGet("reports/valuation")]
     [HasPermission(ApplicationComponentKeys.Inventory, PermissionAction.Read)]
     public async Task<ActionResult<InventoryValuationReportDto>> Valuation() =>
-        HandleResultResponseOld(await Mediator.Send(new InventoryValuationQuery()));
+        HandleResultResponse(await Mediator.Send(new InventoryValuationQuery()));
 
     /// <summary>
     /// Gets recent inventory movement history with optional filters.
@@ -309,7 +309,7 @@ public sealed class InventoryController : BaseApiController
         [FromQuery] StockMovementDirection? direction = null,
         [FromQuery] int limit = 250
     ) =>
-        HandleResultResponseOld(await Mediator.Send(new InventoryMovementHistoryQuery(
+        HandleResultResponse(await Mediator.Send(new InventoryMovementHistoryQuery(
             productId,
             fromUtc,
             toUtc,

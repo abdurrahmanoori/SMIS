@@ -33,7 +33,7 @@ namespace SMIS.Api.Controllers
         public async Task<ActionResult<UserDto>> GetCurrentUser(
             [FromQuery] bool includeShop = false
         ) =>
-            HandleResultResponseOld(await Mediator.Send(new UserGetCurrentQuery(includeShop)));
+            HandleResultResponse(await Mediator.Send(new UserGetCurrentQuery(includeShop)));
 
         /// <summary>
         /// Gets the current user's effective component permissions.
@@ -41,7 +41,7 @@ namespace SMIS.Api.Controllers
         [Authorize]
         [HttpGet("me/permissions")]
         public async Task<ActionResult<IReadOnlyList<ComponentPermissionDto>>> GetCurrentUserPermissions() =>
-            HandleResultResponseOld(await Mediator.Send(new UserGetPermissionsQuery()));
+            HandleResultResponse(await Mediator.Send(new UserGetPermissionsQuery()));
 
         /// <summary>
         /// Gets the current user's effective task privileges.
@@ -49,7 +49,7 @@ namespace SMIS.Api.Controllers
         [Authorize]
         [HttpGet("me/task-permissions")]
         public async Task<ActionResult<IReadOnlyList<string>>> GetCurrentUserTaskPermissions() =>
-            HandleResultResponseOld(await Mediator.Send(new UserGetTaskPermissionsQuery()));
+            HandleResultResponse(await Mediator.Send(new UserGetTaskPermissionsQuery()));
 
         /// <summary>
         /// Signs in a user and returns the login response.
@@ -62,7 +62,7 @@ namespace SMIS.Api.Controllers
         public async Task<ActionResult<LoginResponseDto>> Login(
             LoginDto dto
         ) =>
-            HandleResultResponseOld(await Mediator.Send(new LoginCommand(dto)));
+            HandleResultResponse(await Mediator.Send(new LoginCommand(dto)));
 
         /// <summary>
         /// Changes the active shop context for a SuperAdmin and returns a fresh
@@ -73,7 +73,7 @@ namespace SMIS.Api.Controllers
         public async Task<ActionResult<LoginResponseDto>> SwitchShop(
             SwitchShopDto dto
         ) =>
-            HandleResultResponseOld(await Mediator.Send(new SwitchShopCommand(dto.ShopId)));
+            HandleResultResponse(await Mediator.Send(new SwitchShopCommand(dto.ShopId)));
 
         /// <summary>
         /// Reissues the current session so user profile changes such as language
@@ -82,7 +82,7 @@ namespace SMIS.Api.Controllers
         [Authorize]
         [HttpPost("refresh-session")]
         public async Task<ActionResult<LoginResponseDto>> RefreshSession() =>
-            HandleResultResponseOld(await Mediator.Send(new RefreshSessionCommand()));
+            HandleResultResponse(await Mediator.Send(new RefreshSessionCommand()));
 
         /// <summary>
         /// Creates a new user account.
@@ -92,7 +92,7 @@ namespace SMIS.Api.Controllers
         public async Task<ActionResult<UserDto>> Create(
             UserCreateDto dto
         ) =>
-            HandleResultResponseOld(await Mediator.Send(new UserCreateCommand(dto)));
+            HandleResultResponse(await Mediator.Send(new UserCreateCommand(dto)));
 
         /// <summary>
         /// Gets users in pages.
@@ -130,17 +130,17 @@ namespace SMIS.Api.Controllers
             string id,
             UserUpdateDto dto
         ) =>
-            HandleResultResponseOld(await Mediator.Send(new UserUpdateCommand(id, dto)));
+            HandleResultResponse(await Mediator.Send(new UserUpdateCommand(id, dto)));
 
         /// <summary>
         /// Deletes a user account.
         /// </summary>
         [HasCurrentRole(SD.Role_Super_Admin)]
         [HttpDelete("{id}")]
-        public async Task<ActionResult<Unit>> Delete(
+        public async Task<IActionResult> Delete(
             string id
         ) =>
-            HandleResultResponseOld(await Mediator.Send(new UserDeleteCommand(id)));
+            HandleResultResponse(await Mediator.Send(new UserDeleteCommand(id)));
 
         /// <summary>
         /// Changes a user's password.
@@ -149,11 +149,11 @@ namespace SMIS.Api.Controllers
         /// The request contains the current password and the new password. The current password must be valid before the change is accepted.
         /// </remarks>
         [HttpPost("{id}/change-password")]
-        public async Task<ActionResult<Unit>> ChangePassword(
+        public async Task<IActionResult> ChangePassword(
             string id,
             ChangePasswordDto dto
         ) =>
-            HandleResultResponseOld(await Mediator.Send(new UserChangePasswordCommand(id, dto)));
+            HandleResultResponse(await Mediator.Send(new UserChangePasswordCommand(id, dto)));
 
         /// <summary>
         /// Replaces the complete role list for a user.
@@ -164,11 +164,11 @@ namespace SMIS.Api.Controllers
         /// </remarks>
         [HasCurrentRole(SD.Role_Super_Admin)]
         [HttpPost("{id}/roles")]
-        public async Task<ActionResult<Unit>> AssignRoles(
+        public async Task<IActionResult> AssignRoles(
             string id,
             [FromBody] IEnumerable<string> roles
         ) =>
-            HandleResultResponseOld(await Mediator.Send(new UserAssignRolesCommand(id, roles)));
+            HandleResultResponse(await Mediator.Send(new UserAssignRolesCommand(id, roles)));
 
         /// <summary>
         /// Gets all roles currently assigned to a user.
@@ -178,7 +178,7 @@ namespace SMIS.Api.Controllers
         public async Task<ActionResult<IList<string>>> GetUserRoles(
             string id
         ) =>
-            HandleResultResponseOld(await Mediator.Send(new UserGetRolesQuery(id)));
+            HandleResultResponse(await Mediator.Send(new UserGetRolesQuery(id)));
 
         /// <summary>
         /// Removes one role from a user.
@@ -187,10 +187,10 @@ namespace SMIS.Api.Controllers
         /// <param name="role">The role name to remove.</param>
         [HasCurrentRole(SD.Role_Super_Admin)]
         [HttpDelete("{id}/roles/{role}")]
-        public async Task<ActionResult<Unit>> RemoveRole(
+        public async Task<IActionResult> RemoveRole(
             string id,
             string role
         ) =>
-            HandleResultResponseOld(await Mediator.Send(new UserRemoveRoleCommand(id, role)));
+            HandleResultResponse(await Mediator.Send(new UserRemoveRoleCommand(id, role)));
     }
 }

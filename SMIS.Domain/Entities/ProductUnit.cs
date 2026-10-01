@@ -17,15 +17,11 @@ public class ProductUnit : BaseSyncableAuditableEntity
     /// </summary>
     public string ProductId { get; private set; } = string.Empty;
 
-    public string? ProductName { get; private set; }
-
     /// <summary>
     /// Foreign key to Unit.
     /// Example: Box, Carton, Pack
     /// </summary>
     public string UnitOfMeasureId { get; private set; } = string.Empty;
-
-    public string? UnitName { get; private set; }
 
     /// <summary>
     /// How many Base Units of the Product are contained in this Unit.
@@ -36,6 +32,9 @@ public class ProductUnit : BaseSyncableAuditableEntity
     /// - Coca Cola: 1 Carton = 24 Bottles → BaseUnitQuantity = 24
     /// </summary>
     public decimal BaseUnitQuantity { get; private set; }
+    public string? ProductName { get; private set; }
+
+    public string? UnitName { get; private set; }
 
     public Product Product { get; set; } = null!;
 

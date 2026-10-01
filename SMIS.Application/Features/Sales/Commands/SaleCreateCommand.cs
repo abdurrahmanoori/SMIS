@@ -61,36 +61,31 @@ internal sealed class SaleCreateCommandHandler : IRequestHandler<SaleCreateComma
         var dto = request.Dto;
         var shopId = _currentUser.GetShopId();
         if (string.IsNullOrWhiteSpace(shopId))
-            return Result<SaleDto>.FailureResult("ShopContextRequired", "An active shop is required.");
+            return Result<SaleDto>.Forbidden("sale.shop_context_required", "An active shop is required.");
 
         var reservation = await _idempotency.ReserveAsync(
             "sale:create",
             dto.IdempotencyKey,
             cancellationToken);
-        if (!reservation.Success)
-            return new Result<SaleDto>
-            {
-                Success = false,
-                Message = reservation.Message,
-                Errors = reservation.Errors
-            };
+        if (!reservation.IsSuccess)
+            return Result<SaleDto>.Failure(reservation.Errors);
 
         var shop = await _shops.GetByIdAsync(shopId);
         if (shop is null)
-            return Result<SaleDto>.FailureResult("ShopNotFound", "The active shop does not exist.");
+            return Result<SaleDto>.NotFound("ShopNotFound", "The active shop does not exist.");
 
         Customer? customer = null;
         if (!string.IsNullOrWhiteSpace(dto.CustomerId))
         {
             customer = await _customers.GetByIdAsync(dto.CustomerId);
             if (customer is null || customer.ShopId != shopId)
-                return Result<SaleDto>.FailureResult(
+                return Result<SaleDto>.NotFound(
                     "CustomerNotFoundOrForbidden",
                     "The selected customer does not belong to the sale shop.");
         }
 
         if (dto.PaymentType == SalePaymentType.Credit && customer is null)
-            return Result<SaleDto>.FailureResult("CreditCustomerRequired", "Credit sales require a customer.");
+            return Result<SaleDto>.BusinessRule("CreditCustomerRequired", "Credit sales require a customer.");
 
         foreach (var lineDto in dto.Lines)
         {
@@ -99,12 +94,12 @@ internal sealed class SaleCreateCommandHandler : IRequestHandler<SaleCreateComma
                 includeProperties: "Product");
 
             if (productUnit?.Product is null || productUnit.ProductId != lineDto.ProductId)
-                return Result<SaleDto>.FailureResult(
+                return Result<SaleDto>.BusinessRule(
                     "ProductUnitMismatch",
                     "A selected product unit does not belong to its sale-line product.");
 
             if (productUnit.Product.ShopId != shopId)
-                return Result<SaleDto>.FailureResult(
+                return Result<SaleDto>.BusinessRule(
                     "SaleLineShopMismatch",
                     "All sale-line products must belong to the sale shop.");
         }
@@ -124,7 +119,7 @@ internal sealed class SaleCreateCommandHandler : IRequestHandler<SaleCreateComma
 
         sale.RecalculateTotal();
         if (dto.PaymentType == SalePaymentType.Credit && sale.TotalAmount <= 0)
-            return Result<SaleDto>.FailureResult(
+            return Result<SaleDto>.BusinessRule(
                 "InvalidCreditAmount",
                 "A credit sale must create a positive receivable amount.");
 
@@ -143,7 +138,7 @@ internal sealed class SaleCreateCommandHandler : IRequestHandler<SaleCreateComma
                     line.Id),
                 cancellationToken);
 
-            if (!inventoryResult.Success)
+            if (!inventoryResult.IsSuccess)
                 return FailureFromInventory(inventoryResult);
         }
 
@@ -166,16 +161,11 @@ internal sealed class SaleCreateCommandHandler : IRequestHandler<SaleCreateComma
 
         await _unitOfWork.SaveChanges(cancellationToken);
 
-        return Result<SaleDto>.SuccessResult(SaleMapping.ToDto(sale));
+        return Result<SaleDto>.Success(SaleMapping.ToDto(sale));
     }
 
     private static Result<SaleDto> FailureFromInventory(
         Result<IReadOnlyList<StockMovement>> result
     ) =>
-        new()
-        {
-            Success = false,
-            Message = result.Message,
-            Errors = result.Errors
-        };
+        Result<SaleDto>.Failure(result.Errors);
 }

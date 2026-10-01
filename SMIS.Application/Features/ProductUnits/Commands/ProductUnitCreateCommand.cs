@@ -37,7 +37,7 @@ namespace SMIS.Application.Features.ProductUnits.Commands
         {
             var input = request.ProductUnitCreateDto;
             var product = await _productRepository.GetByIdAsync(input.ProductId);
-            if (product == null) return Result<ProductUnitDto>.NotFoundResult(nameof(ProductUnitCreateDto.ProductId));
+            if (product == null) return Result<ProductUnitDto>.NotFound(nameof(ProductUnitCreateDto.ProductId));
 
             var guard = await ProductUnitCommandRules.ValidateCreateAsync(
                 product, input.ProductId, input.UnitOfMeasureId, input.BaseUnitQuantity,
@@ -52,7 +52,7 @@ namespace SMIS.Application.Features.ProductUnits.Commands
 
             await _productUnitRepository.AddAsync(entity);
             await _db.SaveChangesAsync(cancellationToken);
-            return Result<ProductUnitDto>.SuccessResult(ProductUnitMapping.ToDto(entity));
+            return Result<ProductUnitDto>.Success(ProductUnitMapping.ToDto(entity));
         }
     }
 }

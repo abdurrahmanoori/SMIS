@@ -36,7 +36,7 @@ internal sealed class ProductPriceUpdateCommandHandler
     public async Task<Result<ProductPriceDto>> Handle(ProductPriceUpdateCommand request, CancellationToken cancellationToken)
     {
         var existing = await _productPriceRepository.GetByIdAsync(request.Id);
-        if (existing == null) return Result<ProductPriceDto>.NotFoundResult(nameof(ProductPriceDto.Id));
+        if (existing == null) return Result<ProductPriceDto>.NotFound(nameof(ProductPriceDto.Id));
 
         var dto = request.ProductPriceCreateDto;
         if (!string.Equals(existing.ProductUnitId, dto.ProductUnitId, StringComparison.Ordinal))
@@ -58,6 +58,6 @@ internal sealed class ProductPriceUpdateCommandHandler
         successor.ClearClientModificationMetadata();
         await _productPriceRepository.AddAsync(successor);
         await _db.SaveChangesAsync(cancellationToken);
-        return Result<ProductPriceDto>.SuccessResult(ProductPriceMapping.ToDto(successor));
+        return Result<ProductPriceDto>.Success(ProductPriceMapping.ToDto(successor));
     }
 }

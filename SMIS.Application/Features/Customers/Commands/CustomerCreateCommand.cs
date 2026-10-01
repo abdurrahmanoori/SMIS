@@ -35,7 +35,8 @@ namespace SMIS.Application.Features.Customers.Commands
         {
             var shopId = _currentUser.GetShopId();
             if (string.IsNullOrWhiteSpace(shopId))
-                return Result<CustomerDto>.FailureResult("ShopContextRequired", "An active shop is required.");
+                return Result<CustomerDto>.Forbidden("customer.shop_context_required",
+                    "An active shop is required.");
 
             var dto = request.CustomerCreateDto;
             var entity = Customer.Create(
@@ -55,7 +56,7 @@ namespace SMIS.Application.Features.Customers.Commands
             await _customerRepository.AddAsync(entity);
             await _unitOfWork.SaveChanges(cancellationToken);
 
-            return Result<CustomerDto>.SuccessResult(CustomerMapping.ToDto(entity));
+            return Result<CustomerDto>.Success(CustomerMapping.ToDto(entity));
         }
     }
 }

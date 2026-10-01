@@ -46,6 +46,6 @@ internal sealed class ProvinceTranslationQueryHandler
                 request.Query.GetPageSize(),
                 cancellationToken);
 
-        return Result<PagedListNew<ProvinceTranslationDto>>.SuccessResult(page);
+        return Result<PagedListNew<ProvinceTranslationDto>>.Success(page);
     }
 }

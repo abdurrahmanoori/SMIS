@@ -27,11 +27,11 @@ namespace SMIS.Application.Features.Districts.Commands
             CancellationToken cancellationToken)
         {
             var entity = await _districtRepository.GetByIdAsync(request.Id);
-            if (entity == null) return Result<DistrictDto>.NotFoundResult(nameof(DistrictDto.Id));
+            if (entity == null) return Result<DistrictDto>.NotFound(nameof(DistrictDto.Id));
 
             DistrictMapping.Apply(entity, request.DistrictCreateDto);
             await _unitOfWork.SaveChanges(cancellationToken);
-            return Result<DistrictDto>.SuccessResult(DistrictMapping.ToDto(entity));
+            return Result<DistrictDto>.Success(DistrictMapping.ToDto(entity));
         }
     }
 }

@@ -30,11 +30,11 @@ namespace SMIS.Application.Features.Provinces.Commands
             var existing = await _provinceRepository.GetFirstOrDefaultAsync(
                 x => x.Id == request.Id,
                 includeProperties: nameof(Province.Translations));
-            if (existing is null) return Result<ProvinceDto>.NotFoundResult(request.Id);
+            if (existing is null) return Result<ProvinceDto>.NotFound(request.Id);
 
             ProvinceMapping.Apply(existing, request.ProvinceDto);
             await _unitOfWork.SaveChanges(cancellationToken);
-            return Result<ProvinceDto>.SuccessResult(ProvinceMapping.ToDto(existing));
+            return Result<ProvinceDto>.Success(ProvinceMapping.ToDto(existing));
         }
     }
 }

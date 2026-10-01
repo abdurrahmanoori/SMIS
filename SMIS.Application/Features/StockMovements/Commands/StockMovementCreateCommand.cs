@@ -35,15 +35,10 @@ internal sealed class StockMovementCreateCommandHandler
                 dto.ReferenceId),
             cancellationToken);
 
-        if (!result.Success)
-            return new Result<StockMovementDto>
-            {
-                Success = false,
-                Message = result.Message,
-                Errors = result.Errors
-            };
+        if (!result.IsSuccess)
+            return Result<StockMovementDto>.Failure(result.Errors);
 
         await _unitOfWork.SaveChanges(cancellationToken);
-        return Result<StockMovementDto>.SuccessResult(StockMovementMapping.ToDto(result.Response));
+        return Result<StockMovementDto>.Success(StockMovementMapping.ToDto(result.Value));
     }
 }

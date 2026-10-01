@@ -42,7 +42,7 @@ internal sealed class ProductPriceSyncCreateCommandHandler
         var existing = await _db.ProductPrices.IgnoreQueryFilters()
             .FirstOrDefaultAsync(price => price.Id == id, ct);
         if (existing is not null)
-            return Result<ProductPriceDto>.SuccessResult(ProductPriceMapping.ToDto(existing));
+            return Result<ProductPriceDto>.Success(ProductPriceMapping.ToDto(existing));
 
         var productUnit = await ProductPriceCommandRules.GetAccessibleProductUnitAsync(
             request.Dto.ProductUnitId, _productUnits, _user);
@@ -58,7 +58,7 @@ internal sealed class ProductPriceSyncCreateCommandHandler
         value.SetClientModificationMetadata(request.Dto.ClientModifiedDate);
         await _repository.AddAsync(value);
         await _db.SaveChangesAsync(ct);
-        return Result<ProductPriceDto>.SuccessResult(ProductPriceMapping.ToDto(value));
+        return Result<ProductPriceDto>.Success(ProductPriceMapping.ToDto(value));
     }
 }
 
@@ -87,7 +87,7 @@ internal sealed class ProductPriceSyncUpdateCommandHandler
         var id = ProductPriceSyncRules.Id(request.Id);
         var existing = await _db.ProductPrices.IgnoreQueryFilters()
             .FirstOrDefaultAsync(price => price.Id == id, ct);
-        if (existing is null) return Result<ProductPriceDto>.NotFoundResult(request.Id);
+        if (existing is null) return Result<ProductPriceDto>.NotFound(request.Id);
         if (!string.Equals(existing.ProductUnitId, request.Dto.ProductUnitId, StringComparison.Ordinal))
             return ProductPriceCommandRules.ProductUnitCannotChange();
 
@@ -99,14 +99,14 @@ internal sealed class ProductPriceSyncUpdateCommandHandler
         if (request.Dto.EffectiveDate == existing.EffectiveDate && request.Dto.SellPrice == existing.SellPrice)
         {
             if (!request.Dto.EndDate.HasValue || request.Dto.EndDate.Value < existing.EffectiveDate)
-                return Result<ProductPriceDto>.FailureResult(
+                return Result<ProductPriceDto>.BusinessRule(
                     "InvalidPriceEndDate",
                     "The price end date must be on or after its effective date.");
 
             existing.SetEndDate(request.Dto.EndDate);
             existing.SetClientModificationMetadata(request.Dto.ClientModifiedDate);
             await _db.SaveChangesAsync(ct);
-            return Result<ProductPriceDto>.SuccessResult(ProductPriceMapping.ToDto(existing));
+            return Result<ProductPriceDto>.Success(ProductPriceMapping.ToDto(existing));
         }
 
         if (latest is null || !string.Equals(latest.Id, existing.Id, StringComparison.Ordinal))
@@ -120,7 +120,7 @@ internal sealed class ProductPriceSyncUpdateCommandHandler
         successor.SetClientModificationMetadata(request.Dto.ClientModifiedDate);
         await _repository.AddAsync(successor);
         await _db.SaveChangesAsync(ct);
-        return Result<ProductPriceDto>.SuccessResult(ProductPriceMapping.ToDto(successor));
+        return Result<ProductPriceDto>.Success(ProductPriceMapping.ToDto(successor));
     }
 }
 
@@ -149,7 +149,7 @@ internal sealed class ProductPriceSyncDeleteCommandHandler
         var id = ProductPriceSyncRules.Id(request.Id);
         var value = await _db.ProductPrices.IgnoreQueryFilters()
             .FirstOrDefaultAsync(price => price.Id == id, ct);
-        if (value is null) return Result<ProductPriceDto>.NotFoundResult(request.Id);
+        if (value is null) return Result<ProductPriceDto>.NotFound(request.Id);
 
         var productUnit = await ProductPriceCommandRules.GetAccessibleProductUnitAsync(
             value.ProductUnitId, _productUnits, _user);
@@ -157,12 +157,12 @@ internal sealed class ProductPriceSyncDeleteCommandHandler
 
         var modified = DateTimeService.NormalizeUtc(request.Dto.ClientModifiedDate);
         if (modified < value.GetConflictModifiedUtc())
-            return Result<ProductPriceDto>.SuccessResult(ProductPriceMapping.ToDto(value));
+            return Result<ProductPriceDto>.Success(ProductPriceMapping.ToDto(value));
 
         value.SetClientModificationMetadata(modified);
         await _repository.RemoveAsync(value);
         await _db.SaveChangesAsync(ct);
-        return Result<ProductPriceDto>.SuccessResult(ProductPriceMapping.ToDto(value));
+        return Result<ProductPriceDto>.Success(ProductPriceMapping.ToDto(value));
     }
 }
 

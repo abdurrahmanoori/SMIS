@@ -17,7 +17,6 @@ public static class ApplicationServiceRegistration
     )
     {
         services.AddMediatR(Assembly.GetExecutingAssembly());
-        services.AddScoped(typeof(IPipelineBehavior<,>), typeof(DomainExceptionPipelineBehavior<,>));
         services.AddScoped(typeof(IPipelineBehavior<,>), typeof(ValidationPipelineBehavior<,>));
 
         // Register validators from the current assembly

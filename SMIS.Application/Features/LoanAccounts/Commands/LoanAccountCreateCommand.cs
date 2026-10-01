@@ -45,19 +45,21 @@ internal sealed class LoanAccountCreateCommandHandler
             cancellationToken);
 
         if (sale is null)
-            return Result<LoanAccountDto>.FailureResult("SaleNotFound", "The related sale does not exist.");
+            return Result<LoanAccountDto>.NotFound(request.LoanAccountCreateDto.SaleId);
 
         if (sale.ShopId != _currentUser.GetShopId())
-            return Result<LoanAccountDto>.FailureResult("Forbidden", "The sale belongs to another shop.");
+            return Result<LoanAccountDto>.Forbidden(
+                "loan.sale_forbidden",
+                "The sale belongs to another shop.");
 
         if (sale.PaymentType != SalePaymentType.Credit || string.IsNullOrWhiteSpace(sale.CustomerId))
-            return Result<LoanAccountDto>.FailureResult(
+            return Result<LoanAccountDto>.BusinessRule(
                 "SaleIsNotCredit",
                 "Only a credit sale with a customer can create a receivable.");
 
         if (sale.Receivable is not null)
-            return Result<LoanAccountDto>.FailureResult(
-                "ReceivableAlreadyExists",
+            return Result<LoanAccountDto>.Conflict(
+                "loan.receivable_exists",
                 "This sale already has a receivable.");
 
         var receivable = LoanAccount.Create(
@@ -72,6 +74,6 @@ internal sealed class LoanAccountCreateCommandHandler
         await _receivables.AddAsync(receivable);
         await _unitOfWork.SaveChanges(cancellationToken);
 
-        return Result<LoanAccountDto>.SuccessResult(LoanAccountMapping.ToDto(receivable));
+        return Result<LoanAccountDto>.Success(LoanAccountMapping.ToDto(receivable));
     }
 }

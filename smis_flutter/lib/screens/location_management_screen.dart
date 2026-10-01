@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../controllers/auth_controller.dart';
+import '../data/data_exception.dart';
 import '../data/location_admin_api.dart';
 import '../l10n/app_localizations.dart';
 import '../widgets/app_drawer.dart';
+import '../widgets/app_error_view.dart';
 import '../widgets/home_action.dart';
 import '../widgets/locale_action.dart';
 import '../widgets/theme_mode_action.dart';
@@ -42,10 +44,7 @@ class _LocationManagementScreenState
     });
 
     try {
-      final results = await Future.wait([
-        _api.provinces(),
-        _api.districts(),
-      ]);
+      final results = await Future.wait([_api.provinces(), _api.districts()]);
 
       if (!mounted) return;
       setState(() {
@@ -107,7 +106,7 @@ class _LocationManagementScreenState
         body: _loading
             ? const Center(child: CircularProgressIndicator())
             : _error != null
-            ? _ErrorView(error: _error!, onRetry: _reload)
+            ? AppErrorView(error: _error!, onRetry: _reload)
             : TabBarView(
                 children: [
                   _LocationList(
@@ -141,20 +140,13 @@ class _LocationManagementScreenState
     if (name == null) return;
 
     await _mutate(
-      () => isProvince
-          ? _api.createProvince(name)
-          : _api.createDistrict(name),
+      () => isProvince ? _api.createProvince(name) : _api.createDistrict(name),
     );
   }
 
-  Future<void> _edit(
-    LocationAdminItem item, {
-    required bool isProvince,
-  }) async {
+  Future<void> _edit(LocationAdminItem item, {required bool isProvince}) async {
     final name = await _nameDialog(
-      title: context.l10n.text(
-        isProvince ? 'Edit province' : 'Edit district',
-      ),
+      title: context.l10n.text(isProvince ? 'Edit province' : 'Edit district'),
       initialValue: item.name,
     );
 
@@ -251,11 +243,9 @@ class _LocationManagementScreenState
     try {
       await action();
       await _reload();
-    } catch (error) {
+    } catch (error, stackTrace) {
       if (!mounted) return;
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text(error.toString())));
+      AppErrorNotification.show(context, error, stackTrace);
     } finally {
       if (mounted) setState(() => _mutating = false);
     }
@@ -327,30 +317,5 @@ class _LocationList extends StatelessWidget {
         ),
       ),
     ],
-  );
-}
-
-class _ErrorView extends StatelessWidget {
-  const _ErrorView({required this.error, required this.onRetry});
-
-  final Object error;
-  final VoidCallback onRetry;
-
-  @override
-  Widget build(BuildContext context) => Center(
-    child: Padding(
-      padding: const EdgeInsets.all(24),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text(error.toString(), textAlign: TextAlign.center),
-          const SizedBox(height: 12),
-          FilledButton(
-            onPressed: onRetry,
-            child: Text(context.l10n.text('Retry')),
-          ),
-        ],
-      ),
-    ),
   );
 }

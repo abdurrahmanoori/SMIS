@@ -20,7 +20,8 @@ class LocationAdminItem {
 
 class LocationAdminApi {
   LocationAdminApi({Dio? dio, AuthSessionStore? sessionStore})
-    : _dio = dio ??
+    : _dio =
+          dio ??
           Dio(
             BaseOptions(
               baseUrl: AppConfig.apiBaseUrl,
@@ -61,52 +62,45 @@ class LocationAdminApi {
   Future<void> deleteDistrict(String id) =>
       _delete(AppConfig.districtEndpoint, id);
 
-  Future<List<LocationAdminItem>> _getAll(String endpoint) =>
-      _request(() async {
-        final rows = <LocationAdminItem>[];
-        const pageSize = 100;
+  Future<List<LocationAdminItem>> _getAll(String endpoint) => _request(
+    () async {
+      final rows = <LocationAdminItem>[];
+      const pageSize = 100;
 
-        for (var page = 1; ; page++) {
-          Response<Map<String, dynamic>> response;
-          try {
-            response = await _dio.get<Map<String, dynamic>>(
-              endpoint,
-              queryParameters: {'pageNumber': page, 'pageSize': pageSize},
-            );
-          } on DioException catch (error) {
-            final body = error.response?.data;
-            if (error.response?.statusCode == 400 &&
-                body is List &&
-                body.any(
-                  (item) =>
-                      item is Map &&
-                      (item['code'] ?? item['Code']) == 'EmptyList',
-                )) {
-              break;
-            }
-            rethrow;
+      for (var page = 1; ; page++) {
+        Response<Map<String, dynamic>> response;
+        try {
+          response = await _dio.get<Map<String, dynamic>>(
+            endpoint,
+            queryParameters: {'pageNumber': page, 'pageSize': pageSize},
+          );
+        } on DioException catch (error) {
+          final body = error.response?.data;
+          if (ApiErrorParser.hasErrorCode(body, 'EmptyList') ||
+              ApiErrorParser.hasErrorCode(body, 'common.empty')) {
+            break;
           }
-
-          final data = response.data ?? const <String, dynamic>{};
-          final rawItems = data['items'] ?? data['Items'] ?? const <dynamic>[];
-          final items = (rawItems as List)
-              .whereType<Map>()
-              .map(
-                (item) => LocationAdminItem.fromJson(
-                  Map<String, dynamic>.from(item),
-                ),
-              )
-              .toList(growable: false);
-
-          rows.addAll(items);
-          if (items.length < pageSize) break;
+          rethrow;
         }
 
-        rows.sort(
-          (a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()),
-        );
-        return rows;
-      });
+        final data = response.data ?? const <String, dynamic>{};
+        final rawItems = data['items'] ?? data['Items'] ?? const <dynamic>[];
+        final items = (rawItems as List)
+            .whereType<Map>()
+            .map(
+              (item) =>
+                  LocationAdminItem.fromJson(Map<String, dynamic>.from(item)),
+            )
+            .toList(growable: false);
+
+        rows.addAll(items);
+        if (items.length < pageSize) break;
+      }
+
+      rows.sort((a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
+      return rows;
+    },
+  );
 
   Future<void> _create(String endpoint, String name) => _request(() async {
     await _dio.post<Object?>(endpoint, data: {'name': name});

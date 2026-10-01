@@ -33,13 +33,8 @@ internal sealed class StockBatchCreateCommandHandler
         var dto = request.StockBatchCreateDto;
         var reservation = await _idempotency.ReserveAsync(
             "inventory:purchase-receipt", dto.IdempotencyKey, cancellationToken);
-        if (!reservation.Success)
-            return new Result<StockBatchDto>
-            {
-                Success = false,
-                Message = reservation.Message,
-                Errors = reservation.Errors
-            };
+        if (!reservation.IsSuccess)
+            return Result<StockBatchDto>.Failure(reservation.Errors);
 
         var result = await _inventory.ReceiveBatchAsync(
             new InventoryReceiptRequest(
@@ -54,15 +49,10 @@ internal sealed class StockBatchCreateCommandHandler
                 dto.ReferenceId),
             cancellationToken);
 
-        if (!result.Success)
-            return new Result<StockBatchDto>
-            {
-                Success = false,
-                Message = result.Message,
-                Errors = result.Errors
-            };
+        if (!result.IsSuccess)
+            return Result<StockBatchDto>.Failure(result.Errors);
 
         await _unitOfWork.SaveChanges(cancellationToken);
-        return Result<StockBatchDto>.SuccessResult(StockBatchMapping.ToDto(result.Response));
+        return Result<StockBatchDto>.Success(StockBatchMapping.ToDto(result.Value));
     }
 }

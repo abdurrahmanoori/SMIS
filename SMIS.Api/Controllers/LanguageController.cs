@@ -22,7 +22,7 @@ namespace SMIS.Api.Controllers
         public async Task<ActionResult<LanguageDto>> Create(
             LanguageCreateDto dto
         ) =>
-            HandleResultResponseOld(await Mediator.Send(new LanguageCreateCommand(dto)));
+            HandleResultResponse(await Mediator.Send(new LanguageCreateCommand(dto)));
 
         /// <summary>
         /// Gets languages with flexible filtering, optional returned columns, and pagination.
@@ -51,15 +51,15 @@ namespace SMIS.Api.Controllers
             string id,
             LanguageCreateDto dto
         ) =>
-            HandleResultResponseOld(await Mediator.Send(new LanguageUpdateCommand(id, dto)));
+            HandleResultResponse(await Mediator.Send(new LanguageUpdateCommand(id, dto)));
 
         /// <summary>
         /// Deletes a language.
         /// </summary>
         [HttpDelete("{id}")]
-        public async Task<ActionResult<Unit>> Delete(
+        public async Task<IActionResult> Delete(
             string id
         ) =>
-            HandleResultResponseOld(await Mediator.Send(new LanguageDeleteCommand(id)));
+            HandleResultResponse(await Mediator.Send(new LanguageDeleteCommand(id)));
     }
 }

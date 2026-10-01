@@ -31,7 +31,7 @@ namespace SMIS.Application.Features.Customers.Commands
             var entity = await _customerRepository.GetByIdAsync(request.Id);
             if (entity == null)
             {
-                return Result<CustomerDto>.NotFoundResult(nameof(CustomerDto.Id));
+                return Result<CustomerDto>.NotFound(nameof(CustomerDto.Id));
             }
 
             entity.SetFirstName(request.CustomerCreateDto.FirstName);
@@ -48,7 +48,7 @@ namespace SMIS.Application.Features.Customers.Commands
             else entity.Deactivate();
             await _unitOfWork.SaveChanges(cancellationToken);
 
-            return Result<CustomerDto>.SuccessResult(CustomerMapping.ToDto(entity));
+            return Result<CustomerDto>.Success(CustomerMapping.ToDto(entity));
         }
     }
 }

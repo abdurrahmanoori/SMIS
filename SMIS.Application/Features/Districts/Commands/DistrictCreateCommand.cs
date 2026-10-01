@@ -29,7 +29,7 @@ namespace SMIS.Application.Features.Districts.Commands
             var entity = DistrictMapping.Create(request.DistrictCreateDto);
             await _districtRepository.AddAsync(entity);
             await _unitOfWork.SaveChanges(cancellationToken);
-            return Result<DistrictDto>.SuccessResult(DistrictMapping.ToDto(entity));
+            return Result<DistrictDto>.Success(DistrictMapping.ToDto(entity));
         }
     }
 }

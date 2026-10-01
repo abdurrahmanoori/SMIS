@@ -35,14 +35,14 @@ namespace SMIS.Application.Features.ProductUnits.Commands
         public async Task<Result<ProductUnitDto>> Handle(ProductUnitUpdateCommand request, CancellationToken cancellationToken)
         {
             var entity = await _productUnitRepository.GetByIdAsync(request.Id);
-            if (entity == null) return Result<ProductUnitDto>.NotFoundResult(nameof(ProductUnitDto.Id));
+            if (entity == null) return Result<ProductUnitDto>.NotFound(nameof(ProductUnitDto.Id));
 
             var currentProduct = await _productRepository.GetByIdAsync(entity.ProductId);
-            if (currentProduct == null) return Result<ProductUnitDto>.NotFoundResult(nameof(ProductUnitCreateDto.ProductId));
+            if (currentProduct == null) return Result<ProductUnitDto>.NotFound(nameof(ProductUnitCreateDto.ProductId));
 
             var input = request.ProductUnitCreateDto;
             var targetProduct = await _productRepository.GetByIdAsync(input.ProductId);
-            if (targetProduct == null) return Result<ProductUnitDto>.NotFoundResult(nameof(ProductUnitCreateDto.ProductId));
+            if (targetProduct == null) return Result<ProductUnitDto>.NotFound(nameof(ProductUnitCreateDto.ProductId));
 
             var guard = await ProductUnitCommandRules.ValidateMutationAsync(
                 entity, currentProduct, targetProduct, input.ProductId, input.UnitOfMeasureId,
@@ -56,7 +56,7 @@ namespace SMIS.Application.Features.ProductUnits.Commands
             entity.ClearClientModificationMetadata();
 
             await _db.SaveChangesAsync(cancellationToken);
-            return Result<ProductUnitDto>.SuccessResult(ProductUnitMapping.ToDto(entity));
+            return Result<ProductUnitDto>.Success(ProductUnitMapping.ToDto(entity));
         }
     }
 }

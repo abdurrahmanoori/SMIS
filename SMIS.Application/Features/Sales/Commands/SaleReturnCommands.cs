@@ -85,13 +85,13 @@ internal sealed class SaleReturnCommandHandler :
             .FirstOrDefaultAsync(item => item.Id == saleId, cancellationToken);
 
         if (sale is null)
-            return Result<SaleReturnResultDto>.NotFoundResult(saleId);
+            return Result<SaleReturnResultDto>.NotFound(saleId);
 
         if (!string.Equals(sale.ShopId, _currentUser.GetShopId(), StringComparison.Ordinal))
-            return Result<SaleReturnResultDto>.NotFoundResult(saleId);
+            return Result<SaleReturnResultDto>.NotFound(saleId);
 
         if (sale.Status == SaleStatus.Voided)
-            return Result<SaleReturnResultDto>.FailureResult(
+            return Result<SaleReturnResultDto>.BusinessRule(
                 "SaleAlreadyVoided",
                 "The sale has already been voided.");
 
@@ -99,7 +99,7 @@ internal sealed class SaleReturnCommandHandler :
             isVoid ? $"sale-void:{sale.Id}" : $"sale-return:{sale.Id}",
             idempotencyKey,
             cancellationToken);
-        if (!idempotency.Success)
+        if (!idempotency.IsSuccess)
             return Failure(idempotency);
 
         var linesToReturn = isVoid
@@ -114,13 +114,13 @@ internal sealed class SaleReturnCommandHandler :
             : requestedLines?.ToList() ?? [];
 
         if (linesToReturn.Count == 0)
-            return Result<SaleReturnResultDto>.FailureResult(
+            return Result<SaleReturnResultDto>.BusinessRule(
                 "NothingToReturn",
                 "The sale has no remaining quantity to return.");
 
         if (linesToReturn.Select(line => line.SaleLineId).Distinct(StringComparer.Ordinal).Count() !=
             linesToReturn.Count)
-            return Result<SaleReturnResultDto>.FailureResult(
+            return Result<SaleReturnResultDto>.Conflict(
                 "DuplicateSaleReturnLine",
                 "A sale line can appear only once in a return request.");
 
@@ -132,13 +132,13 @@ internal sealed class SaleReturnCommandHandler :
         {
             var line = sale.Lines.FirstOrDefault(item => item.Id == requestedLine.SaleLineId);
             if (line is null)
-                return Result<SaleReturnResultDto>.FailureResult(
+                return Result<SaleReturnResultDto>.NotFound(
                     "SaleLineNotFound",
                     "A requested return line does not belong to this sale.");
 
             if (requestedLine.QuantityEntered <= 0 ||
                 requestedLine.QuantityEntered > line.ReturnableQuantityEntered)
-                return Result<SaleReturnResultDto>.FailureResult(
+                return Result<SaleReturnResultDto>.BusinessRule(
                     "InvalidReturnQuantity",
                     "Return quantity must be positive and cannot exceed the remaining returnable quantity.");
 
@@ -153,7 +153,7 @@ internal sealed class SaleReturnCommandHandler :
                 .ToListAsync(cancellationToken);
 
             if (originalMovements.Count == 0)
-                return Result<SaleReturnResultDto>.FailureResult(
+                return Result<SaleReturnResultDto>.BusinessRule(
                     "SaleInventoryHistoryMissing",
                     "The original sale inventory allocation could not be found.");
 
@@ -191,15 +191,15 @@ internal sealed class SaleReturnCommandHandler :
                         operationId),
                     cancellationToken);
 
-                if (!inventoryResult.Success)
+                if (!inventoryResult.IsSuccess)
                     return Failure(inventoryResult);
 
-                createdMovements.Add(inventoryResult.Response!);
+                createdMovements.Add(inventoryResult.Value!);
                 remainingBase -= allocatedBase;
             }
 
             if (remainingBase > QuantityTolerance)
-                return Result<SaleReturnResultDto>.FailureResult(
+                return Result<SaleReturnResultDto>.BusinessRule(
                     "ReturnAllocationMismatch",
                     "The requested return quantity exceeds the quantity that can be traced to original sale batches.");
 
@@ -219,7 +219,7 @@ internal sealed class SaleReturnCommandHandler :
 
         await _unitOfWork.SaveChanges(cancellationToken);
 
-        return Result<SaleReturnResultDto>.SuccessResult(new SaleReturnResultDto
+        return Result<SaleReturnResultDto>.Success(new SaleReturnResultDto
         {
             SaleId = sale.Id,
             Status = sale.Status,
@@ -232,10 +232,5 @@ internal sealed class SaleReturnCommandHandler :
 
     private static Result<SaleReturnResultDto> Failure<T>(
         Result<T> source
-    ) => new()
-    {
-        Success = false,
-        Message = source.Message,
-        Errors = source.Errors
-    };
+    ) => Result<SaleReturnResultDto>.Failure(source.Errors);
 }

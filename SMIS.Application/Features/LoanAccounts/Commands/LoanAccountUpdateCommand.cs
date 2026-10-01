@@ -32,7 +32,7 @@ internal sealed class LoanAccountUpdateCommandHandler
     {
         var receivable = await _receivables.GetByIdAsync(request.Id);
         if (receivable is null)
-            return Result<LoanAccountDto>.NotFoundResult(request.Id);
+            return Result<LoanAccountDto>.NotFound(request.Id);
 
         receivable.SetDueDate(request.Dto.DueDate);
         receivable.SetNotes(request.Dto.Notes);
@@ -40,6 +40,6 @@ internal sealed class LoanAccountUpdateCommandHandler
         else receivable.Deactivate();
 
         await _unitOfWork.SaveChanges(cancellationToken);
-        return Result<LoanAccountDto>.SuccessResult(LoanAccountMapping.ToDto(receivable));
+        return Result<LoanAccountDto>.Success(LoanAccountMapping.ToDto(receivable));
     }
 }

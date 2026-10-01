@@ -5,9 +5,9 @@ using SMIS.Application.Services;
 
 namespace SMIS.Application.Features.Products.Commands
 {
-    public record ProductDeleteCommand(string Id) : IRequest<Result<Unit>>;
+    public record ProductDeleteCommand(string Id) : IRequest<Result>;
 
-    internal sealed class ProductDeleteCommandHandler : IRequestHandler<ProductDeleteCommand, Result<Unit>>
+    internal sealed class ProductDeleteCommandHandler : IRequestHandler<ProductDeleteCommand, Result>
     {
         private readonly IProductRepository _productRepository;
         private readonly IApplicationDbContext _db;
@@ -21,7 +21,7 @@ namespace SMIS.Application.Features.Products.Commands
             _productRepository = productRepository;
         }
 
-        public async Task<Result<Unit>> Handle(
+        public async Task<Result> Handle(
             ProductDeleteCommand request,
             CancellationToken cancellationToken
         )
@@ -29,21 +29,21 @@ namespace SMIS.Application.Features.Products.Commands
             var entity = await _productRepository.GetByIdAsync(request.Id);
             if (entity == null)
             {
-                return Result<Unit>.NotFoundResult(request?.Id);
+                return Result.NotFound(request?.Id);
             }
 
             var referenceCount = await _productRepository.CountReferencesAsync(
                 entity.Id,
                 cancellationToken);
             if (referenceCount > 0)
-                return Result<Unit>.FailureResult(
+                return Result.BusinessRule(
                     "ProductInUse",
                     $"Product is used by {referenceCount} record(s). Remove those references before deleting the product.");
 
             entity.ClearClientModificationMetadata();
             await _productRepository.RemoveAsync(entity);
             await _db.SaveChangesAsync(cancellationToken);
-            return Result<Unit>.SuccessResult(Unit.Value);
+            return Result.Success();
         }
     }
 }

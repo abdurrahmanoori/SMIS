@@ -37,12 +37,12 @@ namespace SMIS.Application.Features.Categories.Commands
                 .FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
 
             if (entity == null)
-                return Result<CategoryDto>.NotFoundResult(nameof(CategoryDto.Id));
+                return Result<CategoryDto>.NotFound(nameof(CategoryDto.Id));
 
             var userShopId = _currentUser.GetShopId();
             if (entity.ShopId != userShopId)
             {
-                return Result<CategoryDto>.FailureResult(
+                return Result<CategoryDto>.BusinessRule(
                     "You can only update categories from your own shop");
             }
 
@@ -61,7 +61,7 @@ namespace SMIS.Application.Features.Categories.Commands
 
             await _db.SaveChangesAsync(cancellationToken);
 
-            return Result<CategoryDto>.SuccessResult(
+            return Result<CategoryDto>.Success(
                 CategoryMapping.ToDto(entity));
         }
     }

@@ -38,10 +38,10 @@ namespace SMIS.Application.Features.Provinces.Commands
         {
             var province = await _repo.GetFirstOrDefaultAsync(x => x.Translations.Any(t => t.Id == request.Id),
                 includeProperties: nameof(Province.Translations));
-            if (province is null) return Result<ProvinceTranslationDto>.NotFoundResult(request.Id);
+            if (province is null) return Result<ProvinceTranslationDto>.NotFound(request.Id);
 
             var trans = province.Translations.FirstOrDefault(t => t.Id == request.Id);
-            if (trans is null) return Result<ProvinceTranslationDto>.NotFoundResult(request.Id);
+            if (trans is null) return Result<ProvinceTranslationDto>.NotFound(request.Id);
 
             ProvinceTranslationMapping.Apply(trans, request.Dto);
 
@@ -59,7 +59,7 @@ namespace SMIS.Application.Features.Provinces.Commands
 
             await _uow.SaveChanges(cancellationToken);
 
-            return Result<ProvinceTranslationDto>.SuccessResult(ProvinceTranslationMapping.ToDto(trans));
+            return Result<ProvinceTranslationDto>.Success(ProvinceTranslationMapping.ToDto(trans));
         }
     }
 }

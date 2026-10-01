@@ -44,6 +44,6 @@ internal sealed class LanguageQueryHandler
                 request.Query.GetPageSize(),
                 cancellationToken);
 
-        return Result<PagedListNew<LanguageDto>>.SuccessResult(pagedList);
+        return Result<PagedListNew<LanguageDto>>.Success(pagedList);
     }
 }

@@ -29,7 +29,7 @@ namespace SMIS.Application.Features.Provinces.Commands
             var entity = ProvinceMapping.Create(request.ProvinceCreateDto);
             await _provinceRepository.AddAsync(entity);
             await _unitOfWork.SaveChanges(cancellationToken);
-            return Result<ProvinceDto>.SuccessResult(ProvinceMapping.ToDto(entity));
+            return Result<ProvinceDto>.Success(ProvinceMapping.ToDto(entity));
         }
     }
 }

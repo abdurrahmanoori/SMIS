@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/services.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import '../models/auth_session.dart';
@@ -27,7 +28,7 @@ class SecureAuthSessionStore implements AuthSessionStore {
 
   @override
   Future<AuthSession?> read() async {
-    final rawSession = await _secureStorage.read(key: _activeSessionKey);
+    final rawSession = await _safeRead(_activeSessionKey);
     if (rawSession == null || rawSession.isEmpty) return null;
 
     try {
@@ -48,7 +49,7 @@ class SecureAuthSessionStore implements AuthSessionStore {
 
   @override
   Future<List<AuthSession>> readAll() async {
-    final rawSessions = await _secureStorage.read(key: _allSessionsKey);
+    final rawSessions = await _safeRead(_allSessionsKey);
     if (rawSessions == null || rawSessions.isEmpty) return const [];
 
     try {
@@ -101,12 +102,23 @@ class SecureAuthSessionStore implements AuthSessionStore {
   Future<void> clear() => _secureStorage.delete(key: _activeSessionKey);
 
   Future<Map<String, dynamic>> _readAllMap() async {
-    final raw = await _secureStorage.read(key: _allSessionsKey);
+    final raw = await _safeRead(_allSessionsKey);
     if (raw == null || raw.isEmpty) return {};
     try {
       final decoded = jsonDecode(raw);
       if (decoded is Map<String, dynamic>) return decoded;
     } catch (_) {}
     return {};
+  }
+
+  Future<String?> _safeRead(String key) async {
+    try {
+      return await _secureStorage.read(key: key);
+    } on PlatformException {
+      // On Windows, flutter_secure_storage can invalidate and remove a corrupt
+      // encrypted file when DPAPI decryption fails. Treat that as a missing
+      // saved session so the app can return to sign-in cleanly.
+      return null;
+    }
   }
 }
