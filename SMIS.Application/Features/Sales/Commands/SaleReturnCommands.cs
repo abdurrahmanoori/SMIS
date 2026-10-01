@@ -1,9 +1,8 @@
-using AutoMapper;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using SMIS.Application.Common.Response;
 using SMIS.Application.DTO.Sales;
-using SMIS.Application.DTO.StockMovements;
+using SMIS.Application.Features.StockMovements;
 using SMIS.Application.Repositories.Base;
 using SMIS.Application.Services;
 using SMIS.Application.Identity.IServices;
@@ -28,7 +27,6 @@ internal sealed class SaleReturnCommandHandler :
     private readonly IInventoryService _inventory;
     private readonly IIdempotencyService _idempotency;
     private readonly IUnitOfWork _unitOfWork;
-    private readonly IMapper _mapper;
     private readonly ICurrentUser _currentUser;
 
     public SaleReturnCommandHandler(
@@ -36,7 +34,6 @@ internal sealed class SaleReturnCommandHandler :
         IInventoryService inventory,
         IIdempotencyService idempotency,
         IUnitOfWork unitOfWork,
-        IMapper mapper,
         ICurrentUser currentUser
     )
     {
@@ -44,7 +41,6 @@ internal sealed class SaleReturnCommandHandler :
         _inventory = inventory;
         _idempotency = idempotency;
         _unitOfWork = unitOfWork;
-        _mapper = mapper;
         _currentUser = currentUser;
     }
 
@@ -230,7 +226,7 @@ internal sealed class SaleReturnCommandHandler :
             ReturnedAmountMinor = returnedAmount,
             RefundDueMinor = refundDue,
             ReceivableRemainingAmount = sale.Receivable?.RemainingAmount,
-            InventoryMovements = _mapper.Map<List<StockMovementDto>>(createdMovements)
+            InventoryMovements = StockMovementMapping.ToDtos(createdMovements)
         });
     }
 

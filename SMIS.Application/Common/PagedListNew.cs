@@ -1,4 +1,3 @@
-using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 
 namespace SMIS.Application.Common
@@ -15,7 +14,7 @@ namespace SMIS.Application.Common
         public List<T> Items { get; set; } = new List<T>();
 
         public PagedListNew<TMap> Map<TMap>(
-            IMapper mapper
+            Func<T, TMap> map
         )
         {
             return new PagedListNew<TMap>()
@@ -24,7 +23,7 @@ namespace SMIS.Application.Common
                 PageSize = PageSize,
                 TotalCount = TotalCount,
                 TotalPages = TotalPages,
-                Items = mapper.Map<List<TMap>>(Items)
+                Items = Items.Select(map).ToList()
             };
         }
 

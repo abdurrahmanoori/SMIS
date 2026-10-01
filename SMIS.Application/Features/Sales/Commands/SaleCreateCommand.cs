@@ -1,7 +1,7 @@
-using AutoMapper;
 using MediatR;
 using SMIS.Application.Common.Response;
 using SMIS.Application.DTO.Sales;
+using SMIS.Application.Features.Sales;
 using SMIS.Application.Identity.IServices;
 using SMIS.Application.Repositories.Base;
 using SMIS.Application.Repositories.Customers;
@@ -29,7 +29,6 @@ internal sealed class SaleCreateCommandHandler : IRequestHandler<SaleCreateComma
     private readonly IIdempotencyService _idempotency;
     private readonly IUnitOfWork _unitOfWork;
     private readonly ICurrentUser _currentUser;
-    private readonly IMapper _mapper;
 
     public SaleCreateCommandHandler(
         ISaleRepository sales,
@@ -40,8 +39,7 @@ internal sealed class SaleCreateCommandHandler : IRequestHandler<SaleCreateComma
         IInventoryService inventory,
         IIdempotencyService idempotency,
         IUnitOfWork unitOfWork,
-        ICurrentUser currentUser,
-        IMapper mapper
+        ICurrentUser currentUser
     )
     {
         _sales = sales;
@@ -53,7 +51,6 @@ internal sealed class SaleCreateCommandHandler : IRequestHandler<SaleCreateComma
         _idempotency = idempotency;
         _unitOfWork = unitOfWork;
         _currentUser = currentUser;
-        _mapper = mapper;
     }
 
     public async Task<Result<SaleDto>> Handle(
@@ -95,9 +92,6 @@ internal sealed class SaleCreateCommandHandler : IRequestHandler<SaleCreateComma
         if (dto.PaymentType == SalePaymentType.Credit && customer is null)
             return Result<SaleDto>.FailureResult("CreditCustomerRequired", "Credit sales require a customer.");
 
-        // Validate every commercial line before opening the transaction. Inventory repeats
-        // its own validation because it is the authority for stock, while this check enforces
-        // the sale-specific invariant that all lines belong to this sale's shop.
         foreach (var lineDto in dto.Lines)
         {
             var productUnit = await _productUnits.GetFirstOrDefaultAsync(
@@ -136,9 +130,6 @@ internal sealed class SaleCreateCommandHandler : IRequestHandler<SaleCreateComma
 
         await _sales.AddAsync(sale);
 
-        // Every sale line issues stock immediately, whether the sale is Cash or Credit.
-        // The inventory workflow only stages tracked batch changes and StockMovement rows;
-        // this command owns the single SaveChanges call for the complete business operation.
         foreach (var line in sale.Lines)
         {
             var inventoryResult = await _inventory.IssueFifoAsync(
@@ -173,14 +164,9 @@ internal sealed class SaleCreateCommandHandler : IRequestHandler<SaleCreateComma
             await _receivables.AddAsync(receivable);
         }
 
-        // Sale, lines, FIFO batch deductions, StockMovements, and the optional
-        // receivable are committed atomically by EF Core in this single SaveChanges.
         await _unitOfWork.SaveChanges(cancellationToken);
 
-        var result = _mapper.Map<SaleDto>(sale);
-        result.ReceivableId = sale.Receivable?.Id;
-        result.ReceivableRemainingAmount = sale.Receivable?.RemainingAmount;
-        return Result<SaleDto>.SuccessResult(result);
+        return Result<SaleDto>.SuccessResult(SaleMapping.ToDto(sale));
     }
 
     private static Result<SaleDto> FailureFromInventory(
