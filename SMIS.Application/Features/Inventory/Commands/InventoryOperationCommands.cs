@@ -53,7 +53,7 @@ internal sealed class InventoryBatchOperationCommandHandler
                 dto.ReferenceType,
                 dto.ReferenceId),
             cancellationToken);
-        if (!result.Success) return Failure(result);
+        if (result.IsSuccess) return Failure(result);
 
         if (!result.IsSuccess)
             return Failure(result);
