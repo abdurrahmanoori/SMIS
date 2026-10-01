@@ -18,6 +18,8 @@ namespace SMIS.Application.DTO.Users
         public string LanguageId { get; set; } = LanguageDefaults.EnglishId;
         public bool EmailConfirmed { get; set; }
         public bool PhoneNumberConfirmed { get; set; }
+        public bool IsLocked { get; set; }
+        public DateTimeOffset? LockoutEnd { get; set; }
         public ShopDto? Shop { get; set; }
         public List<string>? Roles { get; set; }
     }

@@ -54,7 +54,7 @@ namespace SMIS.Application.Features.Auth.Commands
             if (signInResult.IsLockedOut)
                 return Result<LoginResponseDto>.Unauthorized(
                     "auth.account_locked",
-                    "The account is temporarily locked after repeated failed sign-in attempts.");
+                    "The account is locked. Contact an administrator if access should be restored.");
             if (!signInResult.Succeeded)
                 return Result<LoginResponseDto>.Unauthorized(
                     "auth.invalid_credentials",

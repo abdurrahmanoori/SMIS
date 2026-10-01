@@ -156,6 +156,51 @@ namespace SMIS.Api.Controllers
             HandleResultResponse(await Mediator.Send(new UserChangePasswordCommand(id, dto)));
 
         /// <summary>
+        /// Resets a managed user's password to the user's current username.
+        /// </summary>
+        /// <remarks>
+        /// A SuperAdmin can reset any user's password. A ShopAdmin can reset passwords only
+        /// for users assigned to the same shop. The client does not supply a password;
+        /// the server always sets the new password to the target user's current username.
+        /// This operation is server-authoritative and does not expose the generated Identity reset token.
+        /// </remarks>
+        [Authorize]
+        [HttpPost("{id}/reset-password")]
+        public async Task<IActionResult> ResetPassword(
+            string id,
+            CancellationToken cancellationToken
+        ) =>
+            HandleResultResponse(await Mediator.Send(
+                new UserAdminResetPasswordCommand(id),
+                cancellationToken));
+
+        /// <summary>
+        /// Locks a managed user account.
+        /// </summary>
+        [Authorize]
+        [HttpPost("{id}/lock")]
+        public async Task<IActionResult> Lock(
+            string id,
+            CancellationToken cancellationToken
+        ) =>
+            HandleResultResponse(await Mediator.Send(
+                new UserSetLockoutCommand(id, true),
+                cancellationToken));
+
+        /// <summary>
+        /// Unlocks a managed user account and clears failed sign-in attempts.
+        /// </summary>
+        [Authorize]
+        [HttpPost("{id}/unlock")]
+        public async Task<IActionResult> Unlock(
+            string id,
+            CancellationToken cancellationToken
+        ) =>
+            HandleResultResponse(await Mediator.Send(
+                new UserSetLockoutCommand(id, false),
+                cancellationToken));
+
+        /// <summary>
         /// Replaces the complete role list for a user.
         /// </summary>
         /// <remarks>

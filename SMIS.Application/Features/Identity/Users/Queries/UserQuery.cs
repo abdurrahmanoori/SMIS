@@ -36,6 +36,7 @@ internal sealed class UserQueryHandler
         CancellationToken cancellationToken
     )
     {
+        var now = DateTimeOffset.UtcNow;
         var query = _userManager.Users
             .AsNoTracking()
             .OrderBy(user => user.UserName)
@@ -52,6 +53,8 @@ internal sealed class UserQueryHandler
                 LanguageId = user.LanguageId,
                 EmailConfirmed = user.EmailConfirmed,
                 PhoneNumberConfirmed = user.PhoneNumberConfirmed,
+                IsLocked = user.LockoutEnabled && user.LockoutEnd.HasValue && user.LockoutEnd > now,
+                LockoutEnd = user.LockoutEnd,
                 Shop = request.IncludeShop
                     ? _context.Shops
                         .Where(shop => shop.Id == user.ShopId)
