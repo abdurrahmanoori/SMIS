@@ -25,7 +25,7 @@ public class LoanAccountController : BaseApiController
     public async Task<ActionResult<LoanAccountDto>> Create(
         LoanAccountCreateDto dto
     ) =>
-        HandleResultResponseOld(await Mediator.Send(new LoanAccountCreateCommand(dto)));
+        HandleResultResponse(await Mediator.Send(new LoanAccountCreateCommand(dto)));
 
     /// <summary>
     /// Gets loan accounts in pages.
@@ -59,16 +59,16 @@ public class LoanAccountController : BaseApiController
         string id,
         LoanAccountUpdateDto dto
     ) =>
-        HandleResultResponseOld(await Mediator.Send(new LoanAccountUpdateCommand(id, dto)));
+        HandleResultResponse(await Mediator.Send(new LoanAccountUpdateCommand(id, dto)));
 
     /// <summary>
     /// Deletes a loan account.
     /// </summary>
     [HttpDelete("{id}")]
-    public async Task<ActionResult<Unit>> Delete(
+    public async Task<IActionResult> Delete(
         string id
     ) =>
-        HandleResultResponseOld(await Mediator.Send(new LoanAccountDeleteCommand(id)));
+        HandleResultResponse(await Mediator.Send(new LoanAccountDeleteCommand(id)));
 
     /// <summary>
     /// Applies one customer payment across that customer's unpaid loan accounts.
@@ -82,7 +82,7 @@ public class LoanAccountController : BaseApiController
     public async Task<ActionResult<PaymentAllocationResultDto>> ProcessPayment(
         CustomerPaymentDto dto
     ) =>
-        HandleResultResponseOld(await Mediator.Send(new ProcessCustomerPaymentCommand
+        HandleResultResponse(await Mediator.Send(new ProcessCustomerPaymentCommand
         {
             CustomerId = dto.CustomerId,
             PaymentAmount = dto.PaymentAmount,
@@ -102,5 +102,5 @@ public class LoanAccountController : BaseApiController
     public async Task<ActionResult<CustomerDebtSummaryDto>> GetCustomerDebtSummary(
         string customerId
     ) =>
-        HandleResultResponseOld(await Mediator.Send(new GetCustomerDebtSummaryQuery { CustomerId = customerId }));
+        HandleResultResponse(await Mediator.Send(new GetCustomerDebtSummaryQuery { CustomerId = customerId }));
 }

@@ -73,6 +73,6 @@ internal sealed class PurchaseOrderQueryHandler
                 request.Query.GetPageSize(),
                 cancellationToken);
 
-        return Result<PagedListNew<PurchaseOrderDto>>.SuccessResult(page);
+        return Result<PagedListNew<PurchaseOrderDto>>.Success(page);
     }
 }

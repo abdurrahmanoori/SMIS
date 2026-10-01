@@ -35,7 +35,7 @@ public sealed class StockMovementController : BaseApiController
     public async Task<ActionResult<List<StockMovementDto>>> Reverse(
         string id
     ) =>
-        HandleResultResponseOld(await Mediator.Send(new StockMovementReverseCommand(id)));
+        HandleResultResponse(await Mediator.Send(new StockMovementReverseCommand(id)));
 
     /// <summary>
     /// Gets stock movements with flexible filtering, optional returned columns, and pagination.

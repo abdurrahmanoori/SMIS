@@ -31,6 +31,6 @@ public sealed class UserGetPermissionsQueryHandler
             _currentUser.GetId(),
             cancellationToken);
 
-        return Result<IReadOnlyList<ComponentPermissionDto>>.SuccessResult(permissions);
+        return Result<IReadOnlyList<ComponentPermissionDto>>.Success(permissions);
     }
 }

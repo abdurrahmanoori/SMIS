@@ -50,6 +50,6 @@ internal sealed class ProductPriceQueryHandler
                 request.Query.GetPageSize(),
                 cancellationToken);
 
-        return Result<PagedListNew<ProductPriceDto>>.SuccessResult(pagedList);
+        return Result<PagedListNew<ProductPriceDto>>.Success(pagedList);
     }
 }

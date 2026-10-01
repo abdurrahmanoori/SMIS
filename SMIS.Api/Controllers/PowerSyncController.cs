@@ -1,5 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using SMIS.Api.Errors;
+using SMIS.Application.Common.Response;
 using SMIS.Application.DTO.Auth;
 using SMIS.Application.Identity.IServices;
 
@@ -33,13 +35,24 @@ public sealed class PowerSyncController : ControllerBase
         var shopId = _currentUser.GetShopId();
 
         if (string.IsNullOrWhiteSpace(userId))
-            return Unauthorized();
+        {
+            var problem = ApiProblemDetailsFactory.Create(
+                HttpContext,
+                new[] { Error.Unauthorized("auth.unauthorized", "Authentication is required.") });
+            return StatusCode(problem.Status!.Value, problem);
+        }
 
         if (string.IsNullOrWhiteSpace(shopId))
         {
-            return Problem(
-                statusCode: StatusCodes.Status403Forbidden,
-                title: "A shop context is required for offline synchronization.");
+            var problem = ApiProblemDetailsFactory.Create(
+                HttpContext,
+                new[]
+                {
+                    Error.Forbidden(
+                        "sync.shop_context_required",
+                        "A shop context is required for offline synchronization.")
+                });
+            return StatusCode(problem.Status!.Value, problem);
         }
 
         return Ok(_tokenGenerator.Generate(userId, shopId, _currentUser.IsSuperAdmin()));

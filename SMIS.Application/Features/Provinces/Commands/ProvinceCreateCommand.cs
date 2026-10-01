@@ -49,7 +49,7 @@ namespace SMIS.Application.Features.Provinces.Commands
 
             await _provinceRepository.AddAsync(entity);
             await _unitOfWork.SaveChanges(cancellationToken);
-            return Result<ProvinceDto>.SuccessResult(_mapper.Map<ProvinceDto>(entity));
+            return Result<ProvinceDto>.Success(_mapper.Map<ProvinceDto>(entity));
         }
     }
 }

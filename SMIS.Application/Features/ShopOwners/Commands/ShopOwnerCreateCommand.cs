@@ -42,7 +42,8 @@ internal sealed class ShopOwnerCreateCommandHandler : IRequestHandler<ShopOwnerC
     {
         var shopId = _currentUser.GetShopId();
         if (string.IsNullOrWhiteSpace(shopId))
-            return Result<ShopOwnerDto>.FailureResult("ShopContextRequired", "An active shop is required.");
+            return Result<ShopOwnerDto>.Forbidden("shop_owner.shop_context_required",
+                "An active shop is required.");
 
         var dto = request.ShopOwnerCreateDto;
         var entity = ShopOwner.Create(
@@ -64,6 +65,6 @@ internal sealed class ShopOwnerCreateCommandHandler : IRequestHandler<ShopOwnerC
         await _shopOwnerRepository.AddAsync(entity);
         await _unitOfWork.SaveChanges(cancellationToken);
 
-        return Result<ShopOwnerDto>.SuccessResult(_mapper.Map<ShopOwnerDto>(entity));
+        return Result<ShopOwnerDto>.Success(_mapper.Map<ShopOwnerDto>(entity));
     }
 }

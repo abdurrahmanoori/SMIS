@@ -5,9 +5,9 @@ using SMIS.Application.Repositories.Customers;
 
 namespace SMIS.Application.Features.Customers.Commands
 {
-    public record CustomerDeleteCommand(string Id) : IRequest<Result<Unit>>;
+    public record CustomerDeleteCommand(string Id) : IRequest<Result>;
 
-    internal sealed class CustomerDeleteCommandHandler : IRequestHandler<CustomerDeleteCommand, Result<Unit>>
+    internal sealed class CustomerDeleteCommandHandler : IRequestHandler<CustomerDeleteCommand, Result>
     {
         private readonly ICustomerRepository _customerRepository;
         private readonly IUnitOfWork _unitOfWork;
@@ -21,7 +21,7 @@ namespace SMIS.Application.Features.Customers.Commands
             _customerRepository = customerRepository;
         }
 
-        public async Task<Result<Unit>> Handle(
+        public async Task<Result> Handle(
             CustomerDeleteCommand request,
             CancellationToken cancellationToken
         )
@@ -29,12 +29,12 @@ namespace SMIS.Application.Features.Customers.Commands
             var entity = await _customerRepository.GetByIdAsync(request.Id);
             if (entity == null)
             {
-                return Result<Unit>.NotFoundResult(request?.Id);
+                return Result.NotFound(request?.Id);
             }
 
             await _customerRepository.RemoveAsync(entity);
             await _unitOfWork.SaveChanges(cancellationToken);
-            return Result<Unit>.SuccessResult(Unit.Value);
+            return Result.Success();
         }
     }
 }

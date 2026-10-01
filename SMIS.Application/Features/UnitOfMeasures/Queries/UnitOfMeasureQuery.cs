@@ -47,6 +47,6 @@ internal sealed class UnitOfMeasureQueryHandler
                 request.Query.GetPageSize(),
                 cancellationToken);
 
-        return Result<PagedListNew<UnitOfMeasureDto>>.SuccessResult(pagedList);
+        return Result<PagedListNew<UnitOfMeasureDto>>.Success(pagedList);
     }
 }

@@ -42,11 +42,11 @@ public class UserGetCurrentQueryHandler : IRequestHandler<UserGetCurrentQuery, R
         }
 
         var user = await query.FirstOrDefaultAsync(u => u.Id == userId, cancellationToken);
-        if (user == null) return Result<UserDto>.NotFoundResult(userId);
+        if (user == null) return Result<UserDto>.NotFound(userId);
 
         var userDto = _mapper.Map<UserDto>(user);
         userDto.Roles = (await _userManager.GetRolesAsync(user)).ToList();
 
-        return Result<UserDto>.SuccessResult(userDto);
+        return Result<UserDto>.Success(userDto);
     }
 }

@@ -34,7 +34,7 @@ namespace SMIS.Application.Features.Districts.Commands
             var entity = await _districtRepository.GetByIdAsync(request.Id);
             if (entity == null)
             {
-                return Result<DistrictDto>.NotFoundResult(nameof(DistrictDto.Id));
+                return Result<DistrictDto>.NotFound(nameof(DistrictDto.Id));
             }
 
             _mapper.Map(request.DistrictCreateDto, entity);
@@ -42,7 +42,7 @@ namespace SMIS.Application.Features.Districts.Commands
             await _unitOfWork.SaveChanges(cancellationToken);
 
             var dto = _mapper.Map<DistrictDto>(entity);
-            return Result<DistrictDto>.SuccessResult(dto);
+            return Result<DistrictDto>.Success(dto);
         }
     }
 }

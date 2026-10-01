@@ -7,6 +7,7 @@ import '../controllers/shop_controller.dart';
 import '../data/data_exception.dart';
 import '../l10n/app_localizations.dart';
 import '../models/shop.dart';
+import 'app_error_view.dart';
 
 class ActiveShopAction extends ConsumerWidget {
   const ActiveShopAction({super.key});
@@ -85,7 +86,8 @@ Future<void> _chooseShop(BuildContext context, WidgetRef ref) async {
             width: 480,
             child: shops.when(
               loading: () => const Center(child: CircularProgressIndicator()),
-              error: (error, _) => Text(error.toString()),
+              error: (error, stackTrace) =>
+                  AppErrorView(error: error, stackTrace: stackTrace),
               data: (state) {
                 final available = state.shops
                     .where((shop) => shop.isActive)

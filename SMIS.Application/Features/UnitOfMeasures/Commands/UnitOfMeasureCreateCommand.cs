@@ -42,7 +42,7 @@ namespace SMIS.Application.Features.UnitOfMeasures.Commands
             await _unitOfMeasureRepository.AddAsync(entity);
             await _db.SaveChangesAsync(cancellationToken);
 
-            return Result<UnitOfMeasureDto>.SuccessResult(_mapper.Map<UnitOfMeasureDto>(entity));
+            return Result<UnitOfMeasureDto>.Success(_mapper.Map<UnitOfMeasureDto>(entity));
         }
     }
 }

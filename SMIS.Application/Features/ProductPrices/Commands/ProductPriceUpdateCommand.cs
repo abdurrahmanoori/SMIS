@@ -44,7 +44,7 @@ internal sealed class
     {
         var existing = await _productPriceRepository.GetByIdAsync(request.Id);
         if (existing == null)
-            return Result<ProductPriceDto>.NotFoundResult(nameof(ProductPriceDto.Id));
+            return Result<ProductPriceDto>.NotFound(nameof(ProductPriceDto.Id));
 
         var dto = request.ProductPriceCreateDto;
         if (!string.Equals(existing.ProductUnitId, dto.ProductUnitId, StringComparison.Ordinal))
@@ -72,6 +72,6 @@ internal sealed class
         await _productPriceRepository.AddAsync(successor);
         await _db.SaveChangesAsync(cancellationToken);
 
-        return Result<ProductPriceDto>.SuccessResult(_mapper.Map<ProductPriceDto>(successor));
+        return Result<ProductPriceDto>.Success(_mapper.Map<ProductPriceDto>(successor));
     }
 }

@@ -25,7 +25,7 @@ namespace SMIS.Api.Controllers
         public async Task<ActionResult<DistrictDto>> Create(
             DistrictCreateDto dto
         ) =>
-            HandleResultResponseOld(await Mediator.Send(new DistrictCreateCommand(dto)));
+            HandleResultResponse(await Mediator.Send(new DistrictCreateCommand(dto)));
 
         /// <summary>
         /// Gets districts with flexible filtering, optional returned columns, and pagination.
@@ -57,15 +57,15 @@ namespace SMIS.Api.Controllers
             string id,
             DistrictCreateDto dto
         ) =>
-            HandleResultResponseOld(await Mediator.Send(new DistrictUpdateCommand(id, dto)));
+            HandleResultResponse(await Mediator.Send(new DistrictUpdateCommand(id, dto)));
 
         /// <summary>
         /// Deletes a district.
         /// </summary>
         [HttpDelete("{id}")]
-        public async Task<ActionResult<Unit>> Delete(
+        public async Task<IActionResult> Delete(
             string id
         ) =>
-            HandleResultResponseOld(await Mediator.Send(new DistrictDeleteCommand(id)));
+            HandleResultResponse(await Mediator.Send(new DistrictDeleteCommand(id)));
     }
 }

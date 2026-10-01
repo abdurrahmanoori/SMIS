@@ -7,9 +7,9 @@ using SMIS.Application.Services;
 
 namespace SMIS.Application.Features.ProductPrices.Commands;
 
-public record ProductPriceDeleteCommand(string Id) : IRequest<Result<Unit>>;
+public record ProductPriceDeleteCommand(string Id) : IRequest<Result>;
 
-internal sealed class ProductPriceDeleteCommandHandler : IRequestHandler<ProductPriceDeleteCommand, Result<Unit>>
+internal sealed class ProductPriceDeleteCommandHandler : IRequestHandler<ProductPriceDeleteCommand, Result>
 {
     private readonly IProductPriceRepository _productPriceRepository;
     private readonly IProductUnitRepository _productUnitRepository;
@@ -29,7 +29,7 @@ internal sealed class ProductPriceDeleteCommandHandler : IRequestHandler<Product
         _currentUser = currentUser;
     }
 
-    public async Task<Result<Unit>> Handle(
+    public async Task<Result> Handle(
         ProductPriceDeleteCommand request,
         CancellationToken cancellationToken
     )
@@ -37,7 +37,7 @@ internal sealed class ProductPriceDeleteCommandHandler : IRequestHandler<Product
         var entity = await _productPriceRepository.GetByIdAsync(request.Id);
         if (entity == null)
         {
-            return Result<Unit>.NotFoundResult(request?.Id);
+            return Result.NotFound(request?.Id);
         }
 
         var productUnit = await ProductPriceCommandRules.GetAccessibleProductUnitAsync(
@@ -46,7 +46,7 @@ internal sealed class ProductPriceDeleteCommandHandler : IRequestHandler<Product
             _currentUser);
         if (productUnit is null)
         {
-            return Result<Unit>.FailureResult(
+            return Result.Forbidden(
                 "Forbidden",
                 "You cannot delete pricing history for another shop.");
         }
@@ -54,6 +54,6 @@ internal sealed class ProductPriceDeleteCommandHandler : IRequestHandler<Product
         entity.ClearClientModificationMetadata();
         await _productPriceRepository.RemoveAsync(entity);
         await _db.SaveChangesAsync(cancellationToken);
-        return Result<Unit>.SuccessResult(Unit.Value);
+        return Result.Success();
     }
 }

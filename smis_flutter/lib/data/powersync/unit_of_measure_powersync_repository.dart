@@ -17,8 +17,11 @@ class UnitOfMeasurePowerSyncRepository extends PowerSyncRepositorySupport {
     final db = await database;
     return db
         .watch(
-          'SELECT id, name, symbol, description, last_modified_utc '
+          'SELECT id, name, symbol, description, last_modified_utc, '
+          '(SELECT message FROM sync_error WHERE table_name = ? '
+          'AND record_id = unit_of_measure.id) AS sync_error_message '
           'FROM unit_of_measure',
+          parameters: ['unit_of_measure'],
           throttle: const Duration(milliseconds: 250),
         )
         .map((_) {});
@@ -31,6 +34,7 @@ class UnitOfMeasurePowerSyncRepository extends PowerSyncRepositorySupport {
   }) async {
     final db = await database;
     final pending = await pendingOperations('unit_of_measure');
+    final errors = await syncErrors('unit_of_measure');
     final args = <Object?>[];
     var where = '1 = 1';
     if (searchQuery != null && searchQuery.trim().isNotEmpty) {
@@ -50,7 +54,9 @@ class UnitOfMeasurePowerSyncRepository extends PowerSyncRepositorySupport {
       }
     }
     final rows = await db.getAll(sql, args);
-    return rows.map((row) => _toUnit(row, pending[row['id']])).toList();
+    return rows
+        .map((row) => _toUnit(row, pending[row['id']], errors[row['id']]))
+        .toList();
   }
 
   Future<int> getTotalCount({String? searchQuery}) async {
@@ -149,10 +155,15 @@ class UnitOfMeasurePowerSyncRepository extends PowerSyncRepositorySupport {
       throw const LocalStorageException('Unit of measurement was not found.');
     }
     final pending = await pendingOperations('unit_of_measure');
-    return _toUnit(row, pending[id]);
+    final errors = await syncErrors('unit_of_measure');
+    return _toUnit(row, pending[id], errors[id]);
   }
 
-  UnitOfMeasure _toUnit(Map<String, Object?> row, String? operation) {
+  UnitOfMeasure _toUnit(
+    Map<String, Object?> row,
+    String? operation,
+    String? syncError,
+  ) {
     final changedAt = timestamp(row['last_modified_utc']);
     return UnitOfMeasure(
       id: row['id']! as String,
@@ -162,11 +173,14 @@ class UnitOfMeasurePowerSyncRepository extends PowerSyncRepositorySupport {
       createdAt: changedAt,
       updatedAt: changedAt,
       lastModifiedUtc: changedAt,
-      syncStatus: operation == null
+      syncStatus: syncError != null
+          ? UnitOfMeasureSyncStatus.failed
+          : operation == null
           ? UnitOfMeasureSyncStatus.synced
           : operation == 'PUT'
           ? UnitOfMeasureSyncStatus.pendingCreate
           : UnitOfMeasureSyncStatus.pendingUpdate,
+      lastSyncError: syncError,
     );
   }
 }

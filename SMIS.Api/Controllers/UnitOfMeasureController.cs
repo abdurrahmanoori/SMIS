@@ -30,7 +30,7 @@ namespace SMIS.Api.Controllers
         public async Task<ActionResult<UnitOfMeasureDto>> Create(
             UnitOfMeasureCreateDto dto
         ) =>
-            HandleResultResponseOld(await Mediator.Send(new UnitOfMeasureCreateCommand(dto)));
+            HandleResultResponse(await Mediator.Send(new UnitOfMeasureCreateCommand(dto)));
 
         /// <summary>
         /// Creates or updates a unit of measure sent by an offline client.
@@ -42,7 +42,7 @@ namespace SMIS.Api.Controllers
         [HasPermission(ApplicationComponentKeys.UnitsOfMeasure, PermissionAction.Create)]
         public async Task<ActionResult<UnitOfMeasureDto>> SyncCreate(
             UnitOfMeasureSyncCreateDto dto
-        ) => HandleResultResponseOld(await Mediator.Send(new UnitOfMeasureSyncCreateCommand(dto)));
+        ) => HandleResultResponse(await Mediator.Send(new UnitOfMeasureSyncCreateCommand(dto)));
 
         /// <summary>
         /// Gets units of measure with flexible filtering, optional returned columns, and pagination.
@@ -76,7 +76,7 @@ namespace SMIS.Api.Controllers
             string id,
             UnitOfMeasureCreateDto dto
         ) =>
-            HandleResultResponseOld(await Mediator.Send(new UnitOfMeasureUpdateCommand(id, dto)));
+            HandleResultResponse(await Mediator.Send(new UnitOfMeasureUpdateCommand(id, dto)));
 
         /// <summary>
         /// Applies a unit-of-measure update sent by an offline client.
@@ -89,17 +89,17 @@ namespace SMIS.Api.Controllers
         public async Task<ActionResult<UnitOfMeasureDto>> SyncUpdate(
             string id,
             UnitOfMeasureSyncUpdateDto dto
-        ) => HandleResultResponseOld(await Mediator.Send(new UnitOfMeasureSyncUpdateCommand(id, dto)));
+        ) => HandleResultResponse(await Mediator.Send(new UnitOfMeasureSyncUpdateCommand(id, dto)));
 
         /// <summary>
         /// Deletes a unit of measure.
         /// </summary>
         [HttpDelete("{id}")]
         [HasPermission(ApplicationComponentKeys.UnitsOfMeasure, PermissionAction.Delete)]
-        public async Task<ActionResult<Unit>> Delete(
+        public async Task<IActionResult> Delete(
             string id
         ) =>
-            HandleResultResponseOld(await Mediator.Send(new UnitOfMeasureDeleteCommand(id)));
+            HandleResultResponse(await Mediator.Send(new UnitOfMeasureDeleteCommand(id)));
 
         /// <summary>
         /// Applies a unit-of-measure delete sent by an offline client.
@@ -109,6 +109,6 @@ namespace SMIS.Api.Controllers
         public async Task<ActionResult<UnitOfMeasureDto>> SyncDelete(
             string id,
             UnitOfMeasureSyncDeleteDto dto
-        ) => HandleResultResponseOld(await Mediator.Send(new UnitOfMeasureSyncDeleteCommand(id, dto)));
+        ) => HandleResultResponse(await Mediator.Send(new UnitOfMeasureSyncDeleteCommand(id, dto)));
     }
 }

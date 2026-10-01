@@ -35,7 +35,7 @@ internal sealed class LoanAccountUpdateCommandHandler
     {
         var receivable = await _receivables.GetByIdAsync(request.Id);
         if (receivable is null)
-            return Result<LoanAccountDto>.NotFoundResult(request.Id);
+            return Result<LoanAccountDto>.NotFound(request.Id);
 
         // Commercial amount and sale/customer ownership are historical facts. Only
         // collection metadata may be edited after the receivable has been created.
@@ -45,6 +45,6 @@ internal sealed class LoanAccountUpdateCommandHandler
         else receivable.Deactivate();
 
         await _unitOfWork.SaveChanges(cancellationToken);
-        return Result<LoanAccountDto>.SuccessResult(_mapper.Map<LoanAccountDto>(receivable));
+        return Result<LoanAccountDto>.Success(_mapper.Map<LoanAccountDto>(receivable));
     }
 }

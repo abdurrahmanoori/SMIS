@@ -105,7 +105,7 @@ internal static class ProductCommandRules
     }
 
     public static Result<ProductDto> BaseUnitIsLocked() =>
-        Result<ProductDto>.FailureResult(
+        Result<ProductDto>.BusinessRule(
             "BaseUnitChangeNotAllowed",
             "Base unit cannot be changed after stock or product-unit conversions exist.");
 

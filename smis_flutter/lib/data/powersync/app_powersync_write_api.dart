@@ -6,8 +6,8 @@ import '../../services/bearer_token_interceptor.dart';
 import '../data_exception.dart';
 import 'upload/category_upload_handler.dart';
 import 'upload/powersync_upload_handler.dart';
-import 'upload/product_unit_upload_handler.dart';
 import 'upload/product_price_upload_handler.dart';
+import 'upload/product_unit_upload_handler.dart';
 import 'upload/product_upload_handler.dart';
 import 'upload/shop_upload_handler.dart';
 import 'upload/unit_of_measure_upload_handler.dart';
@@ -71,16 +71,9 @@ class AppPowerSyncWriteApi {
     try {
       await _handler(table).delete(id, lastModifiedUtc);
     } on DioException catch (error, stackTrace) {
-      final status = error.response?.statusCode;
-      // Complete only recognized permanent rejections. Generic ASP.NET model-binding
-      // 400 responses stay retryable so malformed payloads are not silently discarded.
-      if (status == 404 ||
-          status == 409 ||
-          status == 422 ||
-          (status == 400 &&
-              _isBusinessValidationResponse(error.response?.data))) {
-        return;
-      }
+      // Deleting something that is already absent is idempotently complete.
+      // All other server rejections must remain visible instead of being discarded.
+      if (error.response?.statusCode == 404) return;
       ApiErrorParser.mapAndThrow(error, stackTrace);
     } catch (error, stackTrace) {
       ApiErrorParser.mapAndThrow(error, stackTrace);
@@ -93,14 +86,5 @@ class AppPowerSyncWriteApi {
       throw StateError('Unsupported PowerSync table: $table');
     }
     return handler;
-  }
-
-  bool _isBusinessValidationResponse(Object? data) {
-    if (data is! List || data.isEmpty) return false;
-    return data.every(
-      (item) =>
-          item is Map &&
-          (item.containsKey('description') || item.containsKey('Description')),
-    );
   }
 }

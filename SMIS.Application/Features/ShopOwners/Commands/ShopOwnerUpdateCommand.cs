@@ -37,7 +37,7 @@ internal sealed class ShopOwnerUpdateCommandHandler : IRequestHandler<ShopOwnerU
     {
         var entity = await _shopOwnerRepository.GetByIdAsync(request.Id);
         if (entity == null)
-            return Result<ShopOwnerDto>.NotFoundResult(request.Id);
+            return Result<ShopOwnerDto>.NotFound(request.Id);
 
         // Update using domain methods
         entity.SetUserId(request.ShopOwnerCreateDto.ApplicationUserId);
@@ -59,6 +59,6 @@ internal sealed class ShopOwnerUpdateCommandHandler : IRequestHandler<ShopOwnerU
         await _shopOwnerRepository.UpdateAsync(entity);
         await _unitOfWork.SaveChanges(cancellationToken);
 
-        return Result<ShopOwnerDto>.SuccessResult(_mapper.Map<ShopOwnerDto>(entity));
+        return Result<ShopOwnerDto>.Success(_mapper.Map<ShopOwnerDto>(entity));
     }
 }

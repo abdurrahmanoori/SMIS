@@ -8,9 +8,9 @@ using SMIS.Domain.Entities.Identity.Entity;
 
 namespace SMIS.Application.Features.Identity.Users.Commands
 {
-    public record UserRemoveRoleCommand(string UserId, string Role) : IRequest<Result<Unit>>;
+    public record UserRemoveRoleCommand(string UserId, string Role) : IRequest<Result>;
 
-    public class UserRemoveRoleCommandHandler : IRequestHandler<UserRemoveRoleCommand, Result<Unit>>
+    public class UserRemoveRoleCommandHandler : IRequestHandler<UserRemoveRoleCommand, Result>
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly RoleManager<ApplicationRole> _roleManager;
@@ -33,24 +33,24 @@ namespace SMIS.Application.Features.Identity.Users.Commands
             _userAdministrationGuard = userAdministrationGuard;
         }
 
-        public async Task<Result<Unit>> Handle(
+        public async Task<Result> Handle(
             UserRemoveRoleCommand request,
             CancellationToken cancellationToken
         )
         {
             var user = await _userManager.FindByIdAsync(request.UserId);
-            if (user == null) return Result<Unit>.NotFoundResult(request.UserId);
+            if (user == null) return Result.NotFound(request.UserId);
 
             var role = SD.GetCanonicalRole(request.Role);
             if (role is null || !await _roleManager.RoleExistsAsync(role))
-                return Result<Unit>.FailureResult("InvalidRole", "The requested role is not configured.");
+                return Result.BusinessRule("InvalidRole", "The requested role is not configured.");
 
             if (string.Equals(role, SD.Role_Super_Admin, StringComparison.OrdinalIgnoreCase) &&
                 await _userAdministrationGuard.WouldRemoveLastSuperAdminAsync(
                     user.Id,
                     cancellationToken))
             {
-                return Result<Unit>.FailureResult(
+                return Result.BusinessRule(
                     "LastSuperAdmin",
                     "The SuperAdmin role cannot be removed from the last SuperAdmin account.");
             }
@@ -62,8 +62,8 @@ namespace SMIS.Application.Features.Identity.Users.Commands
                 if (!removeResult.Succeeded)
                 {
                     await _unitOfWork.RollbackTransactionAsync(cancellationToken);
-                    return Result<Unit>.WithErrors(removeResult.Errors
-                        .Select(e => new ValidationError { Code = e.Code, Description = e.Description }).ToList());
+                    return Result.Failure(removeResult.Errors
+                        .Select(e => new Error { Code = e.Code, Description = e.Description }).ToList());
                 }
 
                 await _userRoleMetadataService.SynchronizeAsync(
@@ -72,7 +72,7 @@ namespace SMIS.Application.Features.Identity.Users.Commands
                     cancellationToken);
                 await _unitOfWork.CommitTransactionAsync(cancellationToken);
 
-                return Result<Unit>.SuccessResult(Unit.Value, "Role removed successfully");
+                return Result.Success();
             }
             catch
             {

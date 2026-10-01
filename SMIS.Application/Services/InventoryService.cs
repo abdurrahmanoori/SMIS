@@ -98,7 +98,7 @@ public sealed class InventoryService : IInventoryService
         await _batches.AddAsync(batch);
         await _movements.AddAsync(movement);
 
-        return Result<StockBatch>.SuccessResult(batch);
+        return Result<StockBatch>.Success(batch);
     }
 
     public async Task<Result<StockMovement>> PostMovementAsync(
@@ -107,17 +107,17 @@ public sealed class InventoryService : IInventoryService
     )
     {
         if (request.Reason == StockMovementReason.PurchaseReceipt)
-            return Result<StockMovement>.FailureResult(
+            return Result<StockMovement>.BusinessRule(
                 "PurchaseReceiptUsesReceiptWorkflow",
                 "Purchase receipts must be posted through the inventory receipt workflow.");
 
         if (request.Reason == StockMovementReason.Sale)
-            return Result<StockMovement>.FailureResult(
+            return Result<StockMovement>.BusinessRule(
                 "SaleUsesFifoWorkflow",
                 "Sale inventory must be issued through the FIFO/FEFO sale workflow.");
 
         if (request.Reason == StockMovementReason.Transfer)
-            return Result<StockMovement>.FailureResult(
+            return Result<StockMovement>.BusinessRule(
                 "TransferUsesTransferWorkflow",
                 "Transfers must be posted through the paired transfer workflow.");
 
@@ -142,12 +142,12 @@ public sealed class InventoryService : IInventoryService
         if (request.Reason == StockMovementReason.Expiration)
         {
             if (!batch.ExpirationDate.HasValue)
-                return Result<StockMovement>.FailureResult(
+                return Result<StockMovement>.BusinessRule(
                     "BatchHasNoExpirationDate",
                     "A batch without an expiration date cannot be posted as expired stock.");
 
             if (batch.ExpirationDate.Value > request.OccurredAtUtc)
-                return Result<StockMovement>.FailureResult(
+                return Result<StockMovement>.BusinessRule(
                     "BatchNotExpired",
                     "The selected batch has not reached its expiration date yet.");
         }
@@ -170,7 +170,7 @@ public sealed class InventoryService : IInventoryService
         ApplyBalance(batch, movement.Direction, movement.QuantityBase);
         await _movements.AddAsync(movement);
 
-        return Result<StockMovement>.SuccessResult(movement);
+        return Result<StockMovement>.Success(movement);
     }
 
     public async Task<Result<IReadOnlyList<StockMovement>>> IssueFifoAsync(
@@ -179,7 +179,7 @@ public sealed class InventoryService : IInventoryService
     )
     {
         if (request.Reason != StockMovementReason.Sale)
-            return Result<IReadOnlyList<StockMovement>>.FailureResult(
+            return Result<IReadOnlyList<StockMovement>>.BusinessRule(
                 "FifoIssueReservedForSales",
                 "FIFO/FEFO issuing is reserved for the sale workflow. Other stock changes must use their explicit inventory workflow.");
 
@@ -204,7 +204,7 @@ public sealed class InventoryService : IInventoryService
             cancellationToken);
 
         if (batches.Sum(batch => batch.RemainingQuantityBase) < totalBase)
-            return Result<IReadOnlyList<StockMovement>>.FailureResult(
+            return Result<IReadOnlyList<StockMovement>>.BusinessRule(
                 "InsufficientStock",
                 "Available FIFO stock is lower than the requested quantity.");
 
@@ -239,7 +239,7 @@ public sealed class InventoryService : IInventoryService
             remainingBase -= allocatedBase;
         }
 
-        return Result<IReadOnlyList<StockMovement>>.SuccessResult(created);
+        return Result<IReadOnlyList<StockMovement>>.Success(created);
     }
 
     public async Task<Result<IReadOnlyList<StockMovement>>> ReverseMovementAsync(
@@ -249,18 +249,18 @@ public sealed class InventoryService : IInventoryService
     {
         var original = await _movements.GetByIdAsync(movementId);
         if (original is null)
-            return Result<IReadOnlyList<StockMovement>>.NotFoundResult(movementId);
+            return Result<IReadOnlyList<StockMovement>>.NotFound(movementId);
 
         if (original.Reason is StockMovementReason.Sale
             or StockMovementReason.PurchaseReceipt
             or StockMovementReason.CustomerReturn
             or StockMovementReason.SupplierReturn)
-            return Result<IReadOnlyList<StockMovement>>.FailureResult(
+            return Result<IReadOnlyList<StockMovement>>.BusinessRule(
                 "BusinessMovementRequiresWorkflowReversal",
                 "This movement belongs to a higher-level sale or purchasing workflow and cannot be reversed independently.");
 
         if (original.ReferenceType is nameof(StockMovement) or "StockMovementReversal")
-            return Result<IReadOnlyList<StockMovement>>.FailureResult(
+            return Result<IReadOnlyList<StockMovement>>.BusinessRule(
                 "ReversalCannotBeReversedDirectly",
                 "A compensating reversal cannot itself be reversed through the generic movement endpoint.");
 
@@ -271,7 +271,7 @@ public sealed class InventoryService : IInventoryService
         foreach (var movement in originals)
         {
             if (await _movements.HasReversalAsync(movement.Id, cancellationToken))
-                return Result<IReadOnlyList<StockMovement>>.FailureResult(
+                return Result<IReadOnlyList<StockMovement>>.BusinessRule(
                     "MovementAlreadyReversed",
                     "This inventory operation already has a reversal entry.");
         }
@@ -318,7 +318,7 @@ public sealed class InventoryService : IInventoryService
             reversals.Add(reversal);
         }
 
-        return Result<IReadOnlyList<StockMovement>>.SuccessResult(reversals);
+        return Result<IReadOnlyList<StockMovement>>.Success(reversals);
     }
 
     public async Task<Result<IReadOnlyList<StockMovement>>> TransferAsync(
@@ -328,7 +328,7 @@ public sealed class InventoryService : IInventoryService
     {
         if (string.Equals(request.SourceStockBatchId, request.DestinationStockBatchId,
                 StringComparison.Ordinal))
-            return Result<IReadOnlyList<StockMovement>>.FailureResult(
+            return Result<IReadOnlyList<StockMovement>>.BusinessRule(
                 "SameTransferBatch",
                 "Source and destination stock batches must be different.");
 
@@ -358,28 +358,28 @@ public sealed class InventoryService : IInventoryService
         // shops, or costs would turn a physical move into an implicit product/cost
         // transformation and would make inventory valuation lie rather enthusiastically.
         if (!string.Equals(source.ProductId, destination.ProductId, StringComparison.Ordinal))
-            return Result<IReadOnlyList<StockMovement>>.FailureResult(
+            return Result<IReadOnlyList<StockMovement>>.BusinessRule(
                 "TransferProductMismatch",
                 "Source and destination batches must belong to the same product.");
 
         if (!string.Equals(source.ShopId, destination.ShopId, StringComparison.Ordinal))
-            return Result<IReadOnlyList<StockMovement>>.FailureResult(
+            return Result<IReadOnlyList<StockMovement>>.BusinessRule(
                 "TransferShopMismatch",
                 "Source and destination batches must belong to the same shop.");
 
         if (source.UnitCostBase != destination.UnitCostBase)
-            return Result<IReadOnlyList<StockMovement>>.FailureResult(
+            return Result<IReadOnlyList<StockMovement>>.BusinessRule(
                 "TransferCostMismatch",
                 "Source and destination batches must have the same base-unit cost.");
 
         if (!string.Equals(source.BatchNumber, destination.BatchNumber, StringComparison.Ordinal) ||
             source.ExpirationDate != destination.ExpirationDate)
-            return Result<IReadOnlyList<StockMovement>>.FailureResult(
+            return Result<IReadOnlyList<StockMovement>>.BusinessRule(
                 "TransferLotMismatch",
                 "Source and destination batches must represent the same lot and expiration date.");
 
         if (source.ExpirationDate.HasValue && source.ExpirationDate.Value <= request.OccurredAtUtc)
-            return Result<IReadOnlyList<StockMovement>>.FailureResult(
+            return Result<IReadOnlyList<StockMovement>>.BusinessRule(
                 "ExpiredStockTransfer",
                 "Expired stock cannot be transferred as available inventory.");
 
@@ -388,7 +388,7 @@ public sealed class InventoryService : IInventoryService
         // This keeps the OUT and IN ledger entries exactly symmetrical.
         var quantityBase = ConvertToBaseQuantity(request.QuantityEntered, productUnit);
         if (source.RemainingQuantityBase < quantityBase)
-            return Result<IReadOnlyList<StockMovement>>.FailureResult(
+            return Result<IReadOnlyList<StockMovement>>.BusinessRule(
                 "InsufficientStock",
                 "The source batch does not contain enough stock for this transfer.");
 
@@ -434,7 +434,7 @@ public sealed class InventoryService : IInventoryService
         await _movements.AddAsync(sourceMovement);
         await _movements.AddAsync(destinationMovement);
 
-        return Result<IReadOnlyList<StockMovement>>.SuccessResult(
+        return Result<IReadOnlyList<StockMovement>>.Success(
             new[] { sourceMovement, destinationMovement });
     }
 
@@ -546,7 +546,7 @@ public sealed class InventoryService : IInventoryService
     private static Result<T> Failure<T>(
         InventoryFailure failure
     ) =>
-        Result<T>.FailureResult(failure.Code, failure.Description);
+        Result<T>.BusinessRule(failure.Code, failure.Description);
 
     private sealed record InventoryFailure(string Code, string Description);
 

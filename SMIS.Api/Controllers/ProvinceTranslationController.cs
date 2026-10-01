@@ -25,7 +25,7 @@ namespace SMIS.Api.Controllers
         public async Task<ActionResult<ProvinceTranslationDto>> Create(
             ProvinceTranslationDto dto
         ) =>
-            HandleResultResponseOld(await Mediator.Send(new ProvinceTranslationCreateCommand(dto)));
+            HandleResultResponse(await Mediator.Send(new ProvinceTranslationCreateCommand(dto)));
 
         /// <summary>
         /// Gets province translations with flexible filtering, selected columns, and pagination.
@@ -57,15 +57,15 @@ namespace SMIS.Api.Controllers
             string id,
             ProvinceTranslationDto dto
         ) =>
-            HandleResultResponseOld(await Mediator.Send(new ProvinceTranslationUpdateCommand(id, dto)));
+            HandleResultResponse(await Mediator.Send(new ProvinceTranslationUpdateCommand(id, dto)));
 
         /// <summary>
         /// Deletes a province translation.
         /// </summary>
         [HttpDelete("{id}")]
-        public async Task<ActionResult<Unit>> Delete(
+        public async Task<IActionResult> Delete(
             string id
         ) =>
-            HandleResultResponseOld(await Mediator.Send(new ProvinceTranslationDeleteCommand(id)));
+            HandleResultResponse(await Mediator.Send(new ProvinceTranslationDeleteCommand(id)));
     }
 }

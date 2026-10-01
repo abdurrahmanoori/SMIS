@@ -46,12 +46,12 @@ internal sealed class
         if (unit is not null)
         {
             if (modified <= unit.GetConflictModifiedUtc())
-                return Result<UnitOfMeasureDto>.SuccessResult(_mapper.Map<UnitOfMeasureDto>(unit));
+                return Result<UnitOfMeasureDto>.Success(_mapper.Map<UnitOfMeasureDto>(unit));
             UnitOfMeasureCommandRules.Apply(unit, request.Dto.Name, request.Dto.Symbol, request.Dto.Description);
             unit.SetClientModificationMetadata(modified);
             unit.Restore();
             await _db.SaveChangesAsync(cancellationToken);
-            return Result<UnitOfMeasureDto>.SuccessResult(_mapper.Map<UnitOfMeasureDto>(unit));
+            return Result<UnitOfMeasureDto>.Success(_mapper.Map<UnitOfMeasureDto>(unit));
         }
 
         unit = UnitOfMeasureCommandRules.Create(request.Dto.Name, request.Dto.Symbol, request.Dto.Description);
@@ -59,7 +59,7 @@ internal sealed class
         unit.SetClientModificationMetadata(modified);
         await _repository.AddAsync(unit);
         await _db.SaveChangesAsync(cancellationToken);
-        return Result<UnitOfMeasureDto>.SuccessResult(_mapper.Map<UnitOfMeasureDto>(unit));
+        return Result<UnitOfMeasureDto>.Success(_mapper.Map<UnitOfMeasureDto>(unit));
     }
 }
 
@@ -87,15 +87,15 @@ internal sealed class
         var unit = await _db.UnitOfMeasures
             .IgnoreQueryFilters()
             .FirstOrDefaultAsync(value => value.Id == id, cancellationToken);
-        if (unit is null) return Result<UnitOfMeasureDto>.NotFoundResult(request.Id);
+        if (unit is null) return Result<UnitOfMeasureDto>.NotFound(request.Id);
         var modified = DateTimeService.NormalizeUtc(request.Dto.ClientModifiedDate);
         if (modified <= unit.GetConflictModifiedUtc())
-            return Result<UnitOfMeasureDto>.SuccessResult(_mapper.Map<UnitOfMeasureDto>(unit));
+            return Result<UnitOfMeasureDto>.Success(_mapper.Map<UnitOfMeasureDto>(unit));
         UnitOfMeasureCommandRules.Apply(unit, request.Dto.Name, request.Dto.Symbol, request.Dto.Description);
         unit.SetClientModificationMetadata(modified);
         unit.Restore();
         await _db.SaveChangesAsync(cancellationToken);
-        return Result<UnitOfMeasureDto>.SuccessResult(_mapper.Map<UnitOfMeasureDto>(unit));
+        return Result<UnitOfMeasureDto>.Success(_mapper.Map<UnitOfMeasureDto>(unit));
     }
 }
 
@@ -123,23 +123,23 @@ internal sealed class
         var unit = await _db.UnitOfMeasures
             .IgnoreQueryFilters()
             .FirstOrDefaultAsync(value => value.Id == id, cancellationToken);
-        if (unit is null) return Result<UnitOfMeasureDto>.NotFoundResult(request.Id);
+        if (unit is null) return Result<UnitOfMeasureDto>.NotFound(request.Id);
         var modified = DateTimeService.NormalizeUtc(request.Dto.ClientModifiedDate);
         if (modified < unit.GetConflictModifiedUtc())
-            return Result<UnitOfMeasureDto>.SuccessResult(_mapper.Map<UnitOfMeasureDto>(unit));
+            return Result<UnitOfMeasureDto>.Success(_mapper.Map<UnitOfMeasureDto>(unit));
 
         var referenceCount = await _repository.CountReferencesAsync(
             unit.Id,
             cancellationToken);
         if (referenceCount > 0)
-            return Result<UnitOfMeasureDto>.FailureResult(
+            return Result<UnitOfMeasureDto>.BusinessRule(
                 "UnitOfMeasureInUse",
                 $"Unit of measurement is used by {referenceCount} record(s). Reassign them before deleting the unit.");
 
         unit.SetClientModificationMetadata(modified);
         await _repository.RemoveAsync(unit);
         await _db.SaveChangesAsync(cancellationToken);
-        return Result<UnitOfMeasureDto>.SuccessResult(_mapper.Map<UnitOfMeasureDto>(unit));
+        return Result<UnitOfMeasureDto>.Success(_mapper.Map<UnitOfMeasureDto>(unit));
     }
 }
 

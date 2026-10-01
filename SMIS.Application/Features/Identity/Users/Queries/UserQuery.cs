@@ -89,6 +89,6 @@ internal sealed class UserQueryHandler
                 request.Query.GetPageSize(),
                 cancellationToken);
 
-        return Result<PagedListNew<UserDto>>.SuccessResult(page);
+        return Result<PagedListNew<UserDto>>.Success(page);
     }
 }

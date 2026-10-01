@@ -36,7 +36,7 @@ namespace SMIS.Application.Features.Shops.Commands
             await _shopRepository.AddAsync(entity);
             await _db.SaveChangesAsync(cancellationToken);
 
-            return Result<ShopDto>.SuccessResult(_mapper.Map<ShopDto>(entity), "Shop Created Successfully.");
+            return Result<ShopDto>.Success(_mapper.Map<ShopDto>(entity));
         }
     }
 }

@@ -84,6 +84,6 @@ internal sealed class ProductQueryHandler
                 request.Query.GetPageSize(),
                 cancellationToken);
 
-        return Result<PagedListNew<ProductDto>>.SuccessResult(pagedList);
+        return Result<PagedListNew<ProductDto>>.Success(pagedList);
     }
 }

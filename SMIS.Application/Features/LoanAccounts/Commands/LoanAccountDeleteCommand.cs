@@ -5,9 +5,9 @@ using SMIS.Application.Repositories.LoanAccounts;
 
 namespace SMIS.Application.Features.LoanAccounts.Commands;
 
-public record LoanAccountDeleteCommand(string Id) : IRequest<Result<Unit>>;
+public record LoanAccountDeleteCommand(string Id) : IRequest<Result>;
 
-internal sealed class LoanAccountDeleteCommandHandler : IRequestHandler<LoanAccountDeleteCommand, Result<Unit>>
+internal sealed class LoanAccountDeleteCommandHandler : IRequestHandler<LoanAccountDeleteCommand, Result>
 {
     private readonly ILoanAccountRepository _loanAccountRepository;
     private readonly IUnitOfWork _unitOfWork;
@@ -21,7 +21,7 @@ internal sealed class LoanAccountDeleteCommandHandler : IRequestHandler<LoanAcco
         _loanAccountRepository = loanAccountRepository;
     }
 
-    public async Task<Result<Unit>> Handle(
+    public async Task<Result> Handle(
         LoanAccountDeleteCommand request,
         CancellationToken cancellationToken
     )
@@ -29,11 +29,11 @@ internal sealed class LoanAccountDeleteCommandHandler : IRequestHandler<LoanAcco
         var entity = await _loanAccountRepository.GetByIdAsync(request.Id);
         if (entity == null)
         {
-            return Result<Unit>.NotFoundResult(request?.Id);
+            return Result.NotFound(request?.Id);
         }
 
         await _loanAccountRepository.RemoveAsync(entity);
         await _unitOfWork.SaveChanges(cancellationToken);
-        return Result<Unit>.SuccessResult(Unit.Value);
+        return Result.Success();
     }
 }

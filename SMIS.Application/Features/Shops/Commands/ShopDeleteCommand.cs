@@ -5,9 +5,9 @@ using SMIS.Application.Services;
 
 namespace SMIS.Application.Features.Shops.Commands
 {
-    public record ShopDeleteCommand(string Id) : IRequest<Result<Unit>>;
+    public record ShopDeleteCommand(string Id) : IRequest<Result>;
 
-    internal sealed class ShopDeleteCommandHandler : IRequestHandler<ShopDeleteCommand, Result<Unit>>
+    internal sealed class ShopDeleteCommandHandler : IRequestHandler<ShopDeleteCommand, Result>
     {
         private readonly IShopRepository _shopRepository;
         private readonly IApplicationDbContext _db;
@@ -21,7 +21,7 @@ namespace SMIS.Application.Features.Shops.Commands
             _shopRepository = shopRepository;
         }
 
-        public async Task<Result<Unit>> Handle(
+        public async Task<Result> Handle(
             ShopDeleteCommand request,
             CancellationToken cancellationToken
         )
@@ -29,21 +29,21 @@ namespace SMIS.Application.Features.Shops.Commands
             var entity = await _shopRepository.GetByIdAsync(request.Id);
             if (entity == null)
             {
-                return Result<Unit>.NotFoundResult(request?.Id);
+                return Result.NotFound(request?.Id);
             }
 
             var referenceCount = await _shopRepository.CountReferencesAsync(
                 entity.Id,
                 cancellationToken);
             if (referenceCount > 0)
-                return Result<Unit>.FailureResult(
+                return Result.BusinessRule(
                     "ShopInUse",
                     $"Shop contains {referenceCount} related record(s). Remove or reassign them before deleting the shop.");
 
             entity.ClearClientModificationMetadata();
             await _shopRepository.RemoveAsync(entity);
             await _db.SaveChangesAsync(cancellationToken);
-            return Result<Unit>.SuccessResult(Unit.Value);
+            return Result.Success();
         }
     }
 }

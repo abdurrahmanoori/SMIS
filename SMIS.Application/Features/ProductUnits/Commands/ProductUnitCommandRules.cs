@@ -87,22 +87,22 @@ internal static class ProductUnitCommandRules
         baseUnitQuantity != 1m;
 
     public static Result<ProductUnitDto> DuplicatePair() =>
-        Result<ProductUnitDto>.FailureResult(
-            "ProductUnitAlreadyExists",
+        Result<ProductUnitDto>.Conflict(
+            "product_unit.already_exists",
             "This unit of measurement is already configured for the selected product.");
 
     public static Result<ProductUnitDto> BaseUnitProtected() =>
-        Result<ProductUnitDto>.FailureResult(
+        Result<ProductUnitDto>.BusinessRule(
             "BaseProductUnitProtected",
             "The product's base-unit mapping is managed by the product and cannot be changed or deleted directly.");
 
     public static Result<ProductUnitDto> BaseUnitMustEqualOne() =>
-        Result<ProductUnitDto>.FailureResult(
+        Result<ProductUnitDto>.BusinessRule(
             "InvalidBaseUnitQuantity",
             "The product's base unit must have BaseUnitQuantity = 1.");
 
     public static Result<ProductUnitDto> ConversionInUse() =>
-        Result<ProductUnitDto>.FailureResult(
+        Result<ProductUnitDto>.BusinessRule(
             "ProductUnitInUse",
             "This product-unit conversion has pricing or inventory history and cannot be changed or deleted.");
 }

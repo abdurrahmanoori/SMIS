@@ -7,9 +7,9 @@ using SMIS.Application.Services;
 
 namespace SMIS.Application.Features.Categories.Commands
 {
-    public record CategoryDeleteCommand(string Id) : IRequest<Result<Unit>>;
+    public record CategoryDeleteCommand(string Id) : IRequest<Result>;
 
-    internal sealed class CategoryDeleteCommandHandler : IRequestHandler<CategoryDeleteCommand, Result<Unit>>
+    internal sealed class CategoryDeleteCommandHandler : IRequestHandler<CategoryDeleteCommand, Result>
     {
         private readonly ICategoryRepository _categoryRepository;
         private readonly IApplicationDbContext _db;
@@ -29,23 +29,25 @@ namespace SMIS.Application.Features.Categories.Commands
             _currentUser = currentUser;
         }
 
-        public async Task<Result<Unit>> Handle(
+        public async Task<Result> Handle(
             CategoryDeleteCommand request,
             CancellationToken cancellationToken
         )
         {
             var entity = await _categoryRepository.GetByIdAsync(request.Id);
             if (entity == null)
-                return Result<Unit>.NotFoundResult(request?.Id);
+                return Result.NotFound(request?.Id);
 
             if (entity.ShopId != _currentUser.GetShopId())
-                return Result<Unit>.FailureResult("Forbidden", "You can only delete categories from your own shop");
+                return Result.Forbidden(
+                    "category.delete_forbidden",
+                    "You can only delete categories from your own shop.");
 
             var productCount = await _productRepository.CountByCategoryIdAsync(
                 entity.Id,
                 cancellationToken);
             if (productCount > 0)
-                return Result<Unit>.FailureResult(
+                return Result.BusinessRule(
                     "CategoryInUse",
                     $"Category is used by {productCount} product(s). Reassign them before deleting the category.");
 
@@ -54,7 +56,7 @@ namespace SMIS.Application.Features.Categories.Commands
             entity.ClearClientModificationMetadata();
             await _categoryRepository.RemoveAsync(entity);
             await _db.SaveChangesAsync(cancellationToken);
-            return Result<Unit>.SuccessResult(Unit.Value);
+            return Result.Success();
         }
     }
 }

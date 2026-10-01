@@ -52,6 +52,6 @@ internal sealed class StockBatchQueryHandler
                 request.Query.GetPageSize(),
                 cancellationToken);
 
-        return Result<PagedListNew<StockBatchDto>>.SuccessResult(pagedList);
+        return Result<PagedListNew<StockBatchDto>>.Success(pagedList);
     }
 }

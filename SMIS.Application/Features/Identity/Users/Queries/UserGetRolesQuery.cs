@@ -24,10 +24,10 @@ namespace SMIS.Application.Features.Identity.Users.Queries
         )
         {
             var user = await _userManager.FindByIdAsync(request.UserId);
-            if (user == null) return Result<IList<string>>.NotFoundResult(request.UserId);
+            if (user == null) return Result<IList<string>>.NotFound(request.UserId);
 
             var roles = await _userManager.GetRolesAsync(user);
-            return Result<IList<string>>.SuccessResult(roles, "User roles retrieved successfully");
+            return Result<IList<string>>.Success(roles);
         }
     }
 }

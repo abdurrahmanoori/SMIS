@@ -36,7 +36,7 @@ namespace SMIS.Application.Features.UnitOfMeasures.Commands
             var entity = await _unitOfMeasureRepository.GetByIdAsync(request.Id);
             if (entity == null)
             {
-                return Result<UnitOfMeasureDto>.NotFoundResult(nameof(UnitOfMeasureDto.Id));
+                return Result<UnitOfMeasureDto>.NotFound(nameof(UnitOfMeasureDto.Id));
             }
 
             var input = request.UnitOfMeasureCreateDto;
@@ -50,7 +50,7 @@ namespace SMIS.Application.Features.UnitOfMeasures.Commands
             await _db.SaveChangesAsync(cancellationToken);
 
             var dto = _mapper.Map<UnitOfMeasureDto>(entity);
-            return Result<UnitOfMeasureDto>.SuccessResult(dto);
+            return Result<UnitOfMeasureDto>.Success(dto);
         }
     }
 }

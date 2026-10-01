@@ -34,7 +34,7 @@ namespace SMIS.Application.Features.Customers.Commands
             var entity = await _customerRepository.GetByIdAsync(request.Id);
             if (entity == null)
             {
-                return Result<CustomerDto>.NotFoundResult(nameof(CustomerDto.Id));
+                return Result<CustomerDto>.NotFound(nameof(CustomerDto.Id));
             }
 
             // Update using domain methods
@@ -53,7 +53,7 @@ namespace SMIS.Application.Features.Customers.Commands
             await _unitOfWork.SaveChanges(cancellationToken);
 
             var dto = _mapper.Map<CustomerDto>(entity);
-            return Result<CustomerDto>.SuccessResult(dto);
+            return Result<CustomerDto>.Success(dto);
         }
     }
 }

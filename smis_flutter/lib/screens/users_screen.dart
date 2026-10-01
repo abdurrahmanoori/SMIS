@@ -6,6 +6,7 @@ import '../data/data_exception.dart';
 import '../data/user_management_api.dart';
 import '../models/managed_user.dart';
 import '../widgets/app_drawer.dart';
+import '../widgets/app_error_view.dart';
 
 class UsersScreen extends ConsumerStatefulWidget {
   const UsersScreen({super.key});
@@ -215,24 +216,7 @@ class _UsersScreenState extends ConsumerState<UsersScreen> {
       return const Center(child: CircularProgressIndicator());
     }
     if (_error != null && _page == null) {
-      return Center(
-        child: Padding(
-          padding: const EdgeInsets.all(24),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const Icon(Icons.cloud_off_outlined, size: 48),
-              const SizedBox(height: 12),
-              const Text(
-                'User management requires a connection to the server.',
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 12),
-              FilledButton(onPressed: _load, child: const Text('Retry')),
-            ],
-          ),
-        ),
-      );
+      return AppErrorView(error: _error!, onRetry: _load);
     }
 
     final page = _page;

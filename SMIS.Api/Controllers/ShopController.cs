@@ -26,7 +26,7 @@ namespace SMIS.Api.Controllers
         public async Task<ActionResult<ShopDto>> Create(
             ShopCreateDto dto
         ) =>
-            HandleResultResponseOld(await Mediator.Send(new ShopCreateCommand(dto)));
+            HandleResultResponse(await Mediator.Send(new ShopCreateCommand(dto)));
 
         /// <summary>
         /// Creates or updates a shop sent by an offline client.
@@ -39,7 +39,7 @@ namespace SMIS.Api.Controllers
         public async Task<ActionResult<ShopDto>> SyncCreate(
             ShopSyncCreateDto dto
         ) =>
-            HandleResultResponseOld(await Mediator.Send(new ShopSyncCreateCommand(dto)));
+            HandleResultResponse(await Mediator.Send(new ShopSyncCreateCommand(dto)));
 
         /// <summary>
         /// Gets shops with flexible filtering, optional returned columns, and pagination.
@@ -73,7 +73,7 @@ namespace SMIS.Api.Controllers
             string id,
             ShopUpdateDto dto
         ) =>
-            HandleResultResponseOld(await Mediator.Send(new ShopUpdateCommand(id, dto)));
+            HandleResultResponse(await Mediator.Send(new ShopUpdateCommand(id, dto)));
 
         /// <summary>
         /// Applies a shop update sent by an offline client.
@@ -87,17 +87,17 @@ namespace SMIS.Api.Controllers
             string id,
             ShopSyncUpdateDto dto
         ) =>
-            HandleResultResponseOld(await Mediator.Send(new ShopSyncUpdateCommand(id, dto)));
+            HandleResultResponse(await Mediator.Send(new ShopSyncUpdateCommand(id, dto)));
 
         /// <summary>
         /// Deletes a shop.
         /// </summary>
         [HttpDelete("{id}")]
         [HasPermission(ApplicationComponentKeys.Shops, PermissionAction.Delete)]
-        public async Task<ActionResult<Unit>> Delete(
+        public async Task<IActionResult> Delete(
             string id
         ) =>
-            HandleResultResponseOld(await Mediator.Send(new ShopDeleteCommand(id)));
+            HandleResultResponse(await Mediator.Send(new ShopDeleteCommand(id)));
 
         /// <summary>
         /// Applies a shop delete sent by an offline client.
@@ -108,6 +108,6 @@ namespace SMIS.Api.Controllers
             string id,
             ShopSyncDeleteDto dto
         ) =>
-            HandleResultResponseOld(await Mediator.Send(new ShopSyncDeleteCommand(id, dto)));
+            HandleResultResponse(await Mediator.Send(new ShopSyncDeleteCommand(id, dto)));
     }
 }

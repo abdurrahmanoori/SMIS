@@ -19,9 +19,11 @@ class ProductPowerSyncRepository extends PowerSyncRepositorySupport {
         .watch(
           'SELECT id, name, base_unit_id, sku, description, is_active, barcode, '
           'image_url, category_id, shop_id, reorder_point_base, '
-          'reorder_quantity_base, last_modified_utc '
+          'reorder_quantity_base, last_modified_utc, '
+          '(SELECT message FROM sync_error WHERE table_name = ? '
+          'AND record_id = product.id) AS sync_error_message '
           'FROM product WHERE shop_id = ?',
-          parameters: [shopId],
+          parameters: ['product', shopId],
           throttle: const Duration(milliseconds: 250),
         )
         .map((_) {});
@@ -35,6 +37,7 @@ class ProductPowerSyncRepository extends PowerSyncRepositorySupport {
   }) async {
     final db = await database;
     final pending = await pendingOperations('product');
+    final errors = await syncErrors('product');
     final args = <Object?>[shopId];
     var where = 'shop_id = ?';
     if (searchQuery != null && searchQuery.trim().isNotEmpty) {
@@ -57,7 +60,9 @@ class ProductPowerSyncRepository extends PowerSyncRepositorySupport {
       }
     }
     final rows = await db.getAll(sql, args);
-    return rows.map((row) => _toProduct(row, pending[row['id']])).toList();
+    return rows
+        .map((row) => _toProduct(row, pending[row['id']], errors[row['id']]))
+        .toList();
   }
 
   Future<int> getTotalCount(String shopId, {String? searchQuery}) async {
@@ -217,10 +222,15 @@ class ProductPowerSyncRepository extends PowerSyncRepositorySupport {
       throw const LocalStorageException('Product was not found.');
     }
     final pending = await pendingOperations('product');
-    return _toProduct(row, pending[id]);
+    final errors = await syncErrors('product');
+    return _toProduct(row, pending[id], errors[id]);
   }
 
-  Product _toProduct(Map<String, Object?> row, String? operation) {
+  Product _toProduct(
+    Map<String, Object?> row,
+    String? operation,
+    String? syncError,
+  ) {
     final changedAt = timestamp(row['last_modified_utc']);
     return Product(
       id: row['id']! as String,
@@ -239,11 +249,14 @@ class ProductPowerSyncRepository extends PowerSyncRepositorySupport {
       createdAt: changedAt,
       updatedAt: changedAt,
       lastModifiedUtc: changedAt,
-      syncStatus: operation == null
+      syncStatus: syncError != null
+          ? ProductSyncStatus.failed
+          : operation == null
           ? ProductSyncStatus.synced
           : operation == 'PUT'
           ? ProductSyncStatus.pendingCreate
           : ProductSyncStatus.pendingUpdate,
+      lastSyncError: syncError,
     );
   }
 }

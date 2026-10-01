@@ -53,13 +53,13 @@ internal sealed class ShopSyncCreateCommandHandler : IRequestHandler<ShopSyncCre
 
             var clientModified = DateTimeService.NormalizeUtc(request.Dto.ClientModifiedDate);
             if (clientModified <= existing.GetConflictModifiedUtc())
-                return Result<ShopDto>.SuccessResult(_mapper.Map<ShopDto>(existing));
+                return Result<ShopDto>.Success(_mapper.Map<ShopDto>(existing));
 
             ShopCommandRules.Apply(existing, request.Dto);
             existing.SetClientModificationMetadata(clientModified);
             existing.Restore();
             await _db.SaveChangesAsync(cancellationToken);
-            return Result<ShopDto>.SuccessResult(_mapper.Map<ShopDto>(existing));
+            return Result<ShopDto>.Success(_mapper.Map<ShopDto>(existing));
         }
 
         var shop = ShopCommandRules.Create(request.Dto);
@@ -67,7 +67,7 @@ internal sealed class ShopSyncCreateCommandHandler : IRequestHandler<ShopSyncCre
         shop.SetClientModificationMetadata(DateTimeService.NormalizeUtc(request.Dto.ClientModifiedDate));
         await _repository.AddAsync(shop);
         await _db.SaveChangesAsync(cancellationToken);
-        return Result<ShopDto>.SuccessResult(_mapper.Map<ShopDto>(shop));
+        return Result<ShopDto>.Success(_mapper.Map<ShopDto>(shop));
     }
 }
 
@@ -99,19 +99,19 @@ internal sealed class ShopSyncUpdateCommandHandler : IRequestHandler<ShopSyncUpd
         var id = ShopSyncRules.NormalizeGuid(request.Id);
         var shop = await _repository.GetByIdIncludingDeletedAsync(id, cancellationToken);
         if (shop is null)
-            return Result<ShopDto>.NotFoundResult(id);
+            return Result<ShopDto>.NotFound(id);
         if (!ShopSyncRules.CanAccess(shop, _currentUser))
             return ShopSyncRules.Forbidden();
 
         var clientModified = DateTimeService.NormalizeUtc(request.Dto.ClientModifiedDate);
         if (clientModified <= shop.GetConflictModifiedUtc())
-            return Result<ShopDto>.SuccessResult(_mapper.Map<ShopDto>(shop));
+            return Result<ShopDto>.Success(_mapper.Map<ShopDto>(shop));
 
         ShopCommandRules.Apply(shop, request.Dto);
         shop.SetClientModificationMetadata(clientModified);
         shop.Restore();
         await _db.SaveChangesAsync(cancellationToken);
-        return Result<ShopDto>.SuccessResult(_mapper.Map<ShopDto>(shop));
+        return Result<ShopDto>.Success(_mapper.Map<ShopDto>(shop));
     }
 }
 
@@ -143,26 +143,26 @@ internal sealed class ShopSyncDeleteCommandHandler : IRequestHandler<ShopSyncDel
         var id = ShopSyncRules.NormalizeGuid(request.Id);
         var shop = await _repository.GetByIdIncludingDeletedAsync(id, cancellationToken);
         if (shop is null)
-            return Result<ShopDto>.NotFoundResult(id);
+            return Result<ShopDto>.NotFound(id);
         if (!ShopSyncRules.CanAccess(shop, _currentUser))
             return ShopSyncRules.Forbidden();
 
         var clientModified = DateTimeService.NormalizeUtc(request.Dto.ClientModifiedDate);
         if (clientModified < shop.GetConflictModifiedUtc())
-            return Result<ShopDto>.SuccessResult(_mapper.Map<ShopDto>(shop));
+            return Result<ShopDto>.Success(_mapper.Map<ShopDto>(shop));
 
         var referenceCount = await _repository.CountReferencesAsync(
             shop.Id,
             cancellationToken);
         if (referenceCount > 0)
-            return Result<ShopDto>.FailureResult(
+            return Result<ShopDto>.BusinessRule(
                 "ShopInUse",
                 $"Shop contains {referenceCount} related record(s). Remove or reassign them before deleting the shop.");
 
         shop.SetClientModificationMetadata(clientModified);
         await _repository.RemoveAsync(shop);
         await _db.SaveChangesAsync(cancellationToken);
-        return Result<ShopDto>.SuccessResult(_mapper.Map<ShopDto>(shop));
+        return Result<ShopDto>.Success(_mapper.Map<ShopDto>(shop));
     }
 }
 
@@ -178,6 +178,6 @@ internal static class ShopSyncRules
     ) =>
         currentUser.IsSuperAdmin() || shop.Id == currentUser.GetShopId();
 
-    public static Result<ShopDto> Forbidden() => Result<ShopDto>.FailureResult(
+    public static Result<ShopDto> Forbidden() => Result<ShopDto>.Forbidden(
         "Forbidden", "You can only synchronize your own shop.");
 }

@@ -58,7 +58,7 @@ namespace SMIS.Application.Features.Identity.Users.Commands
             var signedInUser = await _userManager.FindByIdAsync(currentUserId);
             if (signedInUser is null)
             {
-                return Result<UserDto>.FailureResult(
+                return Result<UserDto>.NotFound(
                     "CurrentUserNotFound",
                     "The signed-in user no longer exists.");
             }
@@ -67,21 +67,21 @@ namespace SMIS.Application.Features.Identity.Users.Commands
             if (!isSuperAdmin &&
                 !string.Equals(request.UserId, currentUserId, StringComparison.Ordinal))
             {
-                return Result<UserDto>.FailureResult(
+                return Result<UserDto>.Forbidden(
                     "Forbidden",
                     "You can only update your own profile.");
             }
 
             if (!isSuperAdmin && request.UserUpdateDto.Roles is not null)
             {
-                return Result<UserDto>.FailureResult(
+                return Result<UserDto>.Forbidden(
                     "Forbidden",
                     "Only a SuperAdmin can change user roles.");
             }
 
             if (!isSuperAdmin && !string.IsNullOrWhiteSpace(request.UserUpdateDto.ShopId))
             {
-                return Result<UserDto>.FailureResult(
+                return Result<UserDto>.Forbidden(
                     "Forbidden",
                     "Only a SuperAdmin can change a user's assigned shop.");
             }
@@ -89,7 +89,7 @@ namespace SMIS.Application.Features.Identity.Users.Commands
             var user = string.Equals(request.UserId, currentUserId, StringComparison.Ordinal)
                 ? signedInUser
                 : await _userManager.FindByIdAsync(request.UserId);
-            if (user == null) return Result<UserDto>.NotFoundResult(request.UserId);
+            if (user == null) return Result<UserDto>.NotFound(request.UserId);
 
             string[]? requestedRoles = null;
             if (isSuperAdmin && request.UserUpdateDto.Roles is not null)
@@ -103,7 +103,7 @@ namespace SMIS.Application.Features.Identity.Users.Commands
 
                 if (canonicalRoles.Any(role => role is null))
                 {
-                    return Result<UserDto>.FailureResult(
+                    return Result<UserDto>.BusinessRule(
                         "InvalidRole",
                         $"Roles must be one of: {string.Join(", ", SD.AllRoles)}.");
                 }
@@ -112,7 +112,7 @@ namespace SMIS.Application.Features.Identity.Users.Commands
                 foreach (var role in requestedRoles)
                 {
                     if (!await _roleManager.RoleExistsAsync(role))
-                        return Result<UserDto>.FailureResult("InvalidRole", $"Role '{role}' is not configured.");
+                        return Result<UserDto>.BusinessRule("InvalidRole", $"Role '{role}' is not configured.");
                 }
 
                 if (!requestedRoles.Contains(SD.Role_Super_Admin, StringComparer.OrdinalIgnoreCase) &&
@@ -120,7 +120,7 @@ namespace SMIS.Application.Features.Identity.Users.Commands
                         user.Id,
                         cancellationToken))
                 {
-                    return Result<UserDto>.FailureResult(
+                    return Result<UserDto>.BusinessRule(
                         "LastSuperAdmin",
                         "The SuperAdmin role cannot be removed from the last SuperAdmin account.");
                 }
@@ -134,7 +134,7 @@ namespace SMIS.Application.Features.Identity.Users.Commands
                     cancellationToken);
                 if (assignedShop is null || assignedShop.IsDeleted || !assignedShop.IsActive)
                 {
-                    return Result<UserDto>.FailureResult(
+                    return Result<UserDto>.BusinessRule(
                         "InvalidShop",
                         "The assigned shop does not exist or is inactive.");
                 }
@@ -146,7 +146,7 @@ namespace SMIS.Application.Features.Identity.Users.Commands
                 language = await _languageRepository.GetByIdAsync(request.UserUpdateDto.LanguageId);
                 if (language is null || !language.IsActive)
                 {
-                    return Result<UserDto>.FailureResult(
+                    return Result<UserDto>.BusinessRule(
                         "InvalidLanguage",
                         "The selected language does not exist or is inactive.");
                 }
@@ -178,7 +178,7 @@ namespace SMIS.Application.Features.Identity.Users.Commands
                 if (!updateResult.Succeeded)
                 {
                     await _unitOfWork.RollbackTransactionAsync(cancellationToken);
-                    return Result<UserDto>.WithErrors(updateResult.Errors.Select(e => new ValidationError
+                    return Result<UserDto>.Failure(updateResult.Errors.Select(e => new Error
                     {
                         Code = e.Code,
                         Description = e.Description
@@ -197,7 +197,7 @@ namespace SMIS.Application.Features.Identity.Users.Commands
                         if (!removeResult.Succeeded)
                         {
                             await _unitOfWork.RollbackTransactionAsync(cancellationToken);
-                            return Result<UserDto>.WithErrors(removeResult.Errors.Select(e => new ValidationError
+                            return Result<UserDto>.Failure(removeResult.Errors.Select(e => new Error
                                 { Code = e.Code, Description = e.Description }).ToList());
                         }
                     }
@@ -208,7 +208,7 @@ namespace SMIS.Application.Features.Identity.Users.Commands
                         if (!addResult.Succeeded)
                         {
                             await _unitOfWork.RollbackTransactionAsync(cancellationToken);
-                            return Result<UserDto>.WithErrors(addResult.Errors.Select(e => new ValidationError
+                            return Result<UserDto>.Failure(addResult.Errors.Select(e => new Error
                                 { Code = e.Code, Description = e.Description }).ToList());
                         }
                     }
@@ -222,7 +222,7 @@ namespace SMIS.Application.Features.Identity.Users.Commands
 
                 var dto = _mapper.Map<UserDto>(user);
                 dto.Roles = (await _userManager.GetRolesAsync(user)).ToList();
-                return Result<UserDto>.SuccessResult(dto);
+                return Result<UserDto>.Success(dto);
             }
             catch
             {

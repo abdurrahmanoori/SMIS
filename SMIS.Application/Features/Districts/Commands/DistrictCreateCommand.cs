@@ -36,7 +36,7 @@ namespace SMIS.Application.Features.Districts.Commands
 
             await _districtRepository.AddAsync(entity);
             await _unitOfWork.SaveChanges(cancellationToken);
-            return Result<DistrictDto>.SuccessResult(_mapper.Map<DistrictDto>(entity));
+            return Result<DistrictDto>.Success(_mapper.Map<DistrictDto>(entity));
         }
     }
 }

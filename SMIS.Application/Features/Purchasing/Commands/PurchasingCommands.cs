@@ -58,13 +58,13 @@ internal sealed class PurchasingCommandHandler :
     {
         var shopId = _currentUser.GetShopId();
         if (string.IsNullOrWhiteSpace(shopId))
-            return Result<SupplierDto>.FailureResult("ShopContextRequired", "An active shop is required.");
+            return Result<SupplierDto>.Forbidden("supplier.shop_context_required", "An active shop is required.");
 
         var duplicate = await _db.Suppliers.AnyAsync(
             supplier => supplier.ShopId == shopId && supplier.Name == request.Dto.Name,
             cancellationToken);
         if (duplicate)
-            return Result<SupplierDto>.FailureResult("DuplicateSupplier",
+            return Result<SupplierDto>.Conflict("supplier.name_conflict",
                 "A supplier with this name already exists in the shop.");
 
         var supplier = Supplier.Create(
@@ -75,7 +75,7 @@ internal sealed class PurchasingCommandHandler :
 
         await _db.Suppliers.AddAsync(supplier, cancellationToken);
         await _unitOfWork.SaveChanges(cancellationToken);
-        return Result<SupplierDto>.SuccessResult(PurchasingDtoMapper.ToDto(supplier));
+        return Result<SupplierDto>.Success(PurchasingDtoMapper.ToDto(supplier));
     }
 
     public async Task<Result<PurchaseOrderDto>> Handle(
@@ -86,30 +86,31 @@ internal sealed class PurchasingCommandHandler :
         var dto = request.Dto;
         var shopId = _currentUser.GetShopId();
         if (string.IsNullOrWhiteSpace(shopId))
-            return Result<PurchaseOrderDto>.FailureResult("ShopContextRequired", "An active shop is required.");
+            return Result<PurchaseOrderDto>.Forbidden("purchase_order.shop_context_required",
+                "An active shop is required.");
 
         var reservation = await _idempotency.ReserveAsync(
             "purchase-order:create",
             dto.IdempotencyKey,
             cancellationToken);
-        if (!reservation.Success)
+        if (!reservation.IsSuccess)
             return Failure<PurchaseOrderDto, bool>(reservation);
 
         var supplier = await _db.Suppliers.FirstOrDefaultAsync(
             item => item.Id == dto.SupplierId && item.ShopId == shopId,
             cancellationToken);
         if (supplier is null || !supplier.IsActive)
-            return Result<PurchaseOrderDto>.FailureResult(
+            return Result<PurchaseOrderDto>.NotFound(
                 "SupplierNotFoundOrInactive",
                 "The selected supplier does not exist in this shop or is inactive.");
 
         if (dto.Lines.Count == 0)
-            return Result<PurchaseOrderDto>.FailureResult("PurchaseOrderLinesRequired",
+            return Result<PurchaseOrderDto>.BusinessRule("PurchaseOrderLinesRequired",
                 "A purchase order requires at least one line.");
 
         if (dto.Lines.Select(line => line.ProductUnitId).Distinct(StringComparer.Ordinal).Count() != dto.Lines.Count)
-            return Result<PurchaseOrderDto>.FailureResult(
-                "DuplicatePurchaseOrderLine",
+            return Result<PurchaseOrderDto>.Conflict(
+                "purchase_order.duplicate_line",
                 "A product unit can appear only once in a purchase order.");
 
         var order = PurchaseOrder.Create(
@@ -129,7 +130,7 @@ internal sealed class PurchasingCommandHandler :
                     cancellationToken);
 
             if (productUnit?.Product is null || productUnit.Product.ShopId != shopId)
-                return Result<PurchaseOrderDto>.FailureResult(
+                return Result<PurchaseOrderDto>.BusinessRule(
                     "PurchaseOrderProductMismatch",
                     "Every purchase-order product unit must belong to a product in the selected shop.");
 
@@ -148,7 +149,7 @@ internal sealed class PurchasingCommandHandler :
         await _db.PurchaseOrders.AddAsync(order, cancellationToken);
         await _unitOfWork.SaveChanges(cancellationToken);
 
-        return Result<PurchaseOrderDto>.SuccessResult(PurchasingDtoMapper.ToDto(order));
+        return Result<PurchaseOrderDto>.Success(PurchasingDtoMapper.ToDto(order));
     }
 
     public async Task<Result<PurchaseOrderDto>> Handle(
@@ -158,24 +159,24 @@ internal sealed class PurchasingCommandHandler :
     {
         var order = await LoadOrderAsync(request.Id, cancellationToken);
         if (order is null)
-            return Result<PurchaseOrderDto>.NotFoundResult(request.Id);
+            return Result<PurchaseOrderDto>.NotFound(request.Id);
         if (order.Status == PurchaseOrderStatus.Cancelled)
-            return Result<PurchaseOrderDto>.FailureResult("PurchaseOrderCancelled",
+            return Result<PurchaseOrderDto>.BusinessRule("PurchaseOrderCancelled",
                 "A cancelled purchase order cannot receive stock.");
 
         var reservation = await _idempotency.ReserveAsync(
             $"purchase-order:receive:{order.Id}",
             request.Dto.IdempotencyKey,
             cancellationToken);
-        if (!reservation.Success)
+        if (!reservation.IsSuccess)
             return Failure<PurchaseOrderDto, bool>(reservation);
 
         if (request.Dto.Lines.Count == 0)
-            return Result<PurchaseOrderDto>.FailureResult("ReceiptLinesRequired",
+            return Result<PurchaseOrderDto>.BusinessRule("ReceiptLinesRequired",
                 "At least one receipt line is required.");
         if (request.Dto.Lines.Select(line => line.PurchaseOrderLineId).Distinct(StringComparer.Ordinal).Count() !=
             request.Dto.Lines.Count)
-            return Result<PurchaseOrderDto>.FailureResult("DuplicateReceiptLine",
+            return Result<PurchaseOrderDto>.Conflict("purchase_receipt.duplicate_line",
                 "A purchase-order line can appear only once per receipt.");
 
         var occurredAtUtc = request.Dto.OccurredAtUtc ?? DateTimeService.NowUtc;
@@ -184,12 +185,12 @@ internal sealed class PurchasingCommandHandler :
         {
             var line = order.Lines.FirstOrDefault(item => item.Id == receipt.PurchaseOrderLineId);
             if (line is null)
-                return Result<PurchaseOrderDto>.FailureResult(
+                return Result<PurchaseOrderDto>.NotFound(
                     "PurchaseOrderLineNotFound",
                     "A receipt line does not belong to this purchase order.");
 
             if (receipt.QuantityEntered <= 0 || receipt.QuantityEntered > line.RemainingToReceiveQuantityEntered)
-                return Result<PurchaseOrderDto>.FailureResult(
+                return Result<PurchaseOrderDto>.BusinessRule(
                     "InvalidReceiptQuantity",
                     "Received quantity must be positive and cannot exceed the remaining ordered quantity.");
 
@@ -207,7 +208,7 @@ internal sealed class PurchasingCommandHandler :
                     operationId),
                 cancellationToken);
 
-            if (!inventoryResult.Success)
+            if (!inventoryResult.IsSuccess)
                 return Failure<PurchaseOrderDto, StockBatch>(inventoryResult);
 
             line.RegisterReceipt(receipt.QuantityEntered);
@@ -215,7 +216,7 @@ internal sealed class PurchasingCommandHandler :
 
         order.RefreshReceiptStatus();
         await _unitOfWork.SaveChanges(cancellationToken);
-        return Result<PurchaseOrderDto>.SuccessResult(PurchasingDtoMapper.ToDto(order));
+        return Result<PurchaseOrderDto>.Success(PurchasingDtoMapper.ToDto(order));
     }
 
     public async Task<Result<PurchaseOrderDto>> Handle(
@@ -225,19 +226,19 @@ internal sealed class PurchasingCommandHandler :
     {
         var order = await LoadOrderAsync(request.Id, cancellationToken);
         if (order is null)
-            return Result<PurchaseOrderDto>.NotFoundResult(request.Id);
+            return Result<PurchaseOrderDto>.NotFound(request.Id);
 
         var dto = request.Dto;
         var reservation = await _idempotency.ReserveAsync(
             $"purchase-order:supplier-return:{order.Id}",
             dto.IdempotencyKey,
             cancellationToken);
-        if (!reservation.Success)
+        if (!reservation.IsSuccess)
             return Failure<PurchaseOrderDto, bool>(reservation);
 
         var line = order.Lines.FirstOrDefault(item => item.Id == dto.PurchaseOrderLineId);
         if (line is null)
-            return Result<PurchaseOrderDto>.FailureResult(
+            return Result<PurchaseOrderDto>.NotFound(
                 "PurchaseOrderLineNotFound",
                 "The supplier-return line does not belong to this purchase order.");
 
@@ -250,12 +251,12 @@ internal sealed class PurchasingCommandHandler :
             cancellationToken);
 
         if (!batchBelongsToReceipt)
-            return Result<PurchaseOrderDto>.FailureResult(
+            return Result<PurchaseOrderDto>.BusinessRule(
                 "SupplierReturnBatchMismatch",
                 "The selected batch was not received for this purchase-order line.");
 
         if (dto.QuantityEntered <= 0 || dto.QuantityEntered > line.NetReceivedQuantityEntered)
-            return Result<PurchaseOrderDto>.FailureResult(
+            return Result<PurchaseOrderDto>.BusinessRule(
                 "InvalidSupplierReturnQuantity",
                 "Supplier-return quantity must be positive and cannot exceed net received quantity.");
 
@@ -272,12 +273,12 @@ internal sealed class PurchasingCommandHandler :
                 Guid.NewGuid().ToString()),
             cancellationToken);
 
-        if (!inventoryResult.Success)
+        if (!inventoryResult.IsSuccess)
             return Failure<PurchaseOrderDto, StockMovement>(inventoryResult);
 
         line.RegisterSupplierReturn(dto.QuantityEntered);
         await _unitOfWork.SaveChanges(cancellationToken);
-        return Result<PurchaseOrderDto>.SuccessResult(PurchasingDtoMapper.ToDto(order));
+        return Result<PurchaseOrderDto>.Success(PurchasingDtoMapper.ToDto(order));
     }
 
     public async Task<Result<PurchaseOrderDto>> Handle(
@@ -287,11 +288,11 @@ internal sealed class PurchasingCommandHandler :
     {
         var order = await LoadOrderAsync(request.Id, cancellationToken);
         if (order is null)
-            return Result<PurchaseOrderDto>.NotFoundResult(request.Id);
+            return Result<PurchaseOrderDto>.NotFound(request.Id);
 
         order.Cancel();
         await _unitOfWork.SaveChanges(cancellationToken);
-        return Result<PurchaseOrderDto>.SuccessResult(PurchasingDtoMapper.ToDto(order));
+        return Result<PurchaseOrderDto>.Success(PurchasingDtoMapper.ToDto(order));
     }
 
     private Task<PurchaseOrder?> LoadOrderAsync(
@@ -311,12 +312,7 @@ internal sealed class PurchasingCommandHandler :
 
     private static Result<TTarget> Failure<TTarget, TSource>(
         Result<TSource> source
-    ) => new()
-    {
-        Success = false,
-        Message = source.Message,
-        Errors = source.Errors
-    };
+    ) => Result<TTarget>.Failure(source.Errors);
 }
 
 internal static class PurchasingDtoMapper

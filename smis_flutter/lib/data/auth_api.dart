@@ -49,12 +49,12 @@ class DioAuthApi implements AuthApi {
       final session = AuthSession.fromJson(data);
       try {
         return await _withPermissions(session);
-      } catch (_) {
-        // Authentication succeeded even if the authorization metadata endpoint
-        // is temporarily unavailable. Keep the session, but fail closed: with
-        // no component/task permissions loaded, protected features remain hidden
-        // until the normal session-refresh path can retrieve them successfully.
-        return session;
+      } on DioException catch (permissionError) {
+        // Preserve offline-first login only when no server response exists.
+        // If the server actually rejected the permission request, let the outer
+        // parser surface its exact ProblemDetails response.
+        if (permissionError.response == null) return session;
+        rethrow;
       }
     } catch (error, stackTrace) {
       ApiErrorParser.mapAndThrow(
