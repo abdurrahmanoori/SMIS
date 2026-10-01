@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -213,10 +212,9 @@ class _LoginError extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
-    final rawMessage = error is AppException
-        ? (error as AppException).message
-        : error.toString();
-    final message = context.l10n.errorMessage(rawMessage);
+    final messages = AppErrorPresentation.messages(context, error);
+    final referenceId = AppErrorPresentation.referenceId(error);
+    final showDevelopmentDetails = AppErrorPresentation.showDevelopmentDetails;
 
     return DecoratedBox(
       decoration: BoxDecoration(
@@ -229,36 +227,75 @@ class _LoginError extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Icon(Icons.error_outline, color: colors.onErrorContainer),
                 const SizedBox(width: 10),
                 Expanded(
-                  child: Text(
-                    message,
-                    style: TextStyle(color: colors.onErrorContainer),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      for (var index = 0; index < messages.length; index++) ...[
+                        if (index > 0) const SizedBox(height: 4),
+                        Text(
+                          messages[index],
+                          style: TextStyle(color: colors.onErrorContainer),
+                        ),
+                      ],
+                      if (!showDevelopmentDetails && referenceId != null) ...[
+                        const SizedBox(height: 6),
+                        Text(
+                          '${context.l10n.text('Reference')}: $referenceId',
+                          style: TextStyle(
+                            color: colors.onErrorContainer.withValues(
+                              alpha: 0.75,
+                            ),
+                            fontSize: 11,
+                          ),
+                        ),
+                      ],
+                    ],
                   ),
                 ),
               ],
             ),
-            if (kDebugMode) ...[
+            if (showDevelopmentDetails) ...[
               const SizedBox(height: 8),
-              Text(
-                '${context.l10n.text('Debug')}: ${error.runtimeType}',
-                style: TextStyle(
-                  color: colors.onErrorContainer.withValues(alpha: 0.7),
-                  fontSize: 10,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              if (error is AppException &&
-                  (error as AppException).cause != null)
-                Text(
-                  '${context.l10n.text('Cause')}: ${(error as AppException).cause}',
+              ExpansionTile(
+                tilePadding: EdgeInsets.zero,
+                childrenPadding: EdgeInsets.zero,
+                dense: true,
+                leading: const Icon(Icons.bug_report_outlined, size: 18),
+                title: Text(
+                  context.l10n.text('Development details'),
                   style: TextStyle(
-                    color: colors.onErrorContainer.withValues(alpha: 0.7),
-                    fontSize: 10,
+                    color: colors.onErrorContainer,
+                    fontSize: 11,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
+                children: [
+                  Container(
+                    width: double.infinity,
+                    constraints: const BoxConstraints(maxHeight: 220),
+                    padding: const EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      color: Colors.black87,
+                      borderRadius: BorderRadius.circular(6),
+                    ),
+                    child: SingleChildScrollView(
+                      child: SelectableText(
+                        AppErrorPresentation.developmentDetails(error),
+                        style: const TextStyle(
+                          color: Colors.greenAccent,
+                          fontFamily: 'monospace',
+                          fontSize: 10,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ],
           ],
         ),

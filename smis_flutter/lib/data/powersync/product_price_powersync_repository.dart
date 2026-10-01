@@ -18,7 +18,10 @@ class ProductPricePowerSyncRepository extends PowerSyncRepositorySupport {
     return db
         .watch(
           'SELECT pp.id, pp.product_unit_id, pp.sell_price, pp.effective_date, '
-          'pp.end_date, pp.last_modified_utc '
+          'pp.end_date, pp.last_modified_utc, '
+          '(SELECT message FROM sync_error WHERE table_name = '
+          'product_price'
+          ' AND record_id = pp.id) AS sync_error_message '
           'FROM product_price pp '
           'INNER JOIN product_unit pu ON pu.id = pp.product_unit_id '
           'INNER JOIN product p ON p.id = pu.product_id '
@@ -37,6 +40,7 @@ class ProductPricePowerSyncRepository extends PowerSyncRepositorySupport {
   }) async {
     final db = await database;
     final pending = await pendingOperations('product_price');
+    final errors = await syncErrors('product_price');
     final args = <Object?>[shopId];
     var where = 'p.shop_id = ?';
 
@@ -66,7 +70,11 @@ class ProductPricePowerSyncRepository extends PowerSyncRepositorySupport {
     }
 
     final rows = await db.getAll(sql, args);
-    return rows.map((row) => _toProductPrice(row, pending[row['id']])).toList();
+    return rows
+        .map(
+          (row) => _toProductPrice(row, pending[row['id']], errors[row['id']]),
+        )
+        .toList();
   }
 
   Future<int> getTotalCount(String shopId, {String? searchQuery}) async {
@@ -243,10 +251,15 @@ class ProductPricePowerSyncRepository extends PowerSyncRepositorySupport {
       throw const LocalStorageException('Product price was not found.');
     }
     final pending = await pendingOperations('product_price');
-    return _toProductPrice(row, pending[id]);
+    final errors = await syncErrors('product_price');
+    return _toProductPrice(row, pending[id], errors[id]);
   }
 
-  ProductPrice _toProductPrice(Map<String, Object?> row, String? operation) {
+  ProductPrice _toProductPrice(
+    Map<String, Object?> row,
+    String? operation,
+    String? syncError,
+  ) {
     return ProductPrice(
       id: row['id']! as String,
       productUnitId: row['product_unit_id']! as String,
@@ -254,11 +267,14 @@ class ProductPricePowerSyncRepository extends PowerSyncRepositorySupport {
       effectiveDate: DateTime.parse(row['effective_date']! as String).toUtc(),
       endDate: _optionalDate(row['end_date']),
       lastModifiedUtc: timestamp(row['last_modified_utc']),
-      syncStatus: operation == null
+      syncStatus: syncError != null
+          ? ProductPriceSyncStatus.failed
+          : operation == null
           ? ProductPriceSyncStatus.synced
           : operation == 'PUT'
           ? ProductPriceSyncStatus.pendingCreate
           : ProductPriceSyncStatus.pendingUpdate,
+      lastSyncError: syncError,
     );
   }
 

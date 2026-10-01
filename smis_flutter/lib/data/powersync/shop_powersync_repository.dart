@@ -18,7 +18,10 @@ class ShopPowerSyncRepository extends PowerSyncRepositorySupport {
     return db
         .watch(
           'SELECT id, name, shop_type, address, phone_number, email, '
-          'tax_number, is_active, last_modified_utc FROM shop',
+          'tax_number, is_active, last_modified_utc, '
+          '(SELECT message FROM sync_error WHERE table_name = '
+          'shop'
+          ' AND record_id = shop.id) AS sync_error_message FROM shop',
           throttle: const Duration(milliseconds: 250),
         )
         .map((_) {});
@@ -27,6 +30,7 @@ class ShopPowerSyncRepository extends PowerSyncRepositorySupport {
   Future<List<Shop>> getAll({String? searchQuery}) async {
     final db = await database;
     final pending = await pendingOperations('shop');
+    final errors = await syncErrors('shop');
     final args = <Object?>[];
     var where = '1 = 1';
     if (searchQuery != null && searchQuery.trim().isNotEmpty) {
@@ -40,7 +44,9 @@ class ShopPowerSyncRepository extends PowerSyncRepositorySupport {
       'ORDER BY name COLLATE NOCASE ASC',
       args,
     );
-    return rows.map((row) => _toShop(row, pending[row['id']])).toList();
+    return rows
+        .map((row) => _toShop(row, pending[row['id']], errors[row['id']]))
+        .toList();
   }
 
   Future<Shop> create(ShopDraft draft) async {
@@ -130,10 +136,11 @@ class ShopPowerSyncRepository extends PowerSyncRepositorySupport {
     );
     if (row == null) throw const LocalStorageException('Shop was not found.');
     final pending = await pendingOperations('shop');
-    return _toShop(row, pending[id]);
+    final errors = await syncErrors('shop');
+    return _toShop(row, pending[id], errors[id]);
   }
 
-  Shop _toShop(Map<String, Object?> row, String? operation) {
+  Shop _toShop(Map<String, Object?> row, String? operation, String? syncError) {
     final changedAt = timestamp(row['last_modified_utc']);
     return Shop(
       id: row['id']! as String,
@@ -147,11 +154,14 @@ class ShopPowerSyncRepository extends PowerSyncRepositorySupport {
       createdAt: changedAt,
       updatedAt: changedAt,
       lastModifiedUtc: changedAt,
-      syncStatus: operation == null
+      syncStatus: syncError != null
+          ? ShopSyncStatus.failed
+          : operation == null
           ? ShopSyncStatus.synced
           : operation == 'PUT'
           ? ShopSyncStatus.pendingCreate
           : ShopSyncStatus.pendingUpdate,
+      lastSyncError: syncError,
     );
   }
 

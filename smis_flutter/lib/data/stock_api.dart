@@ -19,14 +19,17 @@ num stockNumber(StockJson row, String key) =>
 /// Inventory changes are posted by the API as atomic ledger transactions.
 class StockApi {
   StockApi({Dio? dio, AuthSessionStore? sessionStore})
-    : _dio = dio ??
-          Dio(BaseOptions(
-            baseUrl: AppConfig.apiBaseUrl,
-            connectTimeout: const Duration(seconds: 10),
-            receiveTimeout: const Duration(seconds: 25),
-            sendTimeout: const Duration(seconds: 25),
-            headers: const {'Accept': 'application/json'},
-          )) {
+    : _dio =
+          dio ??
+          Dio(
+            BaseOptions(
+              baseUrl: AppConfig.apiBaseUrl,
+              connectTimeout: const Duration(seconds: 10),
+              receiveTimeout: const Duration(seconds: 25),
+              sendTimeout: const Duration(seconds: 25),
+              headers: const {'Accept': 'application/json'},
+            ),
+          ) {
     _dio.interceptors.add(
       BearerTokenInterceptor(sessionStore ?? SecureAuthSessionStore()),
     );
@@ -45,12 +48,18 @@ class StockApi {
       'expiration' => AppConfig.inventoryEndpoint + '/expired-stock',
       'customer-return' => AppConfig.inventoryEndpoint + '/customer-returns',
       'supplier-return' => AppConfig.inventoryEndpoint + '/supplier-returns',
-      'count-complete' => AppConfig.inventoryEndpoint +
-          '/stock-counts/' + (payload['sessionId'] as String) + '/complete',
-      'batch-update' => AppConfig.stockBatchEndpoint +
-          '/' + (payload['batchId'] as String),
-      'reverse' => AppConfig.stockMovementEndpoint +
-          '/' + (payload['movementId'] as String) + '/reverse',
+      'count-complete' =>
+        AppConfig.inventoryEndpoint +
+            '/stock-counts/' +
+            (payload['sessionId'] as String) +
+            '/complete',
+      'batch-update' =>
+        AppConfig.stockBatchEndpoint + '/' + (payload['batchId'] as String),
+      'reverse' =>
+        AppConfig.stockMovementEndpoint +
+            '/' +
+            (payload['movementId'] as String) +
+            '/reverse',
       _ => throw ArgumentError.value(kind, 'kind', 'Unknown stock command'),
     };
     final body = Map<String, dynamic>.from(payload)
@@ -67,10 +76,7 @@ class StockApi {
         await _dio.post<Object?>(path);
       } on DioException catch (error) {
         final response = error.response?.data;
-        if (error.response?.statusCode == 400 &&
-            response is List &&
-            response.any((item) => item is Map &&
-                (item['code'] ?? item['Code']) == 'MovementAlreadyReversed')) {
+        if (ApiErrorParser.hasErrorCode(response, 'MovementAlreadyReversed')) {
           return;
         }
         rethrow;
@@ -83,10 +89,7 @@ class StockApi {
       final response = error.response?.data;
       // A response can be lost after the server commits. The backend records
       // the stable idempotency key and rejects a replay with this exact code.
-      if (error.response?.statusCode == 400 &&
-          response is List &&
-          response.any((item) => item is Map &&
-              (item['code'] ?? item['Code']) == 'DuplicateOperation')) {
+      if (ApiErrorParser.hasErrorCode(response, 'DuplicateOperation')) {
         return;
       }
       rethrow;
@@ -114,13 +117,15 @@ class StockApi {
       } on DioException catch (error) {
         // The existing list endpoint returns 400/EmptyList for an empty page.
         final body = error.response?.data;
-        if (body is List &&
-            body.any((item) => item is Map && item['code'] == 'EmptyList')) {
+        if (ApiErrorParser.hasErrorCode(body, 'EmptyList') ||
+            ApiErrorParser.hasErrorCode(body, 'common.empty')) {
           break;
         }
         rethrow;
       }
-      final items = _list(response.data?['items'] ?? response.data?['Items'] ?? []);
+      final items = _list(
+        response.data?['items'] ?? response.data?['Items'] ?? [],
+      );
       batches.addAll(items);
       if (items.length < size) break;
     }
@@ -231,15 +236,14 @@ class StockApi {
     );
   });
 
-  Future<List<StockJson>> report(String path, {
-    Map<String, dynamic>? query,
-  }) => _request(() async {
-    final response = await _dio.get<List<dynamic>>(
-      AppConfig.inventoryEndpoint + '/reports/' + path,
-      queryParameters: query,
-    );
-    return _list(response.data ?? []);
-  });
+  Future<List<StockJson>> report(String path, {Map<String, dynamic>? query}) =>
+      _request(() async {
+        final response = await _dio.get<List<dynamic>>(
+          AppConfig.inventoryEndpoint + '/reports/' + path,
+          queryParameters: query,
+        );
+        return _list(response.data ?? []);
+      });
 
   Future<StockJson> valuation() => _request(() async {
     final response = await _dio.get<StockJson>(

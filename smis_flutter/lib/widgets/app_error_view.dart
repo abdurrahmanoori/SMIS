@@ -1,6 +1,5 @@
-import 'package:dio/dio.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+
 import '../data/data_exception.dart';
 import '../l10n/app_localizations.dart';
 
@@ -21,10 +20,9 @@ class AppErrorView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
-    final rawMessage = error is AppException
-        ? (error as AppException).message
-        : error.toString();
-    final message = context.l10n.errorMessage(rawMessage);
+    final messages = AppErrorPresentation.messages(context, error);
+    final referenceId = AppErrorPresentation.referenceId(error);
+    final showDevelopmentDetails = AppErrorPresentation.showDevelopmentDetails;
 
     return Center(
       child: Padding(
@@ -40,14 +38,25 @@ class AppErrorView extends StatelessWidget {
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 8),
-            Text(
-              message,
-              textAlign: TextAlign.center,
-              style: Theme.of(context).textTheme.bodyMedium,
-            ),
-            if (kDebugMode) ...[
+            for (var index = 0; index < messages.length; index++) ...[
+              if (index > 0) const SizedBox(height: 6),
+              Text(
+                messages[index],
+                textAlign: TextAlign.center,
+                style: Theme.of(context).textTheme.bodyMedium,
+              ),
+            ],
+            if (!showDevelopmentDetails && referenceId != null) ...[
+              const SizedBox(height: 8),
+              Text(
+                '${context.l10n.text('Reference')}: $referenceId',
+                textAlign: TextAlign.center,
+                style: Theme.of(context).textTheme.bodySmall,
+              ),
+            ],
+            if (showDevelopmentDetails) ...[
               const SizedBox(height: 24),
-              _DebugErrorDetails(error: error, stackTrace: stackTrace),
+              _DevelopmentErrorDetails(error: error, stackTrace: stackTrace),
             ],
             if (onRetry != null) ...[
               const SizedBox(height: 24),
@@ -64,32 +73,27 @@ class AppErrorView extends StatelessWidget {
   }
 
   IconData _iconFor(Object error) {
-    if (error is AuthenticationException) return Icons.lock_outline;
+    if (error is AuthenticationException || error is AuthorizationException) {
+      return Icons.lock_outline;
+    }
     if (error is RemoteTransientException) return Icons.cloud_off_outlined;
     return Icons.error_outline;
   }
 }
 
-class _DebugErrorDetails extends StatefulWidget {
-  const _DebugErrorDetails({required this.error, this.stackTrace});
+class _DevelopmentErrorDetails extends StatefulWidget {
+  const _DevelopmentErrorDetails({required this.error, this.stackTrace});
 
   final Object error;
   final StackTrace? stackTrace;
 
   @override
-  State<_DebugErrorDetails> createState() => _DebugErrorDetailsState();
+  State<_DevelopmentErrorDetails> createState() =>
+      _DevelopmentErrorDetailsState();
 }
 
-class _DebugErrorDetailsState extends State<_DebugErrorDetails> {
+class _DevelopmentErrorDetailsState extends State<_DevelopmentErrorDetails> {
   bool _expanded = false;
-
-  DioException? _extractDioException(Object error) {
-    if (error is DioException) return error;
-    if (error is AppException && error.cause is DioException) {
-      return error.cause as DioException;
-    }
-    return null;
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -114,112 +118,32 @@ class _DebugErrorDetailsState extends State<_DebugErrorDetails> {
             ),
             body: Padding(
               padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _DetailItem(
-                    label: context.l10n.text('Type'),
-                    value: widget.error.runtimeType.toString(),
+              child: Container(
+                width: double.infinity,
+                constraints: const BoxConstraints(maxHeight: 360),
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: Colors.black87,
+                  borderRadius: BorderRadius.circular(6),
+                ),
+                child: SingleChildScrollView(
+                  child: SelectableText(
+                    AppErrorPresentation.developmentDetails(
+                      widget.error,
+                      widget.stackTrace,
+                    ),
+                    style: const TextStyle(
+                      color: Colors.greenAccent,
+                      fontFamily: 'monospace',
+                      fontSize: 10,
+                    ),
                   ),
-                  if (widget.error is AppException) ...[
-                    _DetailItem(
-                      label: context.l10n.text('Cause type'),
-                      value:
-                          (widget.error as AppException).cause?.runtimeType
-                              .toString() ??
-                          context.l10n.text('None'),
-                    ),
-                    if ((widget.error as AppException).cause case final cause?)
-                      _DetailItem(
-                        label: context.l10n.text('Cause message'),
-                        value: cause.toString(),
-                      ),
-                  ],
-                  if (_extractDioException(widget.error)
-                      case final dioError?) ...[
-                    const Divider(),
-                    Text(
-                      '${context.l10n.text('Network details')}:',
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 11,
-                      ),
-                    ),
-                    _DetailItem(
-                      label: context.l10n.text('Method'),
-                      value: dioError.requestOptions.method,
-                    ),
-                    _DetailItem(
-                      label: context.l10n.text('Path'),
-                      value: dioError.requestOptions.path,
-                    ),
-                    _DetailItem(
-                      label: context.l10n.text('Status'),
-                      value: dioError.response?.statusCode?.toString() ?? 'N/A',
-                    ),
-                  ],
-                  if (widget.stackTrace != null) ...[
-                    const SizedBox(height: 8),
-                    Text(
-                      '${context.l10n.text('Stack trace')}:',
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 12,
-                      ),
-                    ),
-                    const SizedBox(height: 4),
-                    Container(
-                      padding: const EdgeInsets.all(8),
-                      decoration: BoxDecoration(
-                        color: Colors.black87,
-                        borderRadius: BorderRadius.circular(4),
-                      ),
-                      constraints: const BoxConstraints(maxHeight: 200),
-                      width: double.infinity,
-                      child: SingleChildScrollView(
-                        child: Text(
-                          widget.stackTrace.toString(),
-                          style: const TextStyle(
-                            color: Colors.greenAccent,
-                            fontFamily: 'monospace',
-                            fontSize: 10,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ],
+                ),
               ),
             ),
             isExpanded: _expanded,
           ),
         ],
-      ),
-    );
-  }
-}
-
-class _DetailItem extends StatelessWidget {
-  const _DetailItem({required this.label, required this.value});
-
-  final String label;
-  final String value;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 2),
-      child: RichText(
-        text: TextSpan(
-          style: Theme.of(context).textTheme.bodySmall,
-          children: [
-            TextSpan(
-              text: '$label: ',
-              style: const TextStyle(fontWeight: FontWeight.bold),
-            ),
-            TextSpan(text: value),
-          ],
-        ),
       ),
     );
   }
