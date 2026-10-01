@@ -31,7 +31,9 @@ internal sealed class DistrictQueryHandler
             .Select(district => new DistrictDto
             {
                 Id = district.Id,
-                Name = district.Name
+                Name = district.Name,
+                ProvinceId = district.ProvinceId,
+                ProvinceName = district.Province.Name
             });
 
         var pagedList = await query

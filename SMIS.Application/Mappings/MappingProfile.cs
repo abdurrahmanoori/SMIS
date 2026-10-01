@@ -95,7 +95,8 @@ public class MappingProfile : Profile
             .ForMember(dest => dest.LanguageId, opt => opt.MapFrom(src => src.LanguageId));
 
         // District mapping
-        CreateMap<District, DistrictDto>().ReverseMap();
+        CreateMap<District, DistrictDto>()
+            .ForMember(dest => dest.ProvinceName, opt => opt.MapFrom(src => src.Province.Name));
         CreateMap<District, DistrictCreateDto>().ReverseMap();
 
         // Shop mapping

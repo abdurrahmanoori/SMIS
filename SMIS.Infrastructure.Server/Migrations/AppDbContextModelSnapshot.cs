@@ -3263,6 +3263,11 @@ namespace SMIS.Infrastructure.Server.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
 
+                    b.Property<string>("ProvinceId")
+                        .IsRequired()
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<string>("UpdatedBy")
                         .HasMaxLength(450)
                         .HasColumnType("nvarchar(450)");
@@ -3277,6 +3282,8 @@ namespace SMIS.Infrastructure.Server.Migrations
 
                     b.HasIndex("CreatedBy");
 
+                    b.HasIndex("ProvinceId");
+
                     b.HasIndex("UpdatedBy");
 
                     b.ToTable("Districts");
@@ -3288,6 +3295,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                             IsDeleted = false,
                             LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             Name = "Kabul Center",
+                            ProvinceId = "77777777-0000-0000-0000-000000000001",
                             Version = 0
                         },
                         new
@@ -3296,6 +3304,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                             IsDeleted = false,
                             LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             Name = "Kabul North",
+                            ProvinceId = "77777777-0000-0000-0000-000000000001",
                             Version = 0
                         },
                         new
@@ -3304,6 +3313,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                             IsDeleted = false,
                             LastModifiedUtc = "2026-01-01 00:00:00.000000",
                             Name = "Herat Center",
+                            ProvinceId = "77777777-0000-0000-0000-000000000002",
                             Version = 0
                         });
                 });
@@ -6960,10 +6970,18 @@ namespace SMIS.Infrastructure.Server.Migrations
                         .HasForeignKey("CreatedBy")
                         .OnDelete(DeleteBehavior.Restrict);
 
+                    b.HasOne("SMIS.Domain.Entities.LocationEntities.Province", "Province")
+                        .WithMany("Districts")
+                        .HasForeignKey("ProvinceId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.HasOne("SMIS.Domain.Entities.Identity.Entity.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UpdatedBy")
                         .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("Province");
                 });
 
             modelBuilder.Entity("SMIS.Domain.Entities.LocationEntities.Province", b =>
@@ -7452,6 +7470,8 @@ namespace SMIS.Infrastructure.Server.Migrations
 
             modelBuilder.Entity("SMIS.Domain.Entities.LocationEntities.Province", b =>
                 {
+                    b.Navigation("Districts");
+
                     b.Navigation("Translations");
                 });
 
