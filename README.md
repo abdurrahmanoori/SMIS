@@ -35,7 +35,6 @@ repository does not already provide.
 - **ASP.NET Core Web API** - RESTful API
 - **Entity Framework Core 9** - ORM with SQLite support
 - **MediatR** - CQRS pattern implementation
-- **AutoMapper** - Object-to-object mapping
 - **FluentValidation** - Input validation
 - **Serilog** - Structured logging with Seq integration
 - **MiniProfiler** - Performance profiling
@@ -271,9 +270,8 @@ Application logging for monitoring and debugging.
 - **Extensions/** - Service configuration extensions
 
 ### SMIS.Application
-- **Features/** - CQRS commands & queries
+- **Features/** - CQRS commands, queries, and explicit mapping helpers
 - **DTO/** - Data transfer objects
-- **Mappings/** - AutoMapper profiles
 - **Services/** - Application services
 - **Repositories/** - Repository interfaces
 
