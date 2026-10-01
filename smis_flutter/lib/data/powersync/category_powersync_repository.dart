@@ -21,11 +21,9 @@ class CategoryPowerSyncRepository extends PowerSyncRepositorySupport {
           'SELECT category.id, category.name, category.code, '
           'category.description, category.is_active, category.shop_id, category.last_modified_utc, '
           'sync_error.message AS sync_error_message '
-          'FROM category LEFT JOIN sync_error ON sync_error.table_name = '
-          'category'
-          ' '
+          'FROM category LEFT JOIN sync_error ON sync_error.table_name = ? '
           'AND sync_error.record_id = category.id WHERE category.shop_id = ?',
-          parameters: [shopId],
+          parameters: ['category', shopId],
           throttle: const Duration(milliseconds: 250),
         )
         .map((_) {});

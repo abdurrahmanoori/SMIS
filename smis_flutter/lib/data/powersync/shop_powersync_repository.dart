@@ -19,9 +19,9 @@ class ShopPowerSyncRepository extends PowerSyncRepositorySupport {
         .watch(
           'SELECT id, name, shop_type, address, phone_number, email, '
           'tax_number, is_active, last_modified_utc, '
-          '(SELECT message FROM sync_error WHERE table_name = '
-          'shop'
-          ' AND record_id = shop.id) AS sync_error_message FROM shop',
+          '(SELECT message FROM sync_error WHERE table_name = ? '
+          'AND record_id = shop.id) AS sync_error_message FROM shop',
+          parameters: ['shop'],
           throttle: const Duration(milliseconds: 250),
         )
         .map((_) {});

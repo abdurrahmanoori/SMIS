@@ -19,14 +19,13 @@ class ProductPricePowerSyncRepository extends PowerSyncRepositorySupport {
         .watch(
           'SELECT pp.id, pp.product_unit_id, pp.sell_price, pp.effective_date, '
           'pp.end_date, pp.last_modified_utc, '
-          '(SELECT message FROM sync_error WHERE table_name = '
-          'product_price'
-          ' AND record_id = pp.id) AS sync_error_message '
+          '(SELECT message FROM sync_error WHERE table_name = ? '
+          'AND record_id = pp.id) AS sync_error_message '
           'FROM product_price pp '
           'INNER JOIN product_unit pu ON pu.id = pp.product_unit_id '
           'INNER JOIN product p ON p.id = pu.product_id '
           'WHERE p.shop_id = ?',
-          parameters: [shopId],
+          parameters: ['product_price', shopId],
           throttle: const Duration(milliseconds: 250),
         )
         .map((_) {});

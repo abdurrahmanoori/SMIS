@@ -20,11 +20,10 @@ class ProductPowerSyncRepository extends PowerSyncRepositorySupport {
           'SELECT id, name, base_unit_id, sku, description, is_active, barcode, '
           'image_url, category_id, shop_id, reorder_point_base, '
           'reorder_quantity_base, last_modified_utc, '
-          '(SELECT message FROM sync_error WHERE table_name = '
-          'product'
-          ' AND record_id = product.id) AS sync_error_message '
+          '(SELECT message FROM sync_error WHERE table_name = ? '
+          'AND record_id = product.id) AS sync_error_message '
           'FROM product WHERE shop_id = ?',
-          parameters: [shopId],
+          parameters: ['product', shopId],
           throttle: const Duration(milliseconds: 250),
         )
         .map((_) {});

@@ -19,12 +19,11 @@ class ProductUnitPowerSyncRepository extends PowerSyncRepositorySupport {
         .watch(
           'SELECT pu.id, pu.product_id, pu.unit_of_measure_id, '
           'pu.base_unit_quantity, pu.last_modified_utc, '
-          '(SELECT message FROM sync_error WHERE table_name = '
-          'product_unit'
-          ' AND record_id = pu.id) AS sync_error_message '
+          '(SELECT message FROM sync_error WHERE table_name = ? '
+          'AND record_id = pu.id) AS sync_error_message '
           'FROM product_unit pu INNER JOIN product p ON p.id = pu.product_id '
           'WHERE p.shop_id = ?',
-          parameters: [shopId],
+          parameters: ['product_unit', shopId],
           throttle: const Duration(milliseconds: 250),
         )
         .map((_) {});

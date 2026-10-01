@@ -18,10 +18,10 @@ class UnitOfMeasurePowerSyncRepository extends PowerSyncRepositorySupport {
     return db
         .watch(
           'SELECT id, name, symbol, description, last_modified_utc, '
-          '(SELECT message FROM sync_error WHERE table_name = '
-          'unit_of_measure'
-          ' AND record_id = unit_of_measure.id) AS sync_error_message '
+          '(SELECT message FROM sync_error WHERE table_name = ? '
+          'AND record_id = unit_of_measure.id) AS sync_error_message '
           'FROM unit_of_measure',
+          parameters: ['unit_of_measure'],
           throttle: const Duration(milliseconds: 250),
         )
         .map((_) {});

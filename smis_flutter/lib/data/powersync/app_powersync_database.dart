@@ -7,6 +7,7 @@ import 'package:powersync/powersync.dart';
 
 import '../../services/auth_session_store.dart';
 import '../../services/date_time_service.dart';
+import '../data_exception.dart';
 import '../stock_api.dart';
 import '../stock_offline_store.dart';
 import 'app_powersync_connector.dart';
@@ -33,7 +34,9 @@ class AppPowerSyncDatabase {
 
   Future<PowerSyncDatabase> databaseForCurrentSession() async {
     final session = await _sessionStore.read();
-    if (session == null) throw StateError('User is not authenticated.');
+    if (session == null) {
+      throw const AuthenticationException('User is not authenticated.');
+    }
     final contextKey = _contextKey(session.userId, session.shopId);
     if (_database != null && _databaseContextKey == contextKey) {
       return _database!;
@@ -48,21 +51,21 @@ class AppPowerSyncDatabase {
 
   Future<PowerSyncDatabase> connectForCurrentSession() async {
     final session = await _sessionStore.read();
-    if (session == null) throw StateError('User is not authenticated.');
+    if (session == null) {
+      throw const AuthenticationException('User is not authenticated.');
+    }
     final database = await databaseForCurrentSession();
     final contextKey = _contextKey(session.userId, session.shopId);
     if (_connectedContextKey == contextKey) return database;
 
-    await (_connectFuture ??= _connect(database, contextKey)).whenComplete(
-      () => _connectFuture = null,
-    );
+    await (_connectFuture ??= _connect(
+      database,
+      contextKey,
+    )).whenComplete(() => _connectFuture = null);
     return database;
   }
 
-  Future<void> _connect(
-    PowerSyncDatabase database,
-    String contextKey,
-  ) async {
+  Future<void> _connect(PowerSyncDatabase database, String contextKey) async {
     final authApi = PowerSyncAuthApi(sessionStore: _sessionStore);
     final writeApi = AppPowerSyncWriteApi(sessionStore: _sessionStore);
     await database.connect(

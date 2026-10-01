@@ -134,17 +134,24 @@ class _StockContentState extends ConsumerState<_StockContent> {
   }
 
   Future<void> _watchCache() async {
-    final db = await ref
-        .read(appPowerSyncDatabaseProvider)
-        .databaseForCurrentSession();
-    if (!mounted) return;
-    _cacheSubscription = db
-        .watch(
-          'SELECT id, cached_at_utc FROM stock_cache',
-          throttle: const Duration(milliseconds: 300),
-        )
-        .skip(1)
-        .listen((_) => _refreshLocal());
+    try {
+      final db = await ref
+          .read(appPowerSyncDatabaseProvider)
+          .databaseForCurrentSession();
+      if (!mounted) return;
+      _cacheSubscription = db
+          .watch(
+            'SELECT id, cached_at_utc FROM stock_cache',
+            throttle: const Duration(milliseconds: 300),
+          )
+          .skip(1)
+          .listen((_) => _refreshLocal());
+    } on AuthenticationException {
+      // The auth gate will move the user back to sign-in. Do not leave an
+      // unhandled background Future behind while this screen is being disposed.
+    } catch (error) {
+      if (mounted) setState(() => _syncError = error);
+    }
   }
 
   @override
@@ -157,9 +164,14 @@ class _StockContentState extends ConsumerState<_StockContent> {
       'stock-count-${widget.userId ?? ''}-${widget.shopId ?? ''}';
 
   Future<void> _restoreCount() async {
-    final id = await _storage.read(key: _countStorageKey);
-    if (mounted && id != null && id.isNotEmpty) {
-      setState(() => _countId = id);
+    try {
+      final id = await _storage.read(key: _countStorageKey);
+      if (mounted && id != null && id.isNotEmpty) {
+        setState(() => _countId = id);
+      }
+    } catch (_) {
+      // A corrupt Windows secure-storage file is removed by the storage plugin.
+      // A draft count can simply start fresh after the user signs in again.
     }
   }
 
@@ -236,6 +248,9 @@ class _StockContentState extends ConsumerState<_StockContent> {
     try {
       await _store.syncNow();
       if (mounted) setState(() => _syncError = null);
+    } on AuthenticationException catch (error) {
+      if (mounted) setState(() => _syncError = error);
+      return;
     } catch (error) {
       if (mounted) setState(() => _syncError = error);
     }
