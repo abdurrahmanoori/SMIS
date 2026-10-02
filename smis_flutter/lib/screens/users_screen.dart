@@ -105,6 +105,7 @@ class _UsersScreenState extends ConsumerState<UsersScreen> {
           lastName: draft.lastName,
           phoneNumber: draft.phoneNumber,
         );
+        if (mounted) _showSuccess('User created successfully.');
       } else {
         await api.updateUser(
           user: user,
@@ -116,8 +117,127 @@ class _UsersScreenState extends ConsumerState<UsersScreen> {
           lastName: draft.lastName,
           phoneNumber: draft.phoneNumber,
         );
+        if (mounted) _showSuccess('User updated successfully.');
       }
       await _load();
+    } catch (error, stackTrace) {
+      if (mounted) AppErrorNotification.show(context, error, stackTrace);
+    } finally {
+      if (mounted) setState(() => _mutating = false);
+    }
+  }
+
+  Future<void> _manageRoles(ManagedUser user) async {
+    if (_mutating) return;
+    final selectedRoles = await showDialog<List<String>>(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => _RoleManagementDialog(
+        userName: user.displayName,
+        roles: _roles,
+        selectedRoles: user.roles,
+      ),
+    );
+    if (selectedRoles == null) return;
+
+    final api = _api;
+    if (api == null) return;
+    setState(() => _mutating = true);
+    try {
+      await api.assignRoles(userId: user.id, roles: selectedRoles);
+      await _load();
+      if (mounted) _showSuccess('Roles updated for ${user.displayName}.');
+    } catch (error, stackTrace) {
+      if (mounted) AppErrorNotification.show(context, error, stackTrace);
+    } finally {
+      if (mounted) setState(() => _mutating = false);
+    }
+  }
+
+  Future<void> _resetPassword(ManagedUser user) async {
+    if (_mutating) return;
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Reset password?'),
+        content: Text(
+          'Reset ${user.displayName}\'s password? The server will immediately set the password to the user\'s current username. This operation is online-only and is not stored locally.',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('Cancel'),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: const Text('Reset password'),
+          ),
+        ],
+      ),
+    );
+    if (confirmed != true) return;
+
+    final api = _api;
+    if (api == null) return;
+    setState(() => _mutating = true);
+    try {
+      await api.resetPassword(user.id);
+      if (mounted) {
+        _showSuccess(
+          'Password reset for ${user.displayName}. The new password is the current username.',
+        );
+      }
+    } catch (error, stackTrace) {
+      if (mounted) AppErrorNotification.show(context, error, stackTrace);
+    } finally {
+      if (mounted) setState(() => _mutating = false);
+    }
+  }
+
+  Future<void> _setLocked(ManagedUser user, bool locked) async {
+    final session = ref.read(authControllerProvider).session;
+    if (_mutating || session == null) return;
+    if (locked && user.id == session.userId) return;
+
+    final action = locked ? 'Lock' : 'Unlock';
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('$action user?'),
+        content: Text(
+          '$action ${user.displayName}? This change is applied immediately on the server.',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('Cancel'),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: Text(action),
+          ),
+        ],
+      ),
+    );
+    if (confirmed != true) return;
+
+    final api = _api;
+    if (api == null) return;
+    setState(() => _mutating = true);
+    try {
+      if (locked) {
+        await api.lockUser(user.id);
+      } else {
+        await api.unlockUser(user.id);
+      }
+      await _load();
+      if (mounted) {
+        _showSuccess(
+          locked
+              ? '${user.displayName} is now locked.'
+              : '${user.displayName} is now unlocked.',
+        );
+      }
     } catch (error, stackTrace) {
       if (mounted) AppErrorNotification.show(context, error, stackTrace);
     } finally {
@@ -158,11 +278,32 @@ class _UsersScreenState extends ConsumerState<UsersScreen> {
         _pageNumber--;
       }
       await _load();
+      if (mounted) _showSuccess('${user.displayName} was deleted.');
     } catch (error, stackTrace) {
       if (mounted) AppErrorNotification.show(context, error, stackTrace);
     } finally {
       if (mounted) setState(() => _mutating = false);
     }
+  }
+
+  void _showSuccess(String message) {
+    ScaffoldMessenger.of(context)
+      ..hideCurrentSnackBar()
+      ..showSnackBar(SnackBar(content: Text(message)));
+  }
+
+  String _lockStatus(ManagedUser user) {
+    if (!user.isLocked) return 'Account status: unlocked';
+    final end = user.lockoutEnd;
+    if (end == null) return 'Account status: locked';
+    return 'Account status: locked until ${_formatDateTime(end)}';
+  }
+
+  String _formatDateTime(DateTime value) {
+    final local = value.toLocal();
+    String two(int number) => number.toString().padLeft(2, '0');
+    return '${local.year}-${two(local.month)}-${two(local.day)} '
+        '${two(local.hour)}:${two(local.minute)}';
   }
 
   @override
@@ -171,7 +312,12 @@ class _UsersScreenState extends ConsumerState<UsersScreen> {
     if (session == null || !session.isSuperAdmin) {
       return const Scaffold(
         drawer: AppDrawer(),
-        body: Center(child: Text('Only a SuperAdmin can manage users.')),
+        body: Center(
+          child: Text(
+            'User administration currently requires SuperAdmin access. ShopAdmin user listing and CRUD are not yet enabled by the backend.',
+            textAlign: TextAlign.center,
+          ),
+        ),
       );
     }
 
@@ -199,7 +345,7 @@ class _UsersScreenState extends ConsumerState<UsersScreen> {
           MaterialBanner(
             leading: const Icon(Icons.cloud_outlined),
             content: const Text(
-              'User administration is online-only. Changes are saved directly to the server and are not queued for offline sync.',
+              'User administration is online-only. User CRUD, roles, password resets, and lock/unlock changes call the server directly and are never queued in PowerSync or local offline storage.',
             ),
             actions: [
               TextButton(onPressed: _load, child: const Text('Refresh')),
@@ -226,6 +372,7 @@ class _UsersScreenState extends ConsumerState<UsersScreen> {
 
     return Column(
       children: [
+        if (_mutating) const LinearProgressIndicator(),
         Expanded(
           child: RefreshIndicator(
             onRefresh: _load,
@@ -245,26 +392,67 @@ class _UsersScreenState extends ConsumerState<UsersScreen> {
                             : user.userName.characters.first.toUpperCase(),
                       ),
                     ),
-                    title: Text(user.displayName),
+                    title: Row(
+                      children: [
+                        Expanded(child: Text(user.displayName)),
+                        if (user.isLocked)
+                          const Padding(
+                            padding: EdgeInsets.only(left: 8),
+                            child: Icon(Icons.lock_outline, size: 18),
+                          ),
+                      ],
+                    ),
                     subtitle: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text('${user.userName} · ${user.email}'),
                         Text(user.shopName ?? user.shopId),
-                        if (user.roles.isNotEmpty) Text(user.roles.join(', ')),
+                        Text(
+                          user.roles.isEmpty
+                              ? 'Roles: none'
+                              : 'Roles: ${user.roles.join(', ')}',
+                        ),
+                        Text(_lockStatus(user)),
                       ],
                     ),
-                    isThreeLine: true,
                     trailing: PopupMenuButton<String>(
+                      enabled: !_mutating,
                       onSelected: (value) {
-                        if (value == 'edit') {
-                          _openForm(user);
-                        } else if (value == 'delete') {
-                          _delete(user);
+                        switch (value) {
+                          case 'edit':
+                            _openForm(user);
+                          case 'roles':
+                            _manageRoles(user);
+                          case 'reset-password':
+                            _resetPassword(user);
+                          case 'lock':
+                            _setLocked(user, true);
+                          case 'unlock':
+                            _setLocked(user, false);
+                          case 'delete':
+                            _delete(user);
                         }
                       },
                       itemBuilder: (context) => [
                         const PopupMenuItem(value: 'edit', child: Text('Edit')),
+                        const PopupMenuItem(
+                          value: 'roles',
+                          child: Text('Manage roles'),
+                        ),
+                        const PopupMenuItem(
+                          value: 'reset-password',
+                          child: Text('Reset password'),
+                        ),
+                        if (user.isLocked)
+                          const PopupMenuItem(
+                            value: 'unlock',
+                            child: Text('Unlock account'),
+                          )
+                        else if (user.id != currentUserId)
+                          const PopupMenuItem(
+                            value: 'lock',
+                            child: Text('Lock account'),
+                          ),
                         if (user.id != currentUserId)
                           const PopupMenuItem(
                             value: 'delete',
@@ -286,7 +474,7 @@ class _UsersScreenState extends ConsumerState<UsersScreen> {
               children: [
                 IconButton(
                   tooltip: 'Previous page',
-                  onPressed: _pageNumber > 1 && !_loading
+                  onPressed: _pageNumber > 1 && !_loading && !_mutating
                       ? () {
                           _pageNumber--;
                           _load();
@@ -302,7 +490,8 @@ class _UsersScreenState extends ConsumerState<UsersScreen> {
                 ),
                 IconButton(
                   tooltip: 'Next page',
-                  onPressed: _pageNumber < page.totalPages && !_loading
+                  onPressed:
+                      _pageNumber < page.totalPages && !_loading && !_mutating
                       ? () {
                           _pageNumber++;
                           _load();
@@ -317,6 +506,88 @@ class _UsersScreenState extends ConsumerState<UsersScreen> {
       ],
     );
   }
+}
+
+class _RoleManagementDialog extends StatefulWidget {
+  const _RoleManagementDialog({
+    required this.userName,
+    required this.roles,
+    required this.selectedRoles,
+  });
+
+  final String userName;
+  final List<String> roles;
+  final List<String> selectedRoles;
+
+  @override
+  State<_RoleManagementDialog> createState() => _RoleManagementDialogState();
+}
+
+class _RoleManagementDialogState extends State<_RoleManagementDialog> {
+  late final Set<String> _selectedRoles;
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedRoles = widget.selectedRoles.toSet();
+  }
+
+  @override
+  Widget build(BuildContext context) => AlertDialog(
+    title: Text('Manage roles · ${widget.userName}'),
+    content: SizedBox(
+      width: 420,
+      child: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              'The submitted list replaces the user\'s complete role list on the server.',
+            ),
+            const SizedBox(height: 8),
+            ...widget.roles.map(
+              (role) => CheckboxListTile(
+                dense: true,
+                contentPadding: EdgeInsets.zero,
+                title: Text(role),
+                value: _selectedRoles.contains(role),
+                onChanged: (selected) {
+                  setState(() {
+                    if (selected == true) {
+                      _selectedRoles.add(role);
+                    } else {
+                      _selectedRoles.remove(role);
+                    }
+                  });
+                },
+              ),
+            ),
+            if (_selectedRoles.isEmpty)
+              Text(
+                'Select at least one role.',
+                style: TextStyle(color: Theme.of(context).colorScheme.error),
+              ),
+          ],
+        ),
+      ),
+    ),
+    actions: [
+      TextButton(
+        onPressed: () => Navigator.pop(context),
+        child: const Text('Cancel'),
+      ),
+      FilledButton(
+        onPressed: _selectedRoles.isEmpty
+            ? null
+            : () => Navigator.pop(
+                context,
+                _selectedRoles.toList(growable: false),
+              ),
+        child: const Text('Save roles'),
+      ),
+    ],
+  );
 }
 
 class _UserFormDialog extends StatefulWidget {
