@@ -415,22 +415,22 @@ class _UsersScreenState extends ConsumerState<UsersScreen> {
                         Text(_lockStatus(user)),
                       ],
                     ),
+                    isThreeLine: true,
                     trailing: PopupMenuButton<String>(
                       enabled: !_mutating,
                       onSelected: (value) {
-                        switch (value) {
-                          case 'edit':
-                            _openForm(user);
-                          case 'roles':
-                            _manageRoles(user);
-                          case 'reset-password':
-                            _resetPassword(user);
-                          case 'lock':
-                            _setLocked(user, true);
-                          case 'unlock':
-                            _setLocked(user, false);
-                          case 'delete':
-                            _delete(user);
+                        if (value == 'edit') {
+                          _openForm(user);
+                        } else if (value == 'roles') {
+                          _manageRoles(user);
+                        } else if (value == 'reset-password') {
+                          _resetPassword(user);
+                        } else if (value == 'lock') {
+                          _setLocked(user, true);
+                        } else if (value == 'unlock') {
+                          _setLocked(user, false);
+                        } else if (value == 'delete') {
+                          _delete(user);
                         }
                       },
                       itemBuilder: (context) => [
