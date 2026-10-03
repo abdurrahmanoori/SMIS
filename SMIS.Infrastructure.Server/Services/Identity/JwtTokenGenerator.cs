@@ -3,6 +3,7 @@ using Microsoft.IdentityModel.Tokens;
 using SMIS.Application.Identity.IServices;
 using SMIS.Domain.Entities.Identity.Entity;
 using System.IdentityModel.Tokens.Jwt;
+using System.Globalization;
 using System.Security.Claims;
 using System.Text;
 using SMIS.Domain.Services;
@@ -37,7 +38,10 @@ public class JwtTokenGenerator : ITokenGenerator
         {
             new(ClaimTypes.NameIdentifier, user.Id),
             new(ClaimTypes.Email, user.Email!),
-            new(ClaimTypes.Name, user.UserName!)
+            new(ClaimTypes.Name, user.UserName!),
+            new(
+                JwtClaimNames.SecurityVersion,
+                user.SecurityVersion.ToString(CultureInfo.InvariantCulture))
         };
 
         var effectiveShopId = !string.IsNullOrWhiteSpace(shopIdOverride)

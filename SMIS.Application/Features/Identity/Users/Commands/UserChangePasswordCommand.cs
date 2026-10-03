@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using SMIS.Application.Common.Response;
 using SMIS.Application.DTO.Users;
 using SMIS.Application.Identity.IServices;
+using SMIS.Application.Repositories.Base;
 using SMIS.Domain.Entities.Identity.Entity;
 
 namespace SMIS.Application.Features.Identity.Users.Commands
@@ -13,14 +14,17 @@ namespace SMIS.Application.Features.Identity.Users.Commands
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly ICurrentUser _currentUser;
+        private readonly IUnitOfWork _unitOfWork;
 
         public UserChangePasswordCommandHandler(
             UserManager<ApplicationUser> userManager,
-            ICurrentUser currentUser
+            ICurrentUser currentUser,
+            IUnitOfWork unitOfWork
         )
         {
             _userManager = userManager;
             _currentUser = currentUser;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<Result> Handle(
@@ -38,18 +42,33 @@ namespace SMIS.Application.Features.Identity.Users.Commands
             var user = await _userManager.FindByIdAsync(request.UserId);
             if (user == null) return Result.NotFound(request.UserId);
 
-            var result =
-                await _userManager.ChangePasswordAsync(user, request.Dto.CurrentPassword, request.Dto.NewPassword);
-            if (!result.Succeeded)
+            await _unitOfWork.StartTransactionAsync(cancellationToken);
+            try
             {
-                return Result.Failure(result.Errors.Select(e => new Error
+                user.InvalidateSessions();
+                var result = await _userManager.ChangePasswordAsync(
+                    user,
+                    request.Dto.CurrentPassword,
+                    request.Dto.NewPassword);
+                if (!result.Succeeded)
                 {
-                    Code = e.Code,
-                    Description = e.Description
-                }).ToList());
-            }
+                    await _unitOfWork.RollbackTransactionAsync(cancellationToken);
+                    return Result.Failure(result.Errors.Select(e => new Error
+                    {
+                        Code = e.Code,
+                        Description = e.Description
+                    }).ToList());
+                }
 
-            return Result.Success();
+                await _unitOfWork.CommitTransactionAsync(cancellationToken);
+                return Result.Success();
+            }
+            catch
+            {
+                if (_unitOfWork.HasActiveTransaction)
+                    await _unitOfWork.RollbackTransactionAsync(cancellationToken);
+                throw;
+            }
         }
     }
 }

@@ -80,6 +80,9 @@ namespace SMIS.Application.Features.Identity.Users.Commands
             await _unitOfWork.StartTransactionAsync(cancellationToken);
             try
             {
+                if (toRemove.Length > 0 || toAdd.Length > 0)
+                    user.InvalidateSessions();
+
                 if (toRemove.Length > 0)
                 {
                     var removeResult = await _userManager.RemoveFromRolesAsync(user, toRemove);

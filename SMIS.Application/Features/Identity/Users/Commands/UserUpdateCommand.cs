@@ -137,6 +137,12 @@ namespace SMIS.Application.Features.Identity.Users.Commands
                 }
             }
 
+            var shopChanged = assignedShop is not null &&
+                              !string.Equals(
+                                  user.ShopId,
+                                  assignedShop.Id,
+                                  StringComparison.Ordinal);
+
             SMIS.Domain.Entities.Localization.Language? language = null;
             if (!string.IsNullOrWhiteSpace(request.UserUpdateDto.LanguageId))
             {
@@ -171,6 +177,9 @@ namespace SMIS.Application.Features.Identity.Users.Commands
             await _unitOfWork.StartTransactionAsync(cancellationToken);
             try
             {
+                if (shopChanged)
+                    user.InvalidateSessions();
+
                 var updateResult = await _userManager.UpdateAsync(user);
                 if (!updateResult.Succeeded)
                 {
@@ -187,6 +196,9 @@ namespace SMIS.Application.Features.Identity.Users.Commands
                     var currentRoles = await _userManager.GetRolesAsync(user);
                     var toRemove = currentRoles.Except(requestedRoles, StringComparer.OrdinalIgnoreCase).ToArray();
                     var toAdd = requestedRoles.Except(currentRoles, StringComparer.OrdinalIgnoreCase).ToArray();
+
+                    if (!shopChanged && (toRemove.Length > 0 || toAdd.Length > 0))
+                        user.InvalidateSessions();
 
                     if (toRemove.Length > 0)
                     {

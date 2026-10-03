@@ -14,6 +14,7 @@ public class ApplicationUser : IdentityUser<string>, IEntityPK
     public string LanguageId { get; private set; } = LanguageDefaults.EnglishId;
     public string? ShopName { get; set; }
     public bool IsActive { get; private set; } = true;
+    public int SecurityVersion { get; private set; }
     public int Version { get; set; }
     public DateTime LastModifiedUtc { get; set; }
 
@@ -117,4 +118,5 @@ public class ApplicationUser : IdentityUser<string>, IEntityPK
     public void ConfirmPhoneNumber() => PhoneNumberConfirmed = true;
     public void Activate() => IsActive = true;
     public void Deactivate() => IsActive = false;
+    public void InvalidateSessions() => SecurityVersion++;
 }

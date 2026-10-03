@@ -1,6 +1,9 @@
+import 'dart:async';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../data/auth_api.dart';
+import '../data/auth_session_invalidation.dart';
 import '../data/data_exception.dart';
 import '../models/auth_session.dart';
 import '../services/auth_session_store.dart';
@@ -54,12 +57,18 @@ class AuthState {
 }
 
 class AuthController extends Notifier<AuthState> {
+  bool _handlingSessionInvalidation = false;
+
   AuthApi get _api => ref.read(authApiProvider);
 
   AuthSessionStore get _sessionStore => ref.read(authSessionStoreProvider);
 
   @override
   AuthState build() {
+    final invalidationSubscription = AuthSessionInvalidation.events.listen(
+      (event) => unawaited(_invalidateCurrentSession(event)),
+    );
+    ref.onDispose(invalidationSubscription.cancel);
     _restoreSession();
     return const AuthState(isRestoring: true);
   }
@@ -69,9 +78,13 @@ class AuthController extends Notifier<AuthState> {
       var session = await _sessionStore.read();
       if (session != null &&
           (session.permissions.isEmpty || !session.taskPermissionsLoaded)) {
+        final savedSessionUserId = session.userId;
         try {
           session = await _api.refreshSession();
           await _sessionStore.save(session);
+        } on AuthenticationException {
+          await _sessionStore.deleteSession(savedSessionUserId);
+          session = null;
         } catch (_) {
           // Keep the saved session usable offline. Missing permissions remain
           // conservative, so protected features stay hidden until refreshed.
@@ -242,6 +255,42 @@ class AuthController extends Notifier<AuthState> {
           cause: cleanupError,
         ),
       );
+    }
+  }
+
+  Future<void> _invalidateCurrentSession(
+    AuthSessionInvalidationEvent event,
+  ) async {
+    if (_handlingSessionInvalidation) return;
+
+    final currentSession = state.session;
+    if (currentSession == null) return;
+
+    _handlingSessionInvalidation = true;
+    try {
+      try {
+        await ref.read(appPowerSyncDatabaseProvider).close();
+      } catch (_) {
+        // Authentication revocation takes precedence over local sync cleanup.
+      }
+
+      await _sessionStore.deleteSession(currentSession.userId);
+      final savedSessions = await _sessionStore.readAll();
+      state = state.copyWith(
+        clearSession: true,
+        savedSessions: savedSessions,
+        error: AuthenticationException(event.message),
+      );
+    } catch (error) {
+      state = state.copyWith(
+        clearSession: true,
+        error: LocalStorageException(
+          'Your server session is no longer valid, but local session cleanup failed.',
+          cause: error,
+        ),
+      );
+    } finally {
+      _handlingSessionInvalidation = false;
     }
   }
 

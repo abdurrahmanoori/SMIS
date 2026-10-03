@@ -2,6 +2,7 @@ using MediatR;
 using Microsoft.AspNetCore.Identity;
 using SMIS.Application.Common.Response;
 using SMIS.Application.Identity.IServices;
+using SMIS.Application.Repositories.Base;
 using SMIS.Domain.Entities.Identity.Entity;
 
 namespace SMIS.Application.Features.Identity.Users.Commands;
@@ -15,14 +16,17 @@ internal sealed class UserSetLockoutCommandHandler : IRequestHandler<UserSetLock
 {
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly IUserAdministrationGuard _userAdministrationGuard;
+    private readonly IUnitOfWork _unitOfWork;
 
     public UserSetLockoutCommandHandler(
         UserManager<ApplicationUser> userManager,
-        IUserAdministrationGuard userAdministrationGuard
+        IUserAdministrationGuard userAdministrationGuard,
+        IUnitOfWork unitOfWork
     )
     {
         _userManager = userManager;
         _userAdministrationGuard = userAdministrationGuard;
+        _unitOfWork = unitOfWork;
     }
 
     public async Task<Result> Handle(
@@ -54,25 +58,56 @@ internal sealed class UserSetLockoutCommandHandler : IRequestHandler<UserSetLock
                 "The last available SuperAdmin account cannot be locked.");
         }
 
-        if (request.IsLocked)
+        await _unitOfWork.StartTransactionAsync(cancellationToken);
+        try
         {
-            if (!user.LockoutEnabled)
+            if (request.IsLocked)
             {
-                var enableResult = await _userManager.SetLockoutEnabledAsync(user, true);
-                if (!enableResult.Succeeded) return IdentityFailure(enableResult);
+                if (!user.LockoutEnabled)
+                {
+                    var enableResult = await _userManager.SetLockoutEnabledAsync(user, true);
+                    if (!enableResult.Succeeded)
+                    {
+                        await _unitOfWork.RollbackTransactionAsync(cancellationToken);
+                        return IdentityFailure(enableResult);
+                    }
+                }
+
+                user.InvalidateSessions();
+                var lockResult = await _userManager.SetLockoutEndDateAsync(user, DateTimeOffset.MaxValue);
+                if (!lockResult.Succeeded)
+                {
+                    await _unitOfWork.RollbackTransactionAsync(cancellationToken);
+                    return IdentityFailure(lockResult);
+                }
+            }
+            else
+            {
+                user.InvalidateSessions();
+                var unlockResult = await _userManager.SetLockoutEndDateAsync(user, null);
+                if (!unlockResult.Succeeded)
+                {
+                    await _unitOfWork.RollbackTransactionAsync(cancellationToken);
+                    return IdentityFailure(unlockResult);
+                }
+
+                var resetFailedAttemptsResult = await _userManager.ResetAccessFailedCountAsync(user);
+                if (!resetFailedAttemptsResult.Succeeded)
+                {
+                    await _unitOfWork.RollbackTransactionAsync(cancellationToken);
+                    return IdentityFailure(resetFailedAttemptsResult);
+                }
             }
 
-            var lockResult = await _userManager.SetLockoutEndDateAsync(user, DateTimeOffset.MaxValue);
-            return lockResult.Succeeded ? Result.Success() : IdentityFailure(lockResult);
+            await _unitOfWork.CommitTransactionAsync(cancellationToken);
+            return Result.Success();
         }
-
-        var unlockResult = await _userManager.SetLockoutEndDateAsync(user, null);
-        if (!unlockResult.Succeeded) return IdentityFailure(unlockResult);
-
-        var resetFailedAttemptsResult = await _userManager.ResetAccessFailedCountAsync(user);
-        return resetFailedAttemptsResult.Succeeded
-            ? Result.Success()
-            : IdentityFailure(resetFailedAttemptsResult);
+        catch
+        {
+            if (_unitOfWork.HasActiveTransaction)
+                await _unitOfWork.RollbackTransactionAsync(cancellationToken);
+            throw;
+        }
     }
 
     private static Result IdentityFailure(
