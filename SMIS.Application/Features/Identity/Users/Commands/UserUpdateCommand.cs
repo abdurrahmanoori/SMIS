@@ -60,36 +60,24 @@ namespace SMIS.Application.Features.Identity.Users.Commands
                     "The signed-in user no longer exists.");
             }
 
-            var isSuperAdmin = await _userManager.IsInRoleAsync(signedInUser, SD.Role_Super_Admin);
-            if (!isSuperAdmin &&
-                !string.Equals(request.UserId, currentUserId, StringComparison.Ordinal))
-            {
-                return Result<UserDto>.Forbidden(
-                    "Forbidden",
-                    "You can only update your own profile.");
-            }
-
-            if (!isSuperAdmin && request.UserUpdateDto.Roles is not null)
-            {
-                return Result<UserDto>.Forbidden(
-                    "Forbidden",
-                    "Only a SuperAdmin can change user roles.");
-            }
-
-            if (!isSuperAdmin && !string.IsNullOrWhiteSpace(request.UserUpdateDto.ShopId))
-            {
-                return Result<UserDto>.Forbidden(
-                    "Forbidden",
-                    "Only a SuperAdmin can change a user's assigned shop.");
-            }
-
             var user = string.Equals(request.UserId, currentUserId, StringComparison.Ordinal)
                 ? signedInUser
                 : await _userManager.FindByIdAsync(request.UserId);
-            if (user == null) return Result<UserDto>.NotFound(request.UserId);
+            if (user is null) return Result<UserDto>.NotFound(request.UserId);
+
+            var isSelf = string.Equals(user.Id, currentUserId, StringComparison.Ordinal);
+            var isSuperAdmin = await _userManager.IsInRoleAsync(signedInUser, SD.Role_Super_Admin);
+
+            if (!isSuperAdmin && !isSelf &&
+                !await _userAdministrationGuard.CanManageUserAsync(user, cancellationToken))
+            {
+                return Result<UserDto>.Forbidden(
+                    "user.administration_forbidden",
+                    "You are not allowed to update this user.");
+            }
 
             string[]? requestedRoles = null;
-            if (isSuperAdmin && request.UserUpdateDto.Roles is not null)
+            if (request.UserUpdateDto.Roles is not null)
             {
                 var roleInputs = request.UserUpdateDto.Roles
                     .Distinct(StringComparer.OrdinalIgnoreCase)
@@ -112,6 +100,16 @@ namespace SMIS.Application.Features.Identity.Users.Commands
                         return Result<UserDto>.BusinessRule("InvalidRole", $"Role '{role}' is not configured.");
                 }
 
+                if (!await _userAdministrationGuard.CanAssignRolesAsync(
+                        user,
+                        requestedRoles,
+                        cancellationToken))
+                {
+                    return Result<UserDto>.Forbidden(
+                        "user.role_assignment_forbidden",
+                        "You are not allowed to assign the requested roles to this user.");
+                }
+
                 if (!requestedRoles.Contains(SD.Role_Super_Admin, StringComparer.OrdinalIgnoreCase) &&
                     await _userAdministrationGuard.WouldRemoveLastSuperAdminAsync(
                         user.Id,
@@ -124,16 +122,28 @@ namespace SMIS.Application.Features.Identity.Users.Commands
             }
 
             SMIS.Domain.Entities.Shop? assignedShop = null;
-            if (isSuperAdmin && !string.IsNullOrWhiteSpace(request.UserUpdateDto.ShopId))
+            if (!string.IsNullOrWhiteSpace(request.UserUpdateDto.ShopId))
             {
-                assignedShop = await _shopRepository.GetByIdIncludingDeletedAsync(
-                    request.UserUpdateDto.ShopId,
-                    cancellationToken);
-                if (assignedShop is null || assignedShop.IsDeleted || !assignedShop.IsActive)
+                if (!isSuperAdmin)
                 {
-                    return Result<UserDto>.BusinessRule(
-                        "InvalidShop",
-                        "The assigned shop does not exist or is inactive.");
+                    if (!string.Equals(request.UserUpdateDto.ShopId, user.ShopId, StringComparison.Ordinal))
+                    {
+                        return Result<UserDto>.Forbidden(
+                            "user.shop_assignment_forbidden",
+                            "Only a SuperAdmin can move a user to another shop.");
+                    }
+                }
+                else
+                {
+                    assignedShop = await _shopRepository.GetByIdIncludingDeletedAsync(
+                        request.UserUpdateDto.ShopId,
+                        cancellationToken);
+                    if (assignedShop is null || assignedShop.IsDeleted || !assignedShop.IsActive)
+                    {
+                        return Result<UserDto>.BusinessRule(
+                            "InvalidShop",
+                            "The assigned shop does not exist or is inactive.");
+                    }
                 }
             }
 
@@ -170,7 +180,6 @@ namespace SMIS.Application.Features.Identity.Users.Commands
             if (language is not null)
                 user.SetLanguageId(language.Id);
 
-            // Update shop name
             var shop = await _shopRepository.GetByIdAsync(user.ShopId);
             user.ShopName = shop?.Name;
 
