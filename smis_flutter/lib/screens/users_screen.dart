@@ -7,6 +7,7 @@ import '../controllers/auth_controller.dart';
 import '../data/data_exception.dart';
 import '../data/user_management_api.dart';
 import '../models/managed_user.dart';
+import 'user_details_screen.dart';
 import '../widgets/app_drawer.dart';
 import '../widgets/app_error_view.dart';
 
@@ -172,6 +173,14 @@ class _UsersScreenState extends ConsumerState<UsersScreen> {
     } finally {
       if (mounted) setState(() => _mutating = false);
     }
+  }
+
+  Future<void> _openDetails(ManagedUser user) async {
+    await Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (context) => UserDetailsScreen(user: user),
+      ),
+    );
   }
 
   Future<void> _manageRoles(ManagedUser user) async {
@@ -589,6 +598,7 @@ class _UsersScreenState extends ConsumerState<UsersScreen> {
                 final user = page.items[index];
                 return Card(
                   child: ListTile(
+                    onTap: _mutating ? null : () => _openDetails(user),
                     leading: CircleAvatar(
                       child: Text(
                         user.userName.isEmpty
@@ -628,7 +638,9 @@ class _UsersScreenState extends ConsumerState<UsersScreen> {
                     trailing: PopupMenuButton<String>(
                       enabled: !_mutating,
                       onSelected: (value) {
-                        if (value == 'edit') {
+                        if (value == 'details') {
+                          _openDetails(user);
+                        } else if (value == 'edit') {
                           _openForm(user);
                         } else if (value == 'roles') {
                           _manageRoles(user);
@@ -647,6 +659,10 @@ class _UsersScreenState extends ConsumerState<UsersScreen> {
                         }
                       },
                       itemBuilder: (context) => [
+                        const PopupMenuItem(
+                          value: 'details',
+                          child: Text('View details'),
+                        ),
                         if (isSuperAdmin)
                           const PopupMenuItem(
                             value: 'edit',
@@ -843,6 +859,7 @@ class _UserFormDialogState extends State<_UserFormDialog> {
   late final TextEditingController _password;
   late String _shopId;
   late Set<String> _roles;
+  bool _showRoleError = false;
 
   bool get _isEditing => widget.user != null;
 
@@ -874,125 +891,260 @@ class _UserFormDialogState extends State<_UserFormDialog> {
   }
 
   @override
-  Widget build(BuildContext context) => AlertDialog(
-    title: Text(_isEditing ? 'Edit user' : 'Create user'),
-    content: SizedBox(
-      width: 520,
-      child: Form(
-        key: _formKey,
-        child: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TextFormField(
-                controller: _userName,
-                decoration: const InputDecoration(labelText: 'Username'),
-                validator: _required,
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final maxHeight = MediaQuery.sizeOf(context).height * 0.88;
+
+    return Dialog(
+      clipBehavior: Clip.antiAlias,
+      child: ConstrainedBox(
+        constraints: BoxConstraints(maxWidth: 760, maxHeight: maxHeight),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(24, 20, 16, 16),
+              child: Row(
+                children: [
+                  Icon(
+                    _isEditing
+                        ? Icons.manage_accounts_outlined
+                        : Icons.person_add_alt_1,
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Text(
+                      _isEditing ? 'Edit user' : 'Create user',
+                      style: theme.textTheme.headlineSmall,
+                    ),
+                  ),
+                  IconButton(
+                    tooltip: 'Close',
+                    onPressed: () => Navigator.pop(context),
+                    icon: const Icon(Icons.close),
+                  ),
+                ],
               ),
-              TextFormField(
-                controller: _email,
-                decoration: const InputDecoration(labelText: 'Email'),
-                keyboardType: TextInputType.emailAddress,
-                validator: _required,
-              ),
-              if (!_isEditing)
-                TextFormField(
-                  controller: _password,
-                  decoration: const InputDecoration(labelText: 'Password'),
-                  obscureText: true,
-                  validator: _required,
+            ),
+            const Divider(height: 1),
+            Flexible(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.all(24),
+                child: Form(
+                  key: _formKey,
+                  child: LayoutBuilder(
+                    builder: (context, constraints) {
+                      final useTwoColumns = constraints.maxWidth >= 620;
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          Text(
+                            'Account information',
+                            style: theme.textTheme.titleMedium,
+                          ),
+                          const SizedBox(height: 12),
+                          _fieldPair(
+                            useTwoColumns: useTwoColumns,
+                            first: TextFormField(
+                              controller: _userName,
+                              decoration: const InputDecoration(
+                                labelText: 'Username',
+                                border: OutlineInputBorder(),
+                              ),
+                              validator: _required,
+                            ),
+                            second: TextFormField(
+                              controller: _email,
+                              decoration: const InputDecoration(
+                                labelText: 'Email',
+                                border: OutlineInputBorder(),
+                              ),
+                              keyboardType: TextInputType.emailAddress,
+                              validator: _required,
+                            ),
+                          ),
+                          if (!_isEditing) ...[
+                            const SizedBox(height: 12),
+                            TextFormField(
+                              controller: _password,
+                              decoration: const InputDecoration(
+                                labelText: 'Password',
+                                border: OutlineInputBorder(),
+                              ),
+                              obscureText: true,
+                              validator: _required,
+                            ),
+                          ],
+                          const SizedBox(height: 12),
+                          _fieldPair(
+                            useTwoColumns: useTwoColumns,
+                            first: TextFormField(
+                              controller: _firstName,
+                              decoration: const InputDecoration(
+                                labelText: 'First name',
+                                border: OutlineInputBorder(),
+                              ),
+                            ),
+                            second: TextFormField(
+                              controller: _lastName,
+                              decoration: const InputDecoration(
+                                labelText: 'Last name',
+                                border: OutlineInputBorder(),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 12),
+                          _fieldPair(
+                            useTwoColumns: useTwoColumns,
+                            first: TextFormField(
+                              controller: _phone,
+                              decoration: const InputDecoration(
+                                labelText: 'Phone number',
+                                border: OutlineInputBorder(),
+                              ),
+                              keyboardType: TextInputType.phone,
+                            ),
+                            second: DropdownButtonFormField<String>(
+                              initialValue: _shopId,
+                              isExpanded: true,
+                              decoration: const InputDecoration(
+                                labelText: 'Shop',
+                                border: OutlineInputBorder(),
+                              ),
+                              items: widget.shops
+                                  .map(
+                                    (shop) => DropdownMenuItem(
+                                      value: shop.id,
+                                      child: Text(
+                                        shop.name,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                    ),
+                                  )
+                                  .toList(growable: false),
+                              onChanged: (value) {
+                                if (value != null) {
+                                  setState(() => _shopId = value);
+                                }
+                              },
+                            ),
+                          ),
+                          const SizedBox(height: 24),
+                          Row(
+                            children: [
+                              Text('Roles', style: theme.textTheme.titleMedium),
+                              const Spacer(),
+                              Text(
+                                '${_roles.length} selected',
+                                style: theme.textTheme.bodySmall,
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 10),
+                          Wrap(
+                            spacing: 8,
+                            runSpacing: 8,
+                            children: widget.roles
+                                .map((role) {
+                                  final selected = _roles.contains(role);
+                                  return FilterChip(
+                                    label: Text(role),
+                                    selected: selected,
+                                    onSelected: (value) {
+                                      setState(() {
+                                        if (value) {
+                                          _roles.add(role);
+                                        } else {
+                                          _roles.remove(role);
+                                        }
+                                        _showRoleError = false;
+                                      });
+                                    },
+                                  );
+                                })
+                                .toList(growable: false),
+                          ),
+                          if (_showRoleError) ...[
+                            const SizedBox(height: 8),
+                            Text(
+                              'Select at least one role.',
+                              style: theme.textTheme.bodySmall?.copyWith(
+                                color: theme.colorScheme.error,
+                              ),
+                            ),
+                          ],
+                        ],
+                      );
+                    },
+                  ),
                 ),
-              TextFormField(
-                controller: _firstName,
-                decoration: const InputDecoration(labelText: 'First name'),
               ),
-              TextFormField(
-                controller: _lastName,
-                decoration: const InputDecoration(labelText: 'Last name'),
+            ),
+            const Divider(height: 1),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(24, 12, 24, 16),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  TextButton(
+                    onPressed: () => Navigator.pop(context),
+                    child: const Text('Cancel'),
+                  ),
+                  const SizedBox(width: 8),
+                  FilledButton.icon(
+                    onPressed: _submit,
+                    icon: const Icon(Icons.save_outlined),
+                    label: Text(_isEditing ? 'Save changes' : 'Create user'),
+                  ),
+                ],
               ),
-              TextFormField(
-                controller: _phone,
-                decoration: const InputDecoration(labelText: 'Phone number'),
-                keyboardType: TextInputType.phone,
-              ),
-              const SizedBox(height: 12),
-              DropdownButtonFormField<String>(
-                initialValue: _shopId,
-                decoration: const InputDecoration(labelText: 'Shop'),
-                items: widget.shops
-                    .map(
-                      (shop) => DropdownMenuItem(
-                        value: shop.id,
-                        child: Text(shop.name),
-                      ),
-                    )
-                    .toList(growable: false),
-                onChanged: (value) {
-                  if (value != null) setState(() => _shopId = value);
-                },
-              ),
-              const SizedBox(height: 16),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  'Roles',
-                  style: Theme.of(context).textTheme.titleSmall,
-                ),
-              ),
-              ...widget.roles.map(
-                (role) => CheckboxListTile(
-                  dense: true,
-                  contentPadding: EdgeInsets.zero,
-                  title: Text(role),
-                  value: _roles.contains(role),
-                  onChanged: (selected) {
-                    setState(() {
-                      if (selected == true) {
-                        _roles.add(role);
-                      } else {
-                        _roles.remove(role);
-                      }
-                    });
-                  },
-                ),
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
-    ),
-    actions: [
-      TextButton(
-        onPressed: () => Navigator.pop(context),
-        child: const Text('Cancel'),
+    );
+  }
+
+  Widget _fieldPair({
+    required bool useTwoColumns,
+    required Widget first,
+    required Widget second,
+  }) {
+    if (!useTwoColumns) {
+      return Column(children: [first, const SizedBox(height: 12), second]);
+    }
+
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Expanded(child: first),
+        const SizedBox(width: 12),
+        Expanded(child: second),
+      ],
+    );
+  }
+
+  void _submit() {
+    if (!_formKey.currentState!.validate()) return;
+    if (_roles.isEmpty) {
+      setState(() => _showRoleError = true);
+      return;
+    }
+
+    Navigator.pop(
+      context,
+      _UserDraft(
+        userName: _userName.text.trim(),
+        email: _email.text.trim(),
+        password: _isEditing ? null : _password.text,
+        firstName: _firstName.text,
+        lastName: _lastName.text,
+        phoneNumber: _phone.text,
+        shopId: _shopId,
+        roles: _roles.toList(growable: false),
       ),
-      FilledButton(
-        onPressed: () {
-          if (!_formKey.currentState!.validate()) return;
-          if (_roles.isEmpty) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Select at least one role.')),
-            );
-            return;
-          }
-          Navigator.pop(
-            context,
-            _UserDraft(
-              userName: _userName.text.trim(),
-              email: _email.text.trim(),
-              password: _isEditing ? null : _password.text,
-              firstName: _firstName.text,
-              lastName: _lastName.text,
-              phoneNumber: _phone.text,
-              shopId: _shopId,
-              roles: _roles.toList(growable: false),
-            ),
-          );
-        },
-        child: Text(_isEditing ? 'Save' : 'Create'),
-      ),
-    ],
-  );
+    );
+  }
 
   String? _required(String? value) =>
       value == null || value.trim().isEmpty ? 'Required' : null;
