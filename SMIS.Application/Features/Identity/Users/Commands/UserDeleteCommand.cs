@@ -39,6 +39,13 @@ namespace SMIS.Application.Features.Identity.Users.Commands
             var user = await _userManager.FindByIdAsync(request.UserId);
             if (user == null) return Result.NotFound(request.UserId);
 
+            if (!await _userAdministrationGuard.CanManageUserAsync(user, cancellationToken))
+            {
+                return Result.Forbidden(
+                    "user.administration_forbidden",
+                    "You are not allowed to delete this user.");
+            }
+
             if (await _userAdministrationGuard.WouldRemoveLastSuperAdminAsync(
                     user.Id,
                     cancellationToken))
