@@ -60,6 +60,11 @@ namespace SMIS.Application.Features.Auth.Commands
                     "auth.invalid_credentials",
                     "Invalid email or password.");
 
+            if (!user.IsActive)
+                return Result<LoginResponseDto>.Unauthorized(
+                    "auth.account_inactive",
+                    "The account is inactive. Contact an administrator if access should be restored.");
+
             var roles = await _userManager.GetRolesAsync(user);
             var isSuperAdmin = roles.Any(role => string.Equals(
                 role,

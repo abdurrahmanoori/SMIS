@@ -33,6 +33,10 @@ namespace SMIS.Infrastructure.Server.EntityConfigurations
             builder.Property(u => u.ShopName)
                 .HasMaxLength(200);
 
+            builder.Property(u => u.IsActive)
+                .IsRequired()
+                .HasDefaultValue(true);
+
             builder.Property(u => u.UserName)
                 .IsRequired()
                 .HasMaxLength(256);

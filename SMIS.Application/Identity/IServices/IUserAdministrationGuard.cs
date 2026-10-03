@@ -18,4 +18,9 @@ public interface IUserAdministrationGuard
         string userId,
         CancellationToken cancellationToken = default
     );
+
+    Task<bool> WouldDeactivateLastAvailableSuperAdminAsync(
+        string userId,
+        CancellationToken cancellationToken = default
+    );
 }

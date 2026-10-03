@@ -6,6 +6,7 @@ class ManagedUser {
     required this.shopId,
     required this.languageId,
     required this.roles,
+    required this.isActive,
     required this.isLocked,
     this.lockoutEnd,
     this.firstName,
@@ -24,12 +25,12 @@ class ManagedUser {
   final String? shopName;
   final String languageId;
   final List<String> roles;
+  final bool isActive;
   final bool isLocked;
   final DateTime? lockoutEnd;
 
-  bool get isSuperAdmin => roles.any(
-    (role) => role.trim().toLowerCase() == 'superadmin',
-  );
+  bool get isSuperAdmin =>
+      roles.any((role) => role.trim().toLowerCase() == 'superadmin');
 
   String get displayName {
     final name = [firstName, lastName]
@@ -58,6 +59,7 @@ class ManagedUser {
       roles: rawRoles is List
           ? rawRoles.whereType<String>().toList(growable: false)
           : const <String>[],
+      isActive: _bool(json, 'isActive', 'IsActive'),
       isLocked: _bool(json, 'isLocked', 'IsLocked'),
       lockoutEnd: _dateTime(json, 'lockoutEnd', 'LockoutEnd'),
     );

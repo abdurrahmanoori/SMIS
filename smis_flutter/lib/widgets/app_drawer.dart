@@ -217,7 +217,7 @@ class AppDrawer extends ConsumerWidget {
                 );
               },
             ),
-          if (session.isSuperAdmin)
+          if (session.isSuperAdmin || session.isShopAdmin)
             ListTile(
               leading: const Icon(Icons.manage_accounts_outlined),
               title: Text(l10n.text('User management')),

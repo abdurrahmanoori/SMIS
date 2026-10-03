@@ -106,7 +106,44 @@ public sealed class UserAdministrationGuard : IUserAdministrationGuard
                 where userRole.RoleId == superAdminRoleId && user.Id != userId
                 select user)
             .AnyAsync(
-                user => !user.LockoutEnabled || user.LockoutEnd == null || user.LockoutEnd <= now,
+                user => user.IsActive &&
+                        (!user.LockoutEnabled || user.LockoutEnd == null || user.LockoutEnd <= now),
+                cancellationToken);
+
+        return !anotherAvailableSuperAdminExists;
+    }
+
+    public async Task<bool> WouldDeactivateLastAvailableSuperAdminAsync(
+        string userId,
+        CancellationToken cancellationToken = default
+    )
+    {
+        var superAdminRoleId = await _context.Roles
+            .AsNoTracking()
+            .Where(role => role.Name == SD.Role_Super_Admin)
+            .Select(role => role.Id)
+            .FirstOrDefaultAsync(cancellationToken);
+
+        if (string.IsNullOrWhiteSpace(superAdminRoleId)) return false;
+
+        var targetIsSuperAdmin = await _context.UserRoles
+            .AsNoTracking()
+            .AnyAsync(
+                userRole => userRole.UserId == userId && userRole.RoleId == superAdminRoleId,
+                cancellationToken);
+
+        if (!targetIsSuperAdmin) return false;
+
+        var now = DateTimeOffset.UtcNow;
+        var anotherAvailableSuperAdminExists = await (
+                from userRole in _context.UserRoles.AsNoTracking()
+                join user in _userManager.Users.AsNoTracking()
+                    on userRole.UserId equals user.Id
+                where userRole.RoleId == superAdminRoleId && user.Id != userId
+                select user)
+            .AnyAsync(
+                user => user.IsActive &&
+                        (!user.LockoutEnabled || user.LockoutEnd == null || user.LockoutEnd <= now),
                 cancellationToken);
 
         return !anotherAvailableSuperAdminExists;

@@ -1059,6 +1059,11 @@ namespace SMIS.Infrastructure.Server.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
+                    b.Property<bool>("IsActive")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(true);
+
                     b.Property<string>("LanguageId")
                         .IsRequired()
                         .ValueGeneratedOnAdd()
@@ -1152,6 +1157,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                             Email = "superadmin@mainstore.com",
                             EmailConfirmed = true,
                             FirstName = "Main Store",
+                            IsActive = true,
                             LanguageId = "22222222-0000-0000-0000-000000000001",
                             LastModifiedUtc = "0001-01-01 00:00:00.000000",
                             LastName = "SuperAdmin",
@@ -1175,6 +1181,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                             Email = "shopadmin@mainstore.com",
                             EmailConfirmed = true,
                             FirstName = "Main Store",
+                            IsActive = true,
                             LanguageId = "22222222-0000-0000-0000-000000000001",
                             LastModifiedUtc = "0001-01-01 00:00:00.000000",
                             LastName = "ShopAdmin",
@@ -1198,6 +1205,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                             Email = "manager@mainstore.com",
                             EmailConfirmed = true,
                             FirstName = "Main Store",
+                            IsActive = true,
                             LanguageId = "22222222-0000-0000-0000-000000000001",
                             LastModifiedUtc = "0001-01-01 00:00:00.000000",
                             LastName = "Manager",
@@ -1221,6 +1229,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                             Email = "inventorymanager@mainstore.com",
                             EmailConfirmed = true,
                             FirstName = "Main Store",
+                            IsActive = true,
                             LanguageId = "22222222-0000-0000-0000-000000000001",
                             LastModifiedUtc = "0001-01-01 00:00:00.000000",
                             LastName = "InventoryManager",
@@ -1244,6 +1253,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                             Email = "salesmanager@mainstore.com",
                             EmailConfirmed = true,
                             FirstName = "Main Store",
+                            IsActive = true,
                             LanguageId = "22222222-0000-0000-0000-000000000001",
                             LastModifiedUtc = "0001-01-01 00:00:00.000000",
                             LastName = "SalesManager",
@@ -1267,6 +1277,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                             Email = "cashier@mainstore.com",
                             EmailConfirmed = true,
                             FirstName = "Main Store",
+                            IsActive = true,
                             LanguageId = "22222222-0000-0000-0000-000000000001",
                             LastModifiedUtc = "0001-01-01 00:00:00.000000",
                             LastName = "Cashier",
@@ -1290,6 +1301,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                             Email = "staff@mainstore.com",
                             EmailConfirmed = true,
                             FirstName = "Main Store",
+                            IsActive = true,
                             LanguageId = "22222222-0000-0000-0000-000000000001",
                             LastModifiedUtc = "0001-01-01 00:00:00.000000",
                             LastName = "Staff",
@@ -1313,6 +1325,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                             Email = "viewer@mainstore.com",
                             EmailConfirmed = true,
                             FirstName = "Main Store",
+                            IsActive = true,
                             LanguageId = "22222222-0000-0000-0000-000000000001",
                             LastModifiedUtc = "0001-01-01 00:00:00.000000",
                             LastName = "Viewer",
@@ -1336,6 +1349,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                             Email = "shopadmin@branchstore.com",
                             EmailConfirmed = true,
                             FirstName = "Branch Store",
+                            IsActive = true,
                             LanguageId = "22222222-0000-0000-0000-000000000001",
                             LastModifiedUtc = "0001-01-01 00:00:00.000000",
                             LastName = "ShopAdmin",
@@ -1359,6 +1373,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                             Email = "manager@branchstore.com",
                             EmailConfirmed = true,
                             FirstName = "Branch Store",
+                            IsActive = true,
                             LanguageId = "22222222-0000-0000-0000-000000000001",
                             LastModifiedUtc = "0001-01-01 00:00:00.000000",
                             LastName = "Manager",
@@ -1382,6 +1397,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                             Email = "inventorymanager@branchstore.com",
                             EmailConfirmed = true,
                             FirstName = "Branch Store",
+                            IsActive = true,
                             LanguageId = "22222222-0000-0000-0000-000000000001",
                             LastModifiedUtc = "0001-01-01 00:00:00.000000",
                             LastName = "InventoryManager",
@@ -1405,6 +1421,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                             Email = "salesmanager@branchstore.com",
                             EmailConfirmed = true,
                             FirstName = "Branch Store",
+                            IsActive = true,
                             LanguageId = "22222222-0000-0000-0000-000000000001",
                             LastModifiedUtc = "0001-01-01 00:00:00.000000",
                             LastName = "SalesManager",
@@ -1428,6 +1445,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                             Email = "cashier@branchstore.com",
                             EmailConfirmed = true,
                             FirstName = "Branch Store",
+                            IsActive = true,
                             LanguageId = "22222222-0000-0000-0000-000000000001",
                             LastModifiedUtc = "0001-01-01 00:00:00.000000",
                             LastName = "Cashier",
@@ -1451,6 +1469,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                             Email = "staff@branchstore.com",
                             EmailConfirmed = true,
                             FirstName = "Branch Store",
+                            IsActive = true,
                             LanguageId = "22222222-0000-0000-0000-000000000001",
                             LastModifiedUtc = "0001-01-01 00:00:00.000000",
                             LastName = "Staff",
@@ -1474,6 +1493,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                             Email = "viewer@branchstore.com",
                             EmailConfirmed = true,
                             FirstName = "Branch Store",
+                            IsActive = true,
                             LanguageId = "22222222-0000-0000-0000-000000000001",
                             LastModifiedUtc = "0001-01-01 00:00:00.000000",
                             LastName = "Viewer",
@@ -1497,6 +1517,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                             Email = "shopadmin@wasilshop.com",
                             EmailConfirmed = true,
                             FirstName = "Wasil Shop",
+                            IsActive = true,
                             LanguageId = "22222222-0000-0000-0000-000000000001",
                             LastModifiedUtc = "0001-01-01 00:00:00.000000",
                             LastName = "ShopAdmin",

@@ -17,7 +17,7 @@ namespace SMIS.Api.Controllers
     /// Handles sign-in, user accounts, passwords, and user roles.
     /// </summary>
     /// <remarks>
-    /// Login is public. User administration requires a current SuperAdmin role from the database.
+    /// Login is public. User administration is server-authoritative and scoped by administrator role.
     /// </remarks>
     [Route("api/[controller]")]
     [ApiController]
@@ -100,7 +100,7 @@ namespace SMIS.Api.Controllers
         /// <remarks>
         /// Set <c>includeShop</c> to true when shop information should be included with each user.
         /// </remarks>
-        [HasCurrentRole(SD.Role_Super_Admin)]
+        [Authorize]
         [HttpGet]
         public async Task<ActionResult<PagedListNew<UserDto>>> GetAll(
             [FromQuery] UserQueryCriteria criteria,
@@ -198,6 +198,60 @@ namespace SMIS.Api.Controllers
         ) =>
             HandleResultResponse(await Mediator.Send(
                 new UserSetLockoutCommand(id, false),
+                cancellationToken));
+
+        /// <summary>
+        /// Activates a managed user account.
+        /// </summary>
+        /// <remarks>
+        /// SuperAdmin can manage any user. ShopAdmin can manage non-SuperAdmin users
+        /// assigned to the same shop, excluding the signed-in ShopAdmin account itself.
+        /// </remarks>
+        [Authorize]
+        [HttpPost("{id}/activate")]
+        public async Task<IActionResult> Activate(
+            string id,
+            CancellationToken cancellationToken
+        ) =>
+            HandleResultResponse(await Mediator.Send(
+                new UserSetActiveStatusCommand(id, true),
+                cancellationToken));
+
+        /// <summary>
+        /// Deactivates a managed user account.
+        /// </summary>
+        [Authorize]
+        [HttpPost("{id}/deactivate")]
+        public async Task<IActionResult> Deactivate(
+            string id,
+            CancellationToken cancellationToken
+        ) =>
+            HandleResultResponse(await Mediator.Send(
+                new UserSetActiveStatusCommand(id, false),
+                cancellationToken));
+
+        /// <summary>
+        /// Activates every ShopAdmin account that is not also a SuperAdmin.
+        /// </summary>
+        [HasCurrentRole(SD.Role_Super_Admin)]
+        [HttpPost("shop-admins/activate")]
+        public async Task<IActionResult> ActivateAllShopAdmins(
+            CancellationToken cancellationToken
+        ) =>
+            HandleResultResponse(await Mediator.Send(
+                new UserSetAllShopAdminsActiveStatusCommand(true),
+                cancellationToken));
+
+        /// <summary>
+        /// Deactivates every ShopAdmin account that is not also a SuperAdmin.
+        /// </summary>
+        [HasCurrentRole(SD.Role_Super_Admin)]
+        [HttpPost("shop-admins/deactivate")]
+        public async Task<IActionResult> DeactivateAllShopAdmins(
+            CancellationToken cancellationToken
+        ) =>
+            HandleResultResponse(await Mediator.Send(
+                new UserSetAllShopAdminsActiveStatusCommand(false),
                 cancellationToken));
 
         /// <summary>

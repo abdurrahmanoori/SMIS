@@ -13,6 +13,7 @@ public class ApplicationUser : IdentityUser<string>, IEntityPK
     public string ShopId { get; private set; } = string.Empty;
     public string LanguageId { get; private set; } = LanguageDefaults.EnglishId;
     public string? ShopName { get; set; }
+    public bool IsActive { get; private set; } = true;
     public int Version { get; set; }
     public DateTime LastModifiedUtc { get; set; }
 
@@ -114,4 +115,6 @@ public class ApplicationUser : IdentityUser<string>, IEntityPK
 
     public void ConfirmEmail() => EmailConfirmed = true;
     public void ConfirmPhoneNumber() => PhoneNumberConfirmed = true;
+    public void Activate() => IsActive = true;
+    public void Deactivate() => IsActive = false;
 }

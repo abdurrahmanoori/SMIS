@@ -108,6 +108,7 @@ internal static class ManualMappings
         LanguageId = value.LanguageId,
         EmailConfirmed = value.EmailConfirmed,
         PhoneNumberConfirmed = value.PhoneNumberConfirmed,
+        IsActive = value.IsActive,
         IsLocked = value.LockoutEnabled && value.LockoutEnd.HasValue && value.LockoutEnd > DateTimeOffset.UtcNow,
         LockoutEnd = value.LockoutEnd,
         Shop = value.Shop is null ? null : value.Shop.ToDto()

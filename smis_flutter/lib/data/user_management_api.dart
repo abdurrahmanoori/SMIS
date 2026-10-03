@@ -191,9 +191,9 @@ class UserManagementApi {
         '${AppConfig.accountEndpoint}/$userId/roles',
         options: _options,
       );
-      return (response.data ?? const <dynamic>[])
-          .whereType<String>()
-          .toList(growable: false);
+      return (response.data ?? const <dynamic>[]).whereType<String>().toList(
+        growable: false,
+      );
     } catch (error, stackTrace) {
       _mapAndThrow(
         error,
@@ -263,6 +263,43 @@ class UserManagementApi {
         error,
         stackTrace,
         fallbackMessage: 'Unable to unlock the user.',
+      );
+    }
+  }
+
+  Future<void> setActiveStatus({
+    required String userId,
+    required bool isActive,
+  }) async {
+    try {
+      await _dio.post<void>(
+        '${AppConfig.accountEndpoint}/$userId/${isActive ? 'activate' : 'deactivate'}',
+        options: _options,
+      );
+    } catch (error, stackTrace) {
+      _mapAndThrow(
+        error,
+        stackTrace,
+        fallbackMessage: isActive
+            ? 'Unable to activate the user.'
+            : 'Unable to deactivate the user.',
+      );
+    }
+  }
+
+  Future<void> setAllShopAdminsActiveStatus(bool isActive) async {
+    try {
+      await _dio.post<void>(
+        '${AppConfig.accountEndpoint}/shop-admins/${isActive ? 'activate' : 'deactivate'}',
+        options: _options,
+      );
+    } catch (error, stackTrace) {
+      _mapAndThrow(
+        error,
+        stackTrace,
+        fallbackMessage: isActive
+            ? 'Unable to activate ShopAdmin accounts.'
+            : 'Unable to deactivate ShopAdmin accounts.',
       );
     }
   }

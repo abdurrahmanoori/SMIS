@@ -43,7 +43,9 @@ class _UsersScreenState extends ConsumerState<UsersScreen> {
 
   UserManagementApi? get _api {
     final session = ref.read(authControllerProvider).session;
-    if (session == null || !session.isSuperAdmin) return null;
+    if (session == null || (!session.isSuperAdmin && !session.isShopAdmin)) {
+      return null;
+    }
     return UserManagementApi(token: session.token);
   }
 
@@ -58,14 +60,18 @@ class _UsersScreenState extends ConsumerState<UsersScreen> {
       _error = null;
     });
     try {
-      final results = await Future.wait<Object>([
-        api.getUsers(pageNumber: _pageNumber, pageSize: _pageSize),
-        api.getActiveShops(),
-      ]);
+      final session = ref.read(authControllerProvider).session!;
+      final page = await api.getUsers(
+        pageNumber: _pageNumber,
+        pageSize: _pageSize,
+      );
+      final shops = session.isSuperAdmin
+          ? await api.getActiveShops()
+          : const <UserShopOption>[];
       if (!mounted) return;
       setState(() {
-        _page = results[0] as ManagedUserPage;
-        _shops = results[1] as List<UserShopOption>;
+        _page = page;
+        _shops = shops;
         _loading = false;
       });
     } catch (error) {
@@ -245,6 +251,96 @@ class _UsersScreenState extends ConsumerState<UsersScreen> {
     }
   }
 
+  Future<void> _setActiveStatus(ManagedUser user, bool isActive) async {
+    final session = ref.read(authControllerProvider).session;
+    if (_mutating || session == null || user.id == session.userId) return;
+
+    final action = isActive ? 'Activate' : 'Deactivate';
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('$action user?'),
+        content: Text(
+          '$action ${user.displayName}? ${isActive ? 'The user will be able to sign in again.' : 'Existing authenticated requests will be rejected immediately.'}',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('Cancel'),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: Text(action),
+          ),
+        ],
+      ),
+    );
+    if (confirmed != true) return;
+
+    final api = _api;
+    if (api == null) return;
+    setState(() => _mutating = true);
+    try {
+      await api.setActiveStatus(userId: user.id, isActive: isActive);
+      await _load();
+      if (mounted) {
+        _showSuccess(
+          isActive
+              ? '${user.displayName} is now active.'
+              : '${user.displayName} is now inactive.',
+        );
+      }
+    } catch (error, stackTrace) {
+      if (mounted) AppErrorNotification.show(context, error, stackTrace);
+    } finally {
+      if (mounted) setState(() => _mutating = false);
+    }
+  }
+
+  Future<void> _setAllShopAdminsActiveStatus(bool isActive) async {
+    if (_mutating) return;
+    final action = isActive ? 'Activate' : 'Deactivate';
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('$action all ShopAdmins?'),
+        content: Text(
+          '$action every ShopAdmin account? Accounts that are also SuperAdmin are excluded.',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('Cancel'),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: Text('$action all'),
+          ),
+        ],
+      ),
+    );
+    if (confirmed != true) return;
+
+    final api = _api;
+    if (api == null) return;
+    setState(() => _mutating = true);
+    try {
+      await api.setAllShopAdminsActiveStatus(isActive);
+      await _load();
+      if (mounted) {
+        _showSuccess(
+          isActive
+              ? 'All ShopAdmin accounts are active.'
+              : 'All ShopAdmin accounts are inactive.',
+        );
+      }
+    } catch (error, stackTrace) {
+      if (mounted) AppErrorNotification.show(context, error, stackTrace);
+    } finally {
+      if (mounted) setState(() => _mutating = false);
+    }
+  }
+
   Future<void> _delete(ManagedUser user) async {
     final session = ref.read(authControllerProvider).session;
     if (_mutating || session == null || user.id == session.userId) return;
@@ -293,6 +389,7 @@ class _UsersScreenState extends ConsumerState<UsersScreen> {
   }
 
   String _lockStatus(ManagedUser user) {
+    if (!user.isActive) return 'Account status: inactive';
     if (!user.isLocked) return 'Account status: unlocked';
     final end = user.lockoutEnd;
     if (end == null) return 'Account status: locked';
@@ -309,12 +406,12 @@ class _UsersScreenState extends ConsumerState<UsersScreen> {
   @override
   Widget build(BuildContext context) {
     final session = ref.watch(authControllerProvider).session;
-    if (session == null || !session.isSuperAdmin) {
+    if (session == null || (!session.isSuperAdmin && !session.isShopAdmin)) {
       return const Scaffold(
         drawer: AppDrawer(),
         body: Center(
           child: Text(
-            'User administration currently requires SuperAdmin access. ShopAdmin user listing and CRUD are not yet enabled by the backend.',
+            'User administration requires SuperAdmin or ShopAdmin access.',
             textAlign: TextAlign.center,
           ),
         ),
@@ -325,6 +422,27 @@ class _UsersScreenState extends ConsumerState<UsersScreen> {
       appBar: AppBar(
         title: const Text('User management'),
         actions: [
+          if (session.isSuperAdmin)
+            PopupMenuButton<String>(
+              tooltip: 'ShopAdmin activation',
+              onSelected: (value) {
+                if (value == 'activate-shop-admins') {
+                  _setAllShopAdminsActiveStatus(true);
+                } else if (value == 'deactivate-shop-admins') {
+                  _setAllShopAdminsActiveStatus(false);
+                }
+              },
+              itemBuilder: (context) => const [
+                PopupMenuItem(
+                  value: 'activate-shop-admins',
+                  child: Text('Activate all ShopAdmins'),
+                ),
+                PopupMenuItem(
+                  value: 'deactivate-shop-admins',
+                  child: Text('Deactivate all ShopAdmins'),
+                ),
+              ],
+            ),
           IconButton(
             tooltip: 'Refresh',
             onPressed: _loading || _mutating ? null : _load,
@@ -333,7 +451,7 @@ class _UsersScreenState extends ConsumerState<UsersScreen> {
         ],
       ),
       drawer: const AppDrawer(),
-      floatingActionButton: _shops.isEmpty
+      floatingActionButton: !session.isSuperAdmin || _shops.isEmpty
           ? null
           : FloatingActionButton.extended(
               onPressed: _loading || _mutating ? null : () => _openForm(),
@@ -345,19 +463,24 @@ class _UsersScreenState extends ConsumerState<UsersScreen> {
           MaterialBanner(
             leading: const Icon(Icons.cloud_outlined),
             content: const Text(
-              'User administration is online-only. User CRUD, roles, password resets, and lock/unlock changes call the server directly and are never queued in PowerSync or local offline storage.',
+              'User administration is online-only. User CRUD, roles, activation, password resets, and lock/unlock changes call the server directly and are never queued in PowerSync or local offline storage.',
             ),
             actions: [
               TextButton(onPressed: _load, child: const Text('Refresh')),
             ],
           ),
-          Expanded(child: _buildBody(session.userId)),
+          Expanded(
+            child: _buildBody(
+              session.userId,
+              isSuperAdmin: session.isSuperAdmin,
+            ),
+          ),
         ],
       ),
     );
   }
 
-  Widget _buildBody(String currentUserId) {
+  Widget _buildBody(String currentUserId, {required bool isSuperAdmin}) {
     if (_loading && _page == null) {
       return const Center(child: CircularProgressIndicator());
     }
@@ -395,6 +518,11 @@ class _UsersScreenState extends ConsumerState<UsersScreen> {
                     title: Row(
                       children: [
                         Expanded(child: Text(user.displayName)),
+                        if (!user.isActive)
+                          const Padding(
+                            padding: EdgeInsets.only(left: 8),
+                            child: Icon(Icons.block_outlined, size: 18),
+                          ),
                         if (user.isLocked)
                           const Padding(
                             padding: EdgeInsets.only(left: 8),
@@ -429,16 +557,25 @@ class _UsersScreenState extends ConsumerState<UsersScreen> {
                           _setLocked(user, true);
                         } else if (value == 'unlock') {
                           _setLocked(user, false);
+                        } else if (value == 'activate') {
+                          _setActiveStatus(user, true);
+                        } else if (value == 'deactivate') {
+                          _setActiveStatus(user, false);
                         } else if (value == 'delete') {
                           _delete(user);
                         }
                       },
                       itemBuilder: (context) => [
-                        const PopupMenuItem(value: 'edit', child: Text('Edit')),
-                        const PopupMenuItem(
-                          value: 'roles',
-                          child: Text('Manage roles'),
-                        ),
+                        if (isSuperAdmin)
+                          const PopupMenuItem(
+                            value: 'edit',
+                            child: Text('Edit'),
+                          ),
+                        if (isSuperAdmin)
+                          const PopupMenuItem(
+                            value: 'roles',
+                            child: Text('Manage roles'),
+                          ),
                         const PopupMenuItem(
                           value: 'reset-password',
                           child: Text('Reset password'),
@@ -453,7 +590,17 @@ class _UsersScreenState extends ConsumerState<UsersScreen> {
                             value: 'lock',
                             child: Text('Lock account'),
                           ),
-                        if (user.id != currentUserId)
+                        if (user.id != currentUserId && user.isActive)
+                          const PopupMenuItem(
+                            value: 'deactivate',
+                            child: Text('Deactivate account'),
+                          )
+                        else if (user.id != currentUserId && !user.isActive)
+                          const PopupMenuItem(
+                            value: 'activate',
+                            child: Text('Activate account'),
+                          ),
+                        if (isSuperAdmin && user.id != currentUserId)
                           const PopupMenuItem(
                             value: 'delete',
                             child: Text('Delete'),
