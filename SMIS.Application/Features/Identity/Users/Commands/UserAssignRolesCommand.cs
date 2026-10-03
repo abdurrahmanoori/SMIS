@@ -63,6 +63,16 @@ namespace SMIS.Application.Features.Identity.Users.Commands
                     return Result.BusinessRule("InvalidRole", $"Role '{role}' is not configured.");
             }
 
+            if (!await _userAdministrationGuard.CanAssignRolesAsync(
+                    user,
+                    roles,
+                    cancellationToken))
+            {
+                return Result.Forbidden(
+                    "user.role_assignment_forbidden",
+                    "You are not allowed to assign the requested roles to this user.");
+            }
+
             if (!roles.Contains(SD.Role_Super_Admin, StringComparer.OrdinalIgnoreCase) &&
                 await _userAdministrationGuard.WouldRemoveLastSuperAdminAsync(
                     user.Id,
