@@ -37,6 +37,10 @@ namespace SMIS.Infrastructure.Server.EntityConfigurations
                 .IsRequired()
                 .HasDefaultValue(true);
 
+            builder.Property(u => u.SecurityVersion)
+                .IsRequired()
+                .HasDefaultValue(0);
+
             builder.Property(u => u.UserName)
                 .IsRequired()
                 .HasMaxLength(256);

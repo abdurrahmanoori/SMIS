@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 
 import '../config/flavor_config.dart';
 import '../l10n/app_localizations.dart';
+import 'auth_session_invalidation.dart';
 
 sealed class AppException implements Exception {
   const AppException(this.message, {this.cause});
@@ -339,6 +340,17 @@ class ApiErrorParser {
 
     final RemoteException mapped;
     if (status == 401) {
+      final hasBearerToken = error.requestOptions.headers.entries.any(
+        (entry) =>
+            entry.key.toLowerCase() == 'authorization' &&
+            entry.value.toString().trimLeft().toLowerCase().startsWith(
+              'bearer ',
+            ),
+      );
+      if (hasBearerToken) {
+        AuthSessionInvalidation.notify(message);
+      }
+
       mapped = AuthenticationException(
         message,
         cause: error,
@@ -460,6 +472,7 @@ class ApiErrorParser {
 
   static bool hasErrorCode(Object? data, String code) =>
       errorsFromResponse(data).any((error) => error.code == code);
+
   static bool _isTransient(DioException error, int status) =>
       status == 408 ||
       status == 429 ||

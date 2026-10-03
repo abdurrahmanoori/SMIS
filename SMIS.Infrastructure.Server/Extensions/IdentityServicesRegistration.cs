@@ -7,6 +7,7 @@ using Microsoft.IdentityModel.Tokens;
 using SMIS.Domain.Entities.Identity.Entity;
 using SMIS.Infrastructure.Server.Services.Identity;
 using System.Security.Claims;
+using System.Globalization;
 using System.Text;
 
 namespace SMIS.Infrastructure.Server.Extensions;
@@ -86,9 +87,43 @@ public static class IdentityServicesRegistration
                         var userManager = context.HttpContext.RequestServices
                             .GetRequiredService<UserManager<ApplicationUser>>();
                         var user = await userManager.FindByIdAsync(userId);
-                        if (user is null || !user.IsActive)
+                        if (user is null)
+                        {
+                            context.Fail("The authenticated user no longer exists.");
+                            return;
+                        }
+
+                        if (!user.IsActive)
                         {
                             context.Fail("The user account is inactive.");
+                            return;
+                        }
+
+                        if (user.LockoutEnabled &&
+                            user.LockoutEnd.HasValue &&
+                            user.LockoutEnd.Value > DateTimeOffset.UtcNow)
+                        {
+                            context.Fail("The user account is locked.");
+                            return;
+                        }
+
+                        var securityVersionValue = context.Principal?
+                            .FindFirst(JwtClaimNames.SecurityVersion)?
+                            .Value;
+                        if (string.IsNullOrWhiteSpace(securityVersionValue) ||
+                            !int.TryParse(
+                                securityVersionValue,
+                                NumberStyles.None,
+                                CultureInfo.InvariantCulture,
+                                out var tokenSecurityVersion))
+                        {
+                            context.Fail("The authentication session is no longer valid.");
+                            return;
+                        }
+
+                        if (tokenSecurityVersion != user.SecurityVersion)
+                        {
+                            context.Fail("The authentication session has been invalidated.");
                         }
                     }
                 };

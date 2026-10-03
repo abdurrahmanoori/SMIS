@@ -2,6 +2,7 @@ using MediatR;
 using Microsoft.AspNetCore.Identity;
 using SMIS.Application.Common.Response;
 using SMIS.Application.Identity.IServices;
+using SMIS.Application.Repositories.Base;
 using SMIS.Domain.Entities.Identity.Entity;
 
 namespace SMIS.Application.Features.Identity.Users.Commands;
@@ -15,14 +16,17 @@ internal sealed class UserAdminResetPasswordCommandHandler
 {
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly IUserAdministrationGuard _userAdministrationGuard;
+    private readonly IUnitOfWork _unitOfWork;
 
     public UserAdminResetPasswordCommandHandler(
         UserManager<ApplicationUser> userManager,
-        IUserAdministrationGuard userAdministrationGuard
+        IUserAdministrationGuard userAdministrationGuard,
+        IUnitOfWork unitOfWork
     )
     {
         _userManager = userManager;
         _userAdministrationGuard = userAdministrationGuard;
+        _unitOfWork = unitOfWork;
     }
 
     public async Task<Result> Handle(
@@ -48,21 +52,34 @@ internal sealed class UserAdminResetPasswordCommandHandler
         }
 
         var resetToken = await _userManager.GeneratePasswordResetTokenAsync(user);
-        var resetResult = await _userManager.ResetPasswordAsync(
-            user,
-            resetToken,
-            user.UserName);
-
-        if (!resetResult.Succeeded)
+        await _unitOfWork.StartTransactionAsync(cancellationToken);
+        try
         {
-            return Result.Failure(resetResult.Errors
-                .Select(error => Error.Validation(
-                    error.Code,
-                    error.Description,
-                    nameof(ApplicationUser.UserName)))
-                .ToArray());
-        }
+            user.InvalidateSessions();
+            var resetResult = await _userManager.ResetPasswordAsync(
+                user,
+                resetToken,
+                user.UserName);
 
-        return Result.Success();
+            if (!resetResult.Succeeded)
+            {
+                await _unitOfWork.RollbackTransactionAsync(cancellationToken);
+                return Result.Failure(resetResult.Errors
+                    .Select(error => Error.Validation(
+                        error.Code,
+                        error.Description,
+                        nameof(ApplicationUser.UserName)))
+                    .ToArray());
+            }
+
+            await _unitOfWork.CommitTransactionAsync(cancellationToken);
+            return Result.Success();
+        }
+        catch
+        {
+            if (_unitOfWork.HasActiveTransaction)
+                await _unitOfWork.RollbackTransactionAsync(cancellationToken);
+            throw;
+        }
     }
 }
