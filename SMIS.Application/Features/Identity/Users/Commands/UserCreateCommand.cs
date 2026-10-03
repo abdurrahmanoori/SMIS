@@ -22,6 +22,7 @@ namespace SMIS.Application.Features.Identity.Users.Commands
         private readonly RoleManager<ApplicationRole> _roleManager;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IUserRoleMetadataService _userRoleMetadataService;
+        private readonly IUserAdministrationGuard _userAdministrationGuard;
 
         public UserCreateCommandHandler(
             ILanguageRepository languageRepository,
@@ -29,7 +30,8 @@ namespace SMIS.Application.Features.Identity.Users.Commands
             UserManager<ApplicationUser> userManager,
             RoleManager<ApplicationRole> roleManager,
             IUnitOfWork unitOfWork,
-            IUserRoleMetadataService userRoleMetadataService
+            IUserRoleMetadataService userRoleMetadataService,
+            IUserAdministrationGuard userAdministrationGuard
         )
         {
             _languageRepository = languageRepository;
@@ -38,6 +40,7 @@ namespace SMIS.Application.Features.Identity.Users.Commands
             _roleManager = roleManager;
             _unitOfWork = unitOfWork;
             _userRoleMetadataService = userRoleMetadataService;
+            _userAdministrationGuard = userAdministrationGuard;
         }
 
         public async Task<Result<UserDto>> Handle(
@@ -51,16 +54,6 @@ namespace SMIS.Application.Features.Identity.Users.Commands
                 return Result<UserDto>.BusinessRule(
                     "InvalidLanguage",
                     "The selected language does not exist or is inactive.");
-            }
-
-            var shop = await _shopRepository.GetByIdIncludingDeletedAsync(
-                request.UserCreateDto.ShopId,
-                cancellationToken);
-            if (shop is null || shop.IsDeleted || !shop.IsActive)
-            {
-                return Result<UserDto>.BusinessRule(
-                    "InvalidShop",
-                    "The assigned shop does not exist or is inactive.");
             }
 
             var roles = Array.Empty<string>();
@@ -86,6 +79,26 @@ namespace SMIS.Application.Features.Identity.Users.Commands
                     if (!await _roleManager.RoleExistsAsync(role))
                         return Result<UserDto>.BusinessRule("InvalidRole", $"Role '{role}' is not configured.");
                 }
+            }
+
+            if (!await _userAdministrationGuard.CanCreateUserAsync(
+                    request.UserCreateDto.ShopId,
+                    roles,
+                    cancellationToken))
+            {
+                return Result<UserDto>.Forbidden(
+                    "user.administration_forbidden",
+                    "You are not allowed to create this user.");
+            }
+
+            var shop = await _shopRepository.GetByIdIncludingDeletedAsync(
+                request.UserCreateDto.ShopId,
+                cancellationToken);
+            if (shop is null || shop.IsDeleted || !shop.IsActive)
+            {
+                return Result<UserDto>.BusinessRule(
+                    "InvalidShop",
+                    "The assigned shop does not exist or is inactive.");
             }
 
             var entity = request.UserCreateDto.ToEntity();
