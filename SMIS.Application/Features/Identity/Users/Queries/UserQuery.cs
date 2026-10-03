@@ -76,6 +76,26 @@ internal sealed class UserQueryHandler
             }
         }
 
+        var search = request.Query.Criteria.Search?.Trim();
+        request.Query.Criteria.Search = null;
+        if (!string.IsNullOrWhiteSpace(search))
+        {
+            users = users.Where(user =>
+                (user.UserName != null && user.UserName.Contains(search)) ||
+                (user.Email != null && user.Email.Contains(search)) ||
+                (user.PhoneNumber != null && user.PhoneNumber.Contains(search)) ||
+                (user.FirstName != null && user.FirstName.Contains(search)) ||
+                (user.LastName != null && user.LastName.Contains(search)) ||
+                (((user.FirstName ?? string.Empty) + " " + (user.LastName ?? string.Empty)).Contains(search)) ||
+                (user.ShopName != null && user.ShopName.Contains(search)) ||
+                _context.UserRoles.Any(userRole =>
+                    userRole.UserId == user.Id &&
+                    _context.Roles.Any(role =>
+                        role.Id == userRole.RoleId &&
+                        role.Name != null &&
+                        role.Name.Contains(search))));
+        }
+
         var query = users
             .OrderBy(user => user.UserName)
             .ThenBy(user => user.Id)

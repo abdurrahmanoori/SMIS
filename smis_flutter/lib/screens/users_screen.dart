@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -30,6 +32,11 @@ class _UsersScreenState extends ConsumerState<UsersScreen> {
 
   ManagedUserPage? _page;
   List<UserShopOption> _shops = const [];
+  final _searchController = TextEditingController();
+  Timer? _searchDebounce;
+  bool _isSearching = false;
+  String _searchQuery = '';
+  int _loadRequestId = 0;
   bool _loading = true;
   bool _mutating = false;
   Object? _error;
@@ -41,6 +48,38 @@ class _UsersScreenState extends ConsumerState<UsersScreen> {
     Future<void>.microtask(_load);
   }
 
+  @override
+  void dispose() {
+    _searchDebounce?.cancel();
+    _searchController.dispose();
+    super.dispose();
+  }
+
+  void _onSearchChanged(String value) {
+    _searchDebounce?.cancel();
+    _searchDebounce = Timer(const Duration(milliseconds: 500), () {
+      final query = value.trim();
+      if (query == _searchQuery) return;
+      setState(() {
+        _searchQuery = query;
+        _pageNumber = 1;
+      });
+      _load(refreshShops: false);
+    });
+  }
+
+  void _stopSearching() {
+    _searchDebounce?.cancel();
+    final hadSearch = _searchQuery.isNotEmpty;
+    setState(() {
+      _isSearching = false;
+      _searchController.clear();
+      _searchQuery = '';
+      _pageNumber = 1;
+    });
+    if (hadSearch) _load(refreshShops: false);
+  }
+
   UserManagementApi? get _api {
     final session = ref.read(authControllerProvider).session;
     if (session == null || (!session.isSuperAdmin && !session.isShopAdmin)) {
@@ -49,7 +88,8 @@ class _UsersScreenState extends ConsumerState<UsersScreen> {
     return UserManagementApi(token: session.token);
   }
 
-  Future<void> _load() async {
+  Future<void> _load({bool refreshShops = true}) async {
+    final requestId = ++_loadRequestId;
     final api = _api;
     if (api == null) {
       if (mounted) setState(() => _loading = false);
@@ -64,18 +104,19 @@ class _UsersScreenState extends ConsumerState<UsersScreen> {
       final page = await api.getUsers(
         pageNumber: _pageNumber,
         pageSize: _pageSize,
+        search: _searchQuery,
       );
-      final shops = session.isSuperAdmin
+      final shops = session.isSuperAdmin && (refreshShops || _shops.isEmpty)
           ? await api.getActiveShops()
-          : const <UserShopOption>[];
-      if (!mounted) return;
+          : _shops;
+      if (!mounted || requestId != _loadRequestId) return;
       setState(() {
         _page = page;
         _shops = shops;
         _loading = false;
       });
     } catch (error) {
-      if (!mounted) return;
+      if (!mounted || requestId != _loadRequestId) return;
       setState(() {
         _error = error;
         _loading = false;
@@ -420,8 +461,30 @@ class _UsersScreenState extends ConsumerState<UsersScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('User management'),
+        title: _isSearching
+            ? TextField(
+                controller: _searchController,
+                autofocus: true,
+                decoration: const InputDecoration(
+                  hintText: 'Search users...',
+                  border: InputBorder.none,
+                ),
+                onChanged: _onSearchChanged,
+              )
+            : const Text('User management'),
         actions: [
+          if (_isSearching)
+            IconButton(
+              tooltip: 'Close search',
+              icon: const Icon(Icons.close),
+              onPressed: _stopSearching,
+            )
+          else
+            IconButton(
+              tooltip: 'Search users',
+              icon: const Icon(Icons.search),
+              onPressed: () => setState(() => _isSearching = true),
+            ),
           if (session.isSuperAdmin)
             PopupMenuButton<String>(
               tooltip: 'ShopAdmin activation',
@@ -490,12 +553,30 @@ class _UsersScreenState extends ConsumerState<UsersScreen> {
 
     final page = _page;
     if (page == null || page.items.isEmpty) {
-      return const Center(child: Text('No users found.'));
+      return Center(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              _searchQuery.isEmpty ? Icons.people_outline : Icons.search_off,
+              size: 52,
+            ),
+            const SizedBox(height: 12),
+            Text(
+              _searchQuery.isEmpty ? 'No users found.' : 'No matching users.',
+            ),
+            if (_searchQuery.isNotEmpty) ...[
+              const SizedBox(height: 4),
+              const Text('Try a different search term.'),
+            ],
+          ],
+        ),
+      );
     }
 
     return Column(
       children: [
-        if (_mutating) const LinearProgressIndicator(),
+        if (_mutating || _loading) const LinearProgressIndicator(),
         Expanded(
           child: RefreshIndicator(
             onRefresh: _load,

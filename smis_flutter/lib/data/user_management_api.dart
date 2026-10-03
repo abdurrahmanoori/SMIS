@@ -30,6 +30,7 @@ class UserManagementApi {
   Future<ManagedUserPage> getUsers({
     required int pageNumber,
     int pageSize = 25,
+    String? search,
   }) async {
     try {
       final response = await _dio.get<Map<String, dynamic>>(
@@ -38,6 +39,8 @@ class UserManagementApi {
           'pageNumber': pageNumber,
           'pageSize': pageSize,
           'includeShop': true,
+          if (search != null && search.trim().isNotEmpty)
+            'search': search.trim(),
         },
         options: _options,
       );
