@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../controllers/auth_controller.dart';
+import '../data/data_exception.dart';
 import '../data/user_management_api.dart';
 import '../models/managed_user.dart';
 import '../widgets/app_drawer.dart';
