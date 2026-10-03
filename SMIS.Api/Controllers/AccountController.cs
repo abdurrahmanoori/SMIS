@@ -85,10 +85,10 @@ namespace SMIS.Api.Controllers
             HandleResultResponse(await Mediator.Send(new RefreshSessionCommand()));
 
         /// <summary>
-        /// Creates a new user account.
+        /// Creates a new user account within the signed-in administrator's permitted scope.
         /// </summary>
+        [Authorize]
         [HttpPost("register")]
-        [HasCurrentRole(SD.Role_Super_Admin)]
         public async Task<ActionResult<UserDto>> Create(
             UserCreateDto dto
         ) =>
@@ -125,6 +125,7 @@ namespace SMIS.Api.Controllers
         /// <summary>
         /// Updates an existing user account.
         /// </summary>
+        [Authorize]
         [HttpPut("{id}")]
         public async Task<ActionResult<UserDto>> Update(
             string id,
@@ -133,9 +134,9 @@ namespace SMIS.Api.Controllers
             HandleResultResponse(await Mediator.Send(new UserUpdateCommand(id, dto)));
 
         /// <summary>
-        /// Deletes a user account.
+        /// Deletes a user account within the signed-in administrator's permitted scope.
         /// </summary>
-        [HasCurrentRole(SD.Role_Super_Admin)]
+        [Authorize]
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(
             string id
@@ -255,13 +256,13 @@ namespace SMIS.Api.Controllers
                 cancellationToken));
 
         /// <summary>
-        /// Replaces the complete role list for a user.
+        /// Replaces the complete role list for a user within the signed-in administrator's permitted scope.
         /// </summary>
         /// <remarks>
         /// This is not an "add one role" endpoint. Roles missing from the submitted list are removed, and new names in the list are added.
         /// Submitted roles must be one of the application's configured roles.
         /// </remarks>
-        [HasCurrentRole(SD.Role_Super_Admin)]
+        [Authorize]
         [HttpPost("{id}/roles")]
         public async Task<IActionResult> AssignRoles(
             string id,
@@ -270,9 +271,9 @@ namespace SMIS.Api.Controllers
             HandleResultResponse(await Mediator.Send(new UserAssignRolesCommand(id, roles)));
 
         /// <summary>
-        /// Gets all roles currently assigned to a user.
+        /// Gets all roles currently assigned to a user within the signed-in administrator's permitted scope.
         /// </summary>
-        [HasCurrentRole(SD.Role_Super_Admin)]
+        [Authorize]
         [HttpGet("{id}/roles")]
         public async Task<ActionResult<IList<string>>> GetUserRoles(
             string id
@@ -284,7 +285,7 @@ namespace SMIS.Api.Controllers
         /// </summary>
         /// <param name="id">The user ID.</param>
         /// <param name="role">The role name to remove.</param>
-        [HasCurrentRole(SD.Role_Super_Admin)]
+        [Authorize]
         [HttpDelete("{id}/roles/{role}")]
         public async Task<IActionResult> RemoveRole(
             string id,
