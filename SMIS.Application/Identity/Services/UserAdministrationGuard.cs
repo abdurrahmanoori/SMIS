@@ -49,6 +49,47 @@ public sealed class UserAdministrationGuard : IUserAdministrationGuard
         return !await _userManager.IsInRoleAsync(targetUser, SD.Role_Super_Admin);
     }
 
+    public async Task<bool> CanCreateUserAsync(
+        string shopId,
+        IEnumerable<string> roles,
+        CancellationToken cancellationToken = default
+    )
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+
+        var signedInUser = await _userManager.FindByIdAsync(_currentUser.GetId());
+        if (signedInUser is null) return false;
+
+        if (await _userManager.IsInRoleAsync(signedInUser, SD.Role_Super_Admin))
+            return true;
+
+        if (!await _userManager.IsInRoleAsync(signedInUser, SD.Role_Shop_Admin))
+            return false;
+
+        if (!string.Equals(signedInUser.ShopId, shopId, StringComparison.Ordinal))
+            return false;
+
+        return !roles.Contains(SD.Role_Super_Admin, StringComparer.OrdinalIgnoreCase);
+    }
+
+    public async Task<bool> CanAssignRolesAsync(
+        ApplicationUser targetUser,
+        IEnumerable<string> roles,
+        CancellationToken cancellationToken = default
+    )
+    {
+        if (!await CanManageUserAsync(targetUser, cancellationToken))
+            return false;
+
+        var signedInUser = await _userManager.FindByIdAsync(_currentUser.GetId());
+        if (signedInUser is null) return false;
+
+        if (await _userManager.IsInRoleAsync(signedInUser, SD.Role_Super_Admin))
+            return true;
+
+        return !roles.Contains(SD.Role_Super_Admin, StringComparer.OrdinalIgnoreCase);
+    }
+
     public async Task<bool> WouldRemoveLastSuperAdminAsync(
         string userId,
         CancellationToken cancellationToken = default
