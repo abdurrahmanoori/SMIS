@@ -9,6 +9,18 @@ public interface IUserAdministrationGuard
         CancellationToken cancellationToken = default
     );
 
+    Task<bool> CanCreateUserAsync(
+        string shopId,
+        IEnumerable<string> roles,
+        CancellationToken cancellationToken = default
+    );
+
+    Task<bool> CanAssignRolesAsync(
+        ApplicationUser targetUser,
+        IEnumerable<string> roles,
+        CancellationToken cancellationToken = default
+    );
+
     Task<bool> WouldRemoveLastSuperAdminAsync(
         string userId,
         CancellationToken cancellationToken = default
