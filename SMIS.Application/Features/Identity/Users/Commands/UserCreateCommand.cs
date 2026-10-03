@@ -1,4 +1,3 @@
-using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using SMIS.Application.Common.Contants;
@@ -9,6 +8,7 @@ using SMIS.Application.Repositories.Localization;
 using SMIS.Application.Repositories.Shops;
 using SMIS.Application.Identity.IServices;
 using SMIS.Domain.Entities.Identity.Entity;
+using SMIS.Application.Mappings;
 
 namespace SMIS.Application.Features.Identity.Users.Commands
 {
@@ -21,7 +21,6 @@ namespace SMIS.Application.Features.Identity.Users.Commands
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly RoleManager<ApplicationRole> _roleManager;
         private readonly IUnitOfWork _unitOfWork;
-        private readonly IMapper _mapper;
         private readonly IUserRoleMetadataService _userRoleMetadataService;
 
         public UserCreateCommandHandler(
@@ -30,7 +29,6 @@ namespace SMIS.Application.Features.Identity.Users.Commands
             UserManager<ApplicationUser> userManager,
             RoleManager<ApplicationRole> roleManager,
             IUnitOfWork unitOfWork,
-            IMapper mapper,
             IUserRoleMetadataService userRoleMetadataService
         )
         {
@@ -39,7 +37,6 @@ namespace SMIS.Application.Features.Identity.Users.Commands
             _userManager = userManager;
             _roleManager = roleManager;
             _unitOfWork = unitOfWork;
-            _mapper = mapper;
             _userRoleMetadataService = userRoleMetadataService;
         }
 
@@ -91,7 +88,7 @@ namespace SMIS.Application.Features.Identity.Users.Commands
                 }
             }
 
-            var entity = _mapper.Map<ApplicationUser>(request.UserCreateDto);
+            var entity = request.UserCreateDto.ToEntity();
             entity.ShopName = shop.Name;
 
             await _unitOfWork.StartTransactionAsync(cancellationToken);
@@ -128,7 +125,7 @@ namespace SMIS.Application.Features.Identity.Users.Commands
                     cancellationToken);
                 await _unitOfWork.CommitTransactionAsync(cancellationToken);
 
-                var dto = _mapper.Map<UserDto>(entity);
+                var dto = entity.ToDto();
                 dto.Roles = roles.ToList();
                 return Result<UserDto>.Success(dto);
             }

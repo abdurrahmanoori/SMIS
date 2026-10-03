@@ -1,4 +1,3 @@
-using AutoMapper;
 using MediatR;
 using SMIS.Application.DTO.Provinces;
 using SMIS.Application.Repositories.Base;
@@ -6,6 +5,7 @@ using SMIS.Application.Repositories.Provinces;
 using SMIS.Application.Repositories.Localization;
 using SMIS.Application.Common.Response;
 using SMIS.Domain.Entities.LocationEntities;
+using SMIS.Application.Mappings;
 
 namespace SMIS.Application.Features.Provinces.Commands
 {
@@ -18,19 +18,16 @@ namespace SMIS.Application.Features.Provinces.Commands
     {
         private readonly IProvinceRepository _repo;
         private readonly IUnitOfWork _uow;
-        private readonly IMapper _mapper;
         private readonly ILanguageRepository _languageRepo;
 
         public ProvinceTranslationCreateCommandHandler(
             IProvinceRepository repo,
             IUnitOfWork uow,
-            IMapper mapper,
             ILanguageRepository languageRepo
         )
         {
             _repo = repo;
             _uow = uow;
-            _mapper = mapper;
             _languageRepo = languageRepo;
         }
 
@@ -42,8 +39,8 @@ namespace SMIS.Application.Features.Provinces.Commands
             var province = await _repo.GetByIdAsync(request.Dto.ProvinceId);
             if (province is null) return Result<ProvinceTranslationDto>.NotFound(request.Dto.ProvinceId);
 
-            // Map DTO to entity using AutoMapper
-            var entity = _mapper.Map<ProvinceTranslation>(request.Dto);
+            // Map DTO explicitly so the write contract stays visible at compile time.
+            var entity = request.Dto.ToEntity();
 
             // Resolve LanguageId if not provided but LanguageCode exists
             if (string.IsNullOrEmpty(request.Dto.LanguageId) && !string.IsNullOrWhiteSpace(request.Dto.LanguageCode))
@@ -87,7 +84,7 @@ namespace SMIS.Application.Features.Provinces.Commands
 
             await _uow.SaveChanges(cancellationToken);
 
-            var dto = _mapper.Map<ProvinceTranslationDto>(entity);
+            var dto = entity.ToDto();
             return Result<ProvinceTranslationDto>.Success(dto);
         }
     }

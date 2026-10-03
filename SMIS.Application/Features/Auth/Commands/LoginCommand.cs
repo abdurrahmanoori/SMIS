@@ -54,11 +54,16 @@ namespace SMIS.Application.Features.Auth.Commands
             if (signInResult.IsLockedOut)
                 return Result<LoginResponseDto>.Unauthorized(
                     "auth.account_locked",
-                    "The account is temporarily locked after repeated failed sign-in attempts.");
+                    "The account is locked. Contact an administrator if access should be restored.");
             if (!signInResult.Succeeded)
                 return Result<LoginResponseDto>.Unauthorized(
                     "auth.invalid_credentials",
                     "Invalid email or password.");
+
+            if (!user.IsActive)
+                return Result<LoginResponseDto>.Unauthorized(
+                    "auth.account_inactive",
+                    "The account is inactive. Contact an administrator if access should be restored.");
 
             var roles = await _userManager.GetRolesAsync(user);
             var isSuperAdmin = roles.Any(role => string.Equals(

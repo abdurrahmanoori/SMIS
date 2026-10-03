@@ -1,4 +1,3 @@
-using AutoMapper;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using SMIS.Application.Common.Response;
@@ -6,6 +5,7 @@ using SMIS.Application.DTO.Districts;
 using SMIS.Application.Repositories.Base;
 using SMIS.Application.Repositories.Districts;
 using SMIS.Application.Services;
+using SMIS.Application.Mappings;
 
 namespace SMIS.Application.Features.Districts.Commands
 {
@@ -15,18 +15,15 @@ namespace SMIS.Application.Features.Districts.Commands
     {
         private readonly IDistrictRepository _districtRepository;
         private readonly IUnitOfWork _unitOfWork;
-        private readonly IMapper _mapper;
         private readonly IApplicationDbContext _context;
 
         public DistrictUpdateCommandHandler(
             IUnitOfWork unitOfWork,
-            IMapper mapper,
             IDistrictRepository districtRepository,
             IApplicationDbContext context
         )
         {
             _unitOfWork = unitOfWork;
-            _mapper = mapper;
             _districtRepository = districtRepository;
             _context = context;
         }
@@ -55,12 +52,12 @@ namespace SMIS.Application.Features.Districts.Commands
                     nameof(DistrictCreateDto.ProvinceId));
             }
 
-            _mapper.Map(request.DistrictCreateDto, entity);
+            request.DistrictCreateDto.ApplyTo(entity);
             entity.Province = province;
 
             await _unitOfWork.SaveChanges(cancellationToken);
 
-            var dto = _mapper.Map<DistrictDto>(entity);
+            var dto = entity.ToDto();
             return Result<DistrictDto>.Success(dto);
         }
     }

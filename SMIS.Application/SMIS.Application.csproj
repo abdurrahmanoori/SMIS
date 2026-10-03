@@ -7,9 +7,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="AutoMapper"/>
-        <!--<PackageReference Include="AutoMapper.Collection" Version="9.0.0" />-->
-        <PackageReference Include="AutoMapper.Collection.EntityFrameworkCore"/>
         <PackageReference Include="FluentValidation"/>
         <PackageReference Include="FluentValidation.DependencyInjectionExtensions"/>
         <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions"/>

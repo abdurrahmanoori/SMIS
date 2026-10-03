@@ -1,4 +1,3 @@
-using AutoMapper;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using SMIS.Application.Common.Response;
@@ -7,6 +6,7 @@ using SMIS.Application.Identity.IServices;
 using SMIS.Application.Repositories.UnitOfMeasures;
 using SMIS.Application.Services;
 using SMIS.Domain.Services;
+using SMIS.Application.Mappings;
 
 namespace SMIS.Application.Features.UnitOfMeasures.Commands;
 
@@ -24,14 +24,12 @@ internal sealed class
     private readonly IUnitOfMeasureRepository _repository;
     private readonly IApplicationDbContext _db;
     private readonly ICurrentUser _currentUser;
-    private readonly IMapper _mapper;
 
     public UnitOfMeasureSyncCreateCommandHandler(
         IUnitOfMeasureRepository repository,
         IApplicationDbContext db,
-        ICurrentUser currentUser,
-        IMapper mapper
-    ) => (_repository, _db, _currentUser, _mapper) = (repository, db, currentUser, mapper);
+        ICurrentUser currentUser
+    ) => (_repository, _db, _currentUser) = (repository, db, currentUser);
 
     public async Task<Result<UnitOfMeasureDto>> Handle(
         UnitOfMeasureSyncCreateCommand request,
@@ -46,12 +44,12 @@ internal sealed class
         if (unit is not null)
         {
             if (modified <= unit.GetConflictModifiedUtc())
-                return Result<UnitOfMeasureDto>.Success(_mapper.Map<UnitOfMeasureDto>(unit));
+                return Result<UnitOfMeasureDto>.Success(unit.ToDto());
             UnitOfMeasureCommandRules.Apply(unit, request.Dto.Name, request.Dto.Symbol, request.Dto.Description);
             unit.SetClientModificationMetadata(modified);
             unit.Restore();
             await _db.SaveChangesAsync(cancellationToken);
-            return Result<UnitOfMeasureDto>.Success(_mapper.Map<UnitOfMeasureDto>(unit));
+            return Result<UnitOfMeasureDto>.Success(unit.ToDto());
         }
 
         unit = UnitOfMeasureCommandRules.Create(request.Dto.Name, request.Dto.Symbol, request.Dto.Description);
@@ -59,7 +57,7 @@ internal sealed class
         unit.SetClientModificationMetadata(modified);
         await _repository.AddAsync(unit);
         await _db.SaveChangesAsync(cancellationToken);
-        return Result<UnitOfMeasureDto>.Success(_mapper.Map<UnitOfMeasureDto>(unit));
+        return Result<UnitOfMeasureDto>.Success(unit.ToDto());
     }
 }
 
@@ -69,14 +67,12 @@ internal sealed class
     private readonly IUnitOfMeasureRepository _repository;
     private readonly IApplicationDbContext _db;
     private readonly ICurrentUser _currentUser;
-    private readonly IMapper _mapper;
 
     public UnitOfMeasureSyncUpdateCommandHandler(
         IUnitOfMeasureRepository repository,
         IApplicationDbContext db,
-        ICurrentUser currentUser,
-        IMapper mapper
-    ) => (_repository, _db, _currentUser, _mapper) = (repository, db, currentUser, mapper);
+        ICurrentUser currentUser
+    ) => (_repository, _db, _currentUser) = (repository, db, currentUser);
 
     public async Task<Result<UnitOfMeasureDto>> Handle(
         UnitOfMeasureSyncUpdateCommand request,
@@ -90,12 +86,12 @@ internal sealed class
         if (unit is null) return Result<UnitOfMeasureDto>.NotFound(request.Id);
         var modified = DateTimeService.NormalizeUtc(request.Dto.ClientModifiedDate);
         if (modified <= unit.GetConflictModifiedUtc())
-            return Result<UnitOfMeasureDto>.Success(_mapper.Map<UnitOfMeasureDto>(unit));
+            return Result<UnitOfMeasureDto>.Success(unit.ToDto());
         UnitOfMeasureCommandRules.Apply(unit, request.Dto.Name, request.Dto.Symbol, request.Dto.Description);
         unit.SetClientModificationMetadata(modified);
         unit.Restore();
         await _db.SaveChangesAsync(cancellationToken);
-        return Result<UnitOfMeasureDto>.Success(_mapper.Map<UnitOfMeasureDto>(unit));
+        return Result<UnitOfMeasureDto>.Success(unit.ToDto());
     }
 }
 
@@ -105,14 +101,12 @@ internal sealed class
     private readonly IUnitOfMeasureRepository _repository;
     private readonly IApplicationDbContext _db;
     private readonly ICurrentUser _currentUser;
-    private readonly IMapper _mapper;
 
     public UnitOfMeasureSyncDeleteCommandHandler(
         IUnitOfMeasureRepository repository,
         IApplicationDbContext db,
-        ICurrentUser currentUser,
-        IMapper mapper
-    ) => (_repository, _db, _currentUser, _mapper) = (repository, db, currentUser, mapper);
+        ICurrentUser currentUser
+    ) => (_repository, _db, _currentUser) = (repository, db, currentUser);
 
     public async Task<Result<UnitOfMeasureDto>> Handle(
         UnitOfMeasureSyncDeleteCommand request,
@@ -126,7 +120,7 @@ internal sealed class
         if (unit is null) return Result<UnitOfMeasureDto>.NotFound(request.Id);
         var modified = DateTimeService.NormalizeUtc(request.Dto.ClientModifiedDate);
         if (modified < unit.GetConflictModifiedUtc())
-            return Result<UnitOfMeasureDto>.Success(_mapper.Map<UnitOfMeasureDto>(unit));
+            return Result<UnitOfMeasureDto>.Success(unit.ToDto());
 
         var referenceCount = await _repository.CountReferencesAsync(
             unit.Id,
@@ -139,7 +133,7 @@ internal sealed class
         unit.SetClientModificationMetadata(modified);
         await _repository.RemoveAsync(unit);
         await _db.SaveChangesAsync(cancellationToken);
-        return Result<UnitOfMeasureDto>.Success(_mapper.Map<UnitOfMeasureDto>(unit));
+        return Result<UnitOfMeasureDto>.Success(unit.ToDto());
     }
 }
 
@@ -148,5 +142,4 @@ internal static class UnitOfMeasureSyncRules
     public static string Id(
         string value
     ) => Guid.Parse(value).ToString("D");
-
 }

@@ -1,4 +1,3 @@
-using AutoMapper;
 using MediatR;
 using SMIS.Application.Common.Response;
 using SMIS.Application.DTO.Products;
@@ -10,6 +9,7 @@ using SMIS.Application.Repositories.UnitOfMeasures;
 using SMIS.Application.Identity.IServices;
 using SMIS.Application.Services;
 using SMIS.Domain.Entities;
+using SMIS.Application.Mappings;
 
 namespace SMIS.Application.Features.Products.Commands;
 
@@ -23,12 +23,10 @@ internal sealed class ProductCreateCommandHandler : IRequestHandler<ProductCreat
     private readonly IProductUnitRepository _productUnitRepository;
     private readonly ICategoryRepository _categoryRepository;
     private readonly IApplicationDbContext _db;
-    private readonly IMapper _mapper;
     private readonly ICurrentUser _currentUser;
 
     public ProductCreateCommandHandler(
         IApplicationDbContext db,
-        IMapper mapper,
         IProductRepository productRepository,
         IShopRepository shopRepository,
         IUnitOfMeasureRepository unitOfMeasureRepository,
@@ -38,7 +36,6 @@ internal sealed class ProductCreateCommandHandler : IRequestHandler<ProductCreat
     )
     {
         _db = db;
-        _mapper = mapper;
         _productRepository = productRepository;
         _shopRepository = shopRepository;
         _unitOfMeasureRepository = unitOfMeasureRepository;
@@ -77,6 +74,6 @@ internal sealed class ProductCreateCommandHandler : IRequestHandler<ProductCreat
 
         await _db.SaveChangesAsync(cancellationToken);
 
-        return Result<ProductDto>.Success(_mapper.Map<ProductDto>(entity));
+        return Result<ProductDto>.Success(entity.ToDto());
     }
 }

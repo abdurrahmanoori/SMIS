@@ -6,6 +6,9 @@ class ManagedUser {
     required this.shopId,
     required this.languageId,
     required this.roles,
+    required this.isActive,
+    required this.isLocked,
+    this.lockoutEnd,
     this.firstName,
     this.lastName,
     this.phoneNumber,
@@ -22,6 +25,12 @@ class ManagedUser {
   final String? shopName;
   final String languageId;
   final List<String> roles;
+  final bool isActive;
+  final bool isLocked;
+  final DateTime? lockoutEnd;
+
+  bool get isSuperAdmin =>
+      roles.any((role) => role.trim().toLowerCase() == 'superadmin');
 
   String get displayName {
     final name = [firstName, lastName]
@@ -50,6 +59,9 @@ class ManagedUser {
       roles: rawRoles is List
           ? rawRoles.whereType<String>().toList(growable: false)
           : const <String>[],
+      isActive: _bool(json, 'isActive', 'IsActive'),
+      isLocked: _bool(json, 'isLocked', 'IsLocked'),
+      lockoutEnd: _dateTime(json, 'lockoutEnd', 'LockoutEnd'),
     );
   }
 
@@ -58,6 +70,22 @@ class ManagedUser {
     String camelCase,
     String pascalCase,
   ) => (json[camelCase] ?? json[pascalCase] ?? '').toString();
+
+  static bool _bool(
+    Map<String, dynamic> json,
+    String camelCase,
+    String pascalCase,
+  ) => (json[camelCase] ?? json[pascalCase]) == true;
+
+  static DateTime? _dateTime(
+    Map<String, dynamic> json,
+    String camelCase,
+    String pascalCase,
+  ) {
+    final value = json[camelCase] ?? json[pascalCase];
+    if (value == null) return null;
+    return DateTime.tryParse(value.toString());
+  }
 
   static String? _optionalString(
     Map<String, dynamic> json,

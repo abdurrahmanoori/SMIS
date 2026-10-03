@@ -53,6 +53,11 @@ internal sealed class SwitchShopCommandHandler
         if (user is null)
             return Result<LoginResponseDto>.NotFound(_currentUser.GetId());
 
+        if (!user.IsActive)
+            return Result<LoginResponseDto>.Unauthorized(
+                "auth.account_inactive",
+                "The account is inactive. Contact an administrator if access should be restored.");
+
         if (!await _userManager.IsInRoleAsync(user, SMIS.Application.Common.Contants.SD.Role_Super_Admin))
         {
             return Result<LoginResponseDto>.Forbidden(

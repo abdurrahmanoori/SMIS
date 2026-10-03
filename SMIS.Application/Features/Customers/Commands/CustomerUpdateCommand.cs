@@ -1,9 +1,9 @@
-using AutoMapper;
 using MediatR;
 using SMIS.Application.Common.Response;
 using SMIS.Application.DTO.Customers;
 using SMIS.Application.Repositories.Base;
 using SMIS.Application.Repositories.Customers;
+using SMIS.Application.Mappings;
 
 namespace SMIS.Application.Features.Customers.Commands
 {
@@ -13,16 +13,13 @@ namespace SMIS.Application.Features.Customers.Commands
     {
         private readonly ICustomerRepository _customerRepository;
         private readonly IUnitOfWork _unitOfWork;
-        private readonly IMapper _mapper;
 
         public CustomerUpdateCommandHandler(
             IUnitOfWork unitOfWork,
-            IMapper mapper,
             ICustomerRepository customerRepository
         )
         {
             _unitOfWork = unitOfWork;
-            _mapper = mapper;
             _customerRepository = customerRepository;
         }
 
@@ -52,7 +49,7 @@ namespace SMIS.Application.Features.Customers.Commands
             else entity.Deactivate();
             await _unitOfWork.SaveChanges(cancellationToken);
 
-            var dto = _mapper.Map<CustomerDto>(entity);
+            var dto = entity.ToDto();
             return Result<CustomerDto>.Success(dto);
         }
     }

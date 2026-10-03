@@ -1,4 +1,3 @@
-using AutoMapper;
 using MediatR;
 using SMIS.Application.Common.Response;
 using SMIS.Application.DTO.ProductUnits;
@@ -7,6 +6,7 @@ using SMIS.Application.Repositories.ProductUnits;
 using SMIS.Application.Repositories.UnitOfMeasures;
 using SMIS.Application.Services;
 using SMIS.Domain.Entities;
+using SMIS.Application.Mappings;
 
 namespace SMIS.Application.Features.ProductUnits.Commands
 {
@@ -20,18 +20,15 @@ namespace SMIS.Application.Features.ProductUnits.Commands
         private readonly IProductRepository _productRepository;
         private readonly IUnitOfMeasureRepository _unitOfMeasureRepository;
         private readonly IApplicationDbContext _db;
-        private readonly IMapper _mapper;
 
         public ProductUnitCreateCommandHandler(
             IApplicationDbContext db,
-            IMapper mapper,
             IProductUnitRepository productUnitRepository,
             IProductRepository productRepository,
             IUnitOfMeasureRepository unitOfMeasureRepository
         )
         {
             _db = db;
-            _mapper = mapper;
             _productUnitRepository = productUnitRepository;
             _productRepository = productRepository;
             _unitOfMeasureRepository = unitOfMeasureRepository;
@@ -57,7 +54,7 @@ namespace SMIS.Application.Features.ProductUnits.Commands
                 cancellationToken);
             if (guard is not null) return guard;
 
-            var entity = _mapper.Map<ProductUnit>(request.ProductUnitCreateDto);
+            var entity = request.ProductUnitCreateDto.ToEntity();
 
             // Populate name fields using domain methods
             entity.SetProductName(product.Name);
@@ -68,7 +65,7 @@ namespace SMIS.Application.Features.ProductUnits.Commands
             await _productUnitRepository.AddAsync(entity);
             await _db.SaveChangesAsync(cancellationToken);
 
-            return Result<ProductUnitDto>.Success(_mapper.Map<ProductUnitDto>(entity));
+            return Result<ProductUnitDto>.Success(entity.ToDto());
         }
     }
 }

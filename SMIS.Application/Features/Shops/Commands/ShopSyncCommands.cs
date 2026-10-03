@@ -1,4 +1,3 @@
-using AutoMapper;
 using MediatR;
 using SMIS.Application.Common.Response;
 using SMIS.Application.DTO.Shops;
@@ -7,6 +6,7 @@ using SMIS.Application.Repositories.Shops;
 using SMIS.Application.Services;
 using SMIS.Domain.Entities;
 using SMIS.Domain.Services;
+using SMIS.Application.Mappings;
 
 namespace SMIS.Application.Features.Shops.Commands;
 
@@ -21,19 +21,16 @@ internal sealed class ShopSyncCreateCommandHandler : IRequestHandler<ShopSyncCre
     private readonly IShopRepository _repository;
     private readonly IApplicationDbContext _db;
     private readonly ICurrentUser _currentUser;
-    private readonly IMapper _mapper;
 
     public ShopSyncCreateCommandHandler(
         IShopRepository repository,
         IApplicationDbContext db,
-        ICurrentUser currentUser,
-        IMapper mapper
+        ICurrentUser currentUser
     )
     {
         _repository = repository;
         _db = db;
         _currentUser = currentUser;
-        _mapper = mapper;
     }
 
     public async Task<Result<ShopDto>> Handle(
@@ -53,13 +50,13 @@ internal sealed class ShopSyncCreateCommandHandler : IRequestHandler<ShopSyncCre
 
             var clientModified = DateTimeService.NormalizeUtc(request.Dto.ClientModifiedDate);
             if (clientModified <= existing.GetConflictModifiedUtc())
-                return Result<ShopDto>.Success(_mapper.Map<ShopDto>(existing));
+                return Result<ShopDto>.Success(existing.ToDto());
 
             ShopCommandRules.Apply(existing, request.Dto);
             existing.SetClientModificationMetadata(clientModified);
             existing.Restore();
             await _db.SaveChangesAsync(cancellationToken);
-            return Result<ShopDto>.Success(_mapper.Map<ShopDto>(existing));
+            return Result<ShopDto>.Success(existing.ToDto());
         }
 
         var shop = ShopCommandRules.Create(request.Dto);
@@ -67,7 +64,7 @@ internal sealed class ShopSyncCreateCommandHandler : IRequestHandler<ShopSyncCre
         shop.SetClientModificationMetadata(DateTimeService.NormalizeUtc(request.Dto.ClientModifiedDate));
         await _repository.AddAsync(shop);
         await _db.SaveChangesAsync(cancellationToken);
-        return Result<ShopDto>.Success(_mapper.Map<ShopDto>(shop));
+        return Result<ShopDto>.Success(shop.ToDto());
     }
 }
 
@@ -76,19 +73,16 @@ internal sealed class ShopSyncUpdateCommandHandler : IRequestHandler<ShopSyncUpd
     private readonly IShopRepository _repository;
     private readonly IApplicationDbContext _db;
     private readonly ICurrentUser _currentUser;
-    private readonly IMapper _mapper;
 
     public ShopSyncUpdateCommandHandler(
         IShopRepository repository,
         IApplicationDbContext db,
-        ICurrentUser currentUser,
-        IMapper mapper
+        ICurrentUser currentUser
     )
     {
         _repository = repository;
         _db = db;
         _currentUser = currentUser;
-        _mapper = mapper;
     }
 
     public async Task<Result<ShopDto>> Handle(
@@ -105,13 +99,13 @@ internal sealed class ShopSyncUpdateCommandHandler : IRequestHandler<ShopSyncUpd
 
         var clientModified = DateTimeService.NormalizeUtc(request.Dto.ClientModifiedDate);
         if (clientModified <= shop.GetConflictModifiedUtc())
-            return Result<ShopDto>.Success(_mapper.Map<ShopDto>(shop));
+            return Result<ShopDto>.Success(shop.ToDto());
 
         ShopCommandRules.Apply(shop, request.Dto);
         shop.SetClientModificationMetadata(clientModified);
         shop.Restore();
         await _db.SaveChangesAsync(cancellationToken);
-        return Result<ShopDto>.Success(_mapper.Map<ShopDto>(shop));
+        return Result<ShopDto>.Success(shop.ToDto());
     }
 }
 
@@ -120,19 +114,16 @@ internal sealed class ShopSyncDeleteCommandHandler : IRequestHandler<ShopSyncDel
     private readonly IShopRepository _repository;
     private readonly IApplicationDbContext _db;
     private readonly ICurrentUser _currentUser;
-    private readonly IMapper _mapper;
 
     public ShopSyncDeleteCommandHandler(
         IShopRepository repository,
         IApplicationDbContext db,
-        ICurrentUser currentUser,
-        IMapper mapper
+        ICurrentUser currentUser
     )
     {
         _repository = repository;
         _db = db;
         _currentUser = currentUser;
-        _mapper = mapper;
     }
 
     public async Task<Result<ShopDto>> Handle(
@@ -149,7 +140,7 @@ internal sealed class ShopSyncDeleteCommandHandler : IRequestHandler<ShopSyncDel
 
         var clientModified = DateTimeService.NormalizeUtc(request.Dto.ClientModifiedDate);
         if (clientModified < shop.GetConflictModifiedUtc())
-            return Result<ShopDto>.Success(_mapper.Map<ShopDto>(shop));
+            return Result<ShopDto>.Success(shop.ToDto());
 
         var referenceCount = await _repository.CountReferencesAsync(
             shop.Id,
@@ -162,7 +153,7 @@ internal sealed class ShopSyncDeleteCommandHandler : IRequestHandler<ShopSyncDel
         shop.SetClientModificationMetadata(clientModified);
         await _repository.RemoveAsync(shop);
         await _db.SaveChangesAsync(cancellationToken);
-        return Result<ShopDto>.Success(_mapper.Map<ShopDto>(shop));
+        return Result<ShopDto>.Success(shop.ToDto());
     }
 }
 

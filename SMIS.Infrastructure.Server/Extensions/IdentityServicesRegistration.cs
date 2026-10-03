@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using SMIS.Domain.Entities.Identity.Entity;
 using SMIS.Infrastructure.Server.Services.Identity;
+using System.Security.Claims;
 using System.Text;
 
 namespace SMIS.Infrastructure.Server.Extensions;
@@ -67,6 +68,29 @@ public static class IdentityServicesRegistration
                     ValidAudience = configuration["JwtSettings:Audience"],
                     IssuerSigningKey =
                         new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JwtSettings:Key"]!))
+                };
+
+                options.Events = new JwtBearerEvents
+                {
+                    OnTokenValidated = async context =>
+                    {
+                        var userId = context.Principal?
+                            .FindFirst(ClaimTypes.NameIdentifier)?
+                            .Value;
+                        if (string.IsNullOrWhiteSpace(userId))
+                        {
+                            context.Fail("The authenticated user could not be resolved.");
+                            return;
+                        }
+
+                        var userManager = context.HttpContext.RequestServices
+                            .GetRequiredService<UserManager<ApplicationUser>>();
+                        var user = await userManager.FindByIdAsync(userId);
+                        if (user is null || !user.IsActive)
+                        {
+                            context.Fail("The user account is inactive.");
+                        }
+                    }
                 };
             });
 

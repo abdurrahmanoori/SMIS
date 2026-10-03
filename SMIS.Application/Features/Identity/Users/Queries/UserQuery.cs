@@ -5,6 +5,8 @@ using SMIS.Application.Common;
 using SMIS.Application.Common.Response;
 using SMIS.Application.DTO.Shops;
 using SMIS.Application.DTO.Users;
+using SMIS.Application.Identity.IServices;
+using SMIS.Application.Common.Contants;
 using SMIS.Application.Services;
 using SMIS.Domain.Entities.Identity.Entity;
 
@@ -21,14 +23,17 @@ internal sealed class UserQueryHandler
 {
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly IApplicationDbContext _context;
+    private readonly ICurrentUser _currentUser;
 
     public UserQueryHandler(
         UserManager<ApplicationUser> userManager,
-        IApplicationDbContext context
+        IApplicationDbContext context,
+        ICurrentUser currentUser
     )
     {
         _userManager = userManager;
         _context = context;
+        _currentUser = currentUser;
     }
 
     public async Task<Result<PagedListNew<UserDto>>> Handle(
@@ -36,8 +41,62 @@ internal sealed class UserQueryHandler
         CancellationToken cancellationToken
     )
     {
-        var query = _userManager.Users
-            .AsNoTracking()
+        var now = DateTimeOffset.UtcNow;
+        var signedInUser = await _userManager.FindByIdAsync(_currentUser.GetId());
+        if (signedInUser is null)
+            return Result<PagedListNew<UserDto>>.Forbidden(
+                "user.administration_forbidden",
+                "You are not allowed to manage users.");
+
+        var isSuperAdmin = await _userManager.IsInRoleAsync(signedInUser, SD.Role_Super_Admin);
+        var isShopAdmin = await _userManager.IsInRoleAsync(signedInUser, SD.Role_Shop_Admin);
+        if (!isSuperAdmin && !isShopAdmin)
+            return Result<PagedListNew<UserDto>>.Forbidden(
+                "user.administration_forbidden",
+                "You are not allowed to manage users.");
+
+        IQueryable<ApplicationUser> users = _userManager.Users.AsNoTracking();
+        if (!isSuperAdmin)
+        {
+            users = users.Where(user =>
+                user.ShopId == signedInUser.ShopId && user.Id != signedInUser.Id);
+
+            var superAdminRoleId = await _context.Roles
+                .AsNoTracking()
+                .Where(role => role.Name == SD.Role_Super_Admin)
+                .Select(role => role.Id)
+                .FirstOrDefaultAsync(cancellationToken);
+
+            if (!string.IsNullOrWhiteSpace(superAdminRoleId))
+            {
+                users = users.Where(user => !_context.UserRoles
+                    .AsNoTracking()
+                    .Any(userRole =>
+                        userRole.UserId == user.Id && userRole.RoleId == superAdminRoleId));
+            }
+        }
+
+        var search = request.Query.Criteria.Search?.Trim();
+        request.Query.Criteria.Search = null;
+        if (!string.IsNullOrWhiteSpace(search))
+        {
+            users = users.Where(user =>
+                (user.UserName != null && user.UserName.Contains(search)) ||
+                (user.Email != null && user.Email.Contains(search)) ||
+                (user.PhoneNumber != null && user.PhoneNumber.Contains(search)) ||
+                (user.FirstName != null && user.FirstName.Contains(search)) ||
+                (user.LastName != null && user.LastName.Contains(search)) ||
+                (((user.FirstName ?? string.Empty) + " " + (user.LastName ?? string.Empty)).Contains(search)) ||
+                (user.ShopName != null && user.ShopName.Contains(search)) ||
+                _context.UserRoles.Any(userRole =>
+                    userRole.UserId == user.Id &&
+                    _context.Roles.Any(role =>
+                        role.Id == userRole.RoleId &&
+                        role.Name != null &&
+                        role.Name.Contains(search))));
+        }
+
+        var query = users
             .OrderBy(user => user.UserName)
             .ThenBy(user => user.Id)
             .Select(user => new UserDto
@@ -52,6 +111,9 @@ internal sealed class UserQueryHandler
                 LanguageId = user.LanguageId,
                 EmailConfirmed = user.EmailConfirmed,
                 PhoneNumberConfirmed = user.PhoneNumberConfirmed,
+                IsActive = user.IsActive,
+                IsLocked = user.LockoutEnabled && user.LockoutEnd.HasValue && user.LockoutEnd > now,
+                LockoutEnd = user.LockoutEnd,
                 Shop = request.IncludeShop
                     ? _context.Shops
                         .Where(shop => shop.Id == user.ShopId)

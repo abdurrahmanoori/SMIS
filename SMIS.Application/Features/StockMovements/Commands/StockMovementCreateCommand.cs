@@ -1,10 +1,10 @@
-using AutoMapper;
 using MediatR;
 using SMIS.Application.Common.Response;
 using SMIS.Application.DTO.StockMovements;
 using SMIS.Application.Repositories.Base;
 using SMIS.Application.Services;
 using SMIS.Domain.Services;
+using SMIS.Application.Mappings;
 
 namespace SMIS.Application.Features.StockMovements.Commands;
 
@@ -21,17 +21,14 @@ internal sealed class StockMovementCreateCommandHandler
 {
     private readonly IInventoryService _inventory;
     private readonly IUnitOfWork _unitOfWork;
-    private readonly IMapper _mapper;
 
     public StockMovementCreateCommandHandler(
         IInventoryService inventory,
-        IUnitOfWork unitOfWork,
-        IMapper mapper
+        IUnitOfWork unitOfWork
     )
     {
         _inventory = inventory;
         _unitOfWork = unitOfWork;
-        _mapper = mapper;
     }
 
     public async Task<Result<StockMovementDto>> Handle(
@@ -57,6 +54,6 @@ internal sealed class StockMovementCreateCommandHandler
 
         await _unitOfWork.SaveChanges(cancellationToken);
 
-        return Result<StockMovementDto>.Success(_mapper.Map<StockMovementDto>(result.Value));
+        return Result<StockMovementDto>.Success(result.Value!.ToDto());
     }
 }

@@ -1,10 +1,10 @@
-using AutoMapper;
 using MediatR;
 using SMIS.Application.Common.Response;
 using SMIS.Application.DTO.StockBatches;
 using SMIS.Application.Repositories.Base;
 using SMIS.Application.Repositories.StockBatches;
 using SMIS.Application.Identity.IServices;
+using SMIS.Application.Mappings;
 
 namespace SMIS.Application.Features.StockBatches.Commands
 {
@@ -18,18 +18,15 @@ namespace SMIS.Application.Features.StockBatches.Commands
     {
         private readonly IStockBatchRepository _stockBatchRepository;
         private readonly IUnitOfWork _unitOfWork;
-        private readonly IMapper _mapper;
         private readonly ICurrentUser _currentUser;
 
         public StockBatchUpdateCommandHandler(
             IUnitOfWork unitOfWork,
-            IMapper mapper,
             IStockBatchRepository stockBatchRepository,
             ICurrentUser currentUser
         )
         {
             _unitOfWork = unitOfWork;
-            _mapper = mapper;
             _stockBatchRepository = stockBatchRepository;
             _currentUser = currentUser;
         }
@@ -81,7 +78,7 @@ namespace SMIS.Application.Features.StockBatches.Commands
 
             await _unitOfWork.SaveChanges(cancellationToken);
 
-            var dto = _mapper.Map<StockBatchDto>(entity);
+            var dto = entity.ToDto();
             return Result<StockBatchDto>.Success(dto);
         }
     }

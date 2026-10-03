@@ -2,6 +2,7 @@ namespace SMIS.Application.DTO.Users;
 
 public sealed class UserQueryCriteria
 {
+    public string? Search { get; set; }
     public string? Id { get; set; }
     public string? UserName { get; set; }
     public string? Email { get; set; }
@@ -12,4 +13,5 @@ public sealed class UserQueryCriteria
     public string? LanguageId { get; set; }
     public bool? EmailConfirmed { get; set; }
     public bool? PhoneNumberConfirmed { get; set; }
+    public bool? IsActive { get; set; }
 }

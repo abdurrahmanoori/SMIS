@@ -87,16 +87,15 @@ class AppDrawer extends ConsumerWidget {
           ),
           const ActiveShopDrawerTile(),
           const Divider(height: 1),
+          ListTile(
+            leading: const Icon(Icons.home_outlined),
+            title: Text(l10n.text('Home')),
+            onTap: () {
+              Navigator.of(context).pop();
+              Navigator.of(context).popUntil((route) => route.isFirst);
+            },
+          ),
           if (canViewProductUnits)
-            ListTile(
-              leading: const Icon(Icons.home_outlined),
-              title: Text(l10n.text('Home')),
-              onTap: () {
-                Navigator.of(context).pop();
-                Navigator.of(context).popUntil((route) => route.isFirst);
-              },
-            ),
-          if (canViewProductPrices)
             ListTile(
               leading: const Icon(Icons.scale_outlined),
               title: Text(l10n.text('Product units')),
@@ -112,7 +111,7 @@ class AppDrawer extends ConsumerWidget {
                 );
               },
             ),
-          if (canViewShops)
+          if (canViewProductPrices)
             ListTile(
               leading: const Icon(Icons.price_change_outlined),
               title: Text(l10n.text('Product prices')),
@@ -128,7 +127,7 @@ class AppDrawer extends ConsumerWidget {
                 );
               },
             ),
-          if (canViewUnits)
+          if (canViewShops)
             ListTile(
               leading: const Icon(Icons.storefront_outlined),
               title: Text(l10n.text('Shops')),
@@ -144,7 +143,7 @@ class AppDrawer extends ConsumerWidget {
                 );
               },
             ),
-          if (canViewProducts)
+          if (canViewUnits)
             ListTile(
               leading: const Icon(Icons.straighten_outlined),
               title: Text(l10n.text('Units of measurement')),
@@ -176,7 +175,7 @@ class AppDrawer extends ConsumerWidget {
                 );
               },
             ),
-          if (canViewInventory)
+          if (canViewProducts)
             ListTile(
               leading: const Icon(Icons.inventory_2_outlined),
               title: Text(l10n.text('Products')),
@@ -192,18 +191,19 @@ class AppDrawer extends ConsumerWidget {
                 );
               },
             ),
-          ListTile(
-            leading: const Icon(Icons.warehouse_outlined),
-            title: Text(l10n.text('Stock management')),
-            onTap: () {
-              Navigator.of(context).pop();
-              Navigator.of(context).pushReplacement(
-                MaterialPageRoute<void>(
-                  builder: (context) => const StockScreen(),
-                ),
-              );
-            },
-          ),
+          if (canViewInventory)
+            ListTile(
+              leading: const Icon(Icons.warehouse_outlined),
+              title: Text(l10n.text('Stock management')),
+              onTap: () {
+                Navigator.of(context).pop();
+                Navigator.of(context).pushReplacement(
+                  MaterialPageRoute<void>(
+                    builder: (context) => const StockScreen(),
+                  ),
+                );
+              },
+            ),
           if (session.isSuperAdmin)
             ListTile(
               leading: const Icon(Icons.location_city_outlined),
@@ -217,7 +217,7 @@ class AppDrawer extends ConsumerWidget {
                 );
               },
             ),
-          if (session.isSuperAdmin)
+          if (session.isSuperAdmin || session.isShopAdmin)
             ListTile(
               leading: const Icon(Icons.manage_accounts_outlined),
               title: Text(l10n.text('User management')),

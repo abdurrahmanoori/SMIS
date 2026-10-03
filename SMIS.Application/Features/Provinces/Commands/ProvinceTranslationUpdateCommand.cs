@@ -1,4 +1,3 @@
-using AutoMapper;
 using MediatR;
 using SMIS.Application.DTO.Provinces;
 using SMIS.Application.Repositories.Provinces;
@@ -6,6 +5,7 @@ using SMIS.Application.Repositories.Base;
 using SMIS.Application.Repositories.Localization;
 using SMIS.Application.Common.Response;
 using SMIS.Domain.Entities.LocationEntities;
+using SMIS.Application.Mappings;
 
 namespace SMIS.Application.Features.Provinces.Commands
 {
@@ -18,19 +18,16 @@ namespace SMIS.Application.Features.Provinces.Commands
     {
         private readonly IProvinceRepository _repo;
         private readonly IUnitOfWork _uow;
-        private readonly IMapper _mapper;
         private readonly ILanguageRepository _languageRepo;
 
         public ProvinceTranslationUpdateCommandHandler(
             IProvinceRepository repo,
             IUnitOfWork uow,
-            IMapper mapper,
             ILanguageRepository languageRepo
         )
         {
             _repo = repo;
             _uow = uow;
-            _mapper = mapper;
             _languageRepo = languageRepo;
         }
 
@@ -47,7 +44,7 @@ namespace SMIS.Application.Features.Provinces.Commands
             if (trans is null) return Result<ProvinceTranslationDto>.NotFound(request.Id);
 
             // Map incoming values onto the tracked entity
-            _mapper.Map(request.Dto, trans);
+            request.Dto.ApplyTo(trans);
 
             // Resolve language id if provided or by code
             if (!string.IsNullOrEmpty(request.Dto.LanguageId))
@@ -65,7 +62,7 @@ namespace SMIS.Application.Features.Provinces.Commands
 
             await _uow.SaveChanges(cancellationToken);
 
-            var dto = _mapper.Map<ProvinceTranslationDto>(trans);
+            var dto = trans.ToDto();
             return Result<ProvinceTranslationDto>.Success(dto);
         }
     }

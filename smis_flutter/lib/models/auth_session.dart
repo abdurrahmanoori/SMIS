@@ -31,6 +31,9 @@ class AuthSession {
   bool get isSuperAdmin =>
       roles.any((role) => role.trim().toLowerCase() == 'superadmin');
 
+  bool get isShopAdmin =>
+      roles.any((role) => role.trim().toLowerCase() == 'shopadmin');
+
   ComponentPermission? permissionFor(String componentKey) {
     for (final permission in permissions) {
       if (permission.componentKey.toLowerCase() == componentKey.toLowerCase()) {

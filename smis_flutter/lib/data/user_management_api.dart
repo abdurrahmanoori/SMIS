@@ -30,6 +30,7 @@ class UserManagementApi {
   Future<ManagedUserPage> getUsers({
     required int pageNumber,
     int pageSize = 25,
+    String? search,
   }) async {
     try {
       final response = await _dio.get<Map<String, dynamic>>(
@@ -38,6 +39,8 @@ class UserManagementApi {
           'pageNumber': pageNumber,
           'pageSize': pageSize,
           'includeShop': true,
+          if (search != null && search.trim().isNotEmpty)
+            'search': search.trim(),
         },
         options: _options,
       );
@@ -59,7 +62,7 @@ class UserManagementApi {
         totalPages: _int(data, 'totalPages', 'TotalPages', 1),
       );
     } catch (error, stackTrace) {
-      ApiErrorParser.mapAndThrow(
+      _mapAndThrow(
         error,
         stackTrace,
         fallbackMessage: 'Unable to load users from the server.',
@@ -92,7 +95,7 @@ class UserManagementApi {
       shops.sort((a, b) => a.name.compareTo(b.name));
       return shops;
     } catch (error, stackTrace) {
-      ApiErrorParser.mapAndThrow(
+      _mapAndThrow(
         error,
         stackTrace,
         fallbackMessage: 'Unable to load shops from the server.',
@@ -128,7 +131,7 @@ class UserManagementApi {
         options: _options,
       );
     } catch (error, stackTrace) {
-      ApiErrorParser.mapAndThrow(
+      _mapAndThrow(
         error,
         stackTrace,
         fallbackMessage: 'Unable to create the user.',
@@ -162,7 +165,7 @@ class UserManagementApi {
         options: _options,
       );
     } catch (error, stackTrace) {
-      ApiErrorParser.mapAndThrow(
+      _mapAndThrow(
         error,
         stackTrace,
         fallbackMessage: 'Unable to update the user.',
@@ -177,12 +180,146 @@ class UserManagementApi {
         options: _options,
       );
     } catch (error, stackTrace) {
-      ApiErrorParser.mapAndThrow(
+      _mapAndThrow(
         error,
         stackTrace,
         fallbackMessage: 'Unable to delete the user.',
       );
     }
+  }
+
+  Future<List<String>> getUserRoles(String userId) async {
+    try {
+      final response = await _dio.get<List<dynamic>>(
+        '${AppConfig.accountEndpoint}/$userId/roles',
+        options: _options,
+      );
+      return (response.data ?? const <dynamic>[]).whereType<String>().toList(
+        growable: false,
+      );
+    } catch (error, stackTrace) {
+      _mapAndThrow(
+        error,
+        stackTrace,
+        fallbackMessage: 'Unable to load user roles.',
+      );
+    }
+  }
+
+  Future<void> assignRoles({
+    required String userId,
+    required List<String> roles,
+  }) async {
+    try {
+      await _dio.post<void>(
+        '${AppConfig.accountEndpoint}/$userId/roles',
+        data: roles,
+        options: _options,
+      );
+    } catch (error, stackTrace) {
+      _mapAndThrow(
+        error,
+        stackTrace,
+        fallbackMessage: 'Unable to update user roles.',
+      );
+    }
+  }
+
+  Future<void> resetPassword(String userId) async {
+    try {
+      await _dio.post<void>(
+        '${AppConfig.accountEndpoint}/$userId/reset-password',
+        options: _options,
+      );
+    } catch (error, stackTrace) {
+      _mapAndThrow(
+        error,
+        stackTrace,
+        fallbackMessage: 'Unable to reset the user password.',
+      );
+    }
+  }
+
+  Future<void> lockUser(String userId) async {
+    try {
+      await _dio.post<void>(
+        '${AppConfig.accountEndpoint}/$userId/lock',
+        options: _options,
+      );
+    } catch (error, stackTrace) {
+      _mapAndThrow(
+        error,
+        stackTrace,
+        fallbackMessage: 'Unable to lock the user.',
+      );
+    }
+  }
+
+  Future<void> unlockUser(String userId) async {
+    try {
+      await _dio.post<void>(
+        '${AppConfig.accountEndpoint}/$userId/unlock',
+        options: _options,
+      );
+    } catch (error, stackTrace) {
+      _mapAndThrow(
+        error,
+        stackTrace,
+        fallbackMessage: 'Unable to unlock the user.',
+      );
+    }
+  }
+
+  Future<void> setActiveStatus({
+    required String userId,
+    required bool isActive,
+  }) async {
+    try {
+      await _dio.post<void>(
+        '${AppConfig.accountEndpoint}/$userId/${isActive ? 'activate' : 'deactivate'}',
+        options: _options,
+      );
+    } catch (error, stackTrace) {
+      _mapAndThrow(
+        error,
+        stackTrace,
+        fallbackMessage: isActive
+            ? 'Unable to activate the user.'
+            : 'Unable to deactivate the user.',
+      );
+    }
+  }
+
+  Future<void> setAllShopAdminsActiveStatus(bool isActive) async {
+    try {
+      await _dio.post<void>(
+        '${AppConfig.accountEndpoint}/shop-admins/${isActive ? 'activate' : 'deactivate'}',
+        options: _options,
+      );
+    } catch (error, stackTrace) {
+      _mapAndThrow(
+        error,
+        stackTrace,
+        fallbackMessage: isActive
+            ? 'Unable to activate ShopAdmin accounts.'
+            : 'Unable to deactivate ShopAdmin accounts.',
+      );
+    }
+  }
+
+  static Never _mapAndThrow(
+    Object error,
+    StackTrace stackTrace, {
+    required String fallbackMessage,
+  }) {
+    final offline = error is DioException && error.response == null;
+    ApiErrorParser.mapAndThrow(
+      error,
+      stackTrace,
+      fallbackMessage: offline
+          ? 'User management is online-only. Connect to the internet and try again.'
+          : fallbackMessage,
+    );
   }
 
   static int _int(

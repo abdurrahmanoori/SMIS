@@ -45,6 +45,11 @@ internal sealed class RefreshSessionCommandHandler
         if (user is null)
             return Result<LoginResponseDto>.NotFound(_currentUser.GetId());
 
+        if (!user.IsActive)
+            return Result<LoginResponseDto>.Unauthorized(
+                "auth.account_inactive",
+                "The account is inactive. Contact an administrator if access should be restored.");
+
         var roles = await _userManager.GetRolesAsync(user);
         var isSuperAdmin = roles.Any(role => string.Equals(
             role,

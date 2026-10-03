@@ -1,4 +1,3 @@
-using AutoMapper;
 using MediatR;
 using SMIS.Application.Common.Response;
 using SMIS.Application.DTO.Products;
@@ -8,6 +7,7 @@ using SMIS.Application.Repositories.ProductUnits;
 using SMIS.Application.Repositories.Shops;
 using SMIS.Application.Repositories.UnitOfMeasures;
 using SMIS.Application.Services;
+using SMIS.Application.Mappings;
 
 namespace SMIS.Application.Features.Products.Commands
 {
@@ -21,11 +21,9 @@ namespace SMIS.Application.Features.Products.Commands
         private readonly IProductUnitRepository _productUnitRepository;
         private readonly ICategoryRepository _categoryRepository;
         private readonly IApplicationDbContext _db;
-        private readonly IMapper _mapper;
 
         public ProductUpdateCommandHandler(
             IApplicationDbContext db,
-            IMapper mapper,
             IProductRepository productRepository,
             IShopRepository shopRepository,
             IUnitOfMeasureRepository unitOfMeasureRepository,
@@ -34,7 +32,6 @@ namespace SMIS.Application.Features.Products.Commands
         )
         {
             _db = db;
-            _mapper = mapper;
             _productRepository = productRepository;
             _shopRepository = shopRepository;
             _unitOfMeasureRepository = unitOfMeasureRepository;
@@ -88,7 +85,7 @@ namespace SMIS.Application.Features.Products.Commands
 
             await _db.SaveChangesAsync(cancellationToken);
 
-            var dto = _mapper.Map<ProductDto>(entity);
+            var dto = entity.ToDto();
             return Result<ProductDto>.Success(dto);
         }
     }
