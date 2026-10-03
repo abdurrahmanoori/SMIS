@@ -4,12 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../controllers/auth_controller.dart';
-import '../data/data_exception.dart';
 import '../data/user_management_api.dart';
 import '../models/managed_user.dart';
-import 'user_details_screen.dart';
 import '../widgets/app_drawer.dart';
 import '../widgets/app_error_view.dart';
+import '../widgets/user_form_dialog.dart';
+import 'user_details_screen.dart';
 
 class UsersScreen extends ConsumerStatefulWidget {
   const UsersScreen({super.key});
@@ -56,6 +56,14 @@ class _UsersScreenState extends ConsumerState<UsersScreen> {
     super.dispose();
   }
 
+  UserManagementApi? get _api {
+    final session = ref.read(authControllerProvider).session;
+    if (session == null || (!session.isSuperAdmin && !session.isShopAdmin)) {
+      return null;
+    }
+    return UserManagementApi(token: session.token);
+  }
+
   void _onSearchChanged(String value) {
     _searchDebounce?.cancel();
     _searchDebounce = Timer(const Duration(milliseconds: 500), () {
@@ -81,14 +89,6 @@ class _UsersScreenState extends ConsumerState<UsersScreen> {
     if (hadSearch) _load(refreshShops: false);
   }
 
-  UserManagementApi? get _api {
-    final session = ref.read(authControllerProvider).session;
-    if (session == null || (!session.isSuperAdmin && !session.isShopAdmin)) {
-      return null;
-    }
-    return UserManagementApi(token: session.token);
-  }
-
   Future<void> _load({bool refreshShops = true}) async {
     final requestId = ++_loadRequestId;
     final api = _api;
@@ -96,10 +96,12 @@ class _UsersScreenState extends ConsumerState<UsersScreen> {
       if (mounted) setState(() => _loading = false);
       return;
     }
+
     setState(() {
       _loading = true;
       _error = null;
     });
+
     try {
       final session = ref.read(authControllerProvider).session!;
       final page = await api.getUsers(
@@ -125,15 +127,24 @@ class _UsersScreenState extends ConsumerState<UsersScreen> {
     }
   }
 
+  void _openDetails(ManagedUser user) {
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (context) => UserDetailsScreen(user: user),
+      ),
+    );
+  }
+
   Future<void> _openForm([ManagedUser? user]) async {
     if (_mutating || _shops.isEmpty) return;
     final session = ref.read(authControllerProvider).session;
     if (session == null) return;
-    final draft = await showDialog<_UserDraft>(
+
+    final draft = await showDialog<UserFormDraft>(
       context: context,
       barrierDismissible: false,
       builder: (context) =>
-          _UserFormDialog(user: user, shops: _shops, roles: _roles),
+          UserFormDialog(user: user, shops: _shops, roles: _roles),
     );
     if (draft == null) return;
 
@@ -175,14 +186,6 @@ class _UsersScreenState extends ConsumerState<UsersScreen> {
     }
   }
 
-  Future<void> _openDetails(ManagedUser user) async {
-    await Navigator.of(context).push(
-      MaterialPageRoute<void>(
-        builder: (context) => UserDetailsScreen(user: user),
-      ),
-    );
-  }
-
   Future<void> _manageRoles(ManagedUser user) async {
     if (_mutating) return;
     final selectedRoles = await showDialog<List<String>>(
@@ -212,26 +215,13 @@ class _UsersScreenState extends ConsumerState<UsersScreen> {
 
   Future<void> _resetPassword(ManagedUser user) async {
     if (_mutating) return;
-    final confirmed = await showDialog<bool>(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Reset password?'),
-        content: Text(
+    final confirmed = await _confirm(
+      title: 'Reset password?',
+      message:
           'Reset ${user.displayName}\'s password? The server will immediately set the password to the user\'s current username. This operation is online-only and is not stored locally.',
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context, false),
-            child: const Text('Cancel'),
-          ),
-          FilledButton(
-            onPressed: () => Navigator.pop(context, true),
-            child: const Text('Reset password'),
-          ),
-        ],
-      ),
+      confirmLabel: 'Reset password',
     );
-    if (confirmed != true) return;
+    if (!confirmed) return;
 
     final api = _api;
     if (api == null) return;
@@ -256,26 +246,13 @@ class _UsersScreenState extends ConsumerState<UsersScreen> {
     if (locked && user.id == session.userId) return;
 
     final action = locked ? 'Lock' : 'Unlock';
-    final confirmed = await showDialog<bool>(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text('$action user?'),
-        content: Text(
+    final confirmed = await _confirm(
+      title: '$action user?',
+      message:
           '$action ${user.displayName}? This change is applied immediately on the server.',
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context, false),
-            child: const Text('Cancel'),
-          ),
-          FilledButton(
-            onPressed: () => Navigator.pop(context, true),
-            child: Text(action),
-          ),
-        ],
-      ),
+      confirmLabel: action,
     );
-    if (confirmed != true) return;
+    if (!confirmed) return;
 
     final api = _api;
     if (api == null) return;
@@ -306,26 +283,13 @@ class _UsersScreenState extends ConsumerState<UsersScreen> {
     if (_mutating || session == null || user.id == session.userId) return;
 
     final action = isActive ? 'Activate' : 'Deactivate';
-    final confirmed = await showDialog<bool>(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text('$action user?'),
-        content: Text(
+    final confirmed = await _confirm(
+      title: '$action user?',
+      message:
           '$action ${user.displayName}? ${isActive ? 'The user will be able to sign in again.' : 'Existing authenticated requests will be rejected immediately.'}',
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context, false),
-            child: const Text('Cancel'),
-          ),
-          FilledButton(
-            onPressed: () => Navigator.pop(context, true),
-            child: Text(action),
-          ),
-        ],
-      ),
+      confirmLabel: action,
     );
-    if (confirmed != true) return;
+    if (!confirmed) return;
 
     final api = _api;
     if (api == null) return;
@@ -350,26 +314,13 @@ class _UsersScreenState extends ConsumerState<UsersScreen> {
   Future<void> _setAllShopAdminsActiveStatus(bool isActive) async {
     if (_mutating) return;
     final action = isActive ? 'Activate' : 'Deactivate';
-    final confirmed = await showDialog<bool>(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text('$action all ShopAdmins?'),
-        content: Text(
+    final confirmed = await _confirm(
+      title: '$action all ShopAdmins?',
+      message:
           '$action every ShopAdmin account? Accounts that are also SuperAdmin are excluded.',
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context, false),
-            child: const Text('Cancel'),
-          ),
-          FilledButton(
-            onPressed: () => Navigator.pop(context, true),
-            child: Text('$action all'),
-          ),
-        ],
-      ),
+      confirmLabel: '$action all',
     );
-    if (confirmed != true) return;
+    if (!confirmed) return;
 
     final api = _api;
     if (api == null) return;
@@ -394,26 +345,14 @@ class _UsersScreenState extends ConsumerState<UsersScreen> {
   Future<void> _delete(ManagedUser user) async {
     final session = ref.read(authControllerProvider).session;
     if (_mutating || session == null || user.id == session.userId) return;
-    final confirmed = await showDialog<bool>(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Delete user?'),
-        content: Text(
+
+    final confirmed = await _confirm(
+      title: 'Delete user?',
+      message:
           'Delete ${user.displayName}? This action is performed directly on the server.',
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context, false),
-            child: const Text('Cancel'),
-          ),
-          FilledButton(
-            onPressed: () => Navigator.pop(context, true),
-            child: const Text('Delete'),
-          ),
-        ],
-      ),
+      confirmLabel: 'Delete',
     );
-    if (confirmed != true) return;
+    if (!confirmed) return;
 
     final api = _api;
     if (api == null) return;
@@ -430,6 +369,31 @@ class _UsersScreenState extends ConsumerState<UsersScreen> {
     } finally {
       if (mounted) setState(() => _mutating = false);
     }
+  }
+
+  Future<bool> _confirm({
+    required String title,
+    required String message,
+    required String confirmLabel,
+  }) async {
+    final result = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(title),
+        content: Text(message),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('Cancel'),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: Text(confirmLabel),
+          ),
+        ],
+      ),
+    );
+    return result == true;
   }
 
   void _showSuccess(String message) {
@@ -597,8 +561,10 @@ class _UsersScreenState extends ConsumerState<UsersScreen> {
               itemBuilder: (context, index) {
                 final user = page.items[index];
                 return Card(
+                  clipBehavior: Clip.antiAlias,
                   child: ListTile(
-                    onTap: _mutating ? null : () => _openDetails(user),
+                    contentPadding: const EdgeInsets.fromLTRB(16, 10, 8, 10),
+                    onTap: () => _openDetails(user),
                     leading: CircleAvatar(
                       child: Text(
                         user.userName.isEmpty
@@ -621,61 +587,94 @@ class _UsersScreenState extends ConsumerState<UsersScreen> {
                           ),
                       ],
                     ),
-                    subtitle: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text('${user.userName} · ${user.email}'),
-                        Text(user.shopName ?? user.shopId),
-                        Text(
-                          user.roles.isEmpty
-                              ? 'Roles: none'
-                              : 'Roles: ${user.roles.join(', ')}',
-                        ),
-                        Text(_lockStatus(user)),
-                      ],
+                    subtitle: Padding(
+                      padding: const EdgeInsets.only(top: 4),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text('${user.userName} · ${user.email}'),
+                          const SizedBox(height: 2),
+                          Text(user.shopName ?? user.shopId),
+                          const SizedBox(height: 2),
+                          Text(
+                            user.roles.isEmpty
+                                ? 'Roles: none'
+                                : 'Roles: ${user.roles.join(', ')}',
+                          ),
+                          const SizedBox(height: 2),
+                          Text(_lockStatus(user)),
+                        ],
+                      ),
                     ),
-                    isThreeLine: true,
                     trailing: PopupMenuButton<String>(
                       enabled: !_mutating,
                       onSelected: (value) {
-                        if (value == 'details') {
-                          _openDetails(user);
-                        } else if (value == 'edit') {
-                          _openForm(user);
-                        } else if (value == 'roles') {
-                          _manageRoles(user);
-                        } else if (value == 'reset-password') {
-                          _resetPassword(user);
-                        } else if (value == 'lock') {
-                          _setLocked(user, true);
-                        } else if (value == 'unlock') {
-                          _setLocked(user, false);
-                        } else if (value == 'activate') {
-                          _setActiveStatus(user, true);
-                        } else if (value == 'deactivate') {
-                          _setActiveStatus(user, false);
-                        } else if (value == 'delete') {
-                          _delete(user);
+                        switch (value) {
+                          case 'details':
+                            _openDetails(user);
+                            break;
+                          case 'edit':
+                            _openForm(user);
+                            break;
+                          case 'roles':
+                            _manageRoles(user);
+                            break;
+                          case 'reset-password':
+                            _resetPassword(user);
+                            break;
+                          case 'lock':
+                            _setLocked(user, true);
+                            break;
+                          case 'unlock':
+                            _setLocked(user, false);
+                            break;
+                          case 'activate':
+                            _setActiveStatus(user, true);
+                            break;
+                          case 'deactivate':
+                            _setActiveStatus(user, false);
+                            break;
+                          case 'delete':
+                            _delete(user);
+                            break;
                         }
                       },
                       itemBuilder: (context) => [
                         const PopupMenuItem(
                           value: 'details',
-                          child: Text('View details'),
+                          child: ListTile(
+                            contentPadding: EdgeInsets.zero,
+                            leading: Icon(Icons.visibility_outlined),
+                            title: Text('View details'),
+                          ),
                         ),
                         if (isSuperAdmin)
                           const PopupMenuItem(
                             value: 'edit',
-                            child: Text('Edit'),
+                            child: ListTile(
+                              contentPadding: EdgeInsets.zero,
+                              leading: Icon(Icons.edit_outlined),
+                              title: Text('Edit'),
+                            ),
                           ),
                         if (isSuperAdmin)
                           const PopupMenuItem(
                             value: 'roles',
-                            child: Text('Manage roles'),
+                            child: ListTile(
+                              contentPadding: EdgeInsets.zero,
+                              leading: Icon(
+                                Icons.admin_panel_settings_outlined,
+                              ),
+                              title: Text('Manage roles'),
+                            ),
                           ),
                         const PopupMenuItem(
                           value: 'reset-password',
-                          child: Text('Reset password'),
+                          child: ListTile(
+                            contentPadding: EdgeInsets.zero,
+                            leading: Icon(Icons.password_outlined),
+                            title: Text('Reset password'),
+                          ),
                         ),
                         if (user.isLocked)
                           const PopupMenuItem(
@@ -832,342 +831,4 @@ class _RoleManagementDialogState extends State<_RoleManagementDialog> {
       ),
     ],
   );
-}
-
-class _UserFormDialog extends StatefulWidget {
-  const _UserFormDialog({
-    required this.user,
-    required this.shops,
-    required this.roles,
-  });
-
-  final ManagedUser? user;
-  final List<UserShopOption> shops;
-  final List<String> roles;
-
-  @override
-  State<_UserFormDialog> createState() => _UserFormDialogState();
-}
-
-class _UserFormDialogState extends State<_UserFormDialog> {
-  final _formKey = GlobalKey<FormState>();
-  late final TextEditingController _userName;
-  late final TextEditingController _email;
-  late final TextEditingController _phone;
-  late final TextEditingController _firstName;
-  late final TextEditingController _lastName;
-  late final TextEditingController _password;
-  late String _shopId;
-  late Set<String> _roles;
-  bool _showRoleError = false;
-
-  bool get _isEditing => widget.user != null;
-
-  @override
-  void initState() {
-    super.initState();
-    final user = widget.user;
-    _userName = TextEditingController(text: user?.userName ?? '');
-    _email = TextEditingController(text: user?.email ?? '');
-    _phone = TextEditingController(text: user?.phoneNumber ?? '');
-    _firstName = TextEditingController(text: user?.firstName ?? '');
-    _lastName = TextEditingController(text: user?.lastName ?? '');
-    _password = TextEditingController();
-    _shopId = widget.shops.any((shop) => shop.id == user?.shopId)
-        ? user!.shopId
-        : widget.shops.first.id;
-    _roles = {...?user?.roles};
-  }
-
-  @override
-  void dispose() {
-    _userName.dispose();
-    _email.dispose();
-    _phone.dispose();
-    _firstName.dispose();
-    _lastName.dispose();
-    _password.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final maxHeight = MediaQuery.sizeOf(context).height * 0.88;
-
-    return Dialog(
-      clipBehavior: Clip.antiAlias,
-      child: ConstrainedBox(
-        constraints: BoxConstraints(maxWidth: 760, maxHeight: maxHeight),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Padding(
-              padding: const EdgeInsets.fromLTRB(24, 20, 16, 16),
-              child: Row(
-                children: [
-                  Icon(
-                    _isEditing
-                        ? Icons.manage_accounts_outlined
-                        : Icons.person_add_alt_1,
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: Text(
-                      _isEditing ? 'Edit user' : 'Create user',
-                      style: theme.textTheme.headlineSmall,
-                    ),
-                  ),
-                  IconButton(
-                    tooltip: 'Close',
-                    onPressed: () => Navigator.pop(context),
-                    icon: const Icon(Icons.close),
-                  ),
-                ],
-              ),
-            ),
-            const Divider(height: 1),
-            Flexible(
-              child: SingleChildScrollView(
-                padding: const EdgeInsets.all(24),
-                child: Form(
-                  key: _formKey,
-                  child: LayoutBuilder(
-                    builder: (context, constraints) {
-                      final useTwoColumns = constraints.maxWidth >= 620;
-                      return Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
-                          Text(
-                            'Account information',
-                            style: theme.textTheme.titleMedium,
-                          ),
-                          const SizedBox(height: 12),
-                          _fieldPair(
-                            useTwoColumns: useTwoColumns,
-                            first: TextFormField(
-                              controller: _userName,
-                              decoration: const InputDecoration(
-                                labelText: 'Username',
-                                border: OutlineInputBorder(),
-                              ),
-                              validator: _required,
-                            ),
-                            second: TextFormField(
-                              controller: _email,
-                              decoration: const InputDecoration(
-                                labelText: 'Email',
-                                border: OutlineInputBorder(),
-                              ),
-                              keyboardType: TextInputType.emailAddress,
-                              validator: _required,
-                            ),
-                          ),
-                          if (!_isEditing) ...[
-                            const SizedBox(height: 12),
-                            TextFormField(
-                              controller: _password,
-                              decoration: const InputDecoration(
-                                labelText: 'Password',
-                                border: OutlineInputBorder(),
-                              ),
-                              obscureText: true,
-                              validator: _required,
-                            ),
-                          ],
-                          const SizedBox(height: 12),
-                          _fieldPair(
-                            useTwoColumns: useTwoColumns,
-                            first: TextFormField(
-                              controller: _firstName,
-                              decoration: const InputDecoration(
-                                labelText: 'First name',
-                                border: OutlineInputBorder(),
-                              ),
-                            ),
-                            second: TextFormField(
-                              controller: _lastName,
-                              decoration: const InputDecoration(
-                                labelText: 'Last name',
-                                border: OutlineInputBorder(),
-                              ),
-                            ),
-                          ),
-                          const SizedBox(height: 12),
-                          _fieldPair(
-                            useTwoColumns: useTwoColumns,
-                            first: TextFormField(
-                              controller: _phone,
-                              decoration: const InputDecoration(
-                                labelText: 'Phone number',
-                                border: OutlineInputBorder(),
-                              ),
-                              keyboardType: TextInputType.phone,
-                            ),
-                            second: DropdownButtonFormField<String>(
-                              initialValue: _shopId,
-                              isExpanded: true,
-                              decoration: const InputDecoration(
-                                labelText: 'Shop',
-                                border: OutlineInputBorder(),
-                              ),
-                              items: widget.shops
-                                  .map(
-                                    (shop) => DropdownMenuItem(
-                                      value: shop.id,
-                                      child: Text(
-                                        shop.name,
-                                        overflow: TextOverflow.ellipsis,
-                                      ),
-                                    ),
-                                  )
-                                  .toList(growable: false),
-                              onChanged: (value) {
-                                if (value != null) {
-                                  setState(() => _shopId = value);
-                                }
-                              },
-                            ),
-                          ),
-                          const SizedBox(height: 24),
-                          Row(
-                            children: [
-                              Text('Roles', style: theme.textTheme.titleMedium),
-                              const Spacer(),
-                              Text(
-                                '${_roles.length} selected',
-                                style: theme.textTheme.bodySmall,
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 10),
-                          Wrap(
-                            spacing: 8,
-                            runSpacing: 8,
-                            children: widget.roles
-                                .map((role) {
-                                  final selected = _roles.contains(role);
-                                  return FilterChip(
-                                    label: Text(role),
-                                    selected: selected,
-                                    onSelected: (value) {
-                                      setState(() {
-                                        if (value) {
-                                          _roles.add(role);
-                                        } else {
-                                          _roles.remove(role);
-                                        }
-                                        _showRoleError = false;
-                                      });
-                                    },
-                                  );
-                                })
-                                .toList(growable: false),
-                          ),
-                          if (_showRoleError) ...[
-                            const SizedBox(height: 8),
-                            Text(
-                              'Select at least one role.',
-                              style: theme.textTheme.bodySmall?.copyWith(
-                                color: theme.colorScheme.error,
-                              ),
-                            ),
-                          ],
-                        ],
-                      );
-                    },
-                  ),
-                ),
-              ),
-            ),
-            const Divider(height: 1),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(24, 12, 24, 16),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  TextButton(
-                    onPressed: () => Navigator.pop(context),
-                    child: const Text('Cancel'),
-                  ),
-                  const SizedBox(width: 8),
-                  FilledButton.icon(
-                    onPressed: _submit,
-                    icon: const Icon(Icons.save_outlined),
-                    label: Text(_isEditing ? 'Save changes' : 'Create user'),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _fieldPair({
-    required bool useTwoColumns,
-    required Widget first,
-    required Widget second,
-  }) {
-    if (!useTwoColumns) {
-      return Column(children: [first, const SizedBox(height: 12), second]);
-    }
-
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Expanded(child: first),
-        const SizedBox(width: 12),
-        Expanded(child: second),
-      ],
-    );
-  }
-
-  void _submit() {
-    if (!_formKey.currentState!.validate()) return;
-    if (_roles.isEmpty) {
-      setState(() => _showRoleError = true);
-      return;
-    }
-
-    Navigator.pop(
-      context,
-      _UserDraft(
-        userName: _userName.text.trim(),
-        email: _email.text.trim(),
-        password: _isEditing ? null : _password.text,
-        firstName: _firstName.text,
-        lastName: _lastName.text,
-        phoneNumber: _phone.text,
-        shopId: _shopId,
-        roles: _roles.toList(growable: false),
-      ),
-    );
-  }
-
-  String? _required(String? value) =>
-      value == null || value.trim().isEmpty ? 'Required' : null;
-}
-
-class _UserDraft {
-  const _UserDraft({
-    required this.userName,
-    required this.email,
-    required this.password,
-    required this.firstName,
-    required this.lastName,
-    required this.phoneNumber,
-    required this.shopId,
-    required this.roles,
-  });
-
-  final String userName;
-  final String email;
-  final String? password;
-  final String firstName;
-  final String lastName;
-  final String phoneNumber;
-  final String shopId;
-  final List<String> roles;
 }
