@@ -41,6 +41,13 @@ namespace SMIS.Application.Features.Identity.Users.Commands
             var user = await _userManager.FindByIdAsync(request.UserId);
             if (user == null) return Result.NotFound(request.UserId);
 
+            if (!await _userAdministrationGuard.CanManageUserAsync(user, cancellationToken))
+            {
+                return Result.Forbidden(
+                    "user.administration_forbidden",
+                    "You are not allowed to change roles for this user.");
+            }
+
             var role = SD.GetCanonicalRole(request.Role);
             if (role is null || !await _roleManager.RoleExistsAsync(role))
                 return Result.BusinessRule("InvalidRole", "The requested role is not configured.");
