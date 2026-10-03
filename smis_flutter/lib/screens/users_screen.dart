@@ -615,22 +615,31 @@ class _UsersScreenState extends ConsumerState<UsersScreen> {
                         switch (value) {
                           case 'details':
                             _openDetails(user);
+                            break;
                           case 'edit':
                             _openForm(user);
+                            break;
                           case 'roles':
                             _manageRoles(user);
+                            break;
                           case 'reset-password':
                             _resetPassword(user);
+                            break;
                           case 'lock':
                             _setLocked(user, true);
+                            break;
                           case 'unlock':
                             _setLocked(user, false);
+                            break;
                           case 'activate':
                             _setActiveStatus(user, true);
+                            break;
                           case 'deactivate':
                             _setActiveStatus(user, false);
+                            break;
                           case 'delete':
                             _delete(user);
+                            break;
                         }
                       },
                       itemBuilder: (context) => [
