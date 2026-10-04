@@ -121,7 +121,7 @@ class UserManagementApi {
           'userName': userName.trim(),
           'email': email.trim(),
           'password': password,
-          'shopId': shopId,
+          // ShopId deliberately comes from the authenticated JWT on the server.
           'languageId': languageId,
           'roles': roles,
           'firstName': _trimOrNull(firstName),
