@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using SMIS.Domain.Entities.Localization;
 
 namespace SMIS.Application.DTO.Users
@@ -13,7 +14,11 @@ namespace SMIS.Application.DTO.Users
 
         public string? LastName { get; set; }
 
-        public string ShopId { get; set; } = default!;
+        // Resolved by the server from the authenticated JWT shop context.
+        // It is deliberately excluded from the HTTP request contract.
+        [JsonIgnore]
+        public string ShopId { get; internal set; } = string.Empty;
+
         public string LanguageId { get; set; } = LanguageDefaults.EnglishId;
         public IEnumerable<string>? Roles { get; set; }
     }
