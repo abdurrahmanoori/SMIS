@@ -23,6 +23,7 @@ namespace SMIS.Application.Features.Identity.Users.Commands
         private readonly IUnitOfWork _unitOfWork;
         private readonly IUserRoleMetadataService _userRoleMetadataService;
         private readonly IUserAdministrationGuard _userAdministrationGuard;
+        private readonly ICurrentUser _currentUser;
 
         public UserCreateCommandHandler(
             ILanguageRepository languageRepository,
@@ -31,7 +32,8 @@ namespace SMIS.Application.Features.Identity.Users.Commands
             RoleManager<ApplicationRole> roleManager,
             IUnitOfWork unitOfWork,
             IUserRoleMetadataService userRoleMetadataService,
-            IUserAdministrationGuard userAdministrationGuard
+            IUserAdministrationGuard userAdministrationGuard,
+            ICurrentUser currentUser
         )
         {
             _languageRepository = languageRepository;
@@ -41,6 +43,7 @@ namespace SMIS.Application.Features.Identity.Users.Commands
             _unitOfWork = unitOfWork;
             _userRoleMetadataService = userRoleMetadataService;
             _userAdministrationGuard = userAdministrationGuard;
+            _currentUser = currentUser;
         }
 
         public async Task<Result<UserDto>> Handle(
@@ -48,6 +51,14 @@ namespace SMIS.Application.Features.Identity.Users.Commands
             CancellationToken cancellationToken
         )
         {
+            var currentShopId = _currentUser.GetShopId();
+            if (string.IsNullOrWhiteSpace(currentShopId))
+            {
+                return Result<UserDto>.Unauthorized(
+                    "auth.shop_context_missing",
+                    "The current session does not contain an active shop context.");
+            }
+
             var language = await _languageRepository.GetByIdAsync(request.UserCreateDto.LanguageId);
             if (language is null || !language.IsActive)
             {
@@ -82,7 +93,7 @@ namespace SMIS.Application.Features.Identity.Users.Commands
             }
 
             if (!await _userAdministrationGuard.CanCreateUserAsync(
-                    request.UserCreateDto.ShopId,
+                    currentShopId,
                     roles,
                     cancellationToken))
             {
@@ -92,15 +103,16 @@ namespace SMIS.Application.Features.Identity.Users.Commands
             }
 
             var shop = await _shopRepository.GetByIdIncludingDeletedAsync(
-                request.UserCreateDto.ShopId,
+                currentShopId,
                 cancellationToken);
             if (shop is null || shop.IsDeleted || !shop.IsActive)
             {
                 return Result<UserDto>.BusinessRule(
                     "InvalidShop",
-                    "The assigned shop does not exist or is inactive.");
+                    "The active session shop does not exist or is inactive.");
             }
 
+            request.UserCreateDto.ShopId = currentShopId;
             var entity = request.UserCreateDto.ToEntity();
             entity.ShopName = shop.Name;
 
