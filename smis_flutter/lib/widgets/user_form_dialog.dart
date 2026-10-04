@@ -117,7 +117,7 @@ class _UserFormDialogState extends State<UserFormDialog> {
                         Text(
                           _isEditing
                               ? 'Update account information, shop assignment, and roles.'
-                              : 'Create the account and assign its initial access.',
+                              : 'Create the account in the active session shop and assign its initial access.',
                           style: Theme.of(context).textTheme.bodySmall,
                         ),
                       ],
@@ -247,30 +247,38 @@ class _UserFormDialogState extends State<UserFormDialog> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.stretch,
                               children: [
-                                DropdownButtonFormField<String>(
-                                  initialValue: _shopId,
-                                  decoration: const InputDecoration(
-                                    labelText: 'Shop',
-                                    border: OutlineInputBorder(),
-                                  ),
-                                  items: widget.shops
-                                      .map(
-                                        (shop) => DropdownMenuItem(
-                                          value: shop.id,
-                                          child: Text(
-                                            shop.name,
-                                            overflow: TextOverflow.ellipsis,
+                                if (_isEditing) ...[
+                                  DropdownButtonFormField<String>(
+                                    initialValue: _shopId,
+                                    decoration: const InputDecoration(
+                                      labelText: 'Shop',
+                                      border: OutlineInputBorder(),
+                                    ),
+                                    items: widget.shops
+                                        .map(
+                                          (shop) => DropdownMenuItem(
+                                            value: shop.id,
+                                            child: Text(
+                                              shop.name,
+                                              overflow: TextOverflow.ellipsis,
+                                            ),
                                           ),
-                                        ),
-                                      )
-                                      .toList(growable: false),
-                                  onChanged: (value) {
-                                    if (value != null) {
-                                      setState(() => _shopId = value);
-                                    }
-                                  },
-                                ),
-                                const SizedBox(height: 16),
+                                        )
+                                        .toList(growable: false),
+                                    onChanged: (value) {
+                                      if (value != null) {
+                                        setState(() => _shopId = value);
+                                      }
+                                    },
+                                  ),
+                                  const SizedBox(height: 16),
+                                ] else ...[
+                                  Text(
+                                    'The new user will be assigned to the shop currently active in your session.',
+                                    style: Theme.of(context).textTheme.bodyMedium,
+                                  ),
+                                  const SizedBox(height: 16),
+                                ],
                                 Text(
                                   'Roles',
                                   style: Theme.of(context).textTheme.titleSmall,
