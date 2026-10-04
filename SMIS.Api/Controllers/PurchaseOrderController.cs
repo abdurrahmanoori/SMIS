@@ -4,6 +4,9 @@ using SMIS.Application.Common;
 using SMIS.Application.DTO.Purchasing;
 using SMIS.Application.Features.Purchasing.Commands;
 using SMIS.Application.Features.Purchasing.Queries;
+using SMIS.Api.Authorization;
+using SMIS.Domain.Entities.Identity;
+using SMIS.Domain.Enums;
 
 namespace SMIS.Api.Controllers;
 
@@ -25,6 +28,7 @@ public sealed class PurchaseOrderController : BaseApiController
     /// An optional idempotency key can prevent the same order from being created twice after a retry.
     /// </remarks>
     [HttpPost]
+    [HasPermission(ApplicationComponentKeys.Purchasing, PermissionAction.Create)]
     public async Task<ActionResult<PurchaseOrderDto>> Create(
         PurchaseOrderCreateDto dto,
         CancellationToken cancellationToken
@@ -35,6 +39,7 @@ public sealed class PurchaseOrderController : BaseApiController
     /// Gets purchase orders visible to the current user.
     /// </summary>
     [HttpGet]
+    [HasPermission(ApplicationComponentKeys.Purchasing, PermissionAction.Read)]
     public async Task<ActionResult<PagedListNew<PurchaseOrderDto>>> GetAll(
         [FromQuery] PurchaseOrderQueryCriteria criteria,
         [FromQuery] string[]? columns,
@@ -61,6 +66,8 @@ public sealed class PurchaseOrderController : BaseApiController
     /// A cancelled order cannot receive stock. An optional idempotency key can prevent the same receipt from being processed twice.
     /// </remarks>
     [HttpPost("{id}/receipts")]
+    [HasPermission(ApplicationComponentKeys.Purchasing, PermissionAction.Update)]
+    [HasTaskPermission(ApplicationTaskKeys.ReceivePurchaseOrder)]
     public async Task<ActionResult<PurchaseOrderDto>> Receive(
         string id,
         PurchaseOrderReceiveDto dto,
@@ -76,6 +83,8 @@ public sealed class PurchaseOrderController : BaseApiController
     /// and recorded as a supplier-return movement. The return cannot exceed the line's net received quantity.
     /// </remarks>
     [HttpPost("{id}/supplier-returns")]
+    [HasPermission(ApplicationComponentKeys.Purchasing, PermissionAction.Update)]
+    [HasTaskPermission(ApplicationTaskKeys.ProcessPurchaseOrderSupplierReturn)]
     public async Task<ActionResult<PurchaseOrderDto>> SupplierReturn(
         string id,
         PurchaseOrderSupplierReturnDto dto,
@@ -90,6 +99,8 @@ public sealed class PurchaseOrderController : BaseApiController
     /// After cancellation, the order cannot receive more stock. Existing stock movements are not silently removed by cancelling the order.
     /// </remarks>
     [HttpPost("{id}/cancel")]
+    [HasPermission(ApplicationComponentKeys.Purchasing, PermissionAction.Update)]
+    [HasTaskPermission(ApplicationTaskKeys.CancelPurchaseOrder)]
     public async Task<ActionResult<PurchaseOrderDto>> Cancel(
         string id,
         CancellationToken cancellationToken

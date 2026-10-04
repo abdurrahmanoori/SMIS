@@ -13,4 +13,13 @@ public static class ApplicationTaskKeys
     public const string CompleteStockCount = "Inventory.CompleteStockCount";
     public const string CancelStockCount = "Inventory.CancelStockCount";
     public const string ReverseStockMovement = "Inventory.ReverseStockMovement";
+
+    public const string ReceivePurchaseOrder = "Purchasing.ReceivePurchaseOrder";
+    public const string ProcessPurchaseOrderSupplierReturn = "Purchasing.ProcessSupplierReturn";
+    public const string CancelPurchaseOrder = "Purchasing.CancelPurchaseOrder";
+
+    public const string ProcessSaleReturn = "Sales.ProcessReturn";
+    public const string VoidSale = "Sales.VoidSale";
+
+    public const string ProcessCustomerPayment = "Receivables.ProcessCustomerPayment";
 }

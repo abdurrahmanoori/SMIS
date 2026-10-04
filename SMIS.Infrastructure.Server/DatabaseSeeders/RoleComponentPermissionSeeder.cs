@@ -78,7 +78,67 @@ public static class RoleComponentPermissionSeeder
             Permission(SeedIds.RoleSalesManager, AuthorizationSeedIds.ComponentInventory, true, true, false, false, false),
             Permission(SeedIds.RoleCashier, AuthorizationSeedIds.ComponentInventory, true, true, false, false, false),
             Permission(SeedIds.RoleStaff, AuthorizationSeedIds.ComponentInventory, true, true, false, false, false),
-            Permission(SeedIds.RoleViewer, AuthorizationSeedIds.ComponentInventory, true, true, false, false, false));
+            Permission(SeedIds.RoleViewer, AuthorizationSeedIds.ComponentInventory, true, true, false, false, false),
+
+            // Customers
+            Permission(SeedIds.RoleSuperAdmin, AuthorizationSeedIds.ComponentCustomers, true, true, true, true, true),
+            Permission(SeedIds.RoleShopAdmin, AuthorizationSeedIds.ComponentCustomers, true, true, true, true, true),
+            Permission(SeedIds.RoleManager, AuthorizationSeedIds.ComponentCustomers, true, true, true, true, true),
+            Permission(SeedIds.RoleInventoryManager, AuthorizationSeedIds.ComponentCustomers, true, true, false, false, false),
+            Permission(SeedIds.RoleSalesManager, AuthorizationSeedIds.ComponentCustomers, true, true, true, true, true),
+            Permission(SeedIds.RoleCashier, AuthorizationSeedIds.ComponentCustomers, true, true, true, true, false),
+            Permission(SeedIds.RoleStaff, AuthorizationSeedIds.ComponentCustomers, true, true, true, true, false),
+            Permission(SeedIds.RoleViewer, AuthorizationSeedIds.ComponentCustomers, true, true, false, false, false),
+
+            // Suppliers
+            Permission(SeedIds.RoleSuperAdmin, AuthorizationSeedIds.ComponentSuppliers, true, true, true, true, true),
+            Permission(SeedIds.RoleShopAdmin, AuthorizationSeedIds.ComponentSuppliers, true, true, true, true, true),
+            Permission(SeedIds.RoleManager, AuthorizationSeedIds.ComponentSuppliers, true, true, true, true, true),
+            Permission(SeedIds.RoleInventoryManager, AuthorizationSeedIds.ComponentSuppliers, true, true, true, true, true),
+            Permission(SeedIds.RoleSalesManager, AuthorizationSeedIds.ComponentSuppliers, true, true, false, false, false),
+            Permission(SeedIds.RoleCashier, AuthorizationSeedIds.ComponentSuppliers, true, true, false, false, false),
+            Permission(SeedIds.RoleStaff, AuthorizationSeedIds.ComponentSuppliers, true, true, false, false, false),
+            Permission(SeedIds.RoleViewer, AuthorizationSeedIds.ComponentSuppliers, true, true, false, false, false),
+
+            // Purchasing
+            Permission(SeedIds.RoleSuperAdmin, AuthorizationSeedIds.ComponentPurchasing, true, true, true, true, true),
+            Permission(SeedIds.RoleShopAdmin, AuthorizationSeedIds.ComponentPurchasing, true, true, true, true, true),
+            Permission(SeedIds.RoleManager, AuthorizationSeedIds.ComponentPurchasing, true, true, true, true, true),
+            Permission(SeedIds.RoleInventoryManager, AuthorizationSeedIds.ComponentPurchasing, true, true, true, true, true),
+            Permission(SeedIds.RoleSalesManager, AuthorizationSeedIds.ComponentPurchasing, true, true, false, false, false),
+            Permission(SeedIds.RoleCashier, AuthorizationSeedIds.ComponentPurchasing, true, true, false, false, false),
+            Permission(SeedIds.RoleStaff, AuthorizationSeedIds.ComponentPurchasing, true, true, false, false, false),
+            Permission(SeedIds.RoleViewer, AuthorizationSeedIds.ComponentPurchasing, true, true, false, false, false),
+
+            // Sales
+            Permission(SeedIds.RoleSuperAdmin, AuthorizationSeedIds.ComponentSales, true, true, true, true, true),
+            Permission(SeedIds.RoleShopAdmin, AuthorizationSeedIds.ComponentSales, true, true, true, true, true),
+            Permission(SeedIds.RoleManager, AuthorizationSeedIds.ComponentSales, true, true, true, true, true),
+            Permission(SeedIds.RoleInventoryManager, AuthorizationSeedIds.ComponentSales, true, true, false, false, false),
+            Permission(SeedIds.RoleSalesManager, AuthorizationSeedIds.ComponentSales, true, true, true, true, true),
+            Permission(SeedIds.RoleCashier, AuthorizationSeedIds.ComponentSales, true, true, true, true, false),
+            Permission(SeedIds.RoleStaff, AuthorizationSeedIds.ComponentSales, true, true, false, false, false),
+            Permission(SeedIds.RoleViewer, AuthorizationSeedIds.ComponentSales, true, true, false, false, false),
+
+            // Receivables
+            Permission(SeedIds.RoleSuperAdmin, AuthorizationSeedIds.ComponentReceivables, true, true, true, true, true),
+            Permission(SeedIds.RoleShopAdmin, AuthorizationSeedIds.ComponentReceivables, true, true, true, true, true),
+            Permission(SeedIds.RoleManager, AuthorizationSeedIds.ComponentReceivables, true, true, true, true, true),
+            Permission(SeedIds.RoleInventoryManager, AuthorizationSeedIds.ComponentReceivables, false, false, false, false, false),
+            Permission(SeedIds.RoleSalesManager, AuthorizationSeedIds.ComponentReceivables, true, true, true, true, true),
+            Permission(SeedIds.RoleCashier, AuthorizationSeedIds.ComponentReceivables, true, true, false, true, false),
+            Permission(SeedIds.RoleStaff, AuthorizationSeedIds.ComponentReceivables, true, true, false, false, false),
+            Permission(SeedIds.RoleViewer, AuthorizationSeedIds.ComponentReceivables, true, true, false, false, false),
+
+            // Shop owners
+            Permission(SeedIds.RoleSuperAdmin, AuthorizationSeedIds.ComponentShopOwners, true, true, true, true, true),
+            Permission(SeedIds.RoleShopAdmin, AuthorizationSeedIds.ComponentShopOwners, true, true, true, true, true),
+            Permission(SeedIds.RoleManager, AuthorizationSeedIds.ComponentShopOwners, true, true, false, false, false),
+            Permission(SeedIds.RoleInventoryManager, AuthorizationSeedIds.ComponentShopOwners, false, false, false, false, false),
+            Permission(SeedIds.RoleSalesManager, AuthorizationSeedIds.ComponentShopOwners, false, false, false, false, false),
+            Permission(SeedIds.RoleCashier, AuthorizationSeedIds.ComponentShopOwners, false, false, false, false, false),
+            Permission(SeedIds.RoleStaff, AuthorizationSeedIds.ComponentShopOwners, false, false, false, false, false),
+            Permission(SeedIds.RoleViewer, AuthorizationSeedIds.ComponentShopOwners, false, false, false, false, false));
     }
 
     private static RoleComponentPermission Permission(

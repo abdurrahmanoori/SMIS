@@ -51,5 +51,54 @@ public static class RoleTaskPermissionSeeder
                 TaskId = taskId,
                 IsAllowed = allowedRoles.Contains(roleId)
             })));
+
+        var purchasingAllowedRoles = AllowedRoles(
+            SeedIds.RoleSuperAdmin,
+            SeedIds.RoleShopAdmin,
+            SeedIds.RoleManager,
+            SeedIds.RoleInventoryManager);
+
+        var saleReturnAllowedRoles = AllowedRoles(
+            SeedIds.RoleSuperAdmin,
+            SeedIds.RoleShopAdmin,
+            SeedIds.RoleManager,
+            SeedIds.RoleSalesManager,
+            SeedIds.RoleCashier);
+
+        var saleVoidAllowedRoles = AllowedRoles(
+            SeedIds.RoleSuperAdmin,
+            SeedIds.RoleShopAdmin,
+            SeedIds.RoleManager,
+            SeedIds.RoleSalesManager);
+
+        var paymentAllowedRoles = AllowedRoles(
+            SeedIds.RoleSuperAdmin,
+            SeedIds.RoleShopAdmin,
+            SeedIds.RoleManager,
+            SeedIds.RoleSalesManager,
+            SeedIds.RoleCashier);
+
+        modelBuilder.Entity<RoleTaskPermission>().HasData(
+            PermissionsFor(roles, AuthorizationSeedIds.TaskReceivePurchaseOrder, purchasingAllowedRoles)
+                .Concat(PermissionsFor(roles, AuthorizationSeedIds.TaskProcessPurchaseOrderSupplierReturn, purchasingAllowedRoles))
+                .Concat(PermissionsFor(roles, AuthorizationSeedIds.TaskCancelPurchaseOrder, purchasingAllowedRoles))
+                .Concat(PermissionsFor(roles, AuthorizationSeedIds.TaskProcessSaleReturn, saleReturnAllowedRoles))
+                .Concat(PermissionsFor(roles, AuthorizationSeedIds.TaskVoidSale, saleVoidAllowedRoles))
+                .Concat(PermissionsFor(roles, AuthorizationSeedIds.TaskProcessCustomerPayment, paymentAllowedRoles)));
     }
+
+    private static HashSet<string> AllowedRoles(
+        params string[] roleIds
+    ) => new(roleIds, StringComparer.Ordinal);
+
+    private static IEnumerable<RoleTaskPermission> PermissionsFor(
+        IEnumerable<string> roleIds,
+        string taskId,
+        HashSet<string> allowedRoles
+    ) => roleIds.Select(roleId => new RoleTaskPermission
+    {
+        RoleId = roleId,
+        TaskId = taskId,
+        IsAllowed = allowedRoles.Contains(roleId)
+    });
 }

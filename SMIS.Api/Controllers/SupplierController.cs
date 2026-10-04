@@ -4,6 +4,9 @@ using SMIS.Application.Common;
 using SMIS.Application.DTO.Purchasing;
 using SMIS.Application.Features.Purchasing.Commands;
 using SMIS.Application.Features.Purchasing.Queries;
+using SMIS.Api.Authorization;
+using SMIS.Domain.Entities.Identity;
+using SMIS.Domain.Enums;
 
 namespace SMIS.Api.Controllers;
 
@@ -21,6 +24,7 @@ public sealed class SupplierController : BaseApiController
     /// The supplier name must be unique inside the shop, and regular users can create suppliers only for their own shop.
     /// </remarks>
     [HttpPost]
+    [HasPermission(ApplicationComponentKeys.Suppliers, PermissionAction.Create)]
     public async Task<ActionResult<SupplierDto>> Create(
         SupplierCreateDto dto,
         CancellationToken cancellationToken
@@ -31,6 +35,7 @@ public sealed class SupplierController : BaseApiController
     /// Gets the suppliers visible to the current user.
     /// </summary>
     [HttpGet]
+    [HasPermission(ApplicationComponentKeys.Suppliers, PermissionAction.Read)]
     public async Task<ActionResult<PagedListNew<SupplierDto>>> GetAll(
         [FromQuery] SupplierQueryCriteria criteria,
         [FromQuery] string[]? columns,

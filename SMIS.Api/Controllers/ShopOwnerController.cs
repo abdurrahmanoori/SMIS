@@ -5,7 +5,9 @@ using SMIS.Application.DTO.ShopOwners;
 using SMIS.Application.Features.ShopOwners.Commands;
 using SMIS.Application.Features.ShopOwners.Queries;
 using SMIS.Api.Controllers.Base;
-using Microsoft.AspNetCore.Authorization;
+using SMIS.Api.Authorization;
+using SMIS.Domain.Entities.Identity;
+using SMIS.Domain.Enums;
 
 namespace SMIS.Api.Controllers
 {
@@ -20,6 +22,7 @@ namespace SMIS.Api.Controllers
         /// Creates a new shop owner.
         /// </summary>
         [HttpPost]
+        [HasPermission(ApplicationComponentKeys.ShopOwners, PermissionAction.Create)]
         public async Task<ActionResult<ShopOwnerDto>> Create(
             ShopOwnerCreateDto dto
         ) =>
@@ -29,7 +32,7 @@ namespace SMIS.Api.Controllers
         /// Gets shop owners in pages.
         /// </summary>
         [HttpGet]
-        [Authorize]
+        [HasPermission(ApplicationComponentKeys.ShopOwners, PermissionAction.Read)]
         public async Task<ActionResult<PagedListNew<ShopOwnerDto>>> GetAll(
             [FromQuery] ShopOwnerQueryCriteria criteria,
             [FromQuery] string[]? columns,
@@ -51,6 +54,7 @@ namespace SMIS.Api.Controllers
         /// Updates an existing shop owner.
         /// </summary>
         [HttpPut("{id}")]
+        [HasPermission(ApplicationComponentKeys.ShopOwners, PermissionAction.Update)]
         public async Task<ActionResult<ShopOwnerDto>> Update(
             string id,
             ShopOwnerCreateDto dto
@@ -61,6 +65,7 @@ namespace SMIS.Api.Controllers
         /// Deletes a shop owner.
         /// </summary>
         [HttpDelete("{id}")]
+        [HasPermission(ApplicationComponentKeys.ShopOwners, PermissionAction.Delete)]
         public async Task<IActionResult> Delete(
             string id
         ) =>

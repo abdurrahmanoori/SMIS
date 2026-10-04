@@ -21,20 +21,33 @@ public static class ApplicationTaskSeeder
             Task(AuthorizationSeedIds.TaskStartStockCount, ApplicationTaskKeys.StartStockCount, "Start stock count"),
             Task(AuthorizationSeedIds.TaskCompleteStockCount, ApplicationTaskKeys.CompleteStockCount, "Complete stock count"),
             Task(AuthorizationSeedIds.TaskCancelStockCount, ApplicationTaskKeys.CancelStockCount, "Cancel stock count"),
-            Task(AuthorizationSeedIds.TaskReverseStockMovement, ApplicationTaskKeys.ReverseStockMovement, "Reverse stock movement"));
+            Task(AuthorizationSeedIds.TaskReverseStockMovement, ApplicationTaskKeys.ReverseStockMovement, "Reverse stock movement"),
+            Task(AuthorizationSeedIds.TaskReceivePurchaseOrder, ApplicationTaskKeys.ReceivePurchaseOrder, "Receive purchase order", AuthorizationSeedIds.ComponentPurchasing),
+            Task(AuthorizationSeedIds.TaskProcessPurchaseOrderSupplierReturn, ApplicationTaskKeys.ProcessPurchaseOrderSupplierReturn, "Process purchase-order supplier return", AuthorizationSeedIds.ComponentPurchasing),
+            Task(AuthorizationSeedIds.TaskCancelPurchaseOrder, ApplicationTaskKeys.CancelPurchaseOrder, "Cancel purchase order", AuthorizationSeedIds.ComponentPurchasing),
+            Task(AuthorizationSeedIds.TaskProcessSaleReturn, ApplicationTaskKeys.ProcessSaleReturn, "Process sale return", AuthorizationSeedIds.ComponentSales),
+            Task(AuthorizationSeedIds.TaskVoidSale, ApplicationTaskKeys.VoidSale, "Void sale", AuthorizationSeedIds.ComponentSales),
+            Task(AuthorizationSeedIds.TaskProcessCustomerPayment, ApplicationTaskKeys.ProcessCustomerPayment, "Process customer payment", AuthorizationSeedIds.ComponentReceivables));
     }
 
     private static ApplicationTask Task(
         string id,
         string key,
         string name
+    ) => Task(id, key, name, AuthorizationSeedIds.ComponentInventory);
+
+    private static ApplicationTask Task(
+        string id,
+        string key,
+        string name,
+        string componentId
     ) =>
         new()
         {
             Id = id,
             Key = key,
             Name = name,
-            ComponentId = AuthorizationSeedIds.ComponentInventory,
+            ComponentId = componentId,
             IsActive = true
         };
 }

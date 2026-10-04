@@ -25,7 +25,13 @@ public static class ApplicationComponentSeeder
             Component(AuthorizationSeedIds.ComponentProducts, ApplicationComponentKeys.Products, "Products", 4),
             Component(AuthorizationSeedIds.ComponentProductUnits, ApplicationComponentKeys.ProductUnits, "Product units", 5),
             Component(AuthorizationSeedIds.ComponentProductPrices, ApplicationComponentKeys.ProductPrices, "Product prices", 6),
-            Component(AuthorizationSeedIds.ComponentInventory, ApplicationComponentKeys.Inventory, "Inventory", 7));
+            Component(AuthorizationSeedIds.ComponentInventory, ApplicationComponentKeys.Inventory, "Inventory", 7),
+            Component(AuthorizationSeedIds.ComponentCustomers, ApplicationComponentKeys.Customers, "Customers", 8),
+            Component(AuthorizationSeedIds.ComponentSuppliers, ApplicationComponentKeys.Suppliers, "Suppliers", 9),
+            Component(AuthorizationSeedIds.ComponentPurchasing, ApplicationComponentKeys.Purchasing, "Purchasing", 10),
+            Component(AuthorizationSeedIds.ComponentSales, ApplicationComponentKeys.Sales, "Sales", 11),
+            Component(AuthorizationSeedIds.ComponentReceivables, ApplicationComponentKeys.Receivables, "Receivables", 12),
+            Component(AuthorizationSeedIds.ComponentShopOwners, ApplicationComponentKeys.ShopOwners, "Shop owners", 13));
     }
 
     private static ApplicationComponent Component(

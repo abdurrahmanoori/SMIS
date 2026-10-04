@@ -4,6 +4,9 @@ using SMIS.Application.Common;
 using SMIS.Application.DTO.Sales;
 using SMIS.Application.Features.Sales.Commands;
 using SMIS.Application.Features.Sales.Queries;
+using SMIS.Api.Authorization;
+using SMIS.Domain.Entities.Identity;
+using SMIS.Domain.Enums;
 
 namespace SMIS.Api.Controllers;
 
@@ -35,6 +38,7 @@ public sealed class SaleController : BaseApiController
     /// The created sale with its lines and credit information when applicable.
     /// </returns>
     [HttpPost]
+    [HasPermission(ApplicationComponentKeys.Sales, PermissionAction.Create)]
     public async Task<ActionResult<SaleDto>> Create(
         SaleCreateDto dto,
         CancellationToken cancellationToken
@@ -55,6 +59,7 @@ public sealed class SaleController : BaseApiController
     /// <param name="cancellationToken">Stops the request if it is cancelled.</param>
     /// <returns>A page of sales.</returns>
     [HttpGet]
+    [HasPermission(ApplicationComponentKeys.Sales, PermissionAction.Read)]
     public async Task<ActionResult<PagedListNew<SaleDto>>> GetAll(
         [FromQuery] SaleQueryCriteria criteria,
         [FromQuery] string[]? columns,
@@ -89,6 +94,8 @@ public sealed class SaleController : BaseApiController
     /// The updated sale status, returned amount, refund amount, remaining amount due, and stock movements.
     /// </returns>
     [HttpPost("{id}/returns")]
+    [HasPermission(ApplicationComponentKeys.Sales, PermissionAction.Update)]
+    [HasTaskPermission(ApplicationTaskKeys.ProcessSaleReturn)]
     public async Task<ActionResult<SaleReturnResultDto>> Return(
         string id,
         SaleReturnDto dto,
@@ -112,6 +119,8 @@ public sealed class SaleController : BaseApiController
     /// The final sale status, returned amount, refund amount, remaining amount due, and stock movements.
     /// </returns>
     [HttpPost("{id}/void")]
+    [HasPermission(ApplicationComponentKeys.Sales, PermissionAction.Update)]
+    [HasTaskPermission(ApplicationTaskKeys.VoidSale)]
     public async Task<ActionResult<SaleReturnResultDto>> Void(
         string id,
         SaleVoidDto dto,
