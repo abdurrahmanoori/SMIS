@@ -29,9 +29,6 @@ namespace SMIS.Application.Features.Identity.Users.Validators
                 .NotEmpty().WithMessage("Password is required")
                 .MinimumLength(6).WithMessage("Password must be at least 6 characters");
 
-            RuleFor(x => x.UserCreateDto.ShopId)
-                .NotEmpty().WithMessage("ShopId is required");
-
             RuleFor(x => x.UserCreateDto.LanguageId)
                 .NotEmpty().WithMessage("Language is required")
                 .MaximumLength(450).WithMessage("Language ID must not exceed 450 characters");
