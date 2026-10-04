@@ -5,6 +5,9 @@ using SMIS.Application.DTO.LoanAccounts;
 using SMIS.Application.Features.LoanAccounts.Commands;
 using SMIS.Application.Features.LoanAccounts.Queries;
 using SMIS.Api.Controllers.Base;
+using SMIS.Api.Authorization;
+using SMIS.Domain.Entities.Identity;
+using SMIS.Domain.Enums;
 
 namespace SMIS.Api.Controllers;
 
@@ -22,6 +25,7 @@ public class LoanAccountController : BaseApiController
     /// Creates a new loan account.
     /// </summary>
     [HttpPost]
+    [HasPermission(ApplicationComponentKeys.Receivables, PermissionAction.Create)]
     public async Task<ActionResult<LoanAccountDto>> Create(
         LoanAccountCreateDto dto
     ) =>
@@ -34,6 +38,7 @@ public class LoanAccountController : BaseApiController
     /// Use <c>includeCustomer</c> and <c>includeSale</c> when the response should also contain those related records.
     /// </remarks>
     [HttpGet]
+    [HasPermission(ApplicationComponentKeys.Receivables, PermissionAction.Read)]
     public async Task<ActionResult<PagedListNew<LoanAccountDto>>> GetAll(
         [FromQuery] LoanAccountQueryCriteria criteria,
         [FromQuery] string[]? columns,
@@ -55,6 +60,7 @@ public class LoanAccountController : BaseApiController
     /// Updates an existing loan account.
     /// </summary>
     [HttpPut("{id}")]
+    [HasPermission(ApplicationComponentKeys.Receivables, PermissionAction.Update)]
     public async Task<ActionResult<LoanAccountDto>> Update(
         string id,
         LoanAccountUpdateDto dto
@@ -65,6 +71,7 @@ public class LoanAccountController : BaseApiController
     /// Deletes a loan account.
     /// </summary>
     [HttpDelete("{id}")]
+    [HasPermission(ApplicationComponentKeys.Receivables, PermissionAction.Delete)]
     public async Task<IActionResult> Delete(
         string id
     ) =>
@@ -79,6 +86,8 @@ public class LoanAccountController : BaseApiController
     /// The response shows how much was applied to each loan and what remains after the payment.
     /// </remarks>
     [HttpPost("process-payment")]
+    [HasPermission(ApplicationComponentKeys.Receivables, PermissionAction.Update)]
+    [HasTaskPermission(ApplicationTaskKeys.ProcessCustomerPayment)]
     public async Task<ActionResult<PaymentAllocationResultDto>> ProcessPayment(
         CustomerPaymentDto dto
     ) =>
@@ -99,6 +108,7 @@ public class LoanAccountController : BaseApiController
     /// </remarks>
     /// <param name="customerId">The customer ID.</param>
     [HttpGet("customer/{customerId}/debt-summary")]
+    [HasPermission(ApplicationComponentKeys.Receivables, PermissionAction.Read)]
     public async Task<ActionResult<CustomerDebtSummaryDto>> GetCustomerDebtSummary(
         string customerId
     ) =>

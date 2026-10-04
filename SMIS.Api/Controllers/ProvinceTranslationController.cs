@@ -5,6 +5,8 @@ using SMIS.Application.DTO.Provinces;
 using SMIS.Application.Features.Provinces.Commands;
 using SMIS.Application.Features.Provinces.Queries;
 using SMIS.Api.Controllers.Base;
+using SMIS.Api.Authorization;
+using SMIS.Application.Common.Contants;
 
 namespace SMIS.Api.Controllers
 {
@@ -16,6 +18,7 @@ namespace SMIS.Api.Controllers
     /// </remarks>
     [Route("api/[controller]")]
     [ApiController]
+    [HasCurrentRole(SD.Role_Super_Admin)]
     public class ProvinceTranslationController : BaseApiController
     {
         /// <summary>

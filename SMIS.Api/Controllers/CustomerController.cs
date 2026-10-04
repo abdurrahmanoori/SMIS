@@ -5,7 +5,9 @@ using SMIS.Application.DTO.Customers;
 using SMIS.Application.Features.Customers.Commands;
 using SMIS.Application.Features.Customers.Queries;
 using SMIS.Api.Controllers.Base;
-using Microsoft.AspNetCore.Authorization;
+using SMIS.Api.Authorization;
+using SMIS.Domain.Entities.Identity;
+using SMIS.Domain.Enums;
 
 namespace SMIS.Api.Controllers
 {
@@ -20,6 +22,7 @@ namespace SMIS.Api.Controllers
         /// Creates a new customer.
         /// </summary>
         [HttpPost]
+        [HasPermission(ApplicationComponentKeys.Customers, PermissionAction.Create)]
         public async Task<ActionResult<CustomerDto>> Create(
             CustomerCreateDto dto
         ) =>
@@ -32,6 +35,7 @@ namespace SMIS.Api.Controllers
         /// Set <c>includeShop</c> to true when shop information should be included with each customer.
         /// </remarks>
         [HttpGet]
+        [HasPermission(ApplicationComponentKeys.Customers, PermissionAction.Read)]
         public async Task<ActionResult<PagedListNew<CustomerDto>>> GetAll(
             [FromQuery] CustomerQueryCriteria criteria,
             [FromQuery] string[]? columns,
@@ -53,6 +57,7 @@ namespace SMIS.Api.Controllers
         /// Updates an existing customer.
         /// </summary>
         [HttpPut("{id}")]
+        [HasPermission(ApplicationComponentKeys.Customers, PermissionAction.Update)]
         public async Task<ActionResult<CustomerDto>> Update(
             string id,
             CustomerCreateDto dto
@@ -63,6 +68,7 @@ namespace SMIS.Api.Controllers
         /// Deletes a customer.
         /// </summary>
         [HttpDelete("{id}")]
+        [HasPermission(ApplicationComponentKeys.Customers, PermissionAction.Delete)]
         public async Task<IActionResult> Delete(
             string id
         ) =>

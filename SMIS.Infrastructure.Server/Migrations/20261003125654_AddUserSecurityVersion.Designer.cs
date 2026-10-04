@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SMIS.Infrastructure.Server.Context;
 
@@ -11,9 +12,11 @@ using SMIS.Infrastructure.Server.Context;
 namespace SMIS.Infrastructure.Server.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20261003125654_AddUserSecurityVersion")]
+    partial class AddUserSecurityVersion
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -808,60 +811,6 @@ namespace SMIS.Infrastructure.Server.Migrations
                             Key = "Inventory",
                             Name = "Inventory",
                             ShowInMenu = true
-                        },
-                        new
-                        {
-                            Id = "55555555-0000-0000-0000-000000000008",
-                            DisplayOrder = 8,
-                            IsActive = true,
-                            Key = "Customers",
-                            Name = "Customers",
-                            ShowInMenu = true
-                        },
-                        new
-                        {
-                            Id = "55555555-0000-0000-0000-000000000009",
-                            DisplayOrder = 9,
-                            IsActive = true,
-                            Key = "Suppliers",
-                            Name = "Suppliers",
-                            ShowInMenu = true
-                        },
-                        new
-                        {
-                            Id = "55555555-0000-0000-0000-000000000010",
-                            DisplayOrder = 10,
-                            IsActive = true,
-                            Key = "Purchasing",
-                            Name = "Purchasing",
-                            ShowInMenu = true
-                        },
-                        new
-                        {
-                            Id = "55555555-0000-0000-0000-000000000011",
-                            DisplayOrder = 11,
-                            IsActive = true,
-                            Key = "Sales",
-                            Name = "Sales",
-                            ShowInMenu = true
-                        },
-                        new
-                        {
-                            Id = "55555555-0000-0000-0000-000000000012",
-                            DisplayOrder = 12,
-                            IsActive = true,
-                            Key = "Receivables",
-                            Name = "Receivables",
-                            ShowInMenu = true
-                        },
-                        new
-                        {
-                            Id = "55555555-0000-0000-0000-000000000013",
-                            DisplayOrder = 13,
-                            IsActive = true,
-                            Key = "ShopOwners",
-                            Name = "Shop owners",
-                            ShowInMenu = true
                         });
                 });
 
@@ -1086,54 +1035,6 @@ namespace SMIS.Infrastructure.Server.Migrations
                             IsActive = true,
                             Key = "Inventory.ReverseStockMovement",
                             Name = "Reverse stock movement"
-                        },
-                        new
-                        {
-                            Id = "66666666-0000-0000-0000-000000000012",
-                            ComponentId = "55555555-0000-0000-0000-000000000010",
-                            IsActive = true,
-                            Key = "Purchasing.ReceivePurchaseOrder",
-                            Name = "Receive purchase order"
-                        },
-                        new
-                        {
-                            Id = "66666666-0000-0000-0000-000000000013",
-                            ComponentId = "55555555-0000-0000-0000-000000000010",
-                            IsActive = true,
-                            Key = "Purchasing.ProcessSupplierReturn",
-                            Name = "Process purchase-order supplier return"
-                        },
-                        new
-                        {
-                            Id = "66666666-0000-0000-0000-000000000014",
-                            ComponentId = "55555555-0000-0000-0000-000000000010",
-                            IsActive = true,
-                            Key = "Purchasing.CancelPurchaseOrder",
-                            Name = "Cancel purchase order"
-                        },
-                        new
-                        {
-                            Id = "66666666-0000-0000-0000-000000000015",
-                            ComponentId = "55555555-0000-0000-0000-000000000011",
-                            IsActive = true,
-                            Key = "Sales.ProcessReturn",
-                            Name = "Process sale return"
-                        },
-                        new
-                        {
-                            Id = "66666666-0000-0000-0000-000000000016",
-                            ComponentId = "55555555-0000-0000-0000-000000000011",
-                            IsActive = true,
-                            Key = "Sales.VoidSale",
-                            Name = "Void sale"
-                        },
-                        new
-                        {
-                            Id = "66666666-0000-0000-0000-000000000017",
-                            ComponentId = "55555555-0000-0000-0000-000000000012",
-                            IsActive = true,
-                            Key = "Receivables.ProcessCustomerPayment",
-                            Name = "Process customer payment"
                         });
                 });
 
@@ -2388,486 +2289,6 @@ namespace SMIS.Infrastructure.Server.Migrations
                             CanRead = true,
                             CanUpdate = false,
                             CanView = true
-                        },
-                        new
-                        {
-                            RoleId = "33333333-0000-0000-0000-000000000001",
-                            ComponentId = "55555555-0000-0000-0000-000000000008",
-                            CanCreate = true,
-                            CanDelete = true,
-                            CanRead = true,
-                            CanUpdate = true,
-                            CanView = true
-                        },
-                        new
-                        {
-                            RoleId = "33333333-0000-0000-0000-000000000002",
-                            ComponentId = "55555555-0000-0000-0000-000000000008",
-                            CanCreate = true,
-                            CanDelete = true,
-                            CanRead = true,
-                            CanUpdate = true,
-                            CanView = true
-                        },
-                        new
-                        {
-                            RoleId = "33333333-0000-0000-0000-000000000004",
-                            ComponentId = "55555555-0000-0000-0000-000000000008",
-                            CanCreate = true,
-                            CanDelete = true,
-                            CanRead = true,
-                            CanUpdate = true,
-                            CanView = true
-                        },
-                        new
-                        {
-                            RoleId = "33333333-0000-0000-0000-000000000003",
-                            ComponentId = "55555555-0000-0000-0000-000000000008",
-                            CanCreate = false,
-                            CanDelete = false,
-                            CanRead = true,
-                            CanUpdate = false,
-                            CanView = true
-                        },
-                        new
-                        {
-                            RoleId = "33333333-0000-0000-0000-000000000007",
-                            ComponentId = "55555555-0000-0000-0000-000000000008",
-                            CanCreate = true,
-                            CanDelete = true,
-                            CanRead = true,
-                            CanUpdate = true,
-                            CanView = true
-                        },
-                        new
-                        {
-                            RoleId = "33333333-0000-0000-0000-000000000008",
-                            ComponentId = "55555555-0000-0000-0000-000000000008",
-                            CanCreate = true,
-                            CanDelete = false,
-                            CanRead = true,
-                            CanUpdate = true,
-                            CanView = true
-                        },
-                        new
-                        {
-                            RoleId = "33333333-0000-0000-0000-000000000005",
-                            ComponentId = "55555555-0000-0000-0000-000000000008",
-                            CanCreate = true,
-                            CanDelete = false,
-                            CanRead = true,
-                            CanUpdate = true,
-                            CanView = true
-                        },
-                        new
-                        {
-                            RoleId = "33333333-0000-0000-0000-000000000006",
-                            ComponentId = "55555555-0000-0000-0000-000000000008",
-                            CanCreate = false,
-                            CanDelete = false,
-                            CanRead = true,
-                            CanUpdate = false,
-                            CanView = true
-                        },
-                        new
-                        {
-                            RoleId = "33333333-0000-0000-0000-000000000001",
-                            ComponentId = "55555555-0000-0000-0000-000000000009",
-                            CanCreate = true,
-                            CanDelete = true,
-                            CanRead = true,
-                            CanUpdate = true,
-                            CanView = true
-                        },
-                        new
-                        {
-                            RoleId = "33333333-0000-0000-0000-000000000002",
-                            ComponentId = "55555555-0000-0000-0000-000000000009",
-                            CanCreate = true,
-                            CanDelete = true,
-                            CanRead = true,
-                            CanUpdate = true,
-                            CanView = true
-                        },
-                        new
-                        {
-                            RoleId = "33333333-0000-0000-0000-000000000004",
-                            ComponentId = "55555555-0000-0000-0000-000000000009",
-                            CanCreate = true,
-                            CanDelete = true,
-                            CanRead = true,
-                            CanUpdate = true,
-                            CanView = true
-                        },
-                        new
-                        {
-                            RoleId = "33333333-0000-0000-0000-000000000003",
-                            ComponentId = "55555555-0000-0000-0000-000000000009",
-                            CanCreate = true,
-                            CanDelete = true,
-                            CanRead = true,
-                            CanUpdate = true,
-                            CanView = true
-                        },
-                        new
-                        {
-                            RoleId = "33333333-0000-0000-0000-000000000007",
-                            ComponentId = "55555555-0000-0000-0000-000000000009",
-                            CanCreate = false,
-                            CanDelete = false,
-                            CanRead = true,
-                            CanUpdate = false,
-                            CanView = true
-                        },
-                        new
-                        {
-                            RoleId = "33333333-0000-0000-0000-000000000008",
-                            ComponentId = "55555555-0000-0000-0000-000000000009",
-                            CanCreate = false,
-                            CanDelete = false,
-                            CanRead = true,
-                            CanUpdate = false,
-                            CanView = true
-                        },
-                        new
-                        {
-                            RoleId = "33333333-0000-0000-0000-000000000005",
-                            ComponentId = "55555555-0000-0000-0000-000000000009",
-                            CanCreate = false,
-                            CanDelete = false,
-                            CanRead = true,
-                            CanUpdate = false,
-                            CanView = true
-                        },
-                        new
-                        {
-                            RoleId = "33333333-0000-0000-0000-000000000006",
-                            ComponentId = "55555555-0000-0000-0000-000000000009",
-                            CanCreate = false,
-                            CanDelete = false,
-                            CanRead = true,
-                            CanUpdate = false,
-                            CanView = true
-                        },
-                        new
-                        {
-                            RoleId = "33333333-0000-0000-0000-000000000001",
-                            ComponentId = "55555555-0000-0000-0000-000000000010",
-                            CanCreate = true,
-                            CanDelete = true,
-                            CanRead = true,
-                            CanUpdate = true,
-                            CanView = true
-                        },
-                        new
-                        {
-                            RoleId = "33333333-0000-0000-0000-000000000002",
-                            ComponentId = "55555555-0000-0000-0000-000000000010",
-                            CanCreate = true,
-                            CanDelete = true,
-                            CanRead = true,
-                            CanUpdate = true,
-                            CanView = true
-                        },
-                        new
-                        {
-                            RoleId = "33333333-0000-0000-0000-000000000004",
-                            ComponentId = "55555555-0000-0000-0000-000000000010",
-                            CanCreate = true,
-                            CanDelete = true,
-                            CanRead = true,
-                            CanUpdate = true,
-                            CanView = true
-                        },
-                        new
-                        {
-                            RoleId = "33333333-0000-0000-0000-000000000003",
-                            ComponentId = "55555555-0000-0000-0000-000000000010",
-                            CanCreate = true,
-                            CanDelete = true,
-                            CanRead = true,
-                            CanUpdate = true,
-                            CanView = true
-                        },
-                        new
-                        {
-                            RoleId = "33333333-0000-0000-0000-000000000007",
-                            ComponentId = "55555555-0000-0000-0000-000000000010",
-                            CanCreate = false,
-                            CanDelete = false,
-                            CanRead = true,
-                            CanUpdate = false,
-                            CanView = true
-                        },
-                        new
-                        {
-                            RoleId = "33333333-0000-0000-0000-000000000008",
-                            ComponentId = "55555555-0000-0000-0000-000000000010",
-                            CanCreate = false,
-                            CanDelete = false,
-                            CanRead = true,
-                            CanUpdate = false,
-                            CanView = true
-                        },
-                        new
-                        {
-                            RoleId = "33333333-0000-0000-0000-000000000005",
-                            ComponentId = "55555555-0000-0000-0000-000000000010",
-                            CanCreate = false,
-                            CanDelete = false,
-                            CanRead = true,
-                            CanUpdate = false,
-                            CanView = true
-                        },
-                        new
-                        {
-                            RoleId = "33333333-0000-0000-0000-000000000006",
-                            ComponentId = "55555555-0000-0000-0000-000000000010",
-                            CanCreate = false,
-                            CanDelete = false,
-                            CanRead = true,
-                            CanUpdate = false,
-                            CanView = true
-                        },
-                        new
-                        {
-                            RoleId = "33333333-0000-0000-0000-000000000001",
-                            ComponentId = "55555555-0000-0000-0000-000000000011",
-                            CanCreate = true,
-                            CanDelete = true,
-                            CanRead = true,
-                            CanUpdate = true,
-                            CanView = true
-                        },
-                        new
-                        {
-                            RoleId = "33333333-0000-0000-0000-000000000002",
-                            ComponentId = "55555555-0000-0000-0000-000000000011",
-                            CanCreate = true,
-                            CanDelete = true,
-                            CanRead = true,
-                            CanUpdate = true,
-                            CanView = true
-                        },
-                        new
-                        {
-                            RoleId = "33333333-0000-0000-0000-000000000004",
-                            ComponentId = "55555555-0000-0000-0000-000000000011",
-                            CanCreate = true,
-                            CanDelete = true,
-                            CanRead = true,
-                            CanUpdate = true,
-                            CanView = true
-                        },
-                        new
-                        {
-                            RoleId = "33333333-0000-0000-0000-000000000003",
-                            ComponentId = "55555555-0000-0000-0000-000000000011",
-                            CanCreate = false,
-                            CanDelete = false,
-                            CanRead = true,
-                            CanUpdate = false,
-                            CanView = true
-                        },
-                        new
-                        {
-                            RoleId = "33333333-0000-0000-0000-000000000007",
-                            ComponentId = "55555555-0000-0000-0000-000000000011",
-                            CanCreate = true,
-                            CanDelete = true,
-                            CanRead = true,
-                            CanUpdate = true,
-                            CanView = true
-                        },
-                        new
-                        {
-                            RoleId = "33333333-0000-0000-0000-000000000008",
-                            ComponentId = "55555555-0000-0000-0000-000000000011",
-                            CanCreate = true,
-                            CanDelete = false,
-                            CanRead = true,
-                            CanUpdate = true,
-                            CanView = true
-                        },
-                        new
-                        {
-                            RoleId = "33333333-0000-0000-0000-000000000005",
-                            ComponentId = "55555555-0000-0000-0000-000000000011",
-                            CanCreate = false,
-                            CanDelete = false,
-                            CanRead = true,
-                            CanUpdate = false,
-                            CanView = true
-                        },
-                        new
-                        {
-                            RoleId = "33333333-0000-0000-0000-000000000006",
-                            ComponentId = "55555555-0000-0000-0000-000000000011",
-                            CanCreate = false,
-                            CanDelete = false,
-                            CanRead = true,
-                            CanUpdate = false,
-                            CanView = true
-                        },
-                        new
-                        {
-                            RoleId = "33333333-0000-0000-0000-000000000001",
-                            ComponentId = "55555555-0000-0000-0000-000000000012",
-                            CanCreate = true,
-                            CanDelete = true,
-                            CanRead = true,
-                            CanUpdate = true,
-                            CanView = true
-                        },
-                        new
-                        {
-                            RoleId = "33333333-0000-0000-0000-000000000002",
-                            ComponentId = "55555555-0000-0000-0000-000000000012",
-                            CanCreate = true,
-                            CanDelete = true,
-                            CanRead = true,
-                            CanUpdate = true,
-                            CanView = true
-                        },
-                        new
-                        {
-                            RoleId = "33333333-0000-0000-0000-000000000004",
-                            ComponentId = "55555555-0000-0000-0000-000000000012",
-                            CanCreate = true,
-                            CanDelete = true,
-                            CanRead = true,
-                            CanUpdate = true,
-                            CanView = true
-                        },
-                        new
-                        {
-                            RoleId = "33333333-0000-0000-0000-000000000003",
-                            ComponentId = "55555555-0000-0000-0000-000000000012",
-                            CanCreate = false,
-                            CanDelete = false,
-                            CanRead = false,
-                            CanUpdate = false,
-                            CanView = false
-                        },
-                        new
-                        {
-                            RoleId = "33333333-0000-0000-0000-000000000007",
-                            ComponentId = "55555555-0000-0000-0000-000000000012",
-                            CanCreate = true,
-                            CanDelete = true,
-                            CanRead = true,
-                            CanUpdate = true,
-                            CanView = true
-                        },
-                        new
-                        {
-                            RoleId = "33333333-0000-0000-0000-000000000008",
-                            ComponentId = "55555555-0000-0000-0000-000000000012",
-                            CanCreate = false,
-                            CanDelete = false,
-                            CanRead = true,
-                            CanUpdate = true,
-                            CanView = true
-                        },
-                        new
-                        {
-                            RoleId = "33333333-0000-0000-0000-000000000005",
-                            ComponentId = "55555555-0000-0000-0000-000000000012",
-                            CanCreate = false,
-                            CanDelete = false,
-                            CanRead = true,
-                            CanUpdate = false,
-                            CanView = true
-                        },
-                        new
-                        {
-                            RoleId = "33333333-0000-0000-0000-000000000006",
-                            ComponentId = "55555555-0000-0000-0000-000000000012",
-                            CanCreate = false,
-                            CanDelete = false,
-                            CanRead = true,
-                            CanUpdate = false,
-                            CanView = true
-                        },
-                        new
-                        {
-                            RoleId = "33333333-0000-0000-0000-000000000001",
-                            ComponentId = "55555555-0000-0000-0000-000000000013",
-                            CanCreate = true,
-                            CanDelete = true,
-                            CanRead = true,
-                            CanUpdate = true,
-                            CanView = true
-                        },
-                        new
-                        {
-                            RoleId = "33333333-0000-0000-0000-000000000002",
-                            ComponentId = "55555555-0000-0000-0000-000000000013",
-                            CanCreate = true,
-                            CanDelete = true,
-                            CanRead = true,
-                            CanUpdate = true,
-                            CanView = true
-                        },
-                        new
-                        {
-                            RoleId = "33333333-0000-0000-0000-000000000004",
-                            ComponentId = "55555555-0000-0000-0000-000000000013",
-                            CanCreate = false,
-                            CanDelete = false,
-                            CanRead = true,
-                            CanUpdate = false,
-                            CanView = true
-                        },
-                        new
-                        {
-                            RoleId = "33333333-0000-0000-0000-000000000003",
-                            ComponentId = "55555555-0000-0000-0000-000000000013",
-                            CanCreate = false,
-                            CanDelete = false,
-                            CanRead = false,
-                            CanUpdate = false,
-                            CanView = false
-                        },
-                        new
-                        {
-                            RoleId = "33333333-0000-0000-0000-000000000007",
-                            ComponentId = "55555555-0000-0000-0000-000000000013",
-                            CanCreate = false,
-                            CanDelete = false,
-                            CanRead = false,
-                            CanUpdate = false,
-                            CanView = false
-                        },
-                        new
-                        {
-                            RoleId = "33333333-0000-0000-0000-000000000008",
-                            ComponentId = "55555555-0000-0000-0000-000000000013",
-                            CanCreate = false,
-                            CanDelete = false,
-                            CanRead = false,
-                            CanUpdate = false,
-                            CanView = false
-                        },
-                        new
-                        {
-                            RoleId = "33333333-0000-0000-0000-000000000005",
-                            ComponentId = "55555555-0000-0000-0000-000000000013",
-                            CanCreate = false,
-                            CanDelete = false,
-                            CanRead = false,
-                            CanUpdate = false,
-                            CanView = false
-                        },
-                        new
-                        {
-                            RoleId = "33333333-0000-0000-0000-000000000006",
-                            ComponentId = "55555555-0000-0000-0000-000000000013",
-                            CanCreate = false,
-                            CanDelete = false,
-                            CanRead = false,
-                            CanUpdate = false,
-                            CanView = false
                         });
                 });
 
@@ -2899,134 +2320,470 @@ namespace SMIS.Infrastructure.Server.Migrations
                         },
                         new
                         {
+                            RoleId = "33333333-0000-0000-0000-000000000001",
+                            TaskId = "66666666-0000-0000-0000-000000000002",
+                            IsAllowed = true
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000001",
+                            TaskId = "66666666-0000-0000-0000-000000000003",
+                            IsAllowed = true
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000001",
+                            TaskId = "66666666-0000-0000-0000-000000000004",
+                            IsAllowed = true
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000001",
+                            TaskId = "66666666-0000-0000-0000-000000000005",
+                            IsAllowed = true
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000001",
+                            TaskId = "66666666-0000-0000-0000-000000000006",
+                            IsAllowed = true
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000001",
+                            TaskId = "66666666-0000-0000-0000-000000000007",
+                            IsAllowed = true
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000001",
+                            TaskId = "66666666-0000-0000-0000-000000000008",
+                            IsAllowed = true
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000001",
+                            TaskId = "66666666-0000-0000-0000-000000000009",
+                            IsAllowed = true
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000001",
+                            TaskId = "66666666-0000-0000-0000-000000000010",
+                            IsAllowed = true
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000001",
+                            TaskId = "66666666-0000-0000-0000-000000000011",
+                            IsAllowed = true
+                        },
+                        new
+                        {
                             RoleId = "33333333-0000-0000-0000-000000000002",
                             TaskId = "66666666-0000-0000-0000-000000000001",
                             IsAllowed = true
                         },
                         new
                         {
+                            RoleId = "33333333-0000-0000-0000-000000000002",
+                            TaskId = "66666666-0000-0000-0000-000000000002",
+                            IsAllowed = true
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000002",
+                            TaskId = "66666666-0000-0000-0000-000000000003",
+                            IsAllowed = true
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000002",
+                            TaskId = "66666666-0000-0000-0000-000000000004",
+                            IsAllowed = true
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000002",
+                            TaskId = "66666666-0000-0000-0000-000000000005",
+                            IsAllowed = true
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000002",
+                            TaskId = "66666666-0000-0000-0000-000000000006",
+                            IsAllowed = true
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000002",
+                            TaskId = "66666666-0000-0000-0000-000000000007",
+                            IsAllowed = true
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000002",
+                            TaskId = "66666666-0000-0000-0000-000000000008",
+                            IsAllowed = true
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000002",
+                            TaskId = "66666666-0000-0000-0000-000000000009",
+                            IsAllowed = true
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000002",
+                            TaskId = "66666666-0000-0000-0000-000000000010",
+                            IsAllowed = true
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000002",
+                            TaskId = "66666666-0000-0000-0000-000000000011",
+                            IsAllowed = true
+                        },
+                        new
+                        {
                             RoleId = "33333333-0000-0000-0000-000000000004",
                             TaskId = "66666666-0000-0000-0000-000000000001",
                             IsAllowed = true
                         },
                         new
                         {
+                            RoleId = "33333333-0000-0000-0000-000000000004",
+                            TaskId = "66666666-0000-0000-0000-000000000002",
+                            IsAllowed = true
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000004",
+                            TaskId = "66666666-0000-0000-0000-000000000003",
+                            IsAllowed = true
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000004",
+                            TaskId = "66666666-0000-0000-0000-000000000004",
+                            IsAllowed = true
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000004",
+                            TaskId = "66666666-0000-0000-0000-000000000005",
+                            IsAllowed = true
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000004",
+                            TaskId = "66666666-0000-0000-0000-000000000006",
+                            IsAllowed = true
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000004",
+                            TaskId = "66666666-0000-0000-0000-000000000007",
+                            IsAllowed = true
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000004",
+                            TaskId = "66666666-0000-0000-0000-000000000008",
+                            IsAllowed = true
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000004",
+                            TaskId = "66666666-0000-0000-0000-000000000009",
+                            IsAllowed = true
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000004",
+                            TaskId = "66666666-0000-0000-0000-000000000010",
+                            IsAllowed = true
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000004",
+                            TaskId = "66666666-0000-0000-0000-000000000011",
+                            IsAllowed = true
+                        },
+                        new
+                        {
                             RoleId = "33333333-0000-0000-0000-000000000003",
                             TaskId = "66666666-0000-0000-0000-000000000001",
                             IsAllowed = true
                         },
                         new
                         {
+                            RoleId = "33333333-0000-0000-0000-000000000003",
+                            TaskId = "66666666-0000-0000-0000-000000000002",
+                            IsAllowed = true
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000003",
+                            TaskId = "66666666-0000-0000-0000-000000000003",
+                            IsAllowed = true
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000003",
+                            TaskId = "66666666-0000-0000-0000-000000000004",
+                            IsAllowed = true
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000003",
+                            TaskId = "66666666-0000-0000-0000-000000000005",
+                            IsAllowed = true
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000003",
+                            TaskId = "66666666-0000-0000-0000-000000000006",
+                            IsAllowed = true
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000003",
+                            TaskId = "66666666-0000-0000-0000-000000000007",
+                            IsAllowed = true
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000003",
+                            TaskId = "66666666-0000-0000-0000-000000000008",
+                            IsAllowed = true
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000003",
+                            TaskId = "66666666-0000-0000-0000-000000000009",
+                            IsAllowed = true
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000003",
+                            TaskId = "66666666-0000-0000-0000-000000000010",
+                            IsAllowed = true
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000003",
+                            TaskId = "66666666-0000-0000-0000-000000000011",
+                            IsAllowed = true
+                        },
+                        new
+                        {
                             RoleId = "33333333-0000-0000-0000-000000000007",
                             TaskId = "66666666-0000-0000-0000-000000000001",
                             IsAllowed = false
                         },
                         new
                         {
+                            RoleId = "33333333-0000-0000-0000-000000000007",
+                            TaskId = "66666666-0000-0000-0000-000000000002",
+                            IsAllowed = false
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000007",
+                            TaskId = "66666666-0000-0000-0000-000000000003",
+                            IsAllowed = false
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000007",
+                            TaskId = "66666666-0000-0000-0000-000000000004",
+                            IsAllowed = false
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000007",
+                            TaskId = "66666666-0000-0000-0000-000000000005",
+                            IsAllowed = false
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000007",
+                            TaskId = "66666666-0000-0000-0000-000000000006",
+                            IsAllowed = false
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000007",
+                            TaskId = "66666666-0000-0000-0000-000000000007",
+                            IsAllowed = false
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000007",
+                            TaskId = "66666666-0000-0000-0000-000000000008",
+                            IsAllowed = false
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000007",
+                            TaskId = "66666666-0000-0000-0000-000000000009",
+                            IsAllowed = false
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000007",
+                            TaskId = "66666666-0000-0000-0000-000000000010",
+                            IsAllowed = false
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000007",
+                            TaskId = "66666666-0000-0000-0000-000000000011",
+                            IsAllowed = false
+                        },
+                        new
+                        {
                             RoleId = "33333333-0000-0000-0000-000000000008",
                             TaskId = "66666666-0000-0000-0000-000000000001",
                             IsAllowed = false
                         },
                         new
                         {
+                            RoleId = "33333333-0000-0000-0000-000000000008",
+                            TaskId = "66666666-0000-0000-0000-000000000002",
+                            IsAllowed = false
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000008",
+                            TaskId = "66666666-0000-0000-0000-000000000003",
+                            IsAllowed = false
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000008",
+                            TaskId = "66666666-0000-0000-0000-000000000004",
+                            IsAllowed = false
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000008",
+                            TaskId = "66666666-0000-0000-0000-000000000005",
+                            IsAllowed = false
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000008",
+                            TaskId = "66666666-0000-0000-0000-000000000006",
+                            IsAllowed = false
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000008",
+                            TaskId = "66666666-0000-0000-0000-000000000007",
+                            IsAllowed = false
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000008",
+                            TaskId = "66666666-0000-0000-0000-000000000008",
+                            IsAllowed = false
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000008",
+                            TaskId = "66666666-0000-0000-0000-000000000009",
+                            IsAllowed = false
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000008",
+                            TaskId = "66666666-0000-0000-0000-000000000010",
+                            IsAllowed = false
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000008",
+                            TaskId = "66666666-0000-0000-0000-000000000011",
+                            IsAllowed = false
+                        },
+                        new
+                        {
                             RoleId = "33333333-0000-0000-0000-000000000005",
                             TaskId = "66666666-0000-0000-0000-000000000001",
                             IsAllowed = false
                         },
                         new
                         {
+                            RoleId = "33333333-0000-0000-0000-000000000005",
+                            TaskId = "66666666-0000-0000-0000-000000000002",
+                            IsAllowed = false
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000005",
+                            TaskId = "66666666-0000-0000-0000-000000000003",
+                            IsAllowed = false
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000005",
+                            TaskId = "66666666-0000-0000-0000-000000000004",
+                            IsAllowed = false
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000005",
+                            TaskId = "66666666-0000-0000-0000-000000000005",
+                            IsAllowed = false
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000005",
+                            TaskId = "66666666-0000-0000-0000-000000000006",
+                            IsAllowed = false
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000005",
+                            TaskId = "66666666-0000-0000-0000-000000000007",
+                            IsAllowed = false
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000005",
+                            TaskId = "66666666-0000-0000-0000-000000000008",
+                            IsAllowed = false
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000005",
+                            TaskId = "66666666-0000-0000-0000-000000000009",
+                            IsAllowed = false
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000005",
+                            TaskId = "66666666-0000-0000-0000-000000000010",
+                            IsAllowed = false
+                        },
+                        new
+                        {
+                            RoleId = "33333333-0000-0000-0000-000000000005",
+                            TaskId = "66666666-0000-0000-0000-000000000011",
+                            IsAllowed = false
+                        },
+                        new
+                        {
                             RoleId = "33333333-0000-0000-0000-000000000006",
                             TaskId = "66666666-0000-0000-0000-000000000001",
                             IsAllowed = false
                         },
                         new
                         {
-                            RoleId = "33333333-0000-0000-0000-000000000001",
-                            TaskId = "66666666-0000-0000-0000-000000000002",
-                            IsAllowed = true
-                        },
-                        new
-                        {
-                            RoleId = "33333333-0000-0000-0000-000000000002",
-                            TaskId = "66666666-0000-0000-0000-000000000002",
-                            IsAllowed = true
-                        },
-                        new
-                        {
-                            RoleId = "33333333-0000-0000-0000-000000000004",
-                            TaskId = "66666666-0000-0000-0000-000000000002",
-                            IsAllowed = true
-                        },
-                        new
-                        {
-                            RoleId = "33333333-0000-0000-0000-000000000003",
-                            TaskId = "66666666-0000-0000-0000-000000000002",
-                            IsAllowed = true
-                        },
-                        new
-                        {
-                            RoleId = "33333333-0000-0000-0000-000000000007",
-                            TaskId = "66666666-0000-0000-0000-000000000002",
-                            IsAllowed = false
-                        },
-                        new
-                        {
-                            RoleId = "33333333-0000-0000-0000-000000000008",
-                            TaskId = "66666666-0000-0000-0000-000000000002",
-                            IsAllowed = false
-                        },
-                        new
-                        {
-                            RoleId = "33333333-0000-0000-0000-000000000005",
-                            TaskId = "66666666-0000-0000-0000-000000000002",
-                            IsAllowed = false
-                        },
-                        new
-                        {
                             RoleId = "33333333-0000-0000-0000-000000000006",
                             TaskId = "66666666-0000-0000-0000-000000000002",
-                            IsAllowed = false
-                        },
-                        new
-                        {
-                            RoleId = "33333333-0000-0000-0000-000000000001",
-                            TaskId = "66666666-0000-0000-0000-000000000003",
-                            IsAllowed = true
-                        },
-                        new
-                        {
-                            RoleId = "33333333-0000-0000-0000-000000000002",
-                            TaskId = "66666666-0000-0000-0000-000000000003",
-                            IsAllowed = true
-                        },
-                        new
-                        {
-                            RoleId = "33333333-0000-0000-0000-000000000004",
-                            TaskId = "66666666-0000-0000-0000-000000000003",
-                            IsAllowed = true
-                        },
-                        new
-                        {
-                            RoleId = "33333333-0000-0000-0000-000000000003",
-                            TaskId = "66666666-0000-0000-0000-000000000003",
-                            IsAllowed = true
-                        },
-                        new
-                        {
-                            RoleId = "33333333-0000-0000-0000-000000000007",
-                            TaskId = "66666666-0000-0000-0000-000000000003",
-                            IsAllowed = false
-                        },
-                        new
-                        {
-                            RoleId = "33333333-0000-0000-0000-000000000008",
-                            TaskId = "66666666-0000-0000-0000-000000000003",
-                            IsAllowed = false
-                        },
-                        new
-                        {
-                            RoleId = "33333333-0000-0000-0000-000000000005",
-                            TaskId = "66666666-0000-0000-0000-000000000003",
                             IsAllowed = false
                         },
                         new
@@ -3037,92 +2794,8 @@ namespace SMIS.Infrastructure.Server.Migrations
                         },
                         new
                         {
-                            RoleId = "33333333-0000-0000-0000-000000000001",
-                            TaskId = "66666666-0000-0000-0000-000000000004",
-                            IsAllowed = true
-                        },
-                        new
-                        {
-                            RoleId = "33333333-0000-0000-0000-000000000002",
-                            TaskId = "66666666-0000-0000-0000-000000000004",
-                            IsAllowed = true
-                        },
-                        new
-                        {
-                            RoleId = "33333333-0000-0000-0000-000000000004",
-                            TaskId = "66666666-0000-0000-0000-000000000004",
-                            IsAllowed = true
-                        },
-                        new
-                        {
-                            RoleId = "33333333-0000-0000-0000-000000000003",
-                            TaskId = "66666666-0000-0000-0000-000000000004",
-                            IsAllowed = true
-                        },
-                        new
-                        {
-                            RoleId = "33333333-0000-0000-0000-000000000007",
-                            TaskId = "66666666-0000-0000-0000-000000000004",
-                            IsAllowed = false
-                        },
-                        new
-                        {
-                            RoleId = "33333333-0000-0000-0000-000000000008",
-                            TaskId = "66666666-0000-0000-0000-000000000004",
-                            IsAllowed = false
-                        },
-                        new
-                        {
-                            RoleId = "33333333-0000-0000-0000-000000000005",
-                            TaskId = "66666666-0000-0000-0000-000000000004",
-                            IsAllowed = false
-                        },
-                        new
-                        {
                             RoleId = "33333333-0000-0000-0000-000000000006",
                             TaskId = "66666666-0000-0000-0000-000000000004",
-                            IsAllowed = false
-                        },
-                        new
-                        {
-                            RoleId = "33333333-0000-0000-0000-000000000001",
-                            TaskId = "66666666-0000-0000-0000-000000000005",
-                            IsAllowed = true
-                        },
-                        new
-                        {
-                            RoleId = "33333333-0000-0000-0000-000000000002",
-                            TaskId = "66666666-0000-0000-0000-000000000005",
-                            IsAllowed = true
-                        },
-                        new
-                        {
-                            RoleId = "33333333-0000-0000-0000-000000000004",
-                            TaskId = "66666666-0000-0000-0000-000000000005",
-                            IsAllowed = true
-                        },
-                        new
-                        {
-                            RoleId = "33333333-0000-0000-0000-000000000003",
-                            TaskId = "66666666-0000-0000-0000-000000000005",
-                            IsAllowed = true
-                        },
-                        new
-                        {
-                            RoleId = "33333333-0000-0000-0000-000000000007",
-                            TaskId = "66666666-0000-0000-0000-000000000005",
-                            IsAllowed = false
-                        },
-                        new
-                        {
-                            RoleId = "33333333-0000-0000-0000-000000000008",
-                            TaskId = "66666666-0000-0000-0000-000000000005",
-                            IsAllowed = false
-                        },
-                        new
-                        {
-                            RoleId = "33333333-0000-0000-0000-000000000005",
-                            TaskId = "66666666-0000-0000-0000-000000000005",
                             IsAllowed = false
                         },
                         new
@@ -3133,92 +2806,8 @@ namespace SMIS.Infrastructure.Server.Migrations
                         },
                         new
                         {
-                            RoleId = "33333333-0000-0000-0000-000000000001",
-                            TaskId = "66666666-0000-0000-0000-000000000006",
-                            IsAllowed = true
-                        },
-                        new
-                        {
-                            RoleId = "33333333-0000-0000-0000-000000000002",
-                            TaskId = "66666666-0000-0000-0000-000000000006",
-                            IsAllowed = true
-                        },
-                        new
-                        {
-                            RoleId = "33333333-0000-0000-0000-000000000004",
-                            TaskId = "66666666-0000-0000-0000-000000000006",
-                            IsAllowed = true
-                        },
-                        new
-                        {
-                            RoleId = "33333333-0000-0000-0000-000000000003",
-                            TaskId = "66666666-0000-0000-0000-000000000006",
-                            IsAllowed = true
-                        },
-                        new
-                        {
-                            RoleId = "33333333-0000-0000-0000-000000000007",
-                            TaskId = "66666666-0000-0000-0000-000000000006",
-                            IsAllowed = false
-                        },
-                        new
-                        {
-                            RoleId = "33333333-0000-0000-0000-000000000008",
-                            TaskId = "66666666-0000-0000-0000-000000000006",
-                            IsAllowed = false
-                        },
-                        new
-                        {
-                            RoleId = "33333333-0000-0000-0000-000000000005",
-                            TaskId = "66666666-0000-0000-0000-000000000006",
-                            IsAllowed = false
-                        },
-                        new
-                        {
                             RoleId = "33333333-0000-0000-0000-000000000006",
                             TaskId = "66666666-0000-0000-0000-000000000006",
-                            IsAllowed = false
-                        },
-                        new
-                        {
-                            RoleId = "33333333-0000-0000-0000-000000000001",
-                            TaskId = "66666666-0000-0000-0000-000000000007",
-                            IsAllowed = true
-                        },
-                        new
-                        {
-                            RoleId = "33333333-0000-0000-0000-000000000002",
-                            TaskId = "66666666-0000-0000-0000-000000000007",
-                            IsAllowed = true
-                        },
-                        new
-                        {
-                            RoleId = "33333333-0000-0000-0000-000000000004",
-                            TaskId = "66666666-0000-0000-0000-000000000007",
-                            IsAllowed = true
-                        },
-                        new
-                        {
-                            RoleId = "33333333-0000-0000-0000-000000000003",
-                            TaskId = "66666666-0000-0000-0000-000000000007",
-                            IsAllowed = true
-                        },
-                        new
-                        {
-                            RoleId = "33333333-0000-0000-0000-000000000007",
-                            TaskId = "66666666-0000-0000-0000-000000000007",
-                            IsAllowed = false
-                        },
-                        new
-                        {
-                            RoleId = "33333333-0000-0000-0000-000000000008",
-                            TaskId = "66666666-0000-0000-0000-000000000007",
-                            IsAllowed = false
-                        },
-                        new
-                        {
-                            RoleId = "33333333-0000-0000-0000-000000000005",
-                            TaskId = "66666666-0000-0000-0000-000000000007",
                             IsAllowed = false
                         },
                         new
@@ -3229,92 +2818,8 @@ namespace SMIS.Infrastructure.Server.Migrations
                         },
                         new
                         {
-                            RoleId = "33333333-0000-0000-0000-000000000001",
-                            TaskId = "66666666-0000-0000-0000-000000000008",
-                            IsAllowed = true
-                        },
-                        new
-                        {
-                            RoleId = "33333333-0000-0000-0000-000000000002",
-                            TaskId = "66666666-0000-0000-0000-000000000008",
-                            IsAllowed = true
-                        },
-                        new
-                        {
-                            RoleId = "33333333-0000-0000-0000-000000000004",
-                            TaskId = "66666666-0000-0000-0000-000000000008",
-                            IsAllowed = true
-                        },
-                        new
-                        {
-                            RoleId = "33333333-0000-0000-0000-000000000003",
-                            TaskId = "66666666-0000-0000-0000-000000000008",
-                            IsAllowed = true
-                        },
-                        new
-                        {
-                            RoleId = "33333333-0000-0000-0000-000000000007",
-                            TaskId = "66666666-0000-0000-0000-000000000008",
-                            IsAllowed = false
-                        },
-                        new
-                        {
-                            RoleId = "33333333-0000-0000-0000-000000000008",
-                            TaskId = "66666666-0000-0000-0000-000000000008",
-                            IsAllowed = false
-                        },
-                        new
-                        {
-                            RoleId = "33333333-0000-0000-0000-000000000005",
-                            TaskId = "66666666-0000-0000-0000-000000000008",
-                            IsAllowed = false
-                        },
-                        new
-                        {
                             RoleId = "33333333-0000-0000-0000-000000000006",
                             TaskId = "66666666-0000-0000-0000-000000000008",
-                            IsAllowed = false
-                        },
-                        new
-                        {
-                            RoleId = "33333333-0000-0000-0000-000000000001",
-                            TaskId = "66666666-0000-0000-0000-000000000009",
-                            IsAllowed = true
-                        },
-                        new
-                        {
-                            RoleId = "33333333-0000-0000-0000-000000000002",
-                            TaskId = "66666666-0000-0000-0000-000000000009",
-                            IsAllowed = true
-                        },
-                        new
-                        {
-                            RoleId = "33333333-0000-0000-0000-000000000004",
-                            TaskId = "66666666-0000-0000-0000-000000000009",
-                            IsAllowed = true
-                        },
-                        new
-                        {
-                            RoleId = "33333333-0000-0000-0000-000000000003",
-                            TaskId = "66666666-0000-0000-0000-000000000009",
-                            IsAllowed = true
-                        },
-                        new
-                        {
-                            RoleId = "33333333-0000-0000-0000-000000000007",
-                            TaskId = "66666666-0000-0000-0000-000000000009",
-                            IsAllowed = false
-                        },
-                        new
-                        {
-                            RoleId = "33333333-0000-0000-0000-000000000008",
-                            TaskId = "66666666-0000-0000-0000-000000000009",
-                            IsAllowed = false
-                        },
-                        new
-                        {
-                            RoleId = "33333333-0000-0000-0000-000000000005",
-                            TaskId = "66666666-0000-0000-0000-000000000009",
                             IsAllowed = false
                         },
                         new
@@ -3325,386 +2830,14 @@ namespace SMIS.Infrastructure.Server.Migrations
                         },
                         new
                         {
-                            RoleId = "33333333-0000-0000-0000-000000000001",
-                            TaskId = "66666666-0000-0000-0000-000000000010",
-                            IsAllowed = true
-                        },
-                        new
-                        {
-                            RoleId = "33333333-0000-0000-0000-000000000002",
-                            TaskId = "66666666-0000-0000-0000-000000000010",
-                            IsAllowed = true
-                        },
-                        new
-                        {
-                            RoleId = "33333333-0000-0000-0000-000000000004",
-                            TaskId = "66666666-0000-0000-0000-000000000010",
-                            IsAllowed = true
-                        },
-                        new
-                        {
-                            RoleId = "33333333-0000-0000-0000-000000000003",
-                            TaskId = "66666666-0000-0000-0000-000000000010",
-                            IsAllowed = true
-                        },
-                        new
-                        {
-                            RoleId = "33333333-0000-0000-0000-000000000007",
-                            TaskId = "66666666-0000-0000-0000-000000000010",
-                            IsAllowed = false
-                        },
-                        new
-                        {
-                            RoleId = "33333333-0000-0000-0000-000000000008",
-                            TaskId = "66666666-0000-0000-0000-000000000010",
-                            IsAllowed = false
-                        },
-                        new
-                        {
-                            RoleId = "33333333-0000-0000-0000-000000000005",
-                            TaskId = "66666666-0000-0000-0000-000000000010",
-                            IsAllowed = false
-                        },
-                        new
-                        {
                             RoleId = "33333333-0000-0000-0000-000000000006",
                             TaskId = "66666666-0000-0000-0000-000000000010",
                             IsAllowed = false
                         },
                         new
                         {
-                            RoleId = "33333333-0000-0000-0000-000000000001",
-                            TaskId = "66666666-0000-0000-0000-000000000011",
-                            IsAllowed = true
-                        },
-                        new
-                        {
-                            RoleId = "33333333-0000-0000-0000-000000000002",
-                            TaskId = "66666666-0000-0000-0000-000000000011",
-                            IsAllowed = true
-                        },
-                        new
-                        {
-                            RoleId = "33333333-0000-0000-0000-000000000004",
-                            TaskId = "66666666-0000-0000-0000-000000000011",
-                            IsAllowed = true
-                        },
-                        new
-                        {
-                            RoleId = "33333333-0000-0000-0000-000000000003",
-                            TaskId = "66666666-0000-0000-0000-000000000011",
-                            IsAllowed = true
-                        },
-                        new
-                        {
-                            RoleId = "33333333-0000-0000-0000-000000000007",
-                            TaskId = "66666666-0000-0000-0000-000000000011",
-                            IsAllowed = false
-                        },
-                        new
-                        {
-                            RoleId = "33333333-0000-0000-0000-000000000008",
-                            TaskId = "66666666-0000-0000-0000-000000000011",
-                            IsAllowed = false
-                        },
-                        new
-                        {
-                            RoleId = "33333333-0000-0000-0000-000000000005",
-                            TaskId = "66666666-0000-0000-0000-000000000011",
-                            IsAllowed = false
-                        },
-                        new
-                        {
                             RoleId = "33333333-0000-0000-0000-000000000006",
                             TaskId = "66666666-0000-0000-0000-000000000011",
-                            IsAllowed = false
-                        },
-                        new
-                        {
-                            RoleId = "33333333-0000-0000-0000-000000000001",
-                            TaskId = "66666666-0000-0000-0000-000000000012",
-                            IsAllowed = true
-                        },
-                        new
-                        {
-                            RoleId = "33333333-0000-0000-0000-000000000002",
-                            TaskId = "66666666-0000-0000-0000-000000000012",
-                            IsAllowed = true
-                        },
-                        new
-                        {
-                            RoleId = "33333333-0000-0000-0000-000000000004",
-                            TaskId = "66666666-0000-0000-0000-000000000012",
-                            IsAllowed = true
-                        },
-                        new
-                        {
-                            RoleId = "33333333-0000-0000-0000-000000000003",
-                            TaskId = "66666666-0000-0000-0000-000000000012",
-                            IsAllowed = true
-                        },
-                        new
-                        {
-                            RoleId = "33333333-0000-0000-0000-000000000007",
-                            TaskId = "66666666-0000-0000-0000-000000000012",
-                            IsAllowed = false
-                        },
-                        new
-                        {
-                            RoleId = "33333333-0000-0000-0000-000000000008",
-                            TaskId = "66666666-0000-0000-0000-000000000012",
-                            IsAllowed = false
-                        },
-                        new
-                        {
-                            RoleId = "33333333-0000-0000-0000-000000000005",
-                            TaskId = "66666666-0000-0000-0000-000000000012",
-                            IsAllowed = false
-                        },
-                        new
-                        {
-                            RoleId = "33333333-0000-0000-0000-000000000006",
-                            TaskId = "66666666-0000-0000-0000-000000000012",
-                            IsAllowed = false
-                        },
-                        new
-                        {
-                            RoleId = "33333333-0000-0000-0000-000000000001",
-                            TaskId = "66666666-0000-0000-0000-000000000013",
-                            IsAllowed = true
-                        },
-                        new
-                        {
-                            RoleId = "33333333-0000-0000-0000-000000000002",
-                            TaskId = "66666666-0000-0000-0000-000000000013",
-                            IsAllowed = true
-                        },
-                        new
-                        {
-                            RoleId = "33333333-0000-0000-0000-000000000004",
-                            TaskId = "66666666-0000-0000-0000-000000000013",
-                            IsAllowed = true
-                        },
-                        new
-                        {
-                            RoleId = "33333333-0000-0000-0000-000000000003",
-                            TaskId = "66666666-0000-0000-0000-000000000013",
-                            IsAllowed = true
-                        },
-                        new
-                        {
-                            RoleId = "33333333-0000-0000-0000-000000000007",
-                            TaskId = "66666666-0000-0000-0000-000000000013",
-                            IsAllowed = false
-                        },
-                        new
-                        {
-                            RoleId = "33333333-0000-0000-0000-000000000008",
-                            TaskId = "66666666-0000-0000-0000-000000000013",
-                            IsAllowed = false
-                        },
-                        new
-                        {
-                            RoleId = "33333333-0000-0000-0000-000000000005",
-                            TaskId = "66666666-0000-0000-0000-000000000013",
-                            IsAllowed = false
-                        },
-                        new
-                        {
-                            RoleId = "33333333-0000-0000-0000-000000000006",
-                            TaskId = "66666666-0000-0000-0000-000000000013",
-                            IsAllowed = false
-                        },
-                        new
-                        {
-                            RoleId = "33333333-0000-0000-0000-000000000001",
-                            TaskId = "66666666-0000-0000-0000-000000000014",
-                            IsAllowed = true
-                        },
-                        new
-                        {
-                            RoleId = "33333333-0000-0000-0000-000000000002",
-                            TaskId = "66666666-0000-0000-0000-000000000014",
-                            IsAllowed = true
-                        },
-                        new
-                        {
-                            RoleId = "33333333-0000-0000-0000-000000000004",
-                            TaskId = "66666666-0000-0000-0000-000000000014",
-                            IsAllowed = true
-                        },
-                        new
-                        {
-                            RoleId = "33333333-0000-0000-0000-000000000003",
-                            TaskId = "66666666-0000-0000-0000-000000000014",
-                            IsAllowed = true
-                        },
-                        new
-                        {
-                            RoleId = "33333333-0000-0000-0000-000000000007",
-                            TaskId = "66666666-0000-0000-0000-000000000014",
-                            IsAllowed = false
-                        },
-                        new
-                        {
-                            RoleId = "33333333-0000-0000-0000-000000000008",
-                            TaskId = "66666666-0000-0000-0000-000000000014",
-                            IsAllowed = false
-                        },
-                        new
-                        {
-                            RoleId = "33333333-0000-0000-0000-000000000005",
-                            TaskId = "66666666-0000-0000-0000-000000000014",
-                            IsAllowed = false
-                        },
-                        new
-                        {
-                            RoleId = "33333333-0000-0000-0000-000000000006",
-                            TaskId = "66666666-0000-0000-0000-000000000014",
-                            IsAllowed = false
-                        },
-                        new
-                        {
-                            RoleId = "33333333-0000-0000-0000-000000000001",
-                            TaskId = "66666666-0000-0000-0000-000000000015",
-                            IsAllowed = true
-                        },
-                        new
-                        {
-                            RoleId = "33333333-0000-0000-0000-000000000002",
-                            TaskId = "66666666-0000-0000-0000-000000000015",
-                            IsAllowed = true
-                        },
-                        new
-                        {
-                            RoleId = "33333333-0000-0000-0000-000000000004",
-                            TaskId = "66666666-0000-0000-0000-000000000015",
-                            IsAllowed = true
-                        },
-                        new
-                        {
-                            RoleId = "33333333-0000-0000-0000-000000000003",
-                            TaskId = "66666666-0000-0000-0000-000000000015",
-                            IsAllowed = false
-                        },
-                        new
-                        {
-                            RoleId = "33333333-0000-0000-0000-000000000007",
-                            TaskId = "66666666-0000-0000-0000-000000000015",
-                            IsAllowed = true
-                        },
-                        new
-                        {
-                            RoleId = "33333333-0000-0000-0000-000000000008",
-                            TaskId = "66666666-0000-0000-0000-000000000015",
-                            IsAllowed = true
-                        },
-                        new
-                        {
-                            RoleId = "33333333-0000-0000-0000-000000000005",
-                            TaskId = "66666666-0000-0000-0000-000000000015",
-                            IsAllowed = false
-                        },
-                        new
-                        {
-                            RoleId = "33333333-0000-0000-0000-000000000006",
-                            TaskId = "66666666-0000-0000-0000-000000000015",
-                            IsAllowed = false
-                        },
-                        new
-                        {
-                            RoleId = "33333333-0000-0000-0000-000000000001",
-                            TaskId = "66666666-0000-0000-0000-000000000016",
-                            IsAllowed = true
-                        },
-                        new
-                        {
-                            RoleId = "33333333-0000-0000-0000-000000000002",
-                            TaskId = "66666666-0000-0000-0000-000000000016",
-                            IsAllowed = true
-                        },
-                        new
-                        {
-                            RoleId = "33333333-0000-0000-0000-000000000004",
-                            TaskId = "66666666-0000-0000-0000-000000000016",
-                            IsAllowed = true
-                        },
-                        new
-                        {
-                            RoleId = "33333333-0000-0000-0000-000000000003",
-                            TaskId = "66666666-0000-0000-0000-000000000016",
-                            IsAllowed = false
-                        },
-                        new
-                        {
-                            RoleId = "33333333-0000-0000-0000-000000000007",
-                            TaskId = "66666666-0000-0000-0000-000000000016",
-                            IsAllowed = true
-                        },
-                        new
-                        {
-                            RoleId = "33333333-0000-0000-0000-000000000008",
-                            TaskId = "66666666-0000-0000-0000-000000000016",
-                            IsAllowed = false
-                        },
-                        new
-                        {
-                            RoleId = "33333333-0000-0000-0000-000000000005",
-                            TaskId = "66666666-0000-0000-0000-000000000016",
-                            IsAllowed = false
-                        },
-                        new
-                        {
-                            RoleId = "33333333-0000-0000-0000-000000000006",
-                            TaskId = "66666666-0000-0000-0000-000000000016",
-                            IsAllowed = false
-                        },
-                        new
-                        {
-                            RoleId = "33333333-0000-0000-0000-000000000001",
-                            TaskId = "66666666-0000-0000-0000-000000000017",
-                            IsAllowed = true
-                        },
-                        new
-                        {
-                            RoleId = "33333333-0000-0000-0000-000000000002",
-                            TaskId = "66666666-0000-0000-0000-000000000017",
-                            IsAllowed = true
-                        },
-                        new
-                        {
-                            RoleId = "33333333-0000-0000-0000-000000000004",
-                            TaskId = "66666666-0000-0000-0000-000000000017",
-                            IsAllowed = true
-                        },
-                        new
-                        {
-                            RoleId = "33333333-0000-0000-0000-000000000003",
-                            TaskId = "66666666-0000-0000-0000-000000000017",
-                            IsAllowed = false
-                        },
-                        new
-                        {
-                            RoleId = "33333333-0000-0000-0000-000000000007",
-                            TaskId = "66666666-0000-0000-0000-000000000017",
-                            IsAllowed = true
-                        },
-                        new
-                        {
-                            RoleId = "33333333-0000-0000-0000-000000000008",
-                            TaskId = "66666666-0000-0000-0000-000000000017",
-                            IsAllowed = true
-                        },
-                        new
-                        {
-                            RoleId = "33333333-0000-0000-0000-000000000005",
-                            TaskId = "66666666-0000-0000-0000-000000000017",
-                            IsAllowed = false
-                        },
-                        new
-                        {
-                            RoleId = "33333333-0000-0000-0000-000000000006",
-                            TaskId = "66666666-0000-0000-0000-000000000017",
                             IsAllowed = false
                         });
                 });

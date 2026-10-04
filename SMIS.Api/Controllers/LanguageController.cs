@@ -5,6 +5,8 @@ using SMIS.Application.DTO.Localization;
 using SMIS.Application.Features.Localization.Commands;
 using SMIS.Application.Features.Localization.Queries;
 using SMIS.Api.Controllers.Base;
+using SMIS.Api.Authorization;
+using SMIS.Application.Common.Contants;
 
 namespace SMIS.Api.Controllers
 {
@@ -13,6 +15,7 @@ namespace SMIS.Api.Controllers
     /// </summary>
     [Route("api/[controller]")]
     [ApiController]
+    [HasCurrentRole(SD.Role_Super_Admin)]
     public class LanguageController : BaseApiController
     {
         /// <summary>
