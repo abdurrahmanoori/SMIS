@@ -107,7 +107,6 @@ class UserManagementApi {
     required String userName,
     required String email,
     required String password,
-    required String shopId,
     required String languageId,
     required List<String> roles,
     String? firstName,
