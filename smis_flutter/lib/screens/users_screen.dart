@@ -158,7 +158,6 @@ class _UsersScreenState extends ConsumerState<UsersScreen> {
           userName: draft.userName,
           email: draft.email,
           password: draft.password!,
-          shopId: draft.shopId,
           languageId: session.languageId,
           roles: draft.roles,
           firstName: draft.firstName,
