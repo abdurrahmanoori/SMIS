@@ -20,14 +20,17 @@ internal sealed class UserSetActiveStatusCommandHandler
 {
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly IUserAdministrationGuard _userAdministrationGuard;
+    private readonly IUnitOfWork _unitOfWork;
 
     public UserSetActiveStatusCommandHandler(
         UserManager<ApplicationUser> userManager,
-        IUserAdministrationGuard userAdministrationGuard
+        IUserAdministrationGuard userAdministrationGuard,
+        IUnitOfWork unitOfWork
     )
     {
         _userManager = userManager;
         _userAdministrationGuard = userAdministrationGuard;
+        _unitOfWork = unitOfWork;
     }
 
     public async Task<Result> Handle(
@@ -57,22 +60,38 @@ internal sealed class UserSetActiveStatusCommandHandler
                 "The last available SuperAdmin account cannot be deactivated.");
         }
 
-        if (request.IsActive)
-            user.Activate();
-        else
-            user.Deactivate();
+        await _unitOfWork.StartTransactionAsync(cancellationToken);
+        try
+        {
+            if (request.IsActive)
+                user.Activate();
+            else
+                user.Deactivate();
 
-        var updateResult = await _userManager.UpdateAsync(user);
-        return updateResult.Succeeded
-            ? Result.Success()
-            : Result.Failure(updateResult.Errors
-                .Select(error => new Error
-                {
-                    Code = error.Code,
-                    Description = error.Description,
-                    Type = ErrorType.Failure
-                })
-                .ToArray());
+            user.InvalidateSessions();
+            var updateResult = await _userManager.UpdateAsync(user);
+            if (!updateResult.Succeeded)
+            {
+                await _unitOfWork.RollbackTransactionAsync(cancellationToken);
+                return Result.Failure(updateResult.Errors
+                    .Select(error => new Error
+                    {
+                        Code = error.Code,
+                        Description = error.Description,
+                        Type = ErrorType.Failure
+                    })
+                    .ToArray());
+            }
+
+            await _unitOfWork.CommitTransactionAsync(cancellationToken);
+            return Result.Success();
+        }
+        catch
+        {
+            if (_unitOfWork.HasActiveTransaction)
+                await _unitOfWork.RollbackTransactionAsync(cancellationToken);
+            throw;
+        }
     }
 }
 
@@ -150,6 +169,7 @@ internal sealed class UserSetAllShopAdminsActiveStatusCommandHandler
                 else
                     user.Deactivate();
 
+                user.InvalidateSessions();
                 var updateResult = await _userManager.UpdateAsync(user);
                 if (!updateResult.Succeeded)
                 {
