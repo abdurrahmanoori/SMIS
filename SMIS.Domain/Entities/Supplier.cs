@@ -43,8 +43,7 @@ public sealed class Supplier : BaseAuditableEntity, IShopEntity
     public void Update(
         string name,
         string? phoneNumber,
-        string? notes,
-        bool isActive
+        string? notes
     )
     {
         if (string.IsNullOrWhiteSpace(name))
@@ -53,6 +52,9 @@ public sealed class Supplier : BaseAuditableEntity, IShopEntity
         Name = name.Trim();
         PhoneNumber = string.IsNullOrWhiteSpace(phoneNumber) ? null : phoneNumber.Trim();
         Notes = string.IsNullOrWhiteSpace(notes) ? null : notes.Trim();
-        IsActive = isActive;
     }
+
+    public void Activate() => IsActive = true;
+
+    public void Deactivate() => IsActive = false;
 }
