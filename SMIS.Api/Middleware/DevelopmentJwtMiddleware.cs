@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Globalization;
@@ -19,18 +20,18 @@ namespace SMIS.Api.Middleware;
 public class DevelopmentJwtMiddleware
 {
     private readonly RequestDelegate _next;
-    private readonly IConfiguration _configuration;
     private readonly IWebHostEnvironment _environment;
+    private readonly JwtSettings _jwtSettings;
 
     public DevelopmentJwtMiddleware(
         RequestDelegate next,
-        IConfiguration configuration,
-        IWebHostEnvironment environment
+        IWebHostEnvironment environment,
+        IOptions<JwtSettings> jwtSettings
     )
     {
         _next = next;
-        _configuration = configuration;
         _environment = environment;
+        _jwtSettings = jwtSettings.Value;
     }
 
     public async Task InvokeAsync(
@@ -57,7 +58,7 @@ public class DevelopmentJwtMiddleware
         int securityVersion
     )
     {
-        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JwtSettings:Key"]!));
+        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.Key));
         var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
         var claims = new[]
@@ -67,16 +68,17 @@ public class DevelopmentJwtMiddleware
             new Claim(ClaimTypes.Email, "superadmin@mainstore.com"),
             new Claim(ClaimTypes.Role, "SuperAdmin"),
             new Claim("ShopId", SeedIds.Shop1.ToString()),
+            new Claim(JwtClaimNames.AccessTokenVersion, JwtClaimNames.CurrentAccessTokenVersion),
             new Claim(
                 JwtClaimNames.SecurityVersion,
                 securityVersion.ToString(CultureInfo.InvariantCulture))
         };
 
         var token = new JwtSecurityToken(
-            issuer: _configuration["JwtSettings:Issuer"],
-            audience: _configuration["JwtSettings:Audience"],
+            issuer: _jwtSettings.Issuer,
+            audience: _jwtSettings.Audience,
             claims: claims,
-            expires: DateTimeService.NowUtc.AddHours(24),
+            expires: DateTimeService.NowUtc.AddMinutes(_jwtSettings.AccessTokenLifetimeMinutes),
             signingCredentials: credentials
         );
 

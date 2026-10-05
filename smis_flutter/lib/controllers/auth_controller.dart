@@ -231,6 +231,13 @@ class AuthController extends Notifier<AuthState> {
   Future<void> logout() async {
     Object? cleanupError;
     try {
+      await _api.revokeRefreshToken();
+    } catch (_) {
+      // Local logout must still succeed when the server is unreachable. The
+      // server-side refresh token will expire according to JwtSettings.
+    }
+
+    try {
       await ref.read(appPowerSyncDatabaseProvider).close();
     } catch (error) {
       cleanupError = error;

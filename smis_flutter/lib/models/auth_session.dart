@@ -4,6 +4,7 @@ import 'component_permission.dart';
 class AuthSession {
   const AuthSession({
     required this.token,
+    required this.refreshToken,
     required this.userId,
     required this.userName,
     required this.email,
@@ -17,6 +18,7 @@ class AuthSession {
   });
 
   final String token;
+  final String refreshToken;
   final String userId;
   final String userName;
   final String email;
@@ -64,6 +66,7 @@ class AuthSession {
 
   AuthSession copyWith({
     String? token,
+    String? refreshToken,
     String? userName,
     String? email,
     List<String>? roles,
@@ -75,6 +78,7 @@ class AuthSession {
     bool? taskPermissionsLoaded,
   }) => AuthSession(
     token: token ?? this.token,
+    refreshToken: refreshToken ?? this.refreshToken,
     userId: userId,
     userName: userName ?? this.userName,
     email: email ?? this.email,
@@ -112,6 +116,7 @@ class AuthSession {
         json['taskPermissions'] ?? json['TaskPermissions'] ?? const <dynamic>[];
     return AuthSession(
       token: requiredString('token', 'Token'),
+      refreshToken: optionalString('refreshToken', 'RefreshToken', ''),
       userId: requiredString('userId', 'UserId'),
       userName: requiredString('userName', 'UserName'),
       email: requiredString('email', 'Email'),
@@ -151,6 +156,7 @@ class AuthSession {
 
   Map<String, dynamic> toJson() => {
     'token': token,
+    'refreshToken': refreshToken,
     'userId': userId,
     'userName': userName,
     'email': email,

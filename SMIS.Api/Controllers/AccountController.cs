@@ -65,6 +65,32 @@ namespace SMIS.Api.Controllers
             HandleResultResponse(await Mediator.Send(new LoginCommand(dto)));
 
         /// <summary>
+        /// Exchanges a valid refresh token for a new short-lived access token and a rotated refresh token.
+        /// </summary>
+        [HttpPost("refresh-token")]
+        [AllowAnonymous]
+        public async Task<ActionResult<LoginResponseDto>> RefreshToken(
+            RefreshTokenRequestDto dto,
+            CancellationToken cancellationToken
+        ) =>
+            HandleResultResponse(await Mediator.Send(
+                new RefreshAccessTokenCommand(dto.RefreshToken, dto.ShopId),
+                cancellationToken));
+
+        /// <summary>
+        /// Revokes a refresh token, typically when a client signs out.
+        /// </summary>
+        [HttpPost("refresh-token/revoke")]
+        [AllowAnonymous]
+        public async Task<IActionResult> RevokeRefreshToken(
+            RefreshTokenRequestDto dto,
+            CancellationToken cancellationToken
+        ) =>
+            HandleResultResponse(await Mediator.Send(
+                new RevokeRefreshTokenCommand(dto.RefreshToken),
+                cancellationToken));
+
+        /// <summary>
         /// Changes the active shop context for a SuperAdmin and returns a fresh
         /// access token whose ShopId claim is the selected shop.
         /// </summary>
