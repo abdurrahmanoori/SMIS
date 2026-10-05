@@ -9,6 +9,7 @@ namespace SMIS.Domain.Entities;
 /// inventory normalization; ProductUnit defines every supported transaction unit.
 /// </summary>
 public class Product : BaseSyncableAuditableEntity, IEntity, IShopEntity
+
 {
     public string Name { get; private set; } = string.Empty;
 
