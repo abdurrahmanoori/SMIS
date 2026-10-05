@@ -6,7 +6,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../controllers/auth_controller.dart';
 import '../data/data_exception.dart';
 import '../data/user_management_api.dart';
+import '../l10n/app_localizations.dart';
 import '../models/managed_user.dart';
+import '../validation/user_management_validation.dart';
 import '../widgets/app_drawer.dart';
 import '../widgets/app_error_view.dart';
 import '../widgets/user_form_dialog.dart';
@@ -147,6 +149,7 @@ class _UsersScreenState extends ConsumerState<UsersScreen> {
     if (_mutating || _shops.isEmpty) return;
     final session = ref.read(authControllerProvider).session;
     if (session == null) return;
+
     final assignableRoles = session.isSuperAdmin
         ? _roles
         : _roles
@@ -159,7 +162,25 @@ class _UsersScreenState extends ConsumerState<UsersScreen> {
       builder: (context) =>
           UserFormDialog(user: user, shops: _shops, roles: assignableRoles),
     );
-    if (draft == null) return;
+    if (draft == null || !mounted) return;
+
+    // The form validates interactively, and this second check protects the API
+    // boundary if the dialog or another caller changes later.
+    final validationMessage = UserManagementValidation.userPayload(
+      userName: draft.userName,
+      email: draft.email,
+      password: draft.password,
+      requirePassword: user == null,
+      firstName: draft.firstName,
+      lastName: draft.lastName,
+      phoneNumber: draft.phoneNumber,
+      shopId: draft.shopId,
+      roles: draft.roles,
+    );
+    if (validationMessage != null) {
+      _showMessage(context.l10n.text(validationMessage));
+      return;
+    }
 
     final api = _api;
     if (api == null) return;
@@ -176,7 +197,9 @@ class _UsersScreenState extends ConsumerState<UsersScreen> {
           lastName: draft.lastName,
           phoneNumber: draft.phoneNumber,
         );
-        if (mounted) _showSuccess('User created successfully.');
+        if (mounted) {
+          _showMessage(context.l10n.text('User created successfully.'));
+        }
       } else {
         await api.updateUser(
           user: user,
@@ -188,7 +211,9 @@ class _UsersScreenState extends ConsumerState<UsersScreen> {
           lastName: draft.lastName,
           phoneNumber: draft.phoneNumber,
         );
-        if (mounted) _showSuccess('User updated successfully.');
+        if (mounted) {
+          _showMessage(context.l10n.text('User updated successfully.'));
+        }
       }
       await _load();
     } catch (error, stackTrace) {
@@ -202,11 +227,13 @@ class _UsersScreenState extends ConsumerState<UsersScreen> {
     if (_mutating) return;
     final session = ref.read(authControllerProvider).session;
     if (session == null) return;
+
     final assignableRoles = session.isSuperAdmin
         ? _roles
         : _roles
               .where((role) => role.toLowerCase() != 'superadmin')
               .toList(growable: false);
+
     final selectedRoles = await showDialog<List<String>>(
       context: context,
       barrierDismissible: false,
@@ -216,7 +243,7 @@ class _UsersScreenState extends ConsumerState<UsersScreen> {
         selectedRoles: user.roles,
       ),
     );
-    if (selectedRoles == null) return;
+    if (selectedRoles == null || !mounted) return;
 
     final api = _api;
     if (api == null) return;
@@ -224,7 +251,13 @@ class _UsersScreenState extends ConsumerState<UsersScreen> {
     try {
       await api.assignRoles(userId: user.id, roles: selectedRoles);
       await _load();
-      if (mounted) _showSuccess('Roles updated for ${user.displayName}.');
+      if (mounted) {
+        _showMessage(
+          context.l10n.text('Roles updated for {name}.', {
+            'name': user.displayName,
+          }),
+        );
+      }
     } catch (error, stackTrace) {
       if (mounted) AppErrorNotification.show(context, error, stackTrace);
     } finally {
@@ -234,11 +267,14 @@ class _UsersScreenState extends ConsumerState<UsersScreen> {
 
   Future<void> _resetPassword(ManagedUser user) async {
     if (_mutating) return;
+    final l10n = context.l10n;
     final confirmed = await _confirm(
-      title: 'Reset password?',
-      message:
-          'Reset ${user.displayName}\'s password? The server will immediately set the password to the user\'s current username. This operation is online-only and is not stored locally.',
-      confirmLabel: 'Reset password',
+      title: l10n.text('Reset password?'),
+      message: l10n.text(
+        'Reset {name}\'s password? The server will immediately set the password to the user\'s current username. This operation is online-only and is not stored locally.',
+        {'name': user.displayName},
+      ),
+      confirmLabel: l10n.text('Reset password'),
     );
     if (!confirmed) return;
 
@@ -248,8 +284,11 @@ class _UsersScreenState extends ConsumerState<UsersScreen> {
     try {
       await api.resetPassword(user.id);
       if (mounted) {
-        _showSuccess(
-          'Password reset for ${user.displayName}. The new password is the current username.',
+        _showMessage(
+          context.l10n.text(
+            'Password reset for {name}. The new password is the current username.',
+            {'name': user.displayName},
+          ),
         );
       }
     } catch (error, stackTrace) {
@@ -264,12 +303,17 @@ class _UsersScreenState extends ConsumerState<UsersScreen> {
     if (_mutating || session == null) return;
     if (locked && user.id == session.userId) return;
 
-    final action = locked ? 'Lock' : 'Unlock';
+    final l10n = context.l10n;
+    final actionKey = locked ? 'Lock' : 'Unlock';
     final confirmed = await _confirm(
-      title: '$action user?',
-      message:
-          '$action ${user.displayName}? This change is applied immediately on the server.',
-      confirmLabel: action,
+      title: l10n.text(locked ? 'Lock user?' : 'Unlock user?'),
+      message: l10n.text(
+        locked
+            ? 'Lock {name}? This change is applied immediately on the server.'
+            : 'Unlock {name}? This change is applied immediately on the server.',
+        {'name': user.displayName},
+      ),
+      confirmLabel: l10n.text(actionKey),
     );
     if (!confirmed) return;
 
@@ -284,10 +328,11 @@ class _UsersScreenState extends ConsumerState<UsersScreen> {
       }
       await _load();
       if (mounted) {
-        _showSuccess(
-          locked
-              ? '${user.displayName} is now locked.'
-              : '${user.displayName} is now unlocked.',
+        _showMessage(
+          context.l10n.text(
+            locked ? '{name} is now locked.' : '{name} is now unlocked.',
+            {'name': user.displayName},
+          ),
         );
       }
     } catch (error, stackTrace) {
@@ -301,12 +346,16 @@ class _UsersScreenState extends ConsumerState<UsersScreen> {
     final session = ref.read(authControllerProvider).session;
     if (_mutating || session == null || user.id == session.userId) return;
 
-    final action = isActive ? 'Activate' : 'Deactivate';
+    final l10n = context.l10n;
     final confirmed = await _confirm(
-      title: '$action user?',
-      message:
-          '$action ${user.displayName}? ${isActive ? 'The user will be able to sign in again.' : 'Existing authenticated requests will be rejected immediately.'}',
-      confirmLabel: action,
+      title: l10n.text(isActive ? 'Activate user?' : 'Deactivate user?'),
+      message: l10n.text(
+        isActive
+            ? 'Activate {name}? The user will be able to sign in again.'
+            : 'Deactivate {name}? Existing authenticated requests will be rejected immediately.',
+        {'name': user.displayName},
+      ),
+      confirmLabel: l10n.text(isActive ? 'Activate' : 'Deactivate'),
     );
     if (!confirmed) return;
 
@@ -317,10 +366,11 @@ class _UsersScreenState extends ConsumerState<UsersScreen> {
       await api.setActiveStatus(userId: user.id, isActive: isActive);
       await _load();
       if (mounted) {
-        _showSuccess(
-          isActive
-              ? '${user.displayName} is now active.'
-              : '${user.displayName} is now inactive.',
+        _showMessage(
+          context.l10n.text(
+            isActive ? '{name} is now active.' : '{name} is now inactive.',
+            {'name': user.displayName},
+          ),
         );
       }
     } catch (error, stackTrace) {
@@ -332,12 +382,17 @@ class _UsersScreenState extends ConsumerState<UsersScreen> {
 
   Future<void> _setAllShopAdminsActiveStatus(bool isActive) async {
     if (_mutating) return;
-    final action = isActive ? 'Activate' : 'Deactivate';
+    final l10n = context.l10n;
     final confirmed = await _confirm(
-      title: '$action all ShopAdmins?',
-      message:
-          '$action every ShopAdmin account? Accounts that are also SuperAdmin are excluded.',
-      confirmLabel: '$action all',
+      title: l10n.text(
+        isActive ? 'Activate all ShopAdmins?' : 'Deactivate all ShopAdmins?',
+      ),
+      message: l10n.text(
+        isActive
+            ? 'Activate every ShopAdmin account? Accounts that are also SuperAdmin are excluded.'
+            : 'Deactivate every ShopAdmin account? Accounts that are also SuperAdmin are excluded.',
+      ),
+      confirmLabel: l10n.text(isActive ? 'Activate all' : 'Deactivate all'),
     );
     if (!confirmed) return;
 
@@ -348,10 +403,12 @@ class _UsersScreenState extends ConsumerState<UsersScreen> {
       await api.setAllShopAdminsActiveStatus(isActive);
       await _load();
       if (mounted) {
-        _showSuccess(
-          isActive
-              ? 'All ShopAdmin accounts are active.'
-              : 'All ShopAdmin accounts are inactive.',
+        _showMessage(
+          context.l10n.text(
+            isActive
+                ? 'All ShopAdmin accounts are active.'
+                : 'All ShopAdmin accounts are inactive.',
+          ),
         );
       }
     } catch (error, stackTrace) {
@@ -365,11 +422,14 @@ class _UsersScreenState extends ConsumerState<UsersScreen> {
     final session = ref.read(authControllerProvider).session;
     if (_mutating || session == null || user.id == session.userId) return;
 
+    final l10n = context.l10n;
     final confirmed = await _confirm(
-      title: 'Delete user?',
-      message:
-          'Delete ${user.displayName}? This action is performed directly on the server.',
-      confirmLabel: 'Delete',
+      title: l10n.text('Delete user?'),
+      message: l10n.text(
+        'Delete {name}? This action is performed directly on the server.',
+        {'name': user.displayName},
+      ),
+      confirmLabel: l10n.text('Delete'),
     );
     if (!confirmed) return;
 
@@ -382,7 +442,11 @@ class _UsersScreenState extends ConsumerState<UsersScreen> {
         _pageNumber--;
       }
       await _load();
-      if (mounted) _showSuccess('${user.displayName} was deleted.');
+      if (mounted) {
+        _showMessage(
+          context.l10n.text('{name} was deleted.', {'name': user.displayName}),
+        );
+      }
     } catch (error, stackTrace) {
       if (mounted) AppErrorNotification.show(context, error, stackTrace);
     } finally {
@@ -403,7 +467,7 @@ class _UsersScreenState extends ConsumerState<UsersScreen> {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
-            child: const Text('Cancel'),
+            child: Text(context.l10n.text('Cancel')),
           ),
           FilledButton(
             onPressed: () => Navigator.pop(context, true),
@@ -415,18 +479,21 @@ class _UsersScreenState extends ConsumerState<UsersScreen> {
     return result == true;
   }
 
-  void _showSuccess(String message) {
+  void _showMessage(String message) {
     ScaffoldMessenger.of(context)
       ..hideCurrentSnackBar()
       ..showSnackBar(SnackBar(content: Text(message)));
   }
 
   String _lockStatus(ManagedUser user) {
-    if (!user.isActive) return 'Account status: inactive';
-    if (!user.isLocked) return 'Account status: unlocked';
+    final l10n = context.l10n;
+    if (!user.isActive) return l10n.text('Account status: inactive');
+    if (!user.isLocked) return l10n.text('Account status: unlocked');
     final end = user.lockoutEnd;
-    if (end == null) return 'Account status: locked';
-    return 'Account status: locked until ${_formatDateTime(end)}';
+    if (end == null) return l10n.text('Account status: locked');
+    return l10n.text('Account status: locked until {date}', {
+      'date': _formatDateTime(end),
+    });
   }
 
   String _formatDateTime(DateTime value) {
@@ -442,18 +509,21 @@ class _UsersScreenState extends ConsumerState<UsersScreen> {
       final name = user.shopName?.trim();
       if (name != null && name.isNotEmpty) return name;
     }
-    return 'Current shop';
+    return context.l10n.text('Current shop');
   }
 
   @override
   Widget build(BuildContext context) {
     final session = ref.watch(authControllerProvider).session;
+    final l10n = context.l10n;
     if (session == null || (!session.isSuperAdmin && !session.isShopAdmin)) {
-      return const Scaffold(
-        drawer: AppDrawer(),
+      return Scaffold(
+        drawer: const AppDrawer(),
         body: Center(
           child: Text(
-            'User administration requires SuperAdmin or ShopAdmin access.',
+            l10n.text(
+              'User administration requires SuperAdmin or ShopAdmin access.',
+            ),
             textAlign: TextAlign.center,
           ),
         ),
@@ -466,29 +536,29 @@ class _UsersScreenState extends ConsumerState<UsersScreen> {
             ? TextField(
                 controller: _searchController,
                 autofocus: true,
-                decoration: const InputDecoration(
-                  hintText: 'Search users...',
+                decoration: InputDecoration(
+                  hintText: l10n.text('Search users...'),
                   border: InputBorder.none,
                 ),
                 onChanged: _onSearchChanged,
               )
-            : const Text('User management'),
+            : Text(l10n.text('User management')),
         actions: [
           if (_isSearching)
             IconButton(
-              tooltip: 'Close search',
+              tooltip: l10n.text('Close search'),
               icon: const Icon(Icons.close),
               onPressed: _stopSearching,
             )
           else
             IconButton(
-              tooltip: 'Search users',
+              tooltip: l10n.text('Search users'),
               icon: const Icon(Icons.search),
               onPressed: () => setState(() => _isSearching = true),
             ),
           if (session.isSuperAdmin)
             PopupMenuButton<String>(
-              tooltip: 'ShopAdmin activation',
+              tooltip: l10n.text('ShopAdmin activation'),
               onSelected: (value) {
                 if (value == 'activate-shop-admins') {
                   _setAllShopAdminsActiveStatus(true);
@@ -496,19 +566,19 @@ class _UsersScreenState extends ConsumerState<UsersScreen> {
                   _setAllShopAdminsActiveStatus(false);
                 }
               },
-              itemBuilder: (context) => const [
+              itemBuilder: (context) => [
                 PopupMenuItem(
                   value: 'activate-shop-admins',
-                  child: Text('Activate all ShopAdmins'),
+                  child: Text(l10n.text('Activate all ShopAdmins')),
                 ),
                 PopupMenuItem(
                   value: 'deactivate-shop-admins',
-                  child: Text('Deactivate all ShopAdmins'),
+                  child: Text(l10n.text('Deactivate all ShopAdmins')),
                 ),
               ],
             ),
           IconButton(
-            tooltip: 'Refresh',
+            tooltip: l10n.text('Refresh'),
             onPressed: _loading || _mutating ? null : _load,
             icon: const Icon(Icons.refresh),
           ),
@@ -520,17 +590,19 @@ class _UsersScreenState extends ConsumerState<UsersScreen> {
           : FloatingActionButton.extended(
               onPressed: _loading || _mutating ? null : () => _openForm(),
               icon: const Icon(Icons.person_add_alt_1),
-              label: const Text('Add user'),
+              label: Text(l10n.text('Add user')),
             ),
       body: Column(
         children: [
           MaterialBanner(
             leading: const Icon(Icons.cloud_outlined),
-            content: const Text(
-              'User administration is online-only. User CRUD, roles, activation, password resets, and lock/unlock changes call the server directly and are never queued in PowerSync or local offline storage.',
+            content: Text(
+              l10n.text(
+                'User administration is online-only. User CRUD, roles, activation, password resets, and lock/unlock changes call the server directly and are never queued in PowerSync or local offline storage.',
+              ),
             ),
             actions: [
-              TextButton(onPressed: _load, child: const Text('Refresh')),
+              TextButton(onPressed: _load, child: Text(l10n.text('Refresh'))),
             ],
           ),
           Expanded(child: _buildBody(session.userId)),
@@ -540,6 +612,7 @@ class _UsersScreenState extends ConsumerState<UsersScreen> {
   }
 
   Widget _buildBody(String currentUserId) {
+    final l10n = context.l10n;
     if (_loading && _page == null) {
       return const Center(child: CircularProgressIndicator());
     }
@@ -559,11 +632,13 @@ class _UsersScreenState extends ConsumerState<UsersScreen> {
             ),
             const SizedBox(height: 12),
             Text(
-              _searchQuery.isEmpty ? 'No users found.' : 'No matching users.',
+              l10n.text(
+                _searchQuery.isEmpty ? 'No users found.' : 'No matching users.',
+              ),
             ),
             if (_searchQuery.isNotEmpty) ...[
               const SizedBox(height: 4),
-              const Text('Try a different search term.'),
+              Text(l10n.text('Try a different search term.')),
             ],
           ],
         ),
@@ -621,8 +696,10 @@ class _UsersScreenState extends ConsumerState<UsersScreen> {
                           const SizedBox(height: 2),
                           Text(
                             user.roles.isEmpty
-                                ? 'Roles: none'
-                                : 'Roles: ${user.roles.join(', ')}',
+                                ? l10n.text('Roles: none')
+                                : l10n.text('Roles: {roles}', {
+                                    'roles': user.roles.join(', '),
+                                  }),
                           ),
                           const SizedBox(height: 2),
                           Text(_lockStatus(user)),
@@ -663,62 +740,64 @@ class _UsersScreenState extends ConsumerState<UsersScreen> {
                         }
                       },
                       itemBuilder: (context) => [
-                        const PopupMenuItem(
+                        PopupMenuItem(
                           value: 'details',
                           child: ListTile(
                             contentPadding: EdgeInsets.zero,
-                            leading: Icon(Icons.visibility_outlined),
-                            title: Text('View details'),
+                            leading: const Icon(Icons.visibility_outlined),
+                            title: Text(l10n.text('View details')),
                           ),
                         ),
-                        const PopupMenuItem(
+                        PopupMenuItem(
                           value: 'edit',
                           child: ListTile(
                             contentPadding: EdgeInsets.zero,
-                            leading: Icon(Icons.edit_outlined),
-                            title: Text('Edit'),
+                            leading: const Icon(Icons.edit_outlined),
+                            title: Text(l10n.text('Edit')),
                           ),
                         ),
-                        const PopupMenuItem(
+                        PopupMenuItem(
                           value: 'roles',
                           child: ListTile(
                             contentPadding: EdgeInsets.zero,
-                            leading: Icon(Icons.admin_panel_settings_outlined),
-                            title: Text('Manage roles'),
+                            leading: const Icon(
+                              Icons.admin_panel_settings_outlined,
+                            ),
+                            title: Text(l10n.text('Manage roles')),
                           ),
                         ),
-                        const PopupMenuItem(
+                        PopupMenuItem(
                           value: 'reset-password',
                           child: ListTile(
                             contentPadding: EdgeInsets.zero,
-                            leading: Icon(Icons.password_outlined),
-                            title: Text('Reset password'),
+                            leading: const Icon(Icons.password_outlined),
+                            title: Text(l10n.text('Reset password')),
                           ),
                         ),
                         if (user.isLocked)
-                          const PopupMenuItem(
+                          PopupMenuItem(
                             value: 'unlock',
-                            child: Text('Unlock account'),
+                            child: Text(l10n.text('Unlock account')),
                           )
                         else if (user.id != currentUserId)
-                          const PopupMenuItem(
+                          PopupMenuItem(
                             value: 'lock',
-                            child: Text('Lock account'),
+                            child: Text(l10n.text('Lock account')),
                           ),
                         if (user.id != currentUserId && user.isActive)
-                          const PopupMenuItem(
+                          PopupMenuItem(
                             value: 'deactivate',
-                            child: Text('Deactivate account'),
+                            child: Text(l10n.text('Deactivate account')),
                           )
                         else if (user.id != currentUserId && !user.isActive)
-                          const PopupMenuItem(
+                          PopupMenuItem(
                             value: 'activate',
-                            child: Text('Activate account'),
+                            child: Text(l10n.text('Activate account')),
                           ),
                         if (user.id != currentUserId)
-                          const PopupMenuItem(
+                          PopupMenuItem(
                             value: 'delete',
-                            child: Text('Delete'),
+                            child: Text(l10n.text('Delete')),
                           ),
                       ],
                     ),
@@ -735,7 +814,7 @@ class _UsersScreenState extends ConsumerState<UsersScreen> {
             child: Row(
               children: [
                 IconButton(
-                  tooltip: 'Previous page',
+                  tooltip: l10n.text('Previous page'),
                   onPressed: _pageNumber > 1 && !_loading && !_mutating
                       ? () {
                           _pageNumber--;
@@ -746,12 +825,16 @@ class _UsersScreenState extends ConsumerState<UsersScreen> {
                 ),
                 Expanded(
                   child: Text(
-                    'Page ${page.pageNumber} of ${page.totalPages == 0 ? 1 : page.totalPages} · ${page.totalCount} users',
+                    l10n.text('Page {page} of {totalPages} · {count} users', {
+                      'page': page.pageNumber,
+                      'totalPages': page.totalPages == 0 ? 1 : page.totalPages,
+                      'count': page.totalCount,
+                    }),
                     textAlign: TextAlign.center,
                   ),
                 ),
                 IconButton(
-                  tooltip: 'Next page',
+                  tooltip: l10n.text('Next page'),
                   onPressed:
                       _pageNumber < page.totalPages && !_loading && !_mutating
                       ? () {
@@ -796,7 +879,9 @@ class _RoleManagementDialogState extends State<_RoleManagementDialog> {
 
   @override
   Widget build(BuildContext context) => AlertDialog(
-    title: Text('Manage roles · ${widget.userName}'),
+    title: Text(
+      context.l10n.text('Manage roles · {name}', {'name': widget.userName}),
+    ),
     content: SizedBox(
       width: 420,
       child: SingleChildScrollView(
@@ -804,8 +889,10 @@ class _RoleManagementDialogState extends State<_RoleManagementDialog> {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              'The submitted list replaces the user\'s complete role list on the server.',
+            Text(
+              context.l10n.text(
+                'The submitted list replaces the user\'s complete role list on the server.',
+              ),
             ),
             const SizedBox(height: 8),
             ...widget.roles.map(
@@ -827,7 +914,7 @@ class _RoleManagementDialogState extends State<_RoleManagementDialog> {
             ),
             if (_selectedRoles.isEmpty)
               Text(
-                'Select at least one role.',
+                context.l10n.text('Select at least one role.'),
                 style: TextStyle(color: Theme.of(context).colorScheme.error),
               ),
           ],
@@ -837,7 +924,7 @@ class _RoleManagementDialogState extends State<_RoleManagementDialog> {
     actions: [
       TextButton(
         onPressed: () => Navigator.pop(context),
-        child: const Text('Cancel'),
+        child: Text(context.l10n.text('Cancel')),
       ),
       FilledButton(
         onPressed: _selectedRoles.isEmpty
@@ -846,7 +933,7 @@ class _RoleManagementDialogState extends State<_RoleManagementDialog> {
                 context,
                 _selectedRoles.toList(growable: false),
               ),
-        child: const Text('Save roles'),
+        child: Text(context.l10n.text('Save roles')),
       ),
     ],
   );

@@ -14,6 +14,26 @@ public sealed class SupplierCreateCommandValidator : AbstractValidator<SupplierC
     }
 }
 
+public sealed class SupplierUpdateCommandValidator : AbstractValidator<SupplierUpdateCommand>
+{
+    public SupplierUpdateCommandValidator()
+    {
+        RuleFor(command => command.Id).NotEmpty().MaximumLength(450);
+        RuleFor(command => command.Dto.Name).NotEmpty().MaximumLength(200);
+        RuleFor(command => command.Dto.PhoneNumber).MaximumLength(50);
+        RuleFor(command => command.Dto.Notes).MaximumLength(500);
+    }
+}
+
+public sealed class SupplierStatusUpdateCommandValidator : AbstractValidator<SupplierStatusUpdateCommand>
+{
+    public SupplierStatusUpdateCommandValidator()
+    {
+        RuleFor(command => command.Id).NotEmpty().MaximumLength(450);
+        RuleFor(command => command.Dto.IsActive).NotNull();
+    }
+}
+
 public sealed class PurchaseOrderCreateCommandValidator : AbstractValidator<PurchaseOrderCreateCommand>
 {
     public PurchaseOrderCreateCommandValidator()

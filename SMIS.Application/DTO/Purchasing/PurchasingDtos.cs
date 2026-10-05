@@ -9,6 +9,18 @@ public sealed class SupplierCreateDto
     public string? Notes { get; set; }
 }
 
+public sealed class SupplierUpdateDto
+{
+    public string Name { get; set; } = string.Empty;
+    public string? PhoneNumber { get; set; }
+    public string? Notes { get; set; }
+}
+
+public sealed class SupplierStatusUpdateDto
+{
+    public bool? IsActive { get; set; }
+}
+
 public sealed class SupplierDto
 {
     public string Id { get; set; } = string.Empty;

@@ -32,6 +32,30 @@ public sealed class SupplierController : BaseApiController
         await HandleRequest(new SupplierCreateCommand(dto), cancellationToken);
 
     /// <summary>
+    /// Updates supplier details inside the current shop.
+    /// </summary>
+    [HttpPut("{id}")]
+    [HasPermission(ApplicationComponentKeys.Suppliers, PermissionAction.Update)]
+    public async Task<ActionResult<SupplierDto>> Update(
+        string id,
+        SupplierUpdateDto dto,
+        CancellationToken cancellationToken
+    ) =>
+        await HandleRequest(new SupplierUpdateCommand(id, dto), cancellationToken);
+
+    /// <summary>
+    /// Activates or deactivates a supplier without deleting purchase history.
+    /// </summary>
+    [HttpPatch("{id}/status")]
+    [HasPermission(ApplicationComponentKeys.Suppliers, PermissionAction.Update)]
+    public async Task<ActionResult<SupplierDto>> UpdateStatus(
+        string id,
+        SupplierStatusUpdateDto dto,
+        CancellationToken cancellationToken
+    ) =>
+        await HandleRequest(new SupplierStatusUpdateCommand(id, dto), cancellationToken);
+
+    /// <summary>
     /// Gets the suppliers visible to the current user.
     /// </summary>
     [HttpGet]

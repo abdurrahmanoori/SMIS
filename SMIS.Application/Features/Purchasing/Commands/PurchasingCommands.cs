@@ -13,6 +13,11 @@ namespace SMIS.Application.Features.Purchasing.Commands;
 
 public sealed record SupplierCreateCommand(SupplierCreateDto Dto) : IRequest<Result<SupplierDto>>;
 
+public sealed record SupplierUpdateCommand(string Id, SupplierUpdateDto Dto) : IRequest<Result<SupplierDto>>;
+
+public sealed record SupplierStatusUpdateCommand(string Id, SupplierStatusUpdateDto Dto)
+    : IRequest<Result<SupplierDto>>;
+
 public sealed record PurchaseOrderCreateCommand(PurchaseOrderCreateDto Dto) : IRequest<Result<PurchaseOrderDto>>;
 
 public sealed record PurchaseOrderReceiveCommand(string Id, PurchaseOrderReceiveDto Dto)
@@ -25,6 +30,8 @@ public sealed record PurchaseOrderCancelCommand(string Id) : IRequest<Result<Pur
 
 internal sealed class PurchasingCommandHandler :
     IRequestHandler<SupplierCreateCommand, Result<SupplierDto>>,
+    IRequestHandler<SupplierUpdateCommand, Result<SupplierDto>>,
+    IRequestHandler<SupplierStatusUpdateCommand, Result<SupplierDto>>,
     IRequestHandler<PurchaseOrderCreateCommand, Result<PurchaseOrderDto>>,
     IRequestHandler<PurchaseOrderReceiveCommand, Result<PurchaseOrderDto>>,
     IRequestHandler<PurchaseOrderSupplierReturnCommand, Result<PurchaseOrderDto>>,
@@ -60,8 +67,9 @@ internal sealed class PurchasingCommandHandler :
         if (string.IsNullOrWhiteSpace(shopId))
             return Result<SupplierDto>.Forbidden("supplier.shop_context_required", "An active shop is required.");
 
+        var name = request.Dto.Name.Trim();
         var duplicate = await _db.Suppliers.AnyAsync(
-            supplier => supplier.ShopId == shopId && supplier.Name == request.Dto.Name,
+            supplier => supplier.ShopId == shopId && supplier.Name == name,
             cancellationToken);
         if (duplicate)
             return Result<SupplierDto>.Conflict("supplier.name_conflict",
@@ -69,11 +77,69 @@ internal sealed class PurchasingCommandHandler :
 
         var supplier = Supplier.Create(
             shopId,
-            request.Dto.Name,
+            name,
             request.Dto.PhoneNumber,
             request.Dto.Notes);
 
         await _db.Suppliers.AddAsync(supplier, cancellationToken);
+        await _unitOfWork.SaveChanges(cancellationToken);
+        return Result<SupplierDto>.Success(PurchasingDtoMapper.ToDto(supplier));
+    }
+
+    public async Task<Result<SupplierDto>> Handle(
+        SupplierUpdateCommand request,
+        CancellationToken cancellationToken
+    )
+    {
+        var shopId = _currentUser.GetShopId();
+        if (string.IsNullOrWhiteSpace(shopId))
+            return Result<SupplierDto>.Forbidden("supplier.shop_context_required", "An active shop is required.");
+
+        var supplier = await _db.Suppliers.FirstOrDefaultAsync(
+            item => item.Id == request.Id && item.ShopId == shopId,
+            cancellationToken);
+        if (supplier is null)
+            return Result<SupplierDto>.NotFound(
+                "supplier.not_found",
+                "The supplier does not exist in the active shop.");
+
+        var name = request.Dto.Name.Trim();
+        var duplicate = await _db.Suppliers.AnyAsync(
+            item => item.Id != supplier.Id && item.ShopId == shopId && item.Name == name,
+            cancellationToken);
+        if (duplicate)
+            return Result<SupplierDto>.Conflict(
+                "supplier.name_conflict",
+                "A supplier with this name already exists in the shop.");
+
+        supplier.Update(name, request.Dto.PhoneNumber, request.Dto.Notes);
+        await _unitOfWork.SaveChanges(cancellationToken);
+
+        return Result<SupplierDto>.Success(PurchasingDtoMapper.ToDto(supplier));
+    }
+
+    public async Task<Result<SupplierDto>> Handle(
+        SupplierStatusUpdateCommand request,
+        CancellationToken cancellationToken
+    )
+    {
+        var shopId = _currentUser.GetShopId();
+        if (string.IsNullOrWhiteSpace(shopId))
+            return Result<SupplierDto>.Forbidden("supplier.shop_context_required", "An active shop is required.");
+
+        var supplier = await _db.Suppliers.FirstOrDefaultAsync(
+            item => item.Id == request.Id && item.ShopId == shopId,
+            cancellationToken);
+        if (supplier is null)
+            return Result<SupplierDto>.NotFound(
+                "supplier.not_found",
+                "The supplier does not exist in the active shop.");
+
+        if (request.Dto.IsActive == true)
+            supplier.Activate();
+        else
+            supplier.Deactivate();
+
         await _unitOfWork.SaveChanges(cancellationToken);
         return Result<SupplierDto>.Success(PurchasingDtoMapper.ToDto(supplier));
     }

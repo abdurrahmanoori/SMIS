@@ -104,7 +104,10 @@ abstract final class UserManagementValidation {
   }) {
     return UserManagementValidation.userName(userName) ??
         UserManagementValidation.email(email) ??
-        UserManagementValidation.password(password, required: requirePassword) ??
+        UserManagementValidation.password(
+          password,
+          required: requirePassword,
+        ) ??
         UserManagementValidation.firstName(firstName) ??
         UserManagementValidation.lastName(lastName) ??
         UserManagementValidation.phoneNumber(phoneNumber) ??
