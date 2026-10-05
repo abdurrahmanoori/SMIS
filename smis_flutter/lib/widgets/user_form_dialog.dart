@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
+import '../l10n/app_localizations.dart';
 import '../models/managed_user.dart';
+import '../validation/user_management_validation.dart';
 
 class UserFormDraft {
   const UserFormDraft({
@@ -86,6 +88,10 @@ class _UserFormDialogState extends State<UserFormDialog> {
   Widget build(BuildContext context) {
     final media = MediaQuery.of(context);
     final maxHeight = media.size.height * 0.9;
+    final l10n = context.l10n;
+
+    String? localized(String? message) =>
+        message == null ? null : l10n.text(message);
 
     return Dialog(
       insetPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
@@ -111,20 +117,22 @@ class _UserFormDialogState extends State<UserFormDialog> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          _isEditing ? 'Edit user' : 'Create user',
+                          l10n.text(_isEditing ? 'Edit user' : 'Create user'),
                           style: Theme.of(context).textTheme.titleLarge,
                         ),
                         Text(
-                          _isEditing
-                              ? 'Update account information, shop assignment, and roles.'
-                              : 'Create the account in the active session shop and assign its initial access.',
+                          l10n.text(
+                            _isEditing
+                                ? 'Update account information, shop assignment, and roles.'
+                                : 'Create the account in the active session shop and assign its initial access.',
+                          ),
                           style: Theme.of(context).textTheme.bodySmall,
                         ),
                       ],
                     ),
                   ),
                   IconButton(
-                    tooltip: 'Close',
+                    tooltip: l10n.text('Close'),
                     onPressed: () => Navigator.pop(context),
                     icon: const Icon(Icons.close),
                   ),
@@ -135,6 +143,7 @@ class _UserFormDialogState extends State<UserFormDialog> {
             Flexible(
               child: Form(
                 key: _formKey,
+                autovalidateMode: AutovalidateMode.onUserInteraction,
                 child: SingleChildScrollView(
                   padding: const EdgeInsets.all(24),
                   child: LayoutBuilder(
@@ -144,7 +153,7 @@ class _UserFormDialogState extends State<UserFormDialog> {
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
                           _SectionCard(
-                            title: 'Account',
+                            title: l10n.text('Account'),
                             icon: Icons.account_circle_outlined,
                             child: Column(
                               children: [
@@ -153,22 +162,32 @@ class _UserFormDialogState extends State<UserFormDialog> {
                                   children: [
                                     TextFormField(
                                       controller: _userName,
-                                      decoration: const InputDecoration(
-                                        labelText: 'Username',
-                                        border: OutlineInputBorder(),
+                                      maxLength: UserManagementValidation
+                                          .maxUserNameLength,
+                                      decoration: InputDecoration(
+                                        labelText: l10n.text('Username'),
+                                        border: const OutlineInputBorder(),
                                       ),
                                       textInputAction: TextInputAction.next,
-                                      validator: _required,
+                                      validator: (value) => localized(
+                                        UserManagementValidation.userName(
+                                          value,
+                                        ),
+                                      ),
                                     ),
                                     TextFormField(
                                       controller: _email,
-                                      decoration: const InputDecoration(
-                                        labelText: 'Email',
-                                        border: OutlineInputBorder(),
+                                      maxLength: UserManagementValidation
+                                          .maxEmailLength,
+                                      decoration: InputDecoration(
+                                        labelText: l10n.text('Email'),
+                                        border: const OutlineInputBorder(),
                                       ),
                                       keyboardType: TextInputType.emailAddress,
                                       textInputAction: TextInputAction.next,
-                                      validator: _required,
+                                      validator: (value) => localized(
+                                        UserManagementValidation.email(value),
+                                      ),
                                     ),
                                   ],
                                 ),
@@ -177,12 +196,17 @@ class _UserFormDialogState extends State<UserFormDialog> {
                                   TextFormField(
                                     controller: _password,
                                     decoration: InputDecoration(
-                                      labelText: 'Password',
+                                      labelText: l10n.text('Password'),
+                                      helperText: l10n.text(
+                                        'Password must be at least 6 characters',
+                                      ),
                                       border: const OutlineInputBorder(),
                                       suffixIcon: IconButton(
-                                        tooltip: _obscurePassword
-                                            ? 'Show password'
-                                            : 'Hide password',
+                                        tooltip: l10n.text(
+                                          _obscurePassword
+                                              ? 'Show password'
+                                              : 'Hide password',
+                                        ),
                                         onPressed: () => setState(
                                           () => _obscurePassword =
                                               !_obscurePassword,
@@ -195,7 +219,12 @@ class _UserFormDialogState extends State<UserFormDialog> {
                                       ),
                                     ),
                                     obscureText: _obscurePassword,
-                                    validator: _required,
+                                    validator: (value) => localized(
+                                      UserManagementValidation.password(
+                                        value,
+                                        required: true,
+                                      ),
+                                    ),
                                   ),
                                 ],
                               ],
@@ -203,7 +232,7 @@ class _UserFormDialogState extends State<UserFormDialog> {
                           ),
                           const SizedBox(height: 16),
                           _SectionCard(
-                            title: 'Personal information',
+                            title: l10n.text('Personal information'),
                             icon: Icons.badge_outlined,
                             child: Column(
                               children: [
@@ -212,37 +241,59 @@ class _UserFormDialogState extends State<UserFormDialog> {
                                   children: [
                                     TextFormField(
                                       controller: _firstName,
-                                      decoration: const InputDecoration(
-                                        labelText: 'First name',
-                                        border: OutlineInputBorder(),
+                                      maxLength: UserManagementValidation
+                                          .maxPersonNameLength,
+                                      decoration: InputDecoration(
+                                        labelText: l10n.text('First name'),
+                                        border: const OutlineInputBorder(),
                                       ),
                                       textInputAction: TextInputAction.next,
+                                      validator: (value) => localized(
+                                        UserManagementValidation.firstName(
+                                          value,
+                                        ),
+                                      ),
                                     ),
                                     TextFormField(
                                       controller: _lastName,
-                                      decoration: const InputDecoration(
-                                        labelText: 'Last name',
-                                        border: OutlineInputBorder(),
+                                      maxLength: UserManagementValidation
+                                          .maxPersonNameLength,
+                                      decoration: InputDecoration(
+                                        labelText: l10n.text('Last name'),
+                                        border: const OutlineInputBorder(),
                                       ),
                                       textInputAction: TextInputAction.next,
+                                      validator: (value) => localized(
+                                        UserManagementValidation.lastName(
+                                          value,
+                                        ),
+                                      ),
                                     ),
                                   ],
                                 ),
                                 const SizedBox(height: 12),
                                 TextFormField(
                                   controller: _phone,
-                                  decoration: const InputDecoration(
-                                    labelText: 'Phone number',
-                                    border: OutlineInputBorder(),
+                                  maxLength:
+                                      UserManagementValidation.maxPhoneLength,
+                                  decoration: InputDecoration(
+                                    labelText: l10n.text('Phone number'),
+                                    hintText: l10n.text(
+                                      'Example: +93 700 123 456',
+                                    ),
+                                    border: const OutlineInputBorder(),
                                   ),
                                   keyboardType: TextInputType.phone,
+                                  validator: (value) => localized(
+                                    UserManagementValidation.phoneNumber(value),
+                                  ),
                                 ),
                               ],
                             ),
                           ),
                           const SizedBox(height: 16),
                           _SectionCard(
-                            title: 'Access',
+                            title: l10n.text('Access'),
                             icon: Icons.admin_panel_settings_outlined,
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -250,9 +301,9 @@ class _UserFormDialogState extends State<UserFormDialog> {
                                 if (_isEditing) ...[
                                   DropdownButtonFormField<String>(
                                     initialValue: _shopId,
-                                    decoration: const InputDecoration(
-                                      labelText: 'Shop',
-                                      border: OutlineInputBorder(),
+                                    decoration: InputDecoration(
+                                      labelText: l10n.text('Shop'),
+                                      border: const OutlineInputBorder(),
                                     ),
                                     items: widget.shops
                                         .map(
@@ -265,6 +316,9 @@ class _UserFormDialogState extends State<UserFormDialog> {
                                           ),
                                         )
                                         .toList(growable: false),
+                                    validator: (value) => localized(
+                                      UserManagementValidation.shopId(value),
+                                    ),
                                     onChanged: (value) {
                                       if (value != null) {
                                         setState(() => _shopId = value);
@@ -274,13 +328,17 @@ class _UserFormDialogState extends State<UserFormDialog> {
                                   const SizedBox(height: 16),
                                 ] else ...[
                                   Text(
-                                    'The new user will be assigned to the shop currently active in your session.',
-                                    style: Theme.of(context).textTheme.bodyMedium,
+                                    l10n.text(
+                                      'The new user will be assigned to the shop currently active in your session.',
+                                    ),
+                                    style: Theme.of(
+                                      context,
+                                    ).textTheme.bodyMedium,
                                   ),
                                   const SizedBox(height: 16),
                                 ],
                                 Text(
-                                  'Roles',
+                                  l10n.text('Roles'),
                                   style: Theme.of(context).textTheme.titleSmall,
                                 ),
                                 const SizedBox(height: 8),
@@ -309,7 +367,7 @@ class _UserFormDialogState extends State<UserFormDialog> {
                                 if (_showRoleValidation && _roles.isEmpty) ...[
                                   const SizedBox(height: 8),
                                   Text(
-                                    'Select at least one role.',
+                                    l10n.text('Select at least one role.'),
                                     style: TextStyle(
                                       color: Theme.of(
                                         context,
@@ -335,13 +393,15 @@ class _UserFormDialogState extends State<UserFormDialog> {
                 children: [
                   TextButton(
                     onPressed: () => Navigator.pop(context),
-                    child: const Text('Cancel'),
+                    child: Text(l10n.text('Cancel')),
                   ),
                   const SizedBox(width: 8),
                   FilledButton.icon(
                     onPressed: _submit,
                     icon: Icon(_isEditing ? Icons.save_outlined : Icons.add),
-                    label: Text(_isEditing ? 'Save changes' : 'Create user'),
+                    label: Text(
+                      l10n.text(_isEditing ? 'Save changes' : 'Create user'),
+                    ),
                   ),
                 ],
               ),
@@ -373,9 +433,6 @@ class _UserFormDialogState extends State<UserFormDialog> {
       ),
     );
   }
-
-  String? _required(String? value) =>
-      value == null || value.trim().isEmpty ? 'Required' : null;
 }
 
 class _SectionCard extends StatelessWidget {

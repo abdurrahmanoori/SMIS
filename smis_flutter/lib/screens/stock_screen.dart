@@ -179,18 +179,20 @@ class _StockContentState extends ConsumerState<_StockContent> {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Discard failed stock action?'),
-        content: const Text(
-          'This removes the local command. Review the confirmed stock balance first.',
+        title: Text(context.l10n.text('Discard failed stock action?')),
+        content: Text(
+          context.l10n.text(
+            'This removes the local command. Review the confirmed stock balance first.',
+          ),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
-            child: const Text('Keep'),
+            child: Text(context.l10n.text('Keep')),
           ),
           FilledButton(
             onPressed: () => Navigator.pop(context, true),
-            child: const Text('Discard'),
+            child: Text(context.l10n.text('Discard')),
           ),
         ],
       ),
@@ -356,12 +358,20 @@ class _StockContentState extends ConsumerState<_StockContent> {
             return Column(
               children: [
                 if (!data.hasCache)
-                  const ListTile(
-                    title: Text('No cached stock yet. Connect to load stock.'),
+                  ListTile(
+                    title: Text(
+                      context.l10n.text(
+                        'No cached stock yet. Connect to load stock.',
+                      ),
+                    ),
                   ),
                 if (_syncError != null)
-                  const ListTile(
-                    title: Text('Offline: showing last saved stock data.'),
+                  ListTile(
+                    title: Text(
+                      context.l10n.text(
+                        'Offline: showing last saved stock data.',
+                      ),
+                    ),
                   ),
                 Expanded(
                   child: switch (_tab) {
@@ -441,7 +451,9 @@ class _StockContentState extends ConsumerState<_StockContent> {
                         ? Icons.error_outline
                         : Icons.cloud_upload_outlined,
                   ),
-                  title: Text('${command.kind} • ${command.state}'),
+                  title: Text(
+                    '${_stockOperationLabel(command.kind)} • ${_stockStateLabel(command.state)}',
+                  ),
                   subtitle: command.error == null ? null : Text(command.error!),
                   trailing: command.state == 'failed'
                       ? PopupMenuButton<String>(
@@ -450,13 +462,15 @@ class _StockContentState extends ConsumerState<_StockContent> {
                               : _discard(command.id),
                           itemBuilder: (_) => [
                             if (_canRetry(command.kind))
-                              const PopupMenuItem(
+                              PopupMenuItem(
                                 value: 'retry',
-                                child: Text('Retry'),
+                                child: Text(context.l10n.text('Retry')),
                               ),
-                            const PopupMenuItem(
+                            PopupMenuItem(
                               value: 'discard',
-                              child: Text('Discard failed action'),
+                              child: Text(
+                                context.l10n.text('Discard failed action'),
+                              ),
                             ),
                           ],
                         )
@@ -468,9 +482,13 @@ class _StockContentState extends ConsumerState<_StockContent> {
               return ListTile(
                 title: Text(product?.name ?? stockText(batch, 'productId')),
                 subtitle: Text(
-                  'Batch: ${stockText(batch, 'batchNumber').isEmpty ? '—' : stockText(batch, 'batchNumber')}'
-                  '  •  ${stockText(batch, 'status')}'
-                  '  •  ${stockText(batch, 'expirationDate').split('T').first}',
+                  context.l10n.text('Batch: {batch} • {status} • {date}', {
+                    'batch': stockText(batch, 'batchNumber').isEmpty
+                        ? '—'
+                        : stockText(batch, 'batchNumber'),
+                    'status': _stockStateLabel(stockText(batch, 'status')),
+                    'date': stockText(batch, 'expirationDate').split('T').first,
+                  }),
                 ),
                 trailing: Text(
                   stockNumber(batch, 'remainingQuantityBase').toString(),
@@ -495,18 +513,30 @@ class _StockContentState extends ConsumerState<_StockContent> {
           decoration: InputDecoration(
             labelText: context.l10n.text('Stock report'),
           ),
-          items: const [
+          items: [
             DropdownMenuItem(
               value: 'current-stock',
-              child: Text('Current stock'),
+              child: Text(context.l10n.text('Current stock')),
             ),
-            DropdownMenuItem(value: 'low-stock', child: Text('Low stock')),
-            DropdownMenuItem(value: 'expiring', child: Text('Expiring stock')),
-            DropdownMenuItem(value: 'expired', child: Text('Expired stock')),
-            DropdownMenuItem(value: 'valuation', child: Text('Valuation')),
+            DropdownMenuItem(
+              value: 'low-stock',
+              child: Text(context.l10n.text('Low stock')),
+            ),
+            DropdownMenuItem(
+              value: 'expiring',
+              child: Text(context.l10n.text('Expiring stock')),
+            ),
+            DropdownMenuItem(
+              value: 'expired',
+              child: Text(context.l10n.text('Expired stock')),
+            ),
+            DropdownMenuItem(
+              value: 'valuation',
+              child: Text(context.l10n.text('Valuation')),
+            ),
             DropdownMenuItem(
               value: 'reconciliation',
-              child: Text('Reconciliation mismatches'),
+              child: Text(context.l10n.text('Reconciliation mismatches')),
             ),
           ],
           onChanged: (value) {
@@ -524,8 +554,10 @@ class _StockContentState extends ConsumerState<_StockContent> {
 
   Widget _reportList(Object? report) {
     if (report == null) {
-      return const Center(
-        child: Text('No saved report yet. Connect to download it.'),
+      return Center(
+        child: Text(
+          context.l10n.text('No saved report yet. Connect to download it.'),
+        ),
       );
     }
     if (report is StockJson) {
@@ -541,28 +573,46 @@ class _StockContentState extends ConsumerState<_StockContent> {
           for (final item in items)
             ListTile(
               title: Text((item['productName'] ?? '').toString()),
-              subtitle: Text('Quantity: ${item['quantityBase']}'),
+              subtitle: Text(
+                context.l10n.text('Quantity: {quantity}', {
+                  'quantity': item['quantityBase'] ?? '',
+                }),
+              ),
               trailing: Text((item['inventoryValueMinor'] ?? '').toString()),
             ),
         ],
       );
     }
     final items = report as List<StockJson>? ?? [];
-    if (items.isEmpty)
+    if (items.isEmpty) {
       return Center(child: Text(context.l10n.text('No stock records.')));
+    }
     return ListView.builder(
       itemCount: items.length,
       itemBuilder: (context, index) {
         final row = items[index];
         final quantity = row.containsKey('availableQuantityBase')
-            ? 'Available: ${row['availableQuantityBase']} / Total: ${row['quantityBase']}'
+            ? context.l10n.text('Available: {available} / Total: {total}', {
+                'available': row['availableQuantityBase'] ?? '',
+                'total': row['quantityBase'] ?? '',
+              })
             : row.containsKey('remainingQuantityBase')
-            ? 'Remaining: ${row['remainingQuantityBase']}'
-            : 'Difference: ${row['differenceBase']}';
+            ? context.l10n.text('Remaining: {quantity}', {
+                'quantity': row['remainingQuantityBase'] ?? '',
+              })
+            : context.l10n.text('Difference: {quantity}', {
+                'quantity': row['differenceBase'] ?? '',
+              });
         final detail = row.containsKey('expirationDate')
-            ? '$quantity • Expires: ${stockText(row, 'expirationDate').split('T').first}'
+            ? context.l10n.text('{quantity} • Expires: {date}', {
+                'quantity': quantity,
+                'date': stockText(row, 'expirationDate').split('T').first,
+              })
             : row.containsKey('reorderPointBase')
-            ? '$quantity • Reorder point: ${row['reorderPointBase']}'
+            ? context.l10n.text('{quantity} • Reorder point: {point}', {
+                'quantity': quantity,
+                'point': row['reorderPointBase'] ?? '',
+              })
             : quantity;
         return ListTile(
           title: Text(stockText(row, 'productName')),
@@ -582,8 +632,8 @@ class _StockContentState extends ConsumerState<_StockContent> {
       return ListTile(
         title: Text(stockText(row, 'productName')),
         subtitle: Text(
-          '${stockText(row, 'reason')} • ${stockText(row, 'occurredAtUtc')}\n'
-          'Batch: ${stockText(row, 'stockBatchId')}',
+          '${_stockOperationLabel(stockText(row, 'reason'))} • ${stockText(row, 'occurredAtUtc')}\n'
+          '${context.l10n.text('Batch')}: ${stockText(row, 'stockBatchId')}',
         ),
         isThreeLine: true,
         trailing: Text(
@@ -633,7 +683,9 @@ class _StockContentState extends ConsumerState<_StockContent> {
                     DropdownButtonFormField<String>(
                       initialValue: productId,
                       isExpanded: true,
-                      decoration: const InputDecoration(labelText: 'Product'),
+                      decoration: InputDecoration(
+                        labelText: context.l10n.text('Product'),
+                      ),
                       items: data.products
                           .where(
                             (p) => p.syncStatus == ProductSyncStatus.synced,
@@ -658,8 +710,8 @@ class _StockContentState extends ConsumerState<_StockContent> {
                       key: ValueKey(productId),
                       initialValue: unitId,
                       isExpanded: true,
-                      decoration: const InputDecoration(
-                        labelText: 'Product unit',
+                      decoration: InputDecoration(
+                        labelText: context.l10n.text('Product unit'),
                       ),
                       items: units
                           .map(
@@ -678,8 +730,8 @@ class _StockContentState extends ConsumerState<_StockContent> {
                     TextField(
                       controller: quantity,
                       onChanged: (_) => update(() {}),
-                      decoration: const InputDecoration(
-                        labelText: 'Received quantity',
+                      decoration: InputDecoration(
+                        labelText: context.l10n.text('Received quantity'),
                       ),
                       keyboardType: const TextInputType.numberWithOptions(
                         decimal: true,
@@ -688,9 +740,9 @@ class _StockContentState extends ConsumerState<_StockContent> {
                     const SizedBox(height: 12),
                     TextField(
                       controller: cost,
-                      decoration: const InputDecoration(
-                        labelText: 'Cost per base unit',
-                        suffixText: 'minor units',
+                      decoration: InputDecoration(
+                        labelText: context.l10n.text('Cost per base unit'),
+                        suffixText: context.l10n.text('minor units'),
                       ),
                       keyboardType: TextInputType.number,
                       inputFormatters: [FilteringTextInputFormatter.digitsOnly],
@@ -698,8 +750,8 @@ class _StockContentState extends ConsumerState<_StockContent> {
                     const SizedBox(height: 12),
                     TextField(
                       controller: batchNumber,
-                      decoration: const InputDecoration(
-                        labelText: 'Batch number (optional)',
+                      decoration: InputDecoration(
+                        labelText: context.l10n.text('Batch number (optional)'),
                       ),
                     ),
                     const SizedBox(height: 12),
@@ -716,8 +768,13 @@ class _StockContentState extends ConsumerState<_StockContent> {
                       icon: const Icon(Icons.calendar_month_outlined),
                       label: Text(
                         expiry == null
-                            ? 'Set expiration (optional)'
-                            : 'Expires: ${expiry!.toIso8601String().split('T').first}',
+                            ? context.l10n.text('Set expiration (optional)')
+                            : context.l10n.text('Expires: {date}', {
+                                'date': expiry!
+                                    .toIso8601String()
+                                    .split('T')
+                                    .first,
+                              }),
                       ),
                     ),
                   ],
@@ -727,7 +784,7 @@ class _StockContentState extends ConsumerState<_StockContent> {
             actions: [
               TextButton(
                 onPressed: () => Navigator.pop(context, false),
-                child: const Text('Cancel'),
+                child: Text(context.l10n.text('Cancel')),
               ),
               FilledButton(
                 onPressed:
@@ -737,7 +794,7 @@ class _StockContentState extends ConsumerState<_StockContent> {
                         int.tryParse(cost.text) == null
                     ? null
                     : () => Navigator.pop(context, true),
-                child: const Text('Receive'),
+                child: Text(context.l10n.text('Receive')),
               ),
             ],
           );
@@ -783,7 +840,7 @@ class _StockContentState extends ConsumerState<_StockContent> {
           children: [
             for (final option in options)
               ListTile(
-                title: Text(option.replaceAll('-', ' ')),
+                title: Text(_stockOperationLabel(option)),
                 onTap: () => Navigator.pop(context, option),
               ),
           ],
@@ -806,13 +863,15 @@ class _StockContentState extends ConsumerState<_StockContent> {
       context: context,
       builder: (context) => StatefulBuilder(
         builder: (context, update) => AlertDialog(
-          title: const Text('Edit batch details'),
+          title: Text(context.l10n.text('Edit batch details')),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               TextField(
                 controller: number,
-                decoration: const InputDecoration(labelText: 'Batch number'),
+                decoration: InputDecoration(
+                  labelText: context.l10n.text('Batch number'),
+                ),
               ),
               DropdownButtonFormField<String>(
                 initialValue:
@@ -820,7 +879,12 @@ class _StockContentState extends ConsumerState<_StockContent> {
                     ? status
                     : null,
                 items: ['active', 'inactive', 'cancelled']
-                    .map((s) => DropdownMenuItem(value: s, child: Text(s)))
+                    .map(
+                      (s) => DropdownMenuItem(
+                        value: s,
+                        child: Text(_stockStateLabel(s)),
+                      ),
+                    )
                     .toList(),
                 onChanged: (value) => update(() => status = value ?? status),
               ),
@@ -836,8 +900,10 @@ class _StockContentState extends ConsumerState<_StockContent> {
                 },
                 child: Text(
                   expiry == null
-                      ? 'Set expiration'
-                      : 'Expires: ${expiry!.toIso8601String().split('T').first}',
+                      ? context.l10n.text('Set expiration')
+                      : context.l10n.text('Expires: {date}', {
+                          'date': expiry!.toIso8601String().split('T').first,
+                        }),
                 ),
               ),
             ],
@@ -845,11 +911,11 @@ class _StockContentState extends ConsumerState<_StockContent> {
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context, false),
-              child: const Text('Cancel'),
+              child: Text(context.l10n.text('Cancel')),
             ),
             FilledButton(
               onPressed: () => Navigator.pop(context, true),
-              child: const Text('Save'),
+              child: Text(context.l10n.text('Save')),
             ),
           ],
         ),
@@ -879,7 +945,9 @@ class _StockContentState extends ConsumerState<_StockContent> {
     if (units.isEmpty) {
       AppErrorNotification.show(
         context,
-        const ValidationException('Configure a product unit first.'),
+        ValidationException(
+          context.l10n.text('Configure a product unit first.'),
+        ),
       );
       return;
     }
@@ -917,12 +985,14 @@ class _StockContentState extends ConsumerState<_StockContent> {
       context: context,
       builder: (context) => StatefulBuilder(
         builder: (context, update) => AlertDialog(
-          title: Text(path.replaceAll('-', ' ')),
+          title: Text(_stockOperationLabel(path)),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
-                'Available: ${stockNumber(batch, 'remainingQuantityBase')} base units',
+                context.l10n.text('Available: {quantity} base units', {
+                  'quantity': stockNumber(batch, 'remainingQuantityBase'),
+                }),
               ),
               DropdownButtonFormField<String>(
                 initialValue: unitId,
@@ -939,8 +1009,8 @@ class _StockContentState extends ConsumerState<_StockContent> {
               TextField(
                 controller: quantity,
                 onChanged: (_) => update(() {}),
-                decoration: const InputDecoration(
-                  labelText: 'Quantity in selected unit',
+                decoration: InputDecoration(
+                  labelText: context.l10n.text('Quantity in selected unit'),
                 ),
                 keyboardType: const TextInputType.numberWithOptions(
                   decimal: true,
@@ -949,9 +1019,15 @@ class _StockContentState extends ConsumerState<_StockContent> {
               if (path == 'adjustments')
                 DropdownButtonFormField<String>(
                   initialValue: direction,
-                  items: const [
-                    DropdownMenuItem(value: 'in', child: Text('Increase')),
-                    DropdownMenuItem(value: 'out', child: Text('Decrease')),
+                  items: [
+                    DropdownMenuItem(
+                      value: 'in',
+                      child: Text(context.l10n.text('Increase')),
+                    ),
+                    DropdownMenuItem(
+                      value: 'out',
+                      child: Text(context.l10n.text('Decrease')),
+                    ),
                   ],
                   onChanged: (value) =>
                       update(() => direction = value ?? direction),
@@ -959,8 +1035,8 @@ class _StockContentState extends ConsumerState<_StockContent> {
               if (path == 'transfers')
                 DropdownButtonFormField<String>(
                   initialValue: destination,
-                  decoration: const InputDecoration(
-                    labelText: 'Destination batch',
+                  decoration: InputDecoration(
+                    labelText: context.l10n.text('Destination batch'),
                   ),
                   items: data.batches
                       .where(isCompatibleTransferDestination)
@@ -982,7 +1058,7 @@ class _StockContentState extends ConsumerState<_StockContent> {
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context, false),
-              child: const Text('Cancel'),
+              child: Text(context.l10n.text('Cancel')),
             ),
             FilledButton(
               onPressed:
@@ -991,7 +1067,7 @@ class _StockContentState extends ConsumerState<_StockContent> {
                       (path == 'transfers' && destination == null)
                   ? null
                   : () => Navigator.pop(context, true),
-              child: const Text('Post movement'),
+              child: Text(context.l10n.text('Post movement')),
             ),
           ],
         ),
@@ -1046,7 +1122,7 @@ class _StockContentState extends ConsumerState<_StockContent> {
   Future<void> _openCount(String id) async {
     try {
       final session =
-          await _store.cachedObject('count/' + id) ?? await _api.getCount(id);
+          await _store.cachedObject('count/$id') ?? await _api.getCount(id);
       if (!mounted) return;
       final lines = (session['lines'] as List? ?? [])
           .map((e) => Map<String, dynamic>.from(e as Map))
@@ -1060,7 +1136,7 @@ class _StockContentState extends ConsumerState<_StockContent> {
       final choice = await showDialog<String>(
         context: context,
         builder: (context) => AlertDialog(
-          title: const Text('Physical stock count (base units)'),
+          title: Text(context.l10n.text('Physical stock count (base units)')),
           content: SizedBox(
             width: 500,
             child: ConstrainedBox(
@@ -1093,16 +1169,18 @@ class _StockContentState extends ConsumerState<_StockContent> {
                         keyboardType: const TextInputType.numberWithOptions(
                           decimal: true,
                         ),
-                        decoration: const InputDecoration(
-                          labelText: 'Counted quantity',
-                          suffixText: 'base units',
-                          border: OutlineInputBorder(),
+                        decoration: InputDecoration(
+                          labelText: context.l10n.text('Counted quantity'),
+                          suffixText: context.l10n.text('base units'),
+                          border: const OutlineInputBorder(),
                           isDense: true,
                         ),
                       ),
                       const SizedBox(height: 6),
                       Text(
-                        'Expected: $expected base units',
+                        context.l10n.text('Expected: {quantity} base units', {
+                          'quantity': expected,
+                        }),
                         style: Theme.of(context).textTheme.bodySmall,
                       ),
                     ],
@@ -1116,17 +1194,17 @@ class _StockContentState extends ConsumerState<_StockContent> {
                 _hasTask(ApplicationTaskKeys.cancelStockCount))
               TextButton(
                 onPressed: () => Navigator.pop(context, 'cancel'),
-                child: const Text('Cancel count'),
+                child: Text(context.l10n.text('Cancel count')),
               ),
             TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Keep draft'),
+              child: Text(context.l10n.text('Keep draft')),
             ),
             if (widget.canUpdate &&
                 _hasTask(ApplicationTaskKeys.completeStockCount))
               FilledButton(
                 onPressed: () => Navigator.pop(context, 'complete'),
-                child: const Text('Complete'),
+                child: Text(context.l10n.text('Complete')),
               ),
           ],
         ),
@@ -1138,8 +1216,8 @@ class _StockContentState extends ConsumerState<_StockContent> {
         if (values.any((v) => v == null || v < 0)) {
           AppErrorNotification.show(
             context,
-            const ValidationException(
-              'Enter a non-negative count for every batch.',
+            ValidationException(
+              context.l10n.text('Enter a non-negative count for every batch.'),
             ),
           );
         } else {
@@ -1164,18 +1242,20 @@ class _StockContentState extends ConsumerState<_StockContent> {
         final confirmed = await showDialog<bool>(
           context: context,
           builder: (context) => AlertDialog(
-            title: const Text('Cancel stock count?'),
-            content: const Text(
-              'The draft count will be discarded without changing stock.',
+            title: Text(context.l10n.text('Cancel stock count?')),
+            content: Text(
+              context.l10n.text(
+                'The draft count will be discarded without changing stock.',
+              ),
             ),
             actions: [
               TextButton(
                 onPressed: () => Navigator.pop(context, false),
-                child: const Text('Keep draft'),
+                child: Text(context.l10n.text('Keep draft')),
               ),
               FilledButton(
                 onPressed: () => Navigator.pop(context, true),
-                child: const Text('Cancel count'),
+                child: Text(context.l10n.text('Cancel count')),
               ),
             ],
           ),
@@ -1196,22 +1276,55 @@ class _StockContentState extends ConsumerState<_StockContent> {
     }
   }
 
+  String _stockOperationLabel(String value) {
+    final key = switch (value.trim().toLowerCase()) {
+      'receipt' => 'Receive stock',
+      'adjustments' || 'adjustment' => 'Adjustment',
+      'damaged-stock' || 'damage' => 'Mark damaged stock',
+      'expired-stock' || 'expiration' => 'Mark expired stock',
+      'customer-returns' || 'customer-return' => 'Customer return',
+      'supplier-returns' || 'supplier-return' => 'Supplier return',
+      'transfers' || 'transfer' => 'Transfer stock',
+      'batch-update' || 'edit' => 'Edit batch details',
+      'count-complete' => 'Complete stock count',
+      'reverse' => 'Reverse movement',
+      _ => value,
+    };
+    return context.l10n.text(key);
+  }
+
+  String _stockStateLabel(String value) {
+    final key = switch (value.trim().toLowerCase()) {
+      'active' => 'Active',
+      'inactive' => 'Inactive',
+      'cancelled' => 'Cancelled',
+      'pending' => 'Pending',
+      'failed' => 'Failed',
+      'completed' => 'Completed',
+      'uploaded' => 'Uploaded',
+      _ => value,
+    };
+    return context.l10n.text(key);
+  }
+
   Future<void> _movementActions(StockJson movement) async {
     final confirm = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Reverse movement?'),
-        content: const Text(
-          'Only eligible standalone inventory movements can be reversed. The original remains in the ledger.',
+        title: Text(context.l10n.text('Reverse movement?')),
+        content: Text(
+          context.l10n.text(
+            'Only eligible standalone inventory movements can be reversed. The original remains in the ledger.',
+          ),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
-            child: const Text('Cancel'),
+            child: Text(context.l10n.text('Cancel')),
           ),
           FilledButton(
             onPressed: () => Navigator.pop(context, true),
-            child: const Text('Reverse'),
+            child: Text(context.l10n.text('Reverse')),
           ),
         ],
       ),

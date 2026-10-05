@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
+import 'user_management_translations.dart';
+import 'stock_additional_translations.dart';
+
 class AppLocalizations {
   AppLocalizations(this.locale);
 
@@ -16,6 +19,8 @@ class AppLocalizations {
 
   static const _translations = <String, Map<String, String>>{
     'fa': {
+      ...userManagementFaTranslations,
+      ...stockAdditionalFaTranslations,
       'English': 'English',
       'Dari': 'دری',
       'Pashto': 'پښتو',
@@ -256,6 +261,8 @@ class AppLocalizations {
       'The server request failed.': 'درخواست سرور ناموفق بود.',
     },
     'ps': {
+      ...userManagementPsTranslations,
+      ...stockAdditionalPsTranslations,
       'English': 'English',
       'Dari': 'دری',
       'Pashto': 'پښتو',

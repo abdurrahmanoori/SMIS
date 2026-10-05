@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../l10n/app_localizations.dart';
 import '../models/managed_user.dart';
 
 class UserDetailsScreen extends StatelessWidget {
@@ -9,8 +10,14 @@ class UserDetailsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    String valueOrNotSet(String? value) {
+      final text = value?.trim();
+      return text == null || text.isEmpty ? l10n.text('Not set') : text;
+    }
+
     return Scaffold(
-      appBar: AppBar(title: const Text('User details')),
+      appBar: AppBar(title: Text(l10n.text('User details'))),
       body: SafeArea(
         child: Center(
           child: ConstrainedBox(
@@ -21,75 +28,81 @@ class UserDetailsScreen extends StatelessWidget {
                 _UserHeader(user: user),
                 const SizedBox(height: 16),
                 _DetailsSection(
-                  title: 'Account',
+                  title: l10n.text('Account'),
                   icon: Icons.account_circle_outlined,
                   children: [
-                    _DetailRow(label: 'Username', value: user.userName),
-                    _DetailRow(label: 'Email', value: user.email),
                     _DetailRow(
-                      label: 'Phone number',
-                      value: _valueOrNotSet(user.phoneNumber),
+                      label: l10n.text('Username'),
+                      value: user.userName,
                     ),
-                    _DetailRow(label: 'User ID', value: user.id),
+                    _DetailRow(label: l10n.text('Email'), value: user.email),
                     _DetailRow(
-                      label: 'Language ID',
-                      value: _valueOrNotSet(user.languageId),
+                      label: l10n.text('Phone number'),
+                      value: valueOrNotSet(user.phoneNumber),
+                    ),
+                    _DetailRow(label: l10n.text('User ID'), value: user.id),
+                    _DetailRow(
+                      label: l10n.text('Language ID'),
+                      value: valueOrNotSet(user.languageId),
                     ),
                   ],
                 ),
                 const SizedBox(height: 16),
                 _DetailsSection(
-                  title: 'Personal information',
+                  title: l10n.text('Personal information'),
                   icon: Icons.badge_outlined,
                   children: [
                     _DetailRow(
-                      label: 'First name',
-                      value: _valueOrNotSet(user.firstName),
+                      label: l10n.text('First name'),
+                      value: valueOrNotSet(user.firstName),
                     ),
                     _DetailRow(
-                      label: 'Last name',
-                      value: _valueOrNotSet(user.lastName),
+                      label: l10n.text('Last name'),
+                      value: valueOrNotSet(user.lastName),
                     ),
-                    _DetailRow(label: 'Display name', value: user.displayName),
+                    _DetailRow(
+                      label: l10n.text('Display name'),
+                      value: user.displayName,
+                    ),
                   ],
                 ),
                 const SizedBox(height: 16),
                 _DetailsSection(
-                  title: 'Organization and access',
+                  title: l10n.text('Organization and access'),
                   icon: Icons.admin_panel_settings_outlined,
                   children: [
                     _DetailRow(
-                      label: 'Shop',
+                      label: l10n.text('Shop'),
                       value: user.shopName?.trim().isNotEmpty == true
                           ? user.shopName!
                           : user.shopId,
                     ),
-                    _DetailRow(label: 'Shop ID', value: user.shopId),
+                    _DetailRow(label: l10n.text('Shop ID'), value: user.shopId),
                     _DetailRow(
-                      label: 'Roles',
+                      label: l10n.text('Roles'),
                       value: user.roles.isEmpty
-                          ? 'No roles assigned'
+                          ? l10n.text('No roles assigned')
                           : user.roles.join(', '),
                     ),
                   ],
                 ),
                 const SizedBox(height: 16),
                 _DetailsSection(
-                  title: 'Account status',
+                  title: l10n.text('Account status'),
                   icon: Icons.security_outlined,
                   children: [
                     _DetailRow(
-                      label: 'Activation',
-                      value: user.isActive ? 'Active' : 'Inactive',
+                      label: l10n.text('Activation'),
+                      value: l10n.text(user.isActive ? 'Active' : 'Inactive'),
                     ),
                     _DetailRow(
-                      label: 'Lock status',
-                      value: user.isLocked ? 'Locked' : 'Unlocked',
+                      label: l10n.text('Lock status'),
+                      value: l10n.text(user.isLocked ? 'Locked' : 'Unlocked'),
                     ),
                     _DetailRow(
-                      label: 'Lockout end',
+                      label: l10n.text('Lockout end'),
                       value: user.lockoutEnd == null
-                          ? 'Not set'
+                          ? l10n.text('Not set')
                           : _formatDateTime(user.lockoutEnd!),
                     ),
                   ],
@@ -100,11 +113,6 @@ class UserDetailsScreen extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  static String _valueOrNotSet(String? value) {
-    final text = value?.trim();
-    return text == null || text.isEmpty ? 'Not set' : text;
   }
 
   static String _formatDateTime(DateTime value) {
@@ -156,13 +164,17 @@ class _UserHeader extends StatelessWidget {
                         icon: user.isActive
                             ? Icons.check_circle_outline
                             : Icons.block_outlined,
-                        label: user.isActive ? 'Active' : 'Inactive',
+                        label: context.l10n.text(
+                          user.isActive ? 'Active' : 'Inactive',
+                        ),
                       ),
                       _StatusChip(
                         icon: user.isLocked
                             ? Icons.lock_outline
                             : Icons.lock_open_outlined,
-                        label: user.isLocked ? 'Locked' : 'Unlocked',
+                        label: context.l10n.text(
+                          user.isLocked ? 'Locked' : 'Unlocked',
+                        ),
                       ),
                     ],
                   ),

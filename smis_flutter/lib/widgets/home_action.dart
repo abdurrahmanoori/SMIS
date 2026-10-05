@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+
+import '../l10n/app_localizations.dart';
 import '../screens/home_screen.dart';
 
 class HomeAction extends StatelessWidget {
@@ -8,7 +10,7 @@ class HomeAction extends StatelessWidget {
   Widget build(BuildContext context) {
     return IconButton(
       icon: const Icon(Icons.home_outlined),
-      tooltip: 'Home',
+      tooltip: context.l10n.text('Home'),
       onPressed: () {
         Navigator.of(context).pushAndRemoveUntil(
           MaterialPageRoute<void>(builder: (context) => const HomeScreen()),
