@@ -5,6 +5,8 @@ namespace SMIS.Api.Errors;
 
 public static class ApiProblemDetailsFactory
 {
+    // This stays in the API layer because ProblemDetails, HTTP status codes and the serialized
+    // error shape are presentation/transport concerns. Application only exposes Error/ErrorType.
     public static ProblemDetails Create(
         HttpContext httpContext,
         IReadOnlyCollection<Error> errors,
@@ -29,7 +31,11 @@ public static class ApiProblemDetailsFactory
             Instance = httpContext.Request.Path
         };
 
-        problem.Extensions["errors"] = normalizedErrors;
+        problem.Extensions["errors"] = normalizedErrors.Select(error => new ApiErrorDetails(
+            error.Code,
+            error.Property,
+            error.Description,
+            GetErrorTypeName(error.Type))).ToArray();
         problem.Extensions["traceId"] = httpContext.TraceIdentifier;
 
         return problem;
@@ -62,4 +68,25 @@ public static class ApiProblemDetailsFactory
         ErrorType.Failure => "Unexpected server error",
         _ => "Request failed"
     };
+
+    private static string GetErrorTypeName(
+        ErrorType type
+    ) => type switch
+    {
+        ErrorType.Validation => "validation",
+        ErrorType.NotFound => "notFound",
+        ErrorType.Conflict => "conflict",
+        ErrorType.Unauthorized => "unauthorized",
+        ErrorType.Forbidden => "forbidden",
+        ErrorType.BusinessRule => "businessRule",
+        ErrorType.Failure => "failure",
+        _ => "failure"
+    };
+
+    private sealed record ApiErrorDetails(
+        string Code,
+        string? Property,
+        string Description,
+        string Type
+    );
 }

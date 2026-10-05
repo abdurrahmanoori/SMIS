@@ -1,4 +1,5 @@
 using FluentValidation.AspNetCore;
+using SMIS.Api.Converters;
 using SMIS.Api.Extensions;
 using SMIS.Api.Middleware;
 using SMIS.Application.Extensions;
@@ -30,6 +31,7 @@ builder.Services.AddControllers()
     .AddControllersAsServices()
     .AddJsonOptions(options =>
     {
+        options.JsonSerializerOptions.Converters.Add(new OptionalValueJsonConverterFactory());
         options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter(JsonNamingPolicy.CamelCase));
     });
 

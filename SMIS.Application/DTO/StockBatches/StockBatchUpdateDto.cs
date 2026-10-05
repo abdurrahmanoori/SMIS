@@ -1,10 +1,11 @@
+using SMIS.Application.Common.Models;
 using SMIS.Domain.Enums;
 
 namespace SMIS.Application.DTO.StockBatches;
 
 public sealed class StockBatchUpdateDto
 {
-    public string? BatchNumber { get; set; }
-    public DateTime? ExpirationDate { get; set; }
+    public OptionalValue<string?> BatchNumber { get; set; }
+    public OptionalValue<DateTime?> ExpirationDate { get; set; }
     public StatusEnum? Status { get; set; }
 }

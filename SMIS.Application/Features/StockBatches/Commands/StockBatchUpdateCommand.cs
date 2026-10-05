@@ -47,8 +47,17 @@ namespace SMIS.Application.Features.StockBatches.Commands
                 return Result<StockBatchDto>.NotFound(nameof(StockBatchDto.Id));
             }
 
-            entity.SetBatchNumber(request.StockBatchUpdateDto.BatchNumber);
-            entity.SetExpirationDate(request.StockBatchUpdateDto.ExpirationDate);
+            // For partial updates we must distinguish "property omitted" from "property explicitly set to null".
+            // IsSpecified=false means leave the current value unchanged; true means apply Value, even when Value is null.
+            if (request.StockBatchUpdateDto.BatchNumber.IsSpecified)
+            {
+                entity.SetBatchNumber(request.StockBatchUpdateDto.BatchNumber.Value);
+            }
+
+            if (request.StockBatchUpdateDto.ExpirationDate.IsSpecified)
+            {
+                entity.SetExpirationDate(request.StockBatchUpdateDto.ExpirationDate.Value);
+            }
 
             switch (request.StockBatchUpdateDto.Status)
             {
