@@ -110,9 +110,16 @@ class _UsersScreenState extends ConsumerState<UsersScreen> {
         pageSize: _pageSize,
         search: _searchQuery,
       );
-      final shops = session.isSuperAdmin && (refreshShops || _shops.isEmpty)
-          ? await api.getActiveShops()
-          : _shops;
+      final shops = session.isSuperAdmin
+          ? (refreshShops || _shops.isEmpty)
+                ? await api.getActiveShops()
+                : _shops
+          : <UserShopOption>[
+              UserShopOption(
+                id: session.shopId,
+                name: _resolveCurrentShopName(page, session.shopId),
+              ),
+            ];
       if (!mounted || requestId != _loadRequestId) return;
       setState(() {
         _page = page;
@@ -140,12 +147,17 @@ class _UsersScreenState extends ConsumerState<UsersScreen> {
     if (_mutating || _shops.isEmpty) return;
     final session = ref.read(authControllerProvider).session;
     if (session == null) return;
+    final assignableRoles = session.isSuperAdmin
+        ? _roles
+        : _roles
+              .where((role) => role.toLowerCase() != 'superadmin')
+              .toList(growable: false);
 
     final draft = await showDialog<UserFormDraft>(
       context: context,
       barrierDismissible: false,
       builder: (context) =>
-          UserFormDialog(user: user, shops: _shops, roles: _roles),
+          UserFormDialog(user: user, shops: _shops, roles: assignableRoles),
     );
     if (draft == null) return;
 
@@ -188,12 +200,19 @@ class _UsersScreenState extends ConsumerState<UsersScreen> {
 
   Future<void> _manageRoles(ManagedUser user) async {
     if (_mutating) return;
+    final session = ref.read(authControllerProvider).session;
+    if (session == null) return;
+    final assignableRoles = session.isSuperAdmin
+        ? _roles
+        : _roles
+              .where((role) => role.toLowerCase() != 'superadmin')
+              .toList(growable: false);
     final selectedRoles = await showDialog<List<String>>(
       context: context,
       barrierDismissible: false,
       builder: (context) => _RoleManagementDialog(
         userName: user.displayName,
-        roles: _roles,
+        roles: assignableRoles,
         selectedRoles: user.roles,
       ),
     );
@@ -417,6 +436,15 @@ class _UsersScreenState extends ConsumerState<UsersScreen> {
         '${two(local.hour)}:${two(local.minute)}';
   }
 
+  String _resolveCurrentShopName(ManagedUserPage page, String shopId) {
+    for (final user in page.items) {
+      if (user.shopId != shopId) continue;
+      final name = user.shopName?.trim();
+      if (name != null && name.isNotEmpty) return name;
+    }
+    return 'Current shop';
+  }
+
   @override
   Widget build(BuildContext context) {
     final session = ref.watch(authControllerProvider).session;
@@ -487,7 +515,7 @@ class _UsersScreenState extends ConsumerState<UsersScreen> {
         ],
       ),
       drawer: const AppDrawer(),
-      floatingActionButton: !session.isSuperAdmin || _shops.isEmpty
+      floatingActionButton: _shops.isEmpty
           ? null
           : FloatingActionButton.extended(
               onPressed: _loading || _mutating ? null : () => _openForm(),
@@ -505,18 +533,13 @@ class _UsersScreenState extends ConsumerState<UsersScreen> {
               TextButton(onPressed: _load, child: const Text('Refresh')),
             ],
           ),
-          Expanded(
-            child: _buildBody(
-              session.userId,
-              isSuperAdmin: session.isSuperAdmin,
-            ),
-          ),
+          Expanded(child: _buildBody(session.userId)),
         ],
       ),
     );
   }
 
-  Widget _buildBody(String currentUserId, {required bool isSuperAdmin}) {
+  Widget _buildBody(String currentUserId) {
     if (_loading && _page == null) {
       return const Center(child: CircularProgressIndicator());
     }
@@ -648,26 +671,22 @@ class _UsersScreenState extends ConsumerState<UsersScreen> {
                             title: Text('View details'),
                           ),
                         ),
-                        if (isSuperAdmin)
-                          const PopupMenuItem(
-                            value: 'edit',
-                            child: ListTile(
-                              contentPadding: EdgeInsets.zero,
-                              leading: Icon(Icons.edit_outlined),
-                              title: Text('Edit'),
-                            ),
+                        const PopupMenuItem(
+                          value: 'edit',
+                          child: ListTile(
+                            contentPadding: EdgeInsets.zero,
+                            leading: Icon(Icons.edit_outlined),
+                            title: Text('Edit'),
                           ),
-                        if (isSuperAdmin)
-                          const PopupMenuItem(
-                            value: 'roles',
-                            child: ListTile(
-                              contentPadding: EdgeInsets.zero,
-                              leading: Icon(
-                                Icons.admin_panel_settings_outlined,
-                              ),
-                              title: Text('Manage roles'),
-                            ),
+                        ),
+                        const PopupMenuItem(
+                          value: 'roles',
+                          child: ListTile(
+                            contentPadding: EdgeInsets.zero,
+                            leading: Icon(Icons.admin_panel_settings_outlined),
+                            title: Text('Manage roles'),
                           ),
+                        ),
                         const PopupMenuItem(
                           value: 'reset-password',
                           child: ListTile(
@@ -696,7 +715,7 @@ class _UsersScreenState extends ConsumerState<UsersScreen> {
                             value: 'activate',
                             child: Text('Activate account'),
                           ),
-                        if (isSuperAdmin && user.id != currentUserId)
+                        if (user.id != currentUserId)
                           const PopupMenuItem(
                             value: 'delete',
                             child: Text('Delete'),
