@@ -21,6 +21,7 @@ import 'products_screen.dart';
 import 'product_units_screen.dart';
 import 'shops_screen.dart';
 import 'stock_screen.dart';
+import 'suppliers_screen.dart';
 import 'unit_of_measures_screen.dart';
 
 class HomeScreen extends ConsumerWidget {
@@ -75,6 +76,9 @@ class HomeScreen extends ConsumerWidget {
     );
     final canViewInventory = session.canViewComponent(
       ApplicationComponentKeys.inventory,
+    );
+    final canViewSuppliers = session.canViewComponent(
+      ApplicationComponentKeys.suppliers,
     );
 
     return Scaffold(
@@ -240,6 +244,14 @@ class HomeScreen extends ConsumerWidget {
                         ),
                       ),
                     );
+                    final suppliersCard = _HomeActionCard(
+                      icon: Icons.local_shipping_outlined,
+                      title: l10n.text('Suppliers'),
+                      description: l10n.text(
+                        'Manage suppliers for the active shop.',
+                      ),
+                      onTap: () => _openSuppliers(context),
+                    );
                     return wideLayout
                         ? Wrap(
                             spacing: 16,
@@ -280,6 +292,11 @@ class HomeScreen extends ConsumerWidget {
                                   width: (constraints.maxWidth - 16) / 2,
                                   child: stockCard,
                                 ),
+                              if (canViewSuppliers)
+                                SizedBox(
+                                  width: (constraints.maxWidth - 16) / 2,
+                                  child: suppliersCard,
+                                ),
                               SizedBox(
                                 width: (constraints.maxWidth - 16) / 2,
                                 child: profileCard,
@@ -314,6 +331,10 @@ class HomeScreen extends ConsumerWidget {
                               ],
                               if (canViewInventory) ...[
                                 stockCard,
+                                const SizedBox(height: 16),
+                              ],
+                              if (canViewSuppliers) ...[
+                                suppliersCard,
                                 const SizedBox(height: 16),
                               ],
                               profileCard,
@@ -374,6 +395,12 @@ class HomeScreen extends ConsumerWidget {
       MaterialPageRoute<void>(
         builder: (context) => const ProductPricesScreen(),
       ),
+    );
+  }
+
+  void _openSuppliers(BuildContext context) {
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(builder: (context) => const SuppliersScreen()),
     );
   }
 }

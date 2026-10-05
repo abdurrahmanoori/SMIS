@@ -13,24 +13,47 @@ class ProductScreenState {
     required this.products,
     required this.pendingCount,
     this.searchQuery = '',
+    this.pageNumber = 1,
+    this.pageSize = 25,
+    this.totalCount = 0,
+    this.totalPages = 1,
+    this.isLoadingMore = false,
   });
 
   final List<Product> products;
   final int pendingCount;
   final String searchQuery;
+  final int pageNumber;
+  final int pageSize;
+  final int totalCount;
+  final int totalPages;
+  final bool isLoadingMore;
+
+  bool get hasNextPage => pageNumber < totalPages;
 
   ProductScreenState copyWith({
     List<Product>? products,
     int? pendingCount,
     String? searchQuery,
+    int? pageNumber,
+    int? pageSize,
+    int? totalCount,
+    int? totalPages,
+    bool? isLoadingMore,
   }) => ProductScreenState(
     products: products ?? this.products,
     pendingCount: pendingCount ?? this.pendingCount,
     searchQuery: searchQuery ?? this.searchQuery,
+    pageNumber: pageNumber ?? this.pageNumber,
+    pageSize: pageSize ?? this.pageSize,
+    totalCount: totalCount ?? this.totalCount,
+    totalPages: totalPages ?? this.totalPages,
+    isLoadingMore: isLoadingMore ?? this.isLoadingMore,
   );
 }
 
 class ProductController extends AsyncNotifier<ProductScreenState> {
+  static const _pageSize = 25;
   StreamSubscription<void>? _changesSubscription;
   bool _refreshingFromPowerSync = false;
   int _searchRequestId = 0;
@@ -88,8 +111,13 @@ class ProductController extends AsyncNotifier<ProductScreenState> {
     final requestId = ++_searchRequestId;
 
     state = AsyncData(
-      previous?.copyWith(searchQuery: query, products: []) ??
-          ProductScreenState(products: [], pendingCount: 0, searchQuery: query),
+      previous?.copyWith(searchQuery: query, isLoadingMore: true) ??
+          ProductScreenState(
+            products: [],
+            pendingCount: 0,
+            searchQuery: query,
+            isLoadingMore: true,
+          ),
     );
 
     try {
@@ -120,12 +148,66 @@ class ProductController extends AsyncNotifier<ProductScreenState> {
     ref.invalidate(productLookupProvider);
   }
 
+  Future<void> loadNextPage() async {
+    final current = state.value;
+    if (current == null || current.isLoadingMore || !current.hasNextPage) {
+      return;
+    }
+
+    state = AsyncData(current.copyWith(isLoadingMore: true));
+    try {
+      final nextPage = current.pageNumber + 1;
+      final loaded = await _readLocal(
+        pageNumber: nextPage,
+        pageSize: current.pageSize,
+        searchQuery: current.searchQuery,
+      );
+
+      state = AsyncData(
+        current.copyWith(
+          products: [...current.products, ...loaded.products],
+          pageNumber: loaded.pageNumber,
+          totalCount: loaded.totalCount,
+          totalPages: loaded.totalPages,
+          isLoadingMore: false,
+        ),
+      );
+    } catch (error, stackTrace) {
+      state = AsyncError(error, stackTrace);
+    }
+  }
+
   Future<ProductScreenState> _load({String? searchQuery}) async {
+    return _readLocal(
+      pageNumber: 1,
+      pageSize: _pageSize,
+      searchQuery: searchQuery,
+    );
+  }
+
+  Future<ProductScreenState> _readLocal({
+    required int pageNumber,
+    required int pageSize,
+    String? searchQuery,
+  }) async {
     final shopId = _shopId;
+    final totalCount = await _repository.getTotalCount(
+      shopId,
+      searchQuery: searchQuery,
+    );
     return ProductScreenState(
-      products: await _repository.getAll(shopId, searchQuery: searchQuery),
+      products: await _repository.getAll(
+        shopId,
+        searchQuery: searchQuery,
+        limit: pageSize,
+        offset: (pageNumber - 1) * pageSize,
+      ),
       pendingCount: await _repository.getPendingCount(shopId),
       searchQuery: searchQuery ?? '',
+      pageNumber: pageNumber,
+      pageSize: pageSize,
+      totalCount: totalCount,
+      totalPages: (totalCount / pageSize).ceil(),
     );
   }
 }
