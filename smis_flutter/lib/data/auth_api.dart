@@ -12,6 +12,8 @@ abstract interface class AuthApi {
   Future<AuthSession> switchShop(String shopId);
 
   Future<AuthSession> refreshSession();
+
+  Future<void> revokeRefreshToken();
 }
 
 class DioAuthApi implements AuthApi {
@@ -47,6 +49,11 @@ class DioAuthApi implements AuthApi {
         throw const AuthenticationException('The login response was empty.');
       }
       final session = AuthSession.fromJson(data);
+      if (session.refreshToken.isEmpty) {
+        throw const AuthenticationException(
+          'The login response did not include a refresh token.',
+        );
+      }
       try {
         return await _withPermissions(session);
       } on DioException catch (permissionError) {
@@ -91,7 +98,9 @@ class DioAuthApi implements AuthApi {
           'The shop switch response was empty.',
         );
       }
-      return _withPermissions(AuthSession.fromJson(data));
+      return _withPermissions(
+        AuthSession.fromJson(data).copyWith(refreshToken: current.refreshToken),
+      );
     } catch (error, stackTrace) {
       ApiErrorParser.mapAndThrow(
         error,
@@ -112,8 +121,8 @@ class DioAuthApi implements AuthApi {
 
     try {
       final response = await _dio.post<Map<String, dynamic>>(
-        AppConfig.refreshSessionEndpoint,
-        options: Options(headers: {'Authorization': 'Bearer ${current.token}'}),
+        AppConfig.refreshTokenEndpoint,
+        data: {'refreshToken': current.refreshToken, 'shopId': current.shopId},
       );
       final data = response.data;
       if (data == null) {
@@ -121,12 +130,37 @@ class DioAuthApi implements AuthApi {
           'The session refresh response was empty.',
         );
       }
-      return _withPermissions(AuthSession.fromJson(data));
+      final refreshed = AuthSession.fromJson(data);
+      if (refreshed.refreshToken.isEmpty) {
+        throw const AuthenticationException(
+          'The refresh response did not include a refresh token.',
+        );
+      }
+      return _withPermissions(refreshed);
     } catch (error, stackTrace) {
       ApiErrorParser.mapAndThrow(
         error,
         stackTrace,
         fallbackMessage: 'Unable to refresh the signed-in session.',
+      );
+    }
+  }
+
+  @override
+  Future<void> revokeRefreshToken() async {
+    final current = await _sessionStore.read();
+    if (current == null || current.refreshToken.isEmpty) return;
+
+    try {
+      await _dio.post<Object?>(
+        AppConfig.revokeRefreshTokenEndpoint,
+        data: {'refreshToken': current.refreshToken},
+      );
+    } catch (error, stackTrace) {
+      ApiErrorParser.mapAndThrow(
+        error,
+        stackTrace,
+        fallbackMessage: 'Unable to revoke the signed-in session.',
       );
     }
   }

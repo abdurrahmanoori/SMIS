@@ -1,4 +1,5 @@
 using Microsoft.OpenApi.Models;
+using SMIS.Application.Common.Models;
 using System.Reflection;
 
 namespace SMIS.Api.Extensions;
@@ -15,6 +16,20 @@ public static class SwaggerServiceCollectionExtensions
             {
                 Title = "SMIS API",
                 Version = "v1"
+            });
+
+            // OptionalValue<T> is an application-level partial-update wrapper.
+            // Keep the external API contract simple so Swagger still shows the real client value, not the wrapper internals.
+            options.MapType<OptionalValue<string?>>(() => new OpenApiSchema
+            {
+                Type = "string",
+                Nullable = true
+            });
+            options.MapType<OptionalValue<DateTime?>>(() => new OpenApiSchema
+            {
+                Type = "string",
+                Format = "date-time",
+                Nullable = true
             });
 
             var xmlFileName = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";

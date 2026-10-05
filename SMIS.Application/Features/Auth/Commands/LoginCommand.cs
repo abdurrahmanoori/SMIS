@@ -7,7 +7,9 @@ using SMIS.Domain.Entities.Identity.Entity;
 using SMIS.Application.Common.Contants;
 using SMIS.Application.Repositories.Localization;
 using SMIS.Application.Repositories.Shops;
+using SMIS.Application.Services;
 using SMIS.Domain.Entities.Localization;
+using SMIS.Domain.Services;
 
 namespace SMIS.Application.Features.Auth.Commands
 {
@@ -20,13 +22,17 @@ namespace SMIS.Application.Features.Auth.Commands
         private readonly ITokenGenerator _tokenGenerator;
         private readonly IShopRepository _shopRepository;
         private readonly ILanguageRepository _languageRepository;
+        private readonly IApplicationDbContext _dbContext;
+        private readonly IRefreshTokenService _refreshTokenService;
 
         public LoginCommandHandler(
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
             ITokenGenerator tokenGenerator,
             IShopRepository shopRepository,
-            ILanguageRepository languageRepository
+            ILanguageRepository languageRepository,
+            IApplicationDbContext dbContext,
+            IRefreshTokenService refreshTokenService
         )
         {
             _userManager = userManager;
@@ -34,6 +40,8 @@ namespace SMIS.Application.Features.Auth.Commands
             _tokenGenerator = tokenGenerator;
             _shopRepository = shopRepository;
             _languageRepository = languageRepository;
+            _dbContext = dbContext;
+            _refreshTokenService = refreshTokenService;
         }
 
         public async Task<Result<LoginResponseDto>> Handle(
@@ -95,6 +103,15 @@ namespace SMIS.Application.Features.Auth.Commands
             // Token generation is delegated to the infrastructure layer.
             // Each host provides its own ITokenGenerator implementation.
             var token = _tokenGenerator.Generate(user, roles, activeShopId);
+            var refreshToken = _refreshTokenService.Issue();
+            _dbContext.RefreshTokens.Add(ApplicationRefreshToken.Create(
+                user.Id,
+                refreshToken.TokenHash,
+                user.SecurityVersion,
+                DateTimeService.NowUtc,
+                refreshToken.ExpiresAtUtc));
+            await _dbContext.SaveChangesAsync(cancellationToken);
+
             var language = await _languageRepository.GetByIdAsync(user.LanguageId);
             var languageCode = string.IsNullOrWhiteSpace(language?.Code)
                 ? LanguageDefaults.EnglishCode
@@ -103,6 +120,7 @@ namespace SMIS.Application.Features.Auth.Commands
             return Result<LoginResponseDto>.Success(new LoginResponseDto
             {
                 Token = token,
+                RefreshToken = refreshToken.Token,
                 UserId = user.Id,
                 UserName = user.UserName!,
                 Email = user.Email!,

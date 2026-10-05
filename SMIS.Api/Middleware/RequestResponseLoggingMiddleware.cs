@@ -10,7 +10,15 @@ namespace SMIS.Api.Middleware
     public class RequestResponseLoggingMiddleware
     {
         private readonly RequestDelegate _next;
-        private readonly string[] _skipPaths = { "/swagger", "/health", "/_framework" };
+
+        private readonly string[] _skipPaths =
+        {
+            "/swagger",
+            "/health",
+            "/_framework",
+            "/api/Account/login",
+            "/api/Account/refresh-token"
+        };
 
         public RequestResponseLoggingMiddleware(
             RequestDelegate next

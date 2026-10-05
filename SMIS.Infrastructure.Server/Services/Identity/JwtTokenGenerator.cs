@@ -1,4 +1,5 @@
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using SMIS.Application.Identity.IServices;
 using SMIS.Domain.Entities.Identity.Entity;
@@ -16,13 +17,13 @@ namespace SMIS.Infrastructure.Server.Services.Identity;
 /// </summary>
 public class JwtTokenGenerator : ITokenGenerator
 {
-    private readonly IConfiguration _configuration;
+    private readonly JwtSettings _settings;
 
     public JwtTokenGenerator(
-        IConfiguration configuration
+        IOptions<JwtSettings> settings
     )
     {
-        _configuration = configuration;
+        _settings = settings.Value;
     }
 
     public string Generate(
@@ -31,7 +32,7 @@ public class JwtTokenGenerator : ITokenGenerator
         string? shopIdOverride = null
     )
     {
-        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JwtSettings:Key"]!));
+        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_settings.Key));
         var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
         var claims = new List<Claim>
@@ -39,6 +40,7 @@ public class JwtTokenGenerator : ITokenGenerator
             new(ClaimTypes.NameIdentifier, user.Id),
             new(ClaimTypes.Email, user.Email!),
             new(ClaimTypes.Name, user.UserName!),
+            new(JwtClaimNames.AccessTokenVersion, JwtClaimNames.CurrentAccessTokenVersion),
             new(
                 JwtClaimNames.SecurityVersion,
                 user.SecurityVersion.ToString(CultureInfo.InvariantCulture))
@@ -60,10 +62,10 @@ public class JwtTokenGenerator : ITokenGenerator
         claims.AddRange(roles.Select(role => new Claim(ClaimTypes.Role, role)));
 
         var token = new JwtSecurityToken(
-            issuer: _configuration["JwtSettings:Issuer"],
-            audience: _configuration["JwtSettings:Audience"],
+            issuer: _settings.Issuer,
+            audience: _settings.Audience,
             claims: claims,
-            expires: DateTimeService.NowUtc.AddMonths(2),
+            expires: DateTimeService.NowUtc.AddMinutes(_settings.AccessTokenLifetimeMinutes),
             signingCredentials: credentials
         );
 

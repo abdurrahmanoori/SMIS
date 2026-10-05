@@ -48,6 +48,7 @@ namespace SMIS.Infrastructure.Server.Extensions
 
             // Register JWT token generator — only the infrastructure layer knows about JWT
             services.AddScoped<ITokenGenerator, JwtTokenGenerator>();
+            services.AddScoped<IRefreshTokenService, RefreshTokenService>();
             services.AddScoped<IPowerSyncTokenGenerator, PowerSyncTokenGenerator>();
 
             // Automatically register repositories with Scrutor (no magic strings)

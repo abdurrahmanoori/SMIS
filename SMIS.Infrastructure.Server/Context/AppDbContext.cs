@@ -125,4 +125,5 @@ public partial class AppDbContext : IdentityDbContext<ApplicationUser, Applicati
     public DbSet<RoleComponentPermission> RoleComponentPermissions { get; set; }
     public DbSet<ApplicationTask> ApplicationTasks { get; set; }
     public DbSet<RoleTaskPermission> RoleTaskPermissions { get; set; }
+    public DbSet<ApplicationRefreshToken> RefreshTokens { get; set; }
 }

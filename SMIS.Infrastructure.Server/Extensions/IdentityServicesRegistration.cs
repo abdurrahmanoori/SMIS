@@ -6,8 +6,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using SMIS.Domain.Entities.Identity.Entity;
 using SMIS.Infrastructure.Server.Services.Identity;
-using System.Security.Claims;
-using System.Globalization;
 using System.Text;
 
 namespace SMIS.Infrastructure.Server.Extensions;
@@ -51,6 +49,31 @@ public static class IdentityServicesRegistration
         IConfiguration configuration
     )
     {
+        var jwtSection = configuration.GetSection(JwtSettings.SectionName);
+        var jwtSettings = new JwtSettings
+        {
+            Key = jwtSection[nameof(JwtSettings.Key)] ?? string.Empty,
+            Issuer = jwtSection[nameof(JwtSettings.Issuer)] ?? string.Empty,
+            Audience = jwtSection[nameof(JwtSettings.Audience)] ?? string.Empty,
+            AccessTokenLifetimeMinutes = jwtSection.GetValue<int>(nameof(JwtSettings.AccessTokenLifetimeMinutes)),
+            RefreshTokenLifetimeDays = jwtSection.GetValue<int>(nameof(JwtSettings.RefreshTokenLifetimeDays)),
+            RefreshTokenSizeBytes = jwtSection.GetValue<int>(nameof(JwtSettings.RefreshTokenSizeBytes)),
+            ClockSkewSeconds = jwtSection.GetValue<int>(nameof(JwtSettings.ClockSkewSeconds))
+        };
+
+        if (string.IsNullOrWhiteSpace(jwtSettings.Key) ||
+            string.IsNullOrWhiteSpace(jwtSettings.Issuer) ||
+            string.IsNullOrWhiteSpace(jwtSettings.Audience) ||
+            jwtSettings.AccessTokenLifetimeMinutes <= 0 ||
+            jwtSettings.RefreshTokenLifetimeDays <= 0 ||
+            jwtSettings.RefreshTokenSizeBytes < 32 ||
+            jwtSettings.ClockSkewSeconds < 0)
+        {
+            throw new InvalidOperationException("JwtSettings contains missing or invalid authentication values.");
+        }
+
+        services.Configure<JwtSettings>(jwtSection);
+
         services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -64,67 +87,30 @@ public static class IdentityServicesRegistration
                     ValidateIssuer = true,
                     ValidateAudience = true,
                     ValidateLifetime = true,
-                    ClockSkew = TimeSpan.Zero,
-                    ValidIssuer = configuration["JwtSettings:Issuer"],
-                    ValidAudience = configuration["JwtSettings:Audience"],
+                    ClockSkew = TimeSpan.FromSeconds(jwtSettings.ClockSkewSeconds),
+                    ValidIssuer = jwtSettings.Issuer,
+                    ValidAudience = jwtSettings.Audience,
                     IssuerSigningKey =
-                        new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JwtSettings:Key"]!))
+                        new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.Key))
                 };
 
                 options.Events = new JwtBearerEvents
                 {
-                    OnTokenValidated = async context =>
+                    OnTokenValidated = context =>
                     {
-                        var userId = context.Principal?
-                            .FindFirst(ClaimTypes.NameIdentifier)?
+                        var tokenVersion = context.Principal?
+                            .FindFirst(JwtClaimNames.AccessTokenVersion)?
                             .Value;
-                        if (string.IsNullOrWhiteSpace(userId))
+
+                        if (!string.Equals(
+                                tokenVersion,
+                                JwtClaimNames.CurrentAccessTokenVersion,
+                                StringComparison.Ordinal))
                         {
-                            context.Fail("The authenticated user could not be resolved.");
-                            return;
+                            context.Fail("The access token is from an unsupported session version. Sign in again.");
                         }
 
-                        var userManager = context.HttpContext.RequestServices
-                            .GetRequiredService<UserManager<ApplicationUser>>();
-                        var user = await userManager.FindByIdAsync(userId);
-                        if (user is null)
-                        {
-                            context.Fail("The authenticated user no longer exists.");
-                            return;
-                        }
-
-                        if (!user.IsActive)
-                        {
-                            context.Fail("The user account is inactive.");
-                            return;
-                        }
-
-                        if (user.LockoutEnabled &&
-                            user.LockoutEnd.HasValue &&
-                            user.LockoutEnd.Value > DateTimeOffset.UtcNow)
-                        {
-                            context.Fail("The user account is locked.");
-                            return;
-                        }
-
-                        var securityVersionValue = context.Principal?
-                            .FindFirst(JwtClaimNames.SecurityVersion)?
-                            .Value;
-                        if (string.IsNullOrWhiteSpace(securityVersionValue) ||
-                            !int.TryParse(
-                                securityVersionValue,
-                                NumberStyles.None,
-                                CultureInfo.InvariantCulture,
-                                out var tokenSecurityVersion))
-                        {
-                            context.Fail("The authentication session is no longer valid.");
-                            return;
-                        }
-
-                        if (tokenSecurityVersion != user.SecurityVersion)
-                        {
-                            context.Fail("The authentication session has been invalidated.");
-                        }
+                        return Task.CompletedTask;
                     }
                 };
             });
