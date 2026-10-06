@@ -15,6 +15,7 @@ import '../screens/profile_screen.dart';
 import '../screens/products_screen.dart';
 import '../screens/product_prices_screen.dart';
 import '../screens/product_units_screen.dart';
+import '../screens/purchase_orders_screen.dart';
 import '../screens/shops_screen.dart';
 import '../screens/stock_screen.dart';
 import '../screens/suppliers_screen.dart';
@@ -69,6 +70,9 @@ class AppDrawer extends ConsumerWidget {
     );
     final canViewSuppliers = session.canViewComponent(
       ApplicationComponentKeys.suppliers,
+    );
+    final canViewPurchasing = session.canViewComponent(
+      ApplicationComponentKeys.purchasing,
     );
 
     return Drawer(
@@ -217,6 +221,19 @@ class AppDrawer extends ConsumerWidget {
                 Navigator.of(context).pushReplacement(
                   MaterialPageRoute<void>(
                     builder: (context) => const SuppliersScreen(),
+                  ),
+                );
+              },
+            ),
+          if (canViewPurchasing)
+            ListTile(
+              leading: const Icon(Icons.receipt_long_outlined),
+              title: Text(l10n.text('Purchase orders')),
+              onTap: () {
+                Navigator.of(context).pop();
+                Navigator.of(context).pushReplacement(
+                  MaterialPageRoute<void>(
+                    builder: (_) => const PurchaseOrdersScreen(),
                   ),
                 );
               },

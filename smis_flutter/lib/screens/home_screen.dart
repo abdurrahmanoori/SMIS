@@ -19,6 +19,7 @@ import 'profile_screen.dart';
 import 'product_prices_screen.dart';
 import 'products_screen.dart';
 import 'product_units_screen.dart';
+import 'purchase_orders_screen.dart';
 import 'shops_screen.dart';
 import 'stock_screen.dart';
 import 'suppliers_screen.dart';
@@ -79,6 +80,9 @@ class HomeScreen extends ConsumerWidget {
     );
     final canViewSuppliers = session.canViewComponent(
       ApplicationComponentKeys.suppliers,
+    );
+    final canViewPurchasing = session.canViewComponent(
+      ApplicationComponentKeys.purchasing,
     );
 
     return Scaffold(
@@ -252,6 +256,18 @@ class HomeScreen extends ConsumerWidget {
                       ),
                       onTap: () => _openSuppliers(context),
                     );
+                    final purchasingCard = _HomeActionCard(
+                      icon: Icons.receipt_long_outlined,
+                      title: l10n.text('Purchase orders'),
+                      description: l10n.text(
+                        'Manage supplier orders and receipts online.',
+                      ),
+                      onTap: () => Navigator.of(context).push(
+                        MaterialPageRoute<void>(
+                          builder: (_) => const PurchaseOrdersScreen(),
+                        ),
+                      ),
+                    );
                     return wideLayout
                         ? Wrap(
                             spacing: 16,
@@ -297,6 +313,11 @@ class HomeScreen extends ConsumerWidget {
                                   width: (constraints.maxWidth - 16) / 2,
                                   child: suppliersCard,
                                 ),
+                              if (canViewPurchasing)
+                                SizedBox(
+                                  width: (constraints.maxWidth - 16) / 2,
+                                  child: purchasingCard,
+                                ),
                               SizedBox(
                                 width: (constraints.maxWidth - 16) / 2,
                                 child: profileCard,
@@ -335,6 +356,10 @@ class HomeScreen extends ConsumerWidget {
                               ],
                               if (canViewSuppliers) ...[
                                 suppliersCard,
+                                const SizedBox(height: 16),
+                              ],
+                              if (canViewPurchasing) ...[
+                                purchasingCard,
                                 const SizedBox(height: 16),
                               ],
                               profileCard,
