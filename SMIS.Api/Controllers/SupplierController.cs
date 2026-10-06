@@ -32,6 +32,17 @@ public sealed class SupplierController : BaseApiController
         await HandleRequest(new SupplierCreateCommand(dto), cancellationToken);
 
     /// <summary>
+    /// Creates or reconciles a supplier uploaded by an offline PowerSync client.
+    /// </summary>
+    [HttpPost("sync")]
+    [HasPermission(ApplicationComponentKeys.Suppliers, PermissionAction.Create)]
+    public async Task<ActionResult<SupplierDto>> SyncCreate(
+        SupplierSyncCreateDto dto,
+        CancellationToken cancellationToken
+    ) =>
+        await HandleRequest(new SupplierSyncCreateCommand(dto), cancellationToken);
+
+    /// <summary>
     /// Updates supplier details inside the current shop.
     /// </summary>
     [HttpPut("{id}")]
@@ -42,6 +53,18 @@ public sealed class SupplierController : BaseApiController
         CancellationToken cancellationToken
     ) =>
         await HandleRequest(new SupplierUpdateCommand(id, dto), cancellationToken);
+
+    /// <summary>
+    /// Applies a supplier edit uploaded by an offline PowerSync client.
+    /// </summary>
+    [HttpPut("{id}/sync")]
+    [HasPermission(ApplicationComponentKeys.Suppliers, PermissionAction.Update)]
+    public async Task<ActionResult<SupplierDto>> SyncUpdate(
+        string id,
+        SupplierSyncUpdateDto dto,
+        CancellationToken cancellationToken
+    ) =>
+        await HandleRequest(new SupplierSyncUpdateCommand(id, dto), cancellationToken);
 
     /// <summary>
     /// Activates or deactivates a supplier without deleting purchase history.

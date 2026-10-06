@@ -1,11 +1,14 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../controllers/auth_controller.dart';
+import '../controllers/supplier_controller.dart';
 import '../data/data_exception.dart';
-import '../data/supplier_api.dart';
 import '../l10n/app_localizations.dart';
 import '../models/application_component_keys.dart';
+import '../models/supplier.dart';
 import '../widgets/active_shop_context.dart';
 import '../widgets/app_drawer.dart';
 import '../widgets/app_error_view.dart';
@@ -20,67 +23,57 @@ class SuppliersScreen extends ConsumerStatefulWidget {
   ConsumerState<SuppliersScreen> createState() => _SuppliersScreenState();
 }
 
-class _SuppliersScreenState extends ConsumerState<SuppliersScreen> {
-  final _api = SupplierApi();
+class _SuppliersScreenState extends ConsumerState<SuppliersScreen>
+    with WidgetsBindingObserver {
   final _searchController = TextEditingController();
-
-  List<SupplierItem> _suppliers = const [];
-  bool _loading = true;
-  bool _mutating = false;
+  Timer? _searchDebounce;
   bool _isSearching = false;
-  Object? _error;
-  String? _shopId;
+  bool _mutating = false;
 
   @override
   void initState() {
     super.initState();
-    _shopId = ref.read(authControllerProvider).session?.shopId;
-    _reload();
+    WidgetsBinding.instance.addObserver(this);
   }
 
   @override
   void dispose() {
+    _searchDebounce?.cancel();
     _searchController.dispose();
+    WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
 
-  Future<void> _reload() async {
-    if (!mounted) return;
-    setState(() {
-      _loading = true;
-      _error = null;
-    });
-
-    try {
-      final suppliers = await _api.getAll();
-      if (!mounted) return;
-      setState(() {
-        _suppliers = suppliers;
-        _loading = false;
-      });
-    } catch (error) {
-      if (!mounted) return;
-      setState(() {
-        _error = error;
-        _loading = false;
-      });
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      ref.read(supplierControllerProvider.notifier).reload();
     }
+  }
+
+  void _onSearchChanged(String query) {
+    _searchDebounce?.cancel();
+    _searchDebounce = Timer(const Duration(milliseconds: 500), () {
+      ref.read(supplierControllerProvider.notifier).search(query);
+    });
+  }
+
+  void _stopSearching() {
+    _searchDebounce?.cancel();
+    setState(() {
+      _isSearching = false;
+      _searchController.clear();
+    });
+    ref.read(supplierControllerProvider.notifier).search('');
   }
 
   @override
   Widget build(BuildContext context) {
+    final suppliers = ref.watch(supplierControllerProvider);
     final session = ref.watch(authControllerProvider).session;
     final permission = session?.permissionFor(
       ApplicationComponentKeys.suppliers,
     );
-    final currentShopId = session?.shopId;
-
-    if (currentShopId != _shopId) {
-      _shopId = currentShopId;
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (mounted) _reload();
-      });
-    }
 
     if (permission == null || !permission.canView || !permission.canRead) {
       return Scaffold(
@@ -96,19 +89,6 @@ class _SuppliersScreenState extends ConsumerState<SuppliersScreen> {
       );
     }
 
-    final query = _searchController.text.trim().toLowerCase();
-    final visibleSuppliers = query.isEmpty
-        ? _suppliers
-        : _suppliers
-              .where(
-                (supplier) =>
-                    supplier.name.toLowerCase().contains(query) ||
-                    (supplier.phoneNumber?.toLowerCase().contains(query) ??
-                        false) ||
-                    (supplier.notes?.toLowerCase().contains(query) ?? false),
-              )
-              .toList(growable: false);
-
     return Scaffold(
       appBar: AppBar(
         title: _isSearching
@@ -119,14 +99,14 @@ class _SuppliersScreenState extends ConsumerState<SuppliersScreen> {
                   hintText: context.l10n.text('Search suppliers...'),
                   border: InputBorder.none,
                 ),
-                onChanged: (_) => setState(() {}),
+                onChanged: _onSearchChanged,
               )
             : Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(context.l10n.text('Suppliers')),
                   Text(
-                    context.l10n.text('Manage suppliers for the active shop.'),
+                    context.l10n.text('Local-first supplier management'),
                     style: const TextStyle(
                       fontSize: 12,
                       fontWeight: FontWeight.normal,
@@ -150,7 +130,9 @@ class _SuppliersScreenState extends ConsumerState<SuppliersScreen> {
             ),
           IconButton(
             tooltip: context.l10n.text('Refresh'),
-            onPressed: _loading || _mutating ? null : _reload,
+            onPressed: _mutating
+                ? null
+                : () => ref.read(supplierControllerProvider.notifier).reload(),
             icon: const Icon(Icons.refresh),
           ),
           const HomeAction(),
@@ -164,74 +146,26 @@ class _SuppliersScreenState extends ConsumerState<SuppliersScreen> {
         child: Center(
           child: ConstrainedBox(
             constraints: const BoxConstraints(maxWidth: 900),
-            child: Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
-                  child: Card(
-                    child: ListTile(
-                      leading: const Icon(Icons.cloud_outlined),
-                      title: Text(
-                        context.l10n.text(
-                          'Supplier maintenance is online-only. Changes are applied directly to the server.',
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                Expanded(
-                  child: _loading
-                      ? const Center(child: CircularProgressIndicator())
-                      : _error != null
-                      ? AppErrorView(error: _error!, onRetry: _reload)
-                      : RefreshIndicator(
-                          onRefresh: _reload,
-                          child: visibleSuppliers.isEmpty
-                              ? ListView(
-                                  physics:
-                                      const AlwaysScrollableScrollPhysics(),
-                                  children: [
-                                    SizedBox(
-                                      height: 360,
-                                      child: Center(
-                                        child: Text(
-                                          context.l10n.text(
-                                            query.isEmpty
-                                                ? 'No suppliers found.'
-                                                : 'No matching suppliers.',
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                )
-                              : ListView.separated(
-                                  physics:
-                                      const AlwaysScrollableScrollPhysics(),
-                                  padding: const EdgeInsets.fromLTRB(
-                                    16,
-                                    16,
-                                    16,
-                                    100,
-                                  ),
-                                  itemCount: visibleSuppliers.length,
-                                  separatorBuilder: (_, _) =>
-                                      const SizedBox(height: 8),
-                                  itemBuilder: (context, index) {
-                                    final supplier = visibleSuppliers[index];
-                                    return _SupplierCard(
-                                      supplier: supplier,
-                                      enabled: !_mutating,
-                                      canUpdate: permission.canUpdate,
-                                      onEdit: () => _edit(supplier),
-                                      onToggleStatus: () =>
-                                          _toggleStatus(supplier),
-                                    );
-                                  },
-                                ),
-                        ),
-                ),
-              ],
+            child: suppliers.when(
+              loading: () => const Center(child: CircularProgressIndicator()),
+              error: (error, stackTrace) => AppErrorView(
+                error: error,
+                stackTrace: stackTrace,
+                onRetry: () =>
+                    ref.read(supplierControllerProvider.notifier).reload(),
+              ),
+              data: (state) => _SupplierContent(
+                state: state,
+                enabled: !_mutating,
+                canUpdate: permission.canUpdate,
+                onEdit: _edit,
+                onToggleStatus: _toggleStatus,
+                onRefresh: () =>
+                    ref.read(supplierControllerProvider.notifier).reload(),
+                onLoadMore: () => ref
+                    .read(supplierControllerProvider.notifier)
+                    .loadNextPage(),
+              ),
             ),
           ),
         ),
@@ -246,49 +180,35 @@ class _SuppliersScreenState extends ConsumerState<SuppliersScreen> {
     );
   }
 
-  void _stopSearching() {
-    setState(() {
-      _isSearching = false;
-      _searchController.clear();
-    });
-  }
-
   Future<void> _create() async {
-    final draft = await showDialog<_SupplierDraft>(
+    final draft = await showDialog<SupplierDraft>(
       context: context,
       builder: (context) => const _SupplierFormDialog(),
     );
     if (draft == null || !mounted) return;
 
     await _mutate(
-      () => _api.create(
-        name: draft.name,
-        phoneNumber: draft.phoneNumber,
-        notes: draft.notes,
-      ),
-      context.l10n.text('Supplier created successfully.'),
+      () => ref.read(supplierControllerProvider.notifier).create(draft),
+      context.l10n.text('Supplier saved locally.'),
     );
   }
 
-  Future<void> _edit(SupplierItem supplier) async {
-    final draft = await showDialog<_SupplierDraft>(
+  Future<void> _edit(Supplier supplier) async {
+    final draft = await showDialog<SupplierDraft>(
       context: context,
       builder: (context) => _SupplierFormDialog(supplier: supplier),
     );
     if (draft == null || !mounted) return;
 
     await _mutate(
-      () => _api.update(
-        supplier.id,
-        name: draft.name,
-        phoneNumber: draft.phoneNumber,
-        notes: draft.notes,
-      ),
-      context.l10n.text('Supplier updated successfully.'),
+      () => ref
+          .read(supplierControllerProvider.notifier)
+          .updateSupplier(supplier.id, draft),
+      context.l10n.text('Supplier updated locally.'),
     );
   }
 
-  Future<void> _toggleStatus(SupplierItem supplier) async {
+  Future<void> _toggleStatus(Supplier supplier) async {
     final activate = !supplier.isActive;
     final confirmed = await showDialog<bool>(
       context: context,
@@ -323,7 +243,9 @@ class _SuppliersScreenState extends ConsumerState<SuppliersScreen> {
 
     if (confirmed != true || !mounted) return;
     await _mutate(
-      () => _api.updateStatus(supplier.id, isActive: activate),
+      () => ref
+          .read(supplierControllerProvider.notifier)
+          .updateStatus(supplier.id, activate),
       context.l10n.text(
         activate ? '{name} is now active.' : '{name} is now inactive.',
         {'name': supplier.name},
@@ -336,22 +258,119 @@ class _SuppliersScreenState extends ConsumerState<SuppliersScreen> {
     String successMessage,
   ) async {
     if (_mutating) return;
-
     setState(() => _mutating = true);
     try {
       await action();
-      await _reload();
       if (!mounted) return;
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(SnackBar(content: Text(successMessage)));
     } catch (error, stackTrace) {
-      if (!mounted) return;
-      AppErrorNotification.show(context, error, stackTrace);
+      if (mounted) AppErrorNotification.show(context, error, stackTrace);
     } finally {
       if (mounted) setState(() => _mutating = false);
     }
   }
+}
+
+class _SupplierContent extends StatelessWidget {
+  const _SupplierContent({
+    required this.state,
+    required this.enabled,
+    required this.canUpdate,
+    required this.onEdit,
+    required this.onToggleStatus,
+    required this.onRefresh,
+    required this.onLoadMore,
+  });
+
+  final SupplierScreenState state;
+  final bool enabled;
+  final bool canUpdate;
+  final ValueChanged<Supplier> onEdit;
+  final ValueChanged<Supplier> onToggleStatus;
+  final Future<void> Function() onRefresh;
+  final VoidCallback onLoadMore;
+
+  @override
+  Widget build(BuildContext context) => Column(
+    children: [
+      Padding(
+        padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
+        child: Card(
+          child: ListTile(
+            leading: const Icon(Icons.cloud_sync_outlined),
+            title: Text(
+              context.l10n.text('Offline-ready supplier maintenance'),
+            ),
+            subtitle: Text(
+              state.pendingCount == 0
+                  ? context.l10n.text(
+                      'Supplier changes are saved locally and sync automatically when a connection is available.',
+                    )
+                  : context.l10n.text(
+                      '{count} supplier change(s) are waiting to sync.',
+                      {'count': state.pendingCount},
+                    ),
+            ),
+          ),
+        ),
+      ),
+      Expanded(
+        child: RefreshIndicator(
+          onRefresh: onRefresh,
+          child: state.suppliers.isEmpty
+              ? ListView(
+                  physics: const AlwaysScrollableScrollPhysics(),
+                  children: [
+                    SizedBox(
+                      height: 360,
+                      child: Center(
+                        child: Text(
+                          context.l10n.text(
+                            state.searchQuery.isEmpty
+                                ? 'No suppliers found.'
+                                : 'No matching suppliers.',
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                )
+              : ListView.separated(
+                  physics: const AlwaysScrollableScrollPhysics(),
+                  padding: const EdgeInsets.fromLTRB(16, 16, 16, 100),
+                  itemCount:
+                      state.suppliers.length + (state.hasNextPage ? 1 : 0),
+                  separatorBuilder: (_, _) => const SizedBox(height: 8),
+                  itemBuilder: (context, index) {
+                    if (index == state.suppliers.length) {
+                      return Center(
+                        child: state.isLoadingMore
+                            ? const Padding(
+                                padding: EdgeInsets.all(12),
+                                child: CircularProgressIndicator(),
+                              )
+                            : OutlinedButton(
+                                onPressed: onLoadMore,
+                                child: Text(context.l10n.text('Load more')),
+                              ),
+                      );
+                    }
+                    final supplier = state.suppliers[index];
+                    return _SupplierCard(
+                      supplier: supplier,
+                      enabled: enabled,
+                      canUpdate: canUpdate,
+                      onEdit: () => onEdit(supplier),
+                      onToggleStatus: () => onToggleStatus(supplier),
+                    );
+                  },
+                ),
+        ),
+      ),
+    ],
+  );
 }
 
 class _SupplierCard extends StatelessWidget {
@@ -363,7 +382,7 @@ class _SupplierCard extends StatelessWidget {
     required this.onToggleStatus,
   });
 
-  final SupplierItem supplier;
+  final Supplier supplier;
   final bool enabled;
   final bool canUpdate;
   final VoidCallback onEdit;
@@ -382,6 +401,8 @@ class _SupplierCard extends StatelessWidget {
       title: Row(
         children: [
           Expanded(child: Text(supplier.name)),
+          const SizedBox(width: 8),
+          _SyncStateIcon(supplier: supplier),
           const SizedBox(width: 8),
           Chip(
             visualDensity: VisualDensity.compact,
@@ -437,10 +458,42 @@ class _SupplierCard extends StatelessWidget {
   );
 }
 
+class _SyncStateIcon extends StatelessWidget {
+  const _SyncStateIcon({required this.supplier});
+
+  final Supplier supplier;
+
+  @override
+  Widget build(BuildContext context) {
+    final failed = supplier.syncStatus == SupplierSyncStatus.failed;
+    final synced = supplier.syncStatus == SupplierSyncStatus.synced;
+    return Tooltip(
+      message:
+          supplier.lastSyncError ??
+          (synced
+              ? context.l10n.text('Synced')
+              : failed
+              ? context.l10n.text('Sync failed')
+              : context.l10n.text('Waiting to sync')),
+      child: Icon(
+        failed
+            ? Icons.cloud_off_outlined
+            : synced
+            ? Icons.cloud_done_outlined
+            : Icons.cloud_upload_outlined,
+        size: 18,
+        color: failed
+            ? Theme.of(context).colorScheme.error
+            : Theme.of(context).colorScheme.outline,
+      ),
+    );
+  }
+}
+
 class _SupplierFormDialog extends StatefulWidget {
   const _SupplierFormDialog({this.supplier});
 
-  final SupplierItem? supplier;
+  final Supplier? supplier;
 
   @override
   State<_SupplierFormDialog> createState() => _SupplierFormDialogState();
@@ -551,10 +604,11 @@ class _SupplierFormDialogState extends State<_SupplierFormDialog> {
           if (!(_formKey.currentState?.validate() ?? false)) return;
           Navigator.pop(
             context,
-            _SupplierDraft(
+            SupplierDraft(
               name: _nameController.text.trim(),
               phoneNumber: _nullableText(_phoneController.text),
               notes: _nullableText(_notesController.text),
+              isActive: widget.supplier?.isActive ?? true,
             ),
           );
         },
@@ -567,12 +621,4 @@ class _SupplierFormDialogState extends State<_SupplierFormDialog> {
     final text = value.trim();
     return text.isEmpty ? null : text;
   }
-}
-
-class _SupplierDraft {
-  const _SupplierDraft({required this.name, this.phoneNumber, this.notes});
-
-  final String name;
-  final String? phoneNumber;
-  final String? notes;
 }

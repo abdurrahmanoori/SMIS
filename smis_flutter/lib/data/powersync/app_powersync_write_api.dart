@@ -10,6 +10,7 @@ import 'upload/product_price_upload_handler.dart';
 import 'upload/product_unit_upload_handler.dart';
 import 'upload/product_upload_handler.dart';
 import 'upload/shop_upload_handler.dart';
+import 'upload/supplier_upload_handler.dart';
 import 'upload/unit_of_measure_upload_handler.dart';
 
 class AppPowerSyncWriteApi {
@@ -35,6 +36,7 @@ class AppPowerSyncWriteApi {
       ProductUploadHandler(_dio),
       ProductUnitUploadHandler(_dio),
       ProductPriceUploadHandler(_dio),
+      SupplierUploadHandler(_dio),
     ];
     _handlers = {for (final handler in handlers) handler.table: handler};
   }

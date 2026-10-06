@@ -113,6 +113,7 @@ internal sealed class PurchasingCommandHandler :
                 "A supplier with this name already exists in the shop.");
 
         supplier.Update(name, request.Dto.PhoneNumber, request.Dto.Notes);
+        supplier.ClearClientModificationMetadata();
         await _unitOfWork.SaveChanges(cancellationToken);
 
         return Result<SupplierDto>.Success(PurchasingDtoMapper.ToDto(supplier));
@@ -140,6 +141,7 @@ internal sealed class PurchasingCommandHandler :
         else
             supplier.Deactivate();
 
+        supplier.ClearClientModificationMetadata();
         await _unitOfWork.SaveChanges(cancellationToken);
         return Result<SupplierDto>.Success(PurchasingDtoMapper.ToDto(supplier));
     }

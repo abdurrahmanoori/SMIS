@@ -127,3 +127,18 @@ streams:
         AND product."IsDeleted" = 0
         AND product_unit."IsDeleted" = 0
         AND product_price."IsDeleted" = 0
+
+  shop_suppliers:
+    auto_subscribe: true
+    query: |
+      SELECT
+        supplier."Id" AS id,
+        supplier."ShopId" AS shop_id,
+        supplier."Name" AS name,
+        supplier."PhoneNumber" AS phone_number,
+        supplier."Notes" AS notes,
+        supplier."IsActive" AS is_active,
+        supplier."LastModifiedUtc" AS last_modified_utc
+      FROM "Supplier" AS supplier
+      WHERE supplier."ShopId" = auth.parameter('ShopId')
+        AND supplier."IsDeleted" = 0

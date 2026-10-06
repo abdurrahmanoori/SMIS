@@ -4,7 +4,7 @@ using SMIS.Domain.Exceptions;
 
 namespace SMIS.Domain.Entities;
 
-public sealed class Supplier : BaseAuditableEntity, IShopEntity
+public sealed class Supplier : BaseSyncableAuditableEntity, IShopEntity
 {
     public string ShopId { get; private set; } = string.Empty;
     public string Name { get; private set; } = string.Empty;

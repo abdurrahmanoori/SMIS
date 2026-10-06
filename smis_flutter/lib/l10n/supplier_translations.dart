@@ -3,8 +3,14 @@ const Map<String, String> supplierFaTranslations = {
   'Supplier management': 'مدیریت تأمین‌کنندگان',
   'Manage suppliers for the active shop.':
       'تأمین‌کنندگان فروشگاه فعال را مدیریت کنید.',
-  'Supplier maintenance is online-only. Changes are applied directly to the server.':
-      'مدیریت تأمین‌کنندگان فقط آنلاین است. تغییرات مستقیماً روی سرور اعمال می‌شوند.',
+  'Local-first supplier management': 'مدیریت محلی‌اول تأمین‌کنندگان',
+  'Offline-ready supplier maintenance': 'مدیریت آفلاین‌پذیر تأمین‌کنندگان',
+  'Supplier changes are saved locally and sync automatically when a connection is available.':
+      'تغییرات تأمین‌کنندگان به‌صورت محلی ذخیره می‌شوند و هنگام موجود بودن اتصال به‌طور خودکار همگام می‌شوند.',
+  '{count} supplier change(s) are waiting to sync.':
+      '{count} تغییر تأمین‌کننده در انتظار همگام‌سازی است.',
+  'Supplier saved locally.': 'تأمین‌کننده به‌صورت محلی ذخیره شد.',
+  'Supplier updated locally.': 'تأمین‌کننده به‌صورت محلی به‌روزرسانی شد.',
   'Add supplier': 'افزودن تأمین‌کننده',
   'Edit supplier': 'ویرایش تأمین‌کننده',
   'Search suppliers...': 'جستجوی تأمین‌کنندگان...',
@@ -33,8 +39,14 @@ const Map<String, String> supplierPsTranslations = {
   'Supplier management': 'د عرضه کوونکو مدیریت',
   'Manage suppliers for the active shop.':
       'د فعال دوکان عرضه کوونکي مدیریت کړئ.',
-  'Supplier maintenance is online-only. Changes are applied directly to the server.':
-      'د عرضه کوونکو مدیریت یوازې آنلاین دی. بدلونونه مستقیم په سرور کې پلي کېږي.',
+  'Local-first supplier management': 'د عرضه کوونکو محلي-لومړی مدیریت',
+  'Offline-ready supplier maintenance': 'د عرضه کوونکو آفلاین چمتو مدیریت',
+  'Supplier changes are saved locally and sync automatically when a connection is available.':
+      'د عرضه کوونکو بدلونونه په محلي ډول ساتل کېږي او د انټرنېټ له شتون سره په اوتومات ډول همغږي کېږي.',
+  '{count} supplier change(s) are waiting to sync.':
+      '{count} د عرضه کوونکي بدلونونه د همغږۍ په تمه دي.',
+  'Supplier saved locally.': 'عرضه کوونکی په محلي ډول خوندي شو.',
+  'Supplier updated locally.': 'عرضه کوونکی په محلي ډول تازه شو.',
   'Add supplier': 'عرضه کوونکی زیاتول',
   'Edit supplier': 'عرضه کوونکی سمول',
   'Search suppliers...': 'عرضه کوونکي ولټوئ...',
