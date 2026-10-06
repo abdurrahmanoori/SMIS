@@ -17,6 +17,7 @@ import '../screens/product_prices_screen.dart';
 import '../screens/product_units_screen.dart';
 import '../screens/shops_screen.dart';
 import '../screens/stock_screen.dart';
+import '../screens/suppliers_screen.dart';
 import '../screens/location_management_screen.dart';
 import '../screens/users_screen.dart';
 import '../screens/unit_of_measures_screen.dart';
@@ -65,6 +66,9 @@ class AppDrawer extends ConsumerWidget {
     );
     final canViewInventory = session.canViewComponent(
       ApplicationComponentKeys.inventory,
+    );
+    final canViewSuppliers = session.canViewComponent(
+      ApplicationComponentKeys.suppliers,
     );
 
     return Drawer(
@@ -200,6 +204,19 @@ class AppDrawer extends ConsumerWidget {
                 Navigator.of(context).pushReplacement(
                   MaterialPageRoute<void>(
                     builder: (context) => const StockScreen(),
+                  ),
+                );
+              },
+            ),
+          if (canViewSuppliers)
+            ListTile(
+              leading: const Icon(Icons.local_shipping_outlined),
+              title: Text(l10n.text('Suppliers')),
+              onTap: () {
+                Navigator.of(context).pop();
+                Navigator.of(context).pushReplacement(
+                  MaterialPageRoute<void>(
+                    builder: (context) => const SuppliersScreen(),
                   ),
                 );
               },

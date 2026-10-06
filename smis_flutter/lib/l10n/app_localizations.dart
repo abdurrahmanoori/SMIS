@@ -3,6 +3,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'user_management_translations.dart';
 import 'stock_additional_translations.dart';
+import 'supplier_translations.dart';
 
 class AppLocalizations {
   AppLocalizations(this.locale);
@@ -21,6 +22,7 @@ class AppLocalizations {
     'fa': {
       ...userManagementFaTranslations,
       ...stockAdditionalFaTranslations,
+      ...supplierFaTranslations,
       'English': 'English',
       'Dari': 'دری',
       'Pashto': 'پښتو',
@@ -263,6 +265,7 @@ class AppLocalizations {
     'ps': {
       ...userManagementPsTranslations,
       ...stockAdditionalPsTranslations,
+      ...supplierPsTranslations,
       'English': 'English',
       'Dari': 'دری',
       'Pashto': 'پښتو',

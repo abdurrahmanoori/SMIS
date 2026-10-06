@@ -160,6 +160,9 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen>
                 canDelete: permission.canDelete,
                 onEdit: _edit,
                 onDelete: _delete,
+                onLoadMore: () {
+                  ref.read(productControllerProvider.notifier).loadNextPage();
+                },
               ),
             ),
           ),
@@ -287,6 +290,7 @@ class _Content extends StatelessWidget {
     required this.canDelete,
     required this.onEdit,
     required this.onDelete,
+    required this.onLoadMore,
   });
 
   final ProductScreenState state;
@@ -297,6 +301,7 @@ class _Content extends StatelessWidget {
   final bool canDelete;
   final ValueChanged<Product> onEdit;
   final ValueChanged<Product> onDelete;
+  final VoidCallback onLoadMore;
 
   @override
   Widget build(BuildContext context) => Column(
@@ -334,6 +339,23 @@ class _Content extends StatelessWidget {
                 },
               ),
       ),
+      if (state.hasNextPage)
+        SafeArea(
+          top: false,
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
+            child: FilledButton.tonalIcon(
+              onPressed: state.isLoadingMore ? null : onLoadMore,
+              icon: state.isLoadingMore
+                  ? const SizedBox.square(
+                      dimension: 18,
+                      child: CircularProgressIndicator(strokeWidth: 2),
+                    )
+                  : const Icon(Icons.expand_more),
+              label: Text(context.l10n.text('Load more')),
+            ),
+          ),
+        ),
     ],
   );
 

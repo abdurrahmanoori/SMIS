@@ -20,7 +20,7 @@ public class Product : BaseSyncableAuditableEntity, IEntity, IShopEntity
     public string BaseUnitId { get; private set; } = string.Empty;
 
     // Denormalized display labels are convenience snapshots for DTO/sync flows.
-    // Their corresponding foreign-key IDs remain the source of relationship truth.
+    // Their corresponding foreign-key IDs remain the source of relationship truth..
     public string? BaseUnitName { get; set; }
     public string? Description { get; private set; }
     public bool IsActive { get; private set; } = true;
