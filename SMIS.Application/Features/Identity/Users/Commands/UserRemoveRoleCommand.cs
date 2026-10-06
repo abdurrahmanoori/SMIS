@@ -48,7 +48,8 @@ namespace SMIS.Application.Features.Identity.Users.Commands
                     "You are not allowed to change roles for this user.");
             }
 
-            var role = SD.GetCanonicalRole(request.Role);
+            var role = string.IsNullOrWhiteSpace(request.Role) ? null :
+                (await _roleManager.FindByNameAsync(request.Role.Trim()))?.Name;
             if (role is null || !await _roleManager.RoleExistsAsync(role))
                 return Result.BusinessRule("InvalidRole", "The requested role is not configured.");
 

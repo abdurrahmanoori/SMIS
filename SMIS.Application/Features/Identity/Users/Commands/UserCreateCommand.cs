@@ -1,4 +1,5 @@
 using MediatR;
+using SMIS.Application.Identity.Services;
 using Microsoft.AspNetCore.Identity;
 using SMIS.Application.Common.Contants;
 using SMIS.Application.Common.Response;
@@ -73,15 +74,13 @@ namespace SMIS.Application.Features.Identity.Users.Commands
                 var requestedRoles = request.UserCreateDto.Roles
                     .Distinct(StringComparer.OrdinalIgnoreCase)
                     .ToArray();
-                var canonicalRoles = requestedRoles
-                    .Select(SD.GetCanonicalRole)
-                    .ToArray();
+                var canonicalRoles = await ConfiguredRoleLookup.ResolveAsync(_roleManager, requestedRoles);
 
                 if (canonicalRoles.Any(role => role is null))
                 {
                     return Result<UserDto>.BusinessRule(
                         "InvalidRole",
-                        $"Roles must be one of: {string.Join(", ", SD.AllRoles)}.");
+                        "One or more requested roles are not configured.");
                 }
 
                 roles = canonicalRoles.Cast<string>().ToArray();

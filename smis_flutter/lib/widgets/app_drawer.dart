@@ -22,6 +22,7 @@ import '../screens/suppliers_screen.dart';
 import '../screens/location_management_screen.dart';
 import '../screens/users_screen.dart';
 import '../screens/permission_management_screen.dart';
+import '../screens/task_role_management_screen.dart';
 import '../screens/unit_of_measures_screen.dart';
 import '../l10n/app_localizations.dart';
 import '../models/application_component_keys.dart';
@@ -261,6 +262,19 @@ class AppDrawer extends ConsumerWidget {
                 Navigator.of(context).push(
                   MaterialPageRoute<void>(
                     builder: (_) => const PermissionManagementScreen(),
+                  ),
+                );
+              },
+            ),
+          if (session.isSuperAdmin)
+            ListTile(
+              leading: const Icon(Icons.rule_outlined),
+              title: Text(l10n.text('Tasks and roles')),
+              onTap: () {
+                Navigator.of(context).pop();
+                Navigator.of(context).push(
+                  MaterialPageRoute<void>(
+                    builder: (_) => const TaskRoleManagementScreen(),
                   ),
                 );
               },

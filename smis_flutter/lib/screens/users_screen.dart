@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../controllers/auth_controller.dart';
 import '../data/data_exception.dart';
 import '../data/user_management_api.dart';
+import '../data/permission_administration_api.dart';
 import '../l10n/app_localizations.dart';
 import '../models/managed_user.dart';
 import '../validation/user_management_validation.dart';
@@ -34,6 +35,7 @@ class _UsersScreenState extends ConsumerState<UsersScreen> {
     'Viewer',
   ];
 
+  List<String> _configuredRoles = List.of(_roles);
   ManagedUserPage? _page;
   List<UserShopOption> _shops = const [];
   final _searchController = TextEditingController();
@@ -122,8 +124,14 @@ class _UsersScreenState extends ConsumerState<UsersScreen> {
                 name: _resolveCurrentShopName(page, session.shopId),
               ),
             ];
+      final configuredRoles = session.isSuperAdmin
+          ? (await PermissionAdministrationApi(
+              token: session.token,
+            ).getRoles()).map((r) => r.name).toList()
+          : List<String>.of(_roles);
       if (!mounted || requestId != _loadRequestId) return;
       setState(() {
+        _configuredRoles = configuredRoles;
         _page = page;
         _shops = shops;
         _loading = false;
@@ -151,7 +159,7 @@ class _UsersScreenState extends ConsumerState<UsersScreen> {
     if (session == null) return;
 
     final assignableRoles = session.isSuperAdmin
-        ? _roles
+        ? _configuredRoles
         : _roles
               .where((role) => role.toLowerCase() != 'superadmin')
               .toList(growable: false);
@@ -229,7 +237,7 @@ class _UsersScreenState extends ConsumerState<UsersScreen> {
     if (session == null) return;
 
     final assignableRoles = session.isSuperAdmin
-        ? _roles
+        ? _configuredRoles
         : _roles
               .where((role) => role.toLowerCase() != 'superadmin')
               .toList(growable: false);
