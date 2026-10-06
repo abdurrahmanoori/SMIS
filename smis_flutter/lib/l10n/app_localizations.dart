@@ -5,6 +5,7 @@ import 'user_management_translations.dart';
 import 'stock_additional_translations.dart';
 import 'supplier_translations.dart';
 import 'purchasing_translations.dart';
+import 'permission_management_translations.dart';
 
 class AppLocalizations {
   AppLocalizations(this.locale);
@@ -25,6 +26,7 @@ class AppLocalizations {
       ...stockAdditionalFaTranslations,
       ...supplierFaTranslations,
       ...purchasingFaTranslations,
+      ...permissionManagementFaTranslations,
       'English': 'English',
       'Dari': 'دری',
       'Pashto': 'پښتو',
@@ -269,6 +271,7 @@ class AppLocalizations {
       ...stockAdditionalPsTranslations,
       ...supplierPsTranslations,
       ...purchasingPsTranslations,
+      ...permissionManagementPsTranslations,
       'English': 'English',
       'Dari': 'دری',
       'Pashto': 'پښتو',
