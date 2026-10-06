@@ -69,7 +69,8 @@ public sealed class UserAdministrationGuard : IUserAdministrationGuard
         if (!string.Equals(signedInUser.ShopId, shopId, StringComparison.Ordinal))
             return false;
 
-        return !roles.Contains(SD.Role_Super_Admin, StringComparer.OrdinalIgnoreCase);
+        return roles.All(role => SD.GetCanonicalRole(role) is not null &&
+                                 !string.Equals(role, SD.Role_Super_Admin, StringComparison.OrdinalIgnoreCase));
     }
 
     public async Task<bool> CanAssignRolesAsync(
@@ -87,7 +88,8 @@ public sealed class UserAdministrationGuard : IUserAdministrationGuard
         if (await _userManager.IsInRoleAsync(signedInUser, SD.Role_Super_Admin))
             return true;
 
-        return !roles.Contains(SD.Role_Super_Admin, StringComparer.OrdinalIgnoreCase);
+        return roles.All(role => SD.GetCanonicalRole(role) is not null &&
+                                 !string.Equals(role, SD.Role_Super_Admin, StringComparison.OrdinalIgnoreCase));
     }
 
     public async Task<bool> WouldRemoveLastSuperAdminAsync(
