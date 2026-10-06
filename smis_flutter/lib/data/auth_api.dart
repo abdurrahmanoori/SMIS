@@ -4,6 +4,7 @@ import '../config/app_config.dart';
 import '../models/auth_session.dart';
 import '../models/component_permission.dart';
 import '../services/auth_session_store.dart';
+import '../services/auth_token_refresher.dart';
 import 'data_exception.dart';
 
 abstract interface class AuthApi {
@@ -87,11 +88,19 @@ class DioAuthApi implements AuthApi {
     }
 
     try {
-      final response = await _dio.post<Map<String, dynamic>>(
-        AppConfig.switchShopEndpoint,
-        data: {'shopId': shopId},
-        options: Options(headers: {'Authorization': 'Bearer ${current.token}'}),
-      );
+      Response<Map<String, dynamic>> response;
+      var active = current;
+      try {
+        response = await _switchShopRequest(shopId, active.token);
+      } on DioException catch (error) {
+        if (error.response?.statusCode != 401) rethrow;
+        active = await AuthTokenRefresher.refresh(
+          _sessionStore,
+          failedToken: active.token,
+          userId: active.userId,
+        );
+        response = await _switchShopRequest(shopId, active.token);
+      }
       final data = response.data;
       if (data == null) {
         throw const AuthenticationException(
@@ -99,7 +108,7 @@ class DioAuthApi implements AuthApi {
         );
       }
       return _withPermissions(
-        AuthSession.fromJson(data).copyWith(refreshToken: current.refreshToken),
+        AuthSession.fromJson(data).copyWith(refreshToken: active.refreshToken),
       );
     } catch (error, stackTrace) {
       ApiErrorParser.mapAndThrow(
@@ -120,23 +129,21 @@ class DioAuthApi implements AuthApi {
     }
 
     try {
-      final response = await _dio.post<Map<String, dynamic>>(
-        AppConfig.refreshTokenEndpoint,
-        data: {'refreshToken': current.refreshToken, 'shopId': current.shopId},
+      final refreshed = await AuthTokenRefresher.refresh(
+        _sessionStore,
+        failedToken: current.token,
+        userId: current.userId,
       );
-      final data = response.data;
-      if (data == null) {
-        throw const AuthenticationException(
-          'The session refresh response was empty.',
-        );
+      final withPermissions = await _withPermissions(refreshed);
+      final latest = await _sessionStore.read();
+      if (latest == null || latest.userId != refreshed.userId) {
+        throw const AuthenticationException('The signed-in session changed.');
       }
-      final refreshed = AuthSession.fromJson(data);
-      if (refreshed.refreshToken.isEmpty) {
-        throw const AuthenticationException(
-          'The refresh response did not include a refresh token.',
-        );
-      }
-      return _withPermissions(refreshed);
+      return latest.copyWith(
+        permissions: withPermissions.permissions,
+        taskPermissions: withPermissions.taskPermissions,
+        taskPermissionsLoaded: true,
+      );
     } catch (error, stackTrace) {
       ApiErrorParser.mapAndThrow(
         error,
@@ -145,6 +152,15 @@ class DioAuthApi implements AuthApi {
       );
     }
   }
+
+  Future<Response<Map<String, dynamic>>> _switchShopRequest(
+    String shopId,
+    String token,
+  ) => _dio.post<Map<String, dynamic>>(
+    AppConfig.switchShopEndpoint,
+    data: {'shopId': shopId},
+    options: Options(headers: {'Authorization': 'Bearer $token'}),
+  );
 
   @override
   Future<void> revokeRefreshToken() async {
