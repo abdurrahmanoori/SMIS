@@ -8,5 +8,6 @@ class ApplicationComponentKeys {
   static const productUnits = 'ProductUnits';
   static const productPrices = 'ProductPrices';
   static const suppliers = 'Suppliers';
+  static const purchasing = 'Purchasing';
   static const inventory = 'Inventory';
 }

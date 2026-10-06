@@ -30,6 +30,7 @@ class AppConfig {
   static const productUnitEndpoint = '/api/ProductUnit';
   static const productPriceEndpoint = '/api/ProductPrice';
   static const supplierEndpoint = '/api/Supplier';
+  static const purchaseOrderEndpoint = '/api/PurchaseOrder';
   static const provinceEndpoint = '/api/Province';
   static const districtEndpoint = '/api/District';
   static const stockBatchEndpoint = '/api/StockBatch';

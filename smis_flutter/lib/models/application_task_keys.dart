@@ -12,4 +12,8 @@ class ApplicationTaskKeys {
   static const completeStockCount = 'Inventory.CompleteStockCount';
   static const cancelStockCount = 'Inventory.CancelStockCount';
   static const reverseStockMovement = 'Inventory.ReverseStockMovement';
+  static const receivePurchaseOrder = 'Purchasing.ReceivePurchaseOrder';
+  static const processPurchaseOrderSupplierReturn =
+      'Purchasing.ProcessSupplierReturn';
+  static const cancelPurchaseOrder = 'Purchasing.CancelPurchaseOrder';
 }
