@@ -143,5 +143,6 @@ class AppPowerSyncConnector extends PowerSyncBackendConnector {
     'product',
     'product_unit',
     'product_price',
+    'supplier',
   };
 }

@@ -48,6 +48,7 @@ public sealed class PurchaseOrderConfiguration : IEntityTypeConfiguration<Purcha
         builder.Property(order => order.OrderedAtUtc).IsRequired();
         builder.Property(order => order.Status).IsRequired().HasConversion<string>().HasMaxLength(30);
         builder.Property(order => order.Notes).HasMaxLength(500);
+        builder.Property(order => order.Version).IsConcurrencyToken();
 
         builder.HasOne(order => order.Shop)
             .WithMany()

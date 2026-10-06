@@ -54,7 +54,9 @@ public sealed class PurchaseOrder : BaseAuditableEntity, IShopEntity
     public void RefreshReceiptStatus()
     {
         if (Status == PurchaseOrderStatus.Cancelled)
-            return;
+            throw new DomainValidationException("A cancelled purchase order cannot receive stock");
+
+        Version++;
 
         if (Lines.Count > 0 && Lines.All(line => line.ReceivedQuantityEntered >= line.OrderedQuantityEntered))
         {
@@ -69,10 +71,13 @@ public sealed class PurchaseOrder : BaseAuditableEntity, IShopEntity
 
     public void Cancel()
     {
+        if (Status == PurchaseOrderStatus.Cancelled)
+            throw new DomainValidationException("The purchase order is already cancelled");
         if (Lines.Any(line => line.ReceivedQuantityEntered > 0))
             throw new DomainValidationException("A purchase order with received stock cannot be cancelled");
 
         Status = PurchaseOrderStatus.Cancelled;
+        Version++;
     }
 }
 

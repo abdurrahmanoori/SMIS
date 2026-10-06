@@ -12,6 +12,8 @@ public sealed class IdempotencyRecord : BaseAuditableEntityWithoutName
     public string ActorId { get; private set; } = string.Empty;
     public string Scope { get; private set; } = string.Empty;
     public string Key { get; private set; } = string.Empty;
+    public string? RequestHash { get; private set; }
+    public string? ResponseJson { get; private set; }
 
     internal IdempotencyRecord()
     {
@@ -20,7 +22,8 @@ public sealed class IdempotencyRecord : BaseAuditableEntityWithoutName
     public static IdempotencyRecord Create(
         string actorId,
         string scope,
-        string key
+        string key,
+        string? requestHash = null
     )
     {
         if (string.IsNullOrWhiteSpace(actorId))
@@ -34,7 +37,15 @@ public sealed class IdempotencyRecord : BaseAuditableEntityWithoutName
         {
             ActorId = actorId.Trim(),
             Scope = scope.Trim(),
-            Key = key.Trim()
+            Key = key.Trim(),
+            RequestHash = requestHash
         };
+    }
+
+    public void Complete(string responseJson)
+    {
+        if (string.IsNullOrWhiteSpace(responseJson) || ResponseJson is not null)
+            throw new DomainValidationException("An idempotency result can only be recorded once");
+        ResponseJson = responseJson;
     }
 }

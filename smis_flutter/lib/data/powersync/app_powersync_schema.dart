@@ -68,6 +68,14 @@ const appPowerSyncSchema = Schema([
     Column.text('end_date'),
     Column.text('last_modified_utc'),
   ], trackPreviousValues: _trackTimestamp),
+  Table('supplier', [
+    Column.text('shop_id'),
+    Column.text('name'),
+    Column.text('phone_number'),
+    Column.text('notes'),
+    Column.integer('is_active'),
+    Column.text('last_modified_utc'),
+  ], trackPreviousValues: _trackTimestamp),
   Table.localOnly('sync_error', [
     Column.text('table_name'),
     Column.text('record_id'),
