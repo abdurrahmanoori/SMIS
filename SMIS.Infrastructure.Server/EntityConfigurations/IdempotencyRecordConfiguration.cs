@@ -17,6 +17,8 @@ public sealed class IdempotencyRecordConfiguration : IEntityTypeConfiguration<Id
         builder.Property(record => record.ActorId).IsRequired().HasMaxLength(450);
         builder.Property(record => record.Scope).IsRequired().HasMaxLength(100);
         builder.Property(record => record.Key).IsRequired().HasMaxLength(200);
+        builder.Property(record => record.RequestHash).HasMaxLength(64);
+        builder.Property(record => record.ResponseJson).HasColumnType("nvarchar(max)");
 
         builder.HasIndex(record => new { record.ActorId, record.Scope, record.Key })
             .IsUnique()

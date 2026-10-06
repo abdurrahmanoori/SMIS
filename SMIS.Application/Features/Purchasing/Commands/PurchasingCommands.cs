@@ -157,12 +157,15 @@ internal sealed class PurchasingCommandHandler :
             return Result<PurchaseOrderDto>.Forbidden("purchase_order.shop_context_required",
                 "An active shop is required.");
 
-        var reservation = await _idempotency.ReserveAsync(
+        var reservation = await _idempotency.BeginReplayableAsync(
             "purchase-order:create",
             dto.IdempotencyKey,
+            new { ShopId = shopId, Request = dto },
             cancellationToken);
         if (!reservation.IsSuccess)
-            return Failure<PurchaseOrderDto, bool>(reservation);
+            return Failure<PurchaseOrderDto, IdempotencyRecord?>(reservation);
+        if (reservation.Value?.ResponseJson is not null)
+            return _idempotency.Replay<PurchaseOrderDto>(reservation.Value);
 
         var supplier = await _db.Suppliers.FirstOrDefaultAsync(
             item => item.Id == dto.SupplierId && item.ShopId == shopId,
@@ -215,9 +218,11 @@ internal sealed class PurchasingCommandHandler :
 
         order.Supplier = supplier;
         await _db.PurchaseOrders.AddAsync(order, cancellationToken);
+        var response = PurchasingDtoMapper.ToDto(order);
+        _idempotency.Complete(reservation.Value, response);
         await _unitOfWork.SaveChanges(cancellationToken);
 
-        return Result<PurchaseOrderDto>.Success(PurchasingDtoMapper.ToDto(order));
+        return Result<PurchaseOrderDto>.Success(response);
     }
 
     public async Task<Result<PurchaseOrderDto>> Handle(
@@ -228,16 +233,18 @@ internal sealed class PurchasingCommandHandler :
         var order = await LoadOrderAsync(request.Id, cancellationToken);
         if (order is null)
             return Result<PurchaseOrderDto>.NotFound(request.Id);
+        var reservation = await _idempotency.BeginReplayableAsync(
+            $"purchase-order:receive:{order.Id}",
+            request.Dto.IdempotencyKey,
+            request.Dto,
+            cancellationToken);
+        if (!reservation.IsSuccess)
+            return Failure<PurchaseOrderDto, IdempotencyRecord?>(reservation);
+        if (reservation.Value?.ResponseJson is not null)
+            return _idempotency.Replay<PurchaseOrderDto>(reservation.Value);
         if (order.Status == PurchaseOrderStatus.Cancelled)
             return Result<PurchaseOrderDto>.BusinessRule("PurchaseOrderCancelled",
                 "A cancelled purchase order cannot receive stock.");
-
-        var reservation = await _idempotency.ReserveAsync(
-            $"purchase-order:receive:{order.Id}",
-            request.Dto.IdempotencyKey,
-            cancellationToken);
-        if (!reservation.IsSuccess)
-            return Failure<PurchaseOrderDto, bool>(reservation);
 
         if (request.Dto.Lines.Count == 0)
             return Result<PurchaseOrderDto>.BusinessRule("ReceiptLinesRequired",
@@ -283,8 +290,10 @@ internal sealed class PurchasingCommandHandler :
         }
 
         order.RefreshReceiptStatus();
+        var response = PurchasingDtoMapper.ToDto(order);
+        _idempotency.Complete(reservation.Value, response);
         await _unitOfWork.SaveChanges(cancellationToken);
-        return Result<PurchaseOrderDto>.Success(PurchasingDtoMapper.ToDto(order));
+        return Result<PurchaseOrderDto>.Success(response);
     }
 
     public async Task<Result<PurchaseOrderDto>> Handle(
@@ -297,12 +306,15 @@ internal sealed class PurchasingCommandHandler :
             return Result<PurchaseOrderDto>.NotFound(request.Id);
 
         var dto = request.Dto;
-        var reservation = await _idempotency.ReserveAsync(
+        var reservation = await _idempotency.BeginReplayableAsync(
             $"purchase-order:supplier-return:{order.Id}",
             dto.IdempotencyKey,
+            dto,
             cancellationToken);
         if (!reservation.IsSuccess)
-            return Failure<PurchaseOrderDto, bool>(reservation);
+            return Failure<PurchaseOrderDto, IdempotencyRecord?>(reservation);
+        if (reservation.Value?.ResponseJson is not null)
+            return _idempotency.Replay<PurchaseOrderDto>(reservation.Value);
 
         var line = order.Lines.FirstOrDefault(item => item.Id == dto.PurchaseOrderLineId);
         if (line is null)
@@ -345,8 +357,10 @@ internal sealed class PurchasingCommandHandler :
             return Failure<PurchaseOrderDto, StockMovement>(inventoryResult);
 
         line.RegisterSupplierReturn(dto.QuantityEntered);
+        var response = PurchasingDtoMapper.ToDto(order);
+        _idempotency.Complete(reservation.Value, response);
         await _unitOfWork.SaveChanges(cancellationToken);
-        return Result<PurchaseOrderDto>.Success(PurchasingDtoMapper.ToDto(order));
+        return Result<PurchaseOrderDto>.Success(response);
     }
 
     public async Task<Result<PurchaseOrderDto>> Handle(

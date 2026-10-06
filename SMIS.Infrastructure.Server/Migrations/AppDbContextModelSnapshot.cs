@@ -685,6 +685,13 @@ namespace SMIS.Infrastructure.Server.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("RequestHash")
+                        .HasMaxLength(64)
+                        .HasColumnType("nvarchar(64)");
+
+                    b.Property<string>("ResponseJson")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Scope")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -6325,6 +6332,7 @@ namespace SMIS.Infrastructure.Server.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<int>("Version")
+                        .IsConcurrencyToken()
                         .HasColumnType("int");
 
                     b.HasKey("Id");
