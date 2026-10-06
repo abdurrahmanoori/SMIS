@@ -21,6 +21,7 @@ import '../screens/stock_screen.dart';
 import '../screens/suppliers_screen.dart';
 import '../screens/location_management_screen.dart';
 import '../screens/users_screen.dart';
+import '../screens/permission_management_screen.dart';
 import '../screens/unit_of_measures_screen.dart';
 import '../l10n/app_localizations.dart';
 import '../models/application_component_keys.dart';
@@ -247,6 +248,19 @@ class AppDrawer extends ConsumerWidget {
                 Navigator.of(context).pushReplacement(
                   MaterialPageRoute<void>(
                     builder: (context) => const LocationManagementScreen(),
+                  ),
+                );
+              },
+            ),
+          if (session.isSuperAdmin)
+            ListTile(
+              leading: const Icon(Icons.admin_panel_settings_outlined),
+              title: Text(l10n.text('Permission management')),
+              onTap: () {
+                Navigator.of(context).pop();
+                Navigator.of(context).push(
+                  MaterialPageRoute<void>(
+                    builder: (_) => const PermissionManagementScreen(),
                   ),
                 );
               },
