@@ -131,8 +131,9 @@ class AuthController extends Notifier<AuthState> {
   }
 
   Future<void> switchAccount(String userId) async {
-    final target = state.savedSessions.firstWhere((s) => s.userId == userId);
-    final current = state.session;
+    final saved = await _sessionStore.readAll();
+    final target = saved.firstWhere((s) => s.userId == userId);
+    final current = await _sessionStore.read();
     if (current?.userId == target.userId && current?.shopId == target.shopId) {
       return;
     }
@@ -323,8 +324,13 @@ class AuthController extends Notifier<AuthState> {
   Future<void> updateSessionProfile({String? userName, String? email}) async {
     final currentSession = state.session;
     if (currentSession == null) return;
+    final storedSession = await _sessionStore.read();
+    if (storedSession == null ||
+        storedSession.userId != currentSession.userId) {
+      return;
+    }
 
-    final updatedSession = currentSession.copyWith(
+    final updatedSession = storedSession.copyWith(
       userName: userName,
       email: email,
     );

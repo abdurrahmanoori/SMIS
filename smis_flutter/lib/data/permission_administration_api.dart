@@ -1,6 +1,8 @@
 import 'package:dio/dio.dart';
 import '../config/app_config.dart';
 import '../models/permission_administration.dart';
+import '../services/auth_session_store.dart';
+import '../services/bearer_token_interceptor.dart';
 import 'data_exception.dart';
 
 class PermissionAdministrationApi {
@@ -16,7 +18,11 @@ class PermissionAdministrationApi {
             'Authorization': 'Bearer $token',
           },
         ),
-      );
+      ) {
+    _dio.interceptors.add(
+      BearerTokenInterceptor(SecureAuthSessionStore(), fallbackToken: token),
+    );
+  }
   final Dio _dio;
   static const _path = '/api/permission-administration';
 

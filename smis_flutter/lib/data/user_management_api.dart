@@ -2,6 +2,8 @@ import 'package:dio/dio.dart';
 
 import '../config/app_config.dart';
 import '../models/managed_user.dart';
+import '../services/auth_session_store.dart';
+import '../services/bearer_token_interceptor.dart';
 import 'data_exception.dart';
 
 class UserManagementApi {
@@ -20,7 +22,11 @@ class UserManagementApi {
             ),
       );
 
-  UserManagementApi._(this._token, this._dio);
+  UserManagementApi._(this._token, this._dio) {
+    _dio.interceptors.add(
+      BearerTokenInterceptor(SecureAuthSessionStore(), fallbackToken: _token),
+    );
+  }
 
   final String _token;
   final Dio _dio;
