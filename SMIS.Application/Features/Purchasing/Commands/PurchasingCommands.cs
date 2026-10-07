@@ -190,6 +190,8 @@ internal sealed class PurchasingCommandHandler :
             dto.OrderedAtUtc ?? DateTimeService.NowUtc,
             dto.ReferenceNumber,
             dto.Notes);
+        if (!string.IsNullOrWhiteSpace(dto.Id))
+            order.Id = dto.Id.Trim();
 
         foreach (var lineDto in dto.Lines)
         {
@@ -211,6 +213,8 @@ internal sealed class PurchasingCommandHandler :
                 lineDto.ProductUnitId,
                 lineDto.QuantityEntered,
                 lineDto.UnitCostBase);
+            if (!string.IsNullOrWhiteSpace(lineDto.Id))
+                orderLine.Id = lineDto.Id.Trim();
             orderLine.Product = productUnit.Product;
             orderLine.ProductUnit = productUnit;
             order.Lines.Add(orderLine);
@@ -371,6 +375,9 @@ internal sealed class PurchasingCommandHandler :
         var order = await LoadOrderAsync(request.Id, cancellationToken);
         if (order is null)
             return Result<PurchaseOrderDto>.NotFound(request.Id);
+
+        if (order.Status == PurchaseOrderStatus.Cancelled)
+            return Result<PurchaseOrderDto>.Success(PurchasingDtoMapper.ToDto(order));
 
         order.Cancel();
         await _unitOfWork.SaveChanges(cancellationToken);

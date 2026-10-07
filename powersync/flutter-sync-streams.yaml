@@ -142,3 +142,39 @@ streams:
       FROM "Supplier" AS supplier
       WHERE supplier."ShopId" = auth.parameter('ShopId')
         AND supplier."IsDeleted" = 0
+
+  shop_purchase_orders:
+    auto_subscribe: true
+    query: |
+      SELECT
+        purchase_order."Id" AS id,
+        purchase_order."ShopId" AS shop_id,
+        purchase_order."SupplierId" AS supplier_id,
+        purchase_order."ReferenceNumber" AS reference_number,
+        purchase_order."OrderedAtUtc" AS ordered_at_utc,
+        purchase_order."Status" AS status,
+        purchase_order."Notes" AS notes,
+        purchase_order."LastModifiedUtc" AS last_modified_utc
+      FROM "PurchaseOrder" AS purchase_order
+      WHERE purchase_order."ShopId" = auth.parameter('ShopId')
+        AND purchase_order."IsDeleted" = 0
+
+  shop_purchase_order_lines:
+    auto_subscribe: true
+    query: |
+      SELECT
+        purchase_order_line."Id" AS id,
+        purchase_order_line."PurchaseOrderId" AS purchase_order_id,
+        purchase_order_line."ProductId" AS product_id,
+        purchase_order_line."ProductUnitId" AS product_unit_id,
+        purchase_order_line."OrderedQuantityEntered" AS ordered_quantity_entered,
+        purchase_order_line."ReceivedQuantityEntered" AS received_quantity_entered,
+        purchase_order_line."ReturnedQuantityEntered" AS returned_quantity_entered,
+        purchase_order_line."UnitCostBase" AS unit_cost_base,
+        purchase_order_line."LastModifiedUtc" AS last_modified_utc
+      FROM "PurchaseOrderLine" AS purchase_order_line
+      INNER JOIN "PurchaseOrder" AS purchase_order
+        ON purchase_order."Id" = purchase_order_line."PurchaseOrderId"
+      WHERE purchase_order."ShopId" = auth.parameter('ShopId')
+        AND purchase_order."IsDeleted" = 0
+        AND purchase_order_line."IsDeleted" = 0

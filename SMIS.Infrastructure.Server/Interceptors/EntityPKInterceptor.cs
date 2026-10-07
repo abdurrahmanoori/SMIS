@@ -2,14 +2,13 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using SMIS.Application.Services;
 using SMIS.Domain.Common.Interfaces;
-using SMIS.Domain.Entities;
 
 namespace SMIS.Infrastructure.Server.Interceptors;
 
 /// <summary>
-/// Assigns public entity IDs immediately before persistence.
-/// Sync-capable entities keep valid client-supplied GUIDs so the same row has one stable
-/// identity on SQLite and SQL Server; other entities use the configured ID generator.
+/// Assigns a public entity ID only when an entity does not already have one.
+/// BaseEntity and offline clients create stable GUID identities before persistence;
+/// persistence must never replace an established identity.
 /// </summary>
 public class EntityPKInterceptor : SaveChangesInterceptor
 {
@@ -37,28 +36,7 @@ public class EntityPKInterceptor : SaveChangesInterceptor
         {
             if (entry.State == EntityState.Added)
             {
-                // Sync IDs are validated GUIDs and form the stable key shared by
-                // offline clients and the server. Never replace them.
-                var preservesClientSyncId = entry.Entity is Category
-                    or Shop
-                    or Customer
-                    or Product
-                    or UnitOfMeasure
-                    or ProductUnit
-                    or ProductPrice;
-
-                if (preservesClientSyncId && Guid.TryParse(entry.Entity.Id, out _))
-                    continue;
-
-                // In DEBUG mode, we also replace auto-generated GUIDs (from EntityPK base class default)
-                // with sequential numeric IDs for easier testing and readability.
-                // In Release (production), we only generate an ID when it is truly empty,
-                // preserving any GUID set by either the client or the server.
-#if DEBUG
-                if (string.IsNullOrEmpty(entry.Entity.Id) || Guid.TryParse(entry.Entity.Id, out _))
-#else
                 if (string.IsNullOrEmpty(entry.Entity.Id))
-#endif
                 {
                     var generated = _publicIdGenerator.Generate();
                     if (!string.IsNullOrEmpty(generated))
@@ -67,7 +45,6 @@ public class EntityPKInterceptor : SaveChangesInterceptor
                         await AssignSequenceNumber(entry.Entity, context);
                 }
             }
-
         }
 
         return await base.SavingChangesAsync(eventData, result, cancellationToken);

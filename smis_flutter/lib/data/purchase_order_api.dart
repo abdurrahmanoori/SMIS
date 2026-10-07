@@ -31,6 +31,33 @@ class PurchaseOrderApi {
   static const _uuid = Uuid();
   final Map<String, String> _retryKeys = {};
 
+  /// Dispatches a command already persisted in the local purchase-order outbox.
+  /// The outbox owns the stable idempotency key and command ordering.
+  Future<void> sendQueued(
+    String kind,
+    String aggregateId,
+    Map<String, dynamic> payload,
+  ) => _request(() async {
+    final path = switch (kind) {
+      'create' => AppConfig.purchaseOrderEndpoint,
+      'receive' => '${AppConfig.purchaseOrderEndpoint}/$aggregateId/receipts',
+      'supplier-return' =>
+        '${AppConfig.purchaseOrderEndpoint}/$aggregateId/supplier-returns',
+      'cancel' => '${AppConfig.purchaseOrderEndpoint}/$aggregateId/cancel',
+      _ => throw ArgumentError.value(
+        kind,
+        'kind',
+        'Unknown purchase-order command',
+      ),
+    };
+
+    if (kind == 'cancel') {
+      await _dio.post<Object?>(path);
+      return;
+    }
+    await _dio.post<Object?>(path, data: payload);
+  });
+
   Future<T> _request<T>(Future<T> Function() action) async {
     try {
       return await action();

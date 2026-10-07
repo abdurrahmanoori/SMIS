@@ -38,6 +38,9 @@ public sealed class PurchaseOrderCreateCommandValidator : AbstractValidator<Purc
 {
     public PurchaseOrderCreateCommandValidator()
     {
+        RuleFor(command => command.Dto.Id)
+            .Must(id => id is null || Guid.TryParse(id, out _))
+            .WithMessage("Purchase order ID must be a valid GUID when supplied.");
         RuleFor(command => command.Dto.SupplierId).NotEmpty().MaximumLength(450);
         RuleFor(command => command.Dto.ReferenceNumber).MaximumLength(100);
         RuleFor(command => command.Dto.Notes).MaximumLength(500);
@@ -48,6 +51,9 @@ public sealed class PurchaseOrderCreateCommandValidator : AbstractValidator<Purc
         RuleFor(command => command.Dto.Lines).NotEmpty();
         RuleForEach(command => command.Dto.Lines).ChildRules(line =>
         {
+            line.RuleFor(item => item.Id)
+                .Must(id => id is null || Guid.TryParse(id, out _))
+                .WithMessage("Purchase order line ID must be a valid GUID when supplied.");
             line.RuleFor(item => item.ProductId).NotEmpty().MaximumLength(450);
             line.RuleFor(item => item.ProductUnitId).NotEmpty().MaximumLength(450);
             line.RuleFor(item => item.QuantityEntered).GreaterThan(0);

@@ -33,6 +33,7 @@ public sealed class SupplierDto
 
 public sealed class PurchaseOrderCreateDto
 {
+    public string? Id { get; set; }
     public string SupplierId { get; set; } = string.Empty;
     public string? ReferenceNumber { get; set; }
     public DateTime? OrderedAtUtc { get; set; }
@@ -43,6 +44,7 @@ public sealed class PurchaseOrderCreateDto
 
 public sealed class PurchaseOrderLineCreateDto
 {
+    public string? Id { get; set; }
     public string ProductId { get; set; } = string.Empty;
     public string ProductUnitId { get; set; } = string.Empty;
     public decimal QuantityEntered { get; set; }
