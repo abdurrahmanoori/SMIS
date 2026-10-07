@@ -1,13 +1,16 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../controllers/auth_controller.dart';
+import '../controllers/app_dependencies.dart';
 import '../controllers/product_controller.dart';
 import '../controllers/product_unit_controller.dart';
 import '../controllers/supplier_controller.dart';
 import '../controllers/unit_of_measure_controller.dart';
 import '../data/data_exception.dart';
-import '../data/purchase_order_api.dart';
+import '../data/purchase_order_offline_store.dart';
 import '../data/stock_api.dart';
 import '../l10n/app_localizations.dart';
 import '../models/application_component_keys.dart';
@@ -24,8 +27,8 @@ import '../widgets/home_action.dart';
 import '../widgets/locale_action.dart';
 import '../widgets/theme_mode_action.dart';
 
-final purchaseOrderApiProvider = Provider<PurchaseOrderApi>(
-  (ref) => PurchaseOrderApi(),
+final purchaseOrderStoreProvider = Provider<PurchaseOrderOfflineStore>(
+  (ref) => ref.watch(appPowerSyncDatabaseProvider).purchaseOrderStore,
 );
 
 class PurchaseOrdersScreen extends ConsumerWidget {
@@ -95,50 +98,37 @@ class _PurchaseOrdersContentState
     extends ConsumerState<_PurchaseOrdersContent> {
   late Future<List<PurchaseOrder>> _orders;
   final _items = <PurchaseOrder>[];
-  int _page = 1;
-  bool _hasMore = false;
   bool _busy = false;
 
-  PurchaseOrderApi get _api => ref.read(purchaseOrderApiProvider);
+  PurchaseOrderOfflineStore get _store => ref.read(purchaseOrderStoreProvider);
 
   @override
   void initState() {
     super.initState();
-    _orders = _api.list();
+    _orders = _store.list(widget.shopId);
   }
 
   Future<void> _reload() async {
     setState(() {
-      _page = 1;
-      _orders = _api.list();
+      _orders = _store.list(widget.shopId);
     });
     await _orders;
   }
 
-  Future<void> _more() async {
-    if (_busy || !_hasMore) return;
-    setState(() => _busy = true);
-    try {
-      final next = await _api.list(page: _page + 1);
-      if (!mounted) return;
-      setState(() {
-        _items.addAll(next);
-        _page++;
-        _hasMore = next.length == 25;
-      });
-    } catch (error, stack) {
-      if (mounted) AppErrorNotification.show(context, error, stack);
-    } finally {
-      if (mounted) setState(() => _busy = false);
-    }
-  }
-
-  Future<void> _run(Future<PurchaseOrder> Function() action) async {
+  Future<void> _run(Future<void> Function() action) async {
     if (_busy) return;
     setState(() => _busy = true);
     try {
       await action();
       if (mounted) await _reload();
+      unawaited(
+        _store
+            .syncNow()
+            .then((_) {
+              if (mounted) _reload();
+            })
+            .catchError((Object _) {}),
+      );
     } catch (error, stack) {
       if (mounted) AppErrorNotification.show(context, error, stack);
     } finally {
@@ -178,7 +168,11 @@ class _PurchaseOrdersContentState
           ),
         ),
       );
-      if (payload != null && mounted) await _run(() => _api.create(payload));
+      if (payload != null && mounted) {
+        await _run(() async {
+          await _store.enqueueCreate(payload);
+        });
+      }
     } catch (error, stack) {
       if (mounted) AppErrorNotification.show(context, error, stack);
     }
@@ -193,7 +187,9 @@ class _PurchaseOrdersContentState
       builder: (_) => _ReceiveDialog(lines: lines),
     );
     if (payload != null && mounted) {
-      await _run(() => _api.receive(order.id, payload));
+      await _run(() async {
+        await _store.enqueue(order.id, 'receive', payload);
+      });
     }
   }
 
@@ -204,10 +200,31 @@ class _PurchaseOrdersContentState
           .toList();
       final batches = <String, List<String>>{};
       for (final line in lines) {
-        batches[line.id] = await _api.receivedBatchIds(line.id);
+        final movements =
+            await ref
+                .read(appPowerSyncDatabaseProvider)
+                .stockStore
+                .cachedList('movements') ??
+            const <Map<String, dynamic>>[];
+        batches[line.id] = movements
+            .where(
+              (movement) =>
+                  stockText(movement, 'referenceType') == 'PurchaseOrderLine' &&
+                  stockText(movement, 'referenceId') == line.id &&
+                  stockText(movement, 'reason') == 'PurchaseReceipt',
+            )
+            .map((movement) => stockText(movement, 'stockBatchId'))
+            .where((id) => id.isNotEmpty)
+            .toSet()
+            .toList();
       }
       if (!mounted) return;
-      final stockBatches = await StockApi().batches();
+      final stockBatches =
+          await ref
+              .read(appPowerSyncDatabaseProvider)
+              .stockStore
+              .cachedList('batches') ??
+          const <Map<String, dynamic>>[];
       if (!mounted) return;
       final batchLabels = <String, String>{
         for (final batch in stockBatches)
@@ -225,7 +242,9 @@ class _PurchaseOrdersContentState
         ),
       );
       if (payload != null && mounted) {
-        await _run(() => _api.supplierReturn(order.id, payload));
+        await _run(() async {
+          await _store.enqueue(order.id, 'supplier-return', payload);
+        });
       }
     } catch (error, stack) {
       if (mounted) AppErrorNotification.show(context, error, stack);
@@ -254,7 +273,11 @@ class _PurchaseOrdersContentState
         ],
       ),
     );
-    if (confirmed == true && mounted) await _run(() => _api.cancel(order.id));
+    if (confirmed == true && mounted) {
+      await _run(() async {
+        await _store.enqueue(order.id, 'cancel', const {});
+      });
+    }
   }
 
   @override
@@ -299,12 +322,9 @@ class _PurchaseOrdersContentState
               if (!snapshot.hasData) {
                 return const Center(child: CircularProgressIndicator());
               }
-              if (_page == 1) {
-                _items
-                  ..clear()
-                  ..addAll(snapshot.data!);
-                _hasMore = snapshot.data!.length == 25;
-              }
+              _items
+                ..clear()
+                ..addAll(snapshot.data!);
               return RefreshIndicator(
                 onRefresh: _reload,
                 child: ListView(
@@ -315,12 +335,12 @@ class _PurchaseOrdersContentState
                         leading: const Icon(Icons.wifi),
                         title: Text(
                           context.l10n.text(
-                            'Purchase orders require a connection.',
+                            'Purchase orders are available offline.',
                           ),
                         ),
                         subtitle: Text(
                           context.l10n.text(
-                            'Supplier data is available offline; purchase transactions are posted to the server.',
+                            'Purchase actions are saved locally and synchronized in order when connected.',
                           ),
                         ),
                       ),
@@ -401,13 +421,6 @@ class _PurchaseOrdersContentState
                               ],
                             ),
                           ],
-                        ),
-                      ),
-                    if (_hasMore)
-                      Center(
-                        child: OutlinedButton(
-                          onPressed: _busy ? null : _more,
-                          child: Text(context.l10n.text('Load more')),
                         ),
                       ),
                   ],

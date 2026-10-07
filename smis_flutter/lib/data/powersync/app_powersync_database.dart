@@ -10,6 +10,8 @@ import '../../services/date_time_service.dart';
 import '../data_exception.dart';
 import '../stock_api.dart';
 import '../stock_offline_store.dart';
+import '../purchase_order_api.dart';
+import '../purchase_order_offline_store.dart';
 import 'app_powersync_connector.dart';
 import 'app_powersync_schema.dart';
 import 'app_powersync_write_api.dart';
@@ -24,6 +26,11 @@ class AppPowerSyncDatabase {
     databaseForCurrentSession,
     StockApi(sessionStore: _sessionStore),
   );
+  late final PurchaseOrderOfflineStore purchaseOrderStore =
+      PurchaseOrderOfflineStore(
+        databaseForCurrentSession,
+        PurchaseOrderApi(sessionStore: _sessionStore),
+      );
   PowerSyncDatabase? _database;
   String? _databaseContextKey;
   String? _connectedContextKey;
@@ -31,6 +38,7 @@ class AppPowerSyncDatabase {
   Future<void>? _connectFuture;
   StreamSubscription<SyncStatus>? _stockSyncSubscription;
   Timer? _stockRetryTimer;
+  Timer? _purchaseOrderRetryTimer;
 
   Future<PowerSyncDatabase> databaseForCurrentSession() async {
     final session = await _sessionStore.read();
@@ -79,10 +87,12 @@ class AppPowerSyncDatabase {
     _connectedContextKey = contextKey;
     await _stockSyncSubscription?.cancel();
     _stockRetryTimer?.cancel();
+    _purchaseOrderRetryTimer?.cancel();
     var wasConnected = false;
     _stockSyncSubscription = database.statusStream.listen((status) {
       if (status.connected && !wasConnected) {
         unawaited(stockStore.syncNow().catchError((Object _) {}));
+        unawaited(purchaseOrderStore.syncNow().catchError((Object _) {}));
       }
       wasConnected = status.connected;
     });
@@ -91,15 +101,24 @@ class AppPowerSyncDatabase {
       if (await stockStore.retryableCount() == 0) return;
       unawaited(stockStore.syncNow().catchError((Object _) {}));
     });
+    _purchaseOrderRetryTimer = Timer.periodic(const Duration(seconds: 30), (
+      _,
+    ) async {
+      if (!database.currentStatus.connected) return;
+      if (await purchaseOrderStore.retryableCount() == 0) return;
+      unawaited(purchaseOrderStore.syncNow().catchError((Object _) {}));
+    });
     if (database.currentStatus.connected) {
       unawaited(stockStore.syncNow().catchError((Object _) {}));
+      unawaited(purchaseOrderStore.syncNow().catchError((Object _) {}));
     }
   }
 
   Future<int> pendingCountForCurrentContext() async {
     final database = await databaseForCurrentSession();
     return (await database.getUploadQueueStats()).count +
-        await stockStore.pendingCount();
+        await stockStore.pendingCount() +
+        await purchaseOrderStore.pendingCount();
   }
 
   Future<void> _switchToUser(String userId, String shopId) async {
@@ -107,6 +126,8 @@ class AppPowerSyncDatabase {
     _stockSyncSubscription = null;
     _stockRetryTimer?.cancel();
     _stockRetryTimer = null;
+    _purchaseOrderRetryTimer?.cancel();
+    _purchaseOrderRetryTimer = null;
     final existing = _database;
     if (existing != null) await existing.close();
 
@@ -130,6 +151,8 @@ class AppPowerSyncDatabase {
     _stockSyncSubscription = null;
     _stockRetryTimer?.cancel();
     _stockRetryTimer = null;
+    _purchaseOrderRetryTimer?.cancel();
+    _purchaseOrderRetryTimer = null;
     await _database?.close();
     _database = null;
     _databaseContextKey = null;
