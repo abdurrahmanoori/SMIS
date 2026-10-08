@@ -12,6 +12,8 @@ import '../stock_api.dart';
 import '../stock_offline_store.dart';
 import '../purchase_order_api.dart';
 import '../purchase_order_offline_store.dart';
+import '../supplier_finance_api.dart';
+import '../supplier_finance_offline_store.dart';
 import 'app_powersync_connector.dart';
 import 'app_powersync_schema.dart';
 import 'app_powersync_write_api.dart';
@@ -31,6 +33,12 @@ class AppPowerSyncDatabase {
         databaseForCurrentSession,
         PurchaseOrderApi(sessionStore: _sessionStore),
       );
+  late final SupplierFinanceOfflineStore supplierFinanceStore =
+      SupplierFinanceOfflineStore(
+        databaseForCurrentSession,
+        SupplierFinanceApi(sessionStore: _sessionStore),
+        purchaseOrderStore,
+      );
   PowerSyncDatabase? _database;
   String? _databaseContextKey;
   String? _connectedContextKey;
@@ -39,6 +47,7 @@ class AppPowerSyncDatabase {
   StreamSubscription<SyncStatus>? _stockSyncSubscription;
   Timer? _stockRetryTimer;
   Timer? _purchaseOrderRetryTimer;
+  Timer? _supplierFinanceRetryTimer;
 
   Future<PowerSyncDatabase> databaseForCurrentSession() async {
     final session = await _sessionStore.read();
@@ -88,11 +97,15 @@ class AppPowerSyncDatabase {
     await _stockSyncSubscription?.cancel();
     _stockRetryTimer?.cancel();
     _purchaseOrderRetryTimer?.cancel();
+    _supplierFinanceRetryTimer?.cancel();
     var wasConnected = false;
+    // These queues send business commands directly to the API; PowerSync's
+    // normal row uploader is reserved for independent master-data edits.
     _stockSyncSubscription = database.statusStream.listen((status) {
       if (status.connected && !wasConnected) {
         unawaited(stockStore.syncNow().catchError((Object _) {}));
         unawaited(purchaseOrderStore.syncNow().catchError((Object _) {}));
+        unawaited(supplierFinanceStore.syncNow().catchError((Object _) {}));
       }
       wasConnected = status.connected;
     });
@@ -108,17 +121,28 @@ class AppPowerSyncDatabase {
       if (await purchaseOrderStore.retryableCount() == 0) return;
       unawaited(purchaseOrderStore.syncNow().catchError((Object _) {}));
     });
+    _supplierFinanceRetryTimer = Timer.periodic(const Duration(seconds: 30), (
+      _,
+    ) async {
+      if (!database.currentStatus.connected) return;
+      if (await supplierFinanceStore.retryableCount() == 0) return;
+      unawaited(supplierFinanceStore.syncNow().catchError((Object _) {}));
+    });
     if (database.currentStatus.connected) {
       unawaited(stockStore.syncNow().catchError((Object _) {}));
       unawaited(purchaseOrderStore.syncNow().catchError((Object _) {}));
+      unawaited(supplierFinanceStore.syncNow().catchError((Object _) {}));
     }
   }
 
   Future<int> pendingCountForCurrentContext() async {
     final database = await databaseForCurrentSession();
+    // Count both PowerSync's row-upload queue and the independent command
+    // outboxes, otherwise the UI would incorrectly report "fully synced".
     return (await database.getUploadQueueStats()).count +
         await stockStore.pendingCount() +
-        await purchaseOrderStore.pendingCount();
+        await purchaseOrderStore.pendingCount() +
+        await supplierFinanceStore.pendingCount();
   }
 
   Future<void> _switchToUser(String userId, String shopId) async {
@@ -128,6 +152,8 @@ class AppPowerSyncDatabase {
     _stockRetryTimer = null;
     _purchaseOrderRetryTimer?.cancel();
     _purchaseOrderRetryTimer = null;
+    _supplierFinanceRetryTimer?.cancel();
+    _supplierFinanceRetryTimer = null;
     final existing = _database;
     if (existing != null) await existing.close();
 
@@ -153,6 +179,8 @@ class AppPowerSyncDatabase {
     _stockRetryTimer = null;
     _purchaseOrderRetryTimer?.cancel();
     _purchaseOrderRetryTimer = null;
+    _supplierFinanceRetryTimer?.cancel();
+    _supplierFinanceRetryTimer = null;
     await _database?.close();
     _database = null;
     _databaseContextKey = null;

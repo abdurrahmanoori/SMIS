@@ -178,3 +178,65 @@ streams:
       WHERE purchase_order."ShopId" = auth.parameter('ShopId')
         AND purchase_order."IsDeleted" = 0
         AND purchase_order_line."IsDeleted" = 0
+
+  shop_supplier_payables:
+    auto_subscribe: true
+    query: |
+      SELECT
+        p."Id" AS id,
+        p."ShopId" AS shop_id,
+        p."SupplierId" AS supplier_id,
+        p."PurchaseOrderId" AS purchase_order_id,
+        p."TotalAmount" AS total_amount,
+        p."CreditAmount" AS credit_amount,
+        p."LastModifiedUtc" AS last_modified_utc
+      FROM "SupplierPayable" AS p
+      WHERE p."ShopId" = auth.parameter('ShopId')
+        AND p."IsDeleted" = 0
+
+  shop_supplier_payable_entries:
+    auto_subscribe: true
+    query: |
+      SELECT
+        e."Id" AS id,
+        e."ShopId" AS shop_id,
+        e."SupplierPayableId" AS supplier_payable_id,
+        e."OperationId" AS operation_id,
+        e."Kind" AS kind,
+        e."Amount" AS amount,
+        e."OccurredAtUtc" AS occurred_at_utc,
+        e."LastModifiedUtc" AS last_modified_utc
+      FROM "SupplierPayableEntry" AS e
+      WHERE e."ShopId" = auth.parameter('ShopId')
+        AND e."IsDeleted" = 0
+
+  shop_supplier_payments:
+    auto_subscribe: true
+    query: |
+      SELECT
+        p."Id" AS id,
+        p."ShopId" AS shop_id,
+        p."SupplierId" AS supplier_id,
+        p."Amount" AS amount,
+        p."PaidAtUtc" AS paid_at_utc,
+        p."PaymentMethod" AS payment_method,
+        p."ReferenceNumber" AS reference_number,
+        p."Notes" AS notes,
+        p."LastModifiedUtc" AS last_modified_utc
+      FROM "SupplierPayment" AS p
+      WHERE p."ShopId" = auth.parameter('ShopId')
+        AND p."IsDeleted" = 0
+
+  shop_supplier_payment_allocations:
+    auto_subscribe: true
+    query: |
+      SELECT
+        a."Id" AS id,
+        a."ShopId" AS shop_id,
+        a."SupplierPaymentId" AS supplier_payment_id,
+        a."SupplierPayableId" AS supplier_payable_id,
+        a."Amount" AS amount,
+        a."LastModifiedUtc" AS last_modified_utc
+      FROM "SupplierPaymentAllocation" AS a
+      WHERE a."ShopId" = auth.parameter('ShopId')
+        AND a."IsDeleted" = 0

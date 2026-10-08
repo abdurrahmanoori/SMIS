@@ -259,7 +259,10 @@ internal sealed class PurchasingCommandHandler :
                 "A purchase-order line can appear only once per receipt.");
 
         var occurredAtUtc = request.Dto.OccurredAtUtc ?? DateTimeService.NowUtc;
+        // One receipt command may contain multiple lines/batches. They share an
+        // operation ID so accounting records one receipt event, not one per batch.
         var operationId = Guid.NewGuid().ToString();
+        long receiptValue = 0;
         foreach (var receipt in request.Dto.Lines)
         {
             var line = order.Lines.FirstOrDefault(item => item.Id == receipt.PurchaseOrderLineId);
@@ -290,7 +293,26 @@ internal sealed class PurchasingCommandHandler :
             if (!inventoryResult.IsSuccess)
                 return Failure<PurchaseOrderDto, StockBatch>(inventoryResult);
 
+            // Inventory returns the actual base-unit quantity, which matters when
+            // receiving boxes/cartons. Entered quantity alone would misprice debt.
+            receiptValue = checked(receiptValue + PurchaseValue(
+                inventoryResult.Value!.ReceivedQuantityBase, line.UnitCostBase));
             line.RegisterReceipt(receipt.QuantityEntered);
+        }
+
+        if (receiptValue > 0)
+        {
+            // Additional partial deliveries increase the same Purchase Order debt.
+            // The new receipt entry still retains its own operation ID for history.
+            var payable = await _db.SupplierPayables.FirstOrDefaultAsync(
+                x => x.PurchaseOrderId == order.Id && x.ShopId == order.ShopId,
+                cancellationToken);
+            if (payable is null)
+            {
+                payable = SupplierPayable.Create(order.ShopId, order.SupplierId, order.Id);
+                await _db.SupplierPayables.AddAsync(payable, cancellationToken);
+            }
+            payable.RecordReceipt(receiptValue, operationId, occurredAtUtc);
         }
 
         order.RefreshReceiptStatus();
@@ -360,6 +382,20 @@ internal sealed class PurchasingCommandHandler :
         if (!inventoryResult.IsSuccess)
             return Failure<PurchaseOrderDto, StockMovement>(inventoryResult);
 
+        // A supplier return affects both inventory and money owed. Use the
+        // movement's base quantity and the order's historical purchase cost.
+        var credit = PurchaseValue(inventoryResult.Value!.QuantityBase, line.UnitCostBase);
+        if (credit > 0)
+        {
+            var payable = await _db.SupplierPayables.FirstOrDefaultAsync(
+                x => x.PurchaseOrderId == order.Id && x.ShopId == order.ShopId,
+                cancellationToken);
+            if (payable is null)
+                return Result<PurchaseOrderDto>.BusinessRule("supplier_payable.missing",
+                    "The existing purchase needs payable reconciliation before recording its return.");
+            payable.RecordReturn(credit, inventoryResult.Value.OperationId,
+                dto.OccurredAtUtc ?? DateTimeService.NowUtc);
+        }
         line.RegisterSupplierReturn(dto.QuantityEntered);
         var response = PurchasingDtoMapper.ToDto(order);
         _idempotency.Complete(reservation.Value, response);
@@ -398,6 +434,13 @@ internal sealed class PurchasingCommandHandler :
         string shopId
     ) =>
         string.Equals(shopId, _currentUser.GetShopId(), StringComparison.Ordinal);
+
+    private static long PurchaseValue(decimal quantityBase, long unitCostBase)
+    {
+        // Round each line consistently with the existing integer money model.
+        var exact = quantityBase * unitCostBase;
+        return checked((long)decimal.Round(exact, 0, MidpointRounding.AwayFromZero));
+    }
 
     private static Result<TTarget> Failure<TTarget, TSource>(
         Result<TSource> source

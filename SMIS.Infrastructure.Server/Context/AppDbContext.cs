@@ -114,6 +114,10 @@ public partial class AppDbContext : IdentityDbContext<ApplicationUser, Applicati
     public DbSet<Supplier> Suppliers { get; set; }
     public DbSet<PurchaseOrder> PurchaseOrders { get; set; }
     public DbSet<PurchaseOrderLine> PurchaseOrderLines { get; set; }
+    public DbSet<SupplierPayable> SupplierPayables { get; set; }
+    public DbSet<SupplierPayableEntry> SupplierPayableEntries { get; set; }
+    public DbSet<SupplierPayment> SupplierPayments { get; set; }
+    public DbSet<SupplierPaymentAllocation> SupplierPaymentAllocations { get; set; }
     public DbSet<Sale> Sales { get; set; }
     public DbSet<SaleLine> SaleLines { get; set; }
     public DbSet<Customer> Customers { get; set; }
