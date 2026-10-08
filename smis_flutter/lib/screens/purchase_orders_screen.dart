@@ -20,6 +20,7 @@ import '../models/product_unit.dart';
 import '../models/purchase_order.dart';
 import '../models/supplier.dart';
 import '../models/unit_of_measure.dart';
+import 'supplier_finances_screen.dart';
 import '../widgets/active_shop_context.dart';
 import '../widgets/app_drawer.dart';
 import '../widgets/app_error_view.dart';
@@ -285,6 +286,13 @@ class _PurchaseOrdersContentState
     appBar: AppBar(
       title: Text(context.l10n.text('Purchase orders')),
       actions: [
+        IconButton(
+          tooltip: context.l10n.text('Supplier balances'),
+          icon: const Icon(Icons.account_balance_wallet_outlined),
+          onPressed: () => Navigator.of(context).push(
+            MaterialPageRoute(builder: (_) => const SupplierFinancesScreen()),
+          ),
+        ),
         const ActiveShopAction(),
         IconButton(
           tooltip: context.l10n.text('Refresh'),

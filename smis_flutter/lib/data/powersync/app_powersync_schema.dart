@@ -95,6 +95,42 @@ const appPowerSyncSchema = Schema([
     Column.integer('unit_cost_base'),
     Column.text('last_modified_utc'),
   ]),
+  // Financial records are server-authoritative. PowerSync downloads confirmed
+  // values only; payment commands are uploaded through a local outbox.
+  Table('supplier_payable', [
+    Column.text('shop_id'),
+    Column.text('supplier_id'),
+    Column.text('purchase_order_id'),
+    Column.integer('total_amount'),
+    Column.integer('credit_amount'),
+    Column.text('last_modified_utc'),
+  ]),
+  Table('supplier_payable_entry', [
+    Column.text('shop_id'),
+    Column.text('supplier_payable_id'),
+    Column.text('operation_id'),
+    Column.text('kind'),
+    Column.integer('amount'),
+    Column.text('occurred_at_utc'),
+    Column.text('last_modified_utc'),
+  ]),
+  Table('supplier_payment', [
+    Column.text('shop_id'),
+    Column.text('supplier_id'),
+    Column.integer('amount'),
+    Column.text('paid_at_utc'),
+    Column.text('payment_method'),
+    Column.text('reference_number'),
+    Column.text('notes'),
+    Column.text('last_modified_utc'),
+  ]),
+  Table('supplier_payment_allocation', [
+    Column.text('shop_id'),
+    Column.text('supplier_payment_id'),
+    Column.text('supplier_payable_id'),
+    Column.integer('amount'),
+    Column.text('last_modified_utc'),
+  ]),
   Table.localOnly('sync_error', [
     Column.text('table_name'),
     Column.text('record_id'),
@@ -116,6 +152,14 @@ const appPowerSyncSchema = Schema([
   ]),
   Table.localOnly('purchase_order_outbox', [
     Column.text('aggregate_id'),
+    Column.text('kind'),
+    Column.text('payload'),
+    Column.text('created_at_utc'),
+    Column.text('state'),
+    Column.text('error'),
+  ]),
+  Table.localOnly('supplier_finance_outbox', [
+    Column.text('supplier_id'),
     Column.text('kind'),
     Column.text('payload'),
     Column.text('created_at_utc'),
