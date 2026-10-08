@@ -23,6 +23,7 @@ import 'purchase_orders_screen.dart';
 import 'shops_screen.dart';
 import 'stock_screen.dart';
 import 'suppliers_screen.dart';
+import 'supplier_finances_screen.dart';
 import 'unit_of_measures_screen.dart';
 
 class HomeScreen extends ConsumerWidget {
@@ -84,6 +85,9 @@ class HomeScreen extends ConsumerWidget {
     final canViewPurchasing = session.canViewComponent(
       ApplicationComponentKeys.purchasing,
     );
+    final canViewSupplierFinances =
+        canViewPurchasing &&
+        session.canReadComponent(ApplicationComponentKeys.purchasing);
 
     return Scaffold(
       appBar: AppBar(
@@ -268,6 +272,18 @@ class HomeScreen extends ConsumerWidget {
                         ),
                       ),
                     );
+                    final supplierFinancesCard = _HomeActionCard(
+                      icon: Icons.account_balance_wallet_outlined,
+                      title: l10n.text('Supplier balances'),
+                      description: l10n.text(
+                        'View supplier payables, payment history, and record payments.',
+                      ),
+                      onTap: () => Navigator.of(context).push(
+                        MaterialPageRoute<void>(
+                          builder: (_) => const SupplierFinancesScreen(),
+                        ),
+                      ),
+                    );
                     return wideLayout
                         ? Wrap(
                             spacing: 16,
@@ -318,6 +334,11 @@ class HomeScreen extends ConsumerWidget {
                                   width: (constraints.maxWidth - 16) / 2,
                                   child: purchasingCard,
                                 ),
+                              if (canViewSupplierFinances)
+                                SizedBox(
+                                  width: (constraints.maxWidth - 16) / 2,
+                                  child: supplierFinancesCard,
+                                ),
                               SizedBox(
                                 width: (constraints.maxWidth - 16) / 2,
                                 child: profileCard,
@@ -360,6 +381,10 @@ class HomeScreen extends ConsumerWidget {
                               ],
                               if (canViewPurchasing) ...[
                                 purchasingCard,
+                                const SizedBox(height: 16),
+                              ],
+                              if (canViewSupplierFinances) ...[
+                                supplierFinancesCard,
                                 const SizedBox(height: 16),
                               ],
                               profileCard,
