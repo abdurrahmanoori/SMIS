@@ -14,7 +14,14 @@ public class ApplicationUser : IdentityUser<string>, IEntityPK
     public string LanguageId { get; private set; } = LanguageDefaults.EnglishId;
     public string? ShopName { get; set; }
     public bool IsActive { get; private set; } = true;
+
+    /// <summary>
+    /// Monotonic session generation captured by refresh tokens. Changing it invalidates
+    /// refresh-token renewal for older sessions; already-issued short-lived access tokens
+    /// remain valid until their normal expiration.
+    /// </summary>
     public int SecurityVersion { get; private set; }
+
     public int Version { get; set; }
     public DateTime LastModifiedUtc { get; set; }
 
@@ -118,5 +125,11 @@ public class ApplicationUser : IdentityUser<string>, IEntityPK
     public void ConfirmPhoneNumber() => PhoneNumberConfirmed = true;
     public void Activate() => IsActive = true;
     public void Deactivate() => IsActive = false;
+
+    /// <summary>
+    /// Advances the session generation so refresh tokens issued for an older generation
+    /// are rejected. This intentionally does not revoke an already-issued access token;
+    /// the access token remains usable only until its configured short lifetime expires.
+    /// </summary>
     public void InvalidateSessions() => SecurityVersion++;
 }
