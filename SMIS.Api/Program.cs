@@ -58,6 +58,7 @@ builder.Services.AddAuthorization(options =>
         .Build();
 });
 builder.Services.AddSingleton<IAuthorizationPolicyProvider, PermissionPolicyProvider>();
+builder.Services.AddSingleton<IAuthorizationMiddlewareResultHandler, ApiAuthorizationMiddlewareResultHandler>();
 builder.Services.AddScoped<IAuthorizationHandler, PermissionAuthorizationHandler>();
 builder.Services.AddScoped<IAuthorizationHandler, TaskPermissionAuthorizationHandler>();
 builder.Services.AddScoped<IAuthorizationHandler, CurrentRoleAuthorizationHandler>();
@@ -83,7 +84,6 @@ app.UseMiddleware<RequestResponseLoggingMiddleware>();
 app.UseMiddleware<DevelopmentJwtMiddleware>();
 
 app.UseAuthentication();
-app.UseMiddleware<AuthorizationProblemDetailsMiddleware>();
 app.UseCors("AllowReactApp");
 app.UseAuthorization();
 app.MapControllers();
