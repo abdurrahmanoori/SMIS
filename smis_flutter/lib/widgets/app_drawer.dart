@@ -16,6 +16,7 @@ import '../screens/products_screen.dart';
 import '../screens/product_prices_screen.dart';
 import '../screens/product_units_screen.dart';
 import '../screens/purchase_orders_screen.dart';
+import '../screens/supplier_finances_screen.dart';
 import '../screens/shops_screen.dart';
 import '../screens/stock_screen.dart';
 import '../screens/suppliers_screen.dart';
@@ -76,6 +77,9 @@ class AppDrawer extends ConsumerWidget {
     final canViewPurchasing = session.canViewComponent(
       ApplicationComponentKeys.purchasing,
     );
+    final canViewSupplierFinances =
+        canViewPurchasing &&
+        session.canReadComponent(ApplicationComponentKeys.purchasing);
 
     return Drawer(
       child: ListView(
@@ -236,6 +240,19 @@ class AppDrawer extends ConsumerWidget {
                 Navigator.of(context).pushReplacement(
                   MaterialPageRoute<void>(
                     builder: (_) => const PurchaseOrdersScreen(),
+                  ),
+                );
+              },
+            ),
+          if (canViewSupplierFinances)
+            ListTile(
+              leading: const Icon(Icons.account_balance_wallet_outlined),
+              title: Text(l10n.text('Supplier balances')),
+              onTap: () {
+                Navigator.of(context).pop();
+                Navigator.of(context).pushReplacement(
+                  MaterialPageRoute<void>(
+                    builder: (_) => const SupplierFinancesScreen(),
                   ),
                 );
               },
